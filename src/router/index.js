@@ -11,6 +11,7 @@ import CreditCard from '@/components/examine/creditCard/index.vue'
 
 import GladTidings from '../components/gladTidings/index.vue'
 import Examine from '../components/examine/index.vue'
+import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'
 
 Vue.use(Router);
 
@@ -55,6 +56,12 @@ export default new Router({
       path: '/creditCard',
       name: '研发补卡申请',
       component: CreditCard
+    },
+    {
+      path: '/unCollectBeforeRent',
+      hidden: true,
+      name: '未收先租',
+      component: UncollectBeforeRent
     },
   ]
 })
