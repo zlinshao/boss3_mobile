@@ -25,7 +25,7 @@ export default new Router({
       path: '/gladTidings',
       name: 'gladTidings',
       component: GladTidings
-    },
+    },5
     {
       path: '/examine',
       name: 'Examine',
@@ -33,31 +33,26 @@ export default new Router({
     },
     {
       path: '/hello',
-      hidden: true,
       name: 'HelloWorld',
       component: HelloWorld
     },
     {
       path: '/expense',
-      hidden: true,
       name: '研发部报销申请',
       component: Expense
     },
     {
       path: '/warning',
-      hidden: true,
       name: '警告',
       component: Warning
     },
     {
       path: '/cardDetail',
-      hidden: true,
       name: '研发补卡申请详情',
       component: CardDetail
     },
     {
       path: '/creditCard',
-      hidden: true,
       name: '研发补卡申请',
       component: CreditCard
     },
