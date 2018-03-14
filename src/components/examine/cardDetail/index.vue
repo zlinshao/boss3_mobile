@@ -3,7 +3,7 @@
     <div class="detail">
       <div class="detailLeft">
         <div>
-          <img src="../../assets/head.png" alt="">
+          <img src="../../../assets/head.png" alt="">
         </div>
       </div>
       <div class="detailRight">
@@ -13,7 +13,7 @@
             <p>研发部-产品经理方式发士大夫撒旦撒</p>
           </div>
           <div class="status">
-            <img src="../../assets/tongguo.png" alt="">
+            <img src="../../../assets/tongguo.png" alt="">
           </div>
         </div>
         <div class="topTitle">
@@ -53,7 +53,7 @@
         </div>
         <div class="proRight">
           <p>
-            <img src="../../assets/head.png" alt="">
+            <img src="../../../assets/head.png" alt="">
           </p>
           <h2>李巧俊发</h2>
           <h3>发起申请</h3>
@@ -67,7 +67,7 @@
         </div>
         <div class="proRight">
           <p>
-            <img src="../../assets/head.png" alt="">
+            <img src="../../../assets/head.png" alt="">
           </p>
           <h2>沈晶晶</h2>
           <h3><span>@杜帅</span><span>@张琳琳</span></h3>
@@ -81,7 +81,7 @@
         </div>
         <div class="proRight">
           <p>
-            <img src="../../assets/head.png" alt="">
+            <img src="../../../assets/head.png" alt="">
           </p>
           <h2>杜帅</h2>
           <h3>证明</h3>
@@ -95,7 +95,7 @@
         </div>
         <div class="proRight">
           <p>
-            <img src="../../assets/head.png" alt="">
+            <img src="../../../assets/head.png" alt="">
           </p>
           <h2>张琳琳</h2>
           <h3>证明</h3>
@@ -109,7 +109,7 @@
         </div>
         <div class="proRight">
           <p>
-            <img src="../../assets/head.png" alt="">
+            <img src="../../../assets/head.png" alt="">
           </p>
           <h2>沈晶晶</h2>
           <h3>已同意</h3>
@@ -123,7 +123,7 @@
         </div>
         <div class="proRight">
           <p>
-            <img src="../../assets/head.png" alt="">
+            <img src="../../../assets/head.png" alt="">
           </p>
           <h2>马旭明</h2>
           <h3>已同意</h3>
@@ -136,7 +136,7 @@
         <h1>抄送人：</h1>
         <div>
           <h2 v-for="key in 6">
-            <img src="../../assets/head.png" alt="">
+            <img src="../../../assets/head.png" alt="">
           </h2>
         </div>
       </div>

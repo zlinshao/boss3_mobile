@@ -57,7 +57,7 @@
     padding: .4rem;
     margin-top: .4rem;
     height: 3.54rem;
-    background: url("../../assets/shenp1.jpg") no-repeat;
+    background: url("../../../assets/shenp1.jpg") no-repeat;
     background-size: 100% 100%;
     @include flex;
     flex-wrap: wrap;

@@ -1,40 +1,40 @@
 <template>
   <div id="app">
-    <div class="routerLink">
-      <div v-for="(key,index) in paths" v-if="key.hidden">
-        <router-link :to="{path: key.path}">{{key.name}}</router-link>
-      </div>
-    </div>
+    <!--<div class="routerLink">-->
+      <!--<div v-for="(key,index) in paths" v-if="key.hidden">-->
+        <!--<router-link :to="{path: key.path}">{{key.name}}</router-link>-->
+      <!--</div>-->
+    <!--</div>-->
     <router-view/>
-    <van-cell-group class="item-list">
-      <van-cell isLink icon="points" title="我的积分" ></van-cell>
-      <van-cell isLink icon="gift" title="我收到的礼物" ></van-cell>
-    </van-cell-group>
+    <!--<van-cell-group class="item-list">-->
+      <!--<van-cell isLink icon="points" title="我的积分" ></van-cell>-->
+      <!--<van-cell isLink icon="gift" title="我收到的礼物" ></van-cell>-->
+    <!--</van-cell-group>-->
 
 
-    <van-datetime-picker
-      v-model="currentDate"
-      type="date"
-      :min-hour="minHour"
-      :max-hour="maxHour"
-      :min-date="minDate"
-    ></van-datetime-picker>
+    <!--<van-datetime-picker-->
+      <!--v-model="currentDate"-->
+      <!--type="date"-->
+      <!--:min-hour="minHour"-->
+      <!--:max-hour="maxHour"-->
+      <!--:min-date="minDate"-->
+    <!--&gt;</van-datetime-picker>-->
 
-    <!-- 密码输入框 -->
-    <van-password-input
-      :value="value"
-      info="密码为 4 位数字"
-      lenght="4"
-      @focus="showKeyboard = true"
-    ></van-password-input>
+    <!--&lt;!&ndash; 密码输入框 &ndash;&gt;-->
+    <!--<van-password-input-->
+      <!--:value="value"-->
+      <!--info="密码为 4 位数字"-->
+      <!--lenght="4"-->
+      <!--@focus="showKeyboard = true"-->
+    <!--&gt;</van-password-input>-->
 
-    <!-- 数字键盘 -->
-    <van-number-keyboard
-      :show="showKeyboard"
-      @input="onInput"
-      @delete="onDelete"
-      @blur="showKeyboard = false"
-    ></van-number-keyboard>
+    <!--&lt;!&ndash; 数字键盘 &ndash;&gt;-->
+    <!--<van-number-keyboard-->
+      <!--:show="showKeyboard"-->
+      <!--@input="onInput"-->
+      <!--@delete="onDelete"-->
+      <!--@blur="showKeyboard = false"-->
+    <!--&gt;</van-number-keyboard>-->
   </div>
 </template>
 

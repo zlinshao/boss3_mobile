@@ -35,21 +35,21 @@
           </div>
           <div class="personal">
             <h1>
-              <img src="../../assets/head.png" alt="">
+              <img src="../../../assets/head.png" alt="">
             </h1>
             <h2>反对点的</h2>
             <h3>第1级主管</h3>
           </div>
           <div class="personal">
             <h1>
-              <img src="../../assets/head.png" alt="">
+              <img src="../../../assets/head.png" alt="">
             </h1>
             <h2>反对点的</h2>
             <h3>第1级主管</h3>
           </div>
           <div class="personal">
             <h1>
-              <img src="../../assets/head.png" alt="">
+              <img src="../../../assets/head.png" alt="">
             </h1>
             <h2>反对点的</h2>
             <h3>第1级主管</h3>
