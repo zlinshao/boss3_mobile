@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Index from  '../components/index.vue'
+import Index from '../components/index.vue'
 
 import HelloWorld from '@/components/HelloWorld'
 import Expense from '@/components/examine/Expense/index.vue'
@@ -10,6 +10,13 @@ import CardDetail from '@/components/examine/cardDetail/index.vue'
 import CreditCard from '@/components/examine/creditCard/index.vue'
 
 import GladTidings from '../components/gladTidings/index.vue'
+
+import CollectReport from '../components/gladTidings/collectReport/index.vue'
+import RentReport from '../components/gladTidings/rentReport/index.vue'
+import TransferReport from '../components/gladTidings/transferReport/index.vue'
+import ContinueCollect from '../components/gladTidings/continueCollect/index.vue'
+
+
 import Examine from '../components/examine/index.vue'
 import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'
 
@@ -23,10 +30,30 @@ export default new Router({
       component: Index
     },
     {
+      path: '/collectReport',               //收房报备
+      name: 'collectReport',
+      component: CollectReport
+    },
+    {
+      path: '/rentReport',                 //租房报备
+      name: 'rentReport',
+      component: RentReport
+    },
+    {
+      path: '/transferReport',              //调房报备
+      name: 'transferReport',
+      component: TransferReport
+    },
+    {
+      path: '/continueCollect',              //续收报备
+      name: 'continueCollect',
+      component: ContinueCollect
+    },
+    {
       path: '/gladTidings',
       name: 'gladTidings',
       component: GladTidings
-    },5
+    },
     {
       path: '/examine',
       name: 'Examine',
