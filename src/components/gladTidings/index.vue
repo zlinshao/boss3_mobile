@@ -1,5 +1,7 @@
 <template>
-    <h1>this is region</h1>
+    <div>
+        <router-link to="/unCollectBeforeRent">未收先租</router-link>
+    </div>
 </template>
 
 <script>
