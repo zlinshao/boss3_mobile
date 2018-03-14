@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <van-cell-group class="item-list">
-      <van-cell isLink icon="points" title="我的积分" />
-      <van-cell isLink icon="gift" title="我收到的礼物" />
+      <van-cell isLink icon="points" title="我的积分" ></van-cell>
+      <van-cell isLink icon="gift" title="我收到的礼物" ></van-cell>
     </van-cell-group>
 
 
@@ -12,14 +12,15 @@
       :min-hour="minHour"
       :max-hour="maxHour"
       :min-date="minDate"
-    />
+    ></van-datetime-picker>
 
     <!-- 密码输入框 -->
     <van-password-input
       :value="value"
-      info="密码为 6 位数字"
+      info="密码为 4 位数字"
+      lenght="4"
       @focus="showKeyboard = true"
-    />
+    ></van-password-input>
 
     <!-- 数字键盘 -->
     <van-number-keyboard
@@ -27,7 +28,7 @@
       @input="onInput"
       @delete="onDelete"
       @blur="showKeyboard = false"
-    />
+    ></van-number-keyboard>
   </div>
 </template>
 
@@ -48,8 +49,8 @@ export default {
     return {
       minHour: 10,
       maxHour: 20,
-      minDate: new Date(),
-      maxDate: new Date(2019, 10, 1),
+      minDate: new Date(1000,1,1),
+      maxDate: new Date(2070, 10, 1),
       currentDate: new Date(2018, 0, 1),
       value: '',
       showKeyboard:false,
