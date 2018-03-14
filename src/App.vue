@@ -1,5 +1,11 @@
 <template>
   <div id="app">
+    <div class="routerLink">
+      <div v-for="(key,index) in paths" v-if="key.hidden">
+        <router-link :to="{path: key.path}">{{key.name}}</router-link>
+      </div>
+    </div>
+    <router-view/>
     <van-cell-group class="item-list">
       <van-cell isLink icon="points" title="我的积分" ></van-cell>
       <van-cell isLink icon="gift" title="我收到的礼物" ></van-cell>
@@ -47,6 +53,7 @@ export default {
   },
   data() {
     return {
+      paths: [],
       minHour: 10,
       maxHour: 20,
       minDate: new Date(1000,1,1),
@@ -55,6 +62,9 @@ export default {
       value: '',
       showKeyboard:false,
     };
+  },
+  mounted() {
+    this.paths = this.$router.options.routes;
   },
   methods: {
     onInput(key) {
