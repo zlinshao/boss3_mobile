@@ -25,13 +25,13 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="'FSDFSD'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'PICID'" @getImg="getImgData1"></UpLoad>
       </div>
 
       <!-- -->
       <div class="aloneModel">
         <div class="title">组长同意截图</div>
-        <UpLoad :ID="'DSAD'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'PICID2'" @getImg="getImgData2"></UpLoad>
       </div>
       <van-cell-group>
         <van-field
@@ -89,9 +89,10 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+
   export default {
     name: "index",
-    components:{UpLoad},
+    components: {UpLoad},
     data() {
       return {
         show: false,
@@ -103,10 +104,8 @@
         currentDate: new Date(2018, 0, 1),
         date: '',
         message: '',
-        totalNumber:1,
-        radio:1,
-        upID:"PICID",
-        upID2:"PICID2"
+        totalNumber: 1,
+        radio: 1,
       }
     },
     mounted() {
@@ -120,7 +119,7 @@
       onChange(picker, value, index) {
         this.rentType = value;
       },
-      getDate(picker){
+      getDate(picker) {
         this.date = picker.getValues().join('-');
       },
 
@@ -128,17 +127,23 @@
         console.log(file)
       },
       //增加报销明细
-      addNumber(){
+      addNumber() {
         this.totalNumber++;
       },
       //删除报销明细
-      deleteNumber(index){
+      deleteNumber(index) {
         this.totalNumber--;
       },
 
-      //照片
-      getImgData(val){
-
+      // 截图
+      getImgData1(val) {
+        console.log(1);
+        console.log(val);
+      },
+      // 组长同意截图
+      getImgData2(val) {
+        console.log(2);
+        console.log(val);
       }
     },
   }
