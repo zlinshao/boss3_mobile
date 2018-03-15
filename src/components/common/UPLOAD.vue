@@ -219,7 +219,20 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped="">
+<style lang="scss">
+  .moxie-shim{
+    position: static !important;
+    width: 0 !important;
+    height: 0 !important;
+    input{
+      font-size: 0 !important;
+      opacity: 0;
+      position: static !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+  }
+
   #container {
     padding: 0 .1rem;
     .pickfiles {
