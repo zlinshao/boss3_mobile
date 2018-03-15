@@ -25,11 +25,7 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <div class="upPic">
-          <div class="upButton">
-            <span class="plus">+</span>
-          </div>
-        </div>
+        <UpLoad :ID="upID" @getImg="getImgData"></UpLoad>
       </div>
 
       <!-- -->
@@ -96,8 +92,10 @@
 </template>
 
 <script>
+  import UpLoad from '../../common/UPLOAD.vue'
   export default {
     name: "index",
+    components:{UpLoad},
     data() {
       return {
         show: false,
@@ -111,6 +109,7 @@
         message: '',
         totalNumber:1,
         radio:1,
+        upID:"PICID"
       }
     },
     mounted() {
@@ -139,6 +138,11 @@
       deleteNumber(index){
         this.totalNumber--;
       },
+
+      //照片
+      getImgData(val){
+        console.log(val)
+      }
     },
   }
 </script>
