@@ -19,6 +19,7 @@ Vue.prototype.$http = axios;
 axios.defaults.baseURL = globalConfig.server;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
+axios.defaults.headers = globalConfig.header;
 
 new Vue({
   el: '#app',
