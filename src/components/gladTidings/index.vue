@@ -1,6 +1,5 @@
 <template>
     <div>
-        <router-link to="/unCollectBeforeRent">未收先租</router-link>
         <router-link to="/collectReport">收房报备</router-link>
         <router-link to="/rentReport">租房报备</router-link>
         <router-link to="/transferReport">调房报备</router-link>
