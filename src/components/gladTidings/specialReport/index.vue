@@ -25,13 +25,13 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="upID" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'FSDFSD'" @getImg="getImgData"></UpLoad>
       </div>
 
       <!-- -->
       <div class="aloneModel">
         <div class="title">组长同意截图</div>
-        <UpLoad :ID="upID2" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'DSAD'" @getImg="getImgData"></UpLoad>
       </div>
       <van-cell-group>
         <van-field

@@ -5,8 +5,7 @@
       <!--<div style="width: .9rem;height: .9rem;"></div>-->
       <!--</div>-->
 
-      <div id="pickfiles">
-
+      <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="upButton" :id="ID">
           <span class="plus">+</span>
         </div>
@@ -121,7 +120,7 @@
 //
 //                  `;
 
-                  $('#pickfiles').prepend(`
+                  $('#pickfiles'+_this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
                       <div style=" width: .9rem;  height: .9rem; position: relative;">
                         <img src="" style="width: .9rem; height: .9rem; ">
@@ -137,7 +136,7 @@
 
                   fr.onload = function () {
                     // 文件添加进队列后，处理相关的事情
-                    $('#pickfiles').prepend(`
+                    $('#pickfiles'+_this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
                       <div style=" position: relative;">
                         <img src="${fr.result}" style="width: .9rem; height: .9rem; ">
@@ -221,9 +220,14 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+  .moxie-shim{
+    position: static !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
   #container {
     padding: 0 .1rem;
-    #pickfiles {
+    .pickfiles {
       display: flex;
       display: -webkit-flex; /* Safari */
       flex-wrap: wrap;
