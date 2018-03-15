@@ -2,30 +2,25 @@
   <div>
     <div id="container">
       <!--<div class="btn btn-default btn-lg pickfiles" :id="ID">-->
-          <!--<div style="width: .9rem;height: .9rem;"></div>-->
+      <!--<div style="width: .9rem;height: .9rem;"></div>-->
       <!--</div>-->
 
-      <div id="pickfiles"  style="display: inline-block">
-dasdasdas
+      <div id="pickfiles">
+
+        <div class="upButton" :id="ID">
+          <span class="plus">+</span>
+        </div>
       </div>
-      <div class="upButton" :id="ID">
-        <span class="plus">+</span>
-      </div>
+
     </div>
   </div>
 </template>
 
 <script>
 
-
-  $('.pic_delete').click(function (e) {
-
-  })
-
-
   export default {
     name: 'hello',
-    props:['ID'],
+    props: ['ID'],
     data () {
       return {
         imgArray: [],
@@ -37,7 +32,7 @@ dasdasdas
     },
     mounted(){
       let _this = this;
-      $(document).on('click', 'a.pic_delete', function () {
+      $(document).on('click', '.pic_delete', function () {
         let id = $(this).attr("data-val");
         let toremove = '';
         for (let i in _this.uploader.files) {
@@ -51,7 +46,7 @@ dasdasdas
           if (_this.imgArray[i].indexOf(id) > -1) {
             _this.imgArray.splice(i, 1)
             _this.imgId.splice(i, 1)
-            _this.$emit('getImg', [_this.imgId,_this.isUploading]);
+            _this.$emit('getImg', [_this.imgId, _this.isUploading]);
           }
         }
       });
@@ -104,45 +99,55 @@ dasdasdas
 
           init: {
             'PostInit': function () {
-              document.getElementById(_this.ID).innerHTML = '';
+//              document.getElementById(_this.ID).innerHTML = '';
             },
 
             'FilesAdded': function (up, files) {
 
               plupload.each(files, function (file) {
                 if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
-                  document.getElementById('pickfiles').innerHTML += `
+//                  document.getElementById('pickfiles').innerHTML += `
+//
+//                  <div class="imgItem" id="${file.id}">
+//                      <div style=" width: .9rem;  height: .9rem; overflow: hidden; position: relative;">
+//                      <img src="" style="width: .9rem; height: .9rem; filter: blur(2px)">
+//                      <div class="imgSize" >${plupload.formatSize(file.size)}</div>
+//                      <div style="width: 100%;position: absolute;bottom: .1rem;font-size:20px;text-align: center;"><b style=""></b></div>
+//                    </div>
+//                    <div style="text-align: center;height: .2rem">
+//                        <a href="javascript:;" class="pic_delete" data-val=${file.id}>删除</a>
+//                    </div>
+//                    </div>
+//
+//                  `;
 
-                  <div class="imgItem" style="margin: .1rem;" id="${file.id}">
-                      <div style=" width: .9rem;  height: .9rem; overflow: hidden; position: relative;">
-                      <img src="" style="width: .9rem; height: .9rem; filter: blur(2px)">
-                      <div class="imgSize" >${plupload.formatSize(file.size)}</div>
-                      <div style="width: 100%;position: absolute;bottom: .1rem;font-size:20px;text-align: center;"><b style=""></b></div>
+                  $('#pickfiles').prepend(`
+                    <div class="imgItem" id="${file.id}">
+                      <div style=" width: .9rem;  height: .9rem; position: relative;">
+                        <img src="" style="width: .9rem; height: .9rem; ">
+                        <div class="progress"><b></b></div>
+                        <div class="remove pic_delete"  data-val=${file.id}>
+                          x
+                        </div>
+                      </div>
                     </div>
-                    <div style="text-align: center;height: 14px"">
-                        <a href="javascript:;" class="pic_delete" data-val=${file.id}>删除</a>
-                    </div>
-                    </div>
-
-                  `;
+                   `);
                 } else {
                   let fr = new mOxie.FileReader();
 
                   fr.onload = function () {
                     // 文件添加进队列后，处理相关的事情
-                    document.getElementById('pickfiles').innerHTML += `
-                    <div class="imgItem" style="margin: .1rem;" id="${file.id}">
-                      <div style=" width: .9rem;  height: .9rem; overflow: hidden; position: relative;">
-                      <img src="${fr.result}"
-                      style="width: .9rem; height: .9rem; ">
-                      <div class="imgSize" style="color: #ffffff;">${plupload.formatSize(file.size)}</div>
-                      <div style="width: 100%;position: absolute;bottom: .1rem;font-size:20px;text-align: center;color: #ffffff;"><b style=""></b></div>
+                    $('#pickfiles').prepend(`
+                    <div class="imgItem" id="${file.id}">
+                      <div style=" position: relative;">
+                        <img src="${fr.result}" style="width: .9rem; height: .9rem; ">
+                        <div class="progress"><b style="color: #fff !important;"></b></div>
+                        <div class="remove pic_delete"  data-val=${file.id}>
+                          x
+                        </div>
+                      </div>
                     </div>
-                    <div style="text-align: center;height: 14px">
-                        <a href="javascript:;" class="pic_delete"  data-val=${file.id}>删除</a>
-                    </div>
-                    </div>
-                   `;
+                   `);
                   };
                   fr.readAsDataURL(file.getSource());
                 }
@@ -155,7 +160,12 @@ dasdasdas
             'UploadProgress': function (up, file) {
               // 每个文件上传时，处理相关的事情
               if (document.getElementById(file.id)) {
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+
+                if(file.percent<100){
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+                }else {
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
+                }
               }
 
             },
@@ -181,21 +191,16 @@ dasdasdas
 //                  $('#'+file.id).remove();
                   _this.imgId.push(res.data.data.id);
                   _this.imgArray.push(res.data.data.name);
-                  _this.$emit('getImg', [_this.ID,_this.imgId,_this.isUploading]);
+                  _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
               })
             },
             'Error': function (up, err, errTip) {
-              console.log(errTip);
+//              console.log(errTip);
             },
             'UploadComplete': function () {
               //队列文件处理完毕后，处理相关的事情
               _this.isUploading = false;
-
-              _this.$notify.success({
-                title: '成功',
-                message: '文件上传全部完成'
-              })
             },
             'Key': function (up, file) {
               // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
@@ -216,50 +221,78 @@ dasdasdas
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  #container{
-    padding: .2rem;
-    .upButton {
-      display: inline-block;
-      width: .9rem;
-      height: .9rem;
-      background: #f6f6f6;
-      text-align: center;
-      line-height: .8rem;
-      .plus {
-        font-size: .5rem;
-        color: #aaa;
+  #container {
+    padding: 0 .1rem;
+    #pickfiles {
+      display: flex;
+      display: -webkit-flex; /* Safari */
+      flex-wrap: wrap;
+      > div {
+        margin-left: .2rem;
+        margin-top: .2rem;
+      }
+      .upButton {
+        width: .9rem;
+        height: .9rem;
+        background: #f6f6f6;
+        text-align: center;
+        line-height: .8rem;
+        .plus {
+          font-size: .5rem;
+          color: #aaa;
+        }
+      }
+      .progress {
+        width: 100%;
+        position: absolute;
+        bottom: .3rem;
+        font-size: .3rem;
+        text-align: center;
+      }
+      .remove {
+        text-align: center;
+        width: .3rem;
+        height: .3rem;
+        line-height: .22rem;
+        border-radius: 50%;
+        position: absolute;
+        top: -.1rem;
+        right: -.1rem;
+        z-index: 503333333;
+        background: #333;
+        color: #fff;
+        font-size: .2rem;
       }
     }
-
     /*.pickfiles {*/
-      /*min-height: 40px;*/
-      /*box-sizing: border-box;*/
-      /*border: 1px solid #bbb;*/
-      /*border-radius: 4px;*/
-      /*display: flex;*/
-      /*flex-wrap: wrap;*/
-      /*.imgItem {*/
-        /*.imgSize {*/
-          /*width: 100%;*/
-          /*position: absolute;*/
-          /*bottom: 50px;*/
-          /*font-size: 18px;*/
-          /*text-align: center;*/
-          /*display: none;*/
-        /*}*/
-        /*.pic_delete{*/
-          /*display: none;*/
-        /*}*/
-        /*&:hover {*/
-          /*img {*/
-            /*filter: blur(2px) !important;*/
-          /*}*/
-          /*.imgSize{display: block}*/
-          /*.pic_delete{*/
-            /*display: block;*/
-          /*}*/
-        /*}*/
-      /*}*/
+    /*min-height: 40px;*/
+    /*box-sizing: border-box;*/
+    /*border: 1px solid #bbb;*/
+    /*border-radius: 4px;*/
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*.imgItem {*/
+    /*.imgSize {*/
+    /*width: 100%;*/
+    /*position: absolute;*/
+    /*bottom: 50px;*/
+    /*font-size: 18px;*/
+    /*text-align: center;*/
+    /*display: none;*/
+    /*}*/
+    /*.pic_delete{*/
+    /*display: none;*/
+    /*}*/
+    /*&:hover {*/
+    /*img {*/
+    /*filter: blur(2px) !important;*/
+    /*}*/
+    /*.imgSize{display: block}*/
+    /*.pic_delete{*/
+    /*display: block;*/
+    /*}*/
+    /*}*/
+    /*}*/
     /*}*/
   }
 </style>

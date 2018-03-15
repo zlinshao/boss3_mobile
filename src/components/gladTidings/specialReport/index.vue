@@ -31,11 +31,7 @@
       <!-- -->
       <div class="aloneModel">
         <div class="title">组长同意截图</div>
-        <div class="upPic">
-          <div class="upButton">
-            <span class="plus">+</span>
-          </div>
-        </div>
+        <UpLoad :ID="upID2" @getImg="getImgData"></UpLoad>
       </div>
       <van-cell-group>
         <van-field
@@ -109,7 +105,8 @@
         message: '',
         totalNumber:1,
         radio:1,
-        upID:"PICID"
+        upID:"PICID",
+        upID2:"PICID2"
       }
     },
     mounted() {
@@ -141,7 +138,7 @@
 
       //照片
       getImgData(val){
-        console.log(val)
+
       }
     },
   }
@@ -153,26 +150,9 @@
     background: #fff;
     width: 100%;
     margin: 5px 0;
+    padding-bottom: 10px;
     .title {
       padding: 10px 15px;
-    }
-    .upPic {
-      padding: 10px 15px;
-      margin: 5px 0;
-      .upButton {
-        width: .9rem;
-        height: .9rem;
-        border-radius: .09rem;
-        background: #eee;
-        display: flex;
-        display: -webkit-flex; /* Safari */
-        align-items: center;
-        justify-content: center;
-        .plus {
-          font-size: .5rem;
-          color: #aaa;
-        }
-      }
     }
   }
 
