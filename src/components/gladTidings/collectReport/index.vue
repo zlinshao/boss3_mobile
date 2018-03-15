@@ -1,17 +1,7 @@
 <template>
   <div id="collectReport">
-    <div class="paddingTitle">收房类型</div>
-    <van-radio-group v-model="form.share">
-      <van-cell-group>
-        <van-cell>
-          <van-radio name="0">整租</van-radio>
-        </van-cell>
-        <van-cell>
-          <van-radio name="1">合租</van-radio>
-        </van-cell>
-      </van-cell-group>
-    </van-radio-group>
     <van-cell-group>
+      <van-switch-cell v-model="checked" title="是否整租"/>
       <van-switch-cell v-model="checked" title="是否未收先租已知"/>
       <van-field
         v-if="!checked"
@@ -258,7 +248,7 @@
         v-model="form.bank"
         label="银行"
         type="text"
-        placeholder="请填写银行"
+        placeholder="请填写银行或填写卡号获取"
         required>
       </van-field>
       <van-field
