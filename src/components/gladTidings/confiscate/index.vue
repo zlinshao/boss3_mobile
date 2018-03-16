@@ -70,7 +70,12 @@
 </template>
 
 <script>
+  import {Toast} from 'vant'
+
   export default {
+    components:{
+      [Toast.name]: Toast,
+    },
     name: "index",
     data() {
       return {
