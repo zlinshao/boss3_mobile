@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="padding-bottom: 100px">
     <div style="margin-bottom: 5px">
       <van-nav-bar
-        title="续租报备"
+        title="尾款房租报备"
         left-text="返回"
         left-arrow
         @click-left="onClickLeft"
@@ -15,7 +15,7 @@
         <van-field label="月单价" placeholder="请输入月单价"></van-field>
         <van-field label="租房月数" placeholder="请输入租房月数"></van-field>
         <van-field label="付款方式" placeholder="请选择付款方式" readonly @focus="show = true"></van-field>
-        <van-field label="总收入定金" placeholder="请输入总收入定金"></van-field>
+        <van-field label="总收入定金" v-model="params.money_sum" placeholder="请输入总收入定金"></van-field>
       </van-cell-group>
 
       <div class="canBeMore" v-for="item in totalNumber">
@@ -24,23 +24,20 @@
           <div style="color: #409EFF" v-if="totalNumber>1" @click="deleteNumber(item-1)">删除</div>
         </div>
         <van-cell-group>
-          <van-field label="定金" placeholder="请输入定金"></van-field>
-          <van-field label="定金方式" placeholder="请选择定金方式" readonly @focus="show = true"></van-field>
+          <van-field label="定金" placeholder="请输入定金" v-model="params.money_sep[item-1]"></van-field>
+          <van-field label="定金方式" placeholder="请选择定金方式"  v-model="params.money_way[item-1]" readonly @focus="showType(item-1)"></van-field>
         </van-cell-group>
       </div>
       <div class="showMore" @click="addNumber">+添加定金详情</div>
       <!-- -->
       <div class="aloneModel">
         <div class="title">截图</div>
-        <div class="upPic">
-          <div class="upButton">
-            <span class="plus">+</span>
-          </div>
-        </div>
+        <UpLoad :ID="'jieTu'" @getImg="getImgData"></UpLoad>
       </div>
+
       <van-cell-group>
         <van-field
-          v-model="message"
+          v-model="params.remark"
           label="备注"
           type="textarea"
           placeholder="请输入备注"
@@ -78,17 +75,23 @@
         :max-date="maxDate"
       ></van-datetime-picker>
     </van-popup>
+
+    <div style="position: fixed;bottom: 0;width: 80%;margin-left: 10%;">
+      <van-button size="large" type="primary" @click="confirmSubmit">提  交</van-button>
+    </div>
   </div>
 </template>
 
 <script>
+  import UpLoad from '../../common/UPLOAD.vue'
   export default {
     name: "index",
+    components:{UpLoad},
     data() {
       return {
         show: false,
         show1: false,
-        columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+        columns: ['1', '2', '3', '4'],
         rentType: '',
         minDate: new Date(1970, 1, 1),
         maxDate: new Date(2519, 10, 1),
@@ -96,6 +99,16 @@
         date: '',
         message: '',
         totalNumber:1,
+
+        params:{
+          contract_id:'13',
+          money_sum:'',
+          money_sep:[],
+          money_way:[],
+          screenshot:[],
+          remark:'',
+        },
+        activeIndex:''
       }
     },
     mounted() {
@@ -107,7 +120,7 @@
         this.$router.push('/gladTidings')
       },
       onChange(picker, value, index) {
-        this.rentType = value;
+        this.params.money_way[this.activeIndex] = value;
       },
       getDate(picker){
         this.date = picker.getValues().join('-');
@@ -124,6 +137,23 @@
       deleteNumber(index){
         this.totalNumber--;
       },
+
+      showType(val){
+          this.show = true
+          this.activeIndex = val;
+      },
+      getImgData(val){
+        this.params.screenshot = val[1]
+      },
+      confirmSubmit(){
+        this.$http.post(globalConfig.server + 'bulletin/retainage',this.params).then((res) => {
+          if(res.data.code === '50910'){
+            this.$toast.success(res.data.msg);
+          }else {
+            this.$toast.fail(res.data.msg);
+          }
+        })
+      }
     },
   }
 </script>
@@ -133,27 +163,10 @@
   .aloneModel {
     background: #fff;
     width: 100%;
-    margin: 5px 0;
+    margin: 5px 0 ;
+    padding-bottom: 10px;
     .title {
       padding: 10px 15px;
-    }
-    .upPic {
-      padding: 10px 15px;
-      margin: 5px 0;
-      .upButton {
-        width: .9rem;
-        height: .9rem;
-        border-radius: .09rem;
-        background: #eee;
-        display: flex;
-        display: -webkit-flex; /* Safari */
-        align-items: center;
-        justify-content: center;
-        .plus {
-          font-size: .5rem;
-          color: #aaa;
-        }
-      }
     }
   }
 

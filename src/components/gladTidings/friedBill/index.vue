@@ -16,27 +16,16 @@
         <van-field label="喜报日期" placeholder="请选择喜报日期" readonly v-model="date" @focus="show1 = true"></van-field>
         <van-field label="月单价" placeholder="请输入月单价"></van-field>
         <van-field label="付款方式" placeholder="请选择付款方式" readonly @focus="show = true"></van-field>
+        <div class="dingJin">
+          <div style="color: #333">定金是否退还</div>
+          <van-switch v-model="checked" ></van-switch>
+        </div>
       </van-cell-group>
-
-      <div class="canBeMore">
-        <div class="title">定金退还</div>
-        <van-radio-group v-model="radio">
-          <van-cell-group>
-            <van-cell><van-radio name="1">是</van-radio></van-cell>
-            <van-cell><van-radio name="2">否</van-radio></van-cell>
-          </van-cell-group>
-        </van-radio-group>
-      </div>
-
 
       <!-- -->
       <div class="aloneModel">
         <div class="title">组长同意截图</div>
-        <div class="upPic">
-          <div class="upButton">
-            <span class="plus">+</span>
-          </div>
-        </div>
+        <UpLoad :ID="'jieTu'" @getImg="getImgData"></UpLoad>
       </div>
       <van-cell-group>
         <van-field
@@ -93,8 +82,10 @@
 </template>
 
 <script>
+  import UpLoad from '../../common/UPLOAD.vue'
   export default {
     name: "index",
+    components:{UpLoad},
     data() {
       return {
         show: false,
@@ -107,7 +98,8 @@
         date: '',
         message: '',
         totalNumber:1,
-        radio:1,
+        radio:'1',
+        checked:true,
       }
     },
     mounted() {
@@ -136,6 +128,10 @@
       deleteNumber(index){
         this.totalNumber--;
       },
+      //照片
+      getImgData(val){
+
+      },
     },
   }
 </script>
@@ -146,32 +142,16 @@
     background: #fff;
     width: 100%;
     margin: 5px 0;
+    padding-bottom: 10px;
     .title {
       padding: 10px 15px;
-    }
-    .upPic {
-      padding: 10px 15px;
-      margin: 5px 0;
-      .upButton {
-        width: .9rem;
-        height: .9rem;
-        border-radius: .09rem;
-        background: #eee;
-        display: flex;
-        display: -webkit-flex; /* Safari */
-        align-items: center;
-        justify-content: center;
-        .plus {
-          font-size: .5rem;
-          color: #aaa;
-        }
-      }
     }
   }
 
   .canBeMore {
     margin: 5px 0 0 0;
     .title {
+      color: #333;
       padding: 10px 15px;
       display: flex;
       display: -webkit-flex; /* Safari */
@@ -179,14 +159,11 @@
       justify-content: space-between;
     }
   }
-  .van-cell {
-    .van-radio__input {
-      float: right;
-      position: static;
-    }
-
-    .van-radio__label {
-      margin: 0;
-    }
+  .dingJin{
+    padding: 10px 15px 10px 0;
+    display: flex;
+    display: -webkit-flex; /* Safari */
+    align-items: center;
+    justify-content:space-between;
   }
 </style>

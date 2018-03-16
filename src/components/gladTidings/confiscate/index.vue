@@ -60,6 +60,12 @@
         :max-date="maxDate"
       ></van-datetime-picker>
     </van-popup>
+
+
+
+    <div style="position: fixed;bottom: 0;width: 80%;margin-left: 10%;">
+      <van-button size="large" type="primary" @click="confirmSubmit">提  交</van-button>
+    </div>
   </div>
 </template>
 
@@ -70,8 +76,8 @@
       return {
         show: false,
         show1: false,
-        columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
-        rentType: '',
+        columns: ['请选择','充公报备', '取消报备'],
+        rentType: '请选择',
         minDate: new Date(1970, 1, 1),
         maxDate: new Date(2519, 10, 1),
         currentDate: new Date(2018, 0, 1),
@@ -79,18 +85,22 @@
         message: '',
         totalNumber:1,
         radio:1,
+        params:{
+          collect_or_rent:1,
+          type:'',
+          contract_id:'11',
+          remark:''
+        }
       }
     },
-    mounted() {
 
-    },
-    watch: {},
     methods: {
       onClickLeft() {
         this.$router.push('/gladTidings')
       },
       onChange(picker, value, index) {
-        this.rentType = value;
+        this.params.type = value =='充公报备'?'0':'1';
+        this.rentType =value;
       },
       getDate(picker){
         this.date = picker.getValues().join('-');
@@ -99,19 +109,20 @@
       onRead(file) {
         console.log(file)
       },
-      //增加报销明细
-      addNumber(){
-        this.totalNumber++;
-      },
-      //删除报销明细
-      deleteNumber(index){
-        this.totalNumber--;
-      },
+      confirmSubmit(){
+        this.$http.post(globalConfig.server + 'bulletin/confiscate',this.params).then((res) => {
+          if(res.data.code === '50610'){
+            this.$toast.success(res.data.msg);
+          }else {
+            this.$toast.fail(res.data.msg);
+          }
+        })
+      }
     },
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped="">
 
   .aloneModel {
     background: #fff;
