@@ -21,8 +21,8 @@ import Examine from '../components/examine/index.vue'
 import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'   //未收先祖
 import ContinueRent from '../components/gladTidings/continueRent/index.vue'   //续租
 import Drawback from '../components/gladTidings/drawbackReport/index.vue'
-import FriedBill from '../components/gladTidings/friedBill/index.vue' //zhadan
-import AgencyRent from '../components/gladTidings/agencyReport/index.vue'   //中介给
+import FriedBill from '../components/gladTidings/friedBill/index.vue'         //zhadan
+import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //中介给
 import Special from '../components/gladTidings/specialReport/index.vue'
 import Confiscate from '../components/gladTidings/confiscate/index.vue'
 import FinalPayment from '../components/gladTidings/finalPayment/index.vue'
@@ -64,7 +64,7 @@ export default new Router({
     },
     {
       path: '/examine',
-      name: 'Examine',
+      name: 'examine',
       component: Examine
     },
     {

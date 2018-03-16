@@ -2,8 +2,8 @@
   <div id="hello">
     <div class="container">
       <div>
-        <router-link to="/gladTidings">喜报</router-link>
-        <router-link to="/examine">审批</router-link>
+        <router-link style="font-size: 30px;" to="/gladTidings">喜报</router-link>
+        <router-link style="font-size: 30px;" to="/examine">审批</router-link>
       </div>
     </div>
   </div>

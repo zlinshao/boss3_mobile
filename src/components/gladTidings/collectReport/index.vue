@@ -1,9 +1,8 @@
 <template>
   <div id="collectReport">
-    <div v-show="!searchShow">
+    <div v-show="!searchShow" class="main">
       <van-cell-group>
         <van-switch-cell v-model="joint" title="是否合租"/>
-        <van-switch-cell v-model="checked" title="是否未收先租已知"/>
         <van-field
           v-if="joint"
           v-model="form.rooms_sum"
@@ -13,22 +12,12 @@
           required>
         </van-field>
         <van-field
-          v-if="!checked"
           v-model="form.community_id"
           label="小区"
           type="text"
           @click="searchShow = true"
           readonly
           placeholder="请选择小区地址"
-          required>
-        </van-field>
-        <van-field
-          v-if="checked"
-          v-model="form.house_id"
-          label="房屋地址"
-          type="text"
-          readonly
-          placeholder="请选择房屋地址"
           required>
         </van-field>
         <van-field
@@ -104,6 +93,7 @@
           required>
         </van-field>
       </van-cell-group>
+
       <div class="changes" v-for="(key,index) in amountPrice">
         <div class="paddingTitle">
           <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
@@ -138,6 +128,7 @@
       <div @click="priceAmount(1)" class="addInput">
         +增加月单价
       </div>
+
       <div class="changes" v-for="(key,index) in amountPay">
         <div class="paddingTitle">
           <span>付款方式<span v-if="amountPay > 1">({{index + 1}})</span></span>
@@ -174,6 +165,7 @@
       <div @click="priceAmount(2)" class="addInput">
         +增加付款方式
       </div>
+
       <van-cell-group>
         <van-field
           v-model="form.vacancy"
@@ -315,7 +307,7 @@
           v-model="form.relationship"
           label="关系"
           type="text"
-          placeholder="请填写收款人与房东"
+          placeholder="请填写收款人与房东关系"
           icon="clear"
           @click-icon="form.relationship = ''"
           required>
@@ -348,12 +340,12 @@
 
         <div class="aloneModel">
           <div class="title">截图</div>
-          <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+          <UpLoad :ID="'collectScreenshot'" @getImg="screenshot"></UpLoad>
         </div>
 
         <div class="aloneModel">
           <div class="title">组长同意截图</div>
-          <UpLoad :ID="'photo'" @getImg="contractPhoto"></UpLoad>
+          <UpLoad :ID="'collectPhoto'" @getImg="contractPhoto"></UpLoad>
         </div>
 
         <van-field
@@ -366,33 +358,34 @@
           required>
         </van-field>
         <van-field
-          v-model="form.staff_id"
+          v-model="staff_name"
           label="开单人"
           type="text"
           placeholder="请选择开单人"
           required>
         </van-field>
         <van-field
-          v-model="form.leader_id"
+          v-model="leader_name"
           label="负责人"
           type="text"
           placeholder="请选择负责人"
           required>
         </van-field>
         <van-field
-          v-model="form.department_id"
+          v-model="department_name"
           label="部门"
           type="text"
           placeholder="请选择部门"
           required>
         </van-field>
       </van-cell-group>
-      <div class="footer">
-        <van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>
-        <van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>
-      </div>
     </div>
-
+    <div v-show="!searchShow" class="footer">
+      <!--<van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>-->
+      <!--<van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>-->
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
+    </div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -447,7 +440,6 @@
         columns: [],              //select值
         selectHide: false,        //房型
         joint: false,             //是否合租
-        checked: false,           //是否未收先租已知
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
@@ -468,8 +460,7 @@
           type: 1,
           draft: 0,
           share: '',                    //合租整租标记 0整租1合租
-          community_id: '',             //小区id
-          house_id: '',                 //房屋地址id
+          community_id: '12',           //小区id
           building: '',                 //栋
           unit: '',                     //单元
           doorplate: '',                //门牌
@@ -504,16 +495,16 @@
           screenshot_leader: '',        //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '',                 //开单人id
-          leader_id: '',                //负责人id
-          department_id: '',            //部门id
+          staff_id: '1',                 //开单人id
+          leader_id: '2',                //负责人id
+          department_id: '3',            //部门id
         },
         roomName: '',                 //室
         hallName: '',                 //厅
         toiletName: '',               //卫
         community_name: '',           //小区name
-        fromName: '个人',                 //客户来源
-        phoneTypeName: '手机',            //电话类型
+        fromName: '个人',             //客户来源
+        phoneTypeName: '手机',        //电话类型
         staff_name: '',               //开单人name
         leader_name: '',              //负责人name
         department_name: '',          //部门name
@@ -525,6 +516,9 @@
     },
     watch: {},
     methods: {
+      hhh() {
+        alert(2)
+      },
       // 搜索
       onSearch() {
         this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
@@ -705,8 +699,6 @@
       },
 
       saveCollect(val) {
-        let money = [];
-        let pay = [];
         if (!this.joint) {
           this.form.share = '0';
         } else {
@@ -715,7 +707,11 @@
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
-
+          if(res.data.code === '50110'){
+            this.$toast.success(res.data.msg);
+          }else{
+            this.$toast(res.data.msg);
+          }
         })
       },
     },
@@ -736,7 +732,7 @@
       right: 0;
       background: #ffffff;
       z-index: 99999;
-      .searchContent{
+      .searchContent {
         overflow: auto;
         height: 77%;
         .searchList {
@@ -765,7 +761,7 @@
     .van-icon.van-icon-checked {
       color: $color;
     }
-    .van-cell.van-hairline.van-field.van-cell--required {
+    .van-cell.van-hairline.van-field {
       .van-cell__title {
         width: 110px;
       }
@@ -791,19 +787,29 @@
       background: #ffffff;
       margin-bottom: 15px;
     }
+    .main {
+      margin-bottom: 1rem;
+    }
+
     .footer {
-      margin-top: 20px;
-      display: flex;
-      display: -webkit-flex;
-      justify-content: space-around;
-      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: .8rem;
       background: #ffffff;
-      button {
-        background: $color;
-        border: 0;
+      padding: 10px;
+      z-index: 6666;
+      @include flex;
+      align-items: center;
+      border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
       }
-      span {
-        color: #FFFFFF;
+      div {
+        width: 50%;
+        text-align: center;
+        color: $color;
       }
     }
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {

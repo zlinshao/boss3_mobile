@@ -1,6 +1,6 @@
 <template>
-  <div id="collectReport">
-    <div v-show="!searchShow">
+  <div id="rentReport">
+    <div v-show="!searchShow" class="main">
       <van-cell-group>
         <van-field
           v-model="form.house_id"
@@ -99,7 +99,7 @@
             required>
           </van-field>
           <van-field
-            @click="selectShow(4,index)"
+            @click="selectShow(1,index)"
             v-model="payTypeNum[index]"
             label="付款方式"
             type="text"
@@ -112,13 +112,55 @@
       <div @click="priceAmount(2)" class="addInput">
         +增加付款方式
       </div>
+
+      <van-cell-group>
+        <van-field
+          v-model="form.money_sum"
+          type="number"
+          label="总金额"
+          placeholder="请填写总金额"
+          icon="clear"
+          @click-icon="form.money_sum = ''"
+          required>
+        </van-field>
+      </van-cell-group>
+
+      <div class="changes" v-for="(key,index) in amountMoney">
+        <div class="paddingTitle">
+          <span>分额付款<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
+        </div>
+        <van-cell-group>
+          <van-field
+            v-model="form.money_sep[index]"
+            type="text"
+            label="分额"
+            placeholder="请填写分额"
+            disabled
+            required>
+          </van-field>
+          <van-field
+            @click="selectShow(2,index)"
+            v-model="moneyNum[index]"
+            label="分额方式"
+            type="text"
+            readonly
+            placeholder="请选择分额方式"
+            required>
+          </van-field>
+        </van-cell-group>
+      </div>
+      <div @click="priceAmount(3)" class="addInput">
+        +增加分额付款
+      </div>
+
       <van-cell-group>
         <van-field
           v-model="form.sign_date"
           label="签约日期"
           readonly
           type="text"
-          @click="timeChoose(4)"
+          @click="timeChoose(2)"
           placeholder="请选择签约日期"
           required>
         </van-field>
@@ -145,7 +187,7 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(4)"
+          @click="timeChoose(3)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
@@ -164,7 +206,7 @@
           type="text"
           readonly
           placeholder="请选择电话类型"
-          @click="selectShow(6,'')"
+          @click="selectShow(2,'')"
           required>
         </van-field>
         <van-field
@@ -178,11 +220,11 @@
         </van-field>
         <div class="aloneModel">
           <div class="title">截图</div>
-          <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+          <UpLoad :ID="'rentScreenshot'" @getImg="screenshot"></UpLoad>
         </div>
         <div class="aloneModel">
           <div class="title">合同照片</div>
-          <UpLoad :ID="'photo'" @getImg="contractPhoto"></UpLoad>
+          <UpLoad :ID="'renPhoto'" @getImg="contractPhoto"></UpLoad>
         </div>
         <van-field
           v-model="form.remark"
@@ -215,10 +257,10 @@
           required>
         </van-field>
       </van-cell-group>
-      <div class="footer">
-        <van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>
-        <van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>
-      </div>
+    </div>
+    <div class="footer" v-if="!searchShow">
+      <van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>
+      <van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>
     </div>
 
 
@@ -290,10 +332,13 @@
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
+        amountMoney: 1,
+        moneyNum: [''],             //分金额 付款方式
+
         form: {
           type: 1,
           draft: 0,
-          contract_id: '',              //房屋地址id
+          contract_id: '12',            //房屋地址id
           month: '',                    //租房月数
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
@@ -303,6 +348,11 @@
 
           pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
+
+          money_sum: '',                //总金额
+          money_sep: [''],              //分金额
+          money_way: [''],              //分金额 方式
+
           property: '',                 //物业费
           sign_date: '',                //签约日期
           retainage_date: '',           //尾款补齐时间
@@ -312,9 +362,9 @@
           screenshot: '',               //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '',                 //开单人id
-          leader_id: '',                //负责人id
-          department_id: '',            //部门id
+          staff_id: '2',                 //开单人id
+          leader_id: '3',                //负责人id
+          department_id: '4',            //部门id
         },
         phoneTypeName: '手机',           //电话类型
         staff_name: '',                  //开单人name
@@ -352,16 +402,7 @@
         let strDate = date.getDate();
         this.currentDate = new Date(year, month, strDate);
       },
-      // 获取银行
-      subAccount(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
-          if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
-          } else {
-            this.form.bank = '';
-          }
-        })
-      },
+
       // 日期选择
       timeChoose(val) {
         this.timeShow = true;
@@ -380,13 +421,10 @@
             this.form.begin_date = this.timeValue;
             break;
           case 2:
-            this.form.pay_first_date = this.timeValue;
+            this.form.sign_date = this.timeValue;
             break;
           case 3:
-            this.form.pay_second_date = this.timeValue;
-            break;
-          case 4:
-            this.form.sign_date = this.timeValue;
+            this.form.retainage_date = this.timeValue;
             break;
         }
       },
@@ -397,21 +435,9 @@
         this.selectHide = true;
         switch (val) {
           case 1:
-            this.columns = ['1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'];
-            break;
-          case 2:
-            this.columns = ['0厅', '1厅', '2厅', '3厅'];
-            break;
-          case 3:
-            this.columns = ['0卫', '1卫', '2卫', '3卫'];
-            break;
-          case 4:
             this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
             break;
-          case 5:
-            this.columns = ['个人', '中介'];
-            break;
-          case 6:
+          case 2:
             this.columns = ['手机', '固话', '小灵通'];
             break;
         }
@@ -420,26 +446,10 @@
       onConfirm(value, index) {
         switch (this.tabs) {
           case 1:
-            this.roomName = value;
-            this.form.room = index;
-            break;
-          case 2:
-            this.hallName = value;
-            this.form.hall = index;
-            break;
-          case 3:
-            this.toiletName = value;
-            this.form.toilet = index;
-            break;
-          case 4:
             this.payTypeNum[this.payIndex] = value;
             this.payType[this.payIndex] = index + 1;
             break;
-          case 5:
-            this.fromName = value;
-            this.form.from = index + 1;
-            break;
-          case 6:
+          case 2:
             this.phoneTypeName = value;
             this.form.phone_type = index + 1;
             break;
@@ -458,37 +468,16 @@
           this.amountPrice++;
           this.form.period_price_arr.push('');
           this.form.price_arr.push('');
-        } else {
+        } else if (val === 2) {
           this.amountPay++;
           this.form.period_pay_arr.push('');
           this.payType.push('');
           this.payTypeNum.push('');
-        }
-      },
-      // 日期计算
-      periodDate(val) {
-        if (val === 1) {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: this.form.period_price_arr,
-            }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
-              this.datePrice = res.data;
-            }
-          })
         } else {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: this.form.period_pay_arr,
-            }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
-              this.datePay = res.data;
-            }
-          })
+          this.amountMoney++;
+          this.form.money_sep.push('');
+          this.form.money_way.push('');
+          this.moneyNum.push('');
         }
       },
       // 删除月单价
@@ -499,20 +488,44 @@
             this.form.period_price_arr.splice(val, 1);
             this.price_arr.splice(val, 1);
           }
-        } else {
+        } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(val, 1);
           this.payType.splice(val, 1);
           this.payTypeNum.splice(val, 1);
+        } else {
+          this.amountMoney--;
+          this.form.money_sep.splice(val, 1);
+          this.form.money_way.splice(val, 1);
+          this.moneyNum.splice(val, 1);
         }
+      },
+      // 日期计算
+      periodDate(val) {
+        let period;
+        if (val === 1) {
+          period = this.form.period_price_arr;
+        } else if (val === 2) {
+          period = this.form.period_pay_arr;
+        } else {
+          period = this.form.period_pay_arr;
+        }
+        this.$http.get(this.urls + '/bulletin/helper/date', {
+          params: {
+            begin_date: this.form.begin_date,
+            period: period
+          }
+        }).then((res) => {
+          if (typeof res.data === 'object') {
+            this.datePrice = res.data;
+          }
+        })
       },
 
       saveCollect(val) {
-        let money = [];
-        let pay = [];
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
-        this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+        this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
 
         })
       },
@@ -521,7 +534,7 @@
 </script>
 
 <style lang="scss">
-  #collectReport {
+  #rentReport {
     @mixin flex {
       display: flex;
       display: -webkit-flex;
@@ -563,7 +576,7 @@
     .van-icon.van-icon-checked {
       color: $color;
     }
-    .van-cell.van-hairline.van-field.van-cell--required {
+    .van-cell.van-hairline.van-field {
       .van-cell__title {
         width: 110px;
       }
@@ -588,6 +601,9 @@
       color: $color;
       background: #ffffff;
       margin-bottom: 15px;
+    }
+    .main{
+      margin-bottom: 1rem;
     }
     .footer {
       margin-top: 20px;

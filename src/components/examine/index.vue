@@ -27,7 +27,7 @@
       <div class="inRough">
         <div class="main">
           <div class="mainTop">
-            <div>
+            <div onclick="alert(2)">
               <span>客服部问题申报</span>
               <span>8</span>
             </div>
@@ -166,7 +166,9 @@
       }
     },
     methods: {
-
+      hhhhhh() {
+        alert(1);
+      }
     }
   }
 </script>
@@ -392,7 +394,7 @@
         .rightTitle {
           border: 0;
           padding: 0;
-          h4{
+          h4 {
             color: $onColor;
           }
         }

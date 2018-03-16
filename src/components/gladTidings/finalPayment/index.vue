@@ -146,10 +146,13 @@
         this.params.screenshot = val[1]
       },
       confirmSubmit(){
+        alert(1);
         this.$http.post(globalConfig.server + 'bulletin/retainage',this.params).then((res) => {
           if(res.data.code === '50910'){
+            alert(2);
             this.$toast.success(res.data.msg);
           }else {
+            alert(3);
             this.$toast.fail(res.data.msg);
           }
         })

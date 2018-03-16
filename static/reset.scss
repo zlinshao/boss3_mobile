@@ -65,20 +65,3 @@ table {
   display: block;
   clear: both;
 }
-
-@mixin flex {
-  display: flex;
-  display: -webkit-flex;
-}
-
-@mixin background_img($img) {
-  background: url($img) no-repeat;
-  -webkit-background-size: 100% 100%;
-  background-size: 100% 100%;
-}
-
-@mixin border_radius($p) {
-  -webkit-border-radius: $p;
-  -moz-border-radius: $p;
-  border-radius: $p;
-}

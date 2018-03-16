@@ -40,12 +40,12 @@
           }
         }
         $('#' + id).remove();
-        _this.uploader.splice(toremove, 1);
+        _this.uploader.files.splice(toremove, 1);
         for (let i = 0; i < _this.imgArray.length; i++) {
           if (_this.imgArray[i].indexOf(id) > -1) {
             _this.imgArray.splice(i, 1)
             _this.imgId.splice(i, 1)
-            _this.$emit('getImg', [_this.ID,_this.imgId, _this.isUploading]);
+            _this.$emit('getImg', [_this.imgId, _this.isUploading]);
           }
         }
       });
@@ -105,6 +105,20 @@
 
               plupload.each(files, function (file) {
                 if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
+//                  document.getElementById('pickfiles').innerHTML += `
+//
+//                  <div class="imgItem" id="${file.id}">
+//                      <div style=" width: .9rem;  height: .9rem; overflow: hidden; position: relative;">
+//                      <img src="" style="width: .9rem; height: .9rem; filter: blur(2px)">
+//                      <div class="imgSize" >${plupload.formatSize(file.size)}</div>
+//                      <div style="width: 100%;position: absolute;bottom: .1rem;font-size:20px;text-align: center;"><b style=""></b></div>
+//                    </div>
+//                    <div style="text-align: center;height: .2rem">
+//                        <a href="javascript:;" class="pic_delete" data-val=${file.id}>删除</a>
+//                    </div>
+//                    </div>
+//
+//                  `;
 
                   $('#pickfiles'+_this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
@@ -256,7 +270,7 @@
         position: absolute;
         top: -.1rem;
         right: -.1rem;
-        z-index: 503333333;
+        z-index: 66;
         background: #333;
         color: #fff;
         font-size: .2rem;
