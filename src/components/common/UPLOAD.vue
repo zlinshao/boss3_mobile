@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div id="container">
-      <!--<div class="btn btn-default btn-lg pickfiles" :id="ID">-->
-      <!--<div style="width: .9rem;height: .9rem;"></div>-->
-      <!--</div>-->
-
+    <div id="container" style="position: relative">
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="upButton" :id="ID">
           <span class="plus">+</span>
@@ -12,6 +8,7 @@
       </div>
 
     </div>
+
   </div>
 </template>
 
@@ -51,7 +48,9 @@
       });
 
       this.getTokenMessage();
-
+      setInterval(()=>{
+          this.uploader.refresh();
+      },1000)
     },
 
     watch: {
@@ -75,19 +74,21 @@
           this.uploaderReady(res.data.data);
         })
       },
-
+      functionTimeout(){
+        this.uploader.refresh();
+      },
       uploaderReady(token) {
         let _this = this;
         _this.uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
-          browse_button: _this.ID,       //上传按钮的ID
+          browse_button: [_this.ID,'dasd']  ,     //上传按钮的ID
           uptoken: token,                     // uptoken是上传凭证，由其他程序生成
 
           get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
           unique_names: true,                 // 默认false，key为文件
           domain: 'http://static.lejias.cn',  // bucket域名，下载资源时用到，必需
 
-          container: 'container',             // 上传区域DOM ID，默认是browser_button的父元素
+//          container: 'container',             // 上传区域DOM ID，默认是browser_button的父元素
           max_file_size: '100mb',             // 最大文件体积限制
           flash_swf_url: 'path/of/plupload/Moxie.swf',  //引入flash，相对路径
           max_retries: 1,                     // 上传失败最大重试次数
@@ -108,11 +109,11 @@
 
                   $('#pickfiles'+_this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
-                      <div style=" width: .9rem;  height: .9rem; position: relative;">
-                        <img src="" style="width: .9rem; height: .9rem; ">
+                      <div style=" width: 1.5rem;  height: 1.5rem; position: relative;">
+                        <img src="" style="width: 1.5rem; height: 1.5rem; ">
                         <div class="progress"><b></b></div>
-                        <div class="remove pic_delete"  data-val=${file.id}>
-                          x
+                        <div class="remove pic_delete van-icon van-icon-close"  data-val=${file.id}>
+
                         </div>
                       </div>
                     </div>
@@ -125,10 +126,10 @@
                     $('#pickfiles'+_this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
                       <div style=" position: relative;">
-                        <img src="${fr.result}" style="width: .9rem; height: .9rem; ">
+                        <img src="${fr.result}" style="width: 1.5rem; height: 1.5rem; ">
                         <div class="progress"><b style="color: #fff !important;"></b></div>
-                        <div class="remove pic_delete"  data-val=${file.id}>
-                          x
+                        <div class="remove pic_delete van-icon van-icon-close"  data-val=${file.id}>
+
                         </div>
                       </div>
                     </div>
@@ -206,18 +207,18 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  .moxie-shim{
-    position: static !important;
-    width: 0 !important;
-    height: 0 !important;
-    input{
-      font-size: 0 !important;
-      opacity: 0;
-      position: static !important;
-      width: 0 !important;
-      height: 0 !important;
-    }
-  }
+  /*.moxie-shim{*/
+    /*position: static !important;*/
+    /*width: 0 !important;*/
+    /*height: 0 !important;*/
+    /*input{*/
+      /*font-size: 0 !important;*/
+      /*opacity: 0;*/
+      /*position: static !important;*/
+      /*width: 0 !important;*/
+      /*height: 0 !important;*/
+    /*}*/
+  /*}*/
 
   #container {
     padding: 0 .1rem;
@@ -230,67 +231,37 @@
         margin-top: .2rem;
       }
       .upButton {
-        width: .9rem;
-        height: .9rem;
+        width: 1.5rem;
+        height: 1.5rem;
         background: #f6f6f6;
         text-align: center;
-        line-height: .8rem;
+        line-height: 1.5rem;
         .plus {
-          font-size: .5rem;
+          font-size: 1rem;
           color: #aaa;
         }
       }
       .progress {
         width: 100%;
         position: absolute;
-        bottom: .3rem;
-        font-size: .3rem;
+        bottom: .5rem;
+        font-size: .5rem;
         text-align: center;
       }
       .remove {
         text-align: center;
-        width: .3rem;
-        height: .3rem;
-        line-height: .22rem;
+        width: .5rem;
+        height: .5rem;
+        line-height: .5rem;
         border-radius: 50%;
         position: absolute;
-        top: -.1rem;
-        right: -.1rem;
-        z-index: 503333333;
+        top: -.2rem;
+        right: -.2rem;
+        z-index: 1;
         background: #333;
         color: #fff;
-        font-size: .2rem;
+        font-size: .5rem;
       }
     }
-    /*.pickfiles {*/
-    /*min-height: 40px;*/
-    /*box-sizing: border-box;*/
-    /*border: 1px solid #bbb;*/
-    /*border-radius: 4px;*/
-    /*display: flex;*/
-    /*flex-wrap: wrap;*/
-    /*.imgItem {*/
-    /*.imgSize {*/
-    /*width: 100%;*/
-    /*position: absolute;*/
-    /*bottom: 50px;*/
-    /*font-size: 18px;*/
-    /*text-align: center;*/
-    /*display: none;*/
-    /*}*/
-    /*.pic_delete{*/
-    /*display: none;*/
-    /*}*/
-    /*&:hover {*/
-    /*img {*/
-    /*filter: blur(2px) !important;*/
-    /*}*/
-    /*.imgSize{display: block}*/
-    /*.pic_delete{*/
-    /*display: block;*/
-    /*}*/
-    /*}*/
-    /*}*/
-    /*}*/
   }
 </style>

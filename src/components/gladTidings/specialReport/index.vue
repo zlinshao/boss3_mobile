@@ -22,17 +22,17 @@
           autosize
         ></van-field>
       </van-cell-group>
-
-      <div class="aloneModel" @click="picType === 'jieTu'">
+      <div class="aloneModel">
+        <div class="title">组长同意截图</div>
+        <UpLoad :ID="'tongYi'" @getImg="getImgData"></UpLoad>
+      </div>
+      <div class="aloneModel">
         <div class="title">截图</div>
         <UpLoad :ID="'jieTu'" @getImg="getImgData"></UpLoad>
       </div>
 
       <!-- -->
-      <div class="aloneModel" @click="picType === 'tongYi'">
-        <div class="title">组长同意截图</div>
-        <UpLoad :ID="'tongYi'" @getImg="getImgData"></UpLoad>
-      </div>
+
       <van-cell-group>
         <!--<van-field-->
           <!--v-model="message"-->
