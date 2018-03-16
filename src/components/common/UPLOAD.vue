@@ -43,15 +43,13 @@
         _this.uploader.files.splice(toremove, 1);
         for (let i = 0; i < _this.imgArray.length; i++) {
           if (_this.imgArray[i].indexOf(id) > -1) {
-            _this.imgArray.splice(i, 1)
-            _this.imgId.splice(i, 1)
+            _this.imgArray.splice(i, 1);
+            _this.imgId.splice(i, 1);
             _this.$emit('getImg', [_this.imgId, _this.isUploading]);
           }
         }
       });
-
       this.getTokenMessage();
-
     },
 
     watch: {
@@ -105,6 +103,7 @@
 
               plupload.each(files, function (file) {
                 if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
+
 //                  document.getElementById('pickfiles').innerHTML += `
 //
 //                  <div class="imgItem" id="${file.id}">

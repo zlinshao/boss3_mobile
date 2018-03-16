@@ -28,11 +28,11 @@
         <UpLoad :ID="'PICID'" @getImg="getImgData1"></UpLoad>
       </div>
 
-      <!-- -->
       <div class="aloneModel">
         <div class="title">组长同意截图</div>
         <UpLoad :ID="'PICID2'" @getImg="getImgData2"></UpLoad>
       </div>
+
       <van-cell-group>
         <van-field
           v-model="message"
