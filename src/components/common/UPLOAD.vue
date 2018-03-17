@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="container" style="position: relative">
+    <div id="container">
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="upButton" :id="ID">
           <span class="plus">+</span>
@@ -52,30 +52,12 @@
           this.uploader.refresh();
       },1000)
     },
-
-    watch: {
-      uploader: {
-        deep: true,
-        handler(val, old){
-
-        }
-      }
-    },
-
     methods: {
-      mouseOver(index){
-        this.activeIndex = index;
-      },
-      mouseOut(){
-        this.activeIndex = null;
-      },
+
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'api/v1/files').then((res) => {
           this.uploaderReady(res.data.data);
         })
-      },
-      functionTimeout(){
-        this.uploader.refresh();
       },
       uploaderReady(token) {
         let _this = this;
@@ -98,12 +80,7 @@
           auto_start: true,                   // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
 
           init: {
-            'PostInit': function () {
-//              document.getElementById(_this.ID).innerHTML = '';
-            },
-
             'FilesAdded': function (up, files) {
-
               plupload.each(files, function (file) {
                 if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
 
@@ -122,7 +99,7 @@
                   let fr = new mOxie.FileReader();
 
                   fr.onload = function () {
-                    // 文件添加进队列后，处理相关的事情
+//                     文件添加进队列后，处理相关的事情
                     $('#pickfiles'+_this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
                       <div style=" position: relative;">
@@ -181,20 +158,20 @@
                 }
               })
             },
-            'Error': function (up, err, errTip) {
+//            Error(up, err, errTip) {
 //              console.log(errTip);
-            },
+//            },
             'UploadComplete': function () {
               //队列文件处理完毕后，处理相关的事情
               _this.isUploading = false;
             },
-            'Key': function (up, file) {
-              // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
-              // 该配置必须要在unique_names: false，save_key: false时才生效
-              let key = "";
-              // do something with key here
-              return key
-            }
+//            'Key': function (up, file) {
+//              // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+//              // 该配置必须要在unique_names: false，save_key: false时才生效
+//              let key = "";
+//              // do something with key here
+//              return key
+//            }
           }
         });
       },
@@ -207,18 +184,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  /*.moxie-shim{*/
-    /*position: static !important;*/
-    /*width: 0 !important;*/
-    /*height: 0 !important;*/
-    /*input{*/
-      /*font-size: 0 !important;*/
-      /*opacity: 0;*/
-      /*position: static !important;*/
-      /*width: 0 !important;*/
-      /*height: 0 !important;*/
-    /*}*/
-  /*}*/
 
   #container {
     padding: 0 .1rem;
@@ -227,8 +192,8 @@
       display: -webkit-flex; /* Safari */
       flex-wrap: wrap;
       > div {
-        margin-left: .2rem;
-        margin-top: .2rem;
+        margin-left: .3rem;
+        margin-top: .3rem;
       }
       .upButton {
         width: 1.5rem;
