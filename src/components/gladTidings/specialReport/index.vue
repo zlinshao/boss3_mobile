@@ -100,7 +100,6 @@
 
       //照片
       getImgData(val){
-          console.log(val)
         if(val[0] === 'tongYi'){
             this.params.screenshot_leader = val[1]
         }else {

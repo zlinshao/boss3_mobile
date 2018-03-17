@@ -13,8 +13,8 @@
       <van-cell-group>
         <div class="checks" style="">
           <div style="min-width: 110px;">收租标记</div>
-          <van-checkbox v-model="checked1">收房</van-checkbox>
-          <van-checkbox v-model="checked2" style="margin-left: 18px">租房</van-checkbox>
+          <van-radio name="0" v-model="form.trans_type">收房</van-radio>
+          <van-radio name="1" v-model="form.trans_type" style="margin-left: 18px">租房</van-radio>
         </div>
       </van-cell-group>
       <van-cell-group>

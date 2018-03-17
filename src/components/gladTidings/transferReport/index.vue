@@ -1,39 +1,38 @@
 <template>
   <div id="transferReport">
-    <div v-show="!searchShow">
+    <div v-show="!searchShow" class="main">
       <van-cell-group>
         <van-field
-          v-model="form.house_id"
-          label="房屋地址"
+          v-model="form.contract_id_rent"
+          label="原房屋地址"
           type="text"
           readonly
-          placeholder="请选择房屋地址"
+          placeholder="请选择原房屋地址"
           required>
         </van-field>
         <van-field
-          v-model="form.house_id"
-          label="房屋地址"
+          v-model="form.contract_id"
+          label="现房屋地址"
           type="text"
           readonly
-          placeholder="请选择房屋地址"
+          placeholder="请选择房现房屋地址"
           required>
         </van-field>
         <van-field
           v-model="form.month"
           type="number"
-          label="租房月数"
-          placeholder="请填写租房月数"
+          label="签约时长"
+          placeholder="请填写签约时长(月数)"
           icon="clear"
           @click-icon="form.month = ''"
           required>
         </van-field>
         <van-field
-          v-model="form.begin_date"
+          v-model="form.sign_date"
           type="text"
-          label="开始时间"
-          placeholder="请选择合同时间"
+          label="开始日期"
+          placeholder="获取开始日期"
           readonly
-          @click="timeChoose(1)"
           required>
         </van-field>
       </van-cell-group>
@@ -144,7 +143,6 @@
             type="text"
             label="分额"
             placeholder="请填写分额"
-            disabled
             required>
           </van-field>
           <van-field
@@ -168,17 +166,17 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(2)"
+          @click="timeChoose(1)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
         <div class="aloneModel">
           <div class="title">截图</div>
-          <UpLoad :ID="'rtransferScreenshot'" @getImg="screenshot"></UpLoad>
+          <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
         </div>
         <div class="aloneModel">
           <div class="title">合同照片</div>
-          <UpLoad :ID="'transferPhoto'" @getImg="contractPhoto"></UpLoad>
+          <UpLoad :ID="'photo'" @getImg="contractPhoto"></UpLoad>
         </div>
         <van-field
           v-model="form.remark"
@@ -190,33 +188,33 @@
           required>
         </van-field>
         <van-field
-          v-model="form.staff_id"
+          v-model="staff_name"
           label="开单人"
           type="text"
           placeholder="请选择开单人"
           required>
         </van-field>
         <van-field
-          v-model="form.leader_id"
+          v-model="leader_name"
           label="负责人"
           type="text"
           placeholder="请选择负责人"
           required>
         </van-field>
         <van-field
-          v-model="form.department_id"
+          v-model="department_name"
           label="部门"
           type="text"
           placeholder="请选择部门"
           required>
         </van-field>
       </van-cell-group>
-      <div class="footer">
-        <van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>
-        <van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>
-      </div>
     </div>
 
+    <div v-show="!searchShow" class="footer">
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
+    </div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -258,15 +256,17 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
+        lists: [],                //搜索
         tabs: '',
         columns: [],              //select值
         selectHide: false,        //select选择
@@ -292,10 +292,10 @@
         form: {
           type: 1,
           draft: 0,
-          contract_id_rent: '',         //原租房合同id
-          contract_id: '',              //现房屋合同id
-          month: '',                    //租房月数
-          begin_date: '',               //合同开始日期
+          contract_id_rent: '22',         //原租房合同id
+          contract_id: '33',              //现房屋合同id
+          month: '',                    //签约时长
+          sign_date: '2080-01-01',                //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -309,17 +309,17 @@
           money_way: [''],              //分金额 方式
 
           retainage_date: '',           //尾款补齐时间
+
           screenshot: '',               //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '',                 //开单人id
-          leader_id: '',                //负责人id
-          department_id: '',            //部门id
+          staff_id: '12',                 //开单人id
+          leader_id: '13',                //负责人id
+          department_id: '16',            //部门id
         },
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
-        lists: [],
       }
     },
     mounted() {
@@ -335,13 +335,11 @@
       },
       // 截图
       screenshot(val) {
-        this.form.screenshot_leader = val[1];
-        console.log(val);
+        this.form.screenshot = val[1];
       },
       // 合同照片
       contractPhoto(val) {
         this.form.photo = val[1];
-        console.log(val);
       },
       // 获取当前时间
       getNowFormatDate() {
@@ -367,9 +365,6 @@
         this.timeShow = false;
         switch (this.timeIndex) {
           case 1:
-            this.form.begin_date = this.timeValue;
-            break;
-          case 2:
             this.form.retainage_date = this.timeValue;
             break;
         }
@@ -450,27 +445,31 @@
       // 日期计算
       periodDate(val) {
         let period;
-        if(val === 1){
+        if (val === 1) {
           period = this.form.period_price_arr;
-        }else{
+        } else {
           period = this.form.period_pay_arr;
         }
-        if (val === 1) {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: period
+        this.$http.get(this.urls + '/bulletin/helper/date', {
+          params: {
+            begin_date: this.form.sign_date,
+            period: period
+          }
+        }).then((res) => {
+          if (res.data.code === '51110') {
+            if (val === 1) {
+              this.datePrice = res.data.data;
+            } else {
+              this.datePay = res.data.data;
             }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
-              this.datePrice = res.data;
-            }
-          })
-        }
+          } else {
+            Toast(res.data.msg);
+          }
+        })
       },
       saveCollect(val) {
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+        this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
 
         })
       },
@@ -484,27 +483,7 @@
       display: flex;
       display: -webkit-flex;
     }
-    .searchClass {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      z-index: 99999;
-      .searchContent {
-        overflow: auto;
-        height: 77%;
-        .searchList {
-          @include flex;
-          justify-content: space-between;
-          padding: 15px 20px;
-          &:hover {
-            background: #DDDDDD;
-          }
-        }
-      }
-    }
+
     $color: #409EFF;
     .aloneModel {
       background: #fff;
@@ -547,19 +526,49 @@
       background: #ffffff;
       margin-bottom: 15px;
     }
-    .footer {
-      margin-top: 20px;
-      display: flex;
-      display: -webkit-flex;
-      justify-content: space-around;
-      padding: 10px;
+    .searchClass {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       background: #ffffff;
-      button {
-        background: $color;
-        border: 0;
+      z-index: 999;
+      .searchContent {
+        overflow: auto;
+        height: 77%;
+        .searchList {
+          @include flex;
+          justify-content: space-between;
+          padding: 15px 20px;
+          &:hover {
+            background: #DDDDDD;
+          }
+        }
       }
-      span {
-        color: #FFFFFF;
+    }
+    .main {
+      margin-bottom: 1.2rem;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1rem;
+      background: #ffffff;
+      padding: 10px;
+      z-index: 666;
+      @include flex;
+      align-items: center;
+      border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
+      }
+      div {
+        width: 50%;
+        text-align: center;
+        color: $color;
       }
     }
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {

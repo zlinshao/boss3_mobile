@@ -3,7 +3,7 @@
     <div v-show="!searchShow" class="main">
       <van-cell-group>
         <van-field
-          v-model="form.house_id"
+          v-model="form.contract_id"
           label="房屋地址"
           type="text"
           readonly
@@ -502,9 +502,9 @@
         }).then((res) => {
           if (res.data.code === '51110') {
             if (val === 1) {
-              this.datePrice = res.data;
+              this.datePrice = res.data.data;
             } else {
-              this.datePay = res.data;
+              this.datePay = res.data.data;
             }
           } else {
             Toast(res.data.msg);
@@ -536,7 +536,7 @@
       left: 0;
       right: 0;
       background: #ffffff;
-      z-index: 99999;
+      z-index: 999;
       .searchContent {
         overflow: auto;
         height: 77%;
@@ -603,7 +603,7 @@
       height: 1rem;
       background: #ffffff;
       padding: 10px;
-      z-index: 6666;
+      z-index: 666;
       @include flex;
       align-items: center;
       border-top: 1px solid #ebebeb;

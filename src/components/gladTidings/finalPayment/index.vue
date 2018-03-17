@@ -28,13 +28,13 @@
           <van-field label="定金方式" placeholder="请选择定金方式"  v-model="params.money_way[item-1]" readonly @focus="showType(item-1)"></van-field>
         </van-cell-group>
       </div>
-      <div class="showMore" @click="addNumber">+添加定金详情</div>
+      <div class="showMore" @click="addNumber">+添加定金详情{{totalNumber}}</div>
       <!-- -->
       <div class="aloneModel">
         <div class="title">截图</div>
         <UpLoad :ID="'jieTu'" @getImg="getImgData"></UpLoad>
       </div>
-
+      <div>{{params.remark}}</div>
       <van-cell-group>
         <van-field
           v-model="params.remark"
@@ -107,7 +107,7 @@
           money_sep:[],
           money_way:[],
           screenshot:[],
-          remark:'',
+          remark:'33333333333',
         },
         activeIndex:''
       }
@@ -133,6 +133,8 @@
       //增加报销明细
       addNumber(){
         this.totalNumber++;
+        this.params.remark = 'hjjjjjjjjjjj'
+
       },
       //删除报销明细
       deleteNumber(index){

@@ -723,27 +723,7 @@
       display: flex;
       display: -webkit-flex;
     }
-    .searchClass {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      z-index: 999;
-      .searchContent {
-        overflow: auto;
-        height: 77%;
-        .searchList {
-          @include flex;
-          justify-content: space-between;
-          padding: 15px 20px;
-          &:hover {
-            background: #DDDDDD;
-          }
-        }
-      }
-    }
+
     $color: #409EFF;
     .aloneModel {
       background: #fff;
@@ -788,6 +768,27 @@
       color: $color;
       background: #ffffff;
       margin-bottom: 15px;
+    }
+    .searchClass {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      z-index: 999;
+      .searchContent {
+        overflow: auto;
+        height: 77%;
+        .searchList {
+          @include flex;
+          justify-content: space-between;
+          padding: 15px 20px;
+          &:hover {
+            background: #DDDDDD;
+          }
+        }
+      }
     }
     .main {
       margin-bottom: 1.2rem;

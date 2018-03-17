@@ -1,9 +1,8 @@
 <template>
   <div id="collectReport">
-    <div v-show="!searchShow">
+    <div v-show="!searchShow" class="main">
       <van-cell-group>
         <van-switch-cell v-model="joint" title="是否合租"/>
-        <van-switch-cell v-model="checked" title="是否未收先租已知"/>
         <van-field
           v-if="joint"
           v-model="form.rooms_sum"
@@ -13,22 +12,12 @@
           required>
         </van-field>
         <van-field
-          v-if="!checked"
           v-model="form.community_id"
           label="小区"
           type="text"
           @click="searchShow = true"
           readonly
           placeholder="请选择小区地址"
-          required>
-        </van-field>
-        <van-field
-          v-if="checked"
-          v-model="form.house_id"
-          label="房屋地址"
-          type="text"
-          readonly
-          placeholder="请选择房屋地址"
           required>
         </van-field>
         <van-field
@@ -104,6 +93,7 @@
           required>
         </van-field>
       </van-cell-group>
+
       <div class="changes" v-for="(key,index) in amountPrice">
         <div class="paddingTitle">
           <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
@@ -121,8 +111,8 @@
           <van-field
             v-model="datePrice[index]"
             type="text"
-            label="款项开始时间"
-            placeholder="款项开始时间"
+            label="开始时间"
+            placeholder="周期开始日期"
             disabled
             required>
           </van-field>
@@ -138,6 +128,7 @@
       <div @click="priceAmount(1)" class="addInput">
         +增加月单价
       </div>
+
       <div class="changes" v-for="(key,index) in amountPay">
         <div class="paddingTitle">
           <span>付款方式<span v-if="amountPay > 1">({{index + 1}})</span></span>
@@ -155,8 +146,8 @@
           <van-field
             v-model="datePay[index]"
             type="text"
-            label="款项开始时间"
-            placeholder="款项开始时间"
+            label="开始时间"
+            placeholder="周期开始日期"
             disabled
             required>
           </van-field>
@@ -174,6 +165,7 @@
       <div @click="priceAmount(2)" class="addInput">
         +增加付款方式
       </div>
+
       <van-cell-group>
         <van-field
           v-model="form.vacancy"
@@ -315,7 +307,7 @@
           v-model="form.relationship"
           label="关系"
           type="text"
-          placeholder="请填写收款人与房东"
+          placeholder="请填写收款人与房东关系"
           icon="clear"
           @click-icon="form.relationship = ''"
           required>
@@ -348,12 +340,12 @@
 
         <div class="aloneModel">
           <div class="title">截图</div>
-          <UpLoad :ID="'continueScreenshot'" @getImg="screenshot"></UpLoad>
+          <UpLoad :ID="'collectScreenshot'" @getImg="screenshot"></UpLoad>
         </div>
 
         <div class="aloneModel">
           <div class="title">组长同意截图</div>
-          <UpLoad :ID="'continuePhoto'" @getImg="contractPhoto"></UpLoad>
+          <UpLoad :ID="'collectPhoto'" @getImg="contractPhoto"></UpLoad>
         </div>
 
         <van-field
@@ -366,33 +358,32 @@
           required>
         </van-field>
         <van-field
-          v-model="form.staff_id"
+          v-model="staff_name"
           label="开单人"
           type="text"
           placeholder="请选择开单人"
           required>
         </van-field>
         <van-field
-          v-model="form.leader_id"
+          v-model="leader_name"
           label="负责人"
           type="text"
           placeholder="请选择负责人"
           required>
         </van-field>
         <van-field
-          v-model="form.department_id"
+          v-model="department_name"
           label="部门"
           type="text"
           placeholder="请选择部门"
           required>
         </van-field>
       </van-cell-group>
-      <div class="footer">
-        <van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>
-        <van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>
-      </div>
     </div>
-
+    <div v-show="!searchShow" class="footer">
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
+    </div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -434,10 +425,11 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
@@ -447,7 +439,6 @@
         columns: [],              //select值
         selectHide: false,        //房型
         joint: false,             //是否合租
-        checked: false,           //是否未收先租已知
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
@@ -465,11 +456,10 @@
         payIndex: '',               //付款方式index
 
         form: {
-          type: 1,
+          type: 0,
           draft: 0,
           share: '',                    //合租整租标记 0整租1合租
-          community_id: '',             //小区id
-          house_id: '',                 //房屋地址id
+          community_id: '12',           //小区id
           building: '',                 //栋
           unit: '',                     //单元
           doorplate: '',                //门牌
@@ -504,16 +494,16 @@
           screenshot_leader: '',        //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '',                 //开单人id
-          leader_id: '',                //负责人id
-          department_id: '',            //部门id
+          staff_id: '1',                 //开单人id
+          leader_id: '2',                //负责人id
+          department_id: '3',            //部门id
         },
         roomName: '',                 //室
         hallName: '',                 //厅
         toiletName: '',               //卫
         community_name: '',           //小区name
-        fromName: '个人',                 //客户来源
-        phoneTypeName: '手机',            //电话类型
+        fromName: '个人',             //客户来源
+        phoneTypeName: '手机',        //电话类型
         staff_name: '',               //开单人name
         leader_name: '',              //负责人name
         department_name: '',          //部门name
@@ -664,29 +654,28 @@
       },
       // 日期计算
       periodDate(val) {
+        let per;
         if (val === 1) {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: this.form.period_price_arr,
-            }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
-              this.datePrice = res.data;
-            }
-          })
+          per = this.form.period_price_arr;
         } else {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: this.form.period_pay_arr,
-            }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
+          per = this.form.period_pay_arr;
+        }
+        this.$http.get(this.urls + '/bulletin/helper/date', {
+          params: {
+            begin_date: this.form.begin_date,
+            period: per,
+          }
+        }).then((res) => {
+          if (res.data.code === '51110') {
+            if (val === 1) {
+              this.datePrice = res.data;
+            } else {
               this.datePay = res.data;
             }
-          })
-        }
+          } else {
+            Toast(res.data.msg);
+          }
+        })
       },
       // 删除月单价
       deleteAmount(index, val) {
@@ -710,10 +699,18 @@
         } else {
           this.form.share = '1';
         }
+        // let num = [];
+        // for (let i = 0; i < this.amountPrice; i++) {
+        //   num.push(Number(this.form.price_arr[i]).toFixed(2));
+        // }
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
-
+          if (res.data.code === '50110') {
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
         })
       },
     },
@@ -726,27 +723,7 @@
       display: flex;
       display: -webkit-flex;
     }
-    .searchClass {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      z-index: 99999;
-      .searchContent{
-        overflow: auto;
-        height: 77%;
-        .searchList {
-          @include flex;
-          justify-content: space-between;
-          padding: 15px 20px;
-          &:hover {
-            background: #DDDDDD;
-          }
-        }
-      }
-    }
+
     $color: #409EFF;
     .aloneModel {
       background: #fff;
@@ -766,6 +743,9 @@
     .van-cell.van-hairline.van-field {
       .van-cell__title {
         width: 110px;
+        span {
+          font-size: 16px;
+        }
       }
       .van-cell__value {
         padding-left: 110px;
@@ -789,19 +769,49 @@
       background: #ffffff;
       margin-bottom: 15px;
     }
-    .footer {
-      margin-top: 20px;
-      display: flex;
-      display: -webkit-flex;
-      justify-content: space-around;
-      padding: 10px;
+    .searchClass {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       background: #ffffff;
-      button {
-        background: $color;
-        border: 0;
+      z-index: 999;
+      .searchContent {
+        overflow: auto;
+        height: 77%;
+        .searchList {
+          @include flex;
+          justify-content: space-between;
+          padding: 15px 20px;
+          &:hover {
+            background: #DDDDDD;
+          }
+        }
       }
-      span {
-        color: #FFFFFF;
+    }
+    .main {
+      margin-bottom: 1.2rem;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1rem;
+      background: #ffffff;
+      padding: 10px;
+      z-index: 666;
+      @include flex;
+      align-items: center;
+      border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
+      }
+      div {
+        width: 50%;
+        text-align: center;
+        color: $color;
       }
     }
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {

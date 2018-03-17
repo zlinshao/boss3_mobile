@@ -1,13 +1,75 @@
 <template>
-  <div id="uncollectBeforeRent">
-    <div v-show="!searchShow">
+  <div id="rentReport">
+    <div v-show="!searchShow" class="main">
       <van-cell-group>
+        <div class="checks">
+          <div style="min-width: 110px;">转租类型</div>
+          <van-radio name="0" v-model="form.trans_type">公司</van-radio>
+          <van-radio name="1" v-model="form.trans_type" style="margin-left: 18px">个人</van-radio>
+        </div>
+      </van-cell-group>
+      <van-cell-group>
+
         <van-field
-          v-model="form.house_id"
+          v-model="form.contract_id"
           label="房屋地址"
           type="text"
           readonly
           placeholder="请选择房屋地址"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.building"
+          type="text"
+          label="栋"
+          placeholder="请填写栋"
+          icon="clear"
+          @click-icon="form.building = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.unit"
+          type="text"
+          label="单元"
+          placeholder="请填写单元"
+          icon="clear"
+          @click-icon="form.unit = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.doorplate"
+          type="text"
+          label="门牌"
+          placeholder="请填写门牌"
+          icon="clear"
+          @click-icon="form.doorplate = ''"
+          required>
+        </van-field>
+        <van-field
+          @click="selectShow(1,'')"
+          v-model="roomName"
+          readonly
+          type="text"
+          label="室"
+          placeholder="请选择室"
+          required>
+        </van-field>
+        <van-field
+          @click="selectShow(2,'')"
+          v-model="hallName"
+          readonly
+          type="text"
+          label="厅"
+          placeholder="请选择厅"
+          required>
+        </van-field>
+        <van-field
+          @click="selectShow(3,'')"
+          v-model="toiletName"
+          readonly
+          type="text"
+          label="卫"
+          placeholder="请选择卫"
           required>
         </van-field>
         <van-field
@@ -20,12 +82,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form.begin_date"
-          type="text"
-          label="开始时间"
-          placeholder="请选择合同时间"
+          v-model="form.sign_date"
+          label="签约日期"
           readonly
+          type="text"
           @click="timeChoose(1)"
+          placeholder="请选择签约日期"
           required>
         </van-field>
       </van-cell-group>
@@ -46,8 +108,8 @@
           <van-field
             v-model="datePrice[index]"
             type="text"
-            label="款项开始时间"
-            placeholder="款项开始时间"
+            label="开始时间"
+            placeholder="周期开始日期"
             disabled
             required>
           </van-field>
@@ -93,13 +155,13 @@
           <van-field
             v-model="datePay[index]"
             type="text"
-            label="款项开始时间"
-            placeholder="款项开始时间"
+            label="开始时间"
+            placeholder="周期开始日期"
             disabled
             required>
           </van-field>
           <van-field
-            @click="selectShow(1,index)"
+            @click="selectShow(4,index)"
             v-model="payTypeNum[index]"
             label="付款方式"
             type="text"
@@ -112,16 +174,48 @@
       <div @click="priceAmount(2)" class="addInput">
         +增加付款方式
       </div>
+
       <van-cell-group>
         <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(2)"
-          placeholder="请选择签约日期"
+          v-model="form.money_sum"
+          type="number"
+          label="总金额"
+          placeholder="请填写总金额"
+          icon="clear"
+          @click-icon="form.money_sum = ''"
           required>
         </van-field>
+      </van-cell-group>
+
+      <div class="changes" v-for="(key,index) in amountMoney">
+        <div class="paddingTitle">
+          <span>分额付款<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
+        </div>
+        <van-cell-group>
+          <van-field
+            v-model="form.money_sep[index]"
+            type="text"
+            label="分额"
+            placeholder="请填写分额"
+            required>
+          </van-field>
+          <van-field
+            @click="selectShow(5,index)"
+            v-model="moneyNum[index]"
+            label="分额方式"
+            type="text"
+            readonly
+            placeholder="请选择分额方式"
+            required>
+          </van-field>
+        </van-cell-group>
+      </div>
+      <div @click="priceAmount(3)" class="addInput">
+        +增加分额付款
+      </div>
+
+      <van-cell-group>
         <van-field
           v-model="form.property"
           label="物业费"
@@ -145,7 +239,7 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(3)"
+          @click="timeChoose(2)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
@@ -164,7 +258,7 @@
           type="text"
           readonly
           placeholder="请选择电话类型"
-          @click="selectShow(2,'')"
+          @click="selectShow(6,'')"
           required>
         </van-field>
         <van-field
@@ -215,10 +309,10 @@
           required>
         </van-field>
       </van-cell-group>
-      <div class="footer">
-        <van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>
-        <van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>
-      </div>
+    </div>
+    <div v-show="!searchShow" class="footer">
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
 
@@ -262,12 +356,15 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad},
+    components: {UpLoad, Toast},
     data() {
       return {
+        checked1: true,          //转租类型
+        checked2: false,          //转租类型
         urls: globalConfig.server,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
@@ -290,12 +387,23 @@
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
+        amountMoney: 1,
+        moneyNum: [''],               //分金额 付款方式
+
         form: {
-          type: 1,
+          type: 3,
           draft: 0,
-          contract_id: '',              //房屋地址id
+          rwc_type: 0,
+          trans_type: '0',              //收租类型
+          contract_id: '12',            //房屋地址id
+          building: '',                 //栋
+          unit: '',                     //单元
+          doorplate: '',                //门牌
+          room: '',                     //室
+          hall: '',                     //厅
+          toilet: '',                   //卫
           month: '',                    //租房月数
-          begin_date: '',               //合同开始日期
+          sign_date: '',                //签约日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -303,8 +411,12 @@
 
           pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
+
+          money_sum: '',                //总金额
+          money_sep: [''],              //分金额
+          money_way: [''],              //分金额 方式
+
           property: '',                 //物业费
-          sign_date: '',                //签约日期
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone_type: '1',              //电话类型 1手机2固话3小灵通
@@ -312,10 +424,13 @@
           screenshot: '',               //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '',                 //开单人id
-          leader_id: '',                //负责人id
-          department_id: '',            //部门id
+          staff_id: '2',                 //开单人id
+          leader_id: '3',                //负责人id
+          department_id: '4',            //部门id
         },
+        roomName: '',                    //室
+        hallName: '',                    //厅
+        toiletName: '',                  //卫
         phoneTypeName: '手机',           //电话类型
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
@@ -336,7 +451,7 @@
       },
       // 截图
       screenshot(val) {
-        this.form.screenshot_leader = val[1];
+        this.form.screenshot = val[1];
         console.log(val);
       },
       // 合同照片
@@ -364,16 +479,12 @@
       },
       // 确认日期
       onDate(val) {
-        console.log(val);
         this.timeShow = false;
         switch (this.timeIndex) {
           case 1:
-            this.form.begin_date = this.timeValue;
-            break;
-          case 2:
             this.form.sign_date = this.timeValue;
             break;
-          case 3:
+          case 2:
             this.form.retainage_date = this.timeValue;
             break;
         }
@@ -385,9 +496,21 @@
         this.selectHide = true;
         switch (val) {
           case 1:
-            this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
+            this.columns = ['1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'];
             break;
           case 2:
+            this.columns = ['0厅', '1厅', '2厅', '3厅'];
+            break;
+          case 3:
+            this.columns = ['0卫', '1卫', '2卫', '3卫'];
+            break;
+          case 4:
+            this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
+            break;
+          case 5:
+            this.columns = ['月付1', '双月付1', '季付1', '半年付1', '年付1'];
+            break;
+          case 6:
             this.columns = ['手机', '固话', '小灵通'];
             break;
         }
@@ -396,10 +519,26 @@
       onConfirm(value, index) {
         switch (this.tabs) {
           case 1:
+            this.roomName = value;
+            this.form.room = index;
+            break;
+          case 2:
+            this.hallName = value;
+            this.form.hall = index;
+            break;
+          case 3:
+            this.toiletName = value;
+            this.form.toilet = index;
+            break;
+          case 4:
             this.payTypeNum[this.payIndex] = value;
             this.payType[this.payIndex] = index + 1;
             break;
-          case 2:
+          case 5:
+            this.moneyNum[this.payIndex] = value;
+            this.form.money_way[this.payIndex] = index + 1;
+            break;
+          case 6:
             this.phoneTypeName = value;
             this.form.phone_type = index + 1;
             break;
@@ -418,37 +557,16 @@
           this.amountPrice++;
           this.form.period_price_arr.push('');
           this.form.price_arr.push('');
-        } else {
+        } else if (val === 2) {
           this.amountPay++;
           this.form.period_pay_arr.push('');
           this.payType.push('');
           this.payTypeNum.push('');
-        }
-      },
-      // 日期计算
-      periodDate(val) {
-        if (val === 1) {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: this.form.period_price_arr,
-            }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
-              this.datePrice = res.data;
-            }
-          })
         } else {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: this.form.period_pay_arr,
-            }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
-              this.datePay = res.data;
-            }
-          })
+          this.amountMoney++;
+          this.form.money_sep.push('');
+          this.form.money_way.push('');
+          this.moneyNum.push('');
         }
       },
       // 删除月单价
@@ -459,12 +577,42 @@
             this.form.period_price_arr.splice(val, 1);
             this.price_arr.splice(val, 1);
           }
-        } else {
+        } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(val, 1);
           this.payType.splice(val, 1);
           this.payTypeNum.splice(val, 1);
+        } else {
+          this.amountMoney--;
+          this.form.money_sep.splice(val, 1);
+          this.form.money_way.splice(val, 1);
+          this.moneyNum.splice(val, 1);
         }
+      },
+      // 日期计算
+      periodDate(val) {
+        let period;
+        if (val === 1) {
+          period = this.form.period_price_arr;
+        } else {
+          period = this.form.period_pay_arr;
+        }
+        this.$http.get(this.urls + '/bulletin/helper/date', {
+          params: {
+            begin_date: this.form.sign_date,
+            period: period
+          }
+        }).then((res) => {
+          if (res.data.code === '51110') {
+            if (val === 1) {
+              this.datePrice = res.data.data;
+            } else {
+              this.datePay = res.data.data;
+            }
+          } else {
+            Toast(res.data.msg);
+          }
+        })
       },
 
       saveCollect(val) {
@@ -479,10 +627,15 @@
 </script>
 
 <style lang="scss">
-  #uncollectBeforeRent {
+  #rentReport {
     @mixin flex {
       display: flex;
       display: -webkit-flex;
+    }
+    .checks {
+      display: -webkit-flex;
+      align-items: center;
+      height: 44px;
     }
     .searchClass {
       position: fixed;
@@ -491,7 +644,7 @@
       left: 0;
       right: 0;
       background: #ffffff;
-      z-index: 99999;
+      z-index: 999;
       .searchContent {
         overflow: auto;
         height: 77%;
@@ -547,19 +700,28 @@
       background: #ffffff;
       margin-bottom: 15px;
     }
+    .main {
+      margin-bottom: 1.2rem;
+    }
     .footer {
-      margin-top: 20px;
-      display: flex;
-      display: -webkit-flex;
-      justify-content: space-around;
-      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1rem;
       background: #ffffff;
-      button {
-        background: $color;
-        border: 0;
+      padding: 10px;
+      z-index: 666;
+      @include flex;
+      align-items: center;
+      border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
       }
-      span {
-        color: #FFFFFF;
+      div {
+        width: 50%;
+        text-align: center;
+        color: $color;
       }
     }
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
