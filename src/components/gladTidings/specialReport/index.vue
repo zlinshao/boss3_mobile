@@ -69,9 +69,14 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import {Toast} from 'vant'
   export default {
     name: "index",
-    components:{UpLoad},
+
+    components:{
+      [Toast.name]: Toast,
+      UpLoad,
+    },
     data() {
       return {
         params:{
