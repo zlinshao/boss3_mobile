@@ -11,6 +11,14 @@
           required>
         </van-field>
         <van-field
+          v-model="form.house_id"
+          label="房屋地址"
+          type="text"
+          readonly
+          placeholder="请选择房屋地址"
+          required>
+        </van-field>
+        <van-field
           v-model="form.month"
           type="number"
           label="租房月数"
@@ -284,7 +292,8 @@
         form: {
           type: 1,
           draft: 0,
-          contract_id: '',              //房屋地址id
+          contract_id_rent: '',         //原租房合同id
+          contract_id: '',              //现房屋合同id
           month: '',                    //租房月数
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价

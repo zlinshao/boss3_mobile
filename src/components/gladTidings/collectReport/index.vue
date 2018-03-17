@@ -111,8 +111,8 @@
           <van-field
             v-model="datePrice[index]"
             type="text"
-            label="款项开始时间"
-            placeholder="款项开始时间"
+            label="开始时间"
+            placeholder="周期开始日期"
             disabled
             required>
           </van-field>
@@ -146,8 +146,8 @@
           <van-field
             v-model="datePay[index]"
             type="text"
-            label="款项开始时间"
-            placeholder="款项开始时间"
+            label="开始时间"
+            placeholder="周期开始日期"
             disabled
             required>
           </van-field>
@@ -381,8 +381,6 @@
       </van-cell-group>
     </div>
     <div v-show="!searchShow" class="footer">
-      <!--<van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>-->
-      <!--<van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>-->
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
@@ -427,10 +425,11 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
@@ -516,9 +515,6 @@
     },
     watch: {},
     methods: {
-      hhh() {
-        alert(2)
-      },
       // 搜索
       onSearch() {
         this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
@@ -658,29 +654,28 @@
       },
       // 日期计算
       periodDate(val) {
+        let per;
         if (val === 1) {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: this.form.period_price_arr,
-            }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
-              this.datePrice = res.data;
-            }
-          })
+          per = this.form.period_price_arr;
         } else {
-          this.$http.get(this.urls + '/bulletin/helper/date', {
-            params: {
-              begin_date: this.form.begin_date,
-              period: this.form.period_pay_arr,
-            }
-          }).then((res) => {
-            if (typeof res.data === 'object') {
+          per = this.form.period_pay_arr;
+        }
+        this.$http.get(this.urls + '/bulletin/helper/date', {
+          params: {
+            begin_date: this.form.begin_date,
+            period: per,
+          }
+        }).then((res) => {
+          if (res.data.code === '51110') {
+            if (val === 1) {
+              this.datePrice = res.data;
+            } else {
               this.datePay = res.data;
             }
-          })
-        }
+          } else {
+            Toast(res.data.msg);
+          }
+        })
       },
       // 删除月单价
       deleteAmount(index, val) {
@@ -704,13 +699,17 @@
         } else {
           this.form.share = '1';
         }
+        // let num = [];
+        // for (let i = 0; i < this.amountPrice; i++) {
+        //   num.push(Number(this.form.price_arr[i]).toFixed(2));
+        // }
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
-          if(res.data.code === '50110'){
-            this.$toast.success(res.data.msg);
-          }else{
-            this.$toast(res.data.msg);
+          if (res.data.code === '50110') {
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
           }
         })
       },
@@ -731,7 +730,7 @@
       left: 0;
       right: 0;
       background: #ffffff;
-      z-index: 99999;
+      z-index: 999;
       .searchContent {
         overflow: auto;
         height: 77%;
@@ -764,6 +763,9 @@
     .van-cell.van-hairline.van-field {
       .van-cell__title {
         width: 110px;
+        span {
+          font-size: 16px;
+        }
       }
       .van-cell__value {
         padding-left: 110px;
@@ -788,18 +790,17 @@
       margin-bottom: 15px;
     }
     .main {
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
     }
-
     .footer {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: .8rem;
+      height: 1rem;
       background: #ffffff;
       padding: 10px;
-      z-index: 6666;
+      z-index: 666;
       @include flex;
       align-items: center;
       border-top: 1px solid #ebebeb;

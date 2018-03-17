@@ -20,12 +20,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form.begin_date"
-          type="text"
-          label="开始时间"
-          placeholder="请选择合同时间"
+          v-model="form.sign_date"
+          label="签约日期"
           readonly
+          type="text"
           @click="timeChoose(1)"
+          placeholder="请选择签约日期"
           required>
         </van-field>
       </van-cell-group>
@@ -46,8 +46,8 @@
           <van-field
             v-model="datePrice[index]"
             type="text"
-            label="款项开始时间"
-            placeholder="款项开始时间"
+            label="开始时间"
+            placeholder="周期开始日期"
             disabled
             required>
           </van-field>
@@ -93,8 +93,8 @@
           <van-field
             v-model="datePay[index]"
             type="text"
-            label="款项开始时间"
-            placeholder="款项开始时间"
+            label="开始时间"
+            placeholder="周期开始日期"
             disabled
             required>
           </van-field>
@@ -136,7 +136,6 @@
             type="text"
             label="分额"
             placeholder="请填写分额"
-            disabled
             required>
           </van-field>
           <van-field
@@ -155,15 +154,6 @@
       </div>
 
       <van-cell-group>
-        <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(2)"
-          placeholder="请选择签约日期"
-          required>
-        </van-field>
         <van-field
           v-model="form.property"
           label="物业费"
@@ -187,7 +177,7 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(3)"
+          @click="timeChoose(2)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
@@ -258,9 +248,9 @@
         </van-field>
       </van-cell-group>
     </div>
-    <div class="footer" v-if="!searchShow">
-      <van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>
-      <van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>
+    <div v-show="!searchShow" class="footer">
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
 
@@ -304,10 +294,11 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
@@ -333,14 +324,14 @@
         payIndex: '',               //付款方式index
 
         amountMoney: 1,
-        moneyNum: [''],             //分金额 付款方式
+        moneyNum: [''],               //分金额 付款方式
 
         form: {
           type: 1,
           draft: 0,
           contract_id: '12',            //房屋地址id
           month: '',                    //租房月数
-          begin_date: '',               //合同开始日期
+          sign_date: '',                //签约日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -354,7 +345,6 @@
           money_way: [''],              //分金额 方式
 
           property: '',                 //物业费
-          sign_date: '',                //签约日期
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone_type: '1',              //电话类型 1手机2固话3小灵通
@@ -414,16 +404,12 @@
       },
       // 确认日期
       onDate(val) {
-        console.log(val);
         this.timeShow = false;
         switch (this.timeIndex) {
           case 1:
-            this.form.begin_date = this.timeValue;
-            break;
-          case 2:
             this.form.sign_date = this.timeValue;
             break;
-          case 3:
+          case 2:
             this.form.retainage_date = this.timeValue;
             break;
         }
@@ -450,8 +436,8 @@
             this.payType[this.payIndex] = index + 1;
             break;
           case 2:
-            this.phoneTypeName = value;
-            this.form.phone_type = index + 1;
+            this.moneyNum[this.payIndex] = value;
+            this.form.money_way[this.payIndex] = index + 1;
             break;
         }
         this.selectHide = false;
@@ -505,19 +491,23 @@
         let period;
         if (val === 1) {
           period = this.form.period_price_arr;
-        } else if (val === 2) {
-          period = this.form.period_pay_arr;
         } else {
           period = this.form.period_pay_arr;
         }
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
-            begin_date: this.form.begin_date,
+            begin_date: this.form.sign_date,
             period: period
           }
         }).then((res) => {
-          if (typeof res.data === 'object') {
-            this.datePrice = res.data;
+          if (res.data.code === '51110') {
+            if (val === 1) {
+              this.datePrice = res.data;
+            } else {
+              this.datePay = res.data;
+            }
+          } else {
+            Toast(res.data.msg);
           }
         })
       },
@@ -602,22 +592,28 @@
       background: #ffffff;
       margin-bottom: 15px;
     }
-    .main{
-      margin-bottom: 1rem;
+    .main {
+      margin-bottom: 1.2rem;
     }
     .footer {
-      margin-top: 20px;
-      display: flex;
-      display: -webkit-flex;
-      justify-content: space-around;
-      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1rem;
       background: #ffffff;
-      button {
-        background: $color;
-        border: 0;
+      padding: 10px;
+      z-index: 6666;
+      @include flex;
+      align-items: center;
+      border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
       }
-      span {
-        color: #FFFFFF;
+      div {
+        width: 50%;
+        text-align: center;
+        color: $color;
       }
     }
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
