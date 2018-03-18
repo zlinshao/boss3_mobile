@@ -21,6 +21,15 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 
+router.beforeEach((to, from, next) => {
+  /* 路由发生变化修改页面title */
+  console.log(to.name);
+  if (to.name) {
+    document.title = to.name;
+  }
+  next();
+});
+
 new Vue({
   el: '#app',
   router,

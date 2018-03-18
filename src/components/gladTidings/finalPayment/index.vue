@@ -1,162 +1,256 @@
 <template>
-  <div style="padding-bottom: 100px">
-    <div style="margin-bottom: 5px">
+  <div id="rentReport">
+    <div class="top">
       <van-nav-bar
         title="尾款房租报备"
         left-text="返回"
         left-arrow
-        @click-left="onClickLeft"
-      ></van-nav-bar>
+        @click-left="routerLink('/gladTidings')">
+      </van-nav-bar>
     </div>
 
-    <div>
+    <div v-show="!searchShow" class="main">
       <van-cell-group>
-        <van-field label="房屋地址" placeholder="请输入房屋地址"></van-field>
-        <van-field label="月单价" placeholder="请输入月单价"></van-field>
-        <van-field label="租房月数" placeholder="请输入租房月数"></van-field>
-        <van-field label="付款方式" placeholder="请选择付款方式" readonly @focus="show = true"></van-field>
-        <van-field label="总收入定金" v-model="params.money_sum" placeholder="请输入总收入定金"></van-field>
+        <van-field
+          v-model="form.contract_id"
+          label="房屋地址"
+          type="text"
+          readonly
+          placeholder="请选择房屋地址"
+          required>
+        </van-field>
+        <van-field
+          v-model="month"
+          type="text"
+          label="租房月数"
+          placeholder="租房月数已禁用"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="price_arr"
+          label="月单价"
+          readonly
+          type="text"
+          placeholder="月单价已禁用"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="payWay"
+          label="付款方式"
+          type="text"
+          placeholder="付款方式已禁用"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="periods"
+          label="房租期数"
+          type="text"
+          placeholder="房租期数已禁用"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="form.money_sum"
+          label="总金额"
+          type="text"
+          placeholder="请填写总金额"
+          required>
+        </van-field>
       </van-cell-group>
 
-      <div class="canBeMore" v-for="item in totalNumber">
-        <div class="title">
-          <div>定金详情({{item}})</div>
-          <div style="color: #409EFF" v-if="totalNumber>1" @click="deleteNumber(item-1)">删除</div>
+      <div class="changes" v-for="(key,index) in amountMoney">
+        <div class="paddingTitle">
+          <span>定金付款<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index)">删除</span>
         </div>
         <van-cell-group>
-          <van-field label="定金" placeholder="请输入定金" v-model="params.money_sep[item-1]"></van-field>
-          <van-field label="定金方式" placeholder="请选择定金方式"  v-model="params.money_way[item-1]" readonly @focus="showType(item-1)"></van-field>
+          <van-field
+            v-model="form.money_sep[index]"
+            type="text"
+            label="分额"
+            placeholder="请填写分额"
+            required>
+          </van-field>
+          <van-field
+            @click="selectShow(index)"
+            v-model="moneyNum[index]"
+            label="分额方式"
+            type="text"
+            readonly
+            placeholder="请选择分额方式"
+            required>
+          </van-field>
         </van-cell-group>
       </div>
-      <div class="showMore" @click="addNumber">+添加定金详情{{totalNumber}}</div>
-      <!-- -->
-      <div class="aloneModel">
-        <div class="title">截图</div>
-        <UpLoad :ID="'jieTu'" @getImg="getImgData"></UpLoad>
+      <div @click="priceAmount" class="addInput">
+        +增加定金
       </div>
-      <div>{{params.remark}}</div>
+
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+      </div>
+
       <van-cell-group>
         <van-field
-          v-model="params.remark"
+          v-model="form.remark"
           label="备注"
-          type="textarea"
-          placeholder="请输入备注"
-          rows="1"
-          autosize
-        ></van-field>
-
+          type="text"
+          placeholder="请填写备注"
+          icon="clear"
+          @click-icon="form.remark = ''">
+        </van-field>
         <van-field
+          v-model="staff_name"
           label="开单人"
-          placeholder="请选择开单人"
-        ></van-field>
+          type="text"
+          disabled
+          placeholder="开单人已禁用">
+        </van-field>
         <van-field
+          v-model="leader_name"
           label="负责人"
+          type="text"
+          readonly
           placeholder="请选择负责人"
-        ></van-field>
+          required>
+        </van-field>
         <van-field
+          v-model="department_name"
           label="部门"
+          type="text"
+          readonly
           placeholder="请选择部门"
-        ></van-field>
+          required>
+        </van-field>
       </van-cell-group>
     </div>
 
+    <div v-if="!searchShow" class="footer" @click="saveCollect()">发布</div>
 
-    <van-popup v-model="show" position="bottom" :overlay-style="{'background':'rgba(0,0,0,.2)'}">
-      <van-picker :columns="columns" @change="onChange"></van-picker>
-    </van-popup>
-
-    <van-popup v-model="show1" position="bottom" :overlay-style="{'background':'rgba(0,0,0,.2)'}">
-      <van-datetime-picker
-        type="date"
-        @cancel='show1 = false'
-        @confirm='show1 = false'
-        @change='getDate'
-        :min-date="minDate"
-        :max-date="maxDate"
-      ></van-datetime-picker>
-    </van-popup>
-
-    <div style="position: fixed;bottom: 0;width: 80%;margin-left: 10%;">
-      <van-button size="large" type="primary" @click="confirmSubmit">提  交</van-button>
+    <div :class="{'searchClass':searchShow}" v-if="searchShow">
+      <van-search
+        v-model="searchValue"
+        show-action
+        @search="onSearch">
+        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
+      </van-search>
+      <div class="searchContent">
+        <div class="searchList" v-for="key in 30">
+          <div>{{key}}</div>
+          <div>{{key}}回复</div>
+        </div>
+      </div>
     </div>
+
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @cancel="onCancel"
+        @confirm="onConfirm"/>
+    </van-popup>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import {Toast} from 'vant'
+  import {Toast} from 'vant';
+
   export default {
     name: "index",
-    components:{UpLoad,[Toast.name]: Toast,},
+    components: {UpLoad, Toast},
     data() {
       return {
-        show: false,
-        show1: false,
-        columns: ['1', '2', '3', '4'],
-        rentType: '',
-        minDate: new Date(1970, 1, 1),
-        maxDate: new Date(2519, 10, 1),
-        currentDate: new Date(2018, 0, 1),
-        date: '',
-        message: '',
-        totalNumber:1,
+        urls: globalConfig.server,
+        searchShow: false,        //搜索
+        searchValue: '',          //搜索
+        tabs: '',
+        columns: [],              //select值
+        selectHide: false,        //select选择
 
-        params:{
-          contract_id:'13',
-          money_sum:'',
-          money_sep:[],
-          money_way:[],
-          screenshot:[],
-          remark:'33333333333',
+        month: '',
+        price_arr: '',
+        payWay: '',
+        periods: '',
+
+
+        amountMoney: 1,
+        moneyNum: [''],               //分金额 付款方式
+        payIndex: '',                 //分金额方式index
+
+        form: {
+          contract_id: '12',            //房屋地址id
+
+          money_sum: '',                //总金额
+          money_sep: [''],              //分金额
+          money_way: [''],              //分金额 方式
+
+          screenshot: '',               //领导截图 数组
+          remark: '',                   //备注
+          staff_id: '2',                 //开单人id
+          leader_id: '3',                //负责人id
+          department_id: '4',            //部门id
         },
-        activeIndex:''
+        staff_name: '',                  //开单人name
+        leader_name: '',                 //负责人name
+        department_name: '',             //部门name
       }
     },
-    mounted() {
 
-    },
-    watch: {},
     methods: {
-      onClickLeft() {
-        this.$router.push('/gladTidings')
+      routerLink(val) {
+        this.$router.push({path: val});
       },
-      onChange(picker, value, index) {
-        this.params.money_way[this.activeIndex] = value;
+      // 搜索
+      onSearch() {
+        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
+          this.lists = res.data.data;
+        })
       },
-      getDate(picker){
-        this.date = picker.getValues().join('-');
+      // 截图
+      screenshot(val) {
+        this.form.screenshot = val[1];
+      },
+      // select 显示
+      selectShow(index) {
+        this.payIndex = index;
+        this.selectHide = true;
+        this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
+
+      },
+      // select选择
+      onConfirm(value, index) {
+        this.moneyNum[this.payIndex] = value;
+        this.form.money_way[this.payIndex] = index + 1;
+        this.selectHide = false;
+      },
+      // select关闭
+      onCancel() {
+        this.searchShow = false;
+        this.selectHide = false;
+      },
+      // 增加 定金
+      priceAmount() {
+        this.amountMoney++;
+        this.form.money_sep.push('');
+        this.form.money_way.push('');
+        this.moneyNum.push('');
+
+      },
+      // 删除 定金
+      deleteAmount(val) {
+        this.amountMoney--;
+        this.form.money_sep.splice(val, 1);
+        this.form.money_way.splice(val, 1);
+        this.moneyNum.splice(val, 1);
       },
 
-      onRead(file) {
-        console.log(file)
-      },
-      //增加报销明细
-      addNumber(){
-        this.totalNumber++;
-        this.params.remark = 'hjjjjjjjjjjj'
-
-      },
-      //删除报销明细
-      deleteNumber(index){
-        this.totalNumber--;
-      },
-
-      showType(val){
-          this.show = true
-          this.activeIndex = val;
-      },
-      getImgData(val){
-        this.params.screenshot = val[1]
-      },
-      confirmSubmit(){
-        alert(1);
-        this.$http.post(globalConfig.server + 'bulletin/retainage',this.params).then((res) => {
-          if(res.data.code === '50910'){
-            alert(2);
+      saveCollect() {
+        this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
+          if (res.data.code === '50910') {
             this.$toast.success(res.data.msg);
-          }else {
-            alert(3);
-            this.$toast.fail(res.data.msg);
+          } else {
+            this.$toast(res.data.msg);
           }
         })
       }
@@ -164,38 +258,128 @@
   }
 </script>
 
-<style scoped lang="scss">
-
-  .aloneModel {
-    background: #fff;
-    width: 100%;
-    margin: 5px 0 ;
-    padding-bottom: 10px;
-    .title {
-      padding: 10px 15px;
-    }
-  }
-
-  .canBeMore {
-    margin: 5px 0 0 0;
-    .title {
-      padding: 10px 15px;
+<style lang="scss">
+  #rentReport {
+    @mixin flex {
       display: flex;
-      display: -webkit-flex; /* Safari */
-      align-items: center;
-      justify-content: space-between;
+      display: -webkit-flex;
     }
-  }
+    .searchClass {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      z-index: 999;
+      .searchContent {
+        overflow: auto;
+        height: 77%;
+        .searchList {
+          @include flex;
+          justify-content: space-between;
+          padding: 15px 20px;
+          &:hover {
+            background: #DDDDDD;
+          }
+        }
+      }
+    }
+    $color: #409EFF;
 
-  .showMore {
-    background: #fff;
-    color: #409EFF;
-    padding: 10px 0;
-    text-align: center;
-    margin-bottom: 5px;
-    cursor: pointer;
-    &:hover{
-      background: #f4f4f4;
+    .van-switch.van-switch--on {
+      background: $color;
+    }
+    .van-icon.van-icon-checked {
+      color: $color;
+    }
+    .van-cell.van-hairline.van-field {
+      .van-cell__title {
+        width: 110px;
+      }
+      .van-cell__value {
+        padding-left: 110px;
+      }
+    }
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: .2rem 0;
+      padding-bottom: .26rem;
+      .title {
+        padding: .26rem .3rem 0;
+      }
+    }
+    .aloneModel.required {
+      .title {
+        padding-left: .2rem;
+        span {
+          color: #f44;
+        }
+      }
+    }
+    .paddingTitle {
+      @include flex;
+      justify-content: space-between;
+      padding: .26rem .3rem;
+      color: #aaaaaa;
+      .colors {
+        color: $color;
+      }
+    }
+    .addInput {
+      height: .9rem;
+      line-height: .9rem;
+      text-align: center;
+      color: $color;
+      background: #ffffff;
+      margin-bottom: .2rem;
+    }
+
+    .top, .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: .9rem;
+      z-index: 666;
+      background: #ffffff;
+    }
+    .main {
+      margin: 1.2rem 0;
+    }
+    .top {
+      top: 0;
+      box-shadow: 0 3px 10px 0 #dddddd;
+      .van-hairline--top-bottom::after {
+        border-bottom: 0;
+      }
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      height: 1rem;
+      line-height: 1rem;
+      text-align: center;
+      background: #ffffff;
+      z-index: 666;
+      color: $color;
+      border-top: 1px solid #ebebeb;
+    }
+
+    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+      color: #dddddd;
+    }
+
+    input::-moz-placeholder, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color: #dddddd;
+    }
+
+    input:-moz-placeholder, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color: #dddddd;
+    }
+
+    input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: #dddddd;
     }
   }
 </style>

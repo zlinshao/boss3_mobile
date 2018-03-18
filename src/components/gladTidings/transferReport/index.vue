@@ -1,7 +1,16 @@
 <template>
   <div id="transferReport">
+    <div class="top">
+      <van-nav-bar
+        title="调房报备"
+        left-text="返回"
+        left-arrow
+        @click-left="routerLink('/gladTidings')">
+      </van-nav-bar>
+    </div>
+
     <div v-show="!searchShow" class="main">
-      <van-cell-group>
+      <van-cell-group style="margin-bottom: .2rem;">
         <van-field
           v-model="form.contract_id_rent"
           label="原房屋地址"
@@ -10,6 +19,43 @@
           placeholder="请选择原房屋地址"
           required>
         </van-field>
+        <van-field
+          v-model="oldForm.price_arr"
+          label="开单人"
+          type="text"
+          disabled
+          placeholder="原房屋开单人已禁用">
+        </van-field>
+        <van-field
+          v-model="oldForm.pay_way_arr"
+          label="原付款方式"
+          type="text"
+          disabled
+          placeholder="原房屋付款方式已禁用">
+        </van-field>
+        <van-field
+          v-model="oldForm.price"
+          label="价格"
+          type="text"
+          disabled
+          placeholder="原房屋价格已禁用">
+        </van-field>
+        <van-field
+          v-model="oldForm.money_sum"
+          label="定金"
+          type="text"
+          disabled
+          placeholder="原房屋定金已禁用">
+        </van-field>
+        <van-field
+          v-model="oldForm.bulletinDate"
+          label="喜报日期"
+          type="text"
+          disabled
+          placeholder="原房屋喜报日期已禁用">
+        </van-field>
+      </van-cell-group>
+      <van-cell-group>
         <van-field
           v-model="form.contract_id"
           label="现房屋地址"
@@ -170,22 +216,26 @@
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
-        <div class="aloneModel">
-          <div class="title">截图</div>
-          <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
-        </div>
-        <div class="aloneModel">
-          <div class="title">合同照片</div>
-          <UpLoad :ID="'photo'" @getImg="contractPhoto"></UpLoad>
-        </div>
+      </van-cell-group>
+
+      <div class="aloneModel">
+        <div class="title">截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+      </div>
+
+      <div class="aloneModel">
+        <div class="title">合同照片</div>
+        <UpLoad :ID="'photo'" @getImg="contractPhoto"></UpLoad>
+      </div>
+
+      <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
           type="text"
           placeholder="请填写备注"
           icon="clear"
-          @click-icon="form.remark = ''"
-          required>
+          @click-icon="form.remark = ''">
         </van-field>
         <van-field
           v-model="staff_name"
@@ -211,10 +261,7 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
-    </div>
+    <div v-if="!searchShow" class="footer" @click="saveCollect()">发布</div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -289,11 +336,19 @@
         amountMoney: 1,
         moneyNum: [''],             //分金额 付款方式
 
+        oldForm:{
+          price_arr: '',
+          pay_way_arr: '',
+          price: '',
+          money_sum: '',
+          bulletinDate: '',
+        },
+
         form: {
           type: 1,
           draft: 0,
-          contract_id_rent: '22',         //原租房合同id
-          contract_id: '33',              //现房屋合同id
+          contract_id_rent: '22',       //原租房合同id
+          contract_id: '33',            //现房屋合同id
           month: '',                    //签约时长
           sign_date: '2080-01-01',                //合同开始日期
           price_arr: [''],              //月单价
@@ -325,8 +380,11 @@
     mounted() {
       this.getNowFormatDate();
     },
-    watch: {},
+
     methods: {
+      routerLink(val) {
+        this.$router.push({path: val});
+      },
       // 搜索
       onSearch() {
         this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
@@ -467,10 +525,13 @@
           }
         })
       },
-      saveCollect(val) {
-        this.form.draft = val;
+      saveCollect() {
         this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
-
+          if(res.data.code === '50510'){
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
         })
       },
     },
@@ -485,15 +546,6 @@
     }
 
     $color: #409EFF;
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: 5px 0;
-      padding-bottom: 10px;
-      .title {
-        padding: 10px 15px;
-      }
-    }
     .van-switch.van-switch--on {
       background: $color;
     }
@@ -507,24 +559,6 @@
       .van-cell__value {
         padding-left: 110px;
       }
-    }
-    .paddingTitle {
-      @include flex;
-      justify-content: space-between;
-      padding: 10px 15px;
-      color: #aaaaaa;
-      .colors {
-        color: $color;
-      }
-    }
-    .addInput {
-      height: 44px;
-      line-height: 24px;
-      padding: 10px 0;
-      text-align: center;
-      color: $color;
-      background: #ffffff;
-      margin-bottom: 15px;
     }
     .searchClass {
       position: fixed;
@@ -547,30 +581,64 @@
         }
       }
     }
+
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: .2rem 0;
+      padding-bottom: .26rem;
+      .title {
+        padding: .26rem .3rem 0;
+      }
+    }
+    .paddingTitle {
+      @include flex;
+      justify-content: space-between;
+      padding: .26rem .3rem;
+      color: #aaaaaa;
+      .colors {
+        color: $color;
+      }
+    }
+    .addInput {
+      height: .9rem;
+      line-height: .9rem;
+      text-align: center;
+      color: $color;
+      background: #ffffff;
+      margin-bottom: .2rem;
+    }
+
+    .top, .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: .9rem;
+      z-index: 666;
+      background: #ffffff;
+    }
     .main {
-      margin-bottom: 1.2rem;
+      margin: 1.2rem 0;
+    }
+    .top {
+      top: 0;
+      box-shadow: 0 3px 10px 0 #dddddd;
+      .van-hairline--top-bottom::after {
+        border-bottom: 0;
+      }
     }
     .footer {
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
       height: 1rem;
+      line-height: 1rem;
+      text-align: center;
       background: #ffffff;
-      padding: 10px;
       z-index: 666;
-      @include flex;
-      align-items: center;
+      color: $color;
       border-top: 1px solid #ebebeb;
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
-      div {
-        width: 50%;
-        text-align: center;
-        color: $color;
-      }
     }
+
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
       color: #dddddd;
     }

@@ -1,59 +1,24 @@
 <template>
   <div>
-    <router-link to="/collectReport">
-      <van-button size="large"> 收房报备</van-button>
-    </router-link>
-    <router-link to="/rentReport">
-      <van-button size="large">租房报备</van-button>
-    </router-link>
-    <router-link to="/transferReport">
-      <van-button size="large">调房报备</van-button>
-    </router-link>
-    <router-link to="/continueCollect">
-      <van-button size="large">续收报备</van-button>
-    </router-link>
+    <div style="margin-bottom: .3rem;">
+      <van-nav-bar
+        title="报备"
+        left-text="返回"
+        left-arrow
+        @click-left="routerLink('/')">
+      </van-nav-bar>
+    </div>
 
-    <router-link to="/unCollectBeforeRent">
-      <van-button size="large">
-        未收先租
-      </van-button>
-    </router-link>
-    <router-link to="/continueRent">
-      <van-button size="large">
-        续租报备
-      </van-button>
-    </router-link>
-
-    <router-link to="/drawback">
-      <van-button size="large">
-        退款报备
-      </van-button>
-    </router-link>
-    <router-link to="/friedBill">
-      <van-button size="large">
-        炸单报备
-      </van-button>
-    </router-link>
-    <router-link to="/agencyRent">
-      <van-button size="large">
-        中介费报备
-      </van-button>
-    </router-link>
-    <router-link to="/special">
-      <van-button size="large">
-        特殊事项报备
-      </van-button>
-    </router-link>
-    <router-link to="/confiscate">
-      <van-button size="large">
-        充公报备
-      </van-button>
-    </router-link>
-    <router-link to="/finalPayment">
-      <van-button size="large">
-        尾款房租报备
-      </van-button>
-    </router-link>
+    <div class="paths">
+      <div class="mainMain">
+        <div v-for="key in paths" v-if="key.hidden === 'glad'" @click="routerLink(key.path)">
+          <p>
+            <i class="iconfont icon-wancheng"></i>
+          </p>
+          <h1>{{key.name}}</h1>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,13 +27,58 @@
     name: 'hello',
     data() {
       return {
-        msg: 'Welcome to Your Vue.js App'
+        paths: [],
+      }
+    },
+    mounted() {
+      this.paths = this.$router.options.routes;
+    },
+    methods: {
+      routerLink(val) {
+        this.$router.push({path: val});
       }
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss">
+  .paths {
+    background: #ffffff;
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
+    }
 
+    @mixin border_radius($p) {
+      -webkit-border-radius: $p;
+      -moz-border-radius: $p;
+      border-radius: $p;
+    }
+    .mainMain {
+      padding: .3rem 0 .6rem;
+      @include flex;
+      flex-wrap: wrap;
+      div {
+        width: 25%;
+        text-align: center;
+        P {
+          margin: .3rem auto .2rem;
+          @include border_radius(6px);
+          background: red;
+          width: .86rem;
+          height: .86rem;
+          line-height: .86rem;
+          i {
+            color: #ffffff;
+          }
+        }
+        h1 {
+          font-size: .24rem;
+          padding: 0 .1rem;
+          line-height: .36rem;
+        }
+      }
+    }
+  }
 </style>

@@ -35,33 +35,90 @@ export default new Router({
     {
       path: '/',
       name: 'index',
+      hidden: false,
       component: Index
-    },
-    {
-      path: '/collectReport',               //收房报备
-      name: 'collectReport',
-      component: CollectReport
-    },
-    {
-      path: '/rentReport',                 //租房报备
-      name: 'rentReport',
-      component: RentReport
-    },
-    {
-      path: '/transferReport',              //调房报备
-      name: 'transferReport',
-      component: TransferReport
-    },
-    {
-      path: '/continueCollect',              //续收报备
-      name: 'continueCollect',
-      component: ContinueCollect
     },
     {
       path: '/gladTidings',
       name: 'gladTidings',
+      hidden: false,
       component: GladTidings
     },
+    {
+      path: '/collectReport',               //收房报备
+      name: '收房报备',
+      hidden: 'glad',
+      component: CollectReport
+    },
+    {
+      path: '/rentReport',                 //租房报备
+      name: '租房报备',
+      hidden: 'glad',
+      component: RentReport
+    },
+    {
+      path: '/transferReport',              //调房报备
+      name: '调房报备',
+      hidden: 'glad',
+      component: TransferReport
+    },
+    {
+      path: '/continueCollect',              //续收报备
+      name: '续收报备',
+      hidden: 'glad',
+      component: ContinueCollect
+    },
+    {
+      path: '/unCollectBeforeRent',
+      name: '未收先租',
+      hidden: 'glad',
+      component: UncollectBeforeRent
+    },
+    {
+      path: '/continueRent',
+      name: '续租报备',
+      hidden: 'glad',
+      component: ContinueRent
+    },
+    {
+      path: '/drawback',
+      name: '退款报备',
+      hidden: 'glad',
+      component: Drawback
+    },
+    {
+      path: '/friedBill',
+      name: '炸单报备',
+      hidden: 'glad',
+      component: FriedBill
+    },
+    {
+      path: '/agencyRent',
+      name: '中介费报备',
+      hidden: 'glad',
+      component: AgencyRent
+    },
+    {
+      path: '/special',
+      hidden: 'glad',
+      name: '特殊事项报备',
+      component: Special
+    },
+    {
+      path: '/confiscate',
+      name: '充公报备',
+      hidden: 'glad',
+      component: Confiscate
+    },
+    {
+      path: '/finalPayment',
+      name: '尾款房租报备',
+      hidden: 'glad',
+      component: FinalPayment
+    },
+
+
+
     {
       path: '/examine',
       name: 'examine',
@@ -74,71 +131,27 @@ export default new Router({
     },
     {
       path: '/expense',
+      hidden: 'examine',
       name: '研发部报销申请',
       component: Expense
     },
     {
       path: '/warning',
       name: '警告',
+      hidden: 'examine',
       component: Warning
     },
     {
       path: '/cardDetail',
       name: '研发补卡申请详情',
+      hidden: 'examine',
       component: CardDetail
     },
     {
       path: '/creditCard',
       name: '研发补卡申请',
+      hidden: 'examine',
       component: CreditCard
-    },
-    {
-      path: '/unCollectBeforeRent',
-      hidden: true,
-      name: '未收先租',
-      component: UncollectBeforeRent
-    },
-    {
-      path: '/continueRent',
-      hidden: true,
-      name: '续租报备',
-      component: ContinueRent
-    },
-    {
-      path: '/drawback',
-      hidden: true,
-      name: '退款报备',
-      component: Drawback
-    },
-    {
-      path: '/friedBill',
-      hidden: true,
-      name: '炸单报备',
-      component: FriedBill
-    },
-    {
-      path: '/agencyRent',
-      hidden: true,
-      name: '中介费报备',
-      component: AgencyRent
-    },
-    {
-      path: '/special',
-      hidden: true,
-      name: '特殊事项报备',
-      component: Special
-    },
-    {
-      path: '/confiscate',
-      hidden: true,
-      name: '充公报备',
-      component: Confiscate
-    },
-    {
-      path: '/finalPayment',
-      hidden: true,
-      name: '尾款房租报备',
-      component: FinalPayment
     },
   ]
 })

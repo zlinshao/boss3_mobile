@@ -1,5 +1,14 @@
 <template>
   <div id="collectReport">
+    <div class="top">
+      <van-nav-bar
+        title="收房报备"
+        left-text="返回"
+        left-arrow
+        @click-left="routerLink('/gladTidings')">
+      </van-nav-bar>
+    </div>
+
     <div v-show="!searchShow" class="main">
       <van-cell-group>
         <van-switch-cell v-model="joint" title="是否合租"/>
@@ -92,6 +101,24 @@
           @click="timeChoose(1)"
           required>
         </van-field>
+        <van-field
+          v-model="form.pay_first_date"
+          label="打房租日期"
+          readonly
+          type="text"
+          @click="timeChoose(2)"
+          placeholder="第一次打房租日期"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.pay_second_date"
+          label="打房租日期"
+          readonly
+          type="text"
+          @click="timeChoose(3)"
+          placeholder="第二次打房租日期"
+          required>
+        </van-field>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amountPrice">
@@ -112,7 +139,7 @@
             v-model="datePrice[index]"
             type="text"
             label="开始时间"
-            placeholder="周期开始日期"
+            placeholder="获取周期开始日期"
             disabled
             required>
           </van-field>
@@ -147,7 +174,7 @@
             v-model="datePay[index]"
             type="text"
             label="开始时间"
-            placeholder="周期开始日期"
+            placeholder="获取周期开始日期"
             disabled
             required>
           </van-field>
@@ -162,7 +189,7 @@
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(2)" class="addInput">
+      <div @click="priceAmount(2)" class="addInput bottom">
         +增加付款方式
       </div>
 
@@ -210,24 +237,6 @@
           placeholder="请填写物业费付款人"
           icon="clear"
           @click-icon="form.property_payer = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.pay_first_date"
-          label="打房租日期"
-          readonly
-          type="text"
-          @click="timeChoose(2)"
-          placeholder="第一次打房租日期"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.pay_second_date"
-          label="打房租日期"
-          readonly
-          type="text"
-          @click="timeChoose(3)"
-          placeholder="第二次打房租日期"
           required>
         </van-field>
         <van-field
@@ -321,13 +330,6 @@
           @click-icon="form.penalty = ''"
           required>
         </van-field>
-        <!--<van-field-->
-        <!--v-model="form.type"-->
-        <!--label="匹配租房信息"-->
-        <!--type="text"-->
-        <!--placeholder="请选择租房信息"-->
-        <!--required>-->
-        <!--</van-field>-->
         <van-field
           v-model="form.contract_id"
           label="合同编号"
@@ -337,25 +339,26 @@
           @click-icon="form.contract_id = ''"
           required>
         </van-field>
+      </van-cell-group>
 
-        <div class="aloneModel">
-          <div class="title">截图</div>
-          <UpLoad :ID="'collectScreenshot'" @getImg="screenshot"></UpLoad>
-        </div>
+      <div class="aloneModel">
+        <div class="title">截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
+      </div>
 
-        <div class="aloneModel">
-          <div class="title">组长同意截图</div>
-          <UpLoad :ID="'collectPhoto'" @getImg="contractPhoto"></UpLoad>
-        </div>
+      <div class="aloneModel">
+        <div class="title">组长同意截图</div>
+        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
+      </div>
 
+      <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
           type="text"
           placeholder="请填写备注"
           icon="clear"
-          @click-icon="form.remark = ''"
-          required>
+          @click-icon="form.remark = ''">
         </van-field>
         <van-field
           v-model="staff_name"
@@ -513,24 +516,31 @@
     mounted() {
       this.getNowFormatDate();
     },
-    watch: {},
     methods: {
+      routerLink(val) {
+        this.$router.push({path: val});
+      },
       // 搜索
       onSearch() {
         this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
           this.lists = res.data.data;
         })
       },
-      // 截图
-      screenshot(val) {
-        this.form.screenshot_leader = val[1];
-        console.log(val);
+      // select关闭
+      onCancel() {
+        this.searchShow = false;
+        this.selectHide = false;
+        this.timeShow = false;
       },
-      // 合同照片
-      contractPhoto(val) {
-        this.form.photo = val[1];
-        console.log(val);
+
+      getImgData(val) {
+        if (val[0] === 'screenshot') {
+          this.form.screenshot_leader = val[1];
+        } else {
+          this.form.photo = val[1];
+        }
       },
+
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -633,12 +643,7 @@
         }
         this.selectHide = false;
       },
-      // select关闭
-      onCancel() {
-        this.searchShow = false;
-        this.selectHide = false;
-        this.timeShow = false;
-      },
+
       // 月单价增加
       priceAmount(val) {
         if (val === 1) {
@@ -662,7 +667,7 @@
         }
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
-            begin_date: this.form.begin_date,
+            begin_date: this.form.pay_first_date,
             period: per,
           }
         }).then((res) => {
@@ -694,15 +699,7 @@
       },
 
       saveCollect(val) {
-        if (!this.joint) {
-          this.form.share = '0';
-        } else {
-          this.form.share = '1';
-        }
-        // let num = [];
-        // for (let i = 0; i < this.amountPrice; i++) {
-        //   num.push(Number(this.form.price_arr[i]).toFixed(2));
-        // }
+        this.form.share = this.joint ? '1' : '0';
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
@@ -725,15 +722,6 @@
     }
 
     $color: #409EFF;
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: 5px 0;
-      padding-bottom: 10px;
-      .title {
-        padding: 10px 15px;
-      }
-    }
     .van-switch.van-switch--on {
       background: $color;
     }
@@ -751,23 +739,33 @@
         padding-left: 110px;
       }
     }
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: .2rem 0;
+      padding-bottom: .26rem;
+      .title {
+        padding: .26rem .3rem 0;
+      }
+    }
     .paddingTitle {
       @include flex;
       justify-content: space-between;
-      padding: 10px 15px;
+      padding: .26rem .3rem;
       color: #aaaaaa;
       .colors {
         color: $color;
       }
     }
     .addInput {
-      height: 44px;
-      line-height: 24px;
-      padding: 10px 0;
+      height: .88rem;
+      line-height: .88rem;
       text-align: center;
       color: $color;
       background: #ffffff;
-      margin-bottom: 15px;
+    }
+    .addInput.bottom {
+      margin-bottom: .2rem;
     }
     .searchClass {
       position: fixed;
@@ -790,18 +788,29 @@
         }
       }
     }
-    .main {
-      margin-bottom: 1.2rem;
-    }
-    .footer {
+    .top, .footer {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
-      height: 1rem;
-      background: #ffffff;
-      padding: 10px;
+      height: .9rem;
       z-index: 666;
+      background: #ffffff;
+    }
+
+    .main {
+      margin: 1.2rem 0;
+    }
+    .top {
+      top: 0;
+      box-shadow: 0 3px 10px 0 #dddddd;
+      .van-hairline--top-bottom::after {
+        border-bottom: 0;
+      }
+    }
+    .footer {
+      bottom: 0;
+      height: 1rem;
+      padding: 10px;
       @include flex;
       align-items: center;
       border-top: 1px solid #ebebeb;

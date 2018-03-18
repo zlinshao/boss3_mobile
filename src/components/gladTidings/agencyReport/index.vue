@@ -1,176 +1,371 @@
 <template>
-  <div style="padding-bottom: 100px">
-    <div style="margin-bottom: 5px">
+  <div id="drawbackReport">
+    <div class="top">
       <van-nav-bar
         title="中介费报备"
         left-text="返回"
         left-arrow
-        @click-left="onClickLeft"
-      ></van-nav-bar>
+        @click-left="routerLink('/gladTidings')">
+      </van-nav-bar>
     </div>
 
-    <van-cell-group>
-      <van-field label="中介费" required placeholder="请输入中介费"></van-field>
-      <van-field label="收房状态" v-model="rentType" required placeholder="请选择收房状态" readonly @focus="show = true"></van-field>
-      <van-field label="地址" required placeholder="请选择地址"></van-field>
-      <van-field label="付款方式" placeholder="请选择付款方式" readonly @focus="show = true"></van-field>
-      <van-field label="月单价" placeholder="情书如月单价" ></van-field>
-      <van-field label="银行" required placeholder="请输入选择银行" readonly @focus="show = true"></van-field>
-      <van-field label="开户名" required v-model="params.account" placeholder="请选择开户名"></van-field>
-      <van-field label="支行" required v-model="params.subbranch" placeholder="请输入支行"></van-field>
-      <van-field label="卡号" required v-model="params.account_name" placeholder="请输入卡号"></van-field>
-      <van-field label="中介名称" required v-model="params.name" placeholder="请输入中介名称"></van-field>
-    </van-cell-group>
+    <div v-show="!searchShow" class="main">
+      <van-cell-group>
+        <div class="checks" style="">
+          <div style="min-width: 110px;">收租标记</div>
+          <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
+          <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
+        </div>
+      </van-cell-group>
+      <van-cell-group>
+        <van-field
+          v-model="form.contract_id"
+          label="房屋地址"
+          type="text"
+          readonly
+          placeholder="请选择房屋地址"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.amount"
+          type="number"
+          label="中介费"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.amount = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="payWay"
+          type="text"
+          label="付款方式"
+          placeholder="付款方式已禁用"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="monthPrice"
+          type="text"
+          label="月单价"
+          placeholder="月单价已禁用"
+          disabled>
+        </van-field>
 
-    <div v-if="rentType === '租房'">
+        <van-field
+          v-model="form.account"
+          label="卡号"
+          type="number"
+          @keyup="subAccount(form.account)"
+          placeholder="请填写卡号"
+          icon="clear"
+          @click-icon="form.account = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.bank"
+          label="银行"
+          type="text"
+          placeholder="请填写银行名称"
+          icon="clear"
+          @click-icon="form.bank = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.subbranch"
+          label="支行"
+          type="text"
+          placeholder="请填写支行"
+          icon="clear"
+          @click-icon="form.subbranch = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.account_name"
+          label="开户名"
+          type="text"
+          placeholder="请填写开户名"
+          icon="clear"
+          @click-icon="form.account_name = ''"
+          required>
+        </van-field>
+      </van-cell-group>
       <van-cell-group>
         <div class="dingJin">
-          <div style="color: #333">定金是否退还</div>
-          <van-switch v-model="params.settle" ></van-switch>
+          <div>是否结清</div>
+          <van-switch v-model="form.settleStatus"></van-switch>
         </div>
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">组长同意截图</div>
-        <UpLoad :ID="'jieTu'" @getImg="getImgData"></UpLoad>
+        <div class="title">领导同意截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
       </div>
+      <van-cell-group>
+        <van-field
+          v-model="form.remark"
+          label="备注"
+          type="text"
+          placeholder="请填写备注"
+          icon="clear"
+          @click-icon="form.remark = ''">
+        </van-field>
+        <van-field
+          v-model="staff_name"
+          label="开单人"
+          type="text"
+          placeholder="请选择开单人"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="leader_name"
+          label="负责人"
+          type="text"
+          placeholder="请选择负责人"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="department_name"
+          label="部门"
+          type="text"
+          placeholder="请选择部门"
+          disabled>
+        </van-field>
+      </van-cell-group>
     </div>
 
-    <div class="aloneModel">
-      <div class="title">特殊情况要有领导报备截图</div>
-      <UpLoad :ID="'lingDao'" @getImg="getImgData"></UpLoad>
-    </div>
+    <div v-if="!searchShow" class="footer" @click="saveCollect()">发布</div>
 
-    <van-cell-group>
-      <van-field
-        v-model="params.remark"
-        label="备注"
-        type="textarea"
-        placeholder="请输入备注"
-        rows="1"
-        autosize
-      ></van-field>
-
-      <van-field
-        label="开单人"
-        placeholder="请选择开单人"
-      ></van-field>
-      <van-field
-        label="负责人"
-        placeholder="请选择负责人"
-      ></van-field>
-      <van-field
-        label="部门"
-        placeholder="请选择部门"
-      ></van-field>
-    </van-cell-group>
-
-    <van-popup v-model="show" position="bottom" :overlay-style="{'background':'rgba(0,0,0,.2)'}">
-      <van-picker :columns="contract_id" @change="onChange"></van-picker>
-    </van-popup>
-
-
-    <div style="position: fixed;bottom: 0;width: 80%;margin-left: 10%;">
-      <van-button size="large" type="primary" @click="confirmSubmit">提  交</van-button>
+    <div :class="{'searchClass':searchShow}" v-if="searchShow">
+      <van-search
+        v-model="searchValue"
+        show-action
+        @search="onSearch">
+        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
+      </van-search>
+      <div class="searchContent">
+        <div class="searchList" v-for="key in 30">
+          <div>{{key}}</div>
+          <div>{{key}}回复</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import {Toast} from 'vant'
+  import {Toast} from 'vant';
+
   export default {
     name: "index",
-    components:{UpLoad, [Toast.name]: Toast,},
+    components: {UpLoad, Toast},
     data() {
       return {
-        show: false,
-        rentType:'',
-        columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
-        contract_id:['收房','租房'],
-        message:'',
-        radio:1,
-        params:{
-          collect_or_rent: "0",                 //"collect_or_rent"	收租标记 0收房1租房
-          contract_id: "2",                      //"contract_id"	合同id
-          amount: "123123",                     //"amount"	数量
-          bank: "njbank",                       //"bank"	银行名称
-          subbranch: "hsroad",                  //"subbranch"	支行名称
-          account_name: "qsl",                  //"account_name"	帐户名称
-          account: "123123123123123",           //"account"	帐号
-          name: "qsl",                          //"name"	中介名称
-          settle: false,                          //"settle"	是否结清 0否1是
-          screenshot: [],                       //"screenshot"	结清截图 数组
-          screenshot_leader: [],                //"screenshot_leader"	领导同意截图 数组
-          remark: "123",                        //"remark"	备注
-          staff_id: "11",                       //"staff_id"	开单人id
-          leader_id: "1",                       //"leader_id"	负责人id
-          department_id: "1"                    //"leader_id"	负责人id
-        }
+        urls: globalConfig.server,
+        searchShow: false,        //搜索
+        searchValue: '',          //搜索
+        settleStatus: false,      //是否结清
+
+        payWay: '',         //付款方式
+        monthPrice: '',     //月单价
+
+        form: {
+          collect_or_rent: '0',
+          contract_id: '12',            //房屋地址id
+          amount: '',                   //数量
+          bank: '',                     //银行名称
+          subbranch: '',                //支行名称
+          account_name: '',             //帐户名称
+          account: '',                  //帐号
+          name: '',                     //中介名称
+          settle: '0',                  //是否结清
+          screenshot: '',               //结清截图
+          screenshot_leader: '',        //领导同意截图
+          remark: '',                   //备注
+          staff_id: '1',                //开单人id
+          leader_id: '2',               //负责人id
+          department_id: '3',           //部门id
+        },
+        staff_name: '',                 //开单人name
+        leader_name: '',                //负责人name
+        department_name: '',            //部门name
+        lists: [],
       }
     },
-    mounted() {
-    },
-    watch: {},
-    methods: {
-      onClickLeft() {
-        this.$router.push('/gladTidings')
-      },
-      onChange(picker, value, index) {
-        this.rentType = value;
-      },
-      getImgData(val){
 
+    methods: {
+      routerLink(val) {
+        this.$router.push({path: val});
       },
-      //确认提交
-      confirmSubmit(){
-        this.$http.post(globalConfig.server + 'bulletin/agency',this.params).then((res) => {
-          if(res.data.code === '50310'){
-            this.$toast.success(res.data.msg);
-          }else {
-            this.$toast.fail(res.data.msg);
+      // 搜索
+      onSearch() {
+        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
+          this.lists = res.data.data;
+        })
+      },
+      screenshot(val) {
+        this.form.screenshot_leader = val[1];
+      },
+      // 获取银行
+      subAccount(val) {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+          if (res.data.code === '51110') {
+            this.form.bank = res.data.data;
+          } else {
+            this.form.bank = '';
           }
         })
-      }
+      },
+      // select关闭
+      onCancel() {
+        this.searchShow = false;
+      },
+
+      saveCollect() {
+        if (this.settleStatus) {
+          this.form.settle = '1';
+        } else {
+          this.form.settle = '0';
+        }
+        this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
+          if (res.data.code === '50810') {
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
+        })
+      },
     },
   }
 </script>
 
 <style lang="scss">
-  .aloneModel {
-    background: #fff;
-    width: 100%;
-    margin: 5px 0;
-    padding-bottom: 10px;
-    .title {
-      padding: 10px 15px;
+  #drawbackReport {
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
     }
-  }
-  .canBeMore {
-    margin: 5px 0 0 0;
-    .title {
-      padding: 10px 15px;
+    .checks {
+      display: -webkit-flex;
+      align-items: center;
+      height: 44px;
+    }
+    $color: #409EFF;
+    .van-switch.van-switch--on {
+      background: $color;
+    }
+    .van-icon.van-icon-checked {
+      color: $color;
+    }
+    .van-cell.van-hairline.van-field {
+      .van-cell__title {
+        width: 110px;
+      }
+      .van-cell__value {
+        padding-left: 110px;
+      }
+    }
+
+    .dingJin {
+      padding: 10px 15px 10px 0;
       display: flex;
       display: -webkit-flex; /* Safari */
       align-items: center;
       justify-content: space-between;
     }
-  }
-  /*.van-cell {*/
-    /*.van-radio__input {*/
-      /*float: right;*/
-      /*position: static;*/
-    /*}*/
 
-    /*.van-radio__label {*/
-      /*margin: 0;*/
-    /*}*/
-  /*}*/
-  .dingJin{
-    padding: 10px 15px 10px 0;
-    display: flex;
-    display: -webkit-flex; /* Safari */
-    align-items: center;
-    justify-content:space-between;
+    .searchClass {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      z-index: 999;
+      .searchContent {
+        overflow: auto;
+        height: 77%;
+        .searchList {
+          @include flex;
+          justify-content: space-between;
+          padding: 15px 20px;
+          &:hover {
+            background: #DDDDDD;
+          }
+        }
+      }
+    }
+
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: .2rem 0;
+      padding-bottom: .26rem;
+      .title {
+        padding: .26rem .3rem 0;
+      }
+    }
+    .paddingTitle {
+      @include flex;
+      justify-content: space-between;
+      padding: .26rem .3rem;
+      color: #aaaaaa;
+      .colors {
+        color: $color;
+      }
+    }
+    .addInput {
+      height: .9rem;
+      line-height: .9rem;
+      text-align: center;
+      color: $color;
+      background: #ffffff;
+      margin-bottom: .2rem;
+    }
+
+    .top, .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: .9rem;
+      z-index: 666;
+      background: #ffffff;
+    }
+    .main {
+      margin: 1.2rem 0;
+    }
+    .top {
+      top: 0;
+      box-shadow: 0 3px 10px 0 #dddddd;
+      .van-hairline--top-bottom::after {
+        border-bottom: 0;
+      }
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      height: 1rem;
+      line-height: 1rem;
+      text-align: center;
+      background: #ffffff;
+      z-index: 666;
+      color: $color;
+      border-top: 1px solid #ebebeb;
+    }
+
+    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+      color: #dddddd;
+    }
+
+    input::-moz-placeholder, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color: #dddddd;
+    }
+
+    input:-moz-placeholder, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color: #dddddd;
+    }
+
+    input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: #dddddd;
+    }
   }
 </style>

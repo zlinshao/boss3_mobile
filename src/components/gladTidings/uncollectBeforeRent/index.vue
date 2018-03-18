@@ -1,6 +1,16 @@
 <template>
   <div id="rentReport">
     <div v-show="!searchShow" class="main">
+      <div class="top">
+        <van-nav-bar
+          title="未收先祖报备"
+          left-text="返回"
+          left-arrow
+          @click-left="routerLink('/gladTidings')">
+        </van-nav-bar>
+      </div>
+
+
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">转租类型</div>
@@ -270,14 +280,19 @@
           @click-icon="form.phone = ''"
           required>
         </van-field>
-        <div class="aloneModel">
-          <div class="title">截图</div>
-          <UpLoad :ID="'rentScreenshot'" @getImg="screenshot"></UpLoad>
-        </div>
-        <div class="aloneModel">
-          <div class="title">合同照片</div>
-          <UpLoad :ID="'renPhoto'" @getImg="contractPhoto"></UpLoad>
-        </div>
+      </van-cell-group>
+
+      <div class="aloneModel">
+        <div class="title">截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
+      </div>
+
+      <div class="aloneModel">
+        <div class="title">合同照片</div>
+        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
+      </div>
+
+      <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
@@ -441,24 +456,26 @@
     mounted() {
       this.getNowFormatDate();
     },
-    watch: {},
+
     methods: {
+      routerLink(val) {
+        this.$router.push({path: val});
+      },
       // 搜索
       onSearch() {
         this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
           this.lists = res.data.data;
         })
       },
-      // 截图
-      screenshot(val) {
-        this.form.screenshot = val[1];
-        console.log(val);
+
+      getImgData(val) {
+        if (val[0] === 'screenshot') {
+          this.form.screenshot_leader = val[1];
+        } else {
+          this.form.photo = val[1];
+        }
       },
-      // 合同照片
-      contractPhoto(val) {
-        this.form.photo = val[1];
-        console.log(val);
-      },
+
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -659,15 +676,6 @@
       }
     }
     $color: #409EFF;
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: 5px 0;
-      padding-bottom: 10px;
-      .title {
-        padding: 10px 15px;
-      }
-    }
     .van-switch.van-switch--on {
       background: $color;
     }
@@ -682,36 +690,77 @@
         padding-left: 110px;
       }
     }
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: .2rem 0;
+      padding-bottom: .26rem;
+      .title {
+        padding: .26rem .3rem 0;
+      }
+    }
     .paddingTitle {
       @include flex;
       justify-content: space-between;
-      padding: 10px 15px;
+      padding: .26rem .3rem;
       color: #aaaaaa;
       .colors {
         color: $color;
       }
     }
     .addInput {
-      height: 44px;
-      line-height: 24px;
-      padding: 10px 0;
+      height: .88rem;
+      line-height: .88rem;
       text-align: center;
       color: $color;
       background: #ffffff;
-      margin-bottom: 15px;
+      margin-bottom: .2rem;
     }
-    .main {
-      margin-bottom: 1.2rem;
-    }
-    .footer {
+
+    .searchClass {
       position: fixed;
+      top: 0;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 1rem;
       background: #ffffff;
-      padding: 10px;
+      z-index: 999;
+      .searchContent {
+        overflow: auto;
+        height: 77%;
+        .searchList {
+          @include flex;
+          justify-content: space-between;
+          padding: 15px 20px;
+          &:hover {
+            background: #DDDDDD;
+          }
+        }
+      }
+    }
+    .top, .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: .9rem;
       z-index: 666;
+      background: #ffffff;
+    }
+
+    .main {
+      margin: 1.2rem 0;
+    }
+    .top {
+      top: 0;
+      box-shadow: 0 3px 10px 0 #dddddd;
+      .van-hairline--top-bottom::after {
+        border-bottom: 0;
+      }
+    }
+    .footer {
+      bottom: 0;
+      height: 1rem;
+      padding: 10px;
       @include flex;
       align-items: center;
       border-top: 1px solid #ebebeb;

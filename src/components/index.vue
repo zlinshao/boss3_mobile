@@ -1,9 +1,19 @@
 <template>
   <div id="hello">
     <div class="container">
-      <div>
-        <router-link style="font-size: 30px;" to="/gladTidings">喜报</router-link>
-        <router-link style="font-size: 30px;" to="/examine">审批</router-link>
+      <div class="mainMain">
+        <div @click="routerLink('/gladTidings')">
+          <p>
+            <i class="iconfont icon-wancheng"></i>
+          </p>
+          <h1>喜报</h1>
+        </div>
+        <div @click="routerLink('/examine')">
+          <p>
+            <i class="iconfont icon-wancheng"></i>
+          </p>
+          <h1>审批</h1>
+        </div>
       </div>
     </div>
   </div>
@@ -38,6 +48,9 @@
       this.paths = this.$router.options.routes;
     },
     methods: {
+      routerLink(val) {
+        this.$router.push({path: val});
+      },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
       },
@@ -51,6 +64,41 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
   .container{
+    background: #ffffff;
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
+    }
 
+    @mixin border_radius($p) {
+      -webkit-border-radius: $p;
+      -moz-border-radius: $p;
+      border-radius: $p;
+    }
+    .mainMain {
+      padding: .3rem 0 .6rem;
+      @include flex;
+      flex-wrap: wrap;
+      div {
+        width: 25%;
+        text-align: center;
+        P {
+          margin: .3rem auto .2rem;
+          @include border_radius(6px);
+          background: red;
+          width: .86rem;
+          height: .86rem;
+          line-height: .86rem;
+          i {
+            color: #ffffff;
+          }
+        }
+        h1 {
+          font-size: .24rem;
+          padding: 0 .1rem;
+          line-height: .36rem;
+        }
+      }
+    }
   }
 </style>

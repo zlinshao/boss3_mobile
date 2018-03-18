@@ -1,6 +1,14 @@
 <template>
   <div id="rentReport">
     <div v-show="!searchShow" class="main">
+      <div class="top">
+        <van-nav-bar
+          title="租房报备"
+          left-text="返回"
+          left-arrow
+          @click-left="routerLink('/gladTidings')">
+        </van-nav-bar>
+      </div>
       <van-cell-group>
         <van-field
           v-model="form.contract_id"
@@ -47,7 +55,7 @@
             v-model="datePrice[index]"
             type="text"
             label="开始时间"
-            placeholder="周期开始日期"
+            placeholder="获取周期开始日期"
             disabled
             required>
           </van-field>
@@ -94,7 +102,7 @@
             v-model="datePay[index]"
             type="text"
             label="开始时间"
-            placeholder="周期开始日期"
+            placeholder="获取周期开始日期"
             disabled
             required>
           </van-field>
@@ -208,14 +216,19 @@
           @click-icon="form.phone = ''"
           required>
         </van-field>
-        <div class="aloneModel">
-          <div class="title">截图</div>
-          <UpLoad :ID="'rentScreenshot'" @getImg="screenshot"></UpLoad>
-        </div>
-        <div class="aloneModel">
-          <div class="title">合同照片</div>
-          <UpLoad :ID="'renPhoto'" @getImg="contractPhoto"></UpLoad>
-        </div>
+      </van-cell-group>
+
+      <div class="aloneModel">
+        <div class="title">截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
+      </div>
+
+      <div class="aloneModel">
+        <div class="title">合同照片</div>
+        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
+      </div>
+
+      <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
@@ -366,8 +379,11 @@
     mounted() {
       this.getNowFormatDate();
     },
-    watch: {},
+
     methods: {
+      routerLink(val) {
+        this.$router.push({path: val});
+      },
       // 搜索
       onSearch() {
         this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
@@ -375,15 +391,14 @@
         })
       },
       // 截图
-      screenshot(val) {
-        this.form.screenshot_leader = val[1];
-        console.log(val);
+      getImgData(val) {
+        if (val === 'screenshot') {
+          this.form.screenshot_leader = val[1];
+        } else {
+          this.form.photo = val[1];
+        }
       },
-      // 合同照片
-      contractPhoto(val) {
-        this.form.photo = val[1];
-        console.log(val);
-      },
+
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -516,7 +531,11 @@
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-
+          if(res.data.code === '50210'){
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
         })
       },
     },
@@ -529,6 +548,52 @@
       display: flex;
       display: -webkit-flex;
     }
+
+    $color: #409EFF;
+    .van-switch.van-switch--on {
+      background: $color;
+    }
+    .van-icon.van-icon-checked {
+      color: $color;
+    }
+    .van-cell.van-hairline.van-field {
+      .van-cell__title {
+        width: 110px;
+        span {
+          font-size: 16px;
+        }
+      }
+      .van-cell__value {
+        padding-left: 110px;
+      }
+    }
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: .2rem 0;
+      padding-bottom: .26rem;
+      .title {
+        padding: .26rem .3rem 0;
+      }
+    }
+    .paddingTitle {
+      @include flex;
+      justify-content: space-between;
+      padding: .26rem .3rem;
+      color: #aaaaaa;
+      .colors {
+        color: $color;
+      }
+    }
+    .addInput {
+      height: .9rem;
+      line-height: .9rem;
+      text-align: center;
+      color: $color;
+      background: #ffffff;
+      margin-bottom: .2rem;
+    }
+
     .searchClass {
       position: fixed;
       top: 0;
@@ -550,60 +615,29 @@
         }
       }
     }
-    $color: #409EFF;
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: 5px 0;
-      padding-bottom: 10px;
-      .title {
-        padding: 10px 15px;
-      }
-    }
-    .van-switch.van-switch--on {
-      background: $color;
-    }
-    .van-icon.van-icon-checked {
-      color: $color;
-    }
-    .van-cell.van-hairline.van-field {
-      .van-cell__title {
-        width: 110px;
-      }
-      .van-cell__value {
-        padding-left: 110px;
-      }
-    }
-    .paddingTitle {
-      @include flex;
-      justify-content: space-between;
-      padding: 10px 15px;
-      color: #aaaaaa;
-      .colors {
-        color: $color;
-      }
-    }
-    .addInput {
-      height: 44px;
-      line-height: 24px;
-      padding: 10px 0;
-      text-align: center;
-      color: $color;
-      background: #ffffff;
-      margin-bottom: 15px;
-    }
-    .main {
-      margin-bottom: 1.2rem;
-    }
-    .footer {
+    .top, .footer {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
-      height: 1rem;
-      background: #ffffff;
-      padding: 10px;
+      height: .9rem;
       z-index: 666;
+      background: #ffffff;
+    }
+
+    .main {
+      margin: 1.2rem 0;
+    }
+    .top {
+      top: 0;
+      box-shadow: 0 3px 10px 0 #dddddd;
+      .van-hairline--top-bottom::after {
+        border-bottom: 0;
+      }
+    }
+    .footer {
+      bottom: 0;
+      height: 1rem;
+      padding: 10px;
       @include flex;
       align-items: center;
       border-top: 1px solid #ebebeb;

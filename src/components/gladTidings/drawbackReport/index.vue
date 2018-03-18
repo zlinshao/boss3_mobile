@@ -1,5 +1,14 @@
 <template>
-  <div id="collectReport">
+  <div id="drawbackReport">
+    <div class="top">
+      <van-nav-bar
+        title="退款报备"
+        left-text="返回"
+        left-arrow
+        @click-left="routerLink('/gladTidings')">
+      </van-nav-bar>
+    </div>
+
     <div v-show="!searchShow" class="main">
       <van-cell-group>
         <div class="checks" style="">
@@ -17,6 +26,29 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
+
+        <van-field
+          v-model="payWay"
+          type="text"
+          label="付款方式"
+          placeholder="付款方式已禁用"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="price_arr"
+          type="text"
+          label="月单价"
+          placeholder="月单价已禁用"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="recMoney"
+          type="text"
+          label="已收金额"
+          placeholder="已收金额已禁用"
+          disabled>
+        </van-field>
+
         <van-field
           v-model="form.amount"
           type="number"
@@ -64,53 +96,47 @@
           @click-icon="form.account_name = ''"
           required>
         </van-field>
+      </van-cell-group>
 
-        <div class="aloneModel">
-          <div class="title">领导同意截图</div>
-          <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
-        </div>
+      <div class="aloneModel">
+        <div class="title">领导同意截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+      </div>
 
+      <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
           type="text"
           placeholder="请填写备注"
           icon="clear"
-          @click-icon="form.remark = ''"
-          required>
+          @click-icon="form.remark = ''">
         </van-field>
         <van-field
           v-model="staff_name"
           label="开单人"
           type="text"
-          placeholder="请选择开单人"
-          required>
+          placeholder="开单人已禁用"
+          disabled>
         </van-field>
         <van-field
           v-model="leader_name"
           label="负责人"
           type="text"
-          placeholder="请选择负责人"
-          required>
+          placeholder="负责人已禁用"
+          disabled>
         </van-field>
         <van-field
           v-model="department_name"
           label="部门"
           type="text"
-          placeholder="请选择部门"
-          required>
+          placeholder="部门已禁用"
+          disabled>
         </van-field>
       </van-cell-group>
-      <div class="footer">
-        <van-button size="small" type="primary" @click="saveCollect(1)">草稿</van-button>
-        <van-button size="small" type="primary" @click="saveCollect(0)">发布</van-button>
-      </div>
     </div>
 
-    <div v-show="!searchShow" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
-    </div>
+    <div v-if="!searchShow" class="footer" @click="saveCollect()">发布</div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -131,15 +157,21 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
+        lists: [],
+
+        payWay: '',
+        price_arr: '',
+        recMoney: '',
 
         form: {
           collect_or_rent: '0',
@@ -158,11 +190,13 @@
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
-        lists: [],
       }
     },
     watch: {},
     methods: {
+      routerLink(val) {
+        this.$router.push({path: val});
+      },
       // 搜索
       onSearch() {
         this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
@@ -170,11 +204,7 @@
         })
       },
       screenshot(val) {
-        this.form.screenshot_leader = val;
-      },
-      // 合同照片
-      contractPhoto(val) {
-        this.form.photo = val[1];
+        this.form.screenshot_leader = val[1];
       },
       // 获取银行
       subAccount(val) {
@@ -191,9 +221,13 @@
         this.searchShow = false;
       },
 
-      saveCollect(val) {
+      saveCollect() {
         this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
-
+          if (res.data.code === '50810') {
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
         })
       },
     },
@@ -201,7 +235,7 @@
 </script>
 
 <style lang="scss">
-  #collectReport {
+  #drawbackReport {
     @mixin flex {
       display: flex;
       display: -webkit-flex;
@@ -212,15 +246,6 @@
       height: 44px;
     }
     $color: #409EFF;
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: 5px 0;
-      padding-bottom: 10px;
-      .title {
-        padding: 10px 15px;
-      }
-    }
     .van-switch.van-switch--on {
       background: $color;
     }
@@ -256,30 +281,63 @@
         }
       }
     }
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: .2rem 0;
+      padding-bottom: .26rem;
+      .title {
+        padding: .26rem .3rem 0;
+      }
+    }
+    .paddingTitle {
+      @include flex;
+      justify-content: space-between;
+      padding: .26rem .3rem;
+      color: #aaaaaa;
+      .colors {
+        color: $color;
+      }
+    }
+    .addInput {
+      height: .9rem;
+      line-height: .9rem;
+      text-align: center;
+      color: $color;
+      background: #ffffff;
+      margin-bottom: .2rem;
+    }
+
+    .top, .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: .9rem;
+      z-index: 666;
+      background: #ffffff;
+    }
     .main {
-      margin-bottom: 1.2rem;
+      margin: 1.2rem 0;
+    }
+    .top {
+      top: 0;
+      box-shadow: 0 3px 10px 0 #dddddd;
+      .van-hairline--top-bottom::after {
+        border-bottom: 0;
+      }
     }
     .footer {
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
       height: 1rem;
+      line-height: 1rem;
+      text-align: center;
       background: #ffffff;
-      padding: 10px;
       z-index: 666;
-      @include flex;
-      align-items: center;
+      color: $color;
       border-top: 1px solid #ebebeb;
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
-      div {
-        width: 50%;
-        text-align: center;
-        color: $color;
-      }
     }
+
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
       color: #dddddd;
     }

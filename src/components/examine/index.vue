@@ -1,5 +1,14 @@
 <template>
   <div class="hello">
+    <div style="margin-bottom: .3rem;">
+      <van-nav-bar
+        title="审批"
+        left-text="返回"
+        left-arrow
+        @click-left="routerLink('/')">
+      </van-nav-bar>
+    </div>
+
     <div class="top">
       <div @click="active = 1" :class="{'onDiv': active === 1}">
         <p>
@@ -166,9 +175,9 @@
       }
     },
     methods: {
-      hhhhhh() {
-        alert(1);
-      }
+      routerLink(val) {
+        this.$router.push({path: val});
+      },
     }
   }
 </script>
