@@ -673,9 +673,9 @@
         }).then((res) => {
           if (res.data.code === '51110') {
             if (val === 1) {
-              this.datePrice = res.data;
+              this.datePrice = res.data.data;
             } else {
-              this.datePay = res.data;
+              this.datePay = res.data.data;
             }
           } else {
             Toast(res.data.msg);
