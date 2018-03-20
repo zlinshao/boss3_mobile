@@ -1,14 +1,6 @@
 <template>
-  <div id="rentReport">
+  <div id="rentReport" v-wechat-title="$route.meta.title">
     <div v-show="!searchShow" class="main">
-      <div class="top">
-        <van-nav-bar
-          title="续租报备"
-          left-text="返回"
-          left-arrow
-          @click-left="routerLink('/gladTidings')">
-        </van-nav-bar>
-      </div>
 
       <van-cell-group>
         <van-field
@@ -233,7 +225,7 @@
         <van-field
           v-model="form.remark"
           label="备注"
-          type="text"
+          type="textarea"
           placeholder="请填写备注"
           icon="clear"
           @click-icon="form.remark = ''"
@@ -262,11 +254,11 @@
         </van-field>
       </van-cell-group>
     </div>
+
     <div v-show="!searchShow" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
-
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -533,7 +525,11 @@
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-
+          if(res.data.code === '50210'){
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
         })
       },
     },
@@ -621,7 +617,7 @@
     }
 
     .main {
-      margin: 1.2rem 0;
+      margin: .2rem 0 1.2rem;
     }
     .top {
       top: 0;
@@ -641,6 +637,8 @@
         border-left: 1px solid #ebebeb;
       }
       div {
+        height: .6rem;
+        line-height: .6rem;
         width: 50%;
         text-align: center;
         color: $color;

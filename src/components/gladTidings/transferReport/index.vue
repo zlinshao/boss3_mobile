@@ -1,15 +1,14 @@
 <template>
-  <div id="transferReport">
-    <div class="top">
-      <van-nav-bar
-        title="调房报备"
-        left-text="返回"
-        left-arrow
-        @click-left="routerLink('/gladTidings')">
-      </van-nav-bar>
-    </div>
+  <div id="transferReport" v-wechat-title="$route.meta.title">
 
     <div v-show="!searchShow" class="main">
+      <van-cell-group>
+        <div class="checks" style="">
+          <div style="min-width: 110px;">转租类型</div>
+          <van-radio name="0" v-model="form.trans_type">公司</van-radio>
+          <van-radio name="1" v-model="form.trans_type" style="margin-left: 18px">个人</van-radio>
+        </div>
+      </van-cell-group>
       <van-cell-group style="margin-bottom: .2rem;">
         <van-field
           v-model="form.contract_id_rent"
@@ -21,10 +20,10 @@
         </van-field>
         <van-field
           v-model="oldForm.price_arr"
-          label="开单人"
+          label="原月单价"
           type="text"
           disabled
-          placeholder="原房屋开单人已禁用">
+          placeholder="原房屋月单价已禁用">
         </van-field>
         <van-field
           v-model="oldForm.pay_way_arr"
@@ -74,10 +73,11 @@
           required>
         </van-field>
         <van-field
-          v-model="form.sign_date"
+          v-model="form.begin_date"
           type="text"
           label="开始日期"
           placeholder="获取开始日期"
+          @click="timeChoose(2)"
           readonly
           required>
         </van-field>
@@ -99,7 +99,7 @@
           <van-field
             v-model="datePrice[index]"
             type="text"
-            label="款项开始时间"
+            label="开始日期"
             placeholder="款项开始时间"
             disabled
             required>
@@ -146,7 +146,7 @@
           <van-field
             v-model="datePay[index]"
             type="text"
-            label="款项开始时间"
+            label="开始日期"
             placeholder="款项开始时间"
             disabled
             required>
@@ -220,19 +220,19 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
       </div>
 
       <div class="aloneModel">
         <div class="title">合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="contractPhoto"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
       </div>
 
       <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
-          type="text"
+          type="textarea"
           placeholder="请填写备注"
           icon="clear"
           @click-icon="form.remark = ''">
@@ -261,7 +261,10 @@
       </van-cell-group>
     </div>
 
-    <div v-if="!searchShow" class="footer" @click="saveCollect()">发布</div>
+    <div v-show="!searchShow" class="footer">
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
+    </div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -347,10 +350,11 @@
         form: {
           type: 1,
           draft: 0,
+          trans_type: '0',
           contract_id_rent: '22',       //原租房合同id
           contract_id: '33',            //现房屋合同id
           month: '',                    //签约时长
-          sign_date: '2080-01-01',                //合同开始日期
+          begin_date: '',                //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -392,12 +396,12 @@
         })
       },
       // 截图
-      screenshot(val) {
-        this.form.screenshot = val[1];
-      },
-      // 合同照片
-      contractPhoto(val) {
-        this.form.photo = val[1];
+      getImgData(val) {
+        if (val[0] === 'screenshot') {
+          this.form.screenshot = val[1];
+        } else {
+          this.form.photo = val[1];
+        }
       },
       // 获取当前时间
       getNowFormatDate() {
@@ -425,6 +429,9 @@
           case 1:
             this.form.retainage_date = this.timeValue;
             break;
+            case 2:
+            this.form.begin_date = this.timeValue;
+            break;
         }
       },
       // select 显示
@@ -437,7 +444,7 @@
             this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
             break;
           case 2:
-            this.columns = ['月付1', '双月付2', '季付3', '半年付4', '年付5'];
+            this.columns = ['支付宝', '微信', '银行卡', 'pos机', '现金'];
             break;
         }
       },
@@ -510,7 +517,7 @@
         }
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
-            begin_date: this.form.sign_date,
+            begin_date: this.form.begin_date,
             period: period
           }
         }).then((res) => {
@@ -525,10 +532,12 @@
           }
         })
       },
-      saveCollect() {
+      saveCollect(val) {
+        this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
           if(res.data.code === '50510'){
             Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }
@@ -546,6 +555,11 @@
     }
 
     $color: #409EFF;
+    .checks {
+      display: -webkit-flex;
+      align-items: center;
+      height: 44px;
+    }
     .van-switch.van-switch--on {
       background: $color;
     }
@@ -618,7 +632,7 @@
       background: #ffffff;
     }
     .main {
-      margin: 1.2rem 0;
+      margin: .2rem 0 1.2rem;
     }
     .top {
       top: 0;
@@ -628,17 +642,21 @@
       }
     }
     .footer {
-      position: fixed;
       bottom: 0;
       height: 1rem;
-      line-height: 1rem;
-      text-align: center;
-      background: #ffffff;
-      z-index: 666;
-      color: $color;
+      padding: 10px;
+      @include flex;
+      align-items: center;
       border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
+      }
+      div {
+        width: 50%;
+        text-align: center;
+        color: $color;
+      }
     }
-
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
       color: #dddddd;
     }

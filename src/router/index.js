@@ -3,7 +3,6 @@ import Router from 'vue-router'
 
 import Index from '../components/index.vue'
 
-import HelloWorld from '@/components/HelloWorld'
 import Expense from '@/components/examine/Expense/index.vue'
 import Warning from '@/components/examine/warning/index.vue'
 import CardDetail from '@/components/examine/cardDetail/index.vue'
@@ -26,6 +25,7 @@ import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //
 import Special from '../components/gladTidings/specialReport/index.vue'
 import Confiscate from '../components/gladTidings/confiscate/index.vue'
 import FinalPayment from '../components/gladTidings/finalPayment/index.vue'
+import PublishDetail from '../components/gladTidings/publishDetail/index.vue'
 
 
 Vue.use(Router);
@@ -36,108 +36,126 @@ export default new Router({
       path: '/',
       name: 'index',
       hidden: false,
+      meta: {title: '首页'},
       component: Index
     },
     {
       path: '/gladTidings',
       name: 'gladTidings',
       hidden: false,
+      meta: {title: '报备'},
       component: GladTidings
+    },
+    {
+      path: '/publishDetail',
+      name: 'publishDetail',
+      hidden: 'glad',
+      meta: {title: '报备详情'},
+      component: PublishDetail
     },
     {
       path: '/collectReport',               //收房报备
       name: '收房报备',
       hidden: 'glad',
+      meta: {title: '收房报备'},
       component: CollectReport
     },
     {
       path: '/rentReport',                 //租房报备
       name: '租房报备',
       hidden: 'glad',
+      meta: {title: '租房报备'},
       component: RentReport
     },
     {
       path: '/transferReport',              //调房报备
       name: '调房报备',
       hidden: 'glad',
+      meta: {title: '调房报备'},
       component: TransferReport
     },
     {
       path: '/continueCollect',              //续收报备
       name: '续收报备',
       hidden: 'glad',
+      meta: {title: '续收报备'},
       component: ContinueCollect
     },
     {
       path: '/unCollectBeforeRent',
       name: '未收先租',
       hidden: 'glad',
+      meta: {title: '未收先租'},
       component: UncollectBeforeRent
     },
     {
       path: '/continueRent',
       name: '续租报备',
       hidden: 'glad',
+      meta: {title: '续租报备'},
       component: ContinueRent
     },
     {
       path: '/drawback',
       name: '退款报备',
       hidden: 'glad',
+      meta: {title: '退款报备'},
       component: Drawback
     },
     {
       path: '/friedBill',
       name: '炸单报备',
       hidden: 'glad',
+      meta: {title: '炸单报备'},
       component: FriedBill
     },
     {
       path: '/agencyRent',
       name: '中介费报备',
       hidden: 'glad',
+      meta: {title: '中介费报备'},
       component: AgencyRent
     },
     {
       path: '/special',
       hidden: 'glad',
       name: '特殊事项报备',
+      meta: {title: '特殊事项报备'},
       component: Special
     },
     {
       path: '/confiscate',
       name: '充公报备',
       hidden: 'glad',
+      meta: {title: '充公报备'},
       component: Confiscate
     },
     {
       path: '/finalPayment',
       name: '尾款房租报备',
       hidden: 'glad',
+      meta: {title: '尾款房租报备'},
       component: FinalPayment
     },
 
 
-
     {
       path: '/examine',
-      name: 'examine',
+      name: '审批',
+      meta: {title: '审批'},
       component: Examine
-    },
-    {
-      path: '/hello',
-      name: 'HelloWorld',
-      component: HelloWorld
     },
     {
       path: '/expense',
       hidden: 'examine',
       name: '研发部报销申请',
+      meta: {title: '研发部报销申请'},
       component: Expense
     },
     {
       path: '/warning',
       name: '警告',
+      meta: {title: '警告'},
       hidden: 'examine',
       component: Warning
     },
@@ -145,12 +163,14 @@ export default new Router({
       path: '/cardDetail',
       name: '研发补卡申请详情',
       hidden: 'examine',
+      meta: {title: '研发补卡申请详情'},
       component: CardDetail
     },
     {
       path: '/creditCard',
       name: '研发补卡申请',
       hidden: 'examine',
+      meta: {title: '研发补卡申请'},
       component: CreditCard
     },
   ]

@@ -1,5 +1,5 @@
 <template>
-  <div id="hello">
+  <div id="hello" v-wechat-title="$route.meta.title">
     <div class="container">
       <div class="mainMain">
         <div @click="routerLink('/gladTidings')">

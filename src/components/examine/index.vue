@@ -1,13 +1,5 @@
 <template>
-  <div class="hello">
-    <div style="margin-bottom: .3rem;">
-      <van-nav-bar
-        title="审批"
-        left-text="返回"
-        left-arrow
-        @click-left="routerLink('/')">
-      </van-nav-bar>
-    </div>
+  <div class="hello" v-wechat-title="$route.meta.title">
 
     <div class="top">
       <div @click="active = 1" :class="{'onDiv': active === 1}">
@@ -215,6 +207,7 @@
   }
 
   .top {
+    margin-top: .2rem;
     @include flex;
     justify-content: space-around;
     height: 2rem;

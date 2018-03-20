@@ -1,13 +1,5 @@
 <template>
-  <div id="confiscate">
-    <div class="top">
-      <van-nav-bar
-        title="充公报备"
-        left-text="返回"
-        left-arrow
-        @click-left="routerLink('/gladTidings')">
-      </van-nav-bar>
-    </div>
+  <div id="confiscate" v-wechat-title="$route.meta.title">
 
     <div class="main" v-if="!searchShow">
       <van-cell-group>
@@ -51,7 +43,7 @@
         <van-field
           v-model="form.remark"
           label="备注"
-          type="text"
+          type="textarea"
           placeholder="请填写备注">
         </van-field>
         <van-field
@@ -78,7 +70,10 @@
       </van-cell-group>
     </div>
 
-    <div v-if="!searchShow" class="footer" @click="saveCollect()">发布</div>
+    <div v-show="!searchShow" class="footer">
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
+    </div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -117,6 +112,7 @@
 
         form: {
           type: 0,
+          draft: 0,
           collect_or_rent: '',
           contract_id: '33',            //合同id
           remark: '',                   //备注
@@ -147,7 +143,8 @@
         this.searchShow = false;
       },
 
-      saveCollect() {
+      saveCollect(val) {
+        this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/confiscate', this.form).then((res) => {
           if (res.data.code === '50610') {
             Toast.success(res.data.msg);
@@ -257,7 +254,7 @@
       background: #ffffff;
     }
     .main {
-      margin: 1.2rem 0;
+      margin: .2rem 0 1.2rem;
     }
     .top {
       top: 0;
@@ -267,17 +264,23 @@
       }
     }
     .footer {
-      position: fixed;
       bottom: 0;
       height: 1rem;
-      line-height: 1rem;
-      text-align: center;
-      background: #ffffff;
-      z-index: 666;
-      color: $color;
+      padding: 10px;
+      @include flex;
+      align-items: center;
       border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
+      }
+      div {
+        height: .6rem;
+        line-height: .6rem;
+        width: 50%;
+        text-align: center;
+        color: $color;
+      }
     }
-
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
       color: #dddddd;
     }

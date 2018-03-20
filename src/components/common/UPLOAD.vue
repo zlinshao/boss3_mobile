@@ -1,6 +1,15 @@
 <template>
   <div>
     <div id="container">
+      <div class="editImg" v-if="Object.keys(editImg).length>0">
+        <div class="imgItem" style="position: relative" v-for="(val,key) in editImg">
+          <div style="width: 120px;  height: 120px; border-radius:6px;background: #f0f0f0">
+            <img :src="val" alt="">
+          </div>
+          <div class="remove el-icon-circle-close" @click="deleteImage(key)"></div>
+        </div>
+      </div>
+
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="upButton" :id="ID">
           <span class="plus">+</span>
@@ -16,7 +25,7 @@
 
   export default {
     name: 'hello',
-    props: ['ID'],
+    props: ['ID','editImage','isClear'],
     data () {
       return {
         imgArray: [],
@@ -24,6 +33,7 @@
         isUploading: false,
         activeIndex: null,
         uploader: null,
+        editImg:{},
       }
     },
     mounted(){
@@ -38,13 +48,21 @@
         }
         $('#' + id).remove();
         _this.uploader.splice(toremove, 1);
+
         for (let i = 0; i < _this.imgArray.length; i++) {
-          if (_this.imgArray[i].indexOf(id) > -1) {
-            _this.imgArray.splice(i, 1)
-            _this.imgId.splice(i, 1)
-            _this.$emit('getImg', [_this.ID,_this.imgId, _this.isUploading]);
+          if (_this.imgArray[i].name.indexOf(id) > -1) {
+
+            _this.imgId.forEach((item) => {
+              if(_this.imgArray[i].id === item){
+                _this.imgId = _this.imgId.filter((x) =>{return x!==item})
+              }
+            });
+
+            _this.imgArray.splice(i, 1);
+            _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
           }
         }
+
       });
 
       this.getTokenMessage();
@@ -52,8 +70,39 @@
           this.uploader.refresh();
       },1000)
     },
+    watch: {
+      editImage: {
+        deep: true,
+        handler(val, old){
+          this.editImg = this.editImage;
+          this.imgId = [];
+          for(let key in val){
+            this.imgId.push(key)
+          }
+        }
+      },
+      isClear(val){
+        if(val){
+          this.imgId = [];
+          this.imgArray = [];
+          this.editImg = [];
+          $('.imgItem').remove();
+        }
+      }
+    },
     methods: {
-
+      deleteImage(key){
+        this.imgId = this.imgId.filter((x) => {return x !== key});
+        this.$emit('getImg', [this.ID, this.imgId, this.isUploading]);
+        let imgObject = {};
+        for(let img in this.editImg){
+          if(img !== key){
+            imgObject[img] = this.editImg[img];
+          }
+        }
+        this.editImg = {};
+        this.editImg = imgObject;
+      },
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'api/v1/files').then((res) => {
           this.uploaderReady(res.data.data);
@@ -134,26 +183,26 @@
             },
             'FileUploaded': function (up, file, info) {
 
-
-              // 每个文件上传成功后，处理相关的事情
-              // 其中info是文件上传成功后，服务端返回的json，形式如：
-              // {
-              //    "hash": "Fh8xVqod2MQ1mocfI4S4KpRL6D98",
-              //    "key": "gogopher.jpg"
-              //  }
-              // 获取url路径 传入后台保存到数据库
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
 
+//              _this.isUpId = file.id;
+
               _this.$http.post(globalConfig.server_user + 'api/v1/files', {
                 url: sourceLink,
-                name: url.key
+                name: url.key,
+                raw_name : file.name,
+                type: file.type,
+                size:file.size
               }).then((res) => {
                 if (res.data.status === "success") {
-//                  $('#'+file.id).remove();
                   _this.imgId.push(res.data.data.id);
-                  _this.imgArray.push(res.data.data.name);
+
+                  let object = {};
+                  object.id = res.data.data.id;
+                  object.name = res.data.data.name;
+                  _this.imgArray.push(object);
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
               })

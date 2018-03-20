@@ -1,13 +1,5 @@
 <template>
-  <div>
-    <div style="margin-bottom: .3rem;">
-      <van-nav-bar
-        title="报备"
-        left-text="返回"
-        left-arrow
-        @click-left="routerLink('/')">
-      </van-nav-bar>
-    </div>
+  <div v-wechat-title="$route.meta.title">
 
     <div class="paths">
       <div class="mainMain">
@@ -44,6 +36,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
   .paths {
+    margin-top: .2rem;
     background: #ffffff;
     @mixin flex {
       display: flex;

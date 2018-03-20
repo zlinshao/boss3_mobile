@@ -1,25 +1,8 @@
 <template>
   <div id="rentReport">
-    <div v-show="!searchShow" class="main">
-      <div class="top">
-        <van-nav-bar
-          title="未收先祖报备"
-          left-text="返回"
-          left-arrow
-          @click-left="routerLink('/gladTidings')">
-        </van-nav-bar>
-      </div>
-
+    <div v-show="!searchShow" class="main" v-wechat-title="$route.meta.title">
 
       <van-cell-group>
-        <div class="checks">
-          <div style="min-width: 110px;">转租类型</div>
-          <van-radio name="0" v-model="form.trans_type">公司</van-radio>
-          <van-radio name="1" v-model="form.trans_type" style="margin-left: 18px">个人</van-radio>
-        </div>
-      </van-cell-group>
-      <van-cell-group>
-
         <van-field
           v-model="form.contract_id"
           label="房屋地址"
@@ -296,7 +279,7 @@
         <van-field
           v-model="form.remark"
           label="备注"
-          type="text"
+          type="textarea"
           placeholder="请填写备注"
           icon="clear"
           @click-icon="form.remark = ''"
@@ -378,8 +361,6 @@
     components: {UpLoad, Toast},
     data() {
       return {
-        checked1: true,          //转租类型
-        checked2: false,          //转租类型
         urls: globalConfig.server,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
@@ -409,7 +390,6 @@
           type: 3,
           draft: 0,
           rwc_type: 0,
-          trans_type: '0',              //收租类型
           contract_id: '12',            //房屋地址id
           building: '',                 //栋
           unit: '',                     //单元
@@ -525,7 +505,7 @@
             this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
             break;
           case 5:
-            this.columns = ['月付1', '双月付1', '季付1', '半年付1', '年付1'];
+            this.columns = ['支付宝', '微信', '银行卡', 'pos机', '现金'];
             break;
           case 6:
             this.columns = ['手机', '固话', '小灵通'];
@@ -636,7 +616,11 @@
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-
+          if(res.data.code === '50210'){
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
         })
       },
     },
@@ -748,7 +732,7 @@
     }
 
     .main {
-      margin: 1.2rem 0;
+      margin: .2rem 0 1.2rem;
     }
     .top {
       top: 0;

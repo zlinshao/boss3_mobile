@@ -1,13 +1,5 @@
 <template>
-  <div id="rentReport">
-    <div class="top">
-      <van-nav-bar
-        title="尾款房租报备"
-        left-text="返回"
-        left-arrow
-        @click-left="routerLink('/gladTidings')">
-      </van-nav-bar>
-    </div>
+  <div id="rentReport" v-wechat-title="$route.meta.title">
 
     <div v-show="!searchShow" class="main">
       <van-cell-group>
@@ -94,7 +86,7 @@
         <van-field
           v-model="form.remark"
           label="备注"
-          type="text"
+          type="textarea"
           placeholder="请填写备注"
           icon="clear"
           @click-icon="form.remark = ''">
@@ -125,7 +117,10 @@
       </van-cell-group>
     </div>
 
-    <div v-if="!searchShow" class="footer" @click="saveCollect()">发布</div>
+    <div v-show="!searchShow" class="footer">
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
+    </div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -179,6 +174,7 @@
         payIndex: '',                 //分金额方式index
 
         form: {
+          draft: 0,
           contract_id: '12',            //房屋地址id
 
           money_sum: '',                //总金额
@@ -245,7 +241,8 @@
         this.moneyNum.splice(val, 1);
       },
 
-      saveCollect() {
+      saveCollect(val) {
+        this.form.draft = val;
         this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
           if (res.data.code === '50910') {
             this.$toast.success(res.data.msg);
@@ -345,7 +342,7 @@
       background: #ffffff;
     }
     .main {
-      margin: 1.2rem 0;
+      margin: .2rem 0 1.2rem;
     }
     .top {
       top: 0;
@@ -355,17 +352,23 @@
       }
     }
     .footer {
-      position: fixed;
       bottom: 0;
       height: 1rem;
-      line-height: 1rem;
-      text-align: center;
-      background: #ffffff;
-      z-index: 666;
-      color: $color;
+      padding: 10px;
+      @include flex;
+      align-items: center;
       border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
+      }
+      div {
+        height: .6rem;
+        line-height: .6rem;
+        width: 50%;
+        text-align: center;
+        color: $color;
+      }
     }
-
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
       color: #dddddd;
     }

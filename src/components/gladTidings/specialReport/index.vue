@@ -1,13 +1,5 @@
 <template>
-  <div id="special">
-    <div class="top">
-      <van-nav-bar
-        title="特殊情况报备"
-        left-text="返回"
-        left-arrow
-        @click-left="routerLink('/gladTidings')">
-      </van-nav-bar>
-    </div>
+  <div id="special" v-wechat-title="$route.meta.title">
 
     <div class="main" v-if="!searchShow">
       <van-cell-group>
@@ -71,7 +63,10 @@
       </van-cell-group>
     </div>
 
-    <div v-if="!searchShow" class="footer" @click="saveCollect()">发布</div>
+    <div v-show="!searchShow" class="footer">
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
+    </div>
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -96,7 +91,6 @@
 
   export default {
     name: "index",
-
     components: {
       [Toast.name]: Toast,
       UpLoad,
@@ -107,6 +101,7 @@
         searchValue: '',
         list: [],
         form: {
+          draft: 0,
           collect_or_rent: 1,
           contract_id: '123',
           content: '',
@@ -143,7 +138,8 @@
           this.form.screenshot = val[1]
         }
       },
-      saveCollect() {
+      saveCollect(val) {
+        this.form.draft = val;
         this.$http.post(globalConfig.server + 'bulletin/special', this.form).then((res) => {
           if (res.data.code === '51010') {
             this.$toast.success(res.data.msg);
@@ -261,7 +257,7 @@
       background: #ffffff;
     }
     .main {
-      margin: 1.2rem 0;
+      margin: .2rem 0 1.2rem;
     }
     .top {
       top: 0;
@@ -271,17 +267,23 @@
       }
     }
     .footer {
-      position: fixed;
       bottom: 0;
       height: 1rem;
-      line-height: 1rem;
-      text-align: center;
-      background: #ffffff;
-      z-index: 666;
-      color: $color;
+      padding: 10px;
+      @include flex;
+      align-items: center;
       border-top: 1px solid #ebebeb;
+      div + div {
+        border-left: 1px solid #ebebeb;
+      }
+      div {
+        height: .6rem;
+        line-height: .6rem;
+        width: 50%;
+        text-align: center;
+        color: $color;
+      }
     }
-
     input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
       color: #dddddd;
     }

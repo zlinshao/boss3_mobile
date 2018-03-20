@@ -1,14 +1,6 @@
 <template>
-  <div id="collectReport">
+  <div id="collectReport" v-wechat-title="$route.meta.title">
     <div v-show="!searchShow" class="main">
-      <div class="top">
-        <van-nav-bar
-          title="续收报备"
-          left-text="返回"
-          left-arrow
-          @click-left="routerLink('/gladTidings')">
-        </van-nav-bar>
-      </div>
 
       <van-cell-group>
         <van-switch-cell v-model="joint" title="是否合租"/>
@@ -362,7 +354,7 @@
         <van-field
           v-model="form.remark"
           label="备注"
-          type="text"
+          type="textarea"
           placeholder="请填写备注"
           icon="clear"
           @click-icon="form.remark = ''"
@@ -467,9 +459,9 @@
         payIndex: '',               //付款方式index
 
         form: {
-          type: 0,
+          type: 2,
           draft: 0,
-          share: '',                    //合租整租标记 0整租1合租
+          share: '0',                   //合租整租标记 0整租1合租
           community_id: '12',           //小区id
           building: '',                 //栋
           unit: '',                     //单元
@@ -721,6 +713,7 @@
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
           if (res.data.code === '50110') {
             Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }
@@ -814,7 +807,7 @@
     }
 
     .main {
-      margin: 1.2rem 0;
+      margin: .2rem 0 1.2rem;
     }
     .top {
       top: 0;
@@ -834,6 +827,8 @@
         border-left: 1px solid #ebebeb;
       }
       div {
+        height: .6rem;
+        line-height: .6rem;
         width: 50%;
         text-align: center;
         color: $color;

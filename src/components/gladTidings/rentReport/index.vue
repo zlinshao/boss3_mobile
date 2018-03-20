@@ -1,14 +1,7 @@
 <template>
-  <div id="rentReport">
+  <div id="rentReport" v-wechat-title="$route.meta.title">
     <div v-show="!searchShow" class="main">
-      <div class="top">
-        <van-nav-bar
-          title="租房报备"
-          left-text="返回"
-          left-arrow
-          @click-left="routerLink('/gladTidings')">
-        </van-nav-bar>
-      </div>
+
       <van-cell-group>
         <van-field
           v-model="form.contract_id"
@@ -160,8 +153,16 @@
       <div @click="priceAmount(3)" class="addInput">
         +增加分额付款
       </div>
-
       <van-cell-group>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.property"
           label="物业费"
@@ -199,15 +200,6 @@
           required>
         </van-field>
         <van-field
-          v-model="phoneTypeName"
-          label="电话类型"
-          type="text"
-          readonly
-          placeholder="请选择电话类型"
-          @click="selectShow(2,'')"
-          required>
-        </van-field>
-        <van-field
           v-model="form.phone"
           label="客户手机"
           type="number"
@@ -232,28 +224,28 @@
         <van-field
           v-model="form.remark"
           label="备注"
-          type="text"
+          type="textarea"
           placeholder="请填写备注"
           icon="clear"
           @click-icon="form.remark = ''"
           required>
         </van-field>
         <van-field
-          v-model="form.staff_id"
+          v-model="form.staff_name"
           label="开单人"
           type="text"
           placeholder="请选择开单人"
           required>
         </van-field>
         <van-field
-          v-model="form.leader_id"
+          v-model="form.leader_name"
           label="负责人"
           type="text"
           placeholder="请选择负责人"
           required>
         </van-field>
         <van-field
-          v-model="form.department_id"
+          v-model="form.department_name"
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -261,11 +253,11 @@
         </van-field>
       </van-cell-group>
     </div>
+
     <div v-show="!searchShow" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
-
 
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
@@ -340,7 +332,7 @@
         moneyNum: [''],               //分金额 付款方式
 
         form: {
-          type: 1,
+          type: 0,
           draft: 0,
           contract_id: '12',            //房屋地址id
           month: '',                    //租房月数
@@ -357,19 +349,18 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          deposit: '',                  //押金
           property: '',                 //物业费
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
-          phone_type: '1',              //电话类型 1手机2固话3小灵通
           phone: '',                    //电话号码
-          screenshot: '',               //领导截图 数组
-          photo: '',                    //合同照片 数组
+          screenshot: [3322],               //领导截图 数组
+          photo: [3344],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '2',                 //开单人id
           leader_id: '3',                //负责人id
           department_id: '4',            //部门id
         },
-        phoneTypeName: '手机',           //电话类型
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
@@ -392,8 +383,8 @@
       },
       // 截图
       getImgData(val) {
-        if (val === 'screenshot') {
-          this.form.screenshot_leader = val[1];
+        if (val[0] === 'screenshot') {
+          this.form.screenshot = val[1];
         } else {
           this.form.photo = val[1];
         }
@@ -439,7 +430,7 @@
             this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
             break;
           case 2:
-            this.columns = ['手机', '固话', '小灵通'];
+            this.columns = ['支付宝', '微信', '银行卡', 'pos机', '现金'];
             break;
         }
       },
@@ -531,8 +522,9 @@
         this.form.draft = val;
         this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-          if(res.data.code === '50210'){
+          if (res.data.code === '50210') {
             Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }
@@ -625,7 +617,7 @@
     }
 
     .main {
-      margin: 1.2rem 0;
+      margin: .2rem 0 1.2rem;
     }
     .top {
       top: 0;
@@ -645,6 +637,8 @@
         border-left: 1px solid #ebebeb;
       }
       div {
+        height: .6rem;
+        line-height: .6rem;
         width: 50%;
         text-align: center;
         color: $color;
