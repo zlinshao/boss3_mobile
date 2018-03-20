@@ -510,7 +510,7 @@
       },
       // 搜索
       onSearch() {
-        this.$http.get(this.address + 'v1/api/houses?q=' + this.searchValue, {
+        this.$http.get(this.address + 'v1/api/house?q=' + this.searchValue, {
         }).then((res) => {
           // this.lists = res.data.data.list;
         })
@@ -657,7 +657,7 @@
         } else {
           this.amountPay++;
           this.form.period_pay_arr.push('');
-          this.payType.push('');
+          this.form.pay_way_arr.push('');
           this.payTypeNum.push('');
         }
       },
@@ -672,7 +672,7 @@
         } else {
           this.amountPay--;
           this.form.period_pay_arr.splice(val, 1);
-          this.payType.splice(val, 1);
+          this.form.pay_way_arr.splice(val, 1);
           this.payTypeNum.splice(val, 1);
         }
       },
@@ -705,7 +705,6 @@
       saveCollect(val) {
         this.form.share = this.joint ? '1' : '0';
         this.form.draft = val;
-        this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
           if (res.data.code === '50110') {
             Toast.success(res.data.msg);
