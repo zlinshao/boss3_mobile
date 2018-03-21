@@ -11,7 +11,7 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="form.houseName"
+          v-model="houseName"
           label="房屋地址"
           type="text"
           @click="searchShow = true"
@@ -102,7 +102,7 @@
         list: [],
         form: {
           draft: 0,
-          collect_or_rent: 1,
+          collect_or_rent: '',
           contract_id: '123',
           content: '',
           screenshot: [],
@@ -143,6 +143,7 @@
         this.$http.post(globalConfig.server + 'bulletin/special', this.form).then((res) => {
           if (res.data.code === '51010') {
             this.$toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             this.$toast.fail(res.data.msg);
           }

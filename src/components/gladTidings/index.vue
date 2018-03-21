@@ -3,12 +3,7 @@
 
     <div class="paths">
       <div class="mainMain">
-        <div v-for="key in paths" v-if="key.hidden === 'glad'" @click="routerLink(key.path)">
-          <p>
-            <i class="iconfont icon-wancheng"></i>
-          </p>
-          <h1>{{key.name}}</h1>
-        </div>
+
       </div>
     </div>
   </div>

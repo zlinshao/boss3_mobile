@@ -1,14 +1,6 @@
 <template>
   <div id="transferReport" v-wechat-title="$route.meta.title">
-
     <div v-show="!searchShow" class="main">
-      <van-cell-group>
-        <div class="checks" style="">
-          <div style="min-width: 110px;">转租类型</div>
-          <van-radio name="0" v-model="form.trans_type">公司</van-radio>
-          <van-radio name="1" v-model="form.trans_type" style="margin-left: 18px">个人</van-radio>
-        </div>
-      </van-cell-group>
       <van-cell-group style="margin-bottom: .2rem;">
         <van-field
           v-model="form.contract_id_rent"
@@ -332,8 +324,8 @@
 
         amountPay: 1,
         datePay: [],
-        payType: [''],              //付款方式ID
         payTypeNum: [''],           //付款方式
+
         payIndex: '',               //付款方式index
 
         amountMoney: 1,
@@ -350,7 +342,6 @@
         form: {
           type: 1,
           draft: 0,
-          trans_type: '0',
           contract_id_rent: '22',       //原租房合同id
           contract_id: '33',            //现房屋合同id
           month: '',                    //签约时长
@@ -492,19 +483,19 @@
         if (val === 1) {
           if (this.amountPrice > 1) {
             this.amountPrice--;
-            this.form.period_price_arr.splice(val, 1);
-            this.price_arr.splice(val, 1);
+            this.form.period_price_arr.splice(index, 1);
+            this.price_arr.splice(index, 1);
           }
         } else if (val === 2) {
           this.amountPay--;
-          this.form.period_pay_arr.splice(val, 1);
-          this.pay_way_arr.splice(val, 1);
-          this.payTypeNum.splice(val, 1);
+          this.form.period_pay_arr.splice(index, 1);
+          this.pay_way_arr.splice(index, 1);
+          this.payTypeNum.splice(index, 1);
         } else {
           this.amountMoney--;
-          this.form.money_sep.splice(val, 1);
-          this.form.money_way.splice(val, 1);
-          this.moneyNum.splice(val, 1);
+          this.form.money_sep.splice(index, 1);
+          this.form.money_way.splice(index, 1);
+          this.moneyNum.splice(index, 1);
         }
       },
       // 日期计算

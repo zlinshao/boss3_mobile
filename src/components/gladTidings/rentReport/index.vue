@@ -8,6 +8,7 @@
           label="房屋地址"
           type="text"
           readonly
+          @click="searchSelect(1)"
           placeholder="请选择房屋地址"
           required>
         </van-field>
@@ -262,14 +263,17 @@
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
         v-model="searchValue"
+        placeholder="请输入商品名称"
         show-action
-        @search="onSearch">
-        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
-      </van-search>
+        @keyup="onSearch"
+        @cancel="onCancel"/>
       <div class="searchContent">
-        <div class="searchList" v-for="key in 30">
-          <div>{{key}}</div>
-          <div>{{key}}回复</div>
+        <div class="searchList" v-for="key in lists" @click="village(key.house_name, key.id)">
+          <div>{{key.house_name}}</div>
+          <div>
+            <p>{{key.department_name}}</p>
+            <span>{{key.staff_name}}</span>-<span>{{key.customer}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -307,8 +311,11 @@
     data() {
       return {
         urls: globalConfig.server,
+        address: globalConfig.server_user,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
+        lists: [],
+
         tabs: '',
         columns: [],              //select值
         selectHide: false,        //select选择
@@ -324,7 +331,6 @@
 
         amountPay: 1,
         datePay: [],
-        payType: [''],              //付款方式ID
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
@@ -354,8 +360,8 @@
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
-          screenshot: [3322],               //领导截图 数组
-          photo: [3344],                    //合同照片 数组
+          screenshot: [],               //领导截图 数组
+          photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '2',                 //开单人id
           leader_id: '3',                //负责人id
@@ -364,7 +370,6 @@
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
-        lists: [],
       }
     },
     mounted() {
@@ -375,10 +380,20 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
+      searchSelect(val) {
+        this.searchShow = true;
+      },
+
       // 搜索
       onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
+        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
+          let data = res.data.data;
+          for (let i = 0; i < data.length; i++) {
+            let lord = data[i].lords;
+            for (let i = 0; i < lord.length; i++) {
+              console.log(lord[i]);
+            }
+          }
         })
       },
       // 截图
@@ -439,7 +454,7 @@
         switch (this.tabs) {
           case 1:
             this.payTypeNum[this.payIndex] = value;
-            this.payType[this.payIndex] = index + 1;
+            this.form.pay_way_arr[this.payIndex] = index + 1;
             break;
           case 2:
             this.moneyNum[this.payIndex] = value;
@@ -463,7 +478,7 @@
         } else if (val === 2) {
           this.amountPay++;
           this.form.period_pay_arr.push('');
-          this.payType.push('');
+          this.form.pay_way_arr.push('');
           this.payTypeNum.push('');
         } else {
           this.amountMoney++;
@@ -477,19 +492,19 @@
         if (val === 1) {
           if (this.amountPrice > 1) {
             this.amountPrice--;
-            this.form.period_price_arr.splice(val, 1);
-            this.price_arr.splice(val, 1);
+            this.form.period_price_arr.splice(index, 1);
+            this.price_arr.splice(index, 1);
           }
         } else if (val === 2) {
           this.amountPay--;
-          this.form.period_pay_arr.splice(val, 1);
-          this.payType.splice(val, 1);
-          this.payTypeNum.splice(val, 1);
+          this.form.period_pay_arr.splice(index, 1);
+          this.form.pay_way_arr.splice(index, 1);
+          this.payTypeNum.splice(index, 1);
         } else {
           this.amountMoney--;
-          this.form.money_sep.splice(val, 1);
-          this.form.money_way.splice(val, 1);
-          this.moneyNum.splice(val, 1);
+          this.form.money_sep.splice(index, 1);
+          this.form.money_way.splice(index, 1);
+          this.moneyNum.splice(index, 1);
         }
       },
       // 日期计算
@@ -520,11 +535,10 @@
 
       saveCollect(val) {
         this.form.draft = val;
-        this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
           if (res.data.code === '50210') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
+            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }

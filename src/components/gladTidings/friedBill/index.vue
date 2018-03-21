@@ -11,7 +11,7 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="form.houseName"
+          v-model="houseName"
           label="房屋地址"
           type="text"
           @click="searchShow = true"
@@ -87,15 +87,6 @@
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <!--select 选择-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
-      <van-picker
-        show-toolbar
-        :columns="columns"
-        @cancel="onCancel"
-        @confirm="onConfirm"/>
-    </van-popup>
-
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
         v-model="searchValue"
@@ -110,18 +101,6 @@
         </div>
       </div>
     </div>
-
-    <!--日期-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="date"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @change="monthDate"
-        @cancel="onCancel"
-        @confirm="onDate"/>
-    </van-popup>
   </div>
 </template>
 
@@ -136,26 +115,16 @@
       return {
         urls: globalConfig.server,
         refundSta: false,
-        selectHide: false,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
-
-        minDate: new Date(2000, 0, 1),
-        maxDate: new Date(2200, 12, 31),
-        currentDate: '',
-        timeShow: false,          //日期状态
-        timeIndex: '',
-        timeValue: '',            //日期value
-
         lists: [],
-        columns: [],
 
         bulletinDate: '',             //喜报日期
         payWay: '',                   //付款方式
         price_arr: '',                //月单价
 
         form: {
-          type: 1,
+          type: 0,
           draft: 0,
           collect_or_rent: '',
           contract_id: '33',            //合同id
@@ -172,57 +141,32 @@
         department_name: '',            //部门name
       }
     },
-    mounted() {
-      this.getNowFormatDate();
-    },
+
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
       },
+
       // 搜索
       onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
+        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
+          let data = res.data.data;
+          let arr = {};
+          for (let i = 0; i < data.length; i++) {
+            let lord = data[i].lords;
+            for (let i = 0; i < lord.length; i++) {
+              console.log(lord[i]);
+            }
+          }
         })
       },
-      // 获取当前时间
-      getNowFormatDate() {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let strDate = date.getDate();
-        this.currentDate = new Date(year, month, strDate);
-      },
-      // 日期选择
-      timeChoose() {
-        this.timeShow = true;
-      },
-      // 日期拼接
-      monthDate(peaker) {
-        this.timeValue = peaker.getValues().join('-');
-      },
-      // 确认日期
-      onDate() {
-        this.timeShow = false;
-        this.bulletinDate = this.timeValue;
-      },
+
       // select关闭
       onCancel() {
         this.searchShow = false;
-        this.selectHide = false;
-      },
-
-      onClickLeft() {
-        this.$router.push('/gladTidings')
       },
       // select选择
       onConfirm(value, index) {
-        switch (this.tabs) {
-          case 1:
-            this.roomName = value;
-            this.form.room = index;
-            break;
-        }
         this.selectHide = false;
       },
 
@@ -239,8 +183,9 @@
         }
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
-          if (res.data.code === '50810') {
+          if (res.data.code === '50710') {
             Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }

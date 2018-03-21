@@ -148,6 +148,7 @@
         this.$http.post(this.urls + 'bulletin/confiscate', this.form).then((res) => {
           if (res.data.code === '50610') {
             Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }

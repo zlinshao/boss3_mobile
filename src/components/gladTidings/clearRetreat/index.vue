@@ -1,9 +1,9 @@
 <template>
-  <div id="drawbackReport" v-wechat-title="$route.meta.title">
+  <div id="clearRetreat" v-wechat-title="$route.meta.title">
 
-    <div v-show="!searchShow" class="main">
+    <div class="main" v-if="!searchShow">
       <van-cell-group>
-        <div class="checks">
+        <div class="checks" style="">
           <div style="min-width: 110px;">收租标记</div>
           <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
           <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
@@ -11,98 +11,46 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="form.contract_id"
+          v-model="houseName"
           label="房屋地址"
           type="text"
+          @click="searchShow = true"
           readonly
-          placeholder="请选择房屋地址"
-          required>
+          placeholder="选择房屋地址">
         </van-field>
-
+        <van-field
+          v-model="bulletinDate"
+          label="喜报日期"
+          type="text"
+          disabled
+          placeholder="喜报日期已禁用">
+        </van-field>
         <van-field
           v-model="payWay"
-          type="text"
           label="付款方式"
-          placeholder="付款方式已禁用"
-          disabled>
+          type="text"
+          disabled
+          placeholder="付款方式已禁用">
         </van-field>
         <van-field
           v-model="price_arr"
-          type="text"
           label="月单价"
-          placeholder="月单价已禁用"
-          disabled>
-        </van-field>
-        <van-field
-          v-model="recMoney"
           type="text"
-          label="已收金额"
-          placeholder="已收金额已禁用"
-          disabled>
-        </van-field>
-
-        <van-field
-          v-model="form.amount"
-          type="number"
-          label="退款金额"
-          placeholder="请填写退款金额"
-          icon="clear"
-          @click-icon="form.amount = ''"
-          required>
-        </van-field>
-
-        <van-field
-          v-model="form.account"
-          label="卡号"
-          type="number"
-          @keyup="subAccount(form.account)"
-          placeholder="请填写卡号"
-          icon="clear"
-          @click-icon="form.account = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.bank"
-          label="银行"
-          type="text"
-          placeholder="请填写银行名称"
-          icon="clear"
-          @click-icon="form.bank = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.subbranch"
-          label="支行"
-          type="text"
-          placeholder="请填写支行"
-          icon="clear"
-          @click-icon="form.subbranch = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.account_name"
-          label="开户名"
-          type="text"
-          placeholder="请填写开户名"
-          icon="clear"
-          @click-icon="form.account_name = ''"
-          required>
+          disabled
+          placeholder="月单价已禁用">
         </van-field>
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">领导同意截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+        <div class="title">组长同意截图</div>
+        <UpLoad :ID="'headman'" @getImg="headmanAgree"></UpLoad>
       </div>
-
       <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
           type="textarea"
-          placeholder="请填写备注"
-          icon="clear"
-          @click-icon="form.remark = ''">
+          placeholder="请填写备注">
         </van-field>
         <van-field
           v-model="staff_name"
@@ -164,92 +112,107 @@
         searchValue: '',          //搜索
         lists: [],
 
-        payWay: '',
-        price_arr: '',
-        recMoney: '',
+        bulletinDate: '',             //喜报日期
+        payWay: '',                   //付款方式
+        price_arr: '',                //月单价
 
         form: {
+          type: 0,
           draft: 0,
           collect_or_rent: '',
-          contract_id: '12',            //房屋地址id
-          amount: '',                   //退款金额
-          bank: '',                     //银行名称
-          subbranch: '',                //支行名称
-          account_name: '',             //帐户名称
-          account: '',                  //帐号
-          screenshot_leader: '',        //领导同意截图
+          contract_id: '33',            //合同id
+          screenshot_leader: '',        //领导截图 数组
           remark: '',                   //备注
-          staff_id: '1',                 //开单人id
-          leader_id: '2',                //负责人id
-          department_id: '3',            //部门id
+          staff_id: '1',                //开单人id
+          leader_id: '2',               //负责人id
+          department_id: '3',           //部门id
         },
+        houseName: '',
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
-    watch: {},
+
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
       },
+
       // 搜索
       onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
-        })
-      },
-      screenshot(val) {
-        this.form.screenshot_leader = val[1];
-      },
-      // 获取银行
-      subAccount(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
-          if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
-          } else {
-            this.form.bank = '';
+        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
+          let data = res.data.data;
+          let arr = {};
+          for (let i = 0; i < data.length; i++) {
+            let lord = data[i].lords;
+            for (let i = 0; i < lord.length; i++) {
+              console.log(lord[i]);
+            }
           }
         })
       },
+
       // select关闭
       onCancel() {
         this.searchShow = false;
       },
+      // select选择
+      onConfirm(value, index) {
+        this.selectHide = false;
+      },
+
+      // 截图
+      headmanAgree(val) {
+        this.form.screenshot_leader = val[1];
+      },
 
       saveCollect(val) {
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
-          if (res.data.code === '50810') {
+        this.$http.post(this.urls + 'bulletin/banish', this.form).then((res) => {
+          if (res.data.code === '50410') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }
         })
-      },
+      }
     },
   }
 </script>
 
 <style lang="scss">
-  #drawbackReport {
+  #clearRetreat {
     @mixin flex {
       display: flex;
       display: -webkit-flex;
     }
+    $color: #409EFF;
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: 5px 0;
+      padding-bottom: 10px;
+      .title {
+        padding: 10px 15px;
+      }
+    }
+
     .checks {
       display: -webkit-flex;
       align-items: center;
       height: 44px;
     }
-    $color: #409EFF;
+
     .van-switch.van-switch--on {
       background: $color;
     }
+
     .van-icon.van-icon-checked {
       color: $color;
     }
+
     .van-cell.van-hairline.van-field {
       .van-cell__title {
         width: 110px;
@@ -258,6 +221,14 @@
         padding-left: 110px;
       }
     }
+    .dingJin {
+      padding: 10px 15px 10px 0;
+      display: flex;
+      display: -webkit-flex; /* Safari */
+      align-items: center;
+      justify-content: space-between;
+    }
+
     .searchClass {
       position: fixed;
       top: 0;
@@ -270,7 +241,8 @@
         overflow: auto;
         height: 77%;
         .searchList {
-          @include flex;
+          display: flex;
+          display: -webkit-flex;
           justify-content: space-between;
           padding: 15px 20px;
           &:hover {
@@ -279,6 +251,7 @@
         }
       }
     }
+
     .aloneModel {
       background: #fff;
       width: 100%;

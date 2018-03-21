@@ -8,19 +8,18 @@ import Warning from '@/components/examine/warning/index.vue'
 import CardDetail from '@/components/examine/cardDetail/index.vue'
 import CreditCard from '@/components/examine/creditCard/index.vue'
 
-import GladTidings from '../components/gladTidings/index.vue'
-
 import CollectReport from '../components/gladTidings/collectReport/index.vue'
 import RentReport from '../components/gladTidings/rentReport/index.vue'
 import TransferReport from '../components/gladTidings/transferReport/index.vue'
 import ContinueCollect from '../components/gladTidings/continueCollect/index.vue'
 
 
-import Examine from '../components/examine/index.vue'
 import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'   //未收先祖
 import ContinueRent from '../components/gladTidings/continueRent/index.vue'   //续租
+import ChangeRent from '../components/gladTidings/changeRent/index.vue'       //转租
 import Drawback from '../components/gladTidings/drawbackReport/index.vue'
 import FriedBill from '../components/gladTidings/friedBill/index.vue'         //zhadan
+import ClearRetreat from '../components/gladTidings/clearRetreat/index.vue'   //清退
 import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //中介给
 import Special from '../components/gladTidings/specialReport/index.vue'
 import Confiscate from '../components/gladTidings/confiscate/index.vue'
@@ -40,16 +39,9 @@ export default new Router({
       component: Index
     },
     {
-      path: '/gladTidings',
-      name: 'gladTidings',
-      hidden: false,
-      meta: {title: '报备'},
-      component: GladTidings
-    },
-    {
       path: '/publishDetail',
       name: 'publishDetail',
-      hidden: 'glad',
+      hidden: false,
       meta: {title: '报备详情'},
       component: PublishDetail
     },
@@ -66,6 +58,13 @@ export default new Router({
       hidden: 'glad',
       meta: {title: '租房报备'},
       component: RentReport
+    },
+    {
+      path: '/changeRent',                 //转租报备
+      name: '转租报备',
+      hidden: 'glad',
+      meta: {title: '租房报备'},
+      component: ChangeRent
     },
     {
       path: '/transferReport',              //调房报备
@@ -110,6 +109,13 @@ export default new Router({
       component: FriedBill
     },
     {
+      path: '/clearRetreat',
+      name: '清退报备',
+      hidden: 'glad',
+      meta: {title: '清退报备'},
+      component: ClearRetreat
+    },
+    {
       path: '/agencyRent',
       name: '中介费报备',
       hidden: 'glad',
@@ -136,14 +142,6 @@ export default new Router({
       hidden: 'glad',
       meta: {title: '尾款房租报备'},
       component: FinalPayment
-    },
-
-
-    {
-      path: '/examine',
-      name: '审批',
-      meta: {title: '审批'},
-      component: Examine
     },
     {
       path: '/expense',

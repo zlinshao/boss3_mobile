@@ -83,7 +83,7 @@
       <van-cell-group>
         <div class="dingJin">
           <div>是否结清</div>
-          <van-switch v-model="form.settleStatus"></van-switch>
+          <van-switch v-model="settleStatus"></van-switch>
         </div>
       </van-cell-group>
 
@@ -160,12 +160,12 @@
         searchValue: '',          //搜索
         settleStatus: false,      //是否结清
 
-        payWay: '',         //付款方式
-        monthPrice: '',     //月单价
+        payWay: '',               //付款方式
+        monthPrice: '',           //月单价
 
         form: {
           draft: 0,
-          collect_or_rent: '0',
+          collect_or_rent: '',
           contract_id: '12',            //房屋地址id
           amount: '',                   //数量
           bank: '',                     //银行名称
@@ -173,7 +173,7 @@
           account_name: '',             //帐户名称
           account: '',                  //帐号
           name: '',                     //中介名称
-          settle: '0',                  //是否结清
+          settle: '',                   //是否结清
           screenshot: '',               //结清截图
           screenshot_leader: '',        //领导同意截图
           remark: '',                   //备注
@@ -226,6 +226,7 @@
         this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
           if (res.data.code === '50810') {
             Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }

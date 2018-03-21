@@ -8,6 +8,7 @@
           label="房屋地址"
           type="text"
           readonly
+          @click="searchSelect(1)"
           placeholder="请选择房屋地址"
           required>
         </van-field>
@@ -48,7 +49,7 @@
             v-model="datePrice[index]"
             type="text"
             label="开始时间"
-            placeholder="周期开始日期"
+            placeholder="获取周期开始日期"
             disabled
             required>
           </van-field>
@@ -95,7 +96,7 @@
             v-model="datePay[index]"
             type="text"
             label="开始时间"
-            placeholder="周期开始日期"
+            placeholder="获取周期开始日期"
             disabled
             required>
           </van-field>
@@ -153,8 +154,16 @@
       <div @click="priceAmount(3)" class="addInput">
         +增加分额付款
       </div>
-
       <van-cell-group>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.property"
           label="物业费"
@@ -192,15 +201,6 @@
           required>
         </van-field>
         <van-field
-          v-model="phoneTypeName"
-          label="电话类型"
-          type="text"
-          readonly
-          placeholder="请选择电话类型"
-          @click="selectShow(2,'')"
-          required>
-        </van-field>
-        <van-field
           v-model="form.phone"
           label="客户手机"
           type="number"
@@ -213,12 +213,12 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="'rentScreenshot'" @getImg="screenshot"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
       </div>
 
       <div class="aloneModel">
         <div class="title">合同照片</div>
-        <UpLoad :ID="'renPhoto'" @getImg="contractPhoto"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -232,21 +232,21 @@
           required>
         </van-field>
         <van-field
-          v-model="form.staff_id"
+          v-model="form.staff_name"
           label="开单人"
           type="text"
           placeholder="请选择开单人"
           required>
         </van-field>
         <van-field
-          v-model="form.leader_id"
+          v-model="form.leader_name"
           label="负责人"
           type="text"
           placeholder="请选择负责人"
           required>
         </van-field>
         <van-field
-          v-model="form.department_id"
+          v-model="form.department_name"
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -263,14 +263,17 @@
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
         v-model="searchValue"
+        placeholder="请输入商品名称"
         show-action
-        @search="onSearch">
-        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
-      </van-search>
+        @keyup="onSearch"
+        @cancel="onCancel"/>
       <div class="searchContent">
-        <div class="searchList" v-for="key in 30">
-          <div>{{key}}</div>
-          <div>{{key}}回复</div>
+        <div class="searchList" v-for="key in lists" @click="village(key.village_name, key.id)">
+          <div>{{key.village_name}}</div>
+          <div>
+            <p>{{key.province_name}}-{{key.city_name}}</p>
+            <!--<span>上官海棠</span>-->
+          </div>
         </div>
       </div>
     </div>
@@ -308,8 +311,11 @@
     data() {
       return {
         urls: globalConfig.server,
+        address: globalConfig.server_user,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
+        lists: [],
+
         tabs: '',
         columns: [],              //select值
         selectHide: false,        //select选择
@@ -325,7 +331,6 @@
 
         amountPay: 1,
         datePay: [],
-        payType: [''],              //付款方式ID
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
@@ -350,23 +355,21 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          deposit: '',                  //押金
           property: '',                 //物业费
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
-          phone_type: '1',              //电话类型 1手机2固话3小灵通
           phone: '',                    //电话号码
-          screenshot: '',               //领导截图 数组
-          photo: '',                    //合同照片 数组
+          screenshot: [],               //领导截图 数组
+          photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '2',                 //开单人id
           leader_id: '3',                //负责人id
           department_id: '4',            //部门id
         },
-        phoneTypeName: '手机',           //电话类型
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
-        lists: [],
       }
     },
     mounted() {
@@ -377,22 +380,31 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
+      searchSelect(val){
+        this.searchShow = true;
+      },
       // 搜索
       onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
+        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
+          let data = res.data.data;
+          let arr = {};
+          for (let i = 0; i < data.length; i++) {
+            let lord = data[i].lords;
+            for (let i = 0; i < lord.length; i++) {
+              console.log(lord[i]);
+            }
+          }
         })
       },
       // 截图
-      screenshot(val) {
-        this.form.screenshot_leader = val[1];
-        console.log(val);
+      getImgData(val) {
+        if (val[0] === 'screenshot') {
+          this.form.screenshot = val[1];
+        } else {
+          this.form.photo = val[1];
+        }
       },
-      // 合同照片
-      contractPhoto(val) {
-        this.form.photo = val[1];
-        console.log(val);
-      },
+
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -433,7 +445,7 @@
             this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
             break;
           case 2:
-            this.columns = ['手机', '固话', '小灵通'];
+            this.columns = ['支付宝', '微信', '银行卡', 'pos机', '现金'];
             break;
         }
       },
@@ -442,7 +454,7 @@
         switch (this.tabs) {
           case 1:
             this.payTypeNum[this.payIndex] = value;
-            this.payType[this.payIndex] = index + 1;
+            this.form.pay_way_arr[this.payIndex] = index + 1;
             break;
           case 2:
             this.moneyNum[this.payIndex] = value;
@@ -466,7 +478,7 @@
         } else if (val === 2) {
           this.amountPay++;
           this.form.period_pay_arr.push('');
-          this.payType.push('');
+          this.form.pay_way_arr.push('');
           this.payTypeNum.push('');
         } else {
           this.amountMoney++;
@@ -480,19 +492,19 @@
         if (val === 1) {
           if (this.amountPrice > 1) {
             this.amountPrice--;
-            this.form.period_price_arr.splice(val, 1);
-            this.price_arr.splice(val, 1);
+            this.form.period_price_arr.splice(index, 1);
+            this.price_arr.splice(index, 1);
           }
         } else if (val === 2) {
           this.amountPay--;
-          this.form.period_pay_arr.splice(val, 1);
-          this.payType.splice(val, 1);
-          this.payTypeNum.splice(val, 1);
+          this.form.period_pay_arr.splice(index, 1);
+          this.form.pay_way_arr.splice(index, 1);
+          this.payTypeNum.splice(index, 1);
         } else {
           this.amountMoney--;
-          this.form.money_sep.splice(val, 1);
-          this.form.money_way.splice(val, 1);
-          this.moneyNum.splice(val, 1);
+          this.form.money_sep.splice(index, 1);
+          this.form.money_way.splice(index, 1);
+          this.moneyNum.splice(index, 1);
         }
       },
       // 日期计算
@@ -523,10 +535,10 @@
 
       saveCollect(val) {
         this.form.draft = val;
-        this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-          if(res.data.code === '50210'){
+          if (res.data.code === '50210') {
             Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }
@@ -553,6 +565,9 @@
     .van-cell.van-hairline.van-field {
       .van-cell__title {
         width: 110px;
+        span {
+          font-size: 16px;
+        }
       }
       .van-cell__value {
         padding-left: 110px;
@@ -577,15 +592,14 @@
       }
     }
     .addInput {
-      height: .88rem;
-      line-height: .88rem;
+      height: .9rem;
+      line-height: .9rem;
       text-align: center;
       color: $color;
       background: #ffffff;
-    }
-    .addInput.bottom {
       margin-bottom: .2rem;
     }
+
     .searchClass {
       position: fixed;
       top: 0;

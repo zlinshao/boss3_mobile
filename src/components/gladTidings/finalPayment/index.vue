@@ -246,6 +246,7 @@
         this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
           if (res.data.code === '50910') {
             this.$toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
           } else {
             this.$toast(res.data.msg);
           }

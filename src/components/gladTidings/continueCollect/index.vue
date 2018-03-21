@@ -1,79 +1,22 @@
 <template>
   <div id="collectReport" v-wechat-title="$route.meta.title">
     <div v-show="!searchShow" class="main">
-
       <van-cell-group>
-        <van-switch-cell v-model="joint" title="是否合租"/>
         <van-field
-          v-if="joint"
-          v-model="form.rooms_sum"
-          label="房间数量"
-          type="number"
-          placeholder="请填写房间数量"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.community_id"
-          label="小区"
+          v-model="form.community_name"
+          label="房屋地址"
           type="text"
           @click="searchShow = true"
           readonly
-          placeholder="请选择小区地址"
+          placeholder="请选择房屋地址"
           required>
         </van-field>
         <van-field
-          v-model="form.building"
-          type="text"
-          label="栋"
-          placeholder="请填写栋"
-          icon="clear"
-          @click-icon="form.building = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.unit"
-          type="text"
-          label="单元"
-          placeholder="请填写单元"
-          icon="clear"
-          @click-icon="form.unit = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.doorplate"
-          type="text"
-          label="门牌"
-          placeholder="请填写门牌"
-          icon="clear"
-          @click-icon="form.doorplate = ''"
-          required>
-        </van-field>
-        <van-field
-          @click="selectShow(1,'')"
-          v-model="roomName"
-          readonly
-          type="text"
-          label="室"
-          placeholder="请选择室"
-          required>
-        </van-field>
-        <van-field
-          @click="selectShow(2,'')"
-          v-model="hallName"
-          readonly
-          type="text"
-          label="厅"
-          placeholder="请选择厅"
-          required>
-        </van-field>
-        <van-field
-          @click="selectShow(3,'')"
-          v-model="toiletName"
-          readonly
-          type="text"
-          label="卫"
-          placeholder="请选择卫"
-          required>
+          v-model="house_name"
+          type="number"
+          label="户型"
+          placeholder="户型已禁用"
+          disabled>
         </van-field>
         <van-field
           v-model="form.month"
@@ -179,11 +122,16 @@
         </van-field>
         <van-field
           v-model="form.warranty"
-          label="保修期"
+          label="保修期(月数)"
           type="text"
-          placeholder="请填写保修期"
-          icon="clear"
-          @click-icon="form.warranty = ''"
+          placeholder="请填写保修期(月数)"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.warranty_day"
+          label="保修期(天数)"
+          type="text"
+          placeholder="请填写保修期(天数)"
           required>
         </van-field>
         <van-field
@@ -193,6 +141,15 @@
           readonly
           placeholder="请选择客户来源"
           @click="selectShow(5,'')"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
           required>
         </van-field>
         <van-field
@@ -247,15 +204,6 @@
           placeholder="请填写房东姓名"
           icon="clear"
           @click-icon="form.name = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="phoneTypeName"
-          label="电话类型"
-          type="text"
-          readonly
-          placeholder="请选择电话类型"
-          @click="selectShow(6,'')"
           required>
         </van-field>
         <van-field
@@ -322,20 +270,13 @@
           @click-icon="form.penalty = ''"
           required>
         </van-field>
-        <!--<van-field-->
-        <!--v-model="form.type"-->
-        <!--label="匹配租房信息"-->
-        <!--type="text"-->
-        <!--placeholder="请选择租房信息"-->
-        <!--required>-->
-        <!--</van-field>-->
         <van-field
-          v-model="form.contract_id"
+          v-model="form.contract_number"
           label="合同编号"
           type="text"
           placeholder="请填写收房合同编号"
           icon="clear"
-          @click-icon="form.contract_id = ''"
+          @click-icon="form.contract_number = ''"
           required>
         </van-field>
       </van-cell-group>
@@ -438,54 +379,52 @@
         urls: globalConfig.server,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
+        lists: [],
         tabs: '',
         columns: [],              //select值
         selectHide: false,        //房型
-        joint: false,             //是否合租
+
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
-        timeShow: false,          //日期状态
+        timeShow: false,                //日期状态
         timeIndex: '',
-        timeValue: '',            //日期value
+        timeValue: '',                  //日期value
 
         amountPrice: 1,
         datePrice: [],
 
         amountPay: 1,
         datePay: [],
-        payType: [''],              //付款方式ID
-        payTypeNum: [''],           //付款方式
-        payIndex: '',               //付款方式index
+        payTypeNum: [''],               //付款方式
+        payIndex: '',                   //付款方式index
 
+        house_name: '321321',
         form: {
           type: 2,
           draft: 0,
-          share: '0',                   //合租整租标记 0整租1合租
-          community_id: '12',           //小区id
-          building: '',                 //栋
-          unit: '',                     //单元
-          doorplate: '',                //门牌
-          room: '',                     //室
-          hall: '',                     //厅
-          toilet: '',                   //卫
-          rooms_sum: '',                //合租时房间数量
+          contract_id: '123',
+          contract_id_continued: '12',  //合同ID
           month: '',                    //收房月数
           begin_date: '',               //合同开始日期
-          price_arr: [''],              //月单价
+          house_type: [2,1,1],          //户型
           period_price_arr: [''],       //月单价周期
-          pay_way_arr: [''],            //付款方式
+          price_arr: [''],              //月单价
+
           period_pay_arr: [''],         //付款方式周期
+          pay_way_arr: [''],            //付款方式
+
           vacancy: '',                  //空置期
-          warranty: '',                 //保修期
+          warranty: '',                 //保修期(月)
+          warranty_day: '',             //保修期(天)
           from: '1',                    //客户来源 1个人2中介
+          deposit: '',                  //押金
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
           sign_date: '',                //签约日期
           name: '',                     //房东姓名
-          phone_type: '1',              //电话类型 1手机2固话3小灵通
           phone: '',                    //电话号码
           bank: '',                     //银行名称
           subbranch: '',                //支行名称
@@ -493,7 +432,7 @@
           account: '',                  //帐号
           relationship: '',             //房东与收款人关系
           penalty: '',                  //违约金
-          contract_id: '',              //合同id
+          contract_number: '',          //合同编号
           screenshot_leader: '',        //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
@@ -501,16 +440,12 @@
           leader_id: '2',                //负责人id
           department_id: '3',            //部门id
         },
-        roomName: '',                 //室
-        hallName: '',                 //厅
-        toiletName: '',               //卫
-        community_name: '',           //小区name
+        community_name: '',           //房屋地址
         fromName: '个人',             //客户来源
-        phoneTypeName: '手机',        //电话类型
         staff_name: '',               //开单人name
         leader_name: '',              //负责人name
         department_name: '',          //部门name
-        lists: [],
+
       }
     },
     mounted() {
@@ -588,52 +523,24 @@
         this.payIndex = index;
         this.selectHide = true;
         switch (val) {
-          case 1:
-            this.columns = ['1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'];
-            break;
-          case 2:
-            this.columns = ['0厅', '1厅', '2厅', '3厅'];
-            break;
-          case 3:
-            this.columns = ['0卫', '1卫', '2卫', '3卫'];
-            break;
           case 4:
             this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
             break;
           case 5:
             this.columns = ['个人', '中介'];
             break;
-          case 6:
-            this.columns = ['手机', '固话', '小灵通'];
-            break;
         }
       },
       // select选择
       onConfirm(value, index) {
         switch (this.tabs) {
-          case 1:
-            this.roomName = value;
-            this.form.room = index;
-            break;
-          case 2:
-            this.hallName = value;
-            this.form.hall = index;
-            break;
-          case 3:
-            this.toiletName = value;
-            this.form.toilet = index;
-            break;
           case 4:
             this.payTypeNum[this.payIndex] = value;
-            this.payType[this.payIndex] = index + 1;
+            this.form.pay_way_arr[this.payIndex] = index + 1;
             break;
           case 5:
             this.fromName = value;
             this.form.from = index + 1;
-            break;
-          case 6:
-            this.phoneTypeName = value;
-            this.form.phone_type = index + 1;
             break;
         }
         this.selectHide = false;
@@ -653,7 +560,7 @@
         } else {
           this.amountPay++;
           this.form.period_pay_arr.push('');
-          this.payType.push('');
+          this.form.pay_way_arr.push('');
           this.payTypeNum.push('');
         }
       },
@@ -687,29 +594,19 @@
         if (val === 1) {
           if (this.amountPrice > 1) {
             this.amountPrice--;
-            this.form.period_price_arr.splice(val, 1);
-            this.price_arr.splice(val, 1);
+            this.form.period_price_arr.splice(index, 1);
+            this.price_arr.splice(index, 1);
           }
         } else {
           this.amountPay--;
           this.form.period_pay_arr.splice(val, 1);
-          this.payType.splice(val, 1);
-          this.payTypeNum.splice(val, 1);
+          this.form.pay_way_arr.splice(index, 1);
+          this.payTypeNum.splice(index, 1);
         }
       },
 
       saveCollect(val) {
-        if (!this.joint) {
-          this.form.share = '0';
-        } else {
-          this.form.share = '1';
-        }
-        // let num = [];
-        // for (let i = 0; i < this.amountPrice; i++) {
-        //   num.push(Number(this.form.price_arr[i]).toFixed(2));
-        // }
         this.form.draft = val;
-        this.form.pay_way_arr = this.payType;
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
           if (res.data.code === '50110') {
             Toast.success(res.data.msg);
