@@ -171,6 +171,15 @@
           required>
         </van-field>
         <van-field
+          v-model="fromName"
+          label="来源"
+          type="text"
+          readonly
+          placeholder="请选择客户来源"
+          @click="selectShow(4,'')"
+          required>
+        </van-field>
+        <van-field
           v-model="form.property_payer"
           label="物业费付款人"
           type="text"
@@ -346,6 +355,7 @@
           money_way: [''],              //分金额 方式
 
           deposit: '',                  //押金
+          from: '1',                    //客户来源 1个人2中介
           property: '',                 //物业费
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
@@ -357,6 +367,7 @@
           leader_id: '',                //负责人id
           department_id: '4',            //部门id
         },
+        fromName: '',
         houseName: '',                   //房屋地址name
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
@@ -464,6 +475,9 @@
           case 3:
             this.columns = ['0', '1', '2', '3'];
             break;
+          case 4:
+            this.columns = ['个人', '中介'];
+            break;
         }
       },
       // select选择
@@ -475,6 +489,10 @@
             break;
           case 3:
             this.form.pay_way_bet = value;
+            break;
+          case 4:
+            this.fromName = value;
+            this.form.from = index + 1;
             break;
         }
         this.selectHide = false;

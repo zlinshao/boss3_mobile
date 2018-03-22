@@ -170,6 +170,15 @@
           required>
         </van-field>
         <van-field
+          v-model="fromName"
+          label="来源"
+          type="text"
+          readonly
+          placeholder="请选择客户来源"
+          @click="selectShow(4,'')"
+          required>
+        </van-field>
+        <van-field
           v-model="form.property_payer"
           label="物业费付款人"
           type="text"
@@ -335,7 +344,6 @@
           draft: 0,
           rwc_type: 1,
           rent_without_collect_address: '',
-          contract_id: '12',            //房屋地址id
           month: '',                    //租房月数
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -350,6 +358,7 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          from: '',                     //押金
           deposit: '',                  //押金
           property: '',                 //物业费
           receipt: '',                  //收据编号
@@ -456,6 +465,9 @@
           case 3:
             this.columns = ['0', '1', '2', '3'];
             break;
+          case 4:
+            this.columns = ['个人', '中介'];
+            break;
         }
       },
       // select选择
@@ -467,6 +479,10 @@
             break;
           case 3:
             this.form.pay_way_bet = value;
+            break;
+          case 4:
+            this.fromName = value;
+            this.form.from = index + 1;
             break;
         }
         this.selectHide = false;
