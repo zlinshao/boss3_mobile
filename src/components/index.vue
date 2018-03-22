@@ -174,7 +174,7 @@
       routerLink(val) {
         if (val === '/') {
           this.footActive = 1;
-          this.active = 0;
+          this.active
         }
         this.$router.push({path: val});
       },

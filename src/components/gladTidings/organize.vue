@@ -23,7 +23,7 @@
 <script>
   export default {
     name: "organize",
-    props: ['module'],
+    props: ['module', 'type'],
     data() {
       return {
         organizeShow: false,
@@ -62,32 +62,40 @@
               let list = {};
               list.id = data[i].id;
               list.staff_name = data[i].name;
-              list.depart_name = data[i].org[0].name;
+              if (data[i].org.length !== 0) {
+                list.depart_name = data[i].org[0].name;
+              } else {
+                list.depart_name = '---';
+              }
               this.lists.push(list);
             }
           }
         })
       },
-    },
+      // 开单人
+      organizeSure(name, id) {
+        this.form.id = id;
+        this.form.name = name;
+        this.$emit('organization', this.form, this.type);
+        this.onClose();
+      },
 
-    // 开单人
-    organizeSure(name, id) {
-      this.form.staff_id = name;
-      this.form.leader_id = id;
-      this.$emit('organization', this.form);
-      this.onClose();
-    },
-
-    // select关闭
-    onClose() {
-      this.organizeShow = false;
-      this.lists = [];
-      this.searchValue = '';
+      // select关闭
+      onClose() {
+        this.organizeShow = false;
+        this.lists = [];
+        this.searchValue = '';
+      },
     },
   }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+  @mixin flex {
+    display: flex;
+    display: -webkit-flex;
+  }
+
   .notData {
     text-align: center;
     padding: 24px 0;

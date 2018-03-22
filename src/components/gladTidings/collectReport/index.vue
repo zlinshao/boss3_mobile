@@ -350,7 +350,7 @@
         </van-field>
         <van-field
           v-model="staff_name"
-          @click="staffModule = true"
+          @click="searchSelect(2)"
           label="开单人"
           type="text"
           placeholder="请选择开单人"
@@ -358,7 +358,7 @@
         </van-field>
         <van-field
           v-model="leader_name"
-          @click="staffModule = true"
+          @click="searchSelect(3)"
           label="负责人"
           type="text"
           placeholder="请选择负责人"
@@ -366,6 +366,7 @@
         </van-field>
         <van-field
           v-model="department_name"
+          @click="searchSelect(4)"
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -419,23 +420,25 @@
         @confirm="onDate"/>
     </van-popup>
 
-    <!--<Organization :module="staffModule" @close="onCancel" @organization="staff_name"></Organization>-->
+    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  // import Organization from '../organize.vue'
+  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, Organization},
     data() {
       return {
         urls: globalConfig.server,
         address: globalConfig.server_user,
         staffModule: false,       //开单人
+        organizeType: '',
+
         searchShow: false,        //搜索
         searchValue: '',          //搜索
         allCity: [],              //城市
@@ -502,8 +505,8 @@
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '1',                //开单人id
-          leader_id: '2',               //负责人id
+          staff_id: '',                //开单人id
+          leader_id: '',               //负责人id
           department_id: '3',           //部门id
 
         },
@@ -528,7 +531,21 @@
         this.$router.push({path: val});
       },
       searchSelect(val) {
-        this.searchShow = true;
+        switch (val) {
+          case 1:
+            this.searchShow = true;
+            break;
+          case 2:
+            this.staffModule = true;
+            this.organizeType = 'staff';
+            break;
+          case 3:
+            this.staffModule = true;
+            this.organizeType = 'leader';
+            break;
+
+        }
+
       },
       onSearch() {
         if (this.searchValue.length > 1) {
@@ -552,11 +569,21 @@
         this.staffModule = false;
         this.lists = [];
       },
-      // // 开单人
-      // staff_name(val){
-      //
-      // },
+      // 开单人
+      staff_(val, type) {
+        console.log(val, type);
+        if (type === 'staff') {
+          this.form.staff_id = val.id;
+          this.staff_name = val.name;
+        } else {
+          this.form.leader_id = val.id;
+          this.leader_name = val.name;
+        }
+      },
+      // 负责人
+      leader_(val) {
 
+      },
       // 小区
       village(name, id) {
         this.form.community_name = name;

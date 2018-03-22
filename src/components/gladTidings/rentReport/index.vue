@@ -398,8 +398,13 @@
               list.id = data[i].id;
               list.house_name = data[i].name;
               if (data[i].lords.length !== 0) {
-                list.staff_name = data[i].lords[0].user[0].name;
-                list.department_name = data[i].lords[0].user[0].org[0].name;
+                if (data[i].lords[0].user.length !== 0) {
+                  list.staff_name = data[i].lords[0].user[0].name;
+                  list.department_name = data[i].lords[0].user[0].org[0].name;
+                } else {
+                  list.staff_name = '';
+                  list.department_name = '';
+                }
               } else {
                 list.staff_name = '';
                 list.department_name = '';
