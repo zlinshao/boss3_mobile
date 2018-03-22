@@ -29,7 +29,7 @@
         </van-field>
         <van-field
           v-model="form.name"
-          type="number"
+          type="text"
           label="中介名称"
           placeholder="请填写中介名称"
           icon="clear"

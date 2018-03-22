@@ -1,6 +1,6 @@
 <template>
   <div id="rentReport" v-wechat-title="$route.meta.title">
-    <div v-show="!searchShow" class="main">
+    <div  v-show="!houseShow || !staffModule" class="main">
 
       <van-cell-group>
         <van-field
@@ -126,8 +126,8 @@
         <van-field
           v-model="form.money_sum"
           type="number"
-          label="总金额"
-          placeholder="请填写总金额"
+          label="已收金额"
+          placeholder="请填写已收金额"
           icon="clear"
           @click-icon="form.money_sum = ''"
           required>
@@ -136,30 +136,30 @@
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
-          <span>分额付款<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span>已收金额付款方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
         </div>
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
             type="text"
-            label="分额"
-            placeholder="请填写分额"
+            label="金额"
+            placeholder="请填写金额"
             required>
           </van-field>
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="分额方式"
+            label="付款方式"
             type="text"
             readonly
-            placeholder="请选择分额方式"
+            placeholder="请选择付款方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
       <div @click="priceAmount(3)" class="addInput">
-        +增加分额付款
+        +增加付款方式
       </div>
 
       <van-cell-group>
@@ -260,30 +260,11 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        placeholder="请输入商品名称"
-        show-action
-        @keyup="onSearch"
-        @cancel="onCancel"/>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="village(key.village_name, key.id)">
-          <div>{{key.village_name}}</div>
-          <div>
-            <p>{{key.province_name}}-{{key.city_name}}</p>
-            <!--<span>上官海棠</span>-->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--户型-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
       <van-picker
         show-toolbar
@@ -303,16 +284,22 @@
         @cancel="onCancel"
         @confirm="onDate"/>
     </van-popup>
+
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
+
+    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import CollectHouse from '../collectHouse.vue'
+  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, CollectHouse, Organization},
     data() {
       return {
         urls: globalConfig.server,
@@ -343,7 +330,8 @@
         form: {
           type: 2,
           draft: 0,
-          contract_id: '12',            //房屋地址id
+          contract_id: '',            //房屋地址id
+          house_id: '',               //房屋地址id
           month: '',                    //租房月数
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -366,9 +354,9 @@
           screenshot: [],               //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '2',                 //开单人id
-          leader_id: '3',                //负责人id
-          department_id: '4',            //部门id
+          staff_id: '',                 //开单人id
+          leader_id: '',                //负责人id
+          department_id: '4',           //部门id
         },
         houseName: '',                  //开单人name
         staff_name: '',                  //开单人name
@@ -399,18 +387,31 @@
             break;
         }
       },
-      // 搜索
-      onSearch() {
-        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
-          let data = res.data.data;
-          let arr = {};
-          for (let i = 0; i < data.length; i++) {
-            let lord = data[i].lords;
-            for (let i = 0; i < lord.length; i++) {
-              console.log(lord[i]);
-            }
-          }
-        })
+      // 房屋地址
+      house_(val) {
+        this.houseName = val.houseName;
+        this.form.contract_id = val.contract_id;
+        this.form.house_id = val.house_id;
+        this.onCancel();
+      },
+
+      // 开单人
+      staff_(val, type) {
+        if (type === 'staff') {
+          this.form.staff_id = val.id;
+          this.staff_name = val.name;
+        } else {
+          this.form.leader_id = val.id;
+          this.leader_name = val.name;
+        }
+        this.onCancel();
+      },
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeShow = false;
+        this.houseShow = false;
+        this.staffModule = false;
       },
       // 截图
       getImgData(val) {
@@ -478,12 +479,7 @@
         }
         this.selectHide = false;
       },
-      // select关闭
-      onCancel() {
-        this.searchShow = false;
-        this.selectHide = false;
-        this.timeShow = false;
-      },
+
       // 月单价增加
       priceAmount(val) {
         if (val === 1) {

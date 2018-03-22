@@ -1,12 +1,13 @@
 <template>
   <div id="transferReport" v-wechat-title="$route.meta.title">
-    <div v-show="!searchShow" class="main">
-      <van-cell-group style="margin-bottom: .2rem;">
+    <div v-show="!houseShow || !staffModule" class="main">
+      <van-cell-group>
         <van-field
-          v-model="form.contract_id_rent"
+          v-model="oldHouseName"
           label="原房屋地址"
           type="text"
           readonly
+          @click="searchSelect(1)"
           placeholder="请选择原房屋地址"
           required>
         </van-field>
@@ -48,10 +49,11 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="form.contract_id"
+          v-model="newHouseName"
           label="现房屋地址"
           type="text"
           readonly
+          @click="searchSelect(2)"
           placeholder="请选择房现房屋地址"
           required>
         </van-field>
@@ -170,30 +172,30 @@
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
-          <span>分额付款<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span>已收金额付款方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
         </div>
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
             type="text"
-            label="分付金额"
-            placeholder="请填写分付金额"
+            label="金额"
+            placeholder="请填写金额"
             required>
           </van-field>
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="分付方式"
+            label="付款方式"
             type="text"
             readonly
-            placeholder="请选择分付方式"
+            placeholder="请选择付款方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
       <div @click="priceAmount(3)" class="addInput">
-        +增加分付方式
+        +增加付款方式
       </div>
 
       <van-cell-group>
@@ -229,6 +231,8 @@
         </van-field>
         <van-field
           v-model="staff_name"
+          @click="searchSelect(3)"
+          readonly
           label="开单人"
           type="text"
           placeholder="请选择开单人"
@@ -236,6 +240,8 @@
         </van-field>
         <van-field
           v-model="leader_name"
+          @click="searchSelect(4)"
+          readonly
           label="负责人"
           type="text"
           placeholder="请选择负责人"
@@ -243,6 +249,8 @@
         </van-field>
         <van-field
           v-model="department_name"
+          @click="searchSelect(5)"
+          readonly
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -251,27 +259,11 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @search="onSearch">
-        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
-      </van-search>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in 30">
-          <div>{{key}}</div>
-          <div>{{key}}回复</div>
-        </div>
-      </div>
-    </div>
-
-    <!--户型-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
       <van-picker
         show-toolbar
@@ -291,22 +283,30 @@
         @cancel="onCancel"
         @confirm="onDate"/>
     </van-popup>
+
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
+
+    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
+
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import CollectHouse from '../collectHouse.vue'
+  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, CollectHouse, Organization},
     data() {
       return {
         urls: globalConfig.server,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
-        lists: [],                //搜索
+        houseShow: false,         //搜索
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
+
         tabs: '',
         columns: [],              //select值
         selectHide: false,        //select选择
@@ -327,7 +327,7 @@
         amountMoney: 1,
         moneyNum: [''],             //分金额 付款方式
 
-        oldForm:{
+        oldForm: {
           price_arr: '',
           pay_way_arr: '',
           price: '',
@@ -338,10 +338,12 @@
         form: {
           type: 1,
           draft: 0,
-          contract_id_rent: '22',       //原租房合同id
-          contract_id: '33',            //现房屋合同id
+          contract_id_rent: '',         //原租房合同id
+          contract_id: '',              //现房屋合同id
+          house_id_rent: '',
+          house_id: '',
           month: '',                    //签约时长
-          begin_date: '',                //合同开始日期
+          begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -363,6 +365,8 @@
           leader_id: '13',                //负责人id
           department_id: '16',            //部门id
         },
+        oldHouseName: '',
+        newHouseName: '',
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
@@ -375,12 +379,6 @@
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
-      },
-      // 搜索
-      onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
-        })
       },
       // 截图
       getImgData(val) {
@@ -416,7 +414,7 @@
           case 1:
             this.form.retainage_date = this.timeValue;
             break;
-            case 2:
+          case 2:
             this.form.begin_date = this.timeValue;
             break;
         }
@@ -448,11 +446,58 @@
         }
         this.selectHide = false;
       },
+      searchSelect(val) {
+        switch (val) {
+          case 1:
+            this.houseShow = true;
+            this.organizeType = 'old';
+            break;
+          case 2:
+            this.houseShow = true;
+            this.organizeType = 'new';
+            break;
+          case 3:
+            this.staffModule = true;
+            this.organizeType = 'staff';
+            break;
+          case 4:
+            this.staffModule = true;
+            this.organizeType = 'leader';
+            break;
+        }
+      },
+
+      // 房屋地址
+      house_(val, type) {
+        if (type === 'old') {
+          this.oldHouseName = val.houseName;
+          this.form.contract_id_rent = val.contract_id;
+          this.form.house_id_rent = val.house_id;
+        } else {
+          this.newHouseName = val.houseName;
+          this.form.contract_id = val.contract_id;
+          this.form.house_id = val.house_id;
+        }
+        this.onCancel();
+      },
+
+      // 开单人
+      staff_(val, type) {
+        if (type === 'staff') {
+          this.form.staff_id = val.id;
+          this.staff_name = val.name;
+        } else {
+          this.form.leader_id = val.id;
+          this.leader_name = val.name;
+        }
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
-        this.searchShow = false;
         this.selectHide = false;
         this.timeShow = false;
+        this.houseShow = false;
+        this.staffModule = false;
       },
       // 月单价增加
       priceAmount(val) {
@@ -519,9 +564,9 @@
       saveCollect(val) {
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
-          if(res.data.code === '50510'){
+          if (res.data.code === '50510') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
+            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }

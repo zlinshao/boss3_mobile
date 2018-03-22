@@ -1,18 +1,18 @@
 <template>
   <div id="collectReport" v-wechat-title="$route.meta.title">
-    <div v-show="!searchShow" class="main">
+    <div  v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <van-field
-          v-model="form.community_name"
+          v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchShow = true"
           readonly
+          @click="searchSelect(1)"
           placeholder="请选择房屋地址"
           required>
         </van-field>
         <van-field
-          v-model="house_name"
+          v-model="house_type"
           type="number"
           label="户型"
           placeholder="户型已禁用"
@@ -303,6 +303,8 @@
         </van-field>
         <van-field
           v-model="staff_name"
+          @click="searchSelect(2)"
+          readonly
           label="开单人"
           type="text"
           placeholder="请选择开单人"
@@ -310,6 +312,8 @@
         </van-field>
         <van-field
           v-model="leader_name"
+          @click="searchSelect(3)"
+          readonly
           label="负责人"
           type="text"
           placeholder="请选择负责人"
@@ -317,6 +321,8 @@
         </van-field>
         <van-field
           v-model="department_name"
+          @click="searchSelect(4)"
+          readonly
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -324,24 +330,9 @@
         </van-field>
       </van-cell-group>
     </div>
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
-    </div>
-
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @search="onSearch">
-        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
-      </van-search>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in 30">
-          <div>{{key}}</div>
-          <div>{{key}}回复</div>
-        </div>
-      </div>
     </div>
 
     <!--select 选择-->
@@ -364,22 +355,30 @@
         @cancel="onCancel"
         @confirm="onDate"/>
     </van-popup>
+
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
+
+    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
+
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import CollectHouse from '../collectHouse.vue'
+  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, CollectHouse, Organization},
     data() {
       return {
         urls: globalConfig.server,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
-        lists: [],
+        houseShow: false,         //搜索
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
+
         tabs: '',
         columns: [],              //select值
         selectHide: false,        //房型
@@ -399,15 +398,14 @@
         payTypeNum: [''],               //付款方式
         payIndex: '',                   //付款方式index
 
-        house_name: '321321',
+        house_type: '321321',
         form: {
           type: 2,
           draft: 0,
-          contract_id: '123',
-          contract_id_continued: '12',  //合同ID
+          contract_id_continued: '',    //合同
+          house_id: '',                 //合同
           month: '',                    //收房月数
           begin_date: '',               //合同开始日期
-          house_type: [2,1,1],          //户型
           period_price_arr: [''],       //月单价周期
           price_arr: [''],              //月单价
 
@@ -440,7 +438,7 @@
           leader_id: '2',                //负责人id
           department_id: '3',            //部门id
         },
-        community_name: '',           //房屋地址
+        houseName: '',                //房屋地址name
         fromName: '个人',             //客户来源
         staff_name: '',               //开单人name
         leader_name: '',              //负责人name
@@ -456,13 +454,48 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
-      // 搜索
-      onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
-        })
+      searchSelect(val) {
+        switch (val) {
+          case 1:
+            this.houseShow = true;
+            break;
+          case 2:
+            this.staffModule = true;
+            this.organizeType = 'staff';
+            break;
+          case 3:
+            this.staffModule = true;
+            this.organizeType = 'leader';
+            break;
+        }
       },
 
+      // 房屋地址
+      house_(val) {
+        this.houseName = val.houseName;
+        this.form.contract_id_continued = val.contract_id;
+        this.form.house_id = val.house_id;
+        this.onCancel();
+      },
+
+      // 开单人
+      staff_(val, type) {
+        if (type === 'staff') {
+          this.form.staff_id = val.id;
+          this.staff_name = val.name;
+        } else {
+          this.form.leader_id = val.id;
+          this.leader_name = val.name;
+        }
+        this.onCancel();
+      },
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeShow = false;
+        this.houseShow = false;
+        this.staffModule = false;
+      },
       getImgData(val) {
         if (val[0] === 'screenshot') {
           this.form.screenshot_leader = val[1];
@@ -545,12 +578,7 @@
         }
         this.selectHide = false;
       },
-      // select关闭
-      onCancel() {
-        this.searchShow = false;
-        this.selectHide = false;
-        this.timeShow = false;
-      },
+
       // 月单价增加
       priceAmount(val) {
         if (val === 1) {

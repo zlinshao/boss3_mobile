@@ -51,30 +51,30 @@
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
-          <span>定金付款<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span>已收金额付款方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index)">删除</span>
         </div>
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
             type="text"
-            label="分额"
-            placeholder="请填写分额"
+            label="金额"
+            placeholder="请填写金额"
             required>
           </van-field>
           <van-field
             @click="selectShow(index)"
             v-model="moneyNum[index]"
-            label="分额方式"
+            label="付款方式"
             type="text"
             readonly
-            placeholder="请选择分额方式"
+            placeholder="请选择付款方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
       <div @click="priceAmount" class="addInput">
-        +增加定金
+        +增加付款方式
       </div>
 
       <div class="aloneModel required">

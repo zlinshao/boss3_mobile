@@ -43,6 +43,7 @@
       searchShow(val) {
         if (!val) {
           this.$emit('close', val);
+          this.onCancel();
         }
       }
     },
@@ -87,7 +88,7 @@
         this.form.contract_id = id;
         this.form.house_id = house;
         this.onCancel();
-        this.$emit('house', this.form);
+        this.$emit('house', this.form, this.type);
       },
     },
   }

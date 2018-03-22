@@ -1,7 +1,6 @@
 <template>
   <div id="rentReport" v-wechat-title="$route.meta.title">
-    <div  v-show="!houseShow || !staffModule" class="main">
-
+    <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <van-field
           v-model="houseName"
@@ -284,9 +283,10 @@
         @confirm="onDate"/>
     </van-popup>
 
-    <CollectHouse :module="houseShow" @close="onCancel" @house="house_"></CollectHouse>
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
 
     <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
+
   </div>
 </template>
 
@@ -321,7 +321,7 @@
 
         amountPay: 1,
         datePay: [],
-        payIndex: '',               //付款方式index
+        payIndex: '',                 //付款方式index
 
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
@@ -353,8 +353,8 @@
           screenshot: [],               //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '2',                 //开单人id
-          leader_id: '3',                //负责人id
+          staff_id: '',                 //开单人id
+          leader_id: '',                //负责人id
           department_id: '4',            //部门id
         },
         houseName: '',                   //房屋地址name

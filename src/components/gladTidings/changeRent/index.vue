@@ -142,30 +142,30 @@
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
-          <span>分额付款<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span>已收金额付款方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
         </div>
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
             type="text"
-            label="分付金额"
-            placeholder="请填写分付金额"
+            label="金额"
+            placeholder="请填写金额"
             required>
           </van-field>
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="分付方式"
+            label="付款方式"
             type="text"
             readonly
-            placeholder="请选择分付方式"
+            placeholder="请选择付款方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
       <div @click="priceAmount(3)" class="addInput">
-        +增加分付方式
+        +增加付款方式
       </div>
 
       <van-cell-group>
@@ -291,7 +291,7 @@
         @confirm="onDate"/>
     </van-popup>
 
-    <CollectHouse :module="houseShow" @close="onCancel" @house="house_"></CollectHouse>
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
 
     <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
 
@@ -310,7 +310,6 @@
     data() {
       return {
         urls: globalConfig.server,
-        address: globalConfig.server_user,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
         organizeType: '',         //搜索
@@ -363,8 +362,8 @@
           screenshot: [],               //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '2',                 //开单人id
-          leader_id: '3',                //负责人id
+          staff_id: '',                 //开单人id
+          leader_id: '',                //负责人id
           department_id: '4',            //部门id
         },
         houseName: '',

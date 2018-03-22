@@ -1,6 +1,6 @@
 <template>
   <div id="rentReport" v-wechat-title="$route.meta.title">
-    <div v-show="!searchShow" class="main">
+    <div v-show="!staffModule" class="main">
 
       <van-cell-group>
         <van-field
@@ -134,30 +134,30 @@
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
-          <span>分额付款<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span>已收金额付款方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
         </div>
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
             type="text"
-            label="分付金额"
-            placeholder="请填写分付金额"
+            label="金额"
+            placeholder="请填写金额"
             required>
           </van-field>
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="分付方式"
+            label="付款方式"
             type="text"
             readonly
-            placeholder="请选择分付方式"
+            placeholder="请选择付款方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
       <div @click="priceAmount(3)" class="addInput">
-        +增加分付方式
+        +增加付款方式
       </div>
       <van-cell-group>
         <van-field
@@ -228,21 +228,27 @@
           required>
         </van-field>
         <van-field
-          v-model="form.staff_name"
+          v-model="staff_name"
+          @click="searchSelect(1)"
+          readonly
           label="开单人"
           type="text"
           placeholder="请选择开单人"
           required>
         </van-field>
         <van-field
-          v-model="form.leader_name"
+          v-model="leader_name"
+          @click="searchSelect(2)"
+          readonly
           label="负责人"
           type="text"
           placeholder="请选择负责人"
           required>
         </van-field>
         <van-field
-          v-model="form.department_name"
+          v-model="department_name"
+          @click="searchSelect(3)"
+          readonly
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -251,30 +257,11 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        placeholder="请输入商品名称"
-        show-action
-        @keyup="onSearch"
-        @cancel="onCancel"/>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="village(key.village_name, key.id)">
-          <div>{{key.village_name}}</div>
-          <div>
-            <p>{{key.province_name}}-{{key.city_name}}</p>
-            <!--<span>上官海棠</span>-->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--户型-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
       <van-picker
         show-toolbar
@@ -294,23 +281,25 @@
         @cancel="onCancel"
         @confirm="onDate"/>
     </van-popup>
+
+    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
+
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast,Organization},
     data() {
       return {
         urls: globalConfig.server,
-        address: globalConfig.server_user,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
-        lists: [],
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
 
         tabs: '',
         columns: [],              //select值
@@ -361,8 +350,8 @@
           screenshot: [],               //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '2',                //开单人id
-          leader_id: '3',               //负责人id
+          staff_id: '',                //开单人id
+          leader_id: '',               //负责人id
           department_id: '4',           //部门id
         },
         staff_name: '',                 //开单人name
@@ -378,20 +367,34 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
-      searchSelect(val){
-        this.searchShow = true;
+      searchSelect(val) {
+        switch (val) {
+          case 1:
+            this.staffModule = true;
+            this.organizeType = 'staff';
+            break;
+          case 2:
+            this.staffModule = true;
+            this.organizeType = 'leader';
+            break;
+        }
       },
-      // 搜索
-      onSearch() {
-        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
-          let data = res.data.data;
-          for (let i = 0; i < data.length; i++) {
-            let lord = data[i].lords;
-            for (let i = 0; i < lord.length; i++) {
-              console.log(lord[i]);
-            }
-          }
-        })
+      // 开单人
+      staff_(val, type) {
+        if (type === 'staff') {
+          this.form.staff_id = val.id;
+          this.staff_name = val.name;
+        } else {
+          this.form.leader_id = val.id;
+          this.leader_name = val.name;
+        }
+        this.onCancel();
+      },
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeShow = false;
+        this.staffModule = false;
       },
       // 截图
       getImgData(val) {
@@ -459,12 +462,7 @@
         }
         this.selectHide = false;
       },
-      // select关闭
-      onCancel() {
-        this.searchShow = false;
-        this.selectHide = false;
-        this.timeShow = false;
-      },
+
       // 月单价增加
       priceAmount(val) {
         if (val === 1) {
