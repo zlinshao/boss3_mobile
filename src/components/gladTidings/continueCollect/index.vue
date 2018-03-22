@@ -434,9 +434,9 @@
           screenshot_leader: '',        //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '1',                 //开单人id
-          leader_id: '2',                //负责人id
-          department_id: '3',            //部门id
+          staff_id: '',                 //开单人id
+          leader_id: '',                //负责人id
+          department_id: '3',           //部门id
         },
         houseName: '',                //房屋地址name
         fromName: '个人',             //客户来源
