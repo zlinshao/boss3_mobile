@@ -11,6 +11,7 @@
           placeholder="请填写房间数量"
           required>
         </van-field>
+        {{city_id}}
         <van-field
           v-model="city_name"
           label="城市"
@@ -349,7 +350,7 @@
         </van-field>
         <van-field
           v-model="staff_name"
-          @click="searchSelect(2)"
+          @click="staffModule = true"
           label="开单人"
           type="text"
           placeholder="请选择开单人"
@@ -357,7 +358,7 @@
         </van-field>
         <van-field
           v-model="leader_name"
-          @click="searchSelect(3)"
+          @click="staffModule = true"
           label="负责人"
           type="text"
           placeholder="请选择负责人"
@@ -365,7 +366,6 @@
         </van-field>
         <van-field
           v-model="department_name"
-          @click="searchSelect(4)"
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -418,11 +418,14 @@
         @cancel="onCancel"
         @confirm="onDate"/>
     </van-popup>
+
+    <!--<Organization :module="staffModule" @close="onCancel" @organization="staff_name"></Organization>-->
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  // import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
@@ -432,6 +435,7 @@
       return {
         urls: globalConfig.server,
         address: globalConfig.server_user,
+        staffModule: false,       //开单人
         searchShow: false,        //搜索
         searchValue: '',          //搜索
         allCity: [],              //城市
@@ -539,13 +543,20 @@
           })
         }
       },
+
       // select关闭
       onCancel() {
         this.searchShow = false;
         this.selectHide = false;
         this.timeShow = false;
+        this.staffModule = false;
         this.lists = [];
       },
+      // // 开单人
+      // staff_name(val){
+      //
+      // },
+
       // 小区
       village(name, id) {
         this.form.community_name = name;

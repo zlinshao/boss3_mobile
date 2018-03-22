@@ -4,7 +4,7 @@
 
       <van-cell-group>
         <van-field
-          v-model="form.contract_id"
+          v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
@@ -268,11 +268,13 @@
         @keyup="onSearch"
         @cancel="onCancel"/>
       <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="village(key.house_name, key.id)">
+        <div class="notData" v-if="lists.length === 0">暂无数据</div>
+        <div class="searchList" v-for="key in lists" @click="houseAddress(key.house_name, key.id)">
           <div>{{key.house_name}}</div>
           <div>
             <p>{{key.department_name}}</p>
-            <span>{{key.staff_name}}</span>-<span>{{key.customer}}</span>
+            <span>{{key.staff_name}}</span>
+            <!--<span v-if="key.customer !== ''">-{{key.customer}}</span>-->
           </div>
         </div>
       </div>
@@ -340,7 +342,7 @@
         form: {
           type: 0,
           draft: 0,
-          contract_id: '12',            //房屋地址id
+          contract_id: '',              //房屋地址id
           month: '',                    //租房月数
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -367,6 +369,7 @@
           leader_id: '3',                //负责人id
           department_id: '4',            //部门id
         },
+        houseName: '',                   //房屋地址name
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
@@ -388,13 +391,29 @@
       onSearch() {
         this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
           let data = res.data.data;
+          this.lists = [];
           for (let i = 0; i < data.length; i++) {
-            let lord = data[i].lords;
-            for (let i = 0; i < lord.length; i++) {
-              console.log(lord[i]);
+            if (data[i].name !== null) {
+              let list = {};
+              list.id = data[i].id;
+              list.house_name = data[i].name;
+              if (data[i].lords.length !== 0) {
+                list.staff_name = data[i].lords[0].user[0].name;
+                list.department_name = data[i].lords[0].user[0].org[0].name;
+              } else {
+                list.staff_name = '';
+                list.department_name = '';
+              }
+              this.lists.push(list);
             }
           }
         })
+      },
+      // 房屋地址
+      houseAddress(name, id) {
+        this.houseName = name;
+        this.form.contract_id = id;
+        this.onCancel();
       },
       // 截图
       getImgData(val) {
@@ -468,6 +487,8 @@
         this.searchShow = false;
         this.selectHide = false;
         this.timeShow = false;
+        this.lists = [];
+        this.searchValue = '';
       },
       // 月单价增加
       priceAmount(val) {
@@ -599,7 +620,12 @@
       background: #ffffff;
       margin-bottom: .2rem;
     }
-
+    .notData {
+      text-align: center;
+      padding: 24px 0;
+      font-size: .33rem;
+      color: #b3afaf;
+    }
     .searchClass {
       position: fixed;
       top: 0;
@@ -614,13 +640,30 @@
         .searchList {
           @include flex;
           justify-content: space-between;
-          padding: 15px 20px;
+          padding: .3rem;
           &:hover {
             background: #DDDDDD;
+          }
+          div:first-child {
+            width: 48%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+          }
+          div:last-of-type {
+            text-align: right;
+            p {
+              margin-bottom: .1rem;
+            }
+            span {
+              font-size: .16rem;
+              color: #aaaaaa;
+            }
           }
         }
       }
     }
+
     .top, .footer {
       position: fixed;
       left: 0;
