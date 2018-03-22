@@ -4,7 +4,7 @@
 
       <van-cell-group>
         <van-field
-          v-model="form.contract_id"
+          v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
@@ -79,7 +79,7 @@
         <van-field
           v-model="form.deposit"
           label="押金"
-          type="text"
+          type="number"
           placeholder="请填写押金"
           icon="clear"
           @click-icon="form.deposit = ''"
@@ -110,11 +110,9 @@
             required>
           </van-field>
           <van-field
-            @click="selectShow(1,index)"
-            v-model="pay_way_arr[index]"
+            v-model="form.pay_way_arr[index]"
             label="付款方式"
-            type="text"
-            readonly
+            type="number"
             placeholder="请选择付款方式"
             required>
           </van-field>
@@ -233,21 +231,27 @@
           required>
         </van-field>
         <van-field
-          v-model="form.staff_name"
+          v-model="staff_name"
+          @click="searchSelect(2)"
+          readonly
           label="开单人"
           type="text"
           placeholder="请选择开单人"
           required>
         </van-field>
         <van-field
-          v-model="form.leader_name"
+          v-model="leader_name"
+          @click="searchSelect(3)"
+          readonly
           label="负责人"
           type="text"
           placeholder="请选择负责人"
           required>
         </van-field>
         <van-field
-          v-model="form.department_name"
+          v-model="department_name"
+          @click="searchSelect(4)"
+          readonly
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -312,10 +316,9 @@
     data() {
       return {
         urls: globalConfig.server,
-        address: globalConfig.server_user,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
-        lists: [],
+        houseShow: false,         //搜索
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
 
         tabs: '',
         columns: [],              //select值
@@ -332,7 +335,6 @@
 
         amountPay: 1,
         datePay: [],
-        payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
         amountMoney: 1,
@@ -368,6 +370,7 @@
           leader_id: '3',                //负责人id
           department_id: '4',            //部门id
         },
+        houseName: '',                  //开单人name
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
@@ -381,8 +384,20 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
-      searchSelect(val){
-        this.searchShow = true;
+      searchSelect(val) {
+        switch (val) {
+          case 1:
+            this.houseShow = true;
+            break;
+          case 2:
+            this.staffModule = true;
+            this.organizeType = 'staff';
+            break;
+          case 3:
+            this.staffModule = true;
+            this.organizeType = 'leader';
+            break;
+        }
       },
       // 搜索
       onSearch() {
@@ -498,7 +513,6 @@
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
           this.form.pay_way_arr.splice(index, 1);
-          this.payTypeNum.splice(index, 1);
         } else {
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);

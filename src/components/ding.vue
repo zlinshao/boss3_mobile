@@ -36,7 +36,7 @@
                   corpId: _config.corpId
                 }
               }).then((res) => {
-                alert(res.data.id);
+                alert(JSON.stringify(res.data));
               })
             },
             onFail: function (err) {

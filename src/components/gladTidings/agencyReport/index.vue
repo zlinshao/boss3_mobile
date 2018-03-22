@@ -28,6 +28,15 @@
           required>
         </van-field>
         <van-field
+          v-model="form.name"
+          type="number"
+          label="中介名称"
+          placeholder="请填写中介名称"
+          icon="clear"
+          @click-icon="form.name = ''"
+          required>
+        </van-field>
+        <van-field
           v-model="payWay"
           type="text"
           label="付款方式"
@@ -158,6 +167,7 @@
         urls: globalConfig.server,
         searchShow: false,        //搜索
         searchValue: '',          //搜索
+        lists: [],
         settleStatus: false,      //是否结清
 
         payWay: '',               //付款方式
@@ -184,7 +194,6 @@
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
-        lists: [],
       }
     },
 
