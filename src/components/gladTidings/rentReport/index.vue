@@ -162,21 +162,21 @@
       </div>
       <van-cell-group>
         <van-field
-          v-model="form.property"
-          label="物业费"
-          type="text"
-          placeholder="请填写物业费"
-          icon="clear"
-          @click-icon="form.property = ''"
-          required>
-        </van-field>
-        <van-field
           v-model="fromName"
           label="来源"
           type="text"
           readonly
           placeholder="请选择客户来源"
           @click="selectShow(4,'')"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.property"
+          label="物业费"
+          type="text"
+          placeholder="请填写物业费"
+          icon="clear"
+          @click-icon="form.property = ''"
           required>
         </van-field>
         <van-field

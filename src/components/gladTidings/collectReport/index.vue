@@ -29,33 +29,32 @@
           placeholder="请选择小区地址"
           required>
         </van-field>
-        <van-field
-          v-model="form.building"
-          type="text"
-          label="栋"
-          placeholder="请填写栋"
-          icon="clear"
-          @click-icon="form.building = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.unit"
-          type="text"
-          label="单元"
-          placeholder="请填写单元"
-          icon="clear"
-          @click-icon="form.unit = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.doorplate"
-          type="text"
-          label="门牌"
-          placeholder="请填写门牌"
-          icon="clear"
-          @click-icon="form.doorplate = ''"
-          required>
-        </van-field>
+        <div class="fourth">
+          <van-field
+            label="门牌号"
+            required>
+          </van-field>
+          <van-field
+            style="width: 22%;"
+            v-model="form.building"
+            type="text"
+            placeholder="栋">
+          </van-field>
+          <span class="cut">/</span>
+          <van-field
+            style="width: 22%;"
+            v-model="form.unit"
+            type="text"
+            placeholder="单元">
+          </van-field>
+          <span class="cut">/</span>
+          <van-field
+            class="twoBorder"
+            v-model="form.doorplate"
+            type="text"
+            placeholder="门牌">
+          </van-field>
+        </div>
         <van-field
           @click="selectShow(1,'')"
           v-model="house_type_name"
@@ -83,24 +82,28 @@
           @click="timeChoose(1)"
           required>
         </van-field>
-        <van-field
-          v-model="form.pay_first_date"
-          label="打房租日期"
-          readonly
-          type="text"
-          @click="timeChoose(2)"
-          placeholder="第一次打房租日期"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.pay_second_date"
-          label="打房租日期"
-          readonly
-          type="text"
-          @click="timeChoose(3)"
-          placeholder="第二次打房租日期"
-          required>
-        </van-field>
+        <div class="first_date">
+          <van-field
+            class="title"
+            label="打房租日期"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.pay_first_date"
+            readonly
+            type="text"
+            @click="timeChoose(2)"
+            placeholder="第一次打款日期">
+          </van-field>
+          <span class="cut">/</span>
+          <van-field
+            v-model="form.pay_second_date"
+            readonly
+            type="text"
+            @click="timeChoose(3)"
+            placeholder="第二次打款日期">
+          </van-field>
+        </div>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amountPrice">
@@ -112,7 +115,7 @@
           <van-field
             v-model="form.period_price_arr[index]"
             type="number"
-            label="周期"
+            label="付款周期"
             @keyup="periodDate(1)"
             placeholder="请填写月单价周期"
             required>
@@ -147,7 +150,7 @@
           <van-field
             v-model="form.period_pay_arr[index]"
             type="number"
-            label="周期"
+            label="付款周期"
             @keyup="periodDate(2)"
             placeholder="请填写付款方式周期"
             required>
@@ -195,26 +198,32 @@
         <van-field
           v-model="form.vacancy"
           label="空置期"
-          type="text"
+          type="number"
           placeholder="请填写空置期"
           icon="clear"
           @click-icon="form.vacancy = ''"
           required>
         </van-field>
-        <van-field
-          v-model="form.warranty"
-          label="保修期(月数)"
-          type="text"
-          placeholder="请填写保修期(月数)"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.warranty_day"
-          label="保修期(天数)"
-          type="text"
-          placeholder="请填写保修期(天数)"
-          required>
-        </van-field>
+        <div class="first_date">
+          <van-field
+            class="title"
+            label="保修期"
+            required>
+          </van-field>
+          <van-field
+            style="width: 30%;"
+            v-model="form.warranty"
+            type="number"
+            placeholder="保修期(月)">
+          </van-field>
+          <span class="cut" style="padding-right: 27px;">/</span>
+          <van-field
+            class="twoBorder"
+            v-model="form.warranty_day"
+            type="number"
+            placeholder="保修期(天)">
+          </van-field>
+        </div>
         <van-field
           v-model="fromName"
           label="来源"
@@ -227,19 +236,19 @@
         <van-field
           v-model="form.property"
           label="物业费"
-          type="text"
+          type="number"
           placeholder="请填写物业费"
           icon="clear"
           @click-icon="form.property = ''"
           required>
         </van-field>
         <van-field
-          v-model="form.property_payer"
+          v-model="property_name"
           label="物业费付款人"
           type="text"
-          placeholder="请填写物业费付款人"
-          icon="clear"
-          @click-icon="form.property_payer = ''"
+          placeholder="请选择物业费付款人"
+          @click="selectShow(6,'')"
+          readonly
           required>
         </van-field>
         <van-field
@@ -318,7 +327,7 @@
         <van-field
           v-model="form.penalty"
           label="违约金"
-          type="text"
+          type="number"
           placeholder="请填写违约金"
           icon="clear"
           @click-icon="form.penalty = ''"
@@ -336,12 +345,12 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">截图</div>
+        <div class="title">特殊情况截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
       </div>
 
-      <div class="aloneModel">
-        <div class="title">组长同意截图</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
       </div>
 
@@ -359,6 +368,7 @@
           @click="searchSelect(2)"
           label="开单人"
           type="text"
+          readonly
           placeholder="请选择开单人"
           required>
         </van-field>
@@ -367,6 +377,7 @@
           @click="searchSelect(3)"
           label="负责人"
           type="text"
+          readonly
           placeholder="请选择负责人"
           required>
         </van-field>
@@ -375,6 +386,7 @@
           @click="searchSelect(4)"
           label="部门"
           type="text"
+          readonly
           placeholder="请选择部门"
           required>
         </van-field>
@@ -471,7 +483,7 @@
         payType: [''],              //付款方式ID
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
-        house_type_name: [],
+        house_type_name: '1室 1厅 1卫',
         form: {
           type: 1,
           draft: 0,
@@ -481,7 +493,7 @@
           building: '',                 //栋
           unit: '',                     //单元
           doorplate: '',                //门牌
-          house_type: [],
+          house_type: [0, 1, 1],
           rooms_sum: '',                //合租时房间数量
           month: '',                    //收房月数
           begin_date: '',               //合同开始日期
@@ -517,6 +529,7 @@
           department_id: '3',           //部门id
 
         },
+        property_name: '',            //物业费付款人
         staff_name: '',               //开单人name
         leader_name: '',              //负责人name
         department_name: '',          //部门name
@@ -663,12 +676,12 @@
               {
                 values: ['无', '1厅', '2厅', '3厅', '4卫', '5卫'],
                 className: 'column2',
-                defaultIndex: 0
+                defaultIndex: 1
               },
               {
                 values: ['无', '1卫', '2卫', '3卫', '4卫', '5卫'],
                 className: 'column3',
-                defaultIndex: 0
+                defaultIndex: 1
               }
             ];
             break;
@@ -680,6 +693,9 @@
             break;
           case 5:
             this.columns = ['个人', '中介'];
+            break;
+          case 6:
+            this.columns = ['房东', '租客', '公司'];
             break;
         }
       },
@@ -711,6 +727,10 @@
           case 5:
             this.fromName = value;
             this.form.from = index + 1;
+            break;
+          case 6:
+            this.form.property_payer = index + 1;
+            this.property_name = value;
             break;
         }
         this.selectHide = false;
@@ -811,6 +831,38 @@
         padding-left: 110px;
       }
     }
+    .fourth {
+      .van-cell.van-hairline.van-field {
+        width: 25%;
+        .van-cell__value {
+          padding-left: 20px;
+        }
+      }
+    }
+    .first_date {
+      .van-cell.van-hairline.van-field {
+        width: 33%;
+        .van-cell__value {
+          padding-left: 0;
+        }
+      }
+      .title.van-cell.van-hairline.van-field {
+        width: 31%;
+      }
+    }
+    .fourth, .first_date {
+      span.cut {
+        padding-right: 10px;
+        line-height: 39px;
+        color: #969696;
+        border-bottom: 1px solid #F4F4F4;
+      }
+      @include flex;
+      .twoBorder {
+        border-bottom: 1px solid #F4F4F4;
+        padding-bottom: 9px;
+      }
+    }
     .aloneModel {
       background: #fff;
       width: 100%;
@@ -818,6 +870,14 @@
       padding-bottom: .26rem;
       .title {
         padding: .26rem .3rem 0;
+      }
+    }
+    .aloneModel.required {
+      .title {
+        padding-left: .2rem;
+        span {
+          color: #f44;
+        }
       }
     }
     .paddingTitle {

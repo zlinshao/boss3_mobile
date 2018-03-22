@@ -372,6 +372,7 @@
           leader_id: '',               //负责人id
           department_id: '4',           //部门id
         },
+        fromName: '',
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
