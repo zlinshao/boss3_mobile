@@ -1,6 +1,6 @@
 <template>
   <div id="rentReport" v-wechat-title="$route.meta.title">
-    <div v-show="!staffModule" class="main">
+    <div v-show="!houseShow || !staffModule" class="main">
 
       <van-cell-group>
         <van-field
@@ -257,7 +257,7 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!staffModule" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
@@ -298,6 +298,7 @@
     data() {
       return {
         urls: globalConfig.server,
+        houseShow: false,         //搜索
         staffModule: false,       //搜索
         organizeType: '',         //搜索
 
