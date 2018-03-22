@@ -223,7 +223,7 @@
           this.form.settle = '0';
         }
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
+        this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
           if (res.data.code === '50810') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});

@@ -3,7 +3,6 @@
     <div :class="{'searchClass':organizeShow}" v-if="organizeShow">
       <van-search
         v-model="searchValue"
-        placeholder="请输入商品名称"
         show-action
         @keyup="organize"
         @cancel="onClose"/>

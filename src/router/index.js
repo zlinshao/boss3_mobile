@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import Ding from '../components/ding.vue'
 import Index from '../components/index.vue'
 
 import Expense from '@/components/examine/Expense/index.vue'
@@ -33,6 +34,12 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'ding',
+      hidden: false,
+      component: Ding
+    },
+    {
+      path: '/index',
       name: 'index',
       hidden: false,
       meta: {title: '首页'},

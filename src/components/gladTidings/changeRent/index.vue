@@ -1,6 +1,6 @@
 <template>
   <div id="rentReport" v-wechat-title="$route.meta.title">
-    <div v-show="!searchShow" class="main">
+    <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">转租类型</div>
@@ -10,7 +10,7 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="form.contract_id"
+          v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
@@ -116,11 +116,9 @@
             required>
           </van-field>
           <van-field
-            @click="selectShow(1,index)"
-            v-model="payTypeNum[index]"
+            v-model="form.pay_way_arr[index]"
             label="付款方式"
-            type="text"
-            readonly
+            type="number"
             placeholder="请选择付款方式"
             required>
           </van-field>
@@ -239,21 +237,27 @@
           required>
         </van-field>
         <van-field
-          v-model="form.staff_name"
+          v-model="staff_name"
+          @click="searchSelect(2)"
+          readonly
           label="开单人"
           type="text"
           placeholder="请选择开单人"
           required>
         </van-field>
         <van-field
-          v-model="form.leader_name"
+          v-model="leader_name"
+          @click="searchSelect(3)"
+          readonly
           label="负责人"
           type="text"
           placeholder="请选择负责人"
           required>
         </van-field>
         <van-field
-          v-model="form.department_name"
+          v-model="department_name"
+          @click="searchSelect(4)"
+          readonly
           label="部门"
           type="text"
           placeholder="请选择部门"
@@ -262,30 +266,11 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        placeholder="请输入商品名称"
-        show-action
-        @keyup="onSearch"
-        @cancel="onCancel"/>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="village(key.village_name, key.id)">
-          <div>{{key.village_name}}</div>
-          <div>
-            <p>{{key.province_name}}-{{key.city_name}}</p>
-            <!--<span>上官海棠</span>-->
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--户型-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
       <van-picker
         show-toolbar
@@ -305,23 +290,30 @@
         @cancel="onCancel"
         @confirm="onDate"/>
     </van-popup>
+
+    <CollectHouse :module="houseShow" @close="onCancel" @house="house_"></CollectHouse>
+
+    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
+
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import CollectHouse from '../collectHouse.vue'
+  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, CollectHouse, Organization},
     data() {
       return {
         urls: globalConfig.server,
         address: globalConfig.server_user,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
-        lists: [],
+        houseShow: false,         //搜索
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
 
         tabs: '',
         columns: [],              //select值
@@ -338,7 +330,6 @@
 
         amountPay: 1,
         datePay: [],
-        payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
         amountMoney: 1,
@@ -348,7 +339,8 @@
           type: 1,
           draft: 0,
           trans_type: '0',
-          contract_id: '12',            //房屋地址id
+          contract_id: '',            //房屋地址id
+          house_id: '',               //房屋地址id
           month: '',                    //租房月数
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -375,6 +367,7 @@
           leader_id: '3',                //负责人id
           department_id: '4',            //部门id
         },
+        houseName: '',
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
@@ -388,22 +381,30 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
-      searchSelect(val){
-        this.searchShow = true;
+      searchSelect(val) {
+        switch (val) {
+          case 1:
+            this.houseShow = true;
+            break;
+          case 2:
+            this.staffModule = true;
+            this.organizeType = 'staff';
+            break;
+          case 3:
+            this.staffModule = true;
+            this.organizeType = 'leader';
+            break;
+        }
       },
-      // 搜索
-      onSearch() {
-        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
-          let data = res.data.data;
-          let arr = {};
-          for (let i = 0; i < data.length; i++) {
-            let lord = data[i].lords;
-            for (let i = 0; i < lord.length; i++) {
-              console.log(lord[i]);
-            }
-          }
-        })
+
+      // 房屋地址
+      house_(val) {
+        this.houseName = val.houseName;
+        this.form.contract_id = val.contract_id;
+        this.form.house_id = val.house_id;
+        this.onCancel();
       },
+
       // 截图
       getImgData(val) {
         if (val[0] === 'screenshot') {
@@ -449,9 +450,6 @@
         this.payIndex = index;
         this.selectHide = true;
         switch (val) {
-          case 1:
-            this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
-            break;
           case 2:
             this.columns = ['支付宝', '微信', '银行卡', 'pos机', '现金'];
             break;
@@ -463,10 +461,6 @@
       // select选择
       onConfirm(value, index) {
         switch (this.tabs) {
-          case 1:
-            this.payTypeNum[this.payIndex] = value;
-            this.form.pay_way_arr[this.payIndex] = index + 1;
-            break;
           case 2:
             this.moneyNum[this.payIndex] = value;
             this.form.money_way[this.payIndex] = index + 1;
@@ -477,11 +471,23 @@
         }
         this.selectHide = false;
       },
+      // 开单人
+      staff_(val, type) {
+        if (type === 'staff') {
+          this.form.staff_id = val.id;
+          this.staff_name = val.name;
+        } else {
+          this.form.leader_id = val.id;
+          this.leader_name = val.name;
+        }
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
-        this.searchShow = false;
         this.selectHide = false;
         this.timeShow = false;
+        this.houseShow = false;
+        this.staffModule = false;
       },
       // 月单价增加
       priceAmount(val) {
@@ -493,7 +499,6 @@
           this.amountPay++;
           this.form.period_pay_arr.push('');
           this.form.pay_way_arr.push('');
-          this.payTypeNum.push('');
         } else {
           this.amountMoney++;
           this.form.money_sep.push('');
@@ -507,13 +512,12 @@
           if (this.amountPrice > 1) {
             this.amountPrice--;
             this.form.period_price_arr.splice(index, 1);
-            this.price_arr.splice(index, 1);
+            this.form.price_arr.splice(index, 1);
           }
         } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
           this.form.pay_way_arr.splice(index, 1);
-          this.payTypeNum.splice(index, 1);
         } else {
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);

@@ -11,7 +11,6 @@
           placeholder="请填写房间数量"
           required>
         </van-field>
-        {{city_id}}
         <van-field
           v-model="city_name"
           label="城市"
@@ -543,9 +542,7 @@
             this.staffModule = true;
             this.organizeType = 'leader';
             break;
-
         }
-
       },
       onSearch() {
         if (this.searchValue.length > 1) {
@@ -571,7 +568,6 @@
       },
       // 开单人
       staff_(val, type) {
-        console.log(val, type);
         if (type === 'staff') {
           this.form.staff_id = val.id;
           this.staff_name = val.name;
@@ -579,11 +575,9 @@
           this.form.leader_id = val.id;
           this.leader_name = val.name;
         }
+        this.onCancel();
       },
-      // 负责人
-      leader_(val) {
 
-      },
       // 小区
       village(name, id) {
         this.form.community_name = name;

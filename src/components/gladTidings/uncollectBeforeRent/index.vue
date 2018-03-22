@@ -108,11 +108,9 @@
             required>
           </van-field>
           <van-field
-            @click="selectShow(1,index)"
-            v-model="payTypeNum[index]"
+            v-model="form.pay_way_arr[index]"
             label="付款方式"
-            type="text"
-            readonly
+            type="number"
             placeholder="请选择付款方式"
             required>
           </van-field>
@@ -440,9 +438,6 @@
         this.payIndex = index;
         this.selectHide = true;
         switch (val) {
-          case 1:
-            this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
-            break;
           case 2:
             this.columns = ['支付宝', '微信', '银行卡', 'pos机', '现金'];
             break;
@@ -454,10 +449,6 @@
       // select选择
       onConfirm(value, index) {
         switch (this.tabs) {
-          case 1:
-            this.payTypeNum[this.payIndex] = value;
-            this.form.pay_way_arr[this.payIndex] = index + 1;
-            break;
           case 2:
             this.moneyNum[this.payIndex] = value;
             this.form.money_way[this.payIndex] = index + 1;
@@ -484,7 +475,6 @@
           this.amountPay++;
           this.form.period_pay_arr.push('');
           this.form.pay_way_arr.push('');
-          this.payTypeNum.push('');
         } else {
           this.amountMoney++;
           this.form.money_sep.push('');
@@ -504,7 +494,6 @@
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
           this.form.pay_way_arr.splice(index, 1);
-          this.payTypeNum.splice(index, 1);
         } else {
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
