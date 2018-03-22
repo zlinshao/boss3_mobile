@@ -72,8 +72,17 @@
           type="number"
           label="付款方式-押"
           placeholder="请填写付款方式-押"
+          @click="selectShow(3, '')"
+          readonly
+          required>
+        </van-field>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          placeholder="请填写押金"
           icon="clear"
-          @click-icon="form.pay_way_bet = ''"
+          @click-icon="form.deposit = ''"
           required>
         </van-field>
       </van-cell-group>
@@ -154,16 +163,8 @@
       <div @click="priceAmount(3)" class="addInput">
         +增加分额付款
       </div>
+
       <van-cell-group>
-        <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="text"
-          placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''"
-          required>
-        </van-field>
         <van-field
           v-model="form.property"
           label="物业费"
@@ -447,6 +448,9 @@
           case 2:
             this.columns = ['支付宝', '微信', '银行卡', 'pos机', '现金'];
             break;
+          case 3:
+            this.columns = ['0', '1', '2', '3'];
+            break;
         }
       },
       // select选择
@@ -459,6 +463,9 @@
           case 2:
             this.moneyNum[this.payIndex] = value;
             this.form.money_way[this.payIndex] = index + 1;
+            break;
+          case 3:
+            this.form.pay_way_bet = value;
             break;
         }
         this.selectHide = false;

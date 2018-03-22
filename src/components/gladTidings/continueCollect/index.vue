@@ -112,6 +112,15 @@
 
       <van-cell-group>
         <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
+          required>
+        </van-field>
+        <van-field
           v-model="form.vacancy"
           label="空置期"
           type="text"
@@ -141,15 +150,6 @@
           readonly
           placeholder="请选择客户来源"
           @click="selectShow(5,'')"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="text"
-          placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''"
           required>
         </van-field>
         <van-field

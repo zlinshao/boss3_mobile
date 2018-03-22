@@ -135,7 +135,7 @@
         <h2>
           <i class="iconfont icon-shenpi"></i>
         </h2>
-        <h1>审批</h1>
+        <h1>发起审批</h1>
       </div>
       <div @click="footActive = 2" :class="{'onDiv': footActive === 2}">
         <h2>
@@ -174,7 +174,7 @@
       routerLink(val) {
         if (val === '/') {
           this.footActive = 1;
-          this.active
+          this.active = '';
         }
         this.$router.push({path: val});
       },
