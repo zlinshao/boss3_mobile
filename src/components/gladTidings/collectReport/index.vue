@@ -186,6 +186,13 @@
           required>
         </van-field>
         <van-field
+          v-model="form.receipt"
+          label="收据编号"
+          type="text"
+          placeholder="请填写收据编号"
+          required>
+        </van-field>
+        <van-field
           v-model="form.vacancy"
           label="空置期"
           type="text"
@@ -487,6 +494,7 @@
           warranty_day: '',             //保修期天
           from: '1',                    //客户来源 1个人2中介
           deposit: '',                  //押金
+          receipt: '',                  //收据编号
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
           pay_first_date: '',           //第一次付款时间

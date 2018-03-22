@@ -200,6 +200,12 @@
 
       <van-cell-group>
         <van-field
+          v-model="form.receipt"
+          label="收据编号"
+          type="text"
+          placeholder="请填写收据编号">
+        </van-field>
+        <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
           readonly
@@ -356,6 +362,7 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          receipt: '',                  //收据编号
           retainage_date: '',           //尾款补齐时间
 
           screenshot: '',               //领导截图 数组

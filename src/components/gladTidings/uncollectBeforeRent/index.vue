@@ -179,6 +179,13 @@
           required>
         </van-field>
         <van-field
+          v-model="form.receipt"
+          label="收据编号"
+          type="text"
+          placeholder="请填写收据编号"
+          required>
+        </van-field>
+        <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
           readonly
@@ -345,6 +352,7 @@
 
           deposit: '',                  //押金
           property: '',                 //物业费
+          receipt: '',                  //收据编号
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
