@@ -271,9 +271,9 @@
         </van-field>
         <van-field
           v-model="form.phone"
-          label="客户手机"
+          label="联系方式"
           type="number"
-          placeholder="请填写客户手机号"
+          placeholder="请填写联系方式"
           icon="clear"
           @click-icon="form.phone = ''"
           required>

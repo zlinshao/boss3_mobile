@@ -32,6 +32,7 @@
         searchValue: '',          //搜索
         lists: [],
         form: {},
+        lords: {},
       }
     },
     mounted() {
@@ -58,6 +59,7 @@
               let list = {};
               list.house_name = data[i].name;
               if (data[i].lords.length !== 0) {
+                this.lords = data[i].lords[0];
                 list.id = data[i].lords[0].id;
                 list.house_id = data[i].lords[0].house_id;
                 if (data[i].lords[0].user.length !== 0) {
@@ -88,7 +90,7 @@
         this.form.contract_id = id;
         this.form.house_id = house;
         this.onCancel();
-        this.$emit('house', this.form, this.type);
+        this.$emit('house', this.form, this.type, this.lords);
       },
     },
   }

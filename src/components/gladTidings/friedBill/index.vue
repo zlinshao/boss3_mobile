@@ -3,10 +3,17 @@
 
     <div class="main" v-if="!searchShow">
       <van-cell-group>
-        <div class="checks" style="">
+        <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
           <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
           <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
+        </div>
+      </van-cell-group>
+      <van-cell-group>
+        <div class="checks">
+          <div style="min-width: 110px;">报备性质</div>
+          <van-radio name="0" v-model="form.type">炸单报备</van-radio>
+          <van-radio name="1" v-model="form.type" style="margin-left: 18px">取消报备</van-radio>
         </div>
       </van-cell-group>
       <van-cell-group>
@@ -124,7 +131,7 @@
         price_arr: '',                //月单价
 
         form: {
-          type: 0,
+          type: '0',
           draft: 0,
           collect_or_rent: '',
           contract_id: '33',            //合同id

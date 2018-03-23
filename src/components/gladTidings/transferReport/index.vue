@@ -479,7 +479,8 @@
       },
 
       // 房屋地址
-      house_(val, type) {
+      house_(val, type, lord) {
+        console.log(lord)
         if (type === 'old') {
           this.oldHouseName = val.houseName;
           this.form.contract_id_rent = val.contract_id;
