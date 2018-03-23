@@ -1,7 +1,7 @@
 <template>
   <div id="transferReport" v-wechat-title="$route.meta.title">
     <div v-show="!houseShow || !staffModule" class="main">
-      <van-cell-group>
+      <van-cell-group style="margin-bottom: 12px;">
         <van-field
           v-model="oldHouseName"
           label="原房屋地址"
@@ -12,11 +12,11 @@
           required>
         </van-field>
         <van-field
-          v-model="oldForm.price_arr"
-          label="原月单价"
+          v-model="oldForm.staff_name"
+          label="原开单人"
           type="text"
           disabled
-          placeholder="原房屋月单价已禁用">
+          placeholder="原房屋原开单人已禁用">
         </van-field>
         <van-field
           v-model="oldForm.pay_way_arr"
@@ -334,7 +334,7 @@
         moneyNum: [''],             //分金额 付款方式
 
         oldForm: {
-          price_arr: '',
+          staff_name: '',
           pay_way_arr: '',
           price: '',
           money_sum: '',

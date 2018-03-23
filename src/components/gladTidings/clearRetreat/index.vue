@@ -1,7 +1,7 @@
 <template>
   <div id="clearRetreat" v-wechat-title="$route.meta.title">
 
-    <div class="main" v-if="!searchShow">
+    <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <div class="checks" style="">
           <div style="min-width: 110px;">收租标记</div>
@@ -21,7 +21,7 @@
           v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchShow = true"
+          @click="searchSelect(form.collect_or_rent)"
           readonly
           placeholder="选择房屋地址">
         </van-field>
@@ -83,41 +83,30 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @search="onSearch">
-        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
-      </van-search>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in 30">
-          <div>{{key}}</div>
-          <div>{{key}}回复</div>
-        </div>
-      </div>
-    </div>
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
+
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import CollectHouse from '../collectHouse.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, CollectHouse},
     data() {
       return {
         urls: globalConfig.server,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
-        lists: [],
+        houseShow: false,         //搜索
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
 
         bulletinDate: '',             //喜报日期
         payWay: '',                   //付款方式
@@ -146,27 +135,29 @@
         this.$router.push({path: val});
       },
 
-      // 搜索
-      onSearch() {
-        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
-          let data = res.data.data;
-          let arr = {};
-          for (let i = 0; i < data.length; i++) {
-            let lord = data[i].lords;
-            for (let i = 0; i < lord.length; i++) {
-              console.log(lord[i]);
-            }
-          }
-        })
+
+      searchSelect(val) {
+        if (val === '0') {
+          this.organizeType = 'collect';
+          this.houseShow = true;
+        } else if (val === '1') {
+          this.houseShow = true;
+          this.organizeType = 'rent'
+        } else {
+          Toast('请选择收租标记');
+        }
       },
 
+      // 房屋地址
+      house_(val, type, detail) {
+        this.houseName = val.houseName;
+        this.form.contract_id = val.contract_id;
+        this.form.house_id = val.house_id;
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
-        this.searchShow = false;
-      },
-      // select选择
-      onConfirm(value, index) {
-        this.selectHide = false;
+        this.houseShow = false;
       },
 
       // 截图
@@ -179,7 +170,7 @@
         this.$http.post(this.urls + 'bulletin/banish', this.form).then((res) => {
           if (res.data.code === '50410') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
+            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }

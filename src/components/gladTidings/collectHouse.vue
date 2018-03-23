@@ -4,7 +4,7 @@
       <van-search
         v-model="searchValue"
         show-action
-        @keyup="onSearch"
+        @keyup="onSearch(type)"
         @cancel="onCancel"/>
       <div class="searchContent">
         <div class="notData" v-if="lists.length === 0">暂无数据</div>
@@ -35,8 +35,7 @@
         lords: {},
       }
     },
-    mounted() {
-    },
+
     watch: {
       module(val) {
         this.searchShow = val;
@@ -50,7 +49,7 @@
     },
     methods: {
       // 搜索
-      onSearch() {
+      onSearch(val) {
         this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
           let data = res.data.data;
           this.lists = [];
@@ -58,13 +57,25 @@
             if (data[i].name !== null) {
               let list = {};
               list.house_name = data[i].name;
-              if (data[i].lords.length !== 0) {
+              if (data[i].lords.length !== 0 && val !== 'rent') {
+
                 this.lords = data[i].lords[0];
                 list.id = data[i].lords[0].id;
                 list.house_id = data[i].lords[0].house_id;
                 if (data[i].lords[0].user.length !== 0) {
                   list.staff_name = data[i].lords[0].user[0].name;
                   list.department_name = data[i].lords[0].user[0].org[0].name;
+                } else {
+                  list.staff_name = '';
+                  list.department_name = '';
+                }
+              } else if (data[i].renters.length !== 0 && val === 'rent') {
+                this.lords = data[i].renters[0];
+                list.id = data[i].renters[0].id;
+                list.house_id = data[i].renters[0].house_id;
+                if (data[i].renters[0].user.length !== 0) {
+                  list.staff_name = data[i].renters[0].user[0].name;
+                  list.department_name = data[i].renters[0].user[0].org[0].name;
                 } else {
                   list.staff_name = '';
                   list.department_name = '';
