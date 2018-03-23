@@ -36,19 +36,19 @@
         </div>
         <van-cell-group>
           <van-field
-            v-model="form.period_price_arr[index]"
-            type="number"
-            label="周期"
-            @keyup="periodDate(1)"
-            placeholder="请填写月单价周期"
-            required>
-          </van-field>
-          <van-field
             v-model="datePrice[index]"
             type="text"
             label="开始时间"
             placeholder="获取周期开始日期"
             disabled
+            required>
+          </van-field>
+          <van-field
+            v-model="form.period_price_arr[index]"
+            type="number"
+            label="周期"
+            @keyup="periodDate(1)"
+            placeholder="请填写月单价周期"
             required>
           </van-field>
           <van-field
@@ -92,19 +92,19 @@
         </div>
         <van-cell-group>
           <van-field
-            v-model="form.period_pay_arr[index]"
-            type="number"
-            label="周期"
-            @keyup="periodDate(2)"
-            placeholder="请填写付款方式周期"
-            required>
-          </van-field>
-          <van-field
             v-model="datePay[index]"
             type="text"
             label="开始时间"
             placeholder="获取周期开始日期"
             disabled
+            required>
+          </van-field>
+          <van-field
+            v-model="form.period_pay_arr[index]"
+            type="number"
+            label="周期"
+            @keyup="periodDate(2)"
+            placeholder="请填写付款方式周期"
             required>
           </van-field>
           <van-field
@@ -448,6 +448,10 @@
         switch (this.timeIndex) {
           case 1:
             this.form.sign_date = this.timeValue;
+            this.datePrice = [];
+            this.datePay = [];
+            this.datePrice.push(this.form.sign_date);
+            this.datePay.push(this.form.sign_date);
             break;
           case 2:
             this.form.retainage_date = this.timeValue;
@@ -540,10 +544,14 @@
           }
         }).then((res) => {
           if (res.data.code === '51110') {
+            this.datePrice = [];
+            this.datePay = [];
             if (val === 1) {
               this.datePrice = res.data.data;
+              this.datePrice.unshift(this.form.sign_date);
             } else {
-              this.datePay = res.data.data;
+              this.datePay = this.form.concat(res.data.data);
+              this.datePay.unshift(this.form.sign_date);
             }
           } else {
             Toast(res.data.msg);

@@ -113,19 +113,19 @@
         </div>
         <van-cell-group>
           <van-field
-            v-model="form.period_price_arr[index]"
-            type="number"
-            label="付款周期"
-            @keyup="periodDate(1)"
-            placeholder="请填写月单价周期"
-            required>
-          </van-field>
-          <van-field
             v-model="datePrice[index]"
             type="text"
             label="开始时间"
             placeholder="获取周期开始日期"
             disabled
+            required>
+          </van-field>
+          <van-field
+            v-model="form.period_price_arr[index]"
+            type="number"
+            label="付款周期"
+            @keyup="periodDate(1)"
+            placeholder="请填写月单价周期"
             required>
           </van-field>
           <van-field
@@ -148,19 +148,19 @@
         </div>
         <van-cell-group>
           <van-field
-            v-model="form.period_pay_arr[index]"
-            type="number"
-            label="付款周期"
-            @keyup="periodDate(2)"
-            placeholder="请填写付款方式周期"
-            required>
-          </van-field>
-          <van-field
             v-model="datePay[index]"
             type="text"
             label="开始时间"
             placeholder="获取周期开始日期"
             disabled
+            required>
+          </van-field>
+          <van-field
+            v-model="form.period_pay_arr[index]"
+            type="number"
+            label="付款周期"
+            @keyup="periodDate(2)"
+            placeholder="请填写付款方式周期"
             required>
           </van-field>
           <van-field
@@ -651,6 +651,10 @@
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
+            this.datePrice = [];
+            this.datePay = [];
+            this.datePrice.push(this.form.pay_first_date);
+            this.datePay.push(this.form.pay_first_date);
             break;
           case 3:
             this.form.pay_second_date = this.timeValue;
