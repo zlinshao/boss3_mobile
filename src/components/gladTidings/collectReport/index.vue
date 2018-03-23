@@ -779,10 +779,14 @@
           }
         }).then((res) => {
           if (res.data.code === '51110') {
+            this.datePrice = [];
+            this.datePay = [];
             if (val === 1) {
               this.datePrice = res.data.data;
+              this.datePrice.unshift(this.form.pay_first_date);
             } else {
-              this.datePay = res.data.data;
+              this.datePay = this.form.concat(res.data.data);
+              this.datePay.unshift(this.form.pay_first_date);
             }
           } else {
             Toast(res.data.msg);

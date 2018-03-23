@@ -370,6 +370,7 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          from: '',                     //来源
           deposit: '',                  //押金
           property: '',                 //物业费
           receipt: '',                  //收据编号
@@ -384,7 +385,7 @@
           department_id: '4',            //部门id
         },
         houseName: '',
-        fromName: '',
+        fromName: '个人',
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name

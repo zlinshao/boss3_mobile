@@ -367,7 +367,7 @@
           leader_id: '',                //负责人id
           department_id: '4',            //部门id
         },
-        fromName: '',
+        fromName: '个人',
         houseName: '',                   //房屋地址name
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
@@ -548,10 +548,14 @@
           }
         }).then((res) => {
           if (res.data.code === '51110') {
+            this.datePrice = [];
+            this.datePay = [];
             if (val === 1) {
               this.datePrice = res.data.data;
+              this.datePrice.unshift(this.form.pay_first_date);
             } else {
-              this.datePay = res.data.data;
+              this.datePay = this.form.concat(res.data.data);
+              this.datePay.unshift(this.form.pay_first_date);
             }
           } else {
             Toast(res.data.msg);

@@ -1,6 +1,6 @@
 <template>
   <div id="collectReport" v-wechat-title="$route.meta.title">
-    <div  v-show="!houseShow || !staffModule" class="main">
+    <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <van-field
           v-model="houseName"
@@ -170,24 +170,29 @@
           @click-icon="form.property_payer = ''"
           required>
         </van-field>
-        <van-field
-          v-model="form.pay_first_date"
-          label="打房租日期"
-          readonly
-          type="text"
-          @click="timeChoose(2)"
-          placeholder="第一次打房租日期"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.pay_second_date"
-          label="打房租日期"
-          readonly
-          type="text"
-          @click="timeChoose(3)"
-          placeholder="第二次打房租日期"
-          required>
-        </van-field>
+        <div class="first_date">
+          <van-field
+            class="title"
+            label="打房租日期"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.pay_first_date"
+            readonly
+            type="text"
+            @click="timeChoose(2)"
+            placeholder="第一次打款日期">
+          </van-field>
+          <span class="cut">/</span>
+          <van-field
+            class="twoBorder"
+            v-model="form.pay_second_date"
+            readonly
+            type="text"
+            @click="timeChoose(3)"
+            placeholder="第二次打款日期">
+          </van-field>
+        </div>
         <van-field
           v-model="form.sign_date"
           label="签约日期"
@@ -282,12 +287,12 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">截图</div>
+        <div class="title">特殊情况截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
       </div>
 
-      <div class="aloneModel">
-        <div class="title">组长同意截图</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
       </div>
 
@@ -638,7 +643,7 @@
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
           if (res.data.code === '50110') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
+            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }
@@ -673,6 +678,30 @@
         padding-left: 110px;
       }
     }
+    .first_date {
+      @include flex;
+      .van-cell.van-hairline.van-field {
+        width: 33%;
+        .van-cell__value {
+          padding-left: 0;
+        }
+      }
+      .title.van-cell.van-hairline.van-field {
+        width: 31%;
+      }
+    }
+    .first_date {
+      span.cut {
+        padding-right: 10px;
+        line-height: 39px;
+        color: #969696;
+        border-bottom: 1px solid #F4F4F4;
+      }
+      .twoBorder {
+        border-bottom: 1px solid #F4F4F4;
+        padding-bottom: 9px;
+      }
+    }
     .aloneModel {
       background: #fff;
       width: 100%;
@@ -680,6 +709,15 @@
       padding-bottom: .26rem;
       .title {
         padding: .26rem .3rem 0;
+      }
+    }
+
+    .aloneModel.required {
+      .title {
+        padding-left: .2rem;
+        span {
+          color: #f44;
+        }
       }
     }
     .paddingTitle {
