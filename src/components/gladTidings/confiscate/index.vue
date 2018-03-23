@@ -67,6 +67,13 @@
           placeholder="部门已禁用"
           disabled>
         </van-field>
+        <!--test-->
+        <van-field
+          label="选取"
+          type="text"
+          @focus=" departDialog = true"
+          placeholder="选取部门">
+        </van-field>
       </van-cell-group>
     </div>
 
@@ -89,17 +96,18 @@
         </div>
       </div>
     </div>
-
+    <SelectDepart :departDialog="departDialog" @close="closeModal"></SelectDepart>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import {Toast} from 'vant';
+  import SelectDepart from '../../common/selectDepartment.vue'
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast,SelectDepart},
     data() {
       return {
         urls: globalConfig.server,
@@ -124,6 +132,7 @@
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
+        departDialog:false,
       }
     },
 
@@ -153,6 +162,9 @@
             Toast(res.data.msg);
           }
         })
+      },
+      closeModal(val){
+        this.departDialog = false
       }
     },
   }
