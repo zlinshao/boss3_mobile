@@ -15,7 +15,7 @@
         <ul>
           <li v-for="item in organizeList">
             <div class="radio">
-              <van-radio :name="item.id" v-model="selectId" @change="selectItem(item)"></van-radio>
+              <van-radio :name="item.id" v-model="selectId" @click="selectItem(item)"></van-radio>
             </div>
             <div class="depart_detail" @click="getNextLevel(item)">
               <div>{{item.name}}</div>
@@ -35,19 +35,20 @@
 
 <script>
   import {Toast} from 'vant';
+
   export default {
     name: "organize",
-    components:{Toast},
+    components: {Toast},
     props: ['departDialog', 'type'],
     data() {
       return {
         organizeShow: false,
         searchValue: '',
-        organizeList:[],    //组织架构部门列表
-        breadcrumbList:[],  //面包屑列表
-        highestDepart:'',   //最高级岗位
-        selectId:'',
-        selectDepart:{},
+        organizeList: [],    //组织架构部门列表
+        breadcrumbList: [],  //面包屑列表
+        highestDepart: '',   //最高级岗位
+        selectId: '',
+        selectDepart: {},
       }
     },
 
@@ -61,43 +62,43 @@
         }
       }
     },
-    mounted(){
-        this.getDepartment(1);
+    mounted() {
+      this.getDepartment(1);
     },
     methods: {
-      getDepartment(id){
+      getDepartment(id) {
         //获取顶级部门名称
-        this.$http.get(globalConfig.server_user+'api/v1/organizations/1').then((res) => {
-          if(res.data.status === 'success'){
+        this.$http.get(globalConfig.server_user + 'api/v1/organizations/1').then((res) => {
+          if (res.data.status === 'success') {
             this.highestDepart = res.data.data.name;
           }
         });
-        this.$http.get(globalConfig.server_user+'api/v1/organizations?parent_id='+id).then((res) => {
-          if(res.data.status === 'success'){
+        this.$http.get(globalConfig.server_user + 'api/v1/organizations?parent_id=' + id).then((res) => {
+          if (res.data.status === 'success') {
             this.organizeList = res.data.data;
           }
         });
       },
 
       //搜索下级部门
-      getNextLevel(item){
+      getNextLevel(item) {
         this.getDepartment(item.id);
         let isExist = false;
-        this.breadcrumbList.forEach((x) =>{
-          if(item.id === x.id){
-            isExist =  true
+        this.breadcrumbList.forEach((x) => {
+          if (item.id === x.id) {
+            isExist = true
           }
         });
-        if(!isExist){
+        if (!isExist) {
           this.breadcrumbList.push(item)
         }
       },
       //面包屑搜索
-      breadcrumbSearch(item,index){
-        if(item === 1){
+      breadcrumbSearch(item, index) {
+        if (item === 1) {
           this.getDepartment(1);
           this.breadcrumbList = [];
-        }else {
+        } else {
           this.getDepartment(item.id);
           this.breadcrumbList.splice(index + 1, this.breadcrumbList.length);
         }
@@ -116,14 +117,14 @@
         this.lists = [];
         this.searchValue = '';
       },
-      selectItem(item){
+      selectItem(item) {
         this.selectDepart = item;
       },
-      confirmAdd(){
-        if(this.selectId){
-          this.$emit('close',this.selectDepart);
+      confirmAdd() {
+        if (this.selectId) {
+          this.$emit('close', this.selectDepart);
           this.organizeShow = false;
-        }else {
+        } else {
           Toast.fail('请选择部门');
         }
 
@@ -138,9 +139,10 @@
     display: -webkit-flex;
   }
 
-  .isGray{
+  .isGray {
     color: #aaa !important;
   }
+
   .searchClass {
     position: fixed;
     top: 0;
@@ -149,43 +151,43 @@
     right: 0;
     background: #ffffff;
     z-index: 999;
-    .breadcrumb_box{
+    .breadcrumb_box {
       width: 100%;
       /*overflow: hidden;*/
       margin: .15rem 0;
       background: #F8F8F8;
       padding: .25rem;
-      .breadcrumb{
+      .breadcrumb {
         width: 100%;
         @include flex;
         flex-wrap: wrap;
-        div{
+        div {
           margin: .1rem 0;
           color: #409EFF;
-          &:last-child{
+          &:last-child {
             color: inherit;
           }
         }
       }
     }
-    .departList{
+    .departList {
       height: 100%;
-      li{
+      li {
         height: .9rem;
         padding: 0 .3rem;
         @include flex;
         align-items: center;
         border-bottom: 1px solid #f0f0f0;
-        &:hover{
+        &:hover {
           background: #F8F8F8;
         }
-        .radio{
+        .radio {
           height: .9rem;
           padding-right: .2rem;
           @include flex;
           align-items: center;
         }
-        .depart_detail{
+        .depart_detail {
           flex-grow: 1;
           height: .9rem;
           /*width: 100%;*/

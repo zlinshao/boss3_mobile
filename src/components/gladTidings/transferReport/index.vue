@@ -323,6 +323,8 @@
         timeIndex: '',
         timeValue: '',            //日期value
 
+        first_date: '',            //日期value
+
         amountPrice: 1,
         datePrice: [],
 
@@ -368,14 +370,14 @@
           screenshot: '',               //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '12',                 //开单人id
-          leader_id: '13',                //负责人id
-          department_id: '16',            //部门id
+          staff_id: '',                 //开单人id
+          leader_id: '3',               //负责人id
+          department_id: '',            //部门id
         },
         oldHouseName: '',
         newHouseName: '',
         staff_name: '',                  //开单人name
-        leader_name: '',                 //负责人name
+        leader_name: '湮灭',                //负责人name
         department_name: '',             //部门name
       }
     },
@@ -423,10 +425,12 @@
             break;
           case 2:
             this.form.begin_date = this.timeValue;
+            this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
-            this.datePrice.push(this.form.begin_date);
-            this.datePay.push(this.form.begin_date);
+            this.first_date.push(this.timeValue);
+            this.datePrice.push(this.timeValue);
+            this.datePay.push(this.timeValue);
             break;
         }
       },
@@ -471,16 +475,15 @@
             this.staffModule = true;
             this.organizeType = 'staff';
             break;
-          case 4:
-            this.staffModule = true;
-            this.organizeType = 'leader';
-            break;
+          // case 4:
+          //   this.staffModule = true;
+          //   this.organizeType = 'leader';
+          //   break;
         }
       },
 
       // 房屋地址
       house_(val, type, lord) {
-        console.log(lord)
         if (type === 'old') {
           this.oldHouseName = val.houseName;
           this.form.contract_id_rent = val.contract_id;
@@ -494,16 +497,14 @@
       },
 
       // 开单人
-      staff_(val, type) {
-        if (type === 'staff') {
-          this.form.staff_id = val.id;
-          this.staff_name = val.name;
-        } else {
-          this.form.leader_id = val.id;
-          this.leader_name = val.name;
-        }
+      staff_(val) {
+        this.form.staff_id = val.staff_id;
+        this.staff_name = val.staff_name;
+        this.form.department_id = val.depart_id;
+        this.department_name = val.depart_name;
         this.onCancel();
       },
+
       // select关闭
       onCancel() {
         this.selectHide = false;
@@ -511,6 +512,7 @@
         this.houseShow = false;
         this.staffModule = false;
       },
+
       // 月单价增加
       priceAmount(val) {
         if (val === 1) {
@@ -536,11 +538,15 @@
             this.amountPrice--;
             this.form.period_price_arr.splice(index, 1);
             this.price_arr.splice(index, 1);
+            this.datePrice.splice(index, 1);
+            this.periodDate(val);
           }
         } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
           this.pay_way_arr.splice(index, 1);
+          this.datePay.splice(index, 1);
+          this.periodDate(val);
         } else {
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
@@ -563,14 +569,10 @@
           }
         }).then((res) => {
           if (res.data.code === '51110') {
-            this.datePrice = [];
-            this.datePay = [];
             if (val === 1) {
-              this.datePrice = res.data.data;
-              this.datePrice.unshift(this.form.begin_date);
+              this.datePrice = this.first_date.concat(res.data.data);
             } else {
-              this.datePay = this.form.concat(res.data.data);
-              this.datePay.unshift(this.form.begin_date);
+              this.datePay = this.first_date.concat(res.data.data);
             }
           } else {
             Toast(res.data.msg);

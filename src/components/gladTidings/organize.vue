@@ -8,7 +8,7 @@
         @cancel="onClose"/>
       <div class="notData" v-if="lists.length === 0">暂无数据</div>
       <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="organizeSure(key.staff_name, key.id)">
+        <div class="searchList" v-for="key in lists" @click="organizeSure(key)">
           <div>{{key.staff_name}}</div>
           <div>
             <p>{{key.depart_name}}</p>
@@ -29,7 +29,6 @@
         address: globalConfig.server_user,
         searchValue: '',
         lists: [],
-        form: {}
       }
     },
 
@@ -59,9 +58,10 @@
           for (let i = 0; i < data.length; i++) {
             if (data[i].name !== null) {
               let list = {};
-              list.id = data[i].id;
+              list.staff_id = data[i].id;
               list.staff_name = data[i].name;
               if (data[i].org.length !== 0) {
+                list.depart_id = data[i].org[0].id;
                 list.depart_name = data[i].org[0].name;
               } else {
                 list.depart_name = '---';
@@ -72,10 +72,8 @@
         })
       },
       // 开单人
-      organizeSure(name, id) {
-        this.form.id = id;
-        this.form.name = name;
-        this.$emit('organization', this.form, this.type);
+      organizeSure(name) {
+        this.$emit('organization', name, this.type);
         this.onClose();
       },
 

@@ -151,8 +151,8 @@
       // 房屋地址
       house_(val, type, detail) {
         this.houseName = val.houseName;
-        this.form.contract_id = val.contract_id;
-        this.form.house_id = val.house_id;
+        // this.form.contract_id = val.contract_id;
+        // this.form.house_id = val.house_id;
         this.onCancel();
       },
       // select关闭

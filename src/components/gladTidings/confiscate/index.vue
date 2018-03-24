@@ -1,7 +1,7 @@
 <template>
   <div id="confiscate" v-wechat-title="$route.meta.title">
 
-    <div class="main" v-if="!searchShow">
+    <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <div class="checks" style="">
           <div style="min-width: 110px;">收租标记</div>
@@ -11,13 +11,12 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="form.houseName"
+          v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchShow = true"
+          @click="searchSelect(form.collect_or_rent)"
           readonly
-          placeholder="选择房屋地址"
-          required>
+          placeholder="选择房屋地址">
         </van-field>
         <van-field
           v-model="bulletinDate"
@@ -77,42 +76,33 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @search="onSearch">
-        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
-      </van-search>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in 30">
-          <div>{{key}}</div>
-          <div>{{key}}回复</div>
-        </div>
-      </div>
-    </div>
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
+
     <SelectDepart :departDialog="departDialog" @close="closeModal"></SelectDepart>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import CollectHouse from '../collectHouse.vue'
   import {Toast} from 'vant';
   import SelectDepart from '../../common/selectDepartment.vue'
 
   export default {
     name: "index",
-    components: {UpLoad, Toast,SelectDepart},
+    components: {UpLoad, Toast,SelectDepart,CollectHouse},
     data() {
       return {
         urls: globalConfig.server,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
+        refundSta: false,
+        houseShow: false,         //搜索
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
 
         bulletinDate: '',             //喜报日期
         payWay: '',                   //付款方式
@@ -122,11 +112,8 @@
           type: 0,
           draft: 0,
           collect_or_rent: '',
-          contract_id: '33',            //合同id
+          contract_id: '',            //合同id
           remark: '',                   //备注
-          staff_id: '1',                //开单人id
-          leader_id: '2',               //负责人id
-          department_id: '3',           //部门id
         },
         houseName: '',
         staff_name: '',                 //开单人name
@@ -140,18 +127,30 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
-      // 搜索
-      onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
-        })
+
+      searchSelect(val) {
+        if (val === '0') {
+          this.organizeType = 'collect';
+          this.houseShow = true;
+        } else if (val === '1') {
+          this.houseShow = true;
+          this.organizeType = 'rent'
+        } else {
+          Toast('请选择收租标记');
+        }
       },
 
+      // 房屋地址
+      house_(val,type,detail) {
+        this.houseName = val.houseName;
+        // this.form.contract_id = val.contract_id;
+        // this.form.house_id = val.house_id;
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
-        this.searchShow = false;
+        this.houseShow = false;
       },
-
       saveCollect(val) {
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/confiscate', this.form).then((res) => {
@@ -164,6 +163,7 @@
         })
       },
       closeModal(val){
+        console.log(val);
         this.departDialog = false
       }
     },

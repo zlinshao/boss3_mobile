@@ -400,7 +400,6 @@
     <div :class="{'searchClass':searchShow}" v-if="searchShow">
       <van-search
         v-model="searchValue"
-        placeholder="请输入商品名称"
         show-action
         @keyup="onSearch"
         @cancel="onCancel"/>
@@ -410,7 +409,6 @@
           <div>{{key.village_name}}</div>
           <div>
             <p>{{key.province_name}}-{{key.city_name}}</p>
-            <!--<span>上官海棠</span>-->
           </div>
         </div>
       </div>
@@ -474,9 +472,10 @@
         timeIndex: '',
         timeValue: '',            //日期value
 
+        first_date: [],
+
         amountPrice: 1,
         datePrice: [],
-        first_date: [],
 
         amountPay: 1,
         datePay: [],
@@ -524,16 +523,16 @@
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
-          staff_id: '',                //开单人id
-          leader_id: '',               //负责人id
-          department_id: '3',           //部门id
+          staff_id: '',                 //开单人id
+          leader_id: '3',               //负责人id
+          department_id: '',            //部门id
 
         },
-        property_name: '',            //物业费付款人
-        staff_name: '',               //开单人name
-        leader_name: '',              //负责人name
-        department_name: '',          //部门name
-        fromName: '个人',             //客户来源
+        property_name: '',              //物业费付款人
+        staff_name: '',                 //开单人name
+        leader_name: '湮灭',                //负责人name
+        department_name: '',            //部门name
+        fromName: '个人',               //客户来源
       }
     },
     mounted() {
@@ -560,8 +559,8 @@
             this.organizeType = 'staff';
             break;
           case 3:
-            this.staffModule = true;
-            this.organizeType = 'leader';
+            // this.staffModule = true;
+            // this.organizeType = 'leader';
             break;
         }
       },
@@ -579,6 +578,15 @@
         }
       },
 
+      // 开单人
+      staff_(val) {
+        this.form.staff_id = val.staff_id;
+        this.staff_name = val.staff_name;
+        this.form.department_id = val.depart_id;
+        this.department_name = val.depart_name;
+        this.onCancel();
+      },
+
       // select关闭
       onCancel() {
         this.searchShow = false;
@@ -586,17 +594,6 @@
         this.timeShow = false;
         this.staffModule = false;
         this.lists = [];
-      },
-      // 开单人
-      staff_(val, type) {
-        if (type === 'staff') {
-          this.form.staff_id = val.id;
-          this.staff_name = val.name;
-        } else {
-          this.form.leader_id = val.id;
-          this.leader_name = val.name;
-        }
-        this.onCancel();
       },
 
       // 小区
@@ -763,7 +760,7 @@
             this.form.period_price_arr.splice(index, 1);
             this.form.price_arr.splice(index, 1);
             this.datePrice.splice(index, 1);
-            this.periodDate(1);
+            this.periodDate(val);
           }
         } else {
           this.amountPay--;
@@ -771,7 +768,7 @@
           this.form.pay_way_arr.splice(index, 1);
           this.payTypeNum.splice(index, 1);
           this.datePay.splice(index, 1);
-          this.periodDate(2);
+          this.periodDate(val);
         }
       },
       // 日期计算

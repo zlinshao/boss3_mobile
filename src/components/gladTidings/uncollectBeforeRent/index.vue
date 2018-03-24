@@ -328,6 +328,8 @@
         timeIndex: '',
         timeValue: '',            //日期value
 
+        first_date: '',            //日期value
+
         amountPrice: 1,
         datePrice: [],
 
@@ -369,12 +371,12 @@
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                //开单人id
-          leader_id: '',               //负责人id
-          department_id: '4',           //部门id
+          leader_id: '3',               //负责人id
+          department_id: '',            //部门id
         },
         fromName: '',
         staff_name: '',                 //开单人name
-        leader_name: '',                //负责人name
+        leader_name: '湮灭',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -392,23 +394,21 @@
             this.staffModule = true;
             this.organizeType = 'staff';
             break;
-          case 2:
-            this.staffModule = true;
-            this.organizeType = 'leader';
-            break;
+          // case 2:
+          //   this.staffModule = true;
+          //   this.organizeType = 'leader';
+          //   break;
         }
       },
       // 开单人
-      staff_(val, type) {
-        if (type === 'staff') {
-          this.form.staff_id = val.id;
-          this.staff_name = val.name;
-        } else {
-          this.form.leader_id = val.id;
-          this.leader_name = val.name;
-        }
+      staff_(val) {
+        this.form.staff_id = val.staff_id;
+        this.staff_name = val.staff_name;
+        this.form.department_id = val.depart_id;
+        this.department_name = val.depart_name;
         this.onCancel();
       },
+
       // select关闭
       onCancel() {
         this.selectHide = false;
@@ -448,10 +448,12 @@
         switch (this.timeIndex) {
           case 1:
             this.form.sign_date = this.timeValue;
+            this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
-            this.datePrice.push(this.form.sign_date);
-            this.datePay.push(this.form.sign_date);
+            this.first_date.push(this.timeValue);
+            this.datePrice.push(this.timeValue);
+            this.datePay.push(this.timeValue);
             break;
           case 2:
             this.form.retainage_date = this.timeValue;
@@ -517,11 +519,15 @@
             this.amountPrice--;
             this.form.period_price_arr.splice(index, 1);
             this.price_arr.splice(index, 1);
+            this.datePrice.splice(index, 1);
+            this.periodDate(val);
           }
         } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
           this.form.pay_way_arr.splice(index, 1);
+          this.datePay.splice(index, 1);
+          this.periodDate(val);
         } else {
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
@@ -544,14 +550,10 @@
           }
         }).then((res) => {
           if (res.data.code === '51110') {
-            this.datePrice = [];
-            this.datePay = [];
             if (val === 1) {
-              this.datePrice = res.data.data;
-              this.datePrice.unshift(this.form.sign_date);
+              this.datePrice = this.first_date.concat(res.data.data);
             } else {
-              this.datePay = this.form.concat(res.data.data);
-              this.datePay.unshift(this.form.sign_date);
+              this.datePay = this.first_date.concat(res.data.data);
             }
           } else {
             Toast(res.data.msg);

@@ -1,13 +1,14 @@
 <template>
   <div id="rentReport" v-wechat-title="$route.meta.title">
 
-    <div v-show="!searchShow" class="main">
+    <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <van-field
-          v-model="form.contract_id"
+          v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
+          @click="searchSelect(1)"
           placeholder="请选择房屋地址"
           required>
         </van-field>
@@ -103,38 +104,21 @@
           label="负责人"
           type="text"
           readonly
-          placeholder="请选择负责人"
-          required>
+          placeholder="负责人已禁用">>
         </van-field>
         <van-field
           v-model="department_name"
           label="部门"
           type="text"
           readonly
-          placeholder="请选择部门"
-          required>
+          placeholder="部门已禁用">>
         </van-field>
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
-    </div>
-
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @search="onSearch">
-        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
-      </van-search>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in 30">
-          <div>{{key}}</div>
-          <div>{{key}}回复</div>
-        </div>
-      </div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -144,21 +128,26 @@
         @cancel="onCancel"
         @confirm="onConfirm"/>
     </van-popup>
+
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import CollectHouse from '../collectHouse.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast,CollectHouse},
     data() {
       return {
         urls: globalConfig.server,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
+        houseShow: false,         //搜索
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
+
         tabs: '',
         columns: [],              //select值
         selectHide: false,        //select选择
@@ -183,10 +172,8 @@
 
           screenshot: '',               //领导截图 数组
           remark: '',                   //备注
-          staff_id: '2',                 //开单人id
-          leader_id: '3',                //负责人id
-          department_id: '4',            //部门id
         },
+        houseName: '',                  //房屋名称
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
@@ -197,12 +184,7 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
-      // 搜索
-      onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
-        })
-      },
+
       // 截图
       screenshot(val) {
         this.form.screenshot = val[1];
@@ -220,10 +202,35 @@
         this.form.money_way[this.payIndex] = index + 1;
         this.selectHide = false;
       },
+      searchSelect(val) {
+        switch (val) {
+          case 1:
+            this.houseShow = true;
+            break;
+          case 2:
+            this.staffModule = true;
+            this.organizeType = 'staff';
+            break;
+          // case 3:
+          //   this.staffModule = true;
+          //   this.organizeType = 'leader';
+          //   break;
+        }
+      },
+
+      // 房屋地址
+      house_(val) {
+        this.houseName = val.houseName;
+        this.form.contract_id = val.contract_id;
+        this.form.house_id = val.house_id;
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
-        this.searchShow = false;
         this.selectHide = false;
+        this.timeShow = false;
+        this.houseShow = false;
+        this.staffModule = false;
       },
       // 增加 定金
       priceAmount() {

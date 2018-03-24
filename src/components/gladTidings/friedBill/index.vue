@@ -127,9 +127,6 @@
           refund: '0',                  //定金退还
           screenshot_leader: '',        //特殊情况
           remark: '',                   //备注
-          staff_id: '',                //开单人id
-          leader_id: '',               //负责人id
-          department_id: '84',          //部门id
         },
         houseName: '',
         staff_name: '',                 //开单人name
@@ -158,8 +155,8 @@
       // 房屋地址
       house_(val,type,detail) {
         this.houseName = val.houseName;
-        this.form.contract_id = val.contract_id;
-        this.form.house_id = val.house_id;
+        // this.form.contract_id = val.contract_id;
+        // this.form.house_id = val.house_id;
         this.onCancel();
       },
       // select关闭

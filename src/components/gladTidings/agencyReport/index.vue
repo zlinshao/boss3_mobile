@@ -116,24 +116,30 @@
         </van-field>
         <van-field
           v-model="staff_name"
+          @click="searchStaff(2)"
+          readonly
           label="开单人"
           type="text"
           placeholder="请选择开单人"
-          disabled>
+          required>
         </van-field>
         <van-field
           v-model="leader_name"
+          @click="searchStaff(3)"
+          readonly
           label="负责人"
           type="text"
           placeholder="请选择负责人"
-          disabled>
+          required>
         </van-field>
         <van-field
           v-model="department_name"
+          @click="searchStaff(4)"
+          readonly
           label="部门"
           type="text"
           placeholder="请选择部门"
-          disabled>
+          required>
         </van-field>
       </van-cell-group>
     </div>
@@ -144,17 +150,20 @@
     </div>
 
     <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
+
+    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import CollectHouse from '../collectHouse.vue'
+  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse},
+    components: {UpLoad, Toast, CollectHouse, Organization},
     data() {
       return {
         urls: globalConfig.server,
@@ -183,13 +192,13 @@
           screenshot: [],               //结清截图
           screenshot_leader: [],        //特殊情况
           remark: '',                   //备注
-          staff_id: '92',                //开单人id
-          leader_id: '92',               //负责人id
-          department_id: '84',           //部门id
+          staff_id: '',                //开单人id
+          leader_id: '3',                //负责人id
+          department_id: '',           //部门id
         },
         houseName: '',                  //房屋name
         staff_name: '',                 //开单人name
-        leader_name: '',                //负责人name
+        leader_name: '湮灭',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -216,6 +225,26 @@
         } else {
           this.form.screenshot_leader = val[1];
         }
+      },
+      searchStaff(val) {
+        switch (val) {
+          case 2:
+            this.staffModule = true;
+            this.organizeType = 'staff';
+            break;
+          // case 3:
+          //   this.staffModule = true;
+          //   this.organizeType = 'leader';
+          //   break;
+        }
+      },
+      // 开单人
+      staff_(val) {
+        this.form.staff_id = val.staff_id;
+        this.staff_name = val.staff_name;
+        this.form.department_id = val.depart_id;
+        this.department_name = val.depart_name;
+        this.onCancel();
       },
       // 获取银行
       subAccount(val) {

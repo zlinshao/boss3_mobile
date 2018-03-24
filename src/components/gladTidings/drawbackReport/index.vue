@@ -180,12 +180,12 @@
           screenshot_leader: '',        //领导同意截图
           remark: '',                   //备注
           staff_id: '',                 //开单人id
-          leader_id: '',                //负责人id
-          department_id: '3',            //部门id
+          leader_id: '3',                //负责人id
+          department_id: '',            //部门id
         },
         houseName: '',                  //房屋名称
         staff_name: '',                 //开单人name
-        leader_name: '',                //负责人name
+        leader_name: '湮灭',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -224,10 +224,10 @@
             this.staffModule = true;
             this.organizeType = 'staff';
             break;
-          case 3:
-            this.staffModule = true;
-            this.organizeType = 'leader';
-            break;
+          // case 3:
+          //   this.staffModule = true;
+          //   this.organizeType = 'leader';
+          //   break;
         }
       },
 
@@ -239,17 +239,13 @@
         this.onCancel();
       },
       // 开单人
-      staff_(val, type) {
-        if (type === 'staff') {
-          this.form.staff_id = val.id;
-          this.staff_name = val.name;
-        } else {
-          this.form.leader_id = val.id;
-          this.leader_name = val.name;
-        }
+      staff_(val) {
+        this.form.staff_id = val.staff_id;
+        this.staff_name = val.staff_name;
+        this.form.department_id = val.depart_id;
+        this.department_name = val.depart_name;
         this.onCancel();
       },
-
       saveCollect(val) {
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
