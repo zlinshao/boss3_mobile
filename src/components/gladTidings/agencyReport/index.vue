@@ -1,9 +1,9 @@
 <template>
   <div id="drawbackReport" v-wechat-title="$route.meta.title">
 
-    <div v-show="!searchShow" class="main">
+    <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
-        <div class="checks" style="">
+        <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
           <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
           <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
@@ -11,12 +11,12 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="form.contract_id"
+          v-model="houseName"
           label="房屋地址"
           type="text"
+          @click="searchSelect(form.collect_or_rent)"
           readonly
-          placeholder="请选择房屋地址"
-          required>
+          placeholder="选择房屋地址">
         </van-field>
         <van-field
           v-model="form.amount"
@@ -97,7 +97,12 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">领导同意截图</div>
+        <div class="title">结清截图</div>
+        <UpLoad :ID="'settle'" @getImg="screenshot"></UpLoad>
+      </div>
+
+      <div class="aloneModel">
+        <div class="title">特殊情况截图</div>
         <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
       </div>
       <van-cell-group>
@@ -133,41 +138,31 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
+    <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @search="onSearch">
-        <div slot="action" @click="onCancel" style="padding: 0 10px;color: #06bf04;">取消</div>
-      </van-search>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in 30">
-          <div>{{key}}</div>
-          <div>{{key}}回复</div>
-        </div>
-      </div>
-    </div>
+    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import CollectHouse from '../collectHouse.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, CollectHouse},
     data() {
       return {
         urls: globalConfig.server,
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
-        lists: [],
+        refundSta: false,
+        houseShow: false,         //搜索
+        staffModule: false,       //搜索
+        organizeType: '',         //搜索
+
         settleStatus: false,      //是否结清
 
         payWay: '',               //付款方式
@@ -176,21 +171,23 @@
         form: {
           draft: 0,
           collect_or_rent: '',
-          contract_id: '12',            //房屋地址id
+          contract_id: '',              //房屋地址id
+          house_id: '',                 //房屋地址id
           amount: '',                   //数量
           bank: '',                     //银行名称
           subbranch: '',                //支行名称
           account_name: '',             //帐户名称
           account: '',                  //帐号
           name: '',                     //中介名称
-          settle: '',                   //是否结清
-          screenshot: '',               //结清截图
-          screenshot_leader: '',        //领导同意截图
+          settle: 0,                    //是否结清
+          screenshot: [],               //结清截图
+          screenshot_leader: [],        //特殊情况
           remark: '',                   //备注
-          staff_id: '1',                //开单人id
-          leader_id: '2',               //负责人id
-          department_id: '3',           //部门id
+          staff_id: '92',                //开单人id
+          leader_id: '92',               //负责人id
+          department_id: '84',           //部门id
         },
+        houseName: '',                  //房屋name
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
@@ -201,14 +198,24 @@
       routerLink(val) {
         this.$router.push({path: val});
       },
-      // 搜索
-      onSearch() {
-        this.$http.get(this.urls + 'credit/manage/other?search=' + this.searchValue).then((res) => {
-          this.lists = res.data.data;
-        })
+
+      searchSelect(val) {
+        if (val === '0') {
+          this.organizeType = 'collect';
+          this.houseShow = true;
+        } else if (val === '1') {
+          this.houseShow = true;
+          this.organizeType = 'rent'
+        } else {
+          Toast('请选择收租标记');
+        }
       },
       screenshot(val) {
-        this.form.screenshot_leader = val[1];
+        if (val[0] === 'settle') {
+          this.form.screenshot = val[1];
+        } else {
+          this.form.screenshot_leader = val[1];
+        }
       },
       // 获取银行
       subAccount(val) {
@@ -220,22 +227,29 @@
           }
         })
       },
+
+      // 房屋地址
+      house_(val, type, detail) {
+        this.houseName = val.houseName;
+        this.form.contract_id = val.contract_id;
+        this.form.house_id = val.house_id;
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
-        this.searchShow = false;
+        this.houseShow = false;
       },
-
       saveCollect(val) {
         if (this.settleStatus) {
-          this.form.settle = '1';
+          this.form.settle = 1;
         } else {
-          this.form.settle = '0';
+          this.form.settle = 0;
         }
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
-          if (res.data.code === '50810') {
+          if (res.data.code === '51110') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
+            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
           } else {
             Toast(res.data.msg);
           }

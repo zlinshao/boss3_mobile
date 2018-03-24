@@ -653,8 +653,8 @@
             this.form.pay_first_date = this.timeValue;
             this.datePrice = [];
             this.datePay = [];
-            this.datePrice.push(this.form.pay_first_date);
-            this.datePay.push(this.form.pay_first_date);
+            this.datePrice.push(this.timeValue);
+            this.datePay.push(this.timeValue);
             break;
           case 3:
             this.form.pay_second_date = this.timeValue;
@@ -786,7 +786,7 @@
             this.datePrice = [];
             this.datePay = [];
             if (val === 1) {
-              this.datePrice = res.data.data;
+              this.datePrice = this.form.concat(res.data.data);
               this.datePrice.unshift(this.form.pay_first_date);
             } else {
               this.datePay = this.form.concat(res.data.data);

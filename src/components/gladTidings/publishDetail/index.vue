@@ -22,7 +22,7 @@
       <div class="detailRight">
         <!--收房报备-->
         <div class="topTitle">
-          <div v-for="(key,index) in formList" v-if="index !== '领导报备截图'">
+          <div v-for="(key,index) in formList" v-if="index !== '领导报备截图' && index !== '款项结清截图'">
             <p>{{index}}</p>
             <h1>{{key}}</h1>
           </div>
@@ -35,6 +35,7 @@
             </h1>
           </div>
         </div>
+
         <!--评论-->
         <div class="commentArea">
           <div class="headline">评论<span>{{commentList.length}}</span></div>
@@ -63,6 +64,9 @@
               </div>
             </div>
           </div>
+          <div v-if="commentList.length === 0" style="text-align: center;padding-top: .3rem;">
+            暂无评论
+          </div>
         </div>
       </div>
       <div class="footer">
@@ -86,10 +90,9 @@
         active: false,
         urls: globalConfig.server_user,
         formList: {},
+
         operation: {},
-        screenshot: [],
-        user: {},
-        names: {},
+
         form: {},       //评论
         commentList: {},
       }
@@ -106,18 +109,11 @@
       },
 
       formDetail(val) {
-        this.$http.get(this.urls + 'api/v1/process/' + 733).then((res) => {
+        this.$http.get(this.urls + 'api/v1/process/' + val).then((res) => {
           if (res.data.status === 'success') {
-            this.formList = res.data.data.process.content;
-            if (res.data.data.process.content.screenshot !== undefined) {
-              this.screenshot = res.data.data.process.content.screenshot.pic_addresses;
-            } else {
-              this.screenshot = res.data.data.process.content.screenshot_leader.pic_addresses;
-            }
+            this.formList = res.data.data.process.content.show_content;
             this.operation = res.data.data.operation;
-            this.user = res.data.data.process.user;
-            this.names = res.data.data.process.content.trans_type;
-            this.comments(733);
+            this.comments(val);
           }
         });
       },
@@ -140,7 +136,7 @@
 
       // 评论
       commentOn(val) {
-        this.$router.push({path: '/comment', query: {detail: val, ids: 733}});
+        this.$router.push({path: '/comment', query: {detail: val, ids: this.pitch}});
       },
     },
   }

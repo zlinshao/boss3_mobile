@@ -122,13 +122,14 @@
           type: '0',
           draft: 0,
           collect_or_rent: '',
-          contract_id: '33',            //合同id
+          contract_id: '',              //合同id
+          house_id: '',                 //房屋地址id
           refund: '0',                  //定金退还
-          screenshot_leader: '',        //领导截图 数组
+          screenshot_leader: '',        //特殊情况
           remark: '',                   //备注
-          staff_id: '1',                //开单人id
-          leader_id: '2',               //负责人id
-          department_id: '3',           //部门id
+          staff_id: '',                //开单人id
+          leader_id: '',               //负责人id
+          department_id: '84',          //部门id
         },
         houseName: '',
         staff_name: '',                 //开单人name
