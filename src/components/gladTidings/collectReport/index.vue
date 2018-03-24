@@ -181,7 +181,7 @@
         <van-field
           v-model="form.deposit"
           label="押金"
-          type="text"
+          type="number"
           placeholder="请填写押金"
           icon="clear"
           @click-icon="form.deposit = ''"
