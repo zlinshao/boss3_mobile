@@ -113,46 +113,14 @@
         </li>
       </ul>
       <div class="bottom" v-if="list.length === 0 && disabled">
-        <span v-show="disabled">暂无数据...</span>
+        <span>暂无数据...</span>
       </div>
-      <div class="bottom" v-else>
+      <div class="bottom" v-if="list.length > 6 && !disabled">
         <span v-show="disabled">我是有底线的</span>
         <van-loading v-show="!disabled" type="spinner" color="black"/>
       </div>
     </div>
 
-    <!--抄送我的-->
-    <!--<div class="sendTo" v-if="active === 4">-->
-    <!--<div class="sendTop">-->
-    <!--<div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>全部</span></div>-->
-    <!--<div @click="finish(2)" :class="{'readStatus': readActive === 2}"><span>未读(99)</span></div>-->
-    <!--</div>-->
-    <!--<div class="sendMain">-->
-    <!--<div class="startedMain" v-for="key in 10">-->
-    <!--<div class="leftPic">-->
-    <!--<img src="../assets/head.png" alt="">-->
-    <!--</div>-->
-    <!--<div class="rightTitle">-->
-    <!--<div class="title">-->
-    <!--<h2>-->
-    <!--<span>李巧俊</span>- <span>离职申请</span>-->
-    <!--</h2>-->
-    <!--<span class="times">0000-00-00</span>-->
-    <!--</div>-->
-    <!--<h3>-->
-    <!--姓名：李巧俊-->
-    <!--</h3>-->
-    <!--<h3>-->
-    <!--身份证：101010101010101100-->
-    <!--</h3>-->
-    <!--<h3>-->
-    <!--所属部门：研发部-->
-    <!--</h3>-->
-    <!--<h4>审批通过</h4>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
 
     <!--底部-->
     <div class="footer">
@@ -204,7 +172,6 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
-
     },
 
     methods: {
@@ -221,7 +188,8 @@
         if (val === '/index') {
           this.footActive = 1;
         }
-        this.active = '';
+        this.active = 0;
+        this.disabled = false;
         this.$router.push({path: val});
       },
       loadMore() {
@@ -412,9 +380,10 @@
   }
 
   .okFinish {
+    margin-top: 2.3rem;
     .inRough {
       padding: .4rem;
-      margin-top: 2.3rem;
+      margin-top: .3rem;
       .main {
         .mainTop {
           @include flex;

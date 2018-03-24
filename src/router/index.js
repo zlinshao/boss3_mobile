@@ -37,6 +37,7 @@ export default new Router({
       path: '/',
       name: 'ding',
       hidden: false,
+      meta: {title: '首页'},
       component: Ding
     },
     {
