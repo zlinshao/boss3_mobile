@@ -636,7 +636,7 @@
           if (this.amountPrice > 1) {
             this.amountPrice--;
             this.form.period_price_arr.splice(index, 1);
-            this.price_arr.splice(index, 1);
+            this.form.price_arr.splice(index, 1);
           }
         } else {
           this.amountPay--;

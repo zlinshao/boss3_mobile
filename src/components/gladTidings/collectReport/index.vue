@@ -40,14 +40,14 @@
             type="text"
             placeholder="栋">
           </van-field>
-          <span class="cut">/</span>
+          <span class="cut">-</span>
           <van-field
             style="width: 22%;"
             v-model="form.unit"
             type="text"
             placeholder="单元">
           </van-field>
-          <span class="cut">/</span>
+          <span class="cut">-</span>
           <van-field
             class="twoBorder"
             v-model="form.doorplate"
@@ -95,7 +95,7 @@
             @click="timeChoose(2)"
             placeholder="第一次打款日期">
           </van-field>
-          <span class="cut">/</span>
+          <span class="cut">-</span>
           <van-field
             v-model="form.pay_second_date"
             readonly
@@ -216,7 +216,7 @@
             type="number"
             placeholder="保修期(月)">
           </van-field>
-          <span class="cut" style="padding-right: 27px;">/</span>
+          <span class="cut" style="padding-right: 27px;">-</span>
           <van-field
             class="twoBorder"
             v-model="form.warranty_day"
