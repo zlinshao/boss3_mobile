@@ -1,7 +1,7 @@
 <template>
   <div class="hello" v-wechat-title="$route.meta.title">
 
-    <div class="top">
+    <div class="top" :class="{'shadow': active !== 3 && active !== 4}">
       <div @click="tabTag(1)" :class="{'onDiv': active === 1}">
         <p>
           <i class="iconfont icon-wancheng"></i>
@@ -64,7 +64,8 @@
     </div>
 
     <!--我发起的-->
-    <div v-if="active === 1 || active === 2 || active === 3 || active === 4" class="waterfall" :class="{'marTop': active === 1 || active === 2}">
+    <div v-if="active === 1 || active === 2 || active === 3 || active === 4" class="waterfall"
+         :class="{'marTop': active === 1 || active === 2}">
       <div class="sendTop" v-if="active !== 1 && active === 3">
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已完成</span></div>
         <div @click="finish(2)" :class="{'readStatus': readActive === 2}"><span>未完成</span></div>
@@ -327,12 +328,15 @@
     border-radius: $p;
   }
 
+  @mixin img($p) {
+    min-width: $p;
+    max-width: $p;
+    min-height: $p;
+    max-height: $p;
+  }
+
   $onColor: #39b1ff;
   $color: #a4a5a8;
-  img {
-    width: 100%;
-    height: 100%;
-  }
 
   .top, .started, .inRough, .footer {
     background: #FFFFFF;
@@ -343,6 +347,12 @@
         color: #ffffff;
       }
     }
+  }
+
+  .top.shadow {
+    -webkit-box-shadow: 0 0 10px 0 #dddddd;
+    -moz-box-shadow: 0 0 10px 0 #dddddd;
+    box-shadow: 0 0 10px 0 #dddddd;
   }
 
   .waterfall {
@@ -466,12 +476,10 @@
       @include flex;
       padding-bottom: .3rem;
       .leftPic {
-        min-width: .9rem;
-        max-width: .9rem;
-        min-height: .9rem;
-        max-height: .9rem;
+        @include img(.9rem);
         margin-right: .3rem;
         img {
+          @include img(.9rem);
           @include border_radius(50%);
         }
       }
@@ -615,7 +623,7 @@
         }
       }
       .readStatus {
-        border-bottom: .03px solid $onColor;
+        border-bottom: .03rem solid $onColor;
         span {
           color: $onColor;
         }
@@ -634,22 +642,21 @@
     background: #FFFFFF;
     justify-content: space-around;
     z-index: 999999;
+    div + div {
+      border-left: 1px solid #EEEEEE;
+    }
     div {
-      @include flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      width: 50%;
+      margin: .2rem 0;
+      text-align: center;
       h2 {
-        width: .5rem;
-        height: .5rem;
-        text-align: center;
-        background: transparent;
         color: $color;
         i {
           color: $color;
         }
       }
       h1 {
+        padding-top: .1rem;
         color: $color;
       }
     }
