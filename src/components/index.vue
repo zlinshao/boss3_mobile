@@ -64,7 +64,7 @@
     </div>
 
     <!--我发起的-->
-    <div v-if="active === 1 || active === 2 || active === 3 || active === 4" class="waterfall"
+    <div v-if="active !== 0 " class="waterfall"
          :class="{'marTop': active === 1 || active === 2}">
       <div class="sendTop" v-if="active !== 1 && active === 3">
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已完成</span></div>
@@ -112,7 +112,10 @@
           </div>
         </li>
       </ul>
-      <div class="bottom" v-if="list.length !== 0">
+      <div class="bottom" v-if="list.length === 0 && disabled">
+        <span v-show="disabled">暂无数据...</span>
+      </div>
+      <div class="bottom" v-else>
         <span v-show="disabled">我是有底线的</span>
         <van-loading v-show="!disabled" type="spinner" color="black"/>
       </div>
@@ -189,9 +192,9 @@
         disabled: false,
 
         paths: [],
-        active: 3,
+        active: 0,
         readActive: 1,
-        footActive: 0,
+        footActive: 1,
         checks: '',
 
         params: {},
