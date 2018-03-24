@@ -1,43 +1,73 @@
 <template>
   <div id="cardDetail" v-wechat-title="$route.meta.title">
-    <div class="detail">
-      <div class="detailLeft">
-        <div>
-          <img src="../../../assets/head.png" alt="">
+    <div>
+      <div class="detail">
+        <div class="detailLeft">
+          <div>
+            <img :src="personal.avatar" v-if="personal.avatar !== ''">
+            <img src="../../../assets/head.png" v-else>
+          </div>
+        </div>
+        <div class="topRight">
+          <div class="personal">
+            <p>{{personal.name}}</p>
+            <p>{{personal.depart}}&nbsp;-&nbsp;{{personal.display_name}}</p>
+          </div>
+          <div class="statusSuccess" style="height: 1.4rem;">
+
+          </div>
         </div>
       </div>
-      <div class="topRight">
-        <div class="personal">
-          <p>李巧俊</p>
-          <p>研发部-产品经理方式发士大夫撒旦撒</p>
-        </div>
-        <div style="height: 1.4rem;">
 
-        </div>
-      </div>
-    </div>
-
-    <div class="detailRight">
-      <!--收房报备-->
-      <div class="topTitle">
-        <div v-for="(key,index) in formList" v-if="index !== '领导报备截图'">
-          <p>{{index}}</p>
-          <h1>{{key}}</h1>
-        </div>
-        <div class="photo" v-else>
-          <p>{{index}}</p>
-          <h1>
+      <div class="detailRight">
+        <!--收房报备-->
+        <div class="topTitle">
+          <div v-for="(key,index) in formList" v-if="index !== '领导报备截图'">
+            <p>{{index}}</p>
+            <h1>{{key}}</h1>
+          </div>
+          <div class="photo" v-else>
+            <p>{{index}}</p>
+            <h1>
             <span v-for="(pic,index) in key">
-              <img @click="pics(key,index)" :src="pic" alt="">
+              <img @click="pics(key,index,1)" :src="pic">
             </span>
-          </h1>
+            </h1>
+          </div>
+        </div>
+        <!--评论-->
+        <div class="commentArea">
+          <div class="headline">评论<span>{{commentList.length}}</span></div>
+          <div class="commentAreaMain" v-for="key in commentList">
+            <div class="commentTitle">
+              <div class="staff">
+                <p v-for="item in key.user">
+                  <img :src="item.avatar" v-if="item.avatar !== ''">
+                  <img src="../../../assets/head.png" v-else>
+                </p>
+                <span class="a" v-for="(item,index) in key.user" v-if="index === 0">
+                  {{item.name}}&nbsp;-&nbsp;<span v-for="i in item.org" v-if="index === 0">{{i.name}}
+                </span>
+                </span>
+              </div>
+              <div class="times">
+                {{key.created_at}}
+              </div>
+            </div>
+            <div class="contents">
+              {{key.body}}
+            </div>
+            <div class="pics">
+              <div v-for="(p,index) in key.album">
+                <img :src="p.uri" @click="pics(key.album,index,2)">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="footer">
-      <div v-if="!comment" v-for="(key,index) in operation" @click="manager(index)">{{key}}</div>
-      <div v-if="comment">评论</div>
+      <div class="footer">
+        <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -51,42 +81,24 @@
     components: {ImagePreview, Toast},
     data() {
       return {
+        personal: globalConfig.personal,
         pitch: '',
         active: false,
-        comment: false,
         urls: globalConfig.server_user,
-        formList: {
-
-        },
+        formList: {},
         operation: {},
         screenshot: [],
         user: {},
         names: {},
-
-        columns: [
-          {
-            values: ['1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'],
-            className: 'column1',
-            defaultIndex: 0
-          },
-          {
-            values: ['0厅', '1厅', '2厅', '3厅'],
-            className: 'column2',
-            defaultIndex: 0
-          },
-          {
-            values: ['0卫', '1卫', '2卫', '3卫'],
-            className: 'column3',
-            defaultIndex: 0
-          }
-        ]
+        form: {},       //评论
+        commentList: {},
       }
     },
     mounted() {
       this.pitch = this.$route.query.ids;
       this.formDetail(this.$route.query.ids);
     },
-    watch: {},
+
     methods: {
       onChange(picker, values) {
         console.log(picker);
@@ -94,7 +106,7 @@
       },
 
       formDetail(val) {
-        this.$http.get(this.urls + 'api/v1/process/' + val).then((res) => {
+        this.$http.get(this.urls + 'api/v1/process/' + 733).then((res) => {
           if (res.data.status === 'success') {
             this.formList = res.data.data.process.content;
             if (res.data.data.process.content.screenshot !== undefined) {
@@ -105,30 +117,36 @@
             this.operation = res.data.data.operation;
             this.user = res.data.data.process.user;
             this.names = res.data.data.process.content.trans_type;
+            this.comments(733);
           }
         });
       },
-      pics(val, index) {
-        ImagePreview(val, index);
-      },
-      manager(val) {
-        // this.active = true;
-        this.$http.put(this.urls + 'api/v1/process/' + this.pitch, {
-          operation: val,
-        }).then((res) => {
-          if (res.data.status === 'success') {
-            Toast.success(res.data.message);
-            this.comment = true;
-          } else {
-            Toast(res.data.message);
-          }
+      comments(val) {
+        this.$http.get(this.urls + 'api/v1/comments?id=' + val).then((res) => {
+          this.commentList = res.data.data;
         })
-      }
+      },
+      pics(val, index, num) {
+        let arr = [];
+        if (num === 1) {
+
+        } else {
+          for (let i = 0; i < val.length; i++) {
+            arr.push(val[i].uri)
+          }
+        }
+        ImagePreview(arr, index);
+      },
+
+      // 评论
+      commentOn(val) {
+        this.$router.push({path: '/comment', query: {detail: val, ids: 733}});
+      },
     },
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   @mixin flex {
     display: flex;
     display: -webkit-flex;
@@ -186,11 +204,6 @@
     }
   }
 
-  img {
-    width: 100%;
-    height: 100%;
-  }
-
   #cardDetail {
     img {
       width: 100%;
@@ -218,6 +231,7 @@
       border-top: 1px solid #ebebeb;
       border-bottom: 1px solid #ebebeb;
       @include flex;
+      align-items: center;
       background: #ffffff;
       padding: .3rem;
       .detailLeft {
@@ -226,7 +240,9 @@
         margin-right: .3rem;
         div {
           height: .9rem;
-          margin-top: .34rem;
+          img {
+            @include border_radius(50%);
+          }
         }
       }
       .topRight {
@@ -268,12 +284,12 @@
       .topTitle {
         padding: .3rem;
         margin-top: 2rem;
-        margin-bottom: 1.5rem;
         background: #ffffff;
         div {
           margin: .2rem 0;
           @include flex;
           width: 100%;
+          word-break: break-all;
           p {
             min-width: 1.8rem;
             max-width: 1.8rem;
@@ -283,9 +299,82 @@
             text-align: left;
           }
           h1 {
-
             color: #101010;
             line-height: .4rem;
+          }
+        }
+      }
+
+      .commentArea {
+        margin-top: .3rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: .6rem;
+        background: #ffffff;
+        color: #101010;
+
+        div, p, span {
+          color: #9c9c9c;
+        }
+        .headline {
+          color: #444444;
+          font-size: .33rem;
+          padding: .3rem 0 .2rem .3rem;
+          font-weight: bold;
+          border-bottom: 1px solid #dddddd;
+          span {
+            font-size: .33rem;
+            font-weight: bold;
+            color: #444444;;
+            padding-left: .1rem;
+          }
+        }
+        .commentAreaMain {
+          margin-top: .36rem;
+          padding: 0 .4rem;
+          .commentTitle {
+            @include flex;
+            align-items: center;
+            justify-content: space-between;
+            .staff {
+              @include flex;
+              align-items: center;
+              p {
+                min-width: .8rem;
+                max-width: .8rem;
+                height: .8rem;
+                margin-right: .12rem;
+                img {
+                  @include border_radius(50%);
+                }
+              }
+              .a {
+                width: 4rem;
+                overflow: hidden;
+                -ms-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+            }
+            .times {
+              min-width: 2rem;
+              max-width: 2rem;
+              text-align: right;
+            }
+          }
+          .contents {
+            margin-left: .9rem;
+            color: #101010;
+            line-height: .46rem;
+          }
+          .pics {
+            @include flex;
+            flex-wrap: wrap;
+            margin-left: .9rem;
+            div {
+              width: 1rem;
+              height: 1rem;
+              margin: .2rem .3rem 0 0;
+            }
           }
         }
       }

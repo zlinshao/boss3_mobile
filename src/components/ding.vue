@@ -1,6 +1,6 @@
 <template>
   <div>
-    111111111111111
+
   </div>
 </template>
 
@@ -36,7 +36,14 @@
                   corpId: _config.corpId
                 }
               }).then((res) => {
-                alert(JSON.stringify(res.data));
+                let data = {};
+                data.name = res.data.name;
+                data.avatar = res.data.avatar;
+                data.depart = res.data.org[0].name;
+                data.display_name = res.data.role[0].display_name;
+                localStorage.setItem('personal', JSON.stringify(data));
+                globalConfig.personal = data;
+                that.$router.push({path: '/index'})
               })
             },
             onFail: function (err) {

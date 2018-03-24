@@ -26,6 +26,7 @@ import Special from '../components/gladTidings/specialReport/index.vue'
 import Confiscate from '../components/gladTidings/confiscate/index.vue'
 import FinalPayment from '../components/gladTidings/finalPayment/index.vue'
 import PublishDetail from '../components/gladTidings/publishDetail/index.vue'
+import Comment from '../components/gladTidings/publishDetail/comment.vue'
 
 
 Vue.use(Router);
@@ -48,9 +49,16 @@ export default new Router({
     {
       path: '/publishDetail',
       name: 'publishDetail',
-      hidden: false,
+      hidden: 'glad',
       meta: {title: '报备详情'},
       component: PublishDetail
+    },
+    {
+      path: '/comment',
+      name: 'comment',
+      hidden: false,
+      meta: {title: '评论'},
+      component: Comment
     },
     {
       path: '/collectReport',               //收房报备
@@ -150,6 +158,8 @@ export default new Router({
       meta: {title: '尾款房租报备'},
       component: FinalPayment
     },
+
+
     {
       path: '/expense',
       hidden: 'examine',

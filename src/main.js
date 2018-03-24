@@ -21,6 +21,10 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 
+if (localStorage.personal !== undefined) {
+  globalConfig.personal = JSON.parse(localStorage.personal);
+}
+
 new Vue({
   el: '#app',
   router,

@@ -7,15 +7,14 @@
           <i class="iconfont icon-wancheng"></i>
         </p>
         <h1>我审批的</h1>
-
       </div>
-      <div @click="tabTag(2)" :class="{'onDiv': active === 2}">
+      <div @click="tabTag(3)" :class="{'onDiv': active === 3}">
         <p>
           <i class="iconfont icon-faqiyingyong"></i>
         </p>
         <h1>我发起的</h1>
       </div>
-      <div @click="tabTag(3)" :class="{'onDiv': active === 3}">
+      <div @click="tabTag(4)" :class="{'onDiv': active === 4}">
         <p>
           <i class="iconfont icon-chaosong"></i>
         </p>
@@ -65,79 +64,101 @@
     </div>
 
     <!--我发起的-->
-    <div class="started" v-if="active === 2">
-      <div class="startedMain" v-for="key in 10">
-        <div class="leftPic">
-          <img src="../assets/head.png" alt="">
-        </div>
-        <div class="rightTitle">
-          <div class="title">
-            <h2>
-              <span>李巧俊</span>- <span>研发部卡申请犯得上地方撒范德萨发生</span>
-            </h2>
-            <span class="times">0000-00-00</span>
-          </div>
-          <h3>
-            开始时间：0000-00-00 00:00:00
-          </h3>
-          <h3>
-            结束时间：0000-00-00 00:00:00
-          </h3>
-          <div class="progress">
-            <div>
-              <h4 :style="progress"></h4>
-              <h5></h5>
+    <div v-if="active === 1 || active === 2 || active === 3 || active === 4" class="waterfall" :class="{'marTop': active === 1 || active === 2}">
+      <div class="sendTop" v-if="active !== 1 && active === 3">
+        <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已完成</span></div>
+        <div @click="finish(2)" :class="{'readStatus': readActive === 2}"><span>未完成</span></div>
+      </div>
+      <div class="sendTop" v-if="active !== 1 && active === 4">
+        <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已读</span></div>
+        <div @click="finish(2)" :class="{'readStatus': readActive === 2}"><span>未读 <a
+          v-if="paging !== ''">({{paging}})</a></span></div>
+      </div>
+      <ul v-show="list.length !== 0"
+          v-waterfall-lower="loadMore"
+          waterfall-disabled="disabled"
+          waterfall-offset="300">
+        <li class="started">
+          <div class="startedMain" v-for="item in list">
+            <div class="leftPic">
+              <img :src="item.avatar" v-if="item.avatar !== ''">
+              <img src="../assets/head.png" v-else>
             </div>
-            <div>
-              未完成
+            <div class="rightTitle">
+              <div class="title">
+                <h2>
+                  <span>{{item.name}}</span>- <span>{{item.depart}}</span>
+                </h2>
+                <span class="times">{{item.created_at}}</span>
+              </div>
+              <h3>
+                报备类型：{{item.bulletin}}
+              </h3>
+              <h3>
+                <!--结束时间：0000-00-00 00:00:00-->
+              </h3>
+              <div class="progress"
+                   :class="{'published':item.status === 'published','rejected':item.status === 'rejected','cancelled':item.status === 'cancelled'}">
+                <div>
+                  <h4></h4>
+                  <h5></h5>
+                </div>
+                <div>
+                  {{item.place}}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </li>
+      </ul>
+      <div class="bottom" v-if="list.length !== 0">
+        <span v-show="disabled">我是有底线的</span>
+        <van-loading v-show="!disabled" type="spinner" color="black"/>
       </div>
     </div>
 
     <!--抄送我的-->
-    <div class="sendTo" v-if="active === 3">
-      <div class="sendTop">
-        <div @click="readActive = 1" :class="{'readStatus': readActive === 1}"><span>全部</span></div>
-        <div @click="readActive = 2" :class="{'readStatus': readActive === 2}"><span>未读(99)</span></div>
-      </div>
-      <div class="sendMain">
-        <div class="startedMain" v-for="key in 10">
-          <div class="leftPic">
-            <img src="../assets/head.png" alt="">
-          </div>
-          <div class="rightTitle">
-            <div class="title">
-              <h2>
-                <span>李巧俊</span>- <span>离职申请</span>
-              </h2>
-              <span class="times">0000-00-00</span>
-            </div>
-            <h3>
-              姓名：李巧俊
-            </h3>
-            <h3>
-              身份证：101010101010101100
-            </h3>
-            <h3>
-              所属部门：研发部
-            </h3>
-            <h4>审批通过</h4>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!--<div class="sendTo" v-if="active === 4">-->
+    <!--<div class="sendTop">-->
+    <!--<div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>全部</span></div>-->
+    <!--<div @click="finish(2)" :class="{'readStatus': readActive === 2}"><span>未读(99)</span></div>-->
+    <!--</div>-->
+    <!--<div class="sendMain">-->
+    <!--<div class="startedMain" v-for="key in 10">-->
+    <!--<div class="leftPic">-->
+    <!--<img src="../assets/head.png" alt="">-->
+    <!--</div>-->
+    <!--<div class="rightTitle">-->
+    <!--<div class="title">-->
+    <!--<h2>-->
+    <!--<span>李巧俊</span>- <span>离职申请</span>-->
+    <!--</h2>-->
+    <!--<span class="times">0000-00-00</span>-->
+    <!--</div>-->
+    <!--<h3>-->
+    <!--姓名：李巧俊-->
+    <!--</h3>-->
+    <!--<h3>-->
+    <!--身份证：101010101010101100-->
+    <!--</h3>-->
+    <!--<h3>-->
+    <!--所属部门：研发部-->
+    <!--</h3>-->
+    <!--<h4>审批通过</h4>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
 
     <!--底部-->
     <div class="footer">
-      <div @click="routerLink('/')" :class="{'onDiv': footActive === 1}">
+      <div @click="routerLink('/index')" :class="{'onDiv': footActive === 1}">
         <h2>
           <i class="iconfont icon-shenpi"></i>
         </h2>
         <h1>发起审批</h1>
       </div>
-      <div @click="footActive = 2" :class="{'onDiv': footActive === 2}">
+      <div @click="tabTag(2)" :class="{'onDiv': active === 2}">
         <h2>
           <i class="iconfont icon-daiban"></i>
         </h2>
@@ -148,35 +169,146 @@
 </template>
 
 <script>
+  import {Waterfall} from 'vant';
+  import {Toast} from 'vant';
+
   export default {
     name: 'HelloWorld',
+    directives: {
+      WaterfallLower: Waterfall('lower'),
+      WaterfallUpper: Waterfall('upper')
+    },
+    components: {Toast},
     data() {
       return {
+        urls: globalConfig.server_user,
+
+        list: [],
+        page: 1,
+        disabled: false,
+
         paths: [],
-        active: 0,
+        active: 3,
         readActive: 1,
-        footActive: 1,
-        progress: {
-          width: '50%',
-        },
+        footActive: 0,
         checks: '',
+
+        params: {},
+
+        paging: '',
       }
     },
     mounted() {
       this.paths = this.$router.options.routes;
+
     },
+
     methods: {
       tabTag(val) {
+        this.list = [];
         this.footActive = 0;
         this.active = val;
+        this.readActive = 1;
+        this.page = 1;
+        this.disabled = false;
       },
 
       routerLink(val) {
-        if (val === '/') {
+        if (val === '/index') {
           this.footActive = 1;
-          this.active = '';
         }
+        this.active = '';
         this.$router.push({path: val});
+      },
+      loadMore() {
+        if (!this.disabled) {
+          this.lists(this.page, this.active, this.readActive);
+          this.page++;
+        }
+      },
+      finish(read) {
+        this.list = [];
+        this.page = 1;
+        this.readActive = read;
+        this.disabled = false;
+      },
+      lists(val, active, read) {
+        this.params = {};
+        switch (active) {
+          case 1:
+            this.params.type = active;
+            this.params.page = val;
+            this.processList(this.params);
+            break;
+          case 2:
+            this.params.type = active;
+            this.params.page = val;
+            this.processList(this.params);
+            break;
+          case 3:
+            this.params.type = active;
+            this.params.published = read;
+            this.params.page = val;
+            this.processList(this.params);
+            break;
+          case 4:
+            this.params.type = active;
+            this.params.read_at = read;
+            this.params.page = val;
+            this.processList(this.params);
+            break;
+        }
+      },
+      processList(val) {
+        this.$http.get(this.urls + 'api/v1/process', {
+          params: val,
+        }).then((res) => {
+          let data = res.data.data;
+          if (res.data.status === 'success' && data.length !== 0 && val.type === 3) {
+            for (let i = 0; i < data.length; i++) {
+              let user = {};
+              user.avatar = data[i].user[0].avatar;
+              user.name = data[i].user[0].name;
+              user.staff = data[i].user[0].org[0].name;
+              user.depart = data[i].user[0].role[0].display_name;
+              user.created_at = data[i].created_at;
+              user.place = data[i].place.display_name;
+              user.status = data[i].place.status;
+              if (data[i].content.type) {
+                user.bulletin = data[i].content.type.name;
+              } else {
+                user.bulletin = '';
+              }
+              this.list.push(user);
+              console.log(user)
+            }
+          } else if (res.data.status === 'success' && data.length !== 0 && (val.type === 1 || val.type === 2 || val.type === 4)) {
+            for (let i = 0; i < data.length; i++) {
+              let user = {};
+              user.avatar = data[i].flow.user.avatar;
+              user.name = data[i].flow.user.name;
+              user.staff = data[i].flow.user.org[0].name;
+              user.depart = data[i].flow.user.role[0].display_name;
+              user.created_at = data[i].created_at;
+              user.place = data[i].flow.place.display_name;
+              user.status = data[i].flow.place.status;
+              if (data[i].flow.content.type) {
+                user.bulletin = data[i].flow.content.type.name;
+              } else {
+                user.bulletin = '';
+              }
+              this.list.push(user);
+            }
+            if (val.type === 4) {
+              this.paging = res.data.meta.total;
+            } else {
+              this.paging = '';
+            }
+          }
+          else {
+            this.disabled = true;
+          }
+        })
       },
     }
   }
@@ -211,14 +343,33 @@
         color: #ffffff;
       }
     }
+  }
 
+  .waterfall {
+    margin-top: 2.9rem;
+    margin-bottom: 1.2rem;
+    .bottom {
+      @include flex;
+      justify-content: center;
+      align-items: center;
+      padding: .3rem 0;
+      color: #DDDDDD;
+    }
+  }
+
+  .waterfall.marTop {
+    margin-top: 2.3rem;
   }
 
   .top {
-    margin-top: .2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     @include flex;
     justify-content: space-around;
-    height: 2rem;
+    height: 2.1rem;
+    border-top: .2rem solid #F8F8F8;
     div {
       @include flex;
       flex-direction: column;
@@ -243,14 +394,14 @@
     }
   }
 
-  .okFinish, .started, .sendTo {
+  .okFinish, .sendTo {
     margin-bottom: 2rem;
   }
 
   .okFinish {
     .inRough {
       padding: .4rem;
-      margin-top: .4rem;
+      margin-top: 2.3rem;
       .main {
         .mainTop {
           @include flex;
@@ -302,7 +453,6 @@
 
   /*我发起的*/
   .started {
-    margin-top: .4rem;
     padding: .3rem .3rem 0;
     @include flex;
     flex-wrap: wrap;
@@ -321,6 +471,9 @@
         min-height: .9rem;
         max-height: .9rem;
         margin-right: .3rem;
+        img {
+          @include border_radius(50%);
+        }
       }
       .rightTitle {
         width: 100%;
@@ -345,7 +498,7 @@
             }
           }
           span.times {
-            min-width: 88px;
+            min-width: 2rem;
             text-align: right;
           }
         }
@@ -375,9 +528,48 @@
           }
           div:last-of-type {
             margin-top: -.03rem;
-            min-width: 1rem;
+            min-width: 2.4rem;
             text-align: right;
             color: $onColor;
+          }
+        }
+        /*通过*/
+        div.published {
+          div:first-of-type {
+            h5 {
+              width: 0;
+            }
+          }
+          div:last-of-type {
+            color: #2BD7A1;
+          }
+        }
+        /*拒绝*/
+        div.rejected {
+          div:first-of-type {
+            h5 {
+              width: 0;
+            }
+            h4 {
+              background: -webkit-linear-gradient(left, #2BD7A1, #e4393c);
+              background: -o-linear-gradient(left, #2BD7A1, #e4393c);
+              background: -moz-linear-gradient(left, #2BD7A1, #e4393c);
+              background: linear-gradient(left, #2BD7A1, #e4393c);
+            }
+          }
+          div:last-of-type {
+            color: #e4393c;
+          }
+        }
+        /*撤回*/
+        div.cancelled {
+          div:first-of-type {
+            h4 {
+              width: 0;
+            }
+          }
+          div:last-of-type {
+            color: #cccccc;
           }
         }
       }
@@ -386,7 +578,30 @@
 
   /*抄送我的*/
   .sendTo {
+    .sendMain {
+      flex-wrap: wrap;
+      background: #ffffff;
+      .startedMain {
+        border-bottom: .02rem solid #ebebeb;
+        padding: .3rem;
+        .rightTitle {
+          border: 0;
+          padding: 0;
+          h4 {
+            color: $onColor;
+          }
+        }
+      }
+    }
+  }
+
+  .sendTo, .waterfall {
     .sendTop {
+      position: fixed;
+      background: #F8F8F8;
+      top: 2.1rem;
+      left: 0;
+      right: 0;
       @include flex;
       justify-content: space-around;
       border-bottom: .02px solid #ebebeb;
@@ -403,21 +618,6 @@
         border-bottom: .03px solid $onColor;
         span {
           color: $onColor;
-        }
-      }
-    }
-    .sendMain {
-      flex-wrap: wrap;
-      background: #ffffff;
-      .startedMain {
-        border-bottom: .02rem solid #ebebeb;
-        padding: .3rem;
-        .rightTitle {
-          border: 0;
-          padding: 0;
-          h4 {
-            color: $onColor;
-          }
         }
       }
     }
@@ -443,8 +643,6 @@
         width: .5rem;
         height: .5rem;
         text-align: center;
-        line-height: .5rem;
-        margin-bottom: .1rem;
         background: transparent;
         color: $color;
         i {

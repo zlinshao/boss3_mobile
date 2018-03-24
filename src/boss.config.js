@@ -6,6 +6,7 @@ globalConfig = {
   state: 'dev',
   env: 'dev',
   urlName: '',                                                        //用户名
+  personal: {},
   header:{
     //'Content-Type': 'application/x-www-form-urlencoded',
     'Accept': 'application/json',
