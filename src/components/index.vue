@@ -1,5 +1,5 @@
 <template>
-  <div class="hello" v-wechat-title="$route.meta.title">
+  <div id="hello" class="hello" v-wechat-title="$route.meta.title">
 
     <div class="top" :class="{'shadow': active !== 3 && active !== 4}">
       <div @click="tabTag(1)" :class="{'onDiv': active === 1}">
@@ -33,9 +33,9 @@
             <!--<div>收起</div>-->
           </div>
           <div class="mainMain">
-            <div v-for="key in paths" v-if="key.hidden === 'glad'" @click="routerLink(key.path)">
-              <p>
-                <i class="iconfont icon-wancheng"></i>
+            <div v-for="(key,index) in paths" v-if="key.hidden === 'glad'" @click="routerLink(key.path)">
+              <p :style="{'background': key.back}">
+                <i :class="key.icon"></i>
               </p>
               <h1>{{key.name}}</h1>
             </div>
@@ -112,11 +112,11 @@
           </div>
         </li>
       </ul>
-      <div class="bottom" v-if="list.length === 0 && disabled">
+      <div class="bottom" v-if="list.length === 0 && disabled" style="background: #FFFFFF;">
         <span>暂无数据...</span>
       </div>
-      <div class="bottom" v-if="list.length > 6 && !disabled">
-        <span v-show="disabled">我是有底线的</span>
+      <div class="bottom" v-else>
+        <span v-show="disabled && list.length > 6">我是有底线的</span>
         <van-loading v-show="!disabled" type="spinner" color="black"/>
       </div>
     </div>
@@ -287,370 +287,369 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-  @mixin flex {
-    display: flex;
-    display: -webkit-flex;
-  }
-
-  @mixin border_radius($p) {
-    -webkit-border-radius: $p;
-    -moz-border-radius: $p;
-    border-radius: $p;
-  }
-
-  @mixin img($p) {
-    min-width: $p;
-    max-width: $p;
-    min-height: $p;
-    max-height: $p;
-  }
-
-  $onColor: #39b1ff;
-  $color: #a4a5a8;
-
-  .top, .started, .inRough, .footer {
-    background: #FFFFFF;
-    P, h2 {
-      text-align: center;
-      i {
-        font-size: .42rem;
-        color: #ffffff;
-      }
+<style lang="scss">
+  #hello {
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
     }
-  }
 
-  .top.shadow {
-    -webkit-box-shadow: 0 0 10px 0 #dddddd;
-    -moz-box-shadow: 0 0 10px 0 #dddddd;
-    box-shadow: 0 0 10px 0 #dddddd;
-  }
-
-  .waterfall {
-    margin-top: 2.9rem;
-    margin-bottom: 1.2rem;
-    .bottom {
-      @include flex;
-      justify-content: center;
-      align-items: center;
-      padding: .3rem 0;
-      color: #DDDDDD;
+    @mixin border_radius($p) {
+      -webkit-border-radius: $p;
+      -moz-border-radius: $p;
+      border-radius: $p;
     }
-  }
 
-  .waterfall.marTop {
-    margin-top: 2.3rem;
-  }
+    @mixin img($p) {
+      min-width: $p;
+      max-width: $p;
+      min-height: $p;
+      max-height: $p;
+    }
 
-  .top {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    @include flex;
-    justify-content: space-around;
-    height: 2.1rem;
-    border-top: .2rem solid #F8F8F8;
-    div {
-      @include flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      p {
-        width: .9rem;
-        height: .9rem;
-        line-height: .9rem;
-        @include border_radius(50%);
-        margin-bottom: .26rem;
-        background: #e2e3e4;
+    $onColor: #39b1ff;
+    $color: #a4a5a8;
+
+    .top, .started, .inRough, .footer {
+      background: #FFFFFF;
+      P, h2 {
+        text-align: center;
         i {
           font-size: .42rem;
-          color: $color;
-        }
-      }
-      h1 {
-        font-size: .28rem;
-        color: $color;
-      }
-    }
-  }
-
-  .okFinish, .sendTo {
-    margin-bottom: 2rem;
-  }
-
-  .okFinish {
-    margin-top: 2.3rem;
-    .inRough {
-      padding: .4rem;
-      margin-top: .3rem;
-      .main {
-        .mainTop {
-          @include flex;
-          justify-content: space-between;
-          div, span {
-            color: #818386;
-            span:first-of-type {
-              padding-left: .4rem;
-              color: #101010;
-              font-size: .33rem;
-            }
-          }
-        }
-        .mainMain {
-          @include flex;
-          flex-wrap: wrap;
-          margin-top: .3rem;
-          div {
-            width: 25%;
-            text-align: center;
-            P {
-              background: red;
-              margin: .3rem auto .2rem;
-              @include border_radius(6px);
-              width: .86rem;
-              height: .86rem;
-              line-height: .86rem;
-            }
-            h1 {
-              font-size: .24rem;
-              padding: 0 .1rem;
-              line-height: .36rem;
-            }
-          }
-        }
-        .mainMain.default {
-          div {
-            p {
-              background: #aaaaaa;
-            }
-            h1 {
-              color: #aaaaaa;
-            }
-          }
+          color: #ffffff;
         }
       }
     }
-  }
 
-  /*我发起的*/
-  .started {
-    padding: .3rem .3rem 0;
-    @include flex;
-    flex-wrap: wrap;
-    width: 100%;
-  }
+    .top.shadow {
+      -webkit-box-shadow: 0 0 10px 0 #dddddd;
+      -moz-box-shadow: 0 0 10px 0 #dddddd;
+      box-shadow: 0 0 10px 0 #dddddd;
+    }
 
-  .started, .sendMain {
-    @include flex;
-    .startedMain {
-      width: 100%;
-      @include flex;
-      padding-bottom: .3rem;
-      .leftPic {
-        @include img(.9rem);
-        margin-right: .3rem;
-        img {
-          @include img(.9rem);
-          @include border_radius(50%);
-        }
-      }
-      .rightTitle {
-        width: 100%;
-        border-bottom: .02rem solid #ebebeb;
-        padding-bottom: .3rem;
-        span {
-          color: #9c9c9c;
-        }
-        div.title, div.progress {
-          @include flex;
-          justify-content: space-between;
-        }
-        div.title {
-          h2 {
-            max-width: 3.5rem;
-            text-align: left;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            span {
-              color: #101010;
-            }
-          }
-          span.times {
-            min-width: 2rem;
-            text-align: right;
-          }
-        }
-        h3 {
-          margin: .15rem 0;
-          color: $color;
-        }
-        div.progress {
-          div {
-            @include border_radius(10px);
-          }
-          div:first-of-type {
-            width: 100%;
-            @include flex;
-            align-items: center;
-            h4, h5 {
-              height: .06rem;
-              width: 100%;
-              background: #cccccc;
-            }
-            h4 {
-              background: -webkit-linear-gradient(left, #2BD7A1, #39b1ff);
-              background: -o-linear-gradient(left, #2BD7A1, #39b1ff);
-              background: -moz-linear-gradient(left, #2BD7A1, #39b1ff);
-              background: linear-gradient(left, #2BD7A1, #39b1ff);
-            }
-          }
-          div:last-of-type {
-            margin-top: -.03rem;
-            min-width: 2.4rem;
-            text-align: right;
-            color: $onColor;
-          }
-        }
-        /*通过*/
-        div.published {
-          div:first-of-type {
-            h5 {
-              width: 0;
-            }
-          }
-          div:last-of-type {
-            color: #2BD7A1;
-          }
-        }
-        /*拒绝*/
-        div.rejected {
-          div:first-of-type {
-            h5 {
-              width: 0;
-            }
-            h4 {
-              background: -webkit-linear-gradient(left, #2BD7A1, #e4393c);
-              background: -o-linear-gradient(left, #2BD7A1, #e4393c);
-              background: -moz-linear-gradient(left, #2BD7A1, #e4393c);
-              background: linear-gradient(left, #2BD7A1, #e4393c);
-            }
-          }
-          div:last-of-type {
-            color: #e4393c;
-          }
-        }
-        /*撤回*/
-        div.cancelled {
-          div:first-of-type {
-            h4 {
-              width: 0;
-            }
-          }
-          div:last-of-type {
-            color: #cccccc;
-          }
-        }
+    .waterfall {
+      margin-top: 2.9rem;
+      margin-bottom: 1.2rem;
+      .bottom {
+        @include flex;
+        justify-content: center;
+        align-items: center;
+        padding: .3rem 0;
+        color: #DDDDDD;
       }
     }
-  }
 
-  /*抄送我的*/
-  .sendTo {
-    .sendMain {
-      flex-wrap: wrap;
-      background: #ffffff;
-      .startedMain {
-        border-bottom: .02rem solid #ebebeb;
-        padding: .3rem;
-        .rightTitle {
-          border: 0;
-          padding: 0;
-          h4 {
-            color: $onColor;
-          }
-        }
-      }
+    .waterfall.marTop {
+      margin-top: 2.3rem;
     }
-  }
 
-  .sendTo, .waterfall {
-    .sendTop {
+    .top {
       position: fixed;
-      background: #F8F8F8;
-      top: 2.1rem;
+      top: 0;
       left: 0;
       right: 0;
       @include flex;
       justify-content: space-around;
-      border-bottom: .02px solid #ebebeb;
+      height: 2.1rem;
+      border-top: .2rem solid #F8F8F8;
       div {
-        height: .8rem;
-        width: 40%;
-        line-height: .8rem;
-        text-align: center;
-        span {
-          color: #101010;
+        @include flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        p {
+          width: .9rem;
+          height: .9rem;
+          line-height: .9rem;
+          @include border_radius(50%);
+          margin-bottom: .26rem;
+          background: #e2e3e4;
+          i {
+            font-size: .42rem;
+            color: $color;
+          }
         }
-      }
-      .readStatus {
-        border-bottom: .03rem solid $onColor;
-        span {
-          color: $onColor;
-        }
-      }
-    }
-  }
-
-  .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1.25rem;
-    border-top: 1px solid #ebebeb;
-    @include flex;
-    background: #FFFFFF;
-    justify-content: space-around;
-    z-index: 999999;
-    div + div {
-      border-left: 1px solid #EEEEEE;
-    }
-    div {
-      width: 50%;
-      margin: .2rem 0;
-      text-align: center;
-      h2 {
-        color: $color;
-        i {
+        h1 {
+          font-size: .28rem;
           color: $color;
         }
       }
-      h1 {
-        padding-top: .1rem;
-        color: $color;
-      }
     }
-  }
 
-  .hello {
-    .onDiv {
-      h1 {
-        color: $onColor;
-      }
-      p {
-        background: $onColor;
-        i {
-          color: #ffffff;
+    .okFinish, .sendTo {
+      margin-bottom: 2rem;
+    }
+
+    .okFinish {
+      margin-top: 2.3rem;
+      .inRough {
+        padding: .4rem;
+        margin-top: .3rem;
+        .main {
+          .mainTop {
+            @include flex;
+            justify-content: space-between;
+            div, span {
+              color: #818386;
+              span:first-of-type {
+                padding-left: .4rem;
+                color: #101010;
+                font-size: .33rem;
+              }
+            }
+          }
+          .mainMain {
+            @include flex;
+            flex-wrap: wrap;
+            margin-top: .3rem;
+            div {
+              width: 25%;
+              text-align: center;
+              P {
+                background: $onColor;
+                margin: .3rem auto .2rem;
+                @include border_radius(6px);
+                width: .86rem;
+                height: .86rem;
+                line-height: .86rem;
+              }
+              h1 {
+                font-size: .24rem;
+                padding: 0 .1rem;
+                line-height: .36rem;
+              }
+            }
+          }
+          .mainMain.default {
+            div {
+              p {
+                background: #aaaaaa;
+              }
+              h1 {
+                color: #aaaaaa;
+              }
+            }
+          }
         }
       }
-      h2 {
-        i {
+    }
+
+    /*我发起的*/
+    .started {
+      padding: .3rem .3rem 0;
+      @include flex;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .started, .sendMain {
+      @include flex;
+      .startedMain {
+        width: 100%;
+        @include flex;
+        padding-bottom: .3rem;
+        .leftPic {
+          @include img(.9rem);
+          margin-right: .3rem;
+          img {
+            @include img(.9rem);
+            @include border_radius(50%);
+          }
+        }
+        .rightTitle {
+          width: 100%;
+          border-bottom: .02rem solid #ebebeb;
+          padding-bottom: .3rem;
+          span {
+            color: #9c9c9c;
+          }
+          div.title, div.progress {
+            @include flex;
+            justify-content: space-between;
+          }
+          div.title {
+            h2 {
+              max-width: 3.5rem;
+              text-align: left;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              span {
+                color: #101010;
+              }
+            }
+            span.times {
+              min-width: 2rem;
+              text-align: right;
+            }
+          }
+          h3 {
+            margin: .15rem 0;
+            color: $color;
+          }
+          div.progress {
+            div {
+              @include border_radius(10px);
+            }
+            div:first-of-type {
+              width: 100%;
+              @include flex;
+              align-items: center;
+              h4, h5 {
+                height: .06rem;
+                width: 100%;
+                background: #cccccc;
+              }
+              h4 {
+                background: -webkit-linear-gradient(left, #2BD7A1, #39b1ff);
+                background: -o-linear-gradient(left, #2BD7A1, #39b1ff);
+                background: -moz-linear-gradient(left, #2BD7A1, #39b1ff);
+                background: linear-gradient(left, #2BD7A1, #39b1ff);
+              }
+            }
+            div:last-of-type {
+              margin-top: -.03rem;
+              min-width: 2.4rem;
+              text-align: right;
+              color: $onColor;
+            }
+          }
+          /*通过*/
+          div.published {
+            div:first-of-type {
+              h5 {
+                width: 0;
+              }
+            }
+            div:last-of-type {
+              color: #2BD7A1;
+            }
+          }
+          /*拒绝*/
+          div.rejected {
+            div:first-of-type {
+              h5 {
+                width: 0;
+              }
+              h4 {
+                background: -webkit-linear-gradient(left, #2BD7A1, #e4393c);
+                background: -o-linear-gradient(left, #2BD7A1, #e4393c);
+                background: -moz-linear-gradient(left, #2BD7A1, #e4393c);
+                background: linear-gradient(left, #2BD7A1, #e4393c);
+              }
+            }
+            div:last-of-type {
+              color: #e4393c;
+            }
+          }
+          /*撤回*/
+          div.cancelled {
+            div:first-of-type {
+              h4 {
+                width: 0;
+              }
+            }
+            div:last-of-type {
+              color: #cccccc;
+            }
+          }
+        }
+      }
+    }
+
+    /*抄送我的*/
+    .sendTo {
+      .sendMain {
+        flex-wrap: wrap;
+        background: #ffffff;
+        .startedMain {
+          border-bottom: .02rem solid #ebebeb;
+          padding: .3rem;
+          .rightTitle {
+            border: 0;
+            padding: 0;
+            h4 {
+              color: $onColor;
+            }
+          }
+        }
+      }
+    }
+
+    .sendTo, .waterfall {
+      .sendTop {
+        position: fixed;
+        background: #F8F8F8;
+        top: 2.1rem;
+        left: 0;
+        right: 0;
+        @include flex;
+        justify-content: space-around;
+        border-bottom: .02px solid #ebebeb;
+        div {
+          height: .8rem;
+          width: 40%;
+          line-height: .8rem;
+          text-align: center;
+          span {
+            color: #101010;
+          }
+        }
+        .readStatus {
+          border-bottom: .03rem solid $onColor;
+          span {
+            color: $onColor;
+          }
+        }
+      }
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1.25rem;
+      border-top: 1px solid #ebebeb;
+      @include flex;
+      background: #FFFFFF;
+      justify-content: space-around;
+      z-index: 999999;
+      div + div {
+        border-left: 1px solid #EEEEEE;
+      }
+      div {
+        width: 50%;
+        margin: .2rem 0;
+        text-align: center;
+        h2 {
+          color: $color;
+          i {
+            color: $color;
+          }
+        }
+        h1 {
+          padding-top: .1rem;
+          color: $color;
+        }
+      }
+    }
+
+    .top, .footer {
+      .onDiv {
+        h1, h2 {
           color: $onColor;
+          i {
+            color: $onColor;
+          }
+        }
+        p {
+          background: $onColor;
+          i {
+            color: #FFFFFF;
+          }
         }
       }
     }
   }
-
 </style>

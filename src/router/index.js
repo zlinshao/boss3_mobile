@@ -38,6 +38,7 @@ export default new Router({
       name: 'ding',
       hidden: false,
       meta: {title: '首页'},
+
       component: Ding
     },
     {
@@ -50,7 +51,7 @@ export default new Router({
     {
       path: '/publishDetail',
       name: 'publishDetail',
-      hidden: 'glad',
+      hidden: false,
       meta: {title: '报备详情'},
       component: PublishDetail
     },
@@ -65,6 +66,8 @@ export default new Router({
       path: '/collectReport',               //收房报备
       name: '收房报备',
       hidden: 'glad',
+      back: '#E3705B',
+      icon: 'iconfont icon-shoufang',
       meta: {title: '收房报备'},
       component: CollectReport
     },
@@ -72,6 +75,8 @@ export default new Router({
       path: '/rentReport',                 //租房报备
       name: '租房报备',
       hidden: 'glad',
+      back: '#F19851',
+      icon: 'iconfont icon-zufang-',
       meta: {title: '租房报备'},
       component: RentReport
     },
@@ -79,6 +84,8 @@ export default new Router({
       path: '/changeRent',                 //转租报备
       name: '转租报备',
       hidden: 'glad',
+      back: '#E3705B',
+      icon: 'iconfont icon-zhuanzubaobei',
       meta: {title: '租房报备'},
       component: ChangeRent
     },
@@ -86,6 +93,7 @@ export default new Router({
       path: '/transferReport',              //调房报备
       name: '调房报备',
       hidden: 'glad',
+      icon: 'iconfont icon-tiaofang',
       meta: {title: '调房报备'},
       component: TransferReport
     },
@@ -93,6 +101,8 @@ export default new Router({
       path: '/continueCollect',              //续收报备
       name: '续收报备',
       hidden: 'glad',
+      back: '#E3705B',
+      icon: 'iconfont icon-xushouxibao',
       meta: {title: '续收报备'},
       component: ContinueCollect
     },
@@ -100,6 +110,7 @@ export default new Router({
       path: '/unCollectBeforeRent',
       name: '未收先租',
       hidden: 'glad',
+      icon: 'iconfont icon-weishouxianzu',
       meta: {title: '未收先租'},
       component: UncollectBeforeRent
     },
@@ -107,6 +118,7 @@ export default new Router({
       path: '/continueRent',
       name: '续租报备',
       hidden: 'glad',
+      icon: 'iconfont icon-xuzubaobei',
       meta: {title: '续租报备'},
       component: ContinueRent
     },
@@ -114,6 +126,7 @@ export default new Router({
       path: '/drawback',
       name: '退款报备',
       hidden: 'glad',
+      icon: 'iconfont icon-fanhui',
       meta: {title: '退款报备'},
       component: Drawback
     },
@@ -121,6 +134,7 @@ export default new Router({
       path: '/friedBill',
       name: '炸单报备',
       hidden: 'glad',
+      icon: 'iconfont icon-zhadan',
       meta: {title: '炸单报备'},
       component: FriedBill
     },
@@ -128,6 +142,7 @@ export default new Router({
       path: '/clearRetreat',
       name: '清退报备',
       hidden: 'glad',
+      icon: 'iconfont icon-fanhui',
       meta: {title: '清退报备'},
       component: ClearRetreat
     },
@@ -135,12 +150,16 @@ export default new Router({
       path: '/agencyRent',
       name: '中介费报备',
       hidden: 'glad',
+      back: '#F19851',
+      icon: 'iconfont icon-fanhui',
       meta: {title: '中介费报备'},
       component: AgencyRent
     },
     {
       path: '/special',
       hidden: 'glad',
+      back: '#F19851',
+      icon: 'iconfont icon-teshuqingkuang',
       name: '特殊事项报备',
       meta: {title: '特殊事项报备'},
       component: Special
@@ -149,6 +168,7 @@ export default new Router({
       path: '/confiscate',
       name: '充公报备',
       hidden: 'glad',
+      icon: 'iconfont icon-chonggong',
       meta: {title: '充公报备'},
       component: Confiscate
     },
@@ -156,6 +176,7 @@ export default new Router({
       path: '/finalPayment',
       name: '尾款房租报备',
       hidden: 'glad',
+      icon: 'iconfont icon-fangzu1',
       meta: {title: '尾款房租报备'},
       component: FinalPayment
     },
