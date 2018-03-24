@@ -105,7 +105,6 @@
           </van-field>
         </div>
       </van-cell-group>
-
       <div class="changes" v-for="(key,index) in amountPrice">
         <div class="paddingTitle">
           <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
@@ -477,6 +476,7 @@
 
         amountPrice: 1,
         datePrice: [],
+        first_date: [],
 
         amountPay: 1,
         datePay: [],
@@ -651,8 +651,10 @@
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
+            this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
+            this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
             break;
@@ -760,12 +762,16 @@
             this.amountPrice--;
             this.form.period_price_arr.splice(index, 1);
             this.form.price_arr.splice(index, 1);
+            this.datePrice.splice(index, 1);
+            this.periodDate(1);
           }
         } else {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
           this.form.pay_way_arr.splice(index, 1);
           this.payTypeNum.splice(index, 1);
+          this.datePay.splice(index, 1);
+          this.periodDate(2);
         }
       },
       // 日期计算
@@ -784,13 +790,9 @@
         }).then((res) => {
           if (res.data.code === '51110') {
             if (val === 1) {
-              this.datePrice = [];
-              this.datePrice = this.form.concat(res.data.data);
-              this.datePrice.unshift(this.form.pay_first_date);
+              this.datePrice = this.first_date.concat(res.data.data);
             } else {
-              this.datePay = [];
-              this.datePay = this.form.concat(res.data.data);
-              this.datePay.unshift(this.form.pay_first_date);
+              this.datePay = this.first_date.concat(res.data.data);
             }
           } else {
             Toast(res.data.msg);
