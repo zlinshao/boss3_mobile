@@ -1,5 +1,5 @@
 <template>
-  <div id="rentReport" v-wechat-title="$route.meta.title">
+  <div id="rentReport">
     <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <van-field
@@ -379,7 +379,7 @@
     mounted() {
       this.getNowFormatDate();
       this.$http.get(this.urls + 'bulletin/rent?type=1').then((res) => {
-        alert(JSON.stringify(res.data))
+
       })
     },
 

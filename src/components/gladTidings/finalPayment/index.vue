@@ -1,5 +1,5 @@
 <template>
-  <div id="rentReport" v-wechat-title="$route.meta.title">
+  <div id="rentReport">
 
     <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>

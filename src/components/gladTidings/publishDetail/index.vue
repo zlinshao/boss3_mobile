@@ -1,5 +1,5 @@
 <template>
-  <div id="cardDetail" v-wechat-title="$route.meta.title">
+  <div id="cardDetail">
     <div>
       <div class="detail">
         <div class="detailLeft">
@@ -25,7 +25,10 @@
           <div v-for="(key,index) in formList" v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片'">
             <p>{{index}}</p>
             <h1>
-              <span style="display: block;" v-if="Array.isArray(key)" v-for="item in key">{{item}}</span>
+              <span v-if="Array.isArray(key)" v-for="item in key">
+                <span style="display: block;">{{item.msg}}</span>
+                <span style="display: block;">{{item.period}}</span>
+              </span>
               <span v-if="!Array.isArray(key)">{{key}}</span>
             </h1>
           </div>
@@ -128,7 +131,7 @@
       pics(val, index, num) {
         let arr = [];
         if (num === 1) {
-
+          arr = val;
         } else {
           for (let i = 0; i < val.length; i++) {
             arr.push(val[i].uri)

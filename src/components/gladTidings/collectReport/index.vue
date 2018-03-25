@@ -1,5 +1,5 @@
 <template>
-  <div id="collectReport" v-wechat-title="$route.meta.title">
+  <div id="collectReport">
     <div v-show="!searchShow" class="main">
       <van-cell-group>
         <van-switch-cell v-model="joint" title="是否合租"/>
@@ -189,19 +189,29 @@
           required>
         </van-field>
         <van-field
-          v-model="form.receipt"
-          label="收据编号"
-          type="text"
-          placeholder="请填写收据编号"
-          required>
-        </van-field>
-        <van-field
           v-model="form.vacancy"
           label="空置期"
           type="number"
           placeholder="请填写空置期"
           icon="clear"
           @click-icon="form.vacancy = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="vacancy_way_name"
+          @click="selectShow(7,'')"
+          label="空置期安置方式"
+          type="text"
+          readonly
+          placeholder="空置期安置方式"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.vacancy_other"
+          label="空置期安置方式"
+          type="text"
+          v-if="vacancy_way_name === '无'"
+          placeholder="空置期安置方式"
           required>
         </van-field>
         <div class="first_date">
@@ -492,9 +502,11 @@
         value3: ['无', '1卫', '2卫', '3卫', '4卫', '5卫'],
         value4: ['月付', '双月付', '季付', '半年付', '年付'],
         value5: ['个人', '中介'],
-        value6: ['房东', '租客', '公司'],
+        value6: ['无', '房东', '租客', '公司'],
+        value7: ['空置期开始后', '每年开始时', '合同开始结束各一半', '第二次付款时间前', '无'],
 
         form: {
+          id: '',
           type: 1,
           draft: 0,
           share: '',                    //合租整租标记 0整租1合租
@@ -514,11 +526,12 @@
           pay_way_arr: [''],            //付款方式
           period_pay_arr: [''],         //付款方式周期
           vacancy: '',                  //空置期
+          vacancy_way: '',              //空置期安排方式
+          vacancy_other: '',            //空置期安排方式 随便填
           warranty: '',                 //保修期月
           warranty_day: '',             //保修期天
           from: 1,                      //客户来源 1个人2中介
           deposit: '',                  //押金
-          receipt: '',                  //收据编号
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
           sign_date: '',                //签约日期
@@ -535,28 +548,29 @@
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
-          leader_id: '3',               //负责人id
+          leader_id: '92',               //负责人id
           department_id: '',            //部门id
 
         },
+        vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
-        photos: {},                     //物业费付款人
-        screenshots: {},                 //物业费付款人
+        photos: {},                     //照片
+        screenshots: {},                //照片
         staff_name: '',                 //开单人name
-        leader_name: '湮灭',                //负责人name
+        leader_name: '灭霸',                //负责人name
         department_name: '',            //部门name
         fromName: '个人',               //客户来源
       }
     },
     mounted() {
       this.getNowFormatDate();
-      this.manuscript();
       this.$http.get(this.urls + 'setting/dictionary/306').then((res) => {
         this.allCity = res.data.data;
         this.cities = [];
         for (let i = 0; i < res.data.data.length; i++) {
           this.cities.push(res.data.data[i].dictionary_name);
         }
+        this.manuscript();
       });
     },
     methods: {
@@ -714,6 +728,9 @@
           case 6:
             this.columns = this.value6;
             break;
+          case 7:
+            this.columns = this.value7;
+            break;
         }
       },
       // select选择
@@ -736,6 +753,9 @@
               }
             }
             this.city_name = value;
+            this.form.community_id = '';
+            this.community_name = '';
+
             break;
           case 4:
             this.payTypeNum[this.payIndex] = value;
@@ -748,6 +768,13 @@
           case 6:
             this.form.property_payer = index + 1;
             this.property_name = value;
+            break;
+          case 7:
+            this.form.vacancy_way = index + 1;
+            this.vacancy_way_name = value;
+            if (index === 4) {
+              this.form.vacancy_other = '';
+            }
             break;
         }
         this.selectHide = false;
@@ -793,7 +820,7 @@
         } else {
           per = this.form.period_pay_arr;
         }
-        this.countDate(val,per);
+        this.countDate(val, per);
       },
       // 日期计算
       countDate(val, per) {
@@ -809,8 +836,6 @@
             } else {
               this.datePay = this.first_date.concat(res.data.data);
             }
-          } else {
-            Toast(res.data.msg);
           }
         })
       },
@@ -824,7 +849,7 @@
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
           }
           if (res.data.code === '50120') {
-            this.$router.push({path: '/index'});
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
@@ -837,7 +862,7 @@
           if (res.data.code === '50110') {
             let data = res.data.data;
             let draft = res.data.data.draft_content;
-
+            this.form.id = data.id;
             this.share = data.share;
             this.joint = data.share == 1 ? true : false;
             this.form.rooms_sum = draft.rooms_sum;
@@ -858,6 +883,8 @@
 
             this.form.begin_date = draft.begin_date;
             this.form.pay_first_date = draft.pay_first_date;
+            this.first_date = [];
+            this.first_date.push(draft.pay_first_date);
             this.form.pay_second_date = draft.pay_second_date;
 
             this.house_type = draft.house_type;
@@ -887,13 +914,15 @@
 
             this.form.deposit = draft.deposit;
             this.form.vacancy = draft.vacancy;
+            this.form.vacancy_way = draft.vacancy_way;
+            this.vacancy_way_name = this.value7[draft.vacancy_way - 1];
+            this.form.vacancy_other = draft.vacancy_other;
             this.form.warranty = draft.warranty;
             this.form.warranty_day = draft.warranty_day;
-            this.form.receipt = draft.receipt;
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
-            this.property_name = draft.property_payer === 1 ? '房东' : draft.property_payer === 2 ? '租客' : '公司';
-            this.form.from = '';
+            this.property_name = this.value6[draft.property_payer - 1];
+            this.form.from = draft.from;
             this.form.fromName = draft.from === 1 ? '个人' : '中介';
             this.form.sign_date = draft.sign_date;
             this.form.name = draft.name;
@@ -919,6 +948,8 @@
             this.leader_name = data.leader_name;
             this.form.department_id = draft.department_id;
             this.department_name = data.department_name;
+          } else {
+            this.form.id = '';
           }
         })
       },
@@ -926,6 +957,7 @@
       close_() {
         this.share = 0;
         this.joint = false;
+        this.form.id = '';
         this.form.rooms_sum = '';
         this.form.city_id = '';
         this.city_name = '';
@@ -960,9 +992,11 @@
 
         this.form.deposit = '';
         this.form.vacancy = '';
+        this.form.vacancy_way = '';
+        this.vacancy_way.name = '';
+        this.form.vacancy_other = '';
         this.form.warranty = '';
         this.form.warranty_day = '';
-        this.form.receipt = '';
         this.form.property = '';
         this.form.property_payer = '';
         this.property_name = '';
@@ -987,7 +1021,7 @@
 
         this.form.staff_id = '';
         this.staff_name = '';
-        this.form.leader_id = '3';
+        this.form.leader_id = '92';
         this.leader_name = '';
         this.form.department_id = '';
         this.department_name = '';

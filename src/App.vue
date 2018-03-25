@@ -5,7 +5,7 @@
         <!--<router-link :to="{path: key.path}">{{key.name}}</router-link>-->
       <!--</div>-->
     <!--</div>-->
-    <router-view/>
+    <router-view v-wechat-title="$route.meta.title"/>
     <!--<van-cell-group class="item-list">-->
       <!--<van-cell isLink icon="points" title="我的积分" ></van-cell>-->
       <!--<van-cell isLink icon="gift" title="我收到的礼物" ></van-cell>-->

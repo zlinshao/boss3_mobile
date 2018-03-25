@@ -1,5 +1,5 @@
 <template>
-  <div v-wechat-title="$route.meta.title">
+  <div>
     <div class="navTop">
       <div class="top0">
         <div class="top1">关于杜帅警告通知</div>

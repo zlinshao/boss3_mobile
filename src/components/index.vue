@@ -1,5 +1,5 @@
 <template>
-  <div id="hello" class="hello" v-wechat-title="$route.meta.title">
+  <div id="hello" class="hello">
 
     <div class="top" :class="{'shadow': active !== 3 && active !== 4}">
       <div @click="tabTag(1)" :class="{'onDiv': active === 1}">
@@ -80,7 +80,7 @@
           waterfall-disabled="disabled"
           waterfall-offset="300">
         <li class="started">
-          <div class="startedMain" v-for="item in list">
+          <div class="startedMain" v-for="item in list" @click="routerDetail(item.id)">
             <div class="leftPic">
               <img :src="item.avatar" v-if="item.avatar !== ''">
               <img src="../assets/head.png" v-else>
@@ -183,6 +183,9 @@
         this.page = 1;
         this.disabled = false;
       },
+      routerDetail(id) {
+        this.$router.push({path: '/publishDetail', query: {ids: id}});
+      },
 
       routerLink(val) {
         if (val === '/index') {
@@ -239,6 +242,7 @@
           if (res.data.status === 'success' && data.length !== 0 && val.type === 3) {
             for (let i = 0; i < data.length; i++) {
               let user = {};
+              user.id = data[i].id;
               user.avatar = data[i].user[0].avatar;
               user.name = data[i].user[0].name;
               user.staff = data[i].user[0].org[0].name;
@@ -257,6 +261,7 @@
           } else if (res.data.status === 'success' && data.length !== 0 && (val.type === 1 || val.type === 2 || val.type === 4)) {
             for (let i = 0; i < data.length; i++) {
               let user = {};
+              user.id = data[i].id;
               user.avatar = data[i].flow.user.avatar;
               user.name = data[i].flow.user.name;
               user.staff = data[i].flow.user.org[0].name;

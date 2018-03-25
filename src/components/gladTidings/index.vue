@@ -1,6 +1,5 @@
 <template>
-  <div v-wechat-title="$route.meta.title">
-
+  <div>
     <div class="paths">
       <div class="mainMain">
 

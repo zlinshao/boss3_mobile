@@ -1,5 +1,5 @@
 <template>
-  <div id="information" v-wechat-title="$route.meta.title">
+  <div id="information">
     <div class="title">出差基本信息</div>
     <div class="information">
       <div class="formList">

@@ -1,5 +1,5 @@
 <template>
-  <div v-wechat-title="$route.meta.title">
+  <div>
     <div id="commentOn">
       <div class="contents">
         <van-cell-group>
@@ -109,6 +109,7 @@
     .footerComment {
       border-top: 1px solid #ebebeb;
       position: fixed;
+      background: #ffffff;
       bottom: 0;
       left: 0;
       right: 0;

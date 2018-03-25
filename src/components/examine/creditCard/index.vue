@@ -1,5 +1,5 @@
 <template>
-  <div v-wechat-title="$route.meta.title">
+  <div>
     <div class="creditCard">
       <div class="information">
         <div class="formList">
