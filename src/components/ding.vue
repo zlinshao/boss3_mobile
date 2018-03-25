@@ -42,6 +42,7 @@
                 data.depart = res.data.org[0].name;
                 data.display_name = res.data.role[0].display_name;
                 localStorage.setItem('personal', JSON.stringify(data));
+                alert(JSON.stringify(data));
                 globalConfig.personal = data;
                 that.$router.push({path: '/index'})
               })

@@ -39,13 +39,13 @@
           disabled
           placeholder="原房屋定金已禁用">
         </van-field>
-        <van-field
-          v-model="oldForm.bulletinDate"
-          label="喜报日期"
-          type="text"
-          disabled
-          placeholder="原房屋喜报日期已禁用">
-        </van-field>
+        <!--<van-field-->
+          <!--v-model="oldForm.bulletinDate"-->
+          <!--label="喜报日期"-->
+          <!--type="text"-->
+          <!--disabled-->
+          <!--placeholder="原房屋喜报日期已禁用">-->
+        <!--</van-field>-->
       </van-cell-group>
       <van-cell-group>
         <van-field
@@ -340,7 +340,7 @@
           pay_way_arr: '',
           price: '',
           money_sum: '',
-          bulletinDate: '',
+          // bulletinDate: '',
         },
 
         form: {
@@ -483,9 +483,13 @@
       },
 
       // 房屋地址
-      house_(val, type, lord) {
+      house_(val, type, form) {
         if (type === 'old') {
           this.oldHouseName = val.houseName;
+          this.oldForm.staff_name = form.sign_user.name;
+          this.oldForm.pay_way_arr = form.pay_way;
+          this.oldForm.price = form.month_price;
+          this.oldForm.money_sum = form.mortgage_price;
           this.form.contract_id_rent = val.contract_id;
           this.form.house_id_rent = val.house_id;
         } else {
@@ -613,7 +617,7 @@
     .van-icon.van-icon-checked {
       color: $color;
     }
-    .van-cell.van-hairline.van-field.van-cell--required {
+    .van-cell {
       .van-cell__title {
         width: 110px;
       }

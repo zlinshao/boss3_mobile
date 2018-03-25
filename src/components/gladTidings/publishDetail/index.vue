@@ -22,9 +22,12 @@
       <div class="detailRight">
         <!--收房报备-->
         <div class="topTitle">
-          <div v-for="(key,index) in formList" v-if="index !== '领导报备截图' && index !== '款项结清截图'">
+          <div v-for="(key,index) in formList" v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片'">
             <p>{{index}}</p>
-            <h1>{{key}}</h1>
+            <h1>
+              <span style="display: block;" v-if="Array.isArray(key)" v-for="item in key">{{item}}</span>
+              <span v-if="!Array.isArray(key)">{{key}}</span>
+            </h1>
           </div>
           <div class="photo" v-else>
             <p>{{index}}</p>

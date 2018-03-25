@@ -1,16 +1,18 @@
 <template>
   <div>
     <div id="container">
-      <div class="editImg" v-if="Object.keys(editImg).length>0">
-        <div class="imgItem" style="position: relative" v-for="(val,key) in editImg">
-          <div style="width: 120px;  height: 120px; border-radius:6px;background: #f0f0f0">
-            <img :src="val" alt="">
-          </div>
-          <div class="remove el-icon-circle-close" @click="deleteImage(key)"></div>
-        </div>
-      </div>
 
       <div :id="'pickfiles'+ID" class="pickfiles">
+
+        <div class="imgItem" v-for="(val,key) in editImg" v-if="Object.keys(editImg).length>0">
+          <div style=" position: relative;">
+            <img :src="val" style="width: 1.5rem; height: 1.5rem; ">
+            <div class="progress"><b style="color: #fff !important;"></b></div>
+            <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
+            </div>
+          </div>
+        </div>
+
         <div class="upButton" :id="ID">
           <span class="plus">+</span>
         </div>
@@ -25,18 +27,18 @@
 
   export default {
     name: 'hello',
-    props: ['ID','editImage','isClear'],
-    data () {
+    props: ['ID', 'editImage', 'isClear'],
+    data() {
       return {
         imgArray: [],
         imgId: [],
         isUploading: false,
         activeIndex: null,
         uploader: null,
-        editImg:{},
+        editImg: {},
       }
     },
-    mounted(){
+    mounted() {
       let _this = this;
       $(document).on('click', '.pic_delete', function () {
         let id = $(this).attr("data-val");
@@ -53,8 +55,10 @@
           if (_this.imgArray[i].name.indexOf(id) > -1) {
 
             _this.imgId.forEach((item) => {
-              if(_this.imgArray[i].id === item){
-                _this.imgId = _this.imgId.filter((x) =>{return x!==item})
+              if (_this.imgArray[i].id === item) {
+                _this.imgId = _this.imgId.filter((x) => {
+                  return x !== item
+                })
               }
             });
 
@@ -66,23 +70,28 @@
       });
 
       this.getTokenMessage();
+
+
+
       setInterval(()=>{
+        if(_this.uploader){
           this.uploader.refresh();
+        }
       },1000)
     },
     watch: {
       editImage: {
         deep: true,
-        handler(val, old){
+        handler(val, old) {
           this.editImg = this.editImage;
           this.imgId = [];
-          for(let key in val){
+          for (let key in val) {
             this.imgId.push(key)
           }
         }
       },
-      isClear(val){
-        if(val){
+      isClear(val) {
+        if (val) {
           this.imgId = [];
           this.imgArray = [];
           this.editImg = [];
@@ -91,12 +100,14 @@
       }
     },
     methods: {
-      deleteImage(key){
-        this.imgId = this.imgId.filter((x) => {return x !== key});
+      deleteImage(key) {
+        this.imgId = this.imgId.filter((x) => {
+          return x !== key
+        });
         this.$emit('getImg', [this.ID, this.imgId, this.isUploading]);
         let imgObject = {};
-        for(let img in this.editImg){
-          if(img !== key){
+        for (let img in this.editImg) {
+          if (img !== key) {
             imgObject[img] = this.editImg[img];
           }
         }
@@ -112,7 +123,7 @@
         let _this = this;
         _this.uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
-          browse_button: [_this.ID,'dasd']  ,     //上传按钮的ID
+          browse_button: [_this.ID, 'dasd'],     //上传按钮的ID
           uptoken: token,                     // uptoken是上传凭证，由其他程序生成
 
           get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
@@ -133,7 +144,7 @@
               plupload.each(files, function (file) {
                 if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
 
-                  $('#pickfiles'+_this.ID).prepend(`
+                  $('#pickfiles' + _this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
                       <div style=" width: 1.5rem;  height: 1.5rem; position: relative;">
                         <img src="" style="width: 1.5rem; height: 1.5rem; ">
@@ -149,7 +160,7 @@
 
                   fr.onload = function () {
 //                     文件添加进队列后，处理相关的事情
-                    $('#pickfiles'+_this.ID).prepend(`
+                    $('#pickfiles' + _this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
                       <div style=" position: relative;">
                         <img src="${fr.result}" style="width: 1.5rem; height: 1.5rem; ">
@@ -173,9 +184,9 @@
               // 每个文件上传时，处理相关的事情
               if (document.getElementById(file.id)) {
 
-                if(file.percent<100){
+                if (file.percent < 100) {
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-                }else {
+                } else {
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
                 }
               }
@@ -192,9 +203,9 @@
               _this.$http.post(globalConfig.server_user + 'api/v1/files', {
                 url: sourceLink,
                 name: url.key,
-                raw_name : file.name,
+                raw_name: file.name,
                 type: file.type,
-                size:file.size
+                size: file.size
               }).then((res) => {
                 if (res.data.status === "success") {
                   _this.imgId.push(res.data.data.id);

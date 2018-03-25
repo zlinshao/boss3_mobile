@@ -21,7 +21,7 @@
           required>
         </van-field>
         <van-field
-          v-model="form.community_name"
+          v-model="community_name"
           label="小区"
           @click="searchSelect(1)"
           type="text"
@@ -89,13 +89,14 @@
             required>
           </van-field>
           <van-field
+            style="width: 30%;"
             v-model="form.pay_first_date"
             readonly
             type="text"
             @click="timeChoose(2)"
             placeholder="第一次打款日期">
           </van-field>
-          <span class="cut">-</span>
+          <span class="cut" style="padding-right: 20px;">-</span>
           <van-field
             v-model="form.pay_second_date"
             readonly
@@ -345,12 +346,12 @@
 
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -394,6 +395,7 @@
 
     <div v-show="!searchShow" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -459,7 +461,7 @@
         allCity: [],              //城市
         cities: [],               //城市
         city_name: '',            //城市
-        city_id: '',              //城市
+
         lists: [],
         tabs: '',
         columns: [],              //select值
@@ -482,12 +484,21 @@
         payType: [''],              //付款方式ID
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
+        community_name: '',         //小区名字
         house_type_name: '1室 1厅 1卫',
+
+        value1: ['1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'],
+        value2: ['无', '1厅', '2厅', '3厅', '4卫', '5卫'],
+        value3: ['无', '1卫', '2卫', '3卫', '4卫', '5卫'],
+        value4: ['月付', '双月付', '季付', '半年付', '年付'],
+        value5: ['个人', '中介'],
+        value6: ['房东', '租客', '公司'],
+
         form: {
           type: 1,
           draft: 0,
           share: '',                    //合租整租标记 0整租1合租
-          community_name: '',           //小区名字
+          city_id: '',                  //城市
           community_id: '',             //小区id
           building: '',                 //栋
           unit: '',                     //单元
@@ -496,6 +507,8 @@
           rooms_sum: '',                //合租时房间数量
           month: '',                    //收房月数
           begin_date: '',               //合同开始日期
+          pay_first_date: '',           //第一次付款时间
+          pay_second_date: '',          //第二次付款时间
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
           pay_way_arr: [''],            //付款方式
@@ -503,13 +516,11 @@
           vacancy: '',                  //空置期
           warranty: '',                 //保修期月
           warranty_day: '',             //保修期天
-          from: '1',                    //客户来源 1个人2中介
+          from: 1,                      //客户来源 1个人2中介
           deposit: '',                  //押金
           receipt: '',                  //收据编号
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
-          pay_first_date: '',           //第一次付款时间
-          pay_second_date: '',          //第二次付款时间
           sign_date: '',                //签约日期
           name: '',                     //房东姓名
           phone: '',                    //电话号码
@@ -529,6 +540,8 @@
 
         },
         property_name: '',              //物业费付款人
+        photos: {},                     //物业费付款人
+        screenshots: {},                 //物业费付款人
         staff_name: '',                 //开单人name
         leader_name: '湮灭',                //负责人name
         department_name: '',            //部门name
@@ -537,13 +550,14 @@
     },
     mounted() {
       this.getNowFormatDate();
+      this.manuscript();
       this.$http.get(this.urls + 'setting/dictionary/306').then((res) => {
         this.allCity = res.data.data;
         this.cities = [];
         for (let i = 0; i < res.data.data.length; i++) {
           this.cities.push(res.data.data[i].dictionary_name);
         }
-      })
+      });
     },
     methods: {
       routerLink(val) {
@@ -558,10 +572,10 @@
             this.staffModule = true;
             this.organizeType = 'staff';
             break;
-          case 3:
-            // this.staffModule = true;
-            // this.organizeType = 'leader';
-            break;
+          // case 3:
+          // this.staffModule = true;
+          // this.organizeType = 'leader';
+          // break;
         }
       },
       onSearch() {
@@ -569,7 +583,7 @@
           this.$http.get(this.urls + 'setting/community/', {
             params: {
               num: 30,
-              city: this.city_id,
+              city: this.form.city_id,
               keywords: this.searchValue,
             }
           }).then((res) => {
@@ -598,7 +612,7 @@
 
       // 小区
       village(name, id) {
-        this.form.community_name = name;
+        this.community_name = name;
         this.form.community_id = id;
         this.onCancel();
       },
@@ -672,17 +686,17 @@
           case 1:
             this.columns = [
               {
-                values: ['1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'],
+                values: this.value1,
                 className: 'column1',
                 defaultIndex: 0
               },
               {
-                values: ['无', '1厅', '2厅', '3厅', '4卫', '5卫'],
+                values: this.value2,
                 className: 'column2',
                 defaultIndex: 1
               },
               {
-                values: ['无', '1卫', '2卫', '3卫', '4卫', '5卫'],
+                values: this.value3,
                 className: 'column3',
                 defaultIndex: 1
               }
@@ -692,13 +706,13 @@
             this.columns = this.cities;
             break;
           case 4:
-            this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
+            this.columns = this.value4;
             break;
           case 5:
-            this.columns = ['个人', '中介'];
+            this.columns = this.value5;
             break;
           case 6:
-            this.columns = ['房东', '租客', '公司'];
+            this.columns = this.value6;
             break;
         }
       },
@@ -718,7 +732,7 @@
           case 2:
             for (let i = 0; i < this.allCity.length; i++) {
               if (this.allCity[i].dictionary_name === value) {
-                this.city_id = this.allCity[i].variable.city_id;
+                this.form.city_id = this.allCity[i].variable.city_id;
               }
             }
             this.city_name = value;
@@ -779,6 +793,10 @@
         } else {
           per = this.form.period_pay_arr;
         }
+        this.countDate(val,per);
+      },
+      // 日期计算
+      countDate(val, per) {
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
             begin_date: this.form.pay_first_date,
@@ -804,11 +822,176 @@
           if (res.data.code === '50110') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          }
+          if (res.data.code === '50120') {
+            this.$router.push({path: '/index'});
           } else {
             Toast(res.data.msg);
           }
         })
       },
+
+      // 草稿
+      manuscript() {
+        this.$http.get(this.urls + 'bulletin/collect?type=1').then((res) => {
+          if (res.data.code === '50110') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.share = data.share;
+            this.joint = data.share == 1 ? true : false;
+            this.form.rooms_sum = draft.rooms_sum;
+
+            this.form.city_id = draft.city_id;
+            for (let i = 0; i < this.allCity.length; i++) {
+              if (this.allCity[i].variable.city_id === draft.city_id) {
+                this.city_name = this.allCity[i].dictionary_name;
+              }
+            }
+
+            this.form.community_id = draft.community_id;
+            this.community_name = data.community_name;
+            this.form.building = draft.building;
+            this.form.unit = draft.unit;
+            this.form.doorplate = draft.doorplate;
+            this.form.month = draft.month;
+
+            this.form.begin_date = draft.begin_date;
+            this.form.pay_first_date = draft.pay_first_date;
+            this.form.pay_second_date = draft.pay_second_date;
+
+            this.house_type = draft.house_type;
+            let house = draft.house_type;
+            let room = this.value2[house[1]] === '无' ? '0厅' : this.value2[house[1]];
+            let hall = this.value3[house[2]] === '无' ? '0厅' : this.value3[house[2]];
+            this.house_type_name = this.value1[house[0]] + room + hall;
+
+            for (let i = 0; i < draft.price_arr.length; i++) {
+              this.amountPrice = i + 1;
+              this.form.period_price_arr.push('');
+              this.form.price_arr.push('');
+            }
+            this.form.period_price_arr = draft.period_price_arr;
+            this.countDate(1, draft.period_price_arr);
+            this.form.price_arr = draft.price_arr;
+
+            for (let i = 0; i < draft.pay_way_arr.length; i++) {
+              this.amountPay = i + 1;
+              this.form.period_pay_arr.push('');
+              this.form.pay_way_arr.push('');
+              this.payTypeNum[i] = this.value4[draft.pay_way_arr[i] - 1]
+            }
+            this.form.period_pay_arr = draft.period_pay_arr;
+            this.countDate(2, draft.period_pay_arr);
+            this.form.pay_way_arr = draft.pay_way_arr;
+
+            this.form.deposit = draft.deposit;
+            this.form.vacancy = draft.vacancy;
+            this.form.warranty = draft.warranty;
+            this.form.warranty_day = draft.warranty_day;
+            this.form.receipt = draft.receipt;
+            this.form.property = draft.property;
+            this.form.property_payer = draft.property_payer;
+            this.property_name = draft.property_payer === 1 ? '房东' : draft.property_payer === 2 ? '租客' : '公司';
+            this.form.from = '';
+            this.form.fromName = draft.from === 1 ? '个人' : '中介';
+            this.form.sign_date = draft.sign_date;
+            this.form.name = draft.name;
+            this.form.phone = draft.phone;
+            this.form.bank = draft.bank;
+            this.form.subbranch = draft.subbranch;
+            this.form.account_name = draft.account_name;
+            this.form.account = draft.account;
+            this.form.relationship = draft.relationship;
+            this.form.penalty = draft.penalty;
+            this.form.contract_number = draft.contract_number;
+
+            this.form.photo = draft.photo;
+            this.photos = data.photo;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.screenshots = data.screenshot_leader;
+
+            this.form.remark = draft.remark;
+
+            this.form.staff_id = draft.staff_id;
+            this.staff_name = data.staff_name;
+            this.form.leader_id = draft.leader_id;
+            this.leader_name = data.leader_name;
+            this.form.department_id = draft.department_id;
+            this.department_name = data.department_name;
+          }
+        })
+      },
+
+      close_() {
+        this.share = 0;
+        this.joint = false;
+        this.form.rooms_sum = '';
+        this.form.city_id = '';
+        this.city_name = '';
+        this.form.community_id = '';
+        this.community_name = '';
+        this.form.building = '';
+        this.form.unit = '';
+        this.form.doorplate = '';
+        this.form.month = '';
+
+        this.form.begin_date = '';
+        this.form.pay_first_date = '';
+        this.form.pay_second_date = '';
+
+        this.house_type_name = '1室 1厅 1卫';
+        this.house_type = [0, 1, 1];
+
+        this.amountPrice = 1;
+        this.form.period_price_arr = [''];
+        this.form.price_arr = [''];
+
+        this.form.period_price_arr = [''];
+        this.form.price_arr = [''];
+
+        this.amountPay = 1;
+        this.form.period_pay_arr = [''];
+        this.form.pay_way_arr = [''];
+        this.payTypeNum = [''];
+
+        this.form.period_pay_arr = [''];
+        this.form.pay_way_arr = [''];
+
+        this.form.deposit = '';
+        this.form.vacancy = '';
+        this.form.warranty = '';
+        this.form.warranty_day = '';
+        this.form.receipt = '';
+        this.form.property = '';
+        this.form.property_payer = '';
+        this.property_name = '';
+        this.form.sign_date = '';
+        this.form.name = '';
+        this.form.from = 1;
+        this.form.phone = '';
+        this.form.bank = '';
+        this.form.subbranch = '';
+        this.form.account_name = '';
+        this.form.account = '';
+        this.form.relationship = '';
+        this.form.penalty = '';
+        this.form.contract_number = '';
+
+        this.form.photo = [];
+        this.photos = {};
+        this.form.screenshot_leader = [];
+        this.screenshots = {};
+
+        this.form.remark = '';
+
+        this.form.staff_id = '';
+        this.staff_name = '';
+        this.form.leader_id = '3';
+        this.leader_name = '';
+        this.form.department_id = '';
+        this.department_name = '';
+      }
     },
   }
 </script>

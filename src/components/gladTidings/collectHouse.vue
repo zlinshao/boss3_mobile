@@ -32,7 +32,7 @@
         searchValue: '',          //搜索
         lists: [],
         form: {},
-        lords: {},
+        formDetail: {},
       }
     },
 
@@ -50,42 +50,33 @@
     methods: {
       // 搜索
       onSearch(val) {
-        this.$http.get(this.address + 'api/v1/houses?q=' + this.searchValue).then((res) => {
+        let value = this.searchValue.replace(/\s+/g, '');
+        if (value !== '') {
+          let type;
+          switch (val) {
+            case 'rent':
+              type = 'api/v1/renter?status=1&q=';
+              this.myData(type, value);
+              break;
+            default:
+              type = 'api/v1/lord?status=1&q=';
+              this.myData(type, value);
+          }
+        }
+      },
+      myData(urls, val) {
+        this.$http.get(this.address + urls + val).then((res) => {
           let data = res.data.data;
           this.lists = [];
           for (let i = 0; i < data.length; i++) {
-            if (data[i].name !== null) {
-              let list = {};
-              list.house_name = data[i].name;
-              if (data[i].lords.length !== 0 && val !== 'rent') {
-
-                this.lords = data[i].lords[0];
-                list.id = data[i].lords[0].id;
-                list.house_id = data[i].lords[0].house_id;
-                if (data[i].lords[0].user.length !== 0) {
-                  list.staff_name = data[i].lords[0].user[0].name;
-                  list.department_name = data[i].lords[0].user[0].org[0].name;
-                } else {
-                  list.staff_name = '';
-                  list.department_name = '';
-                }
-              } else if (data[i].renters.length !== 0 && val === 'rent') {
-                this.lords = data[i].renters[0];
-                list.id = data[i].renters[0].id;
-                list.house_id = data[i].renters[0].house_id;
-                if (data[i].renters[0].user.length !== 0) {
-                  list.staff_name = data[i].renters[0].user[0].name;
-                  list.department_name = data[i].renters[0].user[0].org[0].name;
-                } else {
-                  list.staff_name = '';
-                  list.department_name = '';
-                }
-              } else {
-                list.staff_name = '';
-                list.department_name = '';
-              }
-              this.lists.push(list);
-            }
+            this.formDetail = data[i];
+            let list = {};
+            list.id = data[i].id;
+            list.house_name = data[i].house.name;
+            list.house_id = data[i].house.id;
+            list.staff_name = data[i].sign_user.name;
+            list.department_name = data[i].sign_user.org[0].name;
+            this.lists.push(list);
           }
         })
       },
@@ -101,7 +92,7 @@
         this.form.contract_id = id;
         this.form.house_id = house;
         this.onCancel();
-        this.$emit('house', this.form, this.type, this.lords);
+        this.$emit('house', this.form, this.type, this.formDetail);
       },
     },
   }

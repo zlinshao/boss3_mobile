@@ -3,11 +3,11 @@
 
     <div v-show="!houseShow || !staffModule" class="main">
       <!--<van-cell-group>-->
-        <!--<div class="checks">-->
-          <!--<div style="min-width: 110px;">收租标记</div>-->
-          <!--<van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>-->
-          <!--<van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>-->
-        <!--</div>-->
+      <!--<div class="checks">-->
+      <!--<div style="min-width: 110px;">收租标记</div>-->
+      <!--<van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>-->
+      <!--<van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>-->
+      <!--</div>-->
       <!--</van-cell-group>-->
       <van-cell-group>
         <van-field
@@ -22,14 +22,14 @@
 
         <van-field
           v-model="payWay"
-          type="text"
+          type="textarea"
           label="付款方式"
           placeholder="付款方式已禁用"
           disabled>
         </van-field>
         <van-field
           v-model="price_arr"
-          type="text"
+          type="textarea"
           label="月单价"
           placeholder="月单价已禁用"
           disabled>
@@ -92,7 +92,7 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">领导同意截图</div>
+        <div class="title">特殊情况截图</div>
         <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
       </div>
 
@@ -107,30 +107,24 @@
         </van-field>
         <van-field
           v-model="staff_name"
-          @click="searchSelect(2)"
-          readonly
+          disabled
           label="开单人"
           type="text"
-          placeholder="请选择开单人"
-          required>
+          placeholder="开单人已禁用">
         </van-field>
         <van-field
           v-model="leader_name"
-          @click="searchSelect(3)"
-          readonly
+          disabled
           label="负责人"
           type="text"
-          placeholder="请选择负责人"
-          required>
+          placeholder="负责人已禁用">
         </van-field>
         <van-field
           v-model="department_name"
-          @click="searchSelect(4)"
-          readonly
+          disabled
           label="部门"
           type="text"
-          placeholder="请选择部门"
-          required>
+          placeholder="部门已禁用">
         </van-field>
       </van-cell-group>
     </div>
@@ -141,8 +135,6 @@
     </div>
 
     <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
-
-    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
 
   </div>
 </template>
@@ -179,13 +171,10 @@
           account: '',                  //帐号
           screenshot_leader: '',        //领导同意截图
           remark: '',                   //备注
-          staff_id: '',                 //开单人id
-          leader_id: '3',                //负责人id
-          department_id: '',            //部门id
         },
         houseName: '',                  //房屋名称
         staff_name: '',                 //开单人name
-        leader_name: '湮灭',                //负责人name
+        leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -219,33 +208,27 @@
         switch (val) {
           case 1:
             this.houseShow = true;
+            this.organizeType = 'rent';
             break;
           case 2:
             this.staffModule = true;
             this.organizeType = 'staff';
             break;
-          // case 3:
-          //   this.staffModule = true;
-          //   this.organizeType = 'leader';
-          //   break;
         }
       },
 
       // 房屋地址
-      house_(val) {
+      house_(val, type, form) {
+        for (let i = 0; i < form.month_price.length; i++) {
+          this.payWay = '第' + (i + 1) + '期' + form.pay_way[i].period + '个月' + form.pay_way[i].pay_way_str + ';';
+          this.price_arr = '第' + (i + 1) + '期' + form.month_price[i].period + '个月' + form.month_price[i].price + '元/月' + ';';
+        }
         this.houseName = val.houseName;
         this.form.contract_id = val.contract_id;
         this.form.house_id = val.house_id;
         this.onCancel();
       },
-      // 开单人
-      staff_(val) {
-        this.form.staff_id = val.staff_id;
-        this.staff_name = val.staff_name;
-        this.form.department_id = val.depart_id;
-        this.department_name = val.depart_name;
-        this.onCancel();
-      },
+
       saveCollect(val) {
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {

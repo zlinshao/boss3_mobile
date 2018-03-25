@@ -377,7 +377,7 @@
     }
 
     .okFinish, .sendTo {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .okFinish {
@@ -609,7 +609,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 1.25rem;
+      height: 1rem;
       border-top: 1px solid #ebebeb;
       @include flex;
       background: #FFFFFF;
@@ -626,10 +626,12 @@
           color: $color;
           i {
             color: $color;
+            font-size: .34rem;
           }
         }
         h1 {
-          padding-top: .1rem;
+          padding-top: .06rem;
+          font-size: .2rem;
           color: $color;
         }
       }

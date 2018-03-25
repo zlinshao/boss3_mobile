@@ -378,6 +378,9 @@
     },
     mounted() {
       this.getNowFormatDate();
+      this.$http.get(this.urls + 'bulletin/rent?type=1').then((res) => {
+        alert(JSON.stringify(res.data))
+      })
     },
 
     methods: {
