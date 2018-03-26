@@ -217,10 +217,10 @@
       saveCollect(val) {
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
-          if (res.data.code === '50410') {
+          if (res.data.code === '51210') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          } else if (res.data.code === '51210') {
+          } else if (res.data.code === '51220') {
             Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
