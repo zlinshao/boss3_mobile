@@ -1,6 +1,5 @@
 <template>
   <div id="rentReport">
-
     <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <van-field
@@ -80,7 +79,7 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="screenshot" :editImage="screenshots"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -118,6 +117,7 @@
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -140,7 +140,7 @@
 
   export default {
     name: "index",
-    components: {UpLoad, Toast,CollectHouse},
+    components: {UpLoad, Toast, CollectHouse},
     data() {
       return {
         urls: globalConfig.server,
@@ -157,14 +157,15 @@
         payWay: '',
         periods: '',
 
-
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
         payIndex: '',                 //分金额方式index
-
+        value1: ['支付宝', '微信', '银行卡', 'pos机', '现金'],
         form: {
+          id: '',
           draft: 0,
-          contract_id: '12',            //房屋地址id
+          contract_id: '',            //房屋地址id
+          house_id: '',               //房屋地址id
 
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
@@ -174,12 +175,15 @@
           remark: '',                   //备注
         },
         houseName: '',                  //房屋名称
+        screenshots: '',                 //房屋名称
         staff_name: '',                  //开单人name
         leader_name: '',                 //负责人name
         department_name: '',             //部门name
       }
     },
-
+    mounted() {
+      this.finalDetail();
+    },
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
@@ -193,7 +197,7 @@
       selectShow(index) {
         this.payIndex = index;
         this.selectHide = true;
-        this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
+        this.columns = this.value1;
 
       },
       // select选择
@@ -207,14 +211,6 @@
           case 1:
             this.houseShow = true;
             break;
-          case 2:
-            this.staffModule = true;
-            this.organizeType = 'staff';
-            break;
-          // case 3:
-          //   this.staffModule = true;
-          //   this.organizeType = 'leader';
-          //   break;
         }
       },
 
@@ -252,12 +248,71 @@
         this.form.draft = val;
         this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
           if (res.data.code === '50910') {
-            this.$toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
+            Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '50920') {
+            Toast.success(res.data.msg);
           } else {
-            this.$toast(res.data.msg);
+            Toast(res.data.msg);
           }
         })
+      },
+      finalDetail() {
+        this.$http.get(globalConfig.server + 'bulletin/retainage').then((res) => {
+          if (res.data.code === '50910') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.form.id = data.id;
+            this.houseName = data.houseName;
+            this.month = data.month;
+            this.price_arr = data.price_arr;
+            this.payWay = data.payWay;
+            this.periods = data.periods;
+            this.form.contract_id = draft.contract_id;
+            this.form.house_id = draft.house_id;
+            this.form.money_sum = draft.money_sum;
+            for (let i = 0; i < draft.money_sep.length; i++) {
+              this.amountMoney = i + 1;
+              this.form.money_sep.push('');
+              this.form.money_way.push('');
+              this.moneyNum[i] = this.value1[draft.money_way[i] - 1]
+            }
+            this.form.money_sep = draft.money_sep;
+            this.form.money_way = draft.money_way;
+
+            this.form.screenshot = draft.screenshot;
+            this.screenshots = data.screenshot;
+            this.form.remark = draft.remark;
+            this.staff_name = data.staff_name;
+            this.leader_name = data.leader_name;
+            this.department_name = data.department_name;
+          } else {
+            this.form.id = ''
+          }
+        })
+      },
+
+      close_() {
+        this.form.id = '';
+        this.houseName = '';
+        this.month = '';
+        this.price_arr = '';
+        this.payWay = '';
+        this.periods = '';
+        this.form.contract_id = '';
+        this.form.house_id = '';
+        this.form.money_sum = '';
+        this.amountMoney = 1;
+        this.moneyNum = [''];
+        this.form.money_sep = [''];
+        this.form.money_way = [''];
+        this.form.screenshot = '';
+        this.screenshots = '';
+        this.form.remark = '';
+        this.staff_name = '';
+        this.leader_name = '';
+        this.department_name = '';
       }
     },
   }

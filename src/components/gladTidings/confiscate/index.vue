@@ -174,15 +174,29 @@
             this.form.remark = draft.remark;
             this.form.type = draft.type;
             this.form.collect_or_rent = draft.collect_or_rent;
-            this.collect_or_rent = data.houseName;
+            this.houseName = data.houseName;
             this.staff_name = data.staff_name;
             this.leader_name = data.leader_name;
             this.department_name = data.department_name;
+          }else{
+            this.form.id = '';
           }
         })
       },
       close_() {
-
+        this.form.id = '';
+        this.form.bulletinDate = '';
+        this.form.payWay = '';
+        this.form.price_arr = '';
+        this.form.house_id = '';
+        this.form.contract_id = '';
+        this.form.remark = '';
+        this.form.type = 0;
+        this.form.collect_or_rent = '';
+        this.collect_or_rent = '';
+        this.staff_name = '';
+        this.leader_name = '';
+        this.department_name = '';
       }
     },
   }
