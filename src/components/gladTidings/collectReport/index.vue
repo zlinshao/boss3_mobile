@@ -993,7 +993,7 @@
         this.form.deposit = '';
         this.form.vacancy = '';
         this.form.vacancy_way = '';
-        this.vacancy_way.name = '';
+        this.vacancy_way_name = '';
         this.form.vacancy_other = '';
         this.form.warranty = '';
         this.form.warranty_day = '';
