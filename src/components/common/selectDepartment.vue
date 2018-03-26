@@ -58,7 +58,7 @@
       },
       organizeShow(val) {
         if (!val) {
-          this.$emit('close', val);
+          this.$emit('close');
         }
       }
     },
@@ -122,12 +122,11 @@
       },
       confirmAdd() {
         if (this.selectId) {
-          this.$emit('close', this.selectDepart);
+          this.$emit('depart', this.selectDepart);
           this.organizeShow = false;
         } else {
           Toast.fail('请选择部门');
         }
-
       },
     },
   }

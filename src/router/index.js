@@ -86,7 +86,7 @@ export default new Router({
       hidden: 'glad',
       back: '#E3705B',
       icon: 'iconfont icon-zhuanzubaobei',
-      meta: {title: '租房报备'},
+      meta: {title: '转租报备'},
       component: ChangeRent
     },
     {

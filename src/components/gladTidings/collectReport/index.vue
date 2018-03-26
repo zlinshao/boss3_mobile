@@ -12,7 +12,7 @@
           required>
         </van-field>
         <van-field
-          v-model="city_name"
+          v-model="form.city_name"
           label="城市"
           @click="selectShow(2,'')"
           type="text"
@@ -448,29 +448,33 @@
     </van-popup>
 
     <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
+
+    <SelectDepart :departDialog="departDialog" @close="onCancel" @depart="departModal"></SelectDepart>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import Organization from '../organize.vue'
+  import SelectDepart from '../../common/selectDepartment.vue'
+
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, Organization},
+    components: {UpLoad, Toast, Organization, SelectDepart},
     data() {
       return {
         urls: globalConfig.server,
         address: globalConfig.server_user,
         staffModule: false,       //开单人
+        departDialog: false,      //部门
         organizeType: '',
 
         searchShow: false,        //搜索
         searchValue: '',          //搜索
         allCity: [],              //城市
         cities: [],               //城市
-        city_name: '',            //城市
 
         lists: [],
         tabs: '',
@@ -511,6 +515,7 @@
           draft: 0,
           share: '',                    //合租整租标记 0整租1合租
           city_id: '',                  //城市
+          city_name: '',                  //城市
           community_id: '',             //小区id
           building: '',                 //栋
           unit: '',                     //单元
@@ -557,7 +562,7 @@
         photos: {},                     //照片
         screenshots: {},                //照片
         staff_name: '',                 //开单人name
-        leader_name: '灭霸',                //负责人name
+        leader_name: '灭霸',            //负责人name
         department_name: '',            //部门name
         fromName: '个人',               //客户来源
       }
@@ -590,6 +595,9 @@
           // this.staffModule = true;
           // this.organizeType = 'leader';
           // break;
+          case 4:
+            this.departDialog = true;
+            break;
         }
       },
       onSearch() {
@@ -614,9 +622,15 @@
         this.department_name = val.depart_name;
         this.onCancel();
       },
-
+      // 部门
+      departModal(val) {
+        this.department_name = val.name;
+        this.form.department_id = val.id;
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
+        this.departDialog = false;
         this.searchShow = false;
         this.selectHide = false;
         this.timeShow = false;
@@ -752,7 +766,7 @@
                 this.form.city_id = this.allCity[i].variable.city_id;
               }
             }
-            this.city_name = value;
+            this.form.city_name = value;
             this.form.community_id = '';
             this.community_name = '';
 
@@ -868,11 +882,12 @@
             this.form.rooms_sum = draft.rooms_sum;
 
             this.form.city_id = draft.city_id;
-            for (let i = 0; i < this.allCity.length; i++) {
-              if (this.allCity[i].variable.city_id === draft.city_id) {
-                this.city_name = this.allCity[i].dictionary_name;
-              }
-            }
+            this.form.city_name = draft.city_name;
+            // for (let i = 0; i < this.allCity.length; i++) {
+            //   if (this.allCity[i].variable.city_id === draft.city_id) {
+            //     this.city_name = this.allCity[i].dictionary_name;
+            //   }
+            // }
 
             this.form.community_id = draft.community_id;
             this.community_name = data.community_name;
@@ -941,7 +956,6 @@
             this.screenshots = data.screenshot_leader;
 
             this.form.remark = draft.remark;
-
             this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
             this.form.leader_id = draft.leader_id;
@@ -960,7 +974,7 @@
         this.form.id = '';
         this.form.rooms_sum = '';
         this.form.city_id = '';
-        this.city_name = '';
+        this.form.city_name = '';
         this.form.community_id = '';
         this.community_name = '';
         this.form.building = '';

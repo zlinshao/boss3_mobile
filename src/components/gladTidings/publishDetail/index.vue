@@ -22,12 +22,15 @@
       <div class="detailRight">
         <!--收房报备-->
         <div class="topTitle">
-          <div v-for="(key,index) in formList" v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片'">
+          <div v-for="(key,index) in formList" v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图'">
             <p>{{index}}</p>
             <h1>
               <span v-if="Array.isArray(key)" v-for="item in key">
                 <span style="display: block;">{{item.msg}}</span>
                 <span style="display: block;">{{item.period}}</span>
+              </span>
+              <span v-if="index === '定金和收款方式'" v-for="item in key">
+                <span style="display: block;">{{item}}</span>
               </span>
               <span v-if="!Array.isArray(key)">{{key}}</span>
             </h1>
