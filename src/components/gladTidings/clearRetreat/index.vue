@@ -49,8 +49,8 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">组长同意截图</div>
-        <UpLoad :ID="'headman'" @getImg="headmanAgree"></UpLoad>
+        <div class="title">特殊情况截图</div>
+        <UpLoad :ID="'headman'" @getImg="headmanAgree" :editImage="screenshots"></UpLoad>
       </div>
       <van-cell-group>
         <van-field
@@ -85,6 +85,7 @@
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -116,25 +117,24 @@
           type: '0',
           draft: 0,
           collect_or_rent: '',
-          contract_id: '33',            //合同id
-          screenshot_leader: '',        //领导截图 数组
+          contract_id: '',              //合同id
+          screenshot_leader: [],        //领导截图 数组
           remark: '',                   //备注
-          staff_id: '1',                //开单人id
-          leader_id: '2',               //负责人id
-          department_id: '3',           //部门id
         },
         houseName: '',
+        screenshots: {},
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
-
+    mounted() {
+      this.friedDetail();
+    },
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
       },
-
 
       searchSelect(val) {
         if (val === '0') {
@@ -171,11 +171,45 @@
           if (res.data.code === '50410') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '50420') {
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
-      }
+      },
+      friedDetail() {
+        this.$http.get(this.urls + 'bulletin/banish').then((res) => {
+          if (res.data.code === '50410') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.form.id = draft.id;
+            this.form.collect_or_rent = draft.collect_or_rent;
+            this.form.type = draft.type;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.screenshots = data.screenshot_leader;
+            this.form.remark = draft.remark;
+          } else {
+            this.form.id = '';
+          }
+        })
+      },
+      close_() {
+        this.bulletinDate = '';
+        this.payWay = '';
+        this.price_arr = '';
+        this.form.id = '';
+        this.form.collect_or_rent = '';
+        this.form.type = '0';
+        this.form.screenshot_leader = [];
+        this.screenshots = {};
+        this.form.remark = '';
+        this.houseName = '';
+        this.staff_name = '';
+        this.leader_name = '';
+        this.department_name = '';
+      },
     },
   }
 </script>

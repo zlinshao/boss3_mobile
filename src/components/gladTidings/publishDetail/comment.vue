@@ -46,7 +46,7 @@
     methods: {
       // 确认评论
       manager() {
-        this.$http.put(this.urls + 'api/v1/process/' + this.pitch, {
+        this.$http.put(this.urls + 'process/' + this.pitch, {
           operation: this.detail,
           comment: this.form.remark,
           album: this.form.photo

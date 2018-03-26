@@ -3,7 +3,6 @@
     <div id="container">
 
       <div :id="'pickfiles'+ID" class="pickfiles">
-
         <div class="imgItem" v-for="(val,key) in editImg" v-if="Object.keys(editImg).length>0">
           <div style=" position: relative;">
             <img :src="val" style="width: 1.5rem; height: 1.5rem; ">
@@ -115,7 +114,7 @@
         this.editImg = imgObject;
       },
       getTokenMessage() {
-        this.$http.get(globalConfig.server_user + 'api/v1/files').then((res) => {
+        this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.uploaderReady(res.data.data);
         })
       },
@@ -200,7 +199,7 @@
 
 //              _this.isUpId = file.id;
 
-              _this.$http.post(globalConfig.server_user + 'api/v1/files', {
+              _this.$http.post(globalConfig.server_user + 'files', {
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,

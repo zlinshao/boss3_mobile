@@ -2,13 +2,6 @@
   <div id="drawbackReport">
 
     <div v-show="!houseShow || !staffModule" class="main">
-      <!--<van-cell-group>-->
-      <!--<div class="checks">-->
-      <!--<div style="min-width: 110px;">收租标记</div>-->
-      <!--<van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>-->
-      <!--<van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>-->
-      <!--</div>-->
-      <!--</van-cell-group>-->
       <van-cell-group>
         <van-field
           v-model="houseName"
@@ -93,7 +86,7 @@
 
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="screenshot" :editImage="screenshots"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -131,6 +124,7 @@
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -160,8 +154,9 @@
         recMoney: '',
 
         form: {
+          id: '',
           draft: 0,
-          collect_or_rent: '1',
+          collect_or_rent: 1,
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
           amount: '',                   //退款金额
@@ -169,16 +164,19 @@
           subbranch: '',                //支行名称
           account_name: '',             //帐户名称
           account: '',                  //帐号
-          screenshot_leader: '',        //领导同意截图
+          screenshot_leader: [],        //领导同意截图
           remark: '',                   //备注
         },
+        screenshots: {},                //截图
         houseName: '',                  //房屋名称
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
-    watch: {},
+    mounted() {
+      this.refundDetail();
+    },
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
@@ -235,10 +233,51 @@
           if (res.data.code === '50810') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '50820') {
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
+      },
+      refundDetail() {
+        this.$http.get(this.urls + 'bulletin/refund').then((res) => {
+          if (res.data.code === '50810') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.form.id = draft.id;
+            this.form.amount = draft.amount;
+            this.form.account = draft.account;
+            this.form.bank = draft.bank;
+            this.form.subbranch = draft.subbranch;
+            this.form.remark = draft.remark;
+            this.form.account_name = draft.account_name;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.screenshots = data.screenshot_leader;
+          } else {
+            this.form.id = '';
+          }
+        })
+      },
+
+      close_() {
+        this.form.payWay = '';
+        this.form.price_arr = '';
+        this.form.recMoney = '';
+        this.form.id = '';
+        this.form.amount = '';
+        this.form.account = '';
+        this.form.bank = '';
+        this.form.subbranch = '';
+        this.form.remark = '';
+        this.form.account_name = '';
+        this.form.screenshot_leader = [];
+        this.screenshots = {};
+        this.houseName = '';
+        this.staff_name = '';
+        this.leader_name = '';
+        this.department_name = '';
       },
     },
   }

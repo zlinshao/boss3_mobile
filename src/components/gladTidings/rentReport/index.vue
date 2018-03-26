@@ -180,21 +180,21 @@
           required>
         </van-field>
         <van-field
-          v-model="form.receipt"
-          label="收据编号"
-          type="text"
-          placeholder="请填写收据编号"
-          icon="clear"
-          @click-icon="form.receipt = ''"
-          required>
-        </van-field>
-        <van-field
           v-model="property_name"
           label="物业费付款人"
           type="text"
           placeholder="请选择物业费付款人"
           @click="selectShow(1,'')"
           readonly
+          required>
+        </van-field>
+        <van-field
+          v-model="form.receipt"
+          label="收据编号"
+          type="text"
+          placeholder="请填写收据编号"
+          icon="clear"
+          @click-icon="form.receipt = ''"
           required>
         </van-field>
         <van-field
@@ -397,7 +397,7 @@
         property_name: '',              //物业费付款人
         houseName: '',                   //房屋地址name
         staff_name: '',                  //开单人name
-        leader_name: '湮灭',                //负责人name
+        leader_name: '湮灭',              //负责人name
         department_name: '',             //部门name
       }
     },
@@ -633,7 +633,7 @@
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
-            this.form.id = draft.id;
+            this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.houseName = data.address;

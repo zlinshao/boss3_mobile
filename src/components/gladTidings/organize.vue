@@ -44,7 +44,7 @@
     },
     methods: {
       organize() {
-        this.$http.get(this.address + 'api/v1/users', {
+        this.$http.get(this.address + 'users', {
           params: {
             q: this.searchValue,
             page: 1,

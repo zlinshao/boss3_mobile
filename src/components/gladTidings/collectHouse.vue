@@ -55,11 +55,11 @@
           let type;
           switch (val) {
             case 'rent':
-              type = 'api/v1/renter?status=1&q=';
+              type = 'renter?status=1&q=';
               this.myData(type, value);
               break;
             default:
-              type = 'api/v1/lord?status=1&q=';
+              type = 'lord?status=1&q=';
               this.myData(type, value);
           }
         }

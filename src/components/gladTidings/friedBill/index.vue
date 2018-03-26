@@ -56,7 +56,7 @@
 
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'headman'" @getImg="headmanAgree"></UpLoad>
+        <UpLoad :ID="'headman'" @getImg="headmanAgree" :editImage="screenshots"></UpLoad>
       </div>
       <van-cell-group>
         <van-field
@@ -91,6 +91,7 @@
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -109,7 +110,6 @@
     data() {
       return {
         urls: globalConfig.server,
-        refundSta: false,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
         organizeType: '',         //搜索
@@ -117,24 +117,28 @@
         bulletinDate: '',             //喜报日期
         payWay: '',                   //付款方式
         price_arr: '',                //月单价
-
+        refundSta: false,
         form: {
+          id: '',
           type: '0',
           draft: 0,
           collect_or_rent: '',
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
           refund: '0',                  //定金退还
-          screenshot_leader: '',        //特殊情况
+          screenshot_leader: [],        //领导同意截图
           remark: '',                   //备注
         },
         houseName: '',
+        screenshots: {},                //截图
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
-
+    mounted() {
+      this.friedDetail()
+    },
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
@@ -153,7 +157,7 @@
       },
 
       // 房屋地址
-      house_(val,type,detail) {
+      house_(val, type, detail) {
         this.houseName = val.houseName;
         // this.form.contract_id = val.contract_id;
         // this.form.house_id = val.house_id;
@@ -180,11 +184,49 @@
           if (res.data.code === '50710') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '50720') {
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
-      }
+      },
+      friedDetail() {
+        this.$http.get(this.urls + 'bulletin/lose').then((res) => {
+          if (res.data.code === '50710') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.form.id = draft.id;
+            this.form.collect_or_rent = draft.collect_or_rent;
+            this.form.refund = draft.refund;
+            this.form.type = draft.type;
+            this.refundSta = draft.refund === '0' ? false : true;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.screenshots = data.screenshot_leader;
+            this.form.remark = draft.remark;
+          } else {
+            this.form.id = '';
+          }
+        })
+      },
+      close_() {
+        this.bulletinDate = '';
+        this.payWay = '';
+        this.price_arr = '';
+        this.form.id = '';
+        this.form.collect_or_rent = '';
+        this.form.refund = '0';
+        this.form.type = '0';
+        this.refundSta = false;
+        this.form.screenshot_leader = [];
+        this.screenshots = {};
+        this.form.remark = '';
+        this.houseName = '';
+        this.staff_name = '';
+        this.leader_name = '';
+        this.department_name = '';
+      },
     },
   }
 </script>

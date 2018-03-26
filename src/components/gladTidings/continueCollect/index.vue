@@ -36,6 +36,29 @@
           @click="timeChoose(1)"
           required>
         </van-field>
+        <div class="first_date">
+          <van-field
+            class="title"
+            label="打房租日期"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.pay_first_date"
+            readonly
+            type="text"
+            @click="timeChoose(2)"
+            placeholder="第一次打款日期">
+          </van-field>
+          <span class="cut">/</span>
+          <van-field
+            class="twoBorder"
+            v-model="form.pay_second_date"
+            readonly
+            type="text"
+            @click="timeChoose(3)"
+            placeholder="第二次打款日期">
+          </van-field>
+        </div>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amountPrice">
@@ -162,37 +185,14 @@
           required>
         </van-field>
         <van-field
-          v-model="form.property_payer"
+          v-model="property_name"
           label="物业费付款人"
           type="text"
-          placeholder="请填写物业费付款人"
-          icon="clear"
-          @click-icon="form.property_payer = ''"
+          placeholder="请选择物业费付款人"
+          @click="selectShow(6,'')"
+          readonly
           required>
         </van-field>
-        <div class="first_date">
-          <van-field
-            class="title"
-            label="打房租日期"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.pay_first_date"
-            readonly
-            type="text"
-            @click="timeChoose(2)"
-            placeholder="第一次打款日期">
-          </van-field>
-          <span class="cut">/</span>
-          <van-field
-            class="twoBorder"
-            v-model="form.pay_second_date"
-            readonly
-            type="text"
-            @click="timeChoose(3)"
-            placeholder="第二次打款日期">
-          </van-field>
-        </div>
         <van-field
           v-model="form.sign_date"
           label="签约日期"
@@ -337,6 +337,7 @@
     </div>
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -365,6 +366,8 @@
 
     <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
 
+    <SelectDepart :departDialog="departDialog" @close="onCancel" @depart="departModal"></SelectDepart>
+
   </div>
 </template>
 
@@ -372,16 +375,18 @@
   import UpLoad from '../../common/UPLOAD.vue'
   import CollectHouse from '../collectHouse.vue'
   import Organization from '../organize.vue'
+  import SelectDepart from '../../common/selectDepartment.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse, Organization},
+    components: {UpLoad, Toast, CollectHouse, Organization, SelectDepart},
     data() {
       return {
         urls: globalConfig.server,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
+        departDialog: false,      //部门
         organizeType: '',         //搜索
 
         tabs: '',
@@ -406,6 +411,10 @@
         payIndex: '',                   //付款方式index
 
         house_type: '321321',
+
+        value1: ['月付', '双月付', '季付', '半年付', '年付'],
+        value2: ['个人', '中介'],
+        value6: ['无', '房东', '租客', '公司'],
         form: {
           type: 2,
           draft: 0,
@@ -422,7 +431,7 @@
           vacancy: '',                  //空置期
           warranty: '',                 //保修期(月)
           warranty_day: '',             //保修期(天)
-          from: '1',                    //客户来源 1个人2中介
+          from: 1,                      //客户来源 1个人2中介
           deposit: '',                  //押金
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
@@ -447,6 +456,9 @@
         },
         houseName: '',                //房屋地址name
         fromName: '个人',             //客户来源
+        property_name: '',              //物业费付款人
+        photos: {},                     //照片
+        screenshots: {},                //照片
         staff_name: '',               //开单人name
         leader_name: '湮灭',                //负责人name
         department_name: '',          //部门name
@@ -455,6 +467,7 @@
     },
     mounted() {
       this.getNowFormatDate();
+      this.manuscript();
     },
 
     methods: {
@@ -474,6 +487,9 @@
           //   this.staffModule = true;
           //   this.organizeType = 'leader';
           //   break;
+          case 4:
+            this.departDialog = true;
+            break;
         }
       },
 
@@ -493,10 +509,16 @@
         this.department_name = val.depart_name;
         this.onCancel();
       },
-
+      // 部门
+      departModal(val) {
+        this.department_name = val.name;
+        this.form.department_id = val.id;
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
         this.selectHide = false;
+        this.departDialog = false;
         this.timeShow = false;
         this.houseShow = false;
         this.staffModule = false;
@@ -568,10 +590,13 @@
         this.selectHide = true;
         switch (val) {
           case 4:
-            this.columns = ['月付', '双月付', '季付', '半年付', '年付'];
+            this.columns = this.value1;
             break;
           case 5:
-            this.columns = ['个人', '中介'];
+            this.columns = this.value2;
+            break;
+          case 6:
+            this.columns = this.value6;
             break;
         }
       },
@@ -585,6 +610,10 @@
           case 5:
             this.fromName = value;
             this.form.from = index + 1;
+            break;
+          case 6:
+            this.form.property_payer = index + 1;
+            this.property_name = value;
             break;
         }
         this.selectHide = false;
@@ -632,6 +661,10 @@
         } else {
           per = this.form.period_pay_arr;
         }
+        this.countDate(val, per);
+      },
+      // 日期计算
+      countDate(val, per) {
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
             begin_date: this.form.begin_date,
@@ -644,8 +677,6 @@
             } else {
               this.datePay = this.first_date.concat(res.data.data);
             }
-          } else {
-            Toast(res.data.msg);
           }
         })
       },
@@ -656,11 +687,20 @@
           if (res.data.code === '50110') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '50120') {
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
       },
+      manuscript() {
+        this.$http.get(this.urls + 'bulletin/collect?type=2').then((res) => {
+        })
+
+      },
+      close_() {
+      }
     },
   }
 </script>

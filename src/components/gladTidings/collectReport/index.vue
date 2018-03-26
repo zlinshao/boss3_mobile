@@ -861,8 +861,7 @@
           if (res.data.code === '50110') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          }
-          if (res.data.code === '50120') {
+          }else if (res.data.code === '50120') {
             Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
@@ -938,7 +937,7 @@
             this.form.property_payer = draft.property_payer;
             this.property_name = this.value6[draft.property_payer - 1];
             this.form.from = draft.from;
-            this.form.fromName = draft.from === 1 ? '个人' : '中介';
+            this.fromName = draft.from === 1 ? '个人' : '中介';
             this.form.sign_date = draft.sign_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -1017,6 +1016,7 @@
         this.form.sign_date = '';
         this.form.name = '';
         this.form.from = 1;
+        this.fromName = '';
         this.form.phone = '';
         this.form.bank = '';
         this.form.subbranch = '';

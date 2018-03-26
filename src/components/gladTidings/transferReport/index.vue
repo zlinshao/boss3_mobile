@@ -40,11 +40,11 @@
           placeholder="原房屋定金已禁用">
         </van-field>
         <!--<van-field-->
-          <!--v-model="oldForm.bulletinDate"-->
-          <!--label="喜报日期"-->
-          <!--type="text"-->
-          <!--disabled-->
-          <!--placeholder="原房屋喜报日期已禁用">-->
+        <!--v-model="oldForm.bulletinDate"-->
+        <!--label="喜报日期"-->
+        <!--type="text"-->
+        <!--disabled-->
+        <!--placeholder="原房屋喜报日期已禁用">-->
         <!--</van-field>-->
       </van-cell-group>
       <van-cell-group>
@@ -218,12 +218,12 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel">
         <div class="title">合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -267,6 +267,7 @@
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -294,6 +295,8 @@
 
     <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
 
+    <SelectDepart :departDialog="departDialog" @close="onCancel" @depart="departModal"></SelectDepart>
+
   </div>
 </template>
 
@@ -301,16 +304,18 @@
   import UpLoad from '../../common/UPLOAD.vue'
   import CollectHouse from '../collectHouse.vue'
   import Organization from '../organize.vue'
+  import SelectDepart from '../../common/selectDepartment.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse, Organization},
+    components: {UpLoad, Toast, CollectHouse, Organization, SelectDepart},
     data() {
       return {
         urls: globalConfig.server,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
+        departDialog: false,      //部门
         organizeType: '',         //搜索
 
         tabs: '',
@@ -323,7 +328,7 @@
         timeIndex: '',
         timeValue: '',            //日期value
 
-        first_date: '',            //日期value
+        first_date: [],            //日期value
 
         amountPrice: 1,
         datePrice: [],
@@ -335,6 +340,9 @@
         amountMoney: 1,
         moneyNum: [''],             //分金额 付款方式
 
+        value1: ['支付宝', '微信', '银行卡', 'pos机', '现金'],
+        value2: ['0', '1', '2', '3'],
+
         oldForm: {
           staff_name: '',
           pay_way_arr: '',
@@ -344,6 +352,7 @@
         },
 
         form: {
+          id: '',
           type: 1,
           draft: 0,
           contract_id_rent: '',         //原租房合同id
@@ -371,11 +380,13 @@
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
-          leader_id: '3',               //负责人id
+          leader_id: '92',              //负责人id
           department_id: '',            //部门id
         },
         oldHouseName: '',
         newHouseName: '',
+        screenshots: {},
+        photos: {},
         staff_name: '',                  //开单人name
         leader_name: '湮灭',                //负责人name
         department_name: '',             //部门name
@@ -383,6 +394,7 @@
     },
     mounted() {
       this.getNowFormatDate();
+      this.rentDetail();
     },
 
     methods: {
@@ -441,10 +453,10 @@
         this.selectHide = true;
         switch (val) {
           case 2:
-            this.columns = ['支付宝', '微信', '银行卡', 'pos机', '现金'];
+            this.columns = this.value1;
             break;
           case 3:
-            this.columns = ['0', '1', '2', '3'];
+            this.columns = this.value2;
             break;
         }
       },
@@ -465,7 +477,7 @@
         switch (val) {
           case 1:
             this.houseShow = true;
-            this.organizeType = 'old';
+            this.organizeType = 'rent';
             break;
           case 2:
             this.houseShow = true;
@@ -508,10 +520,16 @@
         this.department_name = val.depart_name;
         this.onCancel();
       },
-
+      // 部门
+      departModal(val) {
+        this.department_name = val.name;
+        this.form.department_id = val.id;
+        this.onCancel();
+      },
       // select关闭
       onCancel() {
         this.selectHide = false;
+        this.departDialog = false;
         this.timeShow = false;
         this.houseShow = false;
         this.staffModule = false;
@@ -560,16 +578,20 @@
       },
       // 日期计算
       periodDate(val) {
-        let period;
+        let per;
         if (val === 1) {
-          period = this.form.period_price_arr;
+          per = this.form.period_price_arr;
         } else {
-          period = this.form.period_pay_arr;
+          per = this.form.period_pay_arr;
         }
+        this.countDate(val, per);
+      },
+      // 日期计算
+      countDate(val, per) {
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
             begin_date: this.form.begin_date,
-            period: period
+            period: per,
           }
         }).then((res) => {
           if (res.data.code === '51110') {
@@ -578,8 +600,6 @@
             } else {
               this.datePay = this.first_date.concat(res.data.data);
             }
-          } else {
-            Toast(res.data.msg);
           }
         })
       },
@@ -589,10 +609,78 @@
           if (res.data.code === '50510') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '50520') {
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
+      },
+
+      rentDetail() {
+        this.$http.get(this.urls + 'bulletin/change').then((res) => {
+          if (res.data.code === '50510') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.form.id = draft.id;
+            this.form.month = draft.month;
+
+            this.form.begin_date = draft.begin_date;
+            this.first_date = [];
+            this.first_date.push(draft.begin_date);
+
+            for (let i = 0; i < draft.price_arr.length; i++) {
+              this.amountPrice = i + 1;
+              this.form.period_price_arr.push('');
+              this.form.price_arr.push('');
+            }
+            this.form.period_price_arr = draft.period_price_arr;
+            this.countDate(1, draft.period_price_arr);
+            this.form.price_arr = draft.price_arr;
+
+            this.form.pay_way_bet = draft.pay_way_bet;
+            for (let i = 0; i < draft.pay_way_arr.length; i++) {
+              this.amountPay = i + 1;
+              this.form.period_pay_arr.push('');
+              this.form.pay_way_arr.push('');
+            }
+            this.form.period_pay_arr = draft.period_pay_arr;
+            this.countDate(2, draft.period_pay_arr);
+            this.form.pay_way_arr = draft.pay_way_arr;
+
+            this.form.money_sum = draft.money_sum;
+            for (let i = 0; i < draft.money_sep.length; i++) {
+              this.amountMoney = i + 1;
+              this.form.money_sep.push('');
+              this.form.money_way.push('');
+              this.moneyNum[i] = this.value2[draft.money_way[i] - 1]
+            }
+            this.form.money_sep = draft.money_sep;
+            this.form.money_way = draft.money_way;
+
+            this.form.receipt = draft.receipt;
+            this.form.retainage_date = draft.retainage_date;
+
+            this.form.screenshot = draft.screenshot;
+            this.screenshots = data.screenshot;
+            this.form.photo = draft.photo;
+            this.photos = data.photo;
+
+            this.form.remark = draft.remark;
+            this.form.staff_id = draft.staff_id;
+            this.staff_name = data.staff_name;
+            this.form.leader_id = draft.leader_id;
+            this.leader_name = data.leader_name;
+            this.form.department_id = draft.department_id;
+            this.department_name = data.department_name;
+          } else {
+            this.form.id = '';
+          }
+        })
+      },
+      close_() {
+
       },
     },
   }

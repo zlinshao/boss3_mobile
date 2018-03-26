@@ -16,7 +16,22 @@
           type="text"
           @click="searchSelect(form.collect_or_rent)"
           readonly
-          placeholder="选择房屋地址">
+          placeholder="选择房屋地址"
+          required>
+        </van-field>
+        <van-field
+          v-model="payWay"
+          type="text"
+          label="付款方式"
+          placeholder="付款方式已禁用"
+          disabled>
+        </van-field>
+        <van-field
+          v-model="monthPrice"
+          type="text"
+          label="月单价"
+          placeholder="月单价已禁用"
+          disabled>
         </van-field>
         <van-field
           v-model="form.amount"
@@ -36,21 +51,6 @@
           @click-icon="form.name = ''"
           required>
         </van-field>
-        <van-field
-          v-model="payWay"
-          type="text"
-          label="付款方式"
-          placeholder="付款方式已禁用"
-          disabled>
-        </van-field>
-        <van-field
-          v-model="monthPrice"
-          type="text"
-          label="月单价"
-          placeholder="月单价已禁用"
-          disabled>
-        </van-field>
-
         <van-field
           v-model="form.account"
           label="卡号"
@@ -98,12 +98,12 @@
 
       <div class="aloneModel">
         <div class="title">结清截图</div>
-        <UpLoad :ID="'settle'" @getImg="screenshot"></UpLoad>
+        <UpLoad :ID="'settle'" @getImg="screen" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="screen" :editImage="screenshots_leader"></UpLoad>
       </div>
       <van-cell-group>
         <van-field
@@ -116,42 +116,36 @@
         </van-field>
         <van-field
           v-model="staff_name"
-          @click="searchStaff(2)"
-          readonly
+          disabled
           label="开单人"
           type="text"
-          placeholder="请选择开单人"
-          required>
+          placeholder="开单人已禁用">
         </van-field>
         <van-field
           v-model="leader_name"
-          @click="searchStaff(3)"
-          readonly
+          disabled
           label="负责人"
           type="text"
-          placeholder="请选择负责人"
-          required>
+          placeholder="负责人已禁用">
         </van-field>
         <van-field
           v-model="department_name"
-          @click="searchStaff(4)"
-          readonly
+          disabled
           label="部门"
           type="text"
-          placeholder="请选择部门"
-          required>
+          placeholder="部门已禁用">
         </van-field>
       </van-cell-group>
     </div>
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
     <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
 
-    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
   </div>
 </template>
 
@@ -159,17 +153,16 @@
   import UpLoad from '../../common/UPLOAD.vue'
   import CollectHouse from '../collectHouse.vue'
   import Organization from '../organize.vue'
+  import SelectDepart from '../../common/selectDepartment.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse, Organization},
+    components: {UpLoad, Toast, CollectHouse, Organization, SelectDepart},
     data() {
       return {
         urls: globalConfig.server,
-        refundSta: false,
         houseShow: false,         //搜索
-        staffModule: false,       //搜索
         organizeType: '',         //搜索
 
         settleStatus: false,      //是否结清
@@ -178,11 +171,12 @@
         monthPrice: '',           //月单价
 
         form: {
+          id: '',
           draft: 0,
           collect_or_rent: '',
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
-          amount: '',                   //数量
+          amount: '',                   //中介费
           bank: '',                     //银行名称
           subbranch: '',                //支行名称
           account_name: '',             //帐户名称
@@ -192,17 +186,18 @@
           screenshot: [],               //结清截图
           screenshot_leader: [],        //特殊情况
           remark: '',                   //备注
-          staff_id: '',                //开单人id
-          leader_id: '3',                //负责人id
-          department_id: '',           //部门id
         },
+        screenshots: {},
+        screenshots_leader: {},
         houseName: '',                  //房屋name
         staff_name: '',                 //开单人name
-        leader_name: '湮灭',                //负责人name
+        leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
-
+    mounted() {
+      this.agencyDetail();
+    },
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
@@ -219,42 +214,12 @@
           Toast('请选择收租标记');
         }
       },
-      screenshot(val) {
+      screen(val) {
         if (val[0] === 'settle') {
           this.form.screenshot = val[1];
         } else {
           this.form.screenshot_leader = val[1];
         }
-      },
-      searchStaff(val) {
-        switch (val) {
-          case 2:
-            this.staffModule = true;
-            this.organizeType = 'staff';
-            break;
-          // case 3:
-          //   this.staffModule = true;
-          //   this.organizeType = 'leader';
-          //   break;
-        }
-      },
-      // 开单人
-      staff_(val) {
-        this.form.staff_id = val.staff_id;
-        this.staff_name = val.staff_name;
-        this.form.department_id = val.depart_id;
-        this.department_name = val.depart_name;
-        this.onCancel();
-      },
-      // 获取银行
-      subAccount(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
-          if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
-          } else {
-            this.form.bank = '';
-          }
-        })
       },
 
       // 房屋地址
@@ -268,6 +233,17 @@
       onCancel() {
         this.houseShow = false;
       },
+      // 获取银行
+      subAccount(val) {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+          if (res.data.code === '51110') {
+            this.form.bank = res.data.data;
+          } else {
+            this.form.bank = '';
+          }
+        })
+      },
+
       saveCollect(val) {
         if (this.settleStatus) {
           this.form.settle = 1;
@@ -279,11 +255,70 @@
           if (res.data.code === '51110') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '50320') {
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
       },
+      agencyDetail() {
+        this.$http.get(this.urls + 'bulletin/agency').then((res) => {
+          if (res.data.code === '50310') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.houseName = draft.houseName;
+            this.form.id = data.id;
+            this.form.contract_id = draft.contract_id;
+            this.form.house_id = draft.house_id;
+            this.form.collect_or_rent = draft.collect_or_rent;
+            this.form.amount = draft.amount;
+            this.form.bank = draft.bank;
+            this.form.subbranch = draft.subbranch;
+            this.form.account_name = draft.account_name;
+            this.form.account = draft.account;
+            this.form.name = draft.name;
+            this.form.settle = draft.settle;
+            this.settleStatus = draft.settle === 1 ? true : false;
+            this.form.screenshot = draft.screenshot;
+            this.screenshots = data.screenshot;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.screenshots_leader = data.screenshot_leader;
+            this.form.remark = draft.remark;
+            this.staff_name = data.staff_name;
+            this.leader_name = data.leader_name;
+            this.department_name = data.department_name;
+          } else {
+            this.form.id = '';
+          }
+        })
+      },
+      close_() {
+        this.payWay = '';
+        this.monthPrice = '';
+        this.houseName = '';
+        this.form.id = '';
+        this.form.contract_id = '';
+        this.form.house_id = '';
+        this.form.collect_or_rent = '';
+        this.form.amount = '';
+        this.form.bank = '';
+        this.form.subbranch = '';
+        this.form.account_name ='';
+        this.form.account = '';
+        this.form.name = '';
+        this.form.settle = 0;
+        this.settleStatus = false;
+        this.form.screenshot = [];
+        this.screenshots = {};
+        this.form.screenshot_leader = [];
+        this.screenshots_leader = {};
+        this.form.remark = '';
+        this.staff_name = '';
+        this.leader_name = '';
+        this.department_name = '';
+      }
     },
   }
 </script>

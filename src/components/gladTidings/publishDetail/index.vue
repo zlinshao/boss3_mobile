@@ -118,7 +118,7 @@
       },
 
       formDetail(val) {
-        this.$http.get(this.urls + 'api/v1/process/' + val).then((res) => {
+        this.$http.get(this.urls + 'process/' + val).then((res) => {
           if (res.data.status === 'success') {
             this.formList = res.data.data.process.content.show_content;
             this.operation = res.data.data.operation;
@@ -127,7 +127,7 @@
         });
       },
       comments(val) {
-        this.$http.get(this.urls + 'api/v1/comments?id=' + val).then((res) => {
+        this.$http.get(this.urls + 'comments?id=' + val).then((res) => {
           this.commentList = res.data.data;
         })
       },

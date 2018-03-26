@@ -1,6 +1,5 @@
 <template>
   <div id="special">
-
     <div v-show="!houseShow || !staffModule" class="main">
       <van-cell-group>
         <div class="checks" style="">
@@ -16,7 +15,8 @@
           type="text"
           @click="searchSelect(form.collect_or_rent)"
           readonly
-          placeholder="选择房屋地址">
+          placeholder="选择房屋地址"
+          required>
         </van-field>
         <van-field
           v-model="form.content"
@@ -29,12 +29,12 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="'jieTu'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'jieTu'" @getImg="getImgData" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>特殊情况截图</div>
-        <UpLoad :ID="'tongYi'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'tongYi'" @getImg="getImgData" :editImage="screenshots_leader"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -64,6 +64,7 @@
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -91,20 +92,26 @@
         organizeType: '',         //搜索
 
         form: {
+          id: '',
           draft: 0,
           collect_or_rent: '',
+          house_id: '',
           contract_id: '',
           content: '',
           screenshot: [],
           screenshot_leader: [],
         },
         houseName: '',
+        screenshots: {},
+        screenshots_leader: {},
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
-
+    mounted() {
+      this.specialDetail();
+    },
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
@@ -121,7 +128,7 @@
         }
       },
       // 房屋地址
-      house_(val,type,detail) {
+      house_(val, type, detail) {
         this.houseName = val.houseName;
         // this.form.contract_id = val.contract_id;
         // this.form.house_id = val.house_id;
@@ -143,12 +150,53 @@
         this.form.draft = val;
         this.$http.post(globalConfig.server + 'bulletin/special', this.form).then((res) => {
           if (res.data.code === '51010') {
-            this.$toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
+            Toast.success(res.data.msg);
+            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '51020') {
+            Toast.success(res.data.msg);
           } else {
-            this.$toast.fail(res.data.msg);
+            Toast.fail(res.data.msg);
           }
         })
+      },
+      specialDetail() {
+        this.$http.get(globalConfig.server + 'bulletin/special').then((res) => {
+          if (res.data.code === '51010') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.form.id = data.id;
+            this.houseName = data.houseName;
+            this.form.collect_or_rent = draft.collect_or_rent;
+            this.form.house_id = draft.house_id;
+            this.form.contract_id = draft.contract_id;
+            this.form.content = draft.content;
+            this.form.screenshot = draft.screenshot;
+            this.screenshots = data.screenshot;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.screenshots_leader = data.screenshot_leader;
+            this.staff_name = data.staff_name;
+            this.leader_name = data.leader_name;
+            this.department_name = data.department_name;
+          } else {
+            this.form.id = '';
+          }
+        })
+      },
+      close_() {
+        this.form.id = '';
+        this.houseName = '';
+        this.form.collect_or_rent = '';
+        this.form.house_id = '';
+        this.form.contract_id = '';
+        this.form.content = '';
+        this.form.screenshot = [];
+        this.screenshots = {};
+        this.form.screenshot_leader = [];
+        this.screenshots_leader = {};
+        this.staff_name = '';
+        this.leader_name = '';
+        this.department_name = '';
       }
     },
   }

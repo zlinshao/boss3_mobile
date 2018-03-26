@@ -66,24 +66,16 @@
           placeholder="部门已禁用"
           disabled>
         </van-field>
-        <!--test-->
-        <van-field
-          label="选取"
-          type="text"
-          @focus=" departDialog = true"
-          placeholder="选取部门">
-        </van-field>
       </van-cell-group>
     </div>
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">草稿</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
     <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
-
-    <SelectDepart :departDialog="departDialog" @close="closeModal"></SelectDepart>
   </div>
 </template>
 
@@ -95,7 +87,7 @@
 
   export default {
     name: "index",
-    components: {UpLoad, Toast,SelectDepart,CollectHouse},
+    components: {UpLoad, Toast, SelectDepart, CollectHouse},
     data() {
       return {
         urls: globalConfig.server,
@@ -109,20 +101,23 @@
         price_arr: '',                //月单价
 
         form: {
+          id: '',
           type: 0,
           draft: 0,
           collect_or_rent: '',
           contract_id: '',            //合同id
+          house_id: '',
           remark: '',                   //备注
         },
         houseName: '',
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
-        departDialog:false,
       }
     },
-
+    mounted() {
+      this.confiscate()
+    },
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
@@ -141,7 +136,7 @@
       },
 
       // 房屋地址
-      house_(val,type,detail) {
+      house_(val, type, detail) {
         this.houseName = val.houseName;
         // this.form.contract_id = val.contract_id;
         // this.form.house_id = val.house_id;
@@ -156,15 +151,38 @@
         this.$http.post(this.urls + 'bulletin/confiscate', this.form).then((res) => {
           if (res.data.code === '50610') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail',query:{ids: res.data.data.data.id}});
+            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+          } else if (res.data.code === '50620') {
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
       },
-      closeModal(val){
-        console.log(val);
-        this.departDialog = false
+      confiscate() {
+        this.$http.get(this.urls + 'bulletin/confiscate').then((res) => {
+          if (res.data.code === '50610') {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.form.id = data.id;
+            this.form.bulletinDate = data.bulletinDate;
+            this.form.payWay = data.payWay;
+            this.form.price_arr = data.price_arr;
+            this.form.house_id = draft.house_id;
+            this.form.contract_id = draft.contract_id;
+            this.form.remark = draft.remark;
+            this.form.type = draft.type;
+            this.form.collect_or_rent = draft.collect_or_rent;
+            this.collect_or_rent = data.houseName;
+            this.staff_name = data.staff_name;
+            this.leader_name = data.leader_name;
+            this.department_name = data.department_name;
+          }
+        })
+      },
+      close_() {
+
       }
     },
   }

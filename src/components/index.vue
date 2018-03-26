@@ -235,7 +235,7 @@
         }
       },
       processList(val) {
-        this.$http.get(this.urls + 'api/v1/process', {
+        this.$http.get(this.urls + 'process', {
           params: val,
         }).then((res) => {
           let data = res.data.data;
