@@ -21,6 +21,7 @@ import ChangeRent from '../components/gladTidings/changeRent/index.vue'       //
 import Drawback from '../components/gladTidings/drawbackReport/index.vue'
 import FriedBill from '../components/gladTidings/friedBill/index.vue'         //zhadan
 import ClearRetreat from '../components/gladTidings/clearRetreat/index.vue'   //清退
+import Checkout from '../components/gladTidings/checkout/index.vue'   //清退
 import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //中介给
 import Special from '../components/gladTidings/specialReport/index.vue'
 import Confiscate from '../components/gladTidings/confiscate/index.vue'
@@ -145,6 +146,14 @@ export default new Router({
       icon: 'iconfont icon-qingtui-',
       meta: {title: '清退报备'},
       component: ClearRetreat
+    },
+    {
+      path: '/checkout',
+      name: '退租报备',
+      hidden: 'glad',
+      icon: 'iconfont icon-qingtui-',
+      meta: {title: '退租报备'},
+      component: Checkout
     },
     {
       path: '/agencyRent',

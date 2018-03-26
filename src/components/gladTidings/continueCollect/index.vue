@@ -288,12 +288,12 @@
 
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -387,6 +387,7 @@
         houseShow: false,         //搜索
         staffModule: false,       //搜索
         departDialog: false,      //部门
+        isClear: false,           //删除图片
         organizeType: '',         //搜索
 
         tabs: '',
@@ -416,6 +417,7 @@
         value2: ['个人', '中介'],
         value6: ['无', '房东', '租客', '公司'],
         form: {
+          id: '',
           type: 2,
           draft: 0,
           contract_id_continued: '',    //合同
@@ -451,7 +453,7 @@
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
-          leader_id: '3',               //负责人id
+          leader_id: '92',               //负责人id
           department_id: '',            //部门id
         },
         houseName: '',                //房屋地址name
@@ -460,7 +462,7 @@
         photos: {},                     //照片
         screenshots: {},                //照片
         staff_name: '',               //开单人name
-        leader_name: '湮灭',                //负责人name
+        leader_name: '湮灭',           //负责人name
         department_name: '',          //部门name
 
       }
@@ -696,10 +698,150 @@
       },
       manuscript() {
         this.$http.get(this.urls + 'bulletin/collect?type=2').then((res) => {
-        })
+          if (res.data.code === '50110') {
+            this.isClear = false;
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
 
+            this.form.id = data.id;
+            this.form.month = draft.month;
+            this.form.contract_id_continued = draft.contract_id_continued;
+            this.form.house_id = draft.house_id;
+            this.houseName = data.address;
+            this.form.begin_date = draft.begin_date;
+            this.form.pay_first_date = draft.pay_first_date;
+            this.first_date = [];
+            this.first_date.push(draft.pay_first_date);
+            this.form.pay_second_date = draft.pay_second_date;
+
+            this.house_type = draft.house_type;
+
+            for (let i = 0; i < draft.price_arr.length; i++) {
+              this.amountPrice = i + 1;
+              this.form.period_price_arr.push('');
+              this.form.price_arr.push('');
+            }
+            this.form.period_price_arr = draft.period_price_arr;
+            this.countDate(1, draft.period_price_arr);
+            this.form.price_arr = draft.price_arr;
+
+            for (let i = 0; i < draft.pay_way_arr.length; i++) {
+              this.amountPay = i + 1;
+              this.form.period_pay_arr.push('');
+              this.form.pay_way_arr.push('');
+              this.payTypeNum[i] = this.value1[draft.pay_way_arr[i] - 1]
+            }
+            this.form.period_pay_arr = draft.period_pay_arr;
+            this.countDate(2, draft.period_pay_arr);
+            this.form.pay_way_arr = draft.pay_way_arr;
+
+            this.form.deposit = draft.deposit;
+            this.form.vacancy = draft.vacancy;
+            this.form.vacancy_way = draft.vacancy_way;
+            this.form.vacancy_other = draft.vacancy_other;
+            this.form.warranty = draft.warranty;
+            this.form.warranty_day = draft.warranty_day;
+            this.form.property = draft.property;
+            this.form.property_payer = draft.property_payer;
+            this.property_name = this.value6[draft.property_payer - 1];
+            this.form.from = draft.from;
+            this.fromName = draft.from === 1 ? '个人' : '中介';
+            this.form.sign_date = draft.sign_date;
+            this.form.name = draft.name;
+            this.form.phone = draft.phone;
+            this.form.bank = draft.bank;
+            this.form.subbranch = draft.subbranch;
+            this.form.account_name = draft.account_name;
+            this.form.account = draft.account;
+            this.form.relationship = draft.relationship;
+            this.form.penalty = draft.penalty;
+            this.form.contract_number = draft.contract_number;
+
+            this.form.photo = draft.photo;
+            this.photos = data.photo;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.screenshots = data.screenshot_leader;
+
+            this.form.remark = draft.remark;
+            this.form.staff_id = draft.staff_id;
+            this.staff_name = data.staff_name;
+            this.form.leader_id = draft.leader_id;
+            this.leader_name = data.leader_name;
+            this.form.department_id = draft.department_id;
+            this.department_name = data.department_name;
+          } else {
+            this.form.id = '';
+          }
+        })
       },
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
+        this.form.id = '';
+        this.form.contract_id_continued = '';
+        this.form.house_id = '';
+        this.houseName = '';
+        this.form.month = '';
+        this.form.begin_date = '';
+        this.form.pay_first_date = '';
+        this.form.pay_second_date = '';
+
+        this.house_type_name = '1室 1厅 1卫';
+        this.house_type = [0, 1, 1];
+
+        this.amountPrice = 1;
+        this.form.period_price_arr = [''];
+        this.form.price_arr = [''];
+
+        this.form.period_price_arr = [''];
+        this.form.price_arr = [''];
+
+        this.amountPay = 1;
+        this.form.period_pay_arr = [''];
+        this.form.pay_way_arr = [''];
+        this.payTypeNum = [''];
+
+        this.form.period_pay_arr = [''];
+        this.form.pay_way_arr = [''];
+
+        this.form.deposit = '';
+        this.form.vacancy = '';
+        this.form.vacancy_way = '';
+        this.vacancy_way_name = '';
+        this.form.vacancy_other = '';
+        this.form.warranty = '';
+        this.form.warranty_day = '';
+        this.form.property = '';
+        this.form.property_payer = '';
+        this.property_name = '';
+        this.form.sign_date = '';
+        this.form.name = '';
+        this.form.from = 1;
+        this.fromName = '';
+        this.form.phone = '';
+        this.form.bank = '';
+        this.form.subbranch = '';
+        this.form.account_name = '';
+        this.form.account = '';
+        this.form.relationship = '';
+        this.form.penalty = '';
+        this.form.contract_number = '';
+
+        this.form.photo = [];
+        this.photos = {};
+        this.form.screenshot_leader = [];
+        this.screenshots = {};
+
+        this.form.remark = '';
+
+        this.form.staff_id = '';
+        this.staff_name = '';
+        this.form.leader_id = '92';
+        this.leader_name = '';
+        this.form.department_id = '';
+        this.department_name = '';
       }
     },
   }

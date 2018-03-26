@@ -218,12 +218,12 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel">
         <div class="title">合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :editImage="photos"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -315,6 +315,7 @@
         urls: globalConfig.server,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
+        isClear: false,           //删除图片
         departDialog: false,      //部门
         organizeType: '',         //搜索
 
@@ -429,7 +430,6 @@
       },
       // 确认日期
       onDate(val) {
-        console.log(val);
         this.timeShow = false;
         switch (this.timeIndex) {
           case 1:
@@ -620,6 +620,7 @@
       rentDetail() {
         this.$http.get(this.urls + 'bulletin/change').then((res) => {
           if (res.data.code === '50510') {
+            this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
@@ -680,7 +681,50 @@
         })
       },
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
+        this.form.id = '';
+        this.form.month = '';
 
+        this.form.begin_date = '';
+        this.first_date = [];
+
+        this.amountPrice = 1;
+
+        this.form.period_price_arr = [''];
+
+        this.form.price_arr = [''];
+        this.datePay = [];
+        this.datePrice = [];
+        this.form.pay_way_bet = '';
+        this.amountPay = 1;
+        this.form.period_pay_arr = [''];
+        this.form.pay_way_arr = [''];
+
+        this.form.money_sum = '';
+        this.amountMoney = 1;
+        this.moneyNum = [''];
+
+        this.form.money_sep = [];
+        this.form.money_way = [];
+
+        this.form.receipt = '';
+        this.form.retainage_date = '';
+
+        this.form.screenshot = [];
+        this.screenshots = {};
+        this.form.photo = [];
+        this.photos = {};
+
+        this.form.remark = '';
+        this.form.staff_id = '';
+        this.staff_name = '';
+        this.form.leader_id = '92';
+        this.leader_name = '湮灭';
+        this.form.department_id = '';
+        this.department_name = '';
       },
     },
   }

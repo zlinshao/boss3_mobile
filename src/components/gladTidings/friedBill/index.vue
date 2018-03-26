@@ -56,7 +56,7 @@
 
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'headman'" @getImg="headmanAgree" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'headman'" @getImg="headmanAgree" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
       <van-cell-group>
         <van-field
@@ -112,6 +112,7 @@
         urls: globalConfig.server,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
+        isClear: false,           //删除图片
         organizeType: '',         //搜索
 
         bulletinDate: '',             //喜报日期
@@ -194,6 +195,7 @@
       friedDetail() {
         this.$http.get(this.urls + 'bulletin/lose').then((res) => {
           if (res.data.code === '50710') {
+            this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
@@ -201,7 +203,9 @@
             this.form.collect_or_rent = draft.collect_or_rent;
             this.form.refund = draft.refund;
             this.form.type = draft.type;
-            this.refundSta = draft.refund === '0' ? false : true;
+            this.form.contract_id = draft.contract_id;
+            this.form.house_id = draft.house_id;
+            this.refundSta = draft.refund == '0' ? false : true;
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots = data.screenshot_leader;
             this.form.remark = draft.remark;
@@ -211,6 +215,10 @@
         })
       },
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
         this.bulletinDate = '';
         this.payWay = '';
         this.price_arr = '';

@@ -219,12 +219,12 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel">
         <div class="title">合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :editImage="photos"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -269,6 +269,7 @@
 
     <div v-show="!houseShow || !staffModule" class="footer">
       <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
@@ -315,6 +316,7 @@
         urls: globalConfig.server,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
+        isClear: false,           //删除图片
         departDialog: false,      //部门
         organizeType: '',         //搜索
 
@@ -608,6 +610,7 @@
       rentDetail() {
         this.$http.get(this.urls + 'bulletin/rent?type=2').then((res) => {
           if (res.data.code === '50210') {
+            this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
@@ -675,6 +678,10 @@
       },
 
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
         this.form.id = '';
         this.form.contract_id = '';
         this.form.house_id = '';

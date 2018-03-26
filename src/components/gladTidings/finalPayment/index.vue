@@ -79,7 +79,7 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="screenshot" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -146,6 +146,7 @@
         urls: globalConfig.server,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
+        isClear: false,           //删除图片
         organizeType: '',         //搜索
 
         tabs: '',
@@ -260,6 +261,7 @@
       finalDetail() {
         this.$http.get(globalConfig.server + 'bulletin/retainage').then((res) => {
           if (res.data.code === '50910') {
+            this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
@@ -294,6 +296,10 @@
       },
 
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
         this.form.id = '';
         this.houseName = '';
         this.month = '';

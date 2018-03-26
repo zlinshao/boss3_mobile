@@ -50,7 +50,7 @@
 
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'headman'" @getImg="headmanAgree" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'headman'" @getImg="headmanAgree" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
       <van-cell-group>
         <van-field
@@ -108,12 +108,14 @@
         houseShow: false,         //搜索
         staffModule: false,       //搜索
         organizeType: '',         //搜索
+        isClear: false,           //删除图片
 
         bulletinDate: '',             //喜报日期
         payWay: '',                   //付款方式
         price_arr: '',                //月单价
 
         form: {
+          id: '',
           type: '0',
           draft: 0,
           collect_or_rent: '',
@@ -181,10 +183,11 @@
       friedDetail() {
         this.$http.get(this.urls + 'bulletin/banish').then((res) => {
           if (res.data.code === '50410') {
+            this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
-            this.form.id = draft.id;
+            this.form.id = data.id;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.form.type = draft.type;
             this.form.screenshot_leader = draft.screenshot_leader;
@@ -196,6 +199,7 @@
         })
       },
       close_() {
+        this.isClear = true;
         this.bulletinDate = '';
         this.payWay = '';
         this.price_arr = '';

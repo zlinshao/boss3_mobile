@@ -1,123 +1,85 @@
 <template>
-  <div id="drawbackReport">
+  <div id="clearRetreat">
 
     <div v-show="!houseShow || !staffModule" class="main">
+      <van-cell-group>
+        <div class="checks" style="">
+          <div style="min-width: 110px;">收租标记</div>
+          <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
+          <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
+        </div>
+      </van-cell-group>
       <van-cell-group>
         <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
+          @click="searchSelect(form.collect_or_rent)"
           readonly
-          @click="searchSelect(1)"
-          placeholder="请选择房屋地址"
-          required>
+          placeholder="选择房屋地址">
         </van-field>
-
         <van-field
           v-model="payWay"
-          type="textarea"
           label="付款方式"
-          placeholder="付款方式已禁用"
-          disabled>
+          type="text"
+          disabled
+          placeholder="付款方式已禁用">
         </van-field>
         <van-field
           v-model="price_arr"
-          type="textarea"
           label="月单价"
-          placeholder="月单价已禁用"
-          disabled>
-        </van-field>
-        <van-field
-          v-model="recMoney"
           type="text"
-          label="已收金额"
-          placeholder="已收金额已禁用"
-          disabled>
-        </van-field>
-
-        <van-field
-          v-model="form.amount"
-          type="number"
-          label="退款金额"
-          placeholder="请填写退款金额"
-          icon="clear"
-          @click-icon="form.amount = ''"
-          required>
-        </van-field>
-
-        <van-field
-          v-model="form.account"
-          label="卡号"
-          type="number"
-          @keyup="subAccount(form.account)"
-          placeholder="请填写卡号"
-          icon="clear"
-          @click-icon="form.account = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.bank"
-          label="银行"
-          type="text"
-          placeholder="请填写银行名称"
-          icon="clear"
-          @click-icon="form.bank = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.subbranch"
-          label="支行"
-          type="text"
-          placeholder="请填写支行"
-          icon="clear"
-          @click-icon="form.subbranch = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.account_name"
-          label="开户名"
-          type="text"
-          placeholder="请填写开户名"
-          icon="clear"
-          @click-icon="form.account_name = ''"
-          required>
+          disabled
+          placeholder="月单价已禁用">
         </van-field>
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <div class="title">房屋照片</div>
+        <UpLoad :ID="'photo'" @getImg="headmanAgree" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
+      <div class="aloneModel">
+        <div class="title">退租交接单照片</div>
+        <UpLoad :ID="'checkout'" @getImg="headmanAgree" :isClear="isClear" :editImage="checkouts"></UpLoad>
+
+      </div>
       <van-cell-group>
+        <van-field
+          v-model="form.checkout_date"
+          type="text"
+          label="开始时间"
+          @click="timeChoose()"
+          placeholder="获取周期开始日期"
+          readonly
+          required>
+        </van-field>
         <van-field
           v-model="form.remark"
           label="备注"
           type="textarea"
-          placeholder="请填写备注"
-          icon="clear"
-          @click-icon="form.remark = ''">
+          placeholder="请填写备注">
         </van-field>
         <van-field
           v-model="staff_name"
-          disabled
           label="开单人"
           type="text"
-          placeholder="开单人已禁用">
+          placeholder="开单人已禁用"
+          disabled>
         </van-field>
         <van-field
           v-model="leader_name"
-          disabled
           label="负责人"
           type="text"
-          placeholder="负责人已禁用">
+          placeholder="负责人已禁用"
+          disabled>
         </van-field>
         <van-field
           v-model="department_name"
-          disabled
           label="部门"
           type="text"
-          placeholder="部门已禁用">
+          placeholder="部门已禁用"
+          disabled>
         </van-field>
       </van-cell-group>
     </div>
@@ -128,6 +90,18 @@
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
+    <!--日期-->
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
+      <van-datetime-picker
+        v-model="currentDate"
+        type="date"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @change="monthDate"
+        @cancel="onCancel"
+        @confirm="onDate"/>
+    </van-popup>
+
     <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
 
   </div>
@@ -136,150 +110,164 @@
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import CollectHouse from '../collectHouse.vue'
-  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse, Organization},
+    components: {UpLoad, Toast, CollectHouse},
     data() {
       return {
         urls: globalConfig.server,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
-        isClear: false,           //删除图片
         organizeType: '',         //搜索
+        isClear: false,           //删除图片
 
-        payWay: '',
-        price_arr: '',
-        recMoney: '',
+        minDate: new Date(2000, 0, 1),
+        maxDate: new Date(2200, 12, 31),
+        currentDate: '',
+        timeShow: false,          //日期状态
+        timeIndex: '',
+        timeValue: '',            //日期value
+
+        payWay: '',                   //付款方式
+        price_arr: '',                //月单价
 
         form: {
           id: '',
+          collect_or_rent: '',
           draft: 0,
-          collect_or_rent: 1,
-          contract_id: '',              //房屋地址id
-          house_id: '',                 //房屋地址id
-          amount: '',                   //退款金额
-          bank: '',                     //银行名称
-          subbranch: '',                //支行名称
-          account_name: '',             //帐户名称
-          account: '',                  //帐号
-          screenshot_leader: [],        //领导同意截图
+          house_id: '',
+          contract_id: '',              //合同id
+          photo: [],                    //领导截图 数组
+          checkout_photo: [],           //领导截图 数组
+          checkout_date: '',            //退租时间
           remark: '',                   //备注
         },
-        screenshots: {},                //截图
-        houseName: '',                  //房屋名称
+        houseName: '',
+        photos: {},
+        checkouts: {},
         staff_name: '',                 //开单人name
         leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
     mounted() {
-      this.refundDetail();
+      this.getNowFormatDate();
+      this.checkDetail();
     },
     methods: {
       routerLink(val) {
         this.$router.push({path: val});
       },
-
-      screenshot(val) {
-        this.form.screenshot_leader = val[1];
+      // 获取当前时间
+      getNowFormatDate() {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        let strDate = date.getDate();
+        this.currentDate = new Date(year, month, strDate);
       },
-      // 获取银行
-      subAccount(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
-          if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
-          } else {
-            this.form.bank = '';
-          }
-        })
+      searchSelect(val) {
+        if (val === '0') {
+          this.organizeType = 'collect';
+          this.houseShow = true;
+        } else if (val === '1') {
+          this.houseShow = true;
+          this.organizeType = 'rent'
+        } else {
+          Toast('请选择收租标记');
+        }
+      },
+      // 日期选择
+      timeChoose() {
+        this.timeShow = true;
+      },
+      // 日期拼接
+      monthDate(peaker) {
+        this.timeValue = peaker.getValues().join('-');
+      },
+      // 确认日期
+      onDate() {
+        this.form.checkout_date = this.timeValue;
+        this.onCancel();
+      },
+      // 房屋地址
+      house_(val, type, detail) {
+        this.houseName = val.houseName;
+        // this.form.contract_id = val.contract_id;
+        // this.form.house_id = val.house_id;
+        this.onCancel();
       },
       // select关闭
       onCancel() {
-        this.selectHide = false;
         this.timeShow = false;
         this.houseShow = false;
-        this.staffModule = false;
-      },
-      searchSelect(val) {
-        switch (val) {
-          case 1:
-            this.houseShow = true;
-            this.organizeType = 'rent';
-            break;
-          case 2:
-            this.staffModule = true;
-            this.organizeType = 'staff';
-            break;
-        }
       },
 
-      // 房屋地址
-      house_(val, type, form) {
-        for (let i = 0; i < form.month_price.length; i++) {
-          this.payWay = '第' + (i + 1) + '期' + form.pay_way[i].period + '个月' + form.pay_way[i].pay_way_str + ';';
-          this.price_arr = '第' + (i + 1) + '期' + form.month_price[i].period + '个月' + form.month_price[i].price + '元/月' + ';';
+      // 截图
+      headmanAgree(val) {
+        if (val[0] === 'photo') {
+          this.form.photo = val[1];
+        } else {
+          this.form.checkout_photo = val[1];
         }
-        this.houseName = val.houseName;
-        this.form.contract_id = val.contract_id;
-        this.form.house_id = val.house_id;
-        this.onCancel();
       },
 
       saveCollect(val) {
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
-          if (res.data.code === '50810') {
+        this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
+          if (res.data.code === '50410') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          } else if (res.data.code === '50820') {
+          } else if (res.data.code === '51210') {
             Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
       },
-      refundDetail() {
-        this.$http.get(this.urls + 'bulletin/refund').then((res) => {
-          if (res.data.code === '50810') {
+      checkDetail() {
+        this.$http.get(this.urls + 'bulletin/checkout').then((res) => {
+          if (res.data.code === '51210') {
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
-            this.form.id = draft.id;
-            this.form.amount = draft.amount;
-            this.form.account = draft.account;
-            this.form.bank = draft.bank;
-            this.form.subbranch = draft.subbranch;
+            this.form.id = data.id;
+            this.form.house_id = draft.house_id;
+            this.form.collect_or_rent = draft.collect_or_rent;
+            this.houseName = data.houseName;
+            this.form.photo = draft.photo;
+            this.photos = data.photo;
+            this.form.checkout_photo = draft.checkout_photo;
+            this.checkouts = data.checkout_photo;
+            this.form.checkout_date = draft.checkout_date;
             this.form.remark = draft.remark;
-            this.form.account_name = draft.account_name;
-            this.form.screenshot_leader = draft.screenshot_leader;
-            this.screenshots = data.screenshot_leader;
+            this.staff_name = data.staff_name;
+            this.leader_name = data.leader_name;
+            this.department_name = data.department_name;
           } else {
             this.form.id = '';
           }
         })
       },
-
       close_() {
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;
         });
-        this.form.payWay = '';
-        this.form.price_arr = '';
-        this.form.recMoney = '';
+        this.form.house_id = '';
+        this.form.collect_or_rent = '';
+        this.payWay = '';
+        this.price_arr = '';
         this.form.id = '';
-        this.form.amount = '';
-        this.form.account = '';
-        this.form.bank = '';
-        this.form.subbranch = '';
+        this.form.checkout_photo = [];
+        this.checkouts = {};
+        this.form.photo = [];
+        this.photos = {};
         this.form.remark = '';
-        this.form.account_name = '';
-        this.form.screenshot_leader = [];
-        this.screenshots = {};
+        this.form.checkout_date = '';
         this.houseName = '';
         this.staff_name = '';
         this.leader_name = '';
@@ -290,23 +278,36 @@
 </script>
 
 <style lang="scss">
-  #drawbackReport {
+  #clearRetreat {
     @mixin flex {
       display: flex;
       display: -webkit-flex;
     }
+    $color: #409EFF;
+    .aloneModel {
+      background: #fff;
+      width: 100%;
+      margin: 5px 0;
+      padding-bottom: 10px;
+      .title {
+        padding: 10px 15px;
+      }
+    }
+
     .checks {
       display: -webkit-flex;
       align-items: center;
       height: 44px;
     }
-    $color: #409EFF;
+
     .van-switch.van-switch--on {
       background: $color;
     }
+
     .van-icon.van-icon-checked {
       color: $color;
     }
+
     .van-cell.van-hairline.van-field {
       .van-cell__title {
         width: 110px;
@@ -315,6 +316,14 @@
         padding-left: 110px;
       }
     }
+    .dingJin {
+      padding: 10px 15px 10px 0;
+      display: flex;
+      display: -webkit-flex; /* Safari */
+      align-items: center;
+      justify-content: space-between;
+    }
+
     .searchClass {
       position: fixed;
       top: 0;
@@ -327,7 +336,8 @@
         overflow: auto;
         height: 77%;
         .searchList {
-          @include flex;
+          display: flex;
+          display: -webkit-flex;
           justify-content: space-between;
           padding: 15px 20px;
           &:hover {
@@ -336,6 +346,7 @@
         }
       }
     }
+
     .aloneModel {
       background: #fff;
       width: 100%;

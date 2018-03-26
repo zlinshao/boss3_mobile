@@ -98,7 +98,7 @@
 
       <div class="aloneModel">
         <div class="title">结清截图</div>
-        <UpLoad :ID="'settle'" @getImg="screen" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'settle'" @getImg="screen" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel">
@@ -164,6 +164,7 @@
         urls: globalConfig.server,
         houseShow: false,         //搜索
         organizeType: '',         //搜索
+        isClear: '',              //删除图片
 
         settleStatus: false,      //是否结清
 
@@ -265,6 +266,7 @@
       agencyDetail() {
         this.$http.get(this.urls + 'bulletin/agency').then((res) => {
           if (res.data.code === '50310') {
+            this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
@@ -295,6 +297,10 @@
         })
       },
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
         this.payWay = '';
         this.monthPrice = '';
         this.houseName = '';

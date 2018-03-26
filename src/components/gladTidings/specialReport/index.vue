@@ -29,12 +29,12 @@
 
       <div class="aloneModel">
         <div class="title">截图</div>
-        <UpLoad :ID="'jieTu'" @getImg="getImgData" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'jieTu'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>特殊情况截图</div>
-        <UpLoad :ID="'tongYi'" @getImg="getImgData" :editImage="screenshots_leader"></UpLoad>
+        <UpLoad :ID="'tongYi'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots_leader"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -89,6 +89,7 @@
         refundSta: false,
         houseShow: false,         //搜索
         staffModule: false,       //搜索
+        isClear: false,           //删除图片
         organizeType: '',         //搜索
 
         form: {
@@ -162,6 +163,7 @@
       specialDetail() {
         this.$http.get(globalConfig.server + 'bulletin/special').then((res) => {
           if (res.data.code === '51010') {
+            this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
@@ -184,6 +186,10 @@
         })
       },
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
         this.form.id = '';
         this.houseName = '';
         this.form.collect_or_rent = '';

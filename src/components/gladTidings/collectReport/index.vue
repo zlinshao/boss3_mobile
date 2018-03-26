@@ -356,12 +356,12 @@
 
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :editImage="photos"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -470,6 +470,7 @@
         staffModule: false,       //开单人
         departDialog: false,      //部门
         organizeType: '',
+        isClear: false,
 
         searchShow: false,        //搜索
         searchValue: '',          //搜索
@@ -681,8 +682,7 @@
         this.timeValue = peaker.getValues().join('-');
       },
       // 确认日期
-      onDate(val) {
-        console.log(val);
+      onDate() {
         this.timeShow = false;
         switch (this.timeIndex) {
           case 1:
@@ -873,6 +873,7 @@
       manuscript() {
         this.$http.get(this.urls + 'bulletin/collect?type=1').then((res) => {
           if (res.data.code === '50110') {
+            this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
             this.form.id = data.id;
@@ -968,6 +969,10 @@
       },
 
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
         this.share = 0;
         this.joint = false;
         this.form.id = '';
@@ -1025,14 +1030,11 @@
         this.form.relationship = '';
         this.form.penalty = '';
         this.form.contract_number = '';
-
         this.form.photo = [];
         this.photos = {};
         this.form.screenshot_leader = [];
         this.screenshots = {};
-
         this.form.remark = '';
-
         this.form.staff_id = '';
         this.staff_name = '';
         this.form.leader_id = '92';
