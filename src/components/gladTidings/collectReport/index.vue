@@ -647,6 +647,7 @@
       },
       // 图片
       getImgData(val) {
+        console.log(JSON.stringify(val))
         if (val[0] === 'screenshot') {
           this.form.screenshot_leader = val[1];
         } else {
@@ -999,7 +1000,8 @@
 
         this.form.period_price_arr = [''];
         this.form.price_arr = [''];
-
+        this.datePay = [];
+        this.datePrice = [];
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
@@ -1030,11 +1032,13 @@
         this.form.relationship = '';
         this.form.penalty = '';
         this.form.contract_number = '';
+
         this.form.photo = [];
         this.photos = {};
         this.form.screenshot_leader = [];
         this.screenshots = {};
         this.form.remark = '';
+
         this.form.staff_id = '';
         this.staff_name = '';
         this.form.leader_id = '92';

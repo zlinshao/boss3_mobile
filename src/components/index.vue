@@ -28,6 +28,7 @@
           <div class="mainTop">
             <div>
               <span>报备</span>
+              <span>{{header}}</span>
               <!--<span>8</span>-->
             </div>
             <!--<div>收起</div>-->
@@ -154,7 +155,7 @@
     data() {
       return {
         urls: globalConfig.server_user,
-
+        header: globalConfig.header.Authorization,
         list: [],
         page: 1,
         disabled: false,

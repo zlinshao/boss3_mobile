@@ -39,27 +39,33 @@
                   corpId: _config.corpId
                 }
               }).then((res) => {
-                let data = {};
-                data.name = res.data.name;
-                data.avatar = res.data.avatar;
-                data.phone = res.data.phone;
-                data.depart = res.data.org[0].name;
-                data.display_name = res.data.role[0].display_name;
-                localStorage.setItem('personal', JSON.stringify(data));
-                globalConfig.personal = data;
+                if(res.data !== false){
+                  let data = {};
+                  data.name = res.data.name;
+                  data.avatar = res.data.avatar;
+                  data.phone = res.data.phone;
+                  data.depart = res.data.org[0].name;
+                  data.display_name = res.data.role[0].display_name;
+                  localStorage.setItem('personal', JSON.stringify(data));
+                  globalConfig.personal = data;
 
-                that.$http.post(that.address + 'oauth/token', {
-                  client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
-                  grant_type: 'password',
-                  client_id: '2',
-                  username: res.data.phone,
-                  password: res.data.code,
-                }).then((res) => {
-                  localStorage.setItem('myData', JSON.stringify(res.data.data));
-                  let head = res.data.data;
-                  globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                  that.$router.push({path: '/index'});
-                });
+                  that.$http.post(that.address + 'oauth/token', {
+                    client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
+                    grant_type: 'password',
+                    client_id: '2',
+                    username: res.data.phone,
+                    password: res.data.code,
+                  }).then((res) => {
+                    localStorage.setItem('myData', JSON.stringify(res.data.data));
+                    let head = res.data.data;
+                    globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                    that.$router.push({path: '/index'});
+                  });
+                }else{
+                  setTimeout(() => {
+                    alert('请求超时请稍后再试');
+                  },3000);
+                }
               })
             },
             onFail: function (err) {

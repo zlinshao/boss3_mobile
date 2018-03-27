@@ -21,6 +21,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
+
 // 拦截器
 axios.interceptors.response.use(function (response) {
   // 对响应数据做点什么
@@ -30,7 +31,6 @@ axios.interceptors.response.use(function (response) {
   // 对响应错误做点什么
   return Promise.reject(error);
 });
-
 
 if (localStorage.myData !== undefined) {
   let head = JSON.parse(localStorage.myData);
