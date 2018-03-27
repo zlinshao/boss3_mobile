@@ -20,6 +20,22 @@ Vue.prototype.$http = axios;
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
+Vue.config.productionTip = false;
+// 拦截器
+axios.interceptors.response.use(function (response) {
+  // 对响应数据做点什么
+  console.log(response);
+  return response;
+}, function (error) {
+  // 对响应错误做点什么
+  return Promise.reject(error);
+});
+
+
+if (localStorage.myData !== undefined) {
+  let head = JSON.parse(localStorage.myData);
+  globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+}
 
 if (localStorage.personal !== undefined) {
   globalConfig.personal = JSON.parse(localStorage.personal);
