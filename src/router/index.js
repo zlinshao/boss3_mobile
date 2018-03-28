@@ -16,18 +16,23 @@ import ContinueCollect from '../components/gladTidings/continueCollect/index.vue
 
 
 import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'   //未收先祖
+
 import ContinueRent from '../components/gladTidings/continueRent/index.vue'   //续租
 import ChangeRent from '../components/gladTidings/changeRent/index.vue'       //转租
 import Drawback from '../components/gladTidings/drawbackReport/index.vue'
 import FriedBill from '../components/gladTidings/friedBill/index.vue'         //zhadan
 import ClearRetreat from '../components/gladTidings/clearRetreat/index.vue'   //清退
 import Checkout from '../components/gladTidings/checkout/index.vue'   //清退
-import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //中介给
+import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //中介
 import Special from '../components/gladTidings/specialReport/index.vue'
 import Confiscate from '../components/gladTidings/confiscate/index.vue'
 import FinalPayment from '../components/gladTidings/finalPayment/index.vue'
 import PublishDetail from '../components/gladTidings/publishDetail/index.vue'
 import Comment from '../components/gladTidings/publishDetail/comment.vue'
+
+import CitySearch from '../components/gladTidings/citySearch.vue'   //小区搜索
+import Organize from '../components/gladTidings/organize.vue'       //开单人搜索
+import Depart from '../components/common/selectDepartment.vue'       //部门搜索
 
 
 Vue.use(Router);
@@ -38,7 +43,7 @@ export default new Router({
       path: '/',
       name: 'ding',
       hidden: false,
-      meta: {title: '首页'},
+      meta: {title: '验证中'},
 
       component: Ding
     },
@@ -49,6 +54,28 @@ export default new Router({
       meta: {title: '首页'},
       component: Index
     },
+    {
+      path: '/citySearch',
+      name: '小区搜索',
+      hidden: false,
+      meta: {title: '小区搜索'},
+      component: CitySearch
+    },
+    {
+      path: '/organize',
+      name: '开单人',
+      hidden: false,
+      meta: {title: '开单人'},
+      component: Organize
+    },
+    {
+      path: '/depart',
+      name: '部门',
+      hidden: false,
+      meta: {title: '部门'},
+      component: Depart
+    },
+
     {
       path: '/publishDetail',
       name: 'publishDetail',

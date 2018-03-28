@@ -28,7 +28,6 @@
           <div class="mainTop">
             <div>
               <span>报备</span>
-              <span>{{header}}</span>
               <!--<span>8</span>-->
             </div>
             <!--<div>收起</div>-->
@@ -69,11 +68,11 @@
          :class="{'marTop': active === 1 || active === 2}">
       <div class="sendTop" v-if="active !== 1 && active === 3">
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已完成</span></div>
-        <div @click="finish(2)" :class="{'readStatus': readActive === 2}"><span>未完成</span></div>
+        <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未完成</span></div>
       </div>
       <div class="sendTop" v-if="active !== 1 && active === 4">
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已读</span></div>
-        <div @click="finish(2)" :class="{'readStatus': readActive === 2}"><span>未读 <a
+        <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未读 <a
           v-if="paging !== ''">({{paging}})</a></span></div>
       </div>
       <ul v-show="list.length !== 0"
@@ -244,10 +243,10 @@
             for (let i = 0; i < data.length; i++) {
               let user = {};
               user.id = data[i].id;
-              user.avatar = data[i].user[0].avatar;
-              user.name = data[i].user[0].name;
-              user.staff = data[i].user[0].org[0].name;
-              user.depart = data[i].user[0].role[0].display_name;
+              user.avatar = data[i].user.avatar;
+              user.name = data[i].user.name;
+              user.staff = data[i].user.org[0].name;
+              user.depart = data[i].user.role[0].display_name;
               user.created_at = data[i].created_at;
               user.place = data[i].place.display_name;
               user.status = data[i].place.status;
@@ -472,11 +471,14 @@
           div.title, div.progress {
             @include flex;
             justify-content: space-between;
+            align-items: center;
           }
           div.title {
+            line-height: .42rem;
             h2 {
               max-width: 3.5rem;
               text-align: left;
+
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;

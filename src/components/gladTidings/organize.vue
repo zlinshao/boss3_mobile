@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div :class="{'searchClass':organizeShow}" v-if="organizeShow">
+    <div class="searchClass">
       <van-search
         v-model="searchValue"
         show-action
         @keyup="organize"
         @cancel="onClose"/>
-      <div class="notData" v-if="lists.length === 0">暂无数据</div>
+      <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
       <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="organizeSure(key)">
+        <div class="searchList" v-for="key in lists" @touchstart="organizeSure(key)">
           <div>{{key.staff_name}}</div>
           <div>
             <p>{{key.depart_name}}</p>
@@ -22,25 +22,19 @@
 <script>
   export default {
     name: "organize",
-    props: ['module', 'type'],
     data() {
       return {
-        organizeShow: false,
         address: globalConfig.server_user,
         searchValue: '',
         lists: [],
+        path: '',
       }
     },
-
-    watch: {
-      module(val) {
-        this.organizeShow = val;
-      },
-      organizeShow(val) {
-        if (!val) {
-          this.$emit('close', val);
-        }
-      }
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.path = from.path;
+        localStorage.setItem('path',JSON.stringify(from.path))
+      })
     },
     methods: {
       organize() {
@@ -73,15 +67,12 @@
       },
       // 开单人
       organizeSure(name) {
-        this.$emit('organization', name, this.type);
-        this.onClose();
+        this.$router.push({path: this.path, query: {staff: JSON.stringify(name)}});
       },
 
       // select关闭
       onClose() {
-        this.organizeShow = false;
-        this.lists = [];
-        this.searchValue = '';
+        this.$router.push({path: this.path});
       },
     },
   }

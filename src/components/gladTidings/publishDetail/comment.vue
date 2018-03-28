@@ -15,7 +15,7 @@
         <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
       </div>
       <div class="footerComment">
-        <div @click="manager">确认</div>
+        <div @click="manager()">确认</div>
       </div>
     </div>
   </div>
@@ -39,13 +39,25 @@
         detail: '',
       }
     },
-    mounted(){
+    mounted() {
       this.pitch = this.$route.query.ids;
       this.detail = this.$route.query.detail;
     },
     methods: {
       // 确认评论
       manager() {
+        if (this.detail !== 'to_comment') {
+          this.sure();
+        } else {
+          if (this.form.remark !== '' || this.form.photo.length !== 0) {
+            this.sure();
+          } else {
+            Toast('请填写评论内容');
+          }
+        }
+      },
+
+      sure() {
         this.$http.put(this.urls + 'process/' + this.pitch, {
           operation: this.detail,
           comment: this.form.remark,
@@ -59,6 +71,7 @@
           }
         })
       },
+
       getImgData(val) {
         this.form.photo = val[1];
       },
@@ -114,6 +127,7 @@
       left: 0;
       right: 0;
       height: 1rem;
+      z-index: 666;
       @include flex;
       justify-content: space-around;
       align-items: center;

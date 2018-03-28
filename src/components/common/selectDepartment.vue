@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="{'searchClass':organizeShow}" v-if="organizeShow">
+    <div class="searchClass">
       <div class="breadcrumb_box">
         <div class="breadcrumb">
           <div>
@@ -39,28 +39,21 @@
   export default {
     name: "organize",
     components: {Toast},
-    props: ['departDialog', 'type'],
     data() {
       return {
-        organizeShow: false,
         searchValue: '',
         organizeList: [],    //组织架构部门列表
         breadcrumbList: [],  //面包屑列表
         highestDepart: '',   //最高级岗位
         selectId: '',
         selectDepart: {},
+        path: '',
       }
     },
-
-    watch: {
-      departDialog(val) {
-        this.organizeShow = val;
-      },
-      organizeShow(val) {
-        if (!val) {
-          this.$emit('close');
-        }
-      }
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.path = from.path;
+      })
     },
     mounted() {
       this.getDepartment(1);
@@ -79,7 +72,11 @@
           }
         });
       },
-
+      beforeRouteEnter(to, from, next) {
+        next(vm => {
+          vm.path = from.path;
+        })
+      },
       //搜索下级部门
       getNextLevel(item) {
         this.getDepartment(item.id);
@@ -111,22 +108,17 @@
         this.onClose();
       },
 
-      // select关闭
-      onClose() {
-        this.organizeShow = false;
-        this.lists = [];
-        this.searchValue = '';
-      },
       selectItem(item) {
-        this.selectDepart = item;
+        this.selectDepart.id = item.id;
+        this.selectDepart.name = item.name;
       },
       confirmAdd() {
         if (this.selectId) {
-          this.$emit('depart', this.selectDepart);
-          this.organizeShow = false;
+          this.$router.push({path: this.path, query: {depart: JSON.stringify(this.selectDepart)}});
         } else {
           Toast.fail('请选择部门');
         }
+
       },
     },
   }
@@ -200,13 +192,15 @@
       position: fixed;
       left: 0;
       right: 0;
-      height: .9rem;
+      bottom: 0;
+      height: 1rem;
       text-align: center;
       z-index: 666;
       background: #ffffff;
+      border-top: 1px solid #efefef;
       div {
-        height: .6rem;
-        line-height: .6rem;
+        height: 1rem;
+        line-height: 1rem;
         width: 100% !important;
         text-align: center;
         color: #409EFF;

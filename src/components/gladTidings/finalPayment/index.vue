@@ -171,7 +171,7 @@
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
-
+          retainage_date: '2018-01-03',
           screenshot: '',               //领导截图 数组
           remark: '',                   //备注
         },

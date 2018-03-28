@@ -4,6 +4,7 @@ import App from './App'
 import Boss from './boss.config.js'
 import router from './router'
 import axios from 'axios'
+import FastClick from 'fastclick'
 
 
 import { Cell, CellGroup, Icon, DatetimePicker,PasswordInput, NumberKeyboard ,Row, Col,Badge,Button,
@@ -22,10 +23,16 @@ axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
+if ('addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function() {
+    FastClick.attach(document.body);
+  }, false);
+}
+
 // 拦截器
 axios.interceptors.response.use(function (response) {
   // 对响应数据做点什么
-  console.log(response);
+  // console.log(response);
   return response;
 }, function (error) {
   // 对响应错误做点什么

@@ -1,6 +1,6 @@
 <template>
   <div id="collectReport">
-    <div v-show="!searchShow" class="main">
+    <div class="main">
       <van-cell-group>
         <van-switch-cell v-model="joint" title="是否合租"/>
         <van-field
@@ -200,18 +200,18 @@
         <van-field
           v-model="vacancy_way_name"
           @click="selectShow(7,'')"
-          label="空置期安置方式"
+          label="空置期规则"
           type="text"
           readonly
-          placeholder="空置期安置方式"
+          placeholder="空置期规则"
           required>
         </van-field>
         <van-field
           v-model="form.vacancy_other"
-          label="空置期安置方式"
+          label="空置期规则"
           type="text"
           v-if="vacancy_way_name === '无'"
-          placeholder="空置期安置方式"
+          placeholder="空置期规则"
           required>
         </van-field>
         <div class="first_date">
@@ -403,27 +403,10 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!searchShow" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
+    <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">发布</div>
-    </div>
-
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @keyup="onSearch"
-        @cancel="onCancel"/>
-      <div class="notData" v-if="lists.length === 0">暂无数据</div>
-      <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="village(key.village_name, key.id)">
-          <div>{{key.village_name}}</div>
-          <div>
-            <p>{{key.province_name}}-{{key.city_name}}</p>
-          </div>
-        </div>
-      </div>
+      <div class="" @click="saveCollect(1, 1)">草稿</div>
+      <div class="" @click="saveCollect(0, 1)">发布</div>
     </div>
 
     <!--select 选择-->
@@ -447,9 +430,6 @@
         @confirm="onDate"/>
     </van-popup>
 
-    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
-
-    <SelectDepart :departDialog="departDialog" @close="onCancel" @depart="departModal"></SelectDepart>
   </div>
 </template>
 
@@ -462,18 +442,15 @@
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, Organization, SelectDepart},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
         address: globalConfig.server_user,
-        staffModule: false,       //开单人
         departDialog: false,      //部门
         organizeType: '',
         isClear: false,
 
-        searchShow: false,        //搜索
-        searchValue: '',          //搜索
         allCity: [],              //城市
         cities: [],               //城市
 
@@ -516,7 +493,7 @@
           draft: 0,
           share: '',                    //合租整租标记 0整租1合租
           city_id: '',                  //城市
-          city_name: '',                  //城市
+          city_name: '',                //城市
           community_id: '',             //小区id
           building: '',                 //栋
           unit: '',                     //单元
@@ -566,8 +543,10 @@
         leader_name: '灭霸',            //负责人name
         department_name: '',            //部门name
         fromName: '个人',               //客户来源
+        path: '',
       }
     },
+
     mounted() {
       this.getNowFormatDate();
       this.$http.get(this.urls + 'setting/dictionary/306').then((res) => {
@@ -584,20 +563,20 @@
         this.$router.push({path: val});
       },
       searchSelect(val) {
+        this.saveCollect(1, 2);
         switch (val) {
           case 1:
-            this.searchShow = true;
+            if (this.form.city_id !== '') {
+              this.$router.push({path: '/citySearch', query: {city: this.form.city_id}});
+            } else {
+              Toast('请选择城市');
+            }
             break;
           case 2:
-            this.staffModule = true;
-            this.organizeType = 'staff';
+            this.$router.push({path: '/organize'});
             break;
-          // case 3:
-          // this.staffModule = true;
-          // this.organizeType = 'leader';
-          // break;
           case 4:
-            this.departDialog = true;
+            this.$router.push({path: '/depart'});
             break;
         }
       },
@@ -615,39 +594,14 @@
         }
       },
 
-      // 开单人
-      staff_(val) {
-        this.form.staff_id = val.staff_id;
-        this.staff_name = val.staff_name;
-        this.form.department_id = val.depart_id;
-        this.department_name = val.depart_name;
-        this.onCancel();
-      },
-      // 部门
-      departModal(val) {
-        this.department_name = val.name;
-        this.form.department_id = val.id;
-        this.onCancel();
-      },
       // select关闭
       onCancel() {
-        this.departDialog = false;
-        this.searchShow = false;
         this.selectHide = false;
         this.timeShow = false;
-        this.staffModule = false;
-        this.lists = [];
       },
 
-      // 小区
-      village(name, id) {
-        this.community_name = name;
-        this.form.community_id = id;
-        this.onCancel();
-      },
       // 图片
       getImgData(val) {
-        console.log(JSON.stringify(val))
         if (val[0] === 'screenshot') {
           this.form.screenshot_leader = val[1];
         } else {
@@ -855,15 +809,15 @@
         })
       },
 
-      saveCollect(val) {
+      saveCollect(val, num) {
         this.form.share = this.joint ? '1' : '0';
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
           if (res.data.code === '50110') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          }else if (res.data.code === '50120') {
-            Toast.success(res.data.msg);
+          } else if (res.data.code === '50120') {
+            num === 1 ? Toast.success(res.data.msg) : false;
           } else {
             Toast(res.data.msg);
           }
@@ -966,6 +920,25 @@
           } else {
             this.form.id = '';
           }
+          if (this.$route.query.city !== undefined) {
+            let val = JSON.parse(this.$route.query.city);
+            this.form.community_id = val.id;
+            this.community_name = val.name;
+          }
+          if (this.$route.query.staff !== undefined) {
+            let val = JSON.parse(this.$route.query.staff);
+            this.form.staff_id = val.staff_id;
+            this.staff_name = val.staff_name;
+            this.form.department_id = val.depart_id;
+            this.department_name = val.depart_name;
+            window.scrollTo(0, document.body.scrollHeight);
+          }
+          if (this.$route.query.depart !== undefined) {
+            let val = JSON.parse(this.$route.query.depart);
+            this.department_name = val.name;
+            this.form.department_id = val.id;
+            window.scrollTo(0, document.body.scrollHeight);
+          }
         })
       },
 
@@ -1052,6 +1025,7 @@
 
 <style lang="scss">
   #collectReport {
+    overflow: hidden;
     @mixin flex {
       display: flex;
       display: -webkit-flex;
@@ -1143,47 +1117,9 @@
     .addInput.bottom {
       margin-bottom: .2rem;
     }
-    .notData {
-      text-align: center;
-      padding: 24px 0;
-      font-size: .33rem;
-      color: #b3afaf;
-    }
-    .searchClass {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      z-index: 999;
-      .searchContent {
-        overflow: auto;
-        height: 77%;
-        .searchList {
-          @include flex;
-          justify-content: space-between;
-          padding: .3rem;
-          &:hover {
-            background: #DDDDDD;
-          }
-          div:first-child {
-            width: 48%;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-          }
-          div:last-of-type {
-            text-align: right;
-            p {
-              /*margin-bottom: .16rem;*/
-            }
-            span {
-              color: #aaaaaa;
-            }
-          }
-        }
-      }
+
+    .main {
+      margin: .2rem 0 1.2rem;
     }
     .top, .footer {
       position: fixed;
@@ -1194,9 +1130,6 @@
       background: #ffffff;
     }
 
-    .main {
-      margin: .2rem 0 1.2rem;
-    }
     .top {
       top: 0;
       box-shadow: 0 3px 10px 0 #dddddd;
