@@ -16,7 +16,7 @@
               &nbsp;-&nbsp;<span v-for="(key,index) in personal.role">{{key.display_name}}</span>
             </p>
           </div>
-          <div class="statusSuccess" style="height: 1.4rem;">
+          <div style="height: 1.4rem;">
 
           </div>
         </div>
@@ -54,12 +54,12 @@
           <div class="commentAreaMain" v-for="key in commentList">
             <div class="commentTitle">
               <div class="staff">
-                <p v-for="item in key.user">
-                  <img :src="item.avatar" v-if="item.avatar !== ''">
+                <p>
+                  <img :src="key.user.avatar" v-if="key.user.avatar !== ''">
                   <img src="../../../assets/head.png" v-else>
                 </p>
-                <span class="a" v-for="(item,index) in key.user" v-if="index === 0">
-                  {{item.name}}&nbsp;-&nbsp;<span v-for="i in item.org" v-if="index === 0">{{i.name}}
+                <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
+                  {{item.name}}&nbsp;-&nbsp;<span v-for="(i,index) in key.user.role" v-if="index === 0">{{i.display_name}}
                 </span>
                 </span>
               </div>

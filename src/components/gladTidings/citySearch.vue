@@ -34,13 +34,15 @@
     },
     mounted() {
       this.city_id = this.$route.query.city;
+      this.ddReturn(true);
+      this.ddBack();
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
+        localStorage.setItem('address', from.path);
       })
     },
-    watch: {},
     methods: {
       onSearch() {
         if (this.searchValue.length > 1) {
@@ -59,11 +61,32 @@
         let data = {};
         data.name = name;
         data.id = id;
-        this.$router.push({path: this.path, query: {city: JSON.stringify(data)}});
+        this.$router.replace({path: localStorage.address, query: {city: JSON.stringify(data)}});
       },
       onCancel() {
-        this.$router.push({path: this.path});
+        this.$router.replace({path: localStorage.address});
       },
+      ddReturn(val) {
+        let that = this;
+        dd.biz.navigation.setLeft({
+          control: val,//是否控制点击事件，true 控制，false 不控制， 默认false
+          text: '返回',
+          onSuccess: function (result) {
+            that.$router.replace({path: that.path});
+            //如果control为true，则onSuccess将在发生按钮点击事件被回调
+            that.ddReturn(false);
+          },
+          onFail: function (err) {
+          }
+        });
+      },
+      ddBack() {
+        let that = this;
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          that.$router.replace({path: localStorage.address});
+        });
+      }
     },
   }
 </script>

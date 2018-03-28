@@ -39,7 +39,8 @@
                   corpId: _config.corpId
                 }
               }).then((res) => {
-                if(res.data !== false){
+                alert(JSON.stringify(res.data));
+                if (res.data !== false) {
                   let data = {};
                   data.name = res.data.name;
                   data.avatar = res.data.avatar;
@@ -48,7 +49,6 @@
                   data.display_name = res.data.role[0].display_name;
                   localStorage.setItem('personal', JSON.stringify(data));
                   globalConfig.personal = data;
-
                   that.$http.post(that.address + 'oauth/token', {
                     client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
                     grant_type: 'password',
@@ -61,10 +61,10 @@
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                     that.$router.push({path: '/index'});
                   });
-                }else{
+                } else {
                   setTimeout(() => {
                     alert('请求超时请稍后再试');
-                  },3000);
+                  }, 3000);
                 }
               })
             },

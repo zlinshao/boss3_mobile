@@ -543,10 +543,8 @@
         leader_name: '灭霸',            //负责人name
         department_name: '',            //部门name
         fromName: '个人',               //客户来源
-        path: '',
       }
     },
-
     mounted() {
       this.getNowFormatDate();
       this.$http.get(this.urls + 'setting/dictionary/306').then((res) => {
@@ -567,7 +565,7 @@
         switch (val) {
           case 1:
             if (this.form.city_id !== '') {
-              this.$router.push({path: '/citySearch', query: {city: this.form.city_id}});
+              this.$router.replace({path: '/citySearch', query: {city: this.form.city_id}});
             } else {
               Toast('请选择城市');
             }
