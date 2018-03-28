@@ -67,13 +67,12 @@
     <div v-if="active !== 0 " class="waterfall"
          :class="{'marTop': active === 1 || active === 2}">
       <div class="sendTop" v-if="active !== 1 && active === 3">
+        <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未完成({{paging}})</span></div>
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已完成</span></div>
-        <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未完成</span></div>
       </div>
       <div class="sendTop" v-if="active !== 1 && active === 4">
+        <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未读({{paging}})</span></div>
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已读</span></div>
-        <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未读 <a
-          v-if="paging !== ''">({{paging}})</a></span></div>
       </div>
       <ul v-show="list.length !== 0"
           v-waterfall-lower="loadMore"
@@ -93,7 +92,7 @@
                 <span class="times">{{item.created_at}}</span>
               </div>
               <h3>
-                报备类型：{{item.bulletin}}
+                报备类型：{{item.title}}
               </h3>
               <h3>
                 <!--结束时间：0000-00-00 00:00:00-->
@@ -161,13 +160,13 @@
 
         paths: [],
         active: 0,
-        readActive: 1,
+        readActive: 0,
         footActive: 1,
         checks: '',
 
         params: {},
 
-        paging: '',
+        paging: 0,
       }
     },
     mounted() {
@@ -179,7 +178,7 @@
         this.list = [];
         this.footActive = 0;
         this.active = val;
-        this.readActive = 1;
+        this.readActive = 0;
         this.page = 1;
         this.disabled = false;
       },
@@ -243,6 +242,7 @@
             for (let i = 0; i < data.length; i++) {
               let user = {};
               user.id = data[i].id;
+              user.title = data[i].title;
               user.avatar = data[i].user.avatar;
               user.name = data[i].user.name;
               user.staff = data[i].user.org[0].name;
@@ -256,12 +256,13 @@
                 user.bulletin = '';
               }
               this.list.push(user);
-              console.log(user)
             }
+            this.paging = res.data.meta.total;
           } else if (res.data.status === 'success' && data.length !== 0 && (val.type === 1 || val.type === 2 || val.type === 4)) {
             for (let i = 0; i < data.length; i++) {
               let user = {};
-              user.id = data[i].id;
+              user.id = data[i].flow_id;
+              user.title = data[i].title;
               user.avatar = data[i].flow.user.avatar;
               user.name = data[i].flow.user.name;
               user.staff = data[i].flow.user.org[0].name;
@@ -276,14 +277,11 @@
               }
               this.list.push(user);
             }
-            if (val.type === 4) {
-              this.paging = res.data.meta.total;
-            } else {
-              this.paging = '';
-            }
-          }
-          else {
+          } else {
             this.disabled = true;
+          }
+          if (val.type === 4) {
+            this.paging = res.data.meta.total;
           }
         })
       },

@@ -11,7 +11,10 @@
         <div class="topRight">
           <div class="personal">
             <p>{{personal.name}}</p>
-            <p>{{personal.depart}}&nbsp;-&nbsp;{{personal.display_name}}</p>
+            <p>
+              <span v-for="(key,index) in personal.org">{{key.name}}</span>
+              &nbsp;-&nbsp;<span v-for="(key,index) in personal.role">{{key.display_name}}</span>
+            </p>
           </div>
           <div class="statusSuccess" style="height: 1.4rem;">
 
@@ -94,7 +97,7 @@
     components: {ImagePreview, Toast},
     data() {
       return {
-        personal: globalConfig.personal,
+        personal: {},
         pitch: '',
         active: false,
         urls: globalConfig.server_user,
@@ -122,6 +125,7 @@
           if (res.data.status === 'success') {
             this.formList = res.data.data.process.content.show_content;
             this.operation = res.data.data.operation;
+            this.personal = res.data.data.process.user;
             this.comments(val);
           }
         });
