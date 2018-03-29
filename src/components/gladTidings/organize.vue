@@ -8,7 +8,7 @@
         @cancel="onClose"/>
       <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
       <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @touchstart="organizeSure(key)">
+        <div class="searchList" v-for="key in lists" @click="organizeSure(key)">
           <div>{{key.staff_name}}</div>
           <div>
             <p>{{key.depart_name}}</p>

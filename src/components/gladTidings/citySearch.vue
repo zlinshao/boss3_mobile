@@ -8,7 +8,7 @@
         @cancel="onCancel"/>
       <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
       <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @touchstart="village(key.village_name, key.id)">
+        <div class="searchList" v-for="key in lists" @click="village(key.village_name, key.id)">
           <div>{{key.village_name}}</div>
           <div>
             <p>{{key.province_name}}-{{key.city_name}}</p>

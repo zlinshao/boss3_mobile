@@ -9,7 +9,7 @@
 
       <div class="searchContent">
         <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
-        <div class="searchList" v-for="key in lists" @touchend="houseAddress(key)">
+        <div class="searchList" v-for="key in lists" @click="houseAddress(key)">
           <div>{{key.house_name}}</div>
           <div>
             <p>{{key.department_name}}</p>

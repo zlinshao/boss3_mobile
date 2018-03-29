@@ -120,7 +120,6 @@
       </div>
     </div>
 
-
     <!--底部-->
     <div class="footer">
       <div @click="routerLink('/index')" :class="{'onDiv': footActive === 1}">
