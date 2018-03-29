@@ -5,6 +5,7 @@ import Boss from './boss.config.js'
 import router from './router'
 import axios from 'axios'
 import FastClick from 'fastclick'
+import Fun from './fun.config.js'
 
 
 import { Cell, CellGroup, Icon, DatetimePicker,PasswordInput, NumberKeyboard ,Row, Col,Badge,Button,
@@ -22,6 +23,8 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
+
+Vue.use(Fun);
 
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', function() {
@@ -54,6 +57,7 @@ let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
 if (isAndroid) {
   router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
+    localStorage.setItem('address', from.path);
     next();
   });
 }

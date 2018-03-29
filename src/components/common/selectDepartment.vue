@@ -57,6 +57,8 @@
     },
     mounted() {
       this.getDepartment(1);
+      this.ddReturn(true);
+      this.ddBack();
     },
     methods: {
       getDepartment(id) {
@@ -114,12 +116,40 @@
       },
       confirmAdd() {
         if (this.selectId) {
-          this.$router.push({path: this.path, query: {depart: JSON.stringify(this.selectDepart)}});
+          this.$router.replace({path: this.path, query: {depart: this.selectDepart}});
         } else {
           Toast.fail('请选择部门');
         }
-
       },
+      ddReturn(val) {
+        let that = this;
+        // 钉钉头部左侧
+        dd.biz.navigation.setLeft({
+          control: val,
+          text: '返回',
+          onSuccess: function (result) {
+            that.$router.replace({path: that.path, query: {depart: ''}});
+            that.ddReturn(false);
+          },
+          onFail: function (err) {
+          }
+        });
+        // 钉钉头部右侧
+        dd.biz.navigation.setRight({
+          show: false,
+          onSuccess: function (result) {
+          },
+          onFail: function (err) {
+          }
+        });
+      },
+      ddBack() {
+        let that = this;
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          that.$router.replace({path: that.path, query: {depart: ''}});
+        });
+      }
     },
   }
 </script>

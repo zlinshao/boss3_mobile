@@ -6,9 +6,9 @@
         show-action
         @keyup="onSearch"
         @cancel="onCancel"/>
-      <div class="notData" v-if="lists.length === 0">暂无数据</div>
+      <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
       <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="village(key.village_name, key.id)">
+        <div class="searchList" v-for="key in lists" @touchstart="village(key.village_name, key.id)">
           <div>{{key.village_name}}</div>
           <div>
             <p>{{key.province_name}}-{{key.city_name}}</p>
@@ -40,7 +40,6 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
-        localStorage.setItem('address', from.path);
       })
     },
     methods: {
@@ -61,30 +60,30 @@
         let data = {};
         data.name = name;
         data.id = id;
-        this.$router.replace({path: localStorage.address, query: {city: JSON.stringify(data)}});
+        this.$router.replace({path: this.path, query: {city: data}});
+         this.ddReturn(false);
       },
       onCancel() {
-        this.$router.replace({path: localStorage.address});
+        this.$router.replace({path: this.path, query: {city: ''}});
+         this.ddReturn(false);
       },
       ddReturn(val) {
         let that = this;
+        // 钉钉头部左侧
         dd.biz.navigation.setLeft({
-          control: val,//是否控制点击事件，true 控制，false 不控制， 默认false
-          text: '返回',
+          control: val,
           onSuccess: function (result) {
-            that.$router.replace({path: that.path});
-            //如果control为true，则onSuccess将在发生按钮点击事件被回调
+            that.$router.replace({path: that.path, query: {city: ''}});
             that.ddReturn(false);
           },
-          onFail: function (err) {
-          }
+          onFail: function (err) {}
         });
       },
       ddBack() {
         let that = this;
         document.addEventListener('backbutton', function (e) {
           e.preventDefault();
-          that.$router.replace({path: localStorage.address});
+          that.$router.replace({path: that.path, query: {city: ''}});
         });
       }
     },

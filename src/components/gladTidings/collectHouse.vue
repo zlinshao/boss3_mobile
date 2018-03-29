@@ -1,14 +1,15 @@
 <template>
   <div>
-    <div :class="{'searchClass':searchShow}" v-if="searchShow">
+    <div class="searchClass">
       <van-search
         v-model="searchValue"
         show-action
-        @keyup="onSearch(type)"
+        @keyup="onSearch(types)"
         @cancel="onCancel"/>
+
       <div class="searchContent">
-        <div class="notData" v-if="lists.length === 0">暂无数据</div>
-        <div class="searchList" v-for="key in lists" @click="houseAddress(key.house_name, key.id, key.house_id)">
+        <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
+        <div class="searchList" v-for="key in lists" @touchstart="houseAddress(key)">
           <div>{{key.house_name}}</div>
           <div>
             <p>{{key.department_name}}</p>
@@ -28,24 +29,23 @@
     data() {
       return {
         address: globalConfig.server_user,
-        searchShow: false,        //搜索
         searchValue: '',          //搜索
         lists: [],
         form: {},
         formDetail: {},
+        types: '',
+        path: '',
       }
     },
-
-    watch: {
-      module(val) {
-        this.searchShow = val;
-      },
-      searchShow(val) {
-        if (!val) {
-          this.$emit('close', val);
-          this.onCancel();
-        }
-      }
+    mounted(){
+      this.types = this.$route.query.type;
+      this.ddReturn(true);
+      this.ddBack();
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.path = from.path;
+      })
     },
     methods: {
       // 搜索
@@ -80,20 +80,41 @@
           }
         })
       },
+      // 房屋地址
+      houseAddress(data) {
+        this.$router.replace({path: this.path, query: {house: data}});
+        this.ddReturn(false);
+      },
       // select关闭
       onCancel() {
-        this.searchShow = false;
-        this.lists = [];
-        this.searchValue = '';
+        this.$router.replace({path: this.path, query: {house: ''}});
+        this.ddReturn(false);
       },
-      // 房屋地址
-      houseAddress(name, id, house) {
-        this.form.houseName = name;
-        this.form.contract_id = id;
-        this.form.house_id = house;
-        this.onCancel();
-        this.$emit('house', this.form, this.type, this.formDetail);
+      ddReturn(val) {
+        let that = this;
+        // 钉钉头部左侧
+        dd.biz.navigation.setLeft({
+          control: val,
+          onSuccess: function (result) {
+            that.$router.replace({path: that.path, query: {house: ''}});
+            that.ddReturn(false);
+          },
+          onFail: function (err) {}
+        });
+        // 钉钉头部右侧
+        dd.biz.navigation.setRight({
+          show: false,
+          onSuccess: function (result) {},
+          onFail: function (err) {}
+        });
       },
+      ddBack() {
+        let that = this;
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          that.$router.replace({path: that.path, query: {city: ''}});
+        });
+      }
     },
   }
 </script>

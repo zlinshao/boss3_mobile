@@ -33,8 +33,11 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
-        localStorage.setItem('path',JSON.stringify(from.path))
       })
+    },
+    mounted() {
+      this.ddReturn(true);
+      this.ddBack();
     },
     methods: {
       organize() {
@@ -67,13 +70,43 @@
       },
       // 开单人
       organizeSure(name) {
-        this.$router.push({path: this.path, query: {staff: JSON.stringify(name)}});
+        this.$router.replace({path: this.path, query: {staff: name}});
+        this.ddReturn(false);
       },
-
       // select关闭
       onClose() {
-        this.$router.push({path: this.path});
+        this.$router.replace({path: this.path, query: {staff: ''}});
+        this.ddReturn(false);
       },
+      ddReturn(val) {
+        let that = this;
+        // 钉钉头部左侧
+        dd.biz.navigation.setLeft({
+          control: val,
+          text: '返回',
+          onSuccess: function (result) {
+            that.$router.replace({path: that.path, query: {staff: ''}});
+            that.ddReturn(false);
+          },
+          onFail: function (err) {
+          }
+        });
+        // 钉钉头部右侧
+        dd.biz.navigation.setRight({
+          show: false,
+          onSuccess: function (result) {
+          },
+          onFail: function (err) {
+          }
+        });
+      },
+      ddBack() {
+        let that = this;
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          that.$router.replace({path: that.path, query: {staff: ''}});
+        });
+      }
     },
   }
 </script>

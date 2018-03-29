@@ -65,7 +65,7 @@
         }).then((res) => {
           if (res.data.status === 'success') {
             Toast.success(res.data.message);
-            this.$router.push({path: '/publishDetail', query: {ids: this.pitch}});
+            this.$router.push({path: '/publishDetail', query: {ids: this.pitch, top: ''}});
           } else {
             Toast(res.data.message);
           }

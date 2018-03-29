@@ -477,7 +477,7 @@
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
         community_name: '',         //小区名字
-        house_type_name: '1室 1厅 1卫',
+        house_type_name: '1室1厅1卫',
 
         value1: ['1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'],
         value2: ['无', '1厅', '2厅', '3厅', '4卫', '5卫'],
@@ -555,6 +555,7 @@
         }
         this.manuscript();
       });
+      this.routerIndex();
     },
     methods: {
       routerLink(val) {
@@ -571,10 +572,10 @@
             }
             break;
           case 2:
-            this.$router.push({path: '/organize'});
+            this.$router.replace({path: '/organize'});
             break;
           case 4:
-            this.$router.push({path: '/depart'});
+            this.$router.replace({path: '/depart'});
             break;
         }
       },
@@ -841,7 +842,6 @@
             //     this.city_name = this.allCity[i].dictionary_name;
             //   }
             // }
-
             this.form.community_id = draft.community_id;
             this.community_name = data.community_name;
             this.form.building = draft.building;
@@ -918,23 +918,26 @@
           } else {
             this.form.id = '';
           }
-          if (this.$route.query.city !== undefined) {
-            let val = JSON.parse(this.$route.query.city);
+          if (this.$route.query.city !== undefined && this.$route.query.city !== '') {
+            let val = this.$route.query.city;
             this.form.community_id = val.id;
             this.community_name = val.name;
           }
-          if (this.$route.query.staff !== undefined) {
-            let val = JSON.parse(this.$route.query.staff);
+          if (this.$route.query.staff !== undefined && this.$route.query.staff !== '') {
+            let val = this.$route.query.staff;
             this.form.staff_id = val.staff_id;
             this.staff_name = val.staff_name;
             this.form.department_id = val.depart_id;
             this.department_name = val.depart_name;
             window.scrollTo(0, document.body.scrollHeight);
           }
-          if (this.$route.query.depart !== undefined) {
-            let val = JSON.parse(this.$route.query.depart);
+          if (this.$route.query.depart !== undefined && this.$route.query.depart !== '') {
+            let val = this.$route.query.depart;
             this.department_name = val.name;
             this.form.department_id = val.id;
+            window.scrollTo(0, document.body.scrollHeight);
+          }
+          if (this.$route.query.staff === '' || this.$route.query.depart === '') {
             window.scrollTo(0, document.body.scrollHeight);
           }
         })

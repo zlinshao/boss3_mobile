@@ -171,6 +171,7 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
 
     methods: {
@@ -193,6 +194,7 @@
         this.active = 0;
         this.disabled = false;
         this.$router.push({path: val});
+        localStorage.setItem('address', val);
       },
       loadMore() {
         if (!this.disabled) {
@@ -476,7 +478,6 @@
             h2 {
               max-width: 3.5rem;
               text-align: left;
-
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;

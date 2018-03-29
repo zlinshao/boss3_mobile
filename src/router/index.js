@@ -31,8 +31,10 @@ import PublishDetail from '../components/gladTidings/publishDetail/index.vue'
 import Comment from '../components/gladTidings/publishDetail/comment.vue'
 
 import CitySearch from '../components/gladTidings/citySearch.vue'   //小区搜索
-import Organize from '../components/gladTidings/organize.vue'       //开单人搜索
-import Depart from '../components/common/selectDepartment.vue'       //部门搜索
+
+import CollectHouse from '../components/gladTidings/collectHouse.vue'       //房屋搜索
+import Organize from '../components/gladTidings/organize.vue'               //开单人搜索
+import Depart from '../components/common/selectDepartment.vue'              //部门搜索
 
 
 Vue.use(Router);
@@ -74,6 +76,14 @@ export default new Router({
       hidden: false,
       meta: {title: '部门'},
       component: Depart
+    },
+
+    {
+      path: '/collectHouse',
+      name: '房屋搜索',
+      hidden: false,
+      meta: {title: '房屋搜索'},
+      component: CollectHouse
     },
 
     {

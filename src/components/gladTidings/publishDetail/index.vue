@@ -13,7 +13,7 @@
             <p>{{personal.name}}</p>
             <p>
               <span v-for="(key,index) in personal.org">{{key.name}}</span>
-              &nbsp;-&nbsp;<span v-for="(key,index) in personal.role">{{key.display_name}}</span>
+              <span v-for="(key,index) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>
             </p>
           </div>
           <div style="height: 1.4rem;">
@@ -112,14 +112,12 @@
     mounted() {
       this.pitch = this.$route.query.ids;
       this.formDetail(this.$route.query.ids);
+      if(this.$route.query.top === ''){
+        window.scrollTo(0, document.body.scrollHeight);
+      }
     },
 
     methods: {
-      onChange(picker, values) {
-        console.log(picker);
-        console.log(values);
-      },
-
       formDetail(val) {
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           if (res.data.status === 'success') {
@@ -248,9 +246,14 @@
         max-width: .9rem;
         margin-right: .3rem;
         div {
+          width: 100%;
           height: .9rem;
+          overflow: hidden;
           img {
-            @include border_radius(50%);
+            width: 106%;
+            height: 106%;
+            margin-top: -2%;
+            margin-left: -3%;
           }
         }
       }
@@ -359,6 +362,7 @@
               .a {
                 width: 4rem;
                 overflow: hidden;
+                line-height: .9rem;
                 -ms-text-overflow: ellipsis;
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -373,7 +377,7 @@
           .contents {
             margin-left: .9rem;
             color: #101010;
-            line-height: .46rem;
+            line-height: .6rem;
           }
           .pics {
             @include flex;
