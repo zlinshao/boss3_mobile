@@ -1,7 +1,7 @@
 <template>
   <div id="drawbackReport">
 
-    <div v-show="!houseShow || !staffModule" class="main">
+    <div class="main">
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
@@ -138,33 +138,27 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!houseShow || !staffModule" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
+    <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div class="" @click="saveCollect(1,1)">草稿</div>
+      <div class="" @click="saveCollect(0,1)">发布</div>
     </div>
-
-    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
 
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import CollectHouse from '../collectHouse.vue'
-  import Organization from '../organize.vue'
-  import SelectDepart from '../../common/selectDepartment.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse, Organization, SelectDepart},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
-        houseShow: false,         //搜索
-        organizeType: '',         //搜索
         isClear: '',              //删除图片
+        picStatus: true,
 
         settleStatus: false,      //是否结清
 
@@ -198,6 +192,7 @@
     },
     mounted() {
       this.agencyDetail();
+      this.routerIndex();
     },
     methods: {
       routerLink(val) {
@@ -206,16 +201,17 @@
 
       searchSelect(val) {
         if (val === '0') {
-          this.organizeType = 'collect';
-          this.houseShow = true;
+          this.saveCollect(1, 2);
+          this.$router.replace({path: '/collectHouse', query: {type: 'lord0'}});
         } else if (val === '1') {
-          this.houseShow = true;
-          this.organizeType = 'rent'
+          this.saveCollect(1, 2);
+          this.$router.replace({path: '/collectHouse', query: {type: 'rent0'}});
         } else {
           Toast('请选择收租标记');
         }
       },
       screen(val) {
+        this.picStatus = !val[2];
         if (val[0] === 'settle') {
           this.form.screenshot = val[1];
         } else {
@@ -223,17 +219,6 @@
         }
       },
 
-      // 房屋地址
-      house_(val, type, detail) {
-        this.houseName = val.houseName;
-        this.form.contract_id = val.contract_id;
-        this.form.house_id = val.house_id;
-        this.onCancel();
-      },
-      // select关闭
-      onCancel() {
-        this.houseShow = false;
-      },
       // 获取银行
       subAccount(val) {
         this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
@@ -245,23 +230,27 @@
         })
       },
 
-      saveCollect(val) {
+      saveCollect(val, num) {
         if (this.settleStatus) {
           this.form.settle = 1;
         } else {
           this.form.settle = 0;
         }
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
-          if (res.data.code === '51110') {
-            Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          } else if (res.data.code === '50320') {
-            Toast.success(res.data.msg);
-          } else {
-            Toast(res.data.msg);
-          }
-        })
+        if (this.picStatus) {
+          this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
+            if (res.data.code === '51110') {
+              Toast.success(res.data.msg);
+              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            } else if (res.data.code === '50320') {
+              num === 1 ? Toast.success(res.data.msg) : false;
+            } else {
+              Toast(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
       agencyDetail() {
         this.$http.get(this.urls + 'bulletin/agency').then((res) => {
@@ -270,7 +259,7 @@
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
-            this.houseName = draft.houseName;
+            this.houseName = data.address;
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
@@ -294,6 +283,13 @@
           } else {
             this.form.id = '';
           }
+          let t = this.$route.query;
+          if (t.house !== undefined && t.house !== '') {
+            let val = t.house;
+            this.houseName = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
+          }
         })
       },
       close_() {
@@ -311,7 +307,7 @@
         this.form.amount = '';
         this.form.bank = '';
         this.form.subbranch = '';
-        this.form.account_name ='';
+        this.form.account_name = '';
         this.form.account = '';
         this.form.name = '';
         this.form.settle = 0;

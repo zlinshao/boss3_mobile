@@ -9,7 +9,7 @@
 
       <div class="searchContent">
         <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
-        <div class="searchList" v-for="key in lists" @touchstart="houseAddress(key)">
+        <div class="searchList" v-for="key in lists" @touchend="houseAddress(key)">
           <div>{{key.house_name}}</div>
           <div>
             <p>{{key.department_name}}</p>
@@ -25,7 +25,6 @@
 <script>
   export default {
     name: "collect-house",
-    props: ['module', 'type'],
     data() {
       return {
         address: globalConfig.server_user,
@@ -37,7 +36,7 @@
         path: '',
       }
     },
-    mounted(){
+    mounted() {
       this.types = this.$route.query.type;
       this.ddReturn(true);
       this.ddBack();
@@ -54,13 +53,30 @@
         if (value !== '') {
           let type;
           switch (val) {
-            case 'rent':
+            case 'lord0':
+              type = 'lord?q=';
+              this.myData(type, value);
+              break;
+            case 'rent0':
+              type = 'renter?q=';
+              this.myData(type, value);
+              break;
+            case 'lord1':
+              type = 'lord?status=1&q=';
+              this.myData(type, value);
+              break;
+            case 'rent1':
               type = 'renter?status=1&q=';
               this.myData(type, value);
               break;
-            default:
-              type = 'lord?status=1&q=';
+            case 'lord4':
+              type = 'lord?status=4&q=';
               this.myData(type, value);
+              break;
+            case 'rent4':
+              type = 'renter?status=4&q=';
+              this.myData(type, value);
+              break;
           }
         }
       },
@@ -72,17 +88,27 @@
             this.formDetail = data[i];
             let list = {};
             list.id = data[i].id;
-            list.house_name = data[i].house.name;
-            list.house_id = data[i].house.id;
-            list.staff_name = data[i].sign_user.name;
-            list.department_name = data[i].sign_user.org[0].name;
+            if(data[i].house !== null){
+              list.house_name = data[i].house.name;
+              list.house_id = data[i].house.id;
+            }
+            list.pay_way = data[i].pay_way !== null ? data[i].pay_way : '';
+            if (data[i].sign_user !== null) {
+              list.staff_name = data[i].sign_user.name;
+              list.department_name = data[i].sign_user.org[0].name;
+            } else {
+              list.staff_name = '';
+              list.department_name = '';
+            }
+
             this.lists.push(list);
           }
         })
       },
       // 房屋地址
       houseAddress(data) {
-        this.$router.replace({path: this.path, query: {house: data}});
+
+        this.$router.replace({path: this.path, query: {house: data, type: this.types}});
         this.ddReturn(false);
       },
       // select关闭
@@ -99,20 +125,23 @@
             that.$router.replace({path: that.path, query: {house: ''}});
             that.ddReturn(false);
           },
-          onFail: function (err) {}
+          onFail: function (err) {
+          }
         });
         // 钉钉头部右侧
         dd.biz.navigation.setRight({
           show: false,
-          onSuccess: function (result) {},
-          onFail: function (err) {}
+          onSuccess: function (result) {
+          },
+          onFail: function (err) {
+          }
         });
       },
       ddBack() {
         let that = this;
         document.addEventListener('backbutton', function (e) {
           e.preventDefault();
-          that.$router.replace({path: that.path, query: {city: ''}});
+          that.$router.replace({path: that.path, query: {house: ''}});
         });
       }
     },

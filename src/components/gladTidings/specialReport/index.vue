@@ -1,6 +1,6 @@
 <template>
   <div id="special">
-    <div v-show="!houseShow || !staffModule" class="main">
+    <div class="main">
       <van-cell-group>
         <div class="checks" style="">
           <div style="min-width: 110px;">收租标记</div>
@@ -62,35 +62,26 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!houseShow || !staffModule" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
+    <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div class="" @click="saveCollect(1,1)">草稿</div>
+      <div class="" @click="saveCollect(0,1)">发布</div>
     </div>
-
-    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import CollectHouse from '../collectHouse.vue'
   import {Toast} from 'vant'
 
   export default {
     name: "index",
-    components: {
-      Toast,
-      UpLoad,
-      CollectHouse
-    },
+    components: {Toast, UpLoad},
     data() {
       return {
         refundSta: false,
-        houseShow: false,         //搜索
-        staffModule: false,       //搜索
         isClear: false,           //删除图片
-        organizeType: '',         //搜索
+        picStatus: true,
 
         form: {
           id: '',
@@ -112,6 +103,7 @@
     },
     mounted() {
       this.specialDetail();
+      this.routerIndex();
     },
     methods: {
       routerLink(val) {
@@ -119,46 +111,41 @@
       },
       searchSelect(val) {
         if (val === '0') {
-          this.organizeType = 'collect';
-          this.houseShow = true;
+          this.saveCollect(1, 2);
+          this.$router.replace({path: '/collectHouse', query: {type: 'lord1'}});
         } else if (val === '1') {
-          this.houseShow = true;
-          this.organizeType = 'rent'
+          this.saveCollect(1, 2);
+          this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
         } else {
           Toast('请选择收租标记');
         }
       },
-      // 房屋地址
-      house_(val, type, detail) {
-        this.houseName = val.houseName;
-        // this.form.contract_id = val.contract_id;
-        // this.form.house_id = val.house_id;
-        this.onCancel();
-      },
-      // select关闭
-      onCancel() {
-        this.houseShow = false;
-      },
+
       //照片
       getImgData(val) {
+        this.picStatus = !val[2];
         if (val[0] === 'tongYi') {
           this.form.screenshot_leader = val[1]
         } else {
           this.form.screenshot = val[1]
         }
       },
-      saveCollect(val) {
+      saveCollect(val,num) {
         this.form.draft = val;
+        if (this.picStatus) {
         this.$http.post(globalConfig.server + 'bulletin/special', this.form).then((res) => {
           if (res.data.code === '51010') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
           } else if (res.data.code === '51020') {
-            Toast.success(res.data.msg);
+            num === 1 ? Toast.success(res.data.msg) : false;
           } else {
             Toast.fail(res.data.msg);
           }
         })
+      } else {
+        Toast('图片上传中...');
+  }
       },
       specialDetail() {
         this.$http.get(globalConfig.server + 'bulletin/special').then((res) => {
@@ -168,7 +155,7 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
-            this.houseName = data.houseName;
+            this.houseName = data.address;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.form.house_id = draft.house_id;
             this.form.contract_id = draft.contract_id;
@@ -182,6 +169,13 @@
             this.department_name = data.department_name;
           } else {
             this.form.id = '';
+          }
+          let t = this.$route.query;
+          if (t.house !== undefined && t.house !== '') {
+            let val = t.house;
+            this.houseName = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
           }
         })
       },

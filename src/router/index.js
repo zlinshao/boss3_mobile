@@ -22,7 +22,7 @@ import ChangeRent from '../components/gladTidings/changeRent/index.vue'       //
 import Drawback from '../components/gladTidings/drawbackReport/index.vue'
 import FriedBill from '../components/gladTidings/friedBill/index.vue'         //zhadan
 import ClearRetreat from '../components/gladTidings/clearRetreat/index.vue'   //清退
-import Checkout from '../components/gladTidings/checkout/index.vue'   //清退
+import Checkout from '../components/gladTidings/checkout/index.vue'           //清退
 import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //中介
 import Special from '../components/gladTidings/specialReport/index.vue'
 import Confiscate from '../components/gladTidings/confiscate/index.vue'
@@ -30,7 +30,7 @@ import FinalPayment from '../components/gladTidings/finalPayment/index.vue'
 import PublishDetail from '../components/gladTidings/publishDetail/index.vue'
 import Comment from '../components/gladTidings/publishDetail/comment.vue'
 
-import CitySearch from '../components/gladTidings/citySearch.vue'   //小区搜索
+import CitySearch from '../components/gladTidings/citySearch.vue'           //小区搜索
 
 import CollectHouse from '../components/gladTidings/collectHouse.vue'       //房屋搜索
 import Organize from '../components/gladTidings/organize.vue'               //开单人搜索

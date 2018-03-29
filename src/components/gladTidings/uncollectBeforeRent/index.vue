@@ -1,6 +1,6 @@
 <template>
   <div id="rentReport">
-    <div v-show="!houseShow || !staffModule" class="main">
+    <div class="main">
 
       <van-cell-group>
         <van-field
@@ -272,10 +272,10 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!houseShow || !staffModule" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
+    <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div class="" @click="saveCollect(1,1)">草稿</div>
+      <div class="" @click="saveCollect(0,1)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -298,30 +298,21 @@
         @confirm="onDate"/>
     </van-popup>
 
-    <Organization :type="organizeType" :module="staffModule" @close="onCancel" @organization="staff_"></Organization>
-
-    <SelectDepart :departDialog="departDialog" @close="onCancel" @depart="departModal"></SelectDepart>
-
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import Organization from '../organize.vue'
-  import SelectDepart from '../../common/selectDepartment.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, Organization, SelectDepart},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
-        houseShow: false,         //搜索
-        staffModule: false,       //搜索
         isClear: false,           //删除图片
-        departDialog: false,      //部门
-        organizeType: '',         //搜索
+        picStatus: true,
 
         tabs: '',
         columns: [],              //select值
@@ -398,6 +389,7 @@
     mounted() {
       this.getNowFormatDate();
       this.rentDetail();
+      this.routerIndex();
     },
 
     methods: {
@@ -405,40 +397,24 @@
         this.$router.push({path: val});
       },
       searchSelect(val) {
+        this.saveCollect(1, 2);
         switch (val) {
           case 1:
-            this.staffModule = true;
-            this.organizeType = 'staff';
+            this.$router.replace({path: '/organize'});
             break;
-          // case 2:
-          //   this.staffModule = true;
-          //   this.organizeType = 'leader';
-          //   break;
+          case 3:
+            this.$router.replace({path: '/depart'});
+            break;
         }
-      },
-      // 开单人
-      staff_(val) {
-        this.form.staff_id = val.staff_id;
-        this.staff_name = val.staff_name;
-        this.form.department_id = val.depart_id;
-        this.department_name = val.depart_name;
-        this.onCancel();
-      },
-      // 部门
-      departModal(val) {
-        this.department_name = val.name;
-        this.form.department_id = val.id;
-        this.onCancel();
       },
       // select关闭
       onCancel() {
         this.selectHide = false;
-        this.departDialog = false;
         this.timeShow = false;
-        this.staffModule = false;
       },
       // 截图
       getImgData(val) {
+        this.picStatus = !val[2];
         if (val[0] === 'screenshot') {
           this.form.screenshot = val[1];
         } else {
@@ -594,18 +570,22 @@
         })
       },
 
-      saveCollect(val) {
+      saveCollect(val, num) {
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-          if (res.data.code === '50210') {
-            Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          }else if (res.data.code === '50220') {
-            Toast.success(res.data.msg);
-          }  else {
-            Toast(res.data.msg);
-          }
-        })
+        if (this.picStatus) {
+          this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+            if (res.data.code === '50210') {
+              Toast.success(res.data.msg);
+              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            } else if (res.data.code === '50220') {
+              num === 1 ? Toast.success(res.data.msg) : false;
+            } else {
+              Toast(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
 
       rentDetail() {
@@ -675,6 +655,24 @@
             this.department_name = data.department_name;
           } else {
             this.form.id = '';
+          }
+          let t = this.$route.query;
+          if (t.staff !== undefined && t.staff !== '') {
+            let val = t.staff;
+            this.form.staff_id = val.staff_id;
+            this.staff_name = val.staff_name;
+            this.form.department_id = val.depart_id;
+            this.department_name = val.depart_name;
+            window.scrollTo(0, document.body.scrollHeight);
+          }
+          if (t.depart !== undefined && t.depart !== '') {
+            let val = t.depart;
+            this.department_name = val.name;
+            this.form.department_id = val.id;
+            window.scrollTo(0, document.body.scrollHeight);
+          }
+          if (t.staff === '' || t.depart === '') {
+            window.scrollTo(0, document.body.scrollHeight);
           }
         })
       },

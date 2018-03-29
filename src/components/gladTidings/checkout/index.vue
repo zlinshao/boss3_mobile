@@ -1,22 +1,16 @@
 <template>
   <div id="clearRetreat">
 
-    <div v-show="!houseShow || !staffModule" class="main">
-      <van-cell-group>
-        <div class="checks" style="">
-          <div style="min-width: 110px;">收租标记</div>
-          <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
-          <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
-        </div>
-      </van-cell-group>
+    <div class="main">
       <van-cell-group>
         <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchSelect(form.collect_or_rent)"
+          @click="searchSelect()"
           readonly
-          placeholder="选择房屋地址">
+          placeholder="选择房屋地址"
+          required>
         </van-field>
         <van-field
           v-model="payWay"
@@ -84,10 +78,10 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!houseShow || !staffModule" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
+    <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div class="" @click="saveCollect(1,1)">草稿</div>
+      <div class="" @click="saveCollect(0,1)">发布</div>
     </div>
 
     <!--日期-->
@@ -102,26 +96,21 @@
         @confirm="onDate"/>
     </van-popup>
 
-    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
-
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import CollectHouse from '../collectHouse.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
-        houseShow: false,         //搜索
-        staffModule: false,       //搜索
-        organizeType: '',         //搜索
         isClear: false,           //删除图片
+        picStatus: true,
 
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
@@ -135,7 +124,6 @@
 
         form: {
           id: '',
-          collect_or_rent: '',
           draft: 0,
           house_id: '',
           contract_id: '',              //合同id
@@ -155,6 +143,7 @@
     mounted() {
       this.getNowFormatDate();
       this.checkDetail();
+      this.routerIndex();
     },
     methods: {
       routerLink(val) {
@@ -168,16 +157,9 @@
         let strDate = date.getDate();
         this.currentDate = new Date(year, month, strDate);
       },
-      searchSelect(val) {
-        if (val === '0') {
-          this.organizeType = 'collect';
-          this.houseShow = true;
-        } else if (val === '1') {
-          this.houseShow = true;
-          this.organizeType = 'rent'
-        } else {
-          Toast('请选择收租标记');
-        }
+      searchSelect() {
+        this.saveCollect(1, 2);
+        this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
       },
       // 日期选择
       timeChoose() {
@@ -192,21 +174,15 @@
         this.form.checkout_date = this.timeValue;
         this.onCancel();
       },
-      // 房屋地址
-      house_(val, type, detail) {
-        this.houseName = val.houseName;
-        // this.form.contract_id = val.contract_id;
-        // this.form.house_id = val.house_id;
-        this.onCancel();
-      },
+
       // select关闭
       onCancel() {
         this.timeShow = false;
-        this.houseShow = false;
       },
 
       // 截图
       headmanAgree(val) {
+        this.picStatus = !val[2];
         if (val[0] === 'photo') {
           this.form.photo = val[1];
         } else {
@@ -214,18 +190,22 @@
         }
       },
 
-      saveCollect(val) {
+      saveCollect(val, num) {
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
-          if (res.data.code === '51210') {
-            Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          } else if (res.data.code === '51220') {
-            Toast.success(res.data.msg);
-          } else {
-            Toast(res.data.msg);
-          }
-        })
+        if (this.picStatus) {
+          this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
+            if (res.data.code === '51210') {
+              Toast.success(res.data.msg);
+              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            } else if (res.data.code === '51220') {
+              num === 1 ? Toast.success(res.data.msg) : false;
+            } else {
+              Toast(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
       checkDetail() {
         this.$http.get(this.urls + 'bulletin/checkout').then((res) => {
@@ -235,9 +215,9 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
+            this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
-            this.form.collect_or_rent = draft.collect_or_rent;
-            this.houseName = data.houseName;
+            this.houseName = data.address;
             this.form.photo = draft.photo;
             this.photos = data.photo;
             this.form.checkout_photo = draft.checkout_photo;
@@ -250,6 +230,13 @@
           } else {
             this.form.id = '';
           }
+          let t = this.$route.query;
+          if (t.house !== undefined && t.house !== '') {
+            let val = t.house;
+            this.houseName = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
+          }
         })
       },
       close_() {
@@ -258,7 +245,6 @@
           this.isClear = false;
         });
         this.form.house_id = '';
-        this.form.collect_or_rent = '';
         this.payWay = '';
         this.price_arr = '';
         this.form.id = '';

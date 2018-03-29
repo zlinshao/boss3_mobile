@@ -447,8 +447,7 @@
       return {
         urls: globalConfig.server,
         address: globalConfig.server_user,
-        departDialog: false,      //部门
-        organizeType: '',
+        picStatus: true,
         isClear: false,
 
         allCity: [],              //城市
@@ -601,6 +600,7 @@
 
       // 图片
       getImgData(val) {
+        this.picStatus = !val[2];
         if (val[0] === 'screenshot') {
           this.form.screenshot_leader = val[1];
         } else {
@@ -811,16 +811,21 @@
       saveCollect(val, num) {
         this.form.share = this.joint ? '1' : '0';
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
-          if (res.data.code === '50110') {
-            Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          } else if (res.data.code === '50120') {
-            num === 1 ? Toast.success(res.data.msg) : false;
-          } else {
-            Toast(res.data.msg);
-          }
-        })
+        if (this.picStatus) {
+          this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+            if (res.data.code === '50110') {
+              Toast.success(res.data.msg);
+              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            } else if (res.data.code === '50120') {
+              num === 1 ? Toast.success(res.data.msg) : false;
+            } else {
+              Toast(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
+
       },
 
       // 草稿
@@ -918,26 +923,27 @@
           } else {
             this.form.id = '';
           }
-          if (this.$route.query.city !== undefined && this.$route.query.city !== '') {
-            let val = this.$route.query.city;
+          let t = this.$route.query;
+          if (t.city !== undefined && t.city !== '') {
+            let val = t.city;
             this.form.community_id = val.id;
             this.community_name = val.name;
           }
-          if (this.$route.query.staff !== undefined && this.$route.query.staff !== '') {
-            let val = this.$route.query.staff;
+          if (t.staff !== undefined && t.staff !== '') {
+            let val = t.staff;
             this.form.staff_id = val.staff_id;
             this.staff_name = val.staff_name;
             this.form.department_id = val.depart_id;
             this.department_name = val.depart_name;
             window.scrollTo(0, document.body.scrollHeight);
           }
-          if (this.$route.query.depart !== undefined && this.$route.query.depart !== '') {
-            let val = this.$route.query.depart;
+          if (t.depart !== undefined && t.depart !== '') {
+            let val = t.depart;
             this.department_name = val.name;
             this.form.department_id = val.id;
             window.scrollTo(0, document.body.scrollHeight);
           }
-          if (this.$route.query.staff === '' || this.$route.query.depart === '') {
+          if (t.staff === '' || t.depart === '') {
             window.scrollTo(0, document.body.scrollHeight);
           }
         })

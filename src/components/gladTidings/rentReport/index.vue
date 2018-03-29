@@ -315,6 +315,7 @@
       return {
         urls: globalConfig.server,
         isClear: false,           //删除图片
+        picStatus: true,
 
         tabs: '',
         columns: [],              //select值
@@ -403,7 +404,7 @@
         this.saveCollect(1, 2);
         switch (val) {
           case 1:
-            this.$router.replace({path: '/collectHouse', query: {type: 'lord'}});
+            this.$router.replace({path: '/collectHouse', query: {type: 'lord1'}});
             break;
           case 2:
             this.$router.replace({path: '/organize'});
@@ -414,14 +415,6 @@
         }
       },
 
-      // // 房屋地址
-      // house_(val) {
-      //   this.houseName = val.houseName;
-      //   this.form.contract_id = val.contract_id;
-      //   this.form.house_id = val.house_id;
-      //   this.onCancel();
-      // },
-
       // select关闭
       onCancel() {
         this.selectHide = false;
@@ -429,6 +422,7 @@
       },
       // 截图
       getImgData(val) {
+        this.picStatus = !val[2];
         if (val[0] === 'screenshot') {
           this.form.screenshot = val[1];
         } else {
@@ -583,6 +577,7 @@
 
       saveCollect(val, num) {
         this.form.draft = val;
+        if (this.picStatus) {
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
           if (res.data.code === '50210') {
             Toast.success(res.data.msg);
@@ -593,6 +588,9 @@
             Toast(res.data.msg);
           }
         })
+        } else {
+          Toast('图片上传中...');
+        }
       },
 
       rentDetail() {
@@ -664,28 +662,28 @@
           } else {
             this.form.id = '';
           }
-          if (this.$route.query.house !== undefined && this.$route.query.house !== '') {
-            let val = this.$route.query.house;
-            console.log(val);
+          let t = this.$route.query;
+          if (t.house !== undefined && t.house !== '') {
+            let val = t.house;
             this.houseName = val.house_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
           }
-          if (this.$route.query.staff !== undefined && this.$route.query.staff !== '') {
-            let val = this.$route.query.staff;
+          if (t.staff !== undefined && t.staff !== '') {
+            let val = t.staff;
             this.form.staff_id = val.staff_id;
             this.staff_name = val.staff_name;
             this.form.department_id = val.depart_id;
             this.department_name = val.depart_name;
             window.scrollTo(0, document.body.scrollHeight);
           }
-          if (this.$route.query.depart !== undefined && this.$route.query.depart !== '') {
-            let val = this.$route.query.depart;
+          if (t.depart !== undefined && t.depart !== '') {
+            let val = t.depart;
             this.department_name = val.name;
             this.form.department_id = val.id;
             window.scrollTo(0, document.body.scrollHeight);
           }
-          if (this.$route.query.staff === '' || this.$route.query.depart === '') {
+          if (t.staff === '' || t.depart === '') {
             window.scrollTo(0, document.body.scrollHeight);
           }
         })

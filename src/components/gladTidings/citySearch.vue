@@ -83,7 +83,7 @@
         let that = this;
         document.addEventListener('backbutton', function (e) {
           e.preventDefault();
-          that.$router.replace({path: that.path, query: {city: ''}});
+          that.$router.push({path: that.path, query: {city: ''}});
         });
       }
     },

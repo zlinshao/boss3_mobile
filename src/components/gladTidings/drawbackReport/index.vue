@@ -1,14 +1,21 @@
 <template>
   <div id="drawbackReport">
 
-    <div v-show="!houseShow || !staffModule" class="main">
+    <div class="main">
+      <van-cell-group>
+        <div class="checks">
+          <div style="min-width: 110px;">收租标记</div>
+          <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
+          <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
+        </div>
+      </van-cell-group>
       <van-cell-group>
         <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
-          @click="searchSelect(1)"
+          @click="searchSelect(form.collect_or_rent)"
           placeholder="请选择房屋地址"
           required>
         </van-field>
@@ -122,33 +129,26 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!houseShow || !staffModule" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
+    <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div class="" @click="saveCollect(1,1)">草稿</div>
+      <div class="" @click="saveCollect(0,1)">发布</div>
     </div>
-
-    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
-
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import CollectHouse from '../collectHouse.vue'
-  import Organization from '../organize.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse, Organization},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
-        houseShow: false,         //搜索
-        staffModule: false,       //搜索
         isClear: false,           //删除图片
-        organizeType: '',         //搜索
+        picStatus: true,
 
         payWay: '',
         price_arr: '',
@@ -157,7 +157,7 @@
         form: {
           id: '',
           draft: 0,
-          collect_or_rent: 1,
+          collect_or_rent: '',
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
           amount: '',                   //退款金额
@@ -177,6 +177,7 @@
     },
     mounted() {
       this.refundDetail();
+      this.routerIndex();
     },
     methods: {
       routerLink(val) {
@@ -184,6 +185,7 @@
       },
 
       screenshot(val) {
+        this.picStatus = !val[2];
         this.form.screenshot_leader = val[1];
       },
       // 获取银行
@@ -200,46 +202,47 @@
       onCancel() {
         this.selectHide = false;
         this.timeShow = false;
-        this.houseShow = false;
-        this.staffModule = false;
       },
       searchSelect(val) {
-        switch (val) {
-          case 1:
-            this.houseShow = true;
-            this.organizeType = 'rent';
-            break;
-          case 2:
-            this.staffModule = true;
-            this.organizeType = 'staff';
-            break;
+        if (val === '0') {
+          this.saveCollect(1, 2);
+          this.$router.replace({path: '/collectHouse', query: {type: 'lord1'}});
+        } else if (val === '1') {
+          this.saveCollect(1, 2);
+          this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
+        } else {
+          Toast('请选择收租标记');
         }
       },
 
-      // 房屋地址
-      house_(val, type, form) {
-        for (let i = 0; i < form.month_price.length; i++) {
-          this.payWay = '第' + (i + 1) + '期' + form.pay_way[i].period + '个月' + form.pay_way[i].pay_way_str + ';';
-          this.price_arr = '第' + (i + 1) + '期' + form.month_price[i].period + '个月' + form.month_price[i].price + '元/月' + ';';
-        }
-        this.houseName = val.houseName;
-        this.form.contract_id = val.contract_id;
-        this.form.house_id = val.house_id;
-        this.onCancel();
-      },
+      // // 房屋地址
+      // house_(val, type, form) {
+      //   for (let i = 0; i < form.month_price.length; i++) {
+      //     this.payWay = '第' + (i + 1) + '期' + form.pay_way[i].period + '个月' + form.pay_way[i].pay_way_str + ';';
+      //     this.price_arr = '第' + (i + 1) + '期' + form.month_price[i].period + '个月' + form.month_price[i].price + '元/月' + ';';
+      //   }
+      //   this.houseName = val.houseName;
+      //   this.form.contract_id = val.contract_id;
+      //   this.form.house_id = val.house_id;
+      //   this.onCancel();
+      // },
 
-      saveCollect(val) {
+      saveCollect(val, num) {
         this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
-          if (res.data.code === '50810') {
-            Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          } else if (res.data.code === '50820') {
-            Toast.success(res.data.msg);
-          } else {
-            Toast(res.data.msg);
-          }
-        })
+        if (this.picStatus) {
+          this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
+            if (res.data.code === '50810') {
+              Toast.success(res.data.msg);
+              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            } else if (res.data.code === '50820') {
+              num === 1 ? Toast.success(res.data.msg) : false;
+            } else {
+              Toast(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
       refundDetail() {
         this.$http.get(this.urls + 'bulletin/refund').then((res) => {
@@ -249,6 +252,10 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = draft.id;
+            this.houseName = data.address;
+            this.form.collect_or_rent = draft.collect_or_rent;
+            this.form.contract_id = draft.contract_id;
+            this.form.house_id = draft.house_id;
             this.form.amount = draft.amount;
             this.form.account = draft.account;
             this.form.bank = draft.bank;
@@ -259,6 +266,13 @@
             this.screenshots = data.screenshot_leader;
           } else {
             this.form.id = '';
+          }
+          let t = this.$route.query;
+          if (t.house !== undefined && t.house !== '') {
+            let val = t.house;
+            this.houseName = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
           }
         })
       },

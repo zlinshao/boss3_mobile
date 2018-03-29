@@ -2,19 +2,19 @@
   <div id="hello" class="hello">
 
     <div class="top" :class="{'shadow': active !== 3 && active !== 4}">
-      <div @click="tabTag(1)" :class="{'onDiv': active === 1}">
+      <div @click="tabTag(1,0)" :class="{'onDiv': active === 1}">
         <p>
           <i class="iconfont icon-wancheng"></i>
         </p>
         <h1>我审批的</h1>
       </div>
-      <div @click="tabTag(3)" :class="{'onDiv': active === 3}">
+      <div @click="tabTag(3,0)" :class="{'onDiv': active === 3}">
         <p>
           <i class="iconfont icon-faqiyingyong"></i>
         </p>
         <h1>我发起的</h1>
       </div>
-      <div @click="tabTag(4)" :class="{'onDiv': active === 4}">
+      <div @click="tabTag(4,0)" :class="{'onDiv': active === 4}">
         <p>
           <i class="iconfont icon-chaosong"></i>
         </p>
@@ -129,7 +129,7 @@
         </h2>
         <h1>发起审批</h1>
       </div>
-      <div @click="tabTag(2)" :class="{'onDiv': active === 2}">
+      <div @click="tabTag(2,0)" :class="{'onDiv': active === 2}">
         <h2>
           <i class="iconfont icon-daiban"></i>
         </h2>
@@ -171,20 +171,26 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
+      if (this.$route.query.tags !== undefined) {
+        this.tabTag(this.$route.query.tags, this.$route.query.read)
+      }
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
-
     methods: {
-      tabTag(val) {
+      tabTag(val, red) {
         this.list = [];
         this.footActive = 0;
         this.active = val;
-        this.readActive = 0;
+        this.readActive = red;
         this.page = 1;
         this.disabled = false;
       },
       routerDetail(id) {
-        this.$router.push({path: '/publishDetail', query: {ids: id}});
+        let data = {};
+        data.ids = id;
+        data.tags = this.active;
+        data.read = this.readActive;
+        this.$router.push({path: '/publishDetail', query: {data: data}});
       },
 
       routerLink(val) {

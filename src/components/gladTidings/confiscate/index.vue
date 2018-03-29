@@ -1,7 +1,7 @@
 <template>
   <div id="confiscate">
 
-    <div v-show="!houseShow || !staffModule" class="main">
+    <div class="main">
       <van-cell-group>
         <div class="checks" style="">
           <div style="min-width: 110px;">收租标记</div>
@@ -14,16 +14,10 @@
           v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchSelect(form.collect_or_rent)"
           readonly
-          placeholder="选择房屋地址">
-        </van-field>
-        <van-field
-          v-model="bulletinDate"
-          label="喜报日期"
-          type="text"
-          disabled
-          placeholder="喜报日期已禁用">
+          @click="searchSelect(form.collect_or_rent)"
+          placeholder="选择房屋地址"
+          required>
         </van-field>
         <van-field
           v-model="payWay"
@@ -69,13 +63,12 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!houseShow || !staffModule" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
+    <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div class="" @click="saveCollect(1,1)">草稿</div>
+      <div class="" @click="saveCollect(0,1)">发布</div>
     </div>
 
-    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
   </div>
 </template>
 
@@ -92,11 +85,7 @@
       return {
         urls: globalConfig.server,
         refundSta: false,
-        houseShow: false,         //搜索
-        staffModule: false,       //搜索
-        organizeType: '',         //搜索
 
-        bulletinDate: '',             //喜报日期
         payWay: '',                   //付款方式
         price_arr: '',                //月单价
 
@@ -116,7 +105,8 @@
       }
     },
     mounted() {
-      this.confiscate()
+      this.confiscate();
+      this.routerIndex();
     },
     methods: {
       routerLink(val) {
@@ -125,35 +115,24 @@
 
       searchSelect(val) {
         if (val === '0') {
-          this.organizeType = 'collect';
-          this.houseShow = true;
+          this.saveCollect(1, 2);
+          this.$router.replace({path: '/collectHouse', query: {type: 'lord1'}});
         } else if (val === '1') {
-          this.houseShow = true;
-          this.organizeType = 'rent'
+          this.saveCollect(1, 2);
+          this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
         } else {
           Toast('请选择收租标记');
         }
       },
 
-      // 房屋地址
-      house_(val, type, detail) {
-        this.houseName = val.houseName;
-        // this.form.contract_id = val.contract_id;
-        // this.form.house_id = val.house_id;
-        this.onCancel();
-      },
-      // select关闭
-      onCancel() {
-        this.houseShow = false;
-      },
-      saveCollect(val) {
+      saveCollect(val,num) {
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/confiscate', this.form).then((res) => {
           if (res.data.code === '50610') {
             Toast.success(res.data.msg);
             this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
           } else if (res.data.code === '50620') {
-            Toast.success(res.data.msg);
+            num === 1 ? Toast.success(res.data.msg) : false;
           } else {
             Toast(res.data.msg);
           }
@@ -166,26 +145,31 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
-            this.form.bulletinDate = data.bulletinDate;
-            this.form.payWay = data.payWay;
-            this.form.price_arr = data.price_arr;
             this.form.house_id = draft.house_id;
             this.form.contract_id = draft.contract_id;
-            this.form.remark = draft.remark;
+            this.houseName = data.address;
+            this.form.payWay = data.payWay;
+            this.form.price_arr = data.price_arr;
             this.form.type = draft.type;
             this.form.collect_or_rent = draft.collect_or_rent;
-            this.houseName = data.houseName;
+            this.form.remark = draft.remark;
             this.staff_name = data.staff_name;
             this.leader_name = data.leader_name;
             this.department_name = data.department_name;
           }else{
             this.form.id = '';
           }
+          let t = this.$route.query;
+          if (t.house !== undefined && t.house !== '') {
+            let val = t.house;
+            this.houseName = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
+          }
         })
       },
       close_() {
         this.form.id = '';
-        this.form.bulletinDate = '';
         this.form.payWay = '';
         this.form.price_arr = '';
         this.form.house_id = '';

@@ -35,13 +35,20 @@
           remark: '',
           photo: [],
         },
-        pitch: '',
+        pitch: {},
         detail: '',
+        path: '',
       }
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.path = from.path;
+      })
+    },
     mounted() {
-      this.pitch = this.$route.query.ids;
+      this.pitch = this.$route.query.data;
       this.detail = this.$route.query.detail;
+      this.ddBack();
     },
     methods: {
       // 确认评论
@@ -58,14 +65,14 @@
       },
 
       sure() {
-        this.$http.put(this.urls + 'process/' + this.pitch, {
+        this.$http.put(this.urls + 'process/' + this.pitch.ids, {
           operation: this.detail,
           comment: this.form.remark,
           album: this.form.photo
         }).then((res) => {
           if (res.data.status === 'success') {
             Toast.success(res.data.message);
-            this.$router.push({path: '/publishDetail', query: {ids: this.pitch, top: ''}});
+            this.$router.replace({path: '/publishDetail', query: {data: this.pitch}});
           } else {
             Toast(res.data.message);
           }
@@ -75,6 +82,14 @@
       getImgData(val) {
         this.form.photo = val[1];
       },
+
+      ddBack() {
+        let that = this;
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          that.$router.replace({path: that.path, query: {data: that.pitch}});
+        });
+      }
     },
   }
 </script>

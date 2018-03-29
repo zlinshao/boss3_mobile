@@ -1,13 +1,13 @@
 <template>
   <div id="rentReport">
-    <div v-show="!houseShow || !staffModule" class="main">
+    <div class="main">
       <van-cell-group>
         <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
-          @click="searchSelect(1)"
+          @click="searchSelect()"
           placeholder="请选择房屋地址"
           required>
         </van-field>
@@ -115,10 +115,10 @@
       </van-cell-group>
     </div>
 
-    <div v-show="!houseShow || !staffModule" class="footer">
-      <div class="" @click="saveCollect(1)">草稿</div>
+    <div class="footer">
+      <div class="" @click="saveCollect(1,1)">草稿</div>
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div class="" @click="saveCollect(0,1)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -129,25 +129,21 @@
         @confirm="onConfirm"/>
     </van-popup>
 
-    <CollectHouse :module="houseShow" @close="onCancel" :type="organizeType" @house="house_"></CollectHouse>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import CollectHouse from '../collectHouse.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, CollectHouse},
+    components: {UpLoad, Toast},
     data() {
       return {
         urls: globalConfig.server,
-        houseShow: false,         //搜索
-        staffModule: false,       //搜索
         isClear: false,           //删除图片
-        organizeType: '',         //搜索
+        picStatus: true,
 
         tabs: '',
         columns: [],              //select值
@@ -184,6 +180,7 @@
     },
     mounted() {
       this.finalDetail();
+      this.routerIndex();
     },
     methods: {
       routerLink(val) {
@@ -192,6 +189,7 @@
 
       // 截图
       screenshot(val) {
+        this.picStatus = !val[2];
         this.form.screenshot = val[1];
       },
       // select 显示
@@ -207,27 +205,15 @@
         this.form.money_way[this.payIndex] = index + 1;
         this.selectHide = false;
       },
-      searchSelect(val) {
-        switch (val) {
-          case 1:
-            this.houseShow = true;
-            break;
-        }
+      searchSelect() {
+        this.saveCollect(1, 2);
+        this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
       },
 
-      // 房屋地址
-      house_(val) {
-        this.houseName = val.houseName;
-        this.form.contract_id = val.contract_id;
-        this.form.house_id = val.house_id;
-        this.onCancel();
-      },
       // select关闭
       onCancel() {
         this.selectHide = false;
         this.timeShow = false;
-        this.houseShow = false;
-        this.staffModule = false;
       },
       // 增加 定金
       priceAmount() {
@@ -245,18 +231,22 @@
         this.moneyNum.splice(val, 1);
       },
 
-      saveCollect(val) {
+      saveCollect(val, num) {
         this.form.draft = val;
-        this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
-          if (res.data.code === '50910') {
-            Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
-          } else if (res.data.code === '50920') {
-            Toast.success(res.data.msg);
-          } else {
-            Toast(res.data.msg);
-          }
-        })
+        if (this.picStatus) {
+          this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
+            if (res.data.code === '50910') {
+              Toast.success(res.data.msg);
+              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            } else if (res.data.code === '50920') {
+              num === 1 ? Toast.success(res.data.msg) : false;
+            } else {
+              Toast(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
       finalDetail() {
         this.$http.get(globalConfig.server + 'bulletin/retainage').then((res) => {
@@ -266,7 +256,7 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
-            this.houseName = data.houseName;
+            this.houseName = data.address;
             this.month = data.month;
             this.price_arr = data.price_arr;
             this.payWay = data.payWay;
@@ -291,6 +281,13 @@
             this.department_name = data.department_name;
           } else {
             this.form.id = ''
+          }
+          let t = this.$route.query;
+          if (t.house !== undefined && t.house !== '') {
+            let val = t.house;
+            this.houseName = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
           }
         })
       },

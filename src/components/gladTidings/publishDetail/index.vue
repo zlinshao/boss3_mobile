@@ -4,7 +4,7 @@
       <div class="detail">
         <div class="detailLeft">
           <div>
-            <img :src="personal.avatar" v-if="personal.avatar !== ''">
+            <img :src="personal.avatar" v-if="personal.avatar !== '' && personal.avatar !== undefined">
             <img src="../../../assets/head.png" v-else>
           </div>
         </div>
@@ -22,10 +22,15 @@
         </div>
       </div>
 
+      <div class="load" v-if="vLoading">
+        <van-loading type="spinner" color="black"/>
+      </div>
+
       <div class="detailRight">
         <!--收房报备-->
         <div class="topTitle">
-          <div v-for="(key,index) in formList" v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图'">
+          <div v-for="(key,index) in formList"
+               v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图'">
             <p>{{index}}</p>
             <h1>
               <span v-if="Array.isArray(key)" v-for="item in key">
@@ -97,24 +102,27 @@
     components: {ImagePreview, Toast},
     data() {
       return {
+        vLoading: true,
+        routerData: {},
         personal: {},
-        pitch: '',
         active: false,
         urls: globalConfig.server_user,
         formList: {},
 
         operation: {},
-
         form: {},       //评论
         commentList: {},
       }
     },
     mounted() {
-      this.pitch = this.$route.query.ids;
-      this.formDetail(this.$route.query.ids);
-      if(this.$route.query.top === ''){
-        window.scrollTo(0, document.body.scrollHeight);
-      }
+      this.routerData = this.$route.query.data;
+      this.formDetail(this.$route.query.data.ids);
+
+      let that = this;
+      document.addEventListener('backbutton', function (e) {
+        e.preventDefault();
+        that.$router.push({path: '/index', query: {tags: that.routerData.tags, read: that.routerData.read}});
+      });
     },
 
     methods: {
@@ -124,6 +132,7 @@
             this.formList = res.data.data.process.content.show_content;
             this.operation = res.data.data.operation;
             this.personal = res.data.data.process.user;
+            this.vLoading = false;
             this.comments(val);
           }
         });
@@ -147,7 +156,7 @@
 
       // 评论
       commentOn(val) {
-        this.$router.push({path: '/comment', query: {detail: val, ids: this.pitch}});
+        this.$router.replace({path: '/comment', query: {detail: val, data: this.routerData}});
       },
     },
   }
@@ -230,6 +239,11 @@
         }
       }
     }
+    .load {
+      display: flex;
+      justify-content: center;
+      margin: 3rem auto 0;
+    }
     .detail {
       position: fixed;
       top: 0;
@@ -250,10 +264,9 @@
           height: .9rem;
           overflow: hidden;
           img {
-            width: 106%;
-            height: 106%;
-            margin-top: -2%;
-            margin-left: -3%;
+            @include border_radius(50%);
+            width: 100%;
+            height: 100%;
           }
         }
       }
