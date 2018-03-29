@@ -136,7 +136,7 @@
         this.$http.post(globalConfig.server + 'bulletin/special', this.form).then((res) => {
           if (res.data.code === '51010') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            this.routerDetail(res.data.data.data.id);
           } else if (res.data.code === '51020') {
             num === 1 ? Toast.success(res.data.msg) : false;
           } else {

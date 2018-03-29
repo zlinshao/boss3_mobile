@@ -196,7 +196,7 @@
           this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
             if (res.data.code === '51210') {
               Toast.success(res.data.msg);
-              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+              this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '51220') {
               num === 1 ? Toast.success(res.data.msg) : false;
             } else {

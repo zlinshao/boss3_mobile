@@ -233,7 +233,7 @@
           this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
             if (res.data.code === '50810') {
               Toast.success(res.data.msg);
-              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+              this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50820') {
               num === 1 ? Toast.success(res.data.msg) : false;
             } else {

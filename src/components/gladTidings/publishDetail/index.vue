@@ -22,13 +22,12 @@
         </div>
       </div>
 
-      <div class="load" v-if="vLoading">
-        <van-loading type="spinner" color="black"/>
-      </div>
-
       <div class="detailRight">
         <!--收房报备-->
         <div class="topTitle">
+          <div class="load" v-if="vLoading">
+            <van-loading type="spinner" color="black"/>
+          </div>
           <div v-for="(key,index) in formList"
                v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图'">
             <p>{{index}}</p>
@@ -103,6 +102,7 @@
     data() {
       return {
         vLoading: true,
+
         routerData: {},
         personal: {},
         active: false,
@@ -117,7 +117,6 @@
     mounted() {
       this.routerData = this.$route.query.data;
       this.formDetail(this.$route.query.data.ids);
-
       let that = this;
       document.addEventListener('backbutton', function (e) {
         e.preventDefault();

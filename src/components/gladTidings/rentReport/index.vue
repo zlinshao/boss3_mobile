@@ -243,8 +243,7 @@
           type="textarea"
           placeholder="请填写备注"
           icon="clear"
-          @click-icon="form.remark = ''"
-          required>
+          @click-icon="form.remark = ''">
         </van-field>
         <van-field
           v-model="staff_name"
@@ -581,7 +580,8 @@
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
           if (res.data.code === '50210') {
             Toast.success(res.data.msg);
-            this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            alert(JSON.stringify(res.data));
+            this.routerDetail(res.data.data.data.id);
           } else if (res.data.code === '50220') {
             num === 1 ? Toast.success(res.data.msg) : false;
           } else {
