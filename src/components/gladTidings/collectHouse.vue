@@ -91,7 +91,7 @@
             this.formDetail = data[i];
             let list = {};
             list.id = data[i].id;
-            if (data[i].house !== null) {
+            if(data[i].house !== null){
               list.house_name = data[i].house.name;
               list.house_id = data[i].house.id;
             }
@@ -200,11 +200,11 @@
         }
       }
     }
-    .van-search__input-wrap {
+    .van-search__input-wrap{
       padding-top: 5px;
-      .van-search__input {
+      .van-search__input{
         height: 22px;
-        line-height: 22px;
+
       }
     }
   }
