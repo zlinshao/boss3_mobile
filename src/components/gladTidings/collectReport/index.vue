@@ -448,6 +448,7 @@
         urls: globalConfig.server,
         address: globalConfig.server_user,
         picStatus: true,
+        onSubmit: true,
         isClear: false,
 
         allCity: [],              //城市
@@ -812,16 +813,21 @@
         this.form.share = this.joint ? '1' : '0';
         this.form.draft = val;
         if (this.picStatus) {
-          this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
-            if (res.data.code === '50110') {
-              Toast.success(res.data.msg);
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '50120') {
-              num === 1 ? Toast.success(res.data.msg) : false;
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+          if (this.onSubmit) {
+            this.onSubmit = false;
+            this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+              if (res.data.code === '50110') {
+                Toast.success(res.data.msg);
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === '50120') {
+                num === 1 ? Toast.success(res.data.msg) : false;
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('正在提交请耐心等待...');
+          }
         } else {
           Toast('图片上传中...');
         }

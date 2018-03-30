@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div class="searchClass">
+    <div class="searchClass" v-if="houseVisible">
       <van-search
+        autofocus="autofocus"
         v-model="searchValue"
         show-action
         @keyup="onSearch(types)"
@@ -25,6 +26,7 @@
 <script>
   export default {
     name: "collect-house",
+    props: ['module', 'types'],
     data() {
       return {
         address: globalConfig.server_user,
@@ -32,22 +34,21 @@
         lists: [],
         form: {},
         formDetail: {},
-        types: '',
-        path: '',
+        houseVisible: false,
       }
     },
-    mounted() {
-      // document.getElementsByTagName('input')[0].focus();
-      // $("input").trigger("click").focus();
 
-      this.types = this.$route.query.type;
-      this.ddReturn(true);
-      this.ddBack();
-    },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        vm.path = from.path;
-      })
+    watch: {
+      module(val) {
+        this.houseVisible = val;
+        this.ddReturn(val);
+      },
+      houseVisible(val) {
+        if (!val) {
+          this.ddReturn(!val);
+          this.$emit('close');
+        }
+      }
     },
     methods: {
       // 搜索
@@ -103,21 +104,18 @@
               list.staff_name = '';
               list.department_name = '';
             }
-
             this.lists.push(list);
           }
         })
       },
       // 房屋地址
       houseAddress(data) {
-
-        this.$router.replace({path: this.path, query: {house: data, type: this.types}});
-        this.ddReturn(false);
+        this.$emit('houseInfo', data, this.types);
+        this.onCancel();
       },
       // select关闭
       onCancel() {
-        this.$router.replace({path: this.path, query: {house: ''}});
-        this.ddReturn(false);
+        this.houseVisible = false;
       },
       ddReturn(val) {
         let that = this;
@@ -125,16 +123,8 @@
         dd.biz.navigation.setLeft({
           control: val,
           onSuccess: function (result) {
-            that.$router.replace({path: that.path, query: {house: ''}});
+            that.onCancel();
             that.ddReturn(false);
-          },
-          onFail: function (err) {
-          }
-        });
-        // 钉钉头部右侧
-        dd.biz.navigation.setRight({
-          show: false,
-          onSuccess: function (result) {
           },
           onFail: function (err) {
           }
@@ -142,10 +132,14 @@
       },
       ddBack() {
         let that = this;
-        document.addEventListener('backbutton', function (e) {
+        //返回按钮点击的事件监听(android)
+        document.addEventListener('backbutton', function(e) {
           e.preventDefault();
-          that.$router.replace({path: that.path, query: {house: ''}});
-        });
+          dd.device.notification.alert({
+            message: '哎呀，你不小心点到返回键啦!',
+            title: '...警告...'
+          });
+        }, false);
       }
     },
   }
@@ -198,13 +192,6 @@
             color: #aaaaaa;
           }
         }
-      }
-    }
-    .van-search__input-wrap {
-      padding-top: 5px;
-      .van-search__input {
-        height: 22px;
-        line-height: 22px;
       }
     }
   }

@@ -33,6 +33,7 @@
       }
     },
     mounted() {
+      // $("input").trigger("click").focus();
       this.city_id = this.$route.query.city;
       this.ddReturn(true);
       this.ddBack();
@@ -135,6 +136,13 @@
               color: #aaaaaa;
             }
           }
+        }
+      }
+      .van-search__input-wrap {
+        padding-top: 5px;
+        .van-search__input {
+          height: 22px;
+          line-height: 22px;
         }
       }
     }

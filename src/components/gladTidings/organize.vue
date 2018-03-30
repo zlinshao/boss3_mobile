@@ -36,6 +36,7 @@
       })
     },
     mounted() {
+      // $("input").trigger("click").focus();
       this.ddReturn(true);
       this.ddBack();
     },
@@ -87,14 +88,6 @@
           onSuccess: function (result) {
             that.$router.replace({path: that.path, query: {staff: ''}});
             that.ddReturn(false);
-          },
-          onFail: function (err) {
-          }
-        });
-        // 钉钉头部右侧
-        dd.biz.navigation.setRight({
-          show: false,
-          onSuccess: function (result) {
           },
           onFail: function (err) {
           }
@@ -151,6 +144,13 @@
         div:last-of-type {
           text-align: right;
         }
+      }
+    }
+    .van-search__input-wrap {
+      padding-top: 5px;
+      .van-search__input {
+        height: 22px;
+        line-height: 22px;
       }
     }
   }

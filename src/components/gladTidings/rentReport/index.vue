@@ -243,7 +243,8 @@
           type="textarea"
           placeholder="请填写备注"
           icon="clear"
-          @click-icon="form.remark = ''">
+          @click-icon="form.remark = ''"
+          required>
         </van-field>
         <van-field
           v-model="staff_name"
@@ -577,23 +578,27 @@
       saveCollect(val, num) {
         this.form.draft = val;
         if (this.picStatus) {
-        this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-          if (res.data.code === '50210') {
-            Toast.success(res.data.msg);
-            alert(JSON.stringify(res.data));
-            this.routerDetail(res.data.data.data.id);
-          } else if (res.data.code === '50220') {
-            num === 1 ? Toast.success(res.data.msg) : false;
-          } else {
-            Toast(res.data.msg);
-          }
-        })
+          this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+            if (res.data.code === '50210') {
+              Toast.success(res.data.msg);
+              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+            } else if (res.data.code === '50220') {
+              num === 1 ? Toast.success(res.data.msg) : false;
+            } else {
+              Toast(res.data.msg);
+            }
+          })
         } else {
           Toast('图片上传中...');
         }
       },
 
       rentDetail() {
+        // let toast = Toast.loading({
+        //   mask: true,
+        //   message: '加载中...',
+        //   duration: 0,
+        // });
         this.$http.get(this.urls + 'bulletin/rent?type=0').then((res) => {
           if (res.data.code === '50210') {
             this.isClear = false;
@@ -686,6 +691,7 @@
           if (t.staff === '' || t.depart === '') {
             window.scrollTo(0, document.body.scrollHeight);
           }
+          // toast.clear();
         })
       },
 

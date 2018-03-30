@@ -48,6 +48,7 @@
     mounted() {
       this.pitch = this.$route.query.data;
       this.detail = this.$route.query.detail;
+      this.ddReturn(true);
       this.ddBack();
     },
     methods: {
@@ -89,7 +90,21 @@
           e.preventDefault();
           that.$router.replace({path: that.path, query: {data: that.pitch}});
         });
-      }
+      },
+      ddReturn(val) {
+        let that = this;
+        // 钉钉头部左侧
+        dd.biz.navigation.setLeft({
+          control: val,
+          text: '返回',
+          onSuccess: function (result) {
+            that.$router.replace({path: that.path, query: {data: that.pitch}});
+            that.ddReturn(false);
+          },
+          onFail: function (err) {
+          }
+        });
+      },
     },
   }
 </script>

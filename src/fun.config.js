@@ -9,7 +9,6 @@ export default {
       });
     };
     Vue.prototype.routerDetail = function (val) {
-      alert(val);
       this.$router.push({path: '/publishDetail', query: {data:{ids: val}}});
     };
   }

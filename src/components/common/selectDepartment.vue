@@ -56,6 +56,7 @@
       })
     },
     mounted() {
+      $("input").trigger("click").focus();
       this.getDepartment(1);
       this.ddReturn(true);
       this.ddBack();

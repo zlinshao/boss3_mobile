@@ -120,6 +120,7 @@
       </div>
     </div>
 
+
     <!--底部-->
     <div class="footer">
       <div @click="routerLink('/index')" :class="{'onDiv': footActive === 1}">
@@ -186,8 +187,8 @@
       },
       routerDetail(id) {
         let data = {};
-        data.ids = id;
         data.tags = this.active;
+        data.ids = id;
         data.read = this.readActive;
         this.$router.push({path: '/publishDetail', query: {data: data}});
       },
@@ -245,50 +246,51 @@
           params: val,
         }).then((res) => {
           let data = res.data.data;
-          if (res.data.status === 'success' && data.length !== 0 && val.type === 3) {
+          this.paging = res.data.meta.total;
+          if (res.data.status === 'success' && data.length !== 0) {
             for (let i = 0; i < data.length; i++) {
               let user = {};
               user.id = data[i].id;
               user.title = data[i].title;
-              user.avatar = data[i].user.avatar;
-              user.name = data[i].user.name;
-              user.staff = data[i].user.org[0].name;
-              user.depart = data[i].user.role[0].display_name;
               user.created_at = data[i].created_at;
-              user.place = data[i].place.display_name;
-              user.status = data[i].place.status;
-              if (data[i].content.type) {
-                user.bulletin = data[i].content.type.name;
+              if (data[i].user) {
+                user.avatar = data[i].user.avatar;
+                user.name = data[i].user.name;
+                user.staff = data[i].user.org[0].name;
+                user.depart = data[i].user.role[0].display_name;
               } else {
-                user.bulletin = '';
+                user.avatar = '';
+                user.name = '';
+                user.staff = '';
+                user.depart = '';
               }
-              this.list.push(user);
-            }
-            this.paging = res.data.meta.total;
-          } else if (res.data.status === 'success' && data.length !== 0 && (val.type === 1 || val.type === 2 || val.type === 4)) {
-            for (let i = 0; i < data.length; i++) {
-              let user = {};
-              user.id = data[i].flow_id;
-              user.title = data[i].title;
-              user.avatar = data[i].flow.user.avatar;
-              user.name = data[i].flow.user.name;
-              user.staff = data[i].flow.user.org[0].name;
-              user.depart = data[i].flow.user.role[0].display_name;
-              user.created_at = data[i].created_at;
-              user.place = data[i].flow.place.display_name;
-              user.status = data[i].flow.place.status;
-              if (data[i].flow.content.type) {
-                user.bulletin = data[i].flow.content.type.name;
-              } else {
-                user.bulletin = '';
+              if (val.type === 3) {
+                user.place = data[i].place.display_name;
+                user.status = data[i].place.status;
+                if (data[i].content.type) {
+                  user.bulletin = data[i].content.type.name;
+                } else {
+                  user.bulletin = '';
+                }
+              } else if (val.type === 1 || val.type === 2 || val.type === 4) {
+                if (data[i].flow) {
+                  user.place = data[i].flow.place.display_name;
+                  user.status = data[i].flow.place.status;
+                  if (data[i].flow.content.type) {
+                    user.bulletin = data[i].flow.content.type.name;
+                  } else {
+                    user.bulletin = '';
+                  }
+                } else {
+                  user.place = '';
+                  user.status = '';
+                  user.bulletin = '';
+                }
               }
               this.list.push(user);
             }
           } else {
             this.disabled = true;
-          }
-          if (val.type === 4) {
-            this.paging = res.data.meta.total;
           }
         })
       },
