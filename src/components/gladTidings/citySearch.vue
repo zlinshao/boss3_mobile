@@ -25,7 +25,6 @@
     data() {
       return {
         urls: globalConfig.server,
-        searchShow: false,        //搜索
         searchValue: '',          //搜索
         city_id: '',
         lists: [],
@@ -33,10 +32,12 @@
       }
     },
     mounted() {
-      // $("input").trigger("click").focus();
       this.city_id = this.$route.query.city;
-      this.ddReturn(true);
-      this.ddBack();
+    },
+    activated() {
+      this.lists = [];
+      this.searchValue = '';
+      this.city_id = this.$route.query.city;
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -68,25 +69,6 @@
         this.$router.replace({path: this.path, query: {city: ''}});
          this.ddReturn(false);
       },
-      ddReturn(val) {
-        let that = this;
-        // 钉钉头部左侧
-        dd.biz.navigation.setLeft({
-          control: val,
-          onSuccess: function (result) {
-            that.$router.replace({path: that.path, query: {city: ''}});
-            that.ddReturn(false);
-          },
-          onFail: function (err) {}
-        });
-      },
-      ddBack() {
-        let that = this;
-        document.addEventListener('backbutton', function (e) {
-          e.preventDefault();
-          that.$router.push({path: that.path, query: {city: ''}});
-        });
-      }
     },
   }
 </script>
@@ -117,7 +99,7 @@
         .searchList {
           @include flex;
           justify-content: space-between;
-          padding: .3rem;
+          padding: .46rem .3rem 0;
           &:hover {
             background: #DDDDDD;
           }

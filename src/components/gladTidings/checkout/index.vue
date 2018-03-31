@@ -80,8 +80,8 @@
 
     <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1,1)">草稿</div>
-      <div class="" @click="saveCollect(0,1)">发布</div>
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
     <!--日期-->
@@ -143,12 +143,11 @@
     mounted() {
       this.getNowFormatDate();
       this.checkDetail();
-      this.routerIndex();
+    },
+    activated() {
+      this.houseInfo();
     },
     methods: {
-      routerLink(val) {
-        this.$router.push({path: val});
-      },
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -158,7 +157,6 @@
         this.currentDate = new Date(year, month, strDate);
       },
       searchSelect() {
-        this.saveCollect(1, 2);
         this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
       },
       // 日期选择
@@ -190,15 +188,16 @@
         }
       },
 
-      saveCollect(val, num) {
+      saveCollect(val) {
         this.form.draft = val;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
             if (res.data.code === '51210') {
               Toast.success(res.data.msg);
+              this.close_();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '51220') {
-              num === 1 ? Toast.success(res.data.msg) : false;
+              Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
             }
@@ -207,6 +206,17 @@
           Toast('图片上传中...');
         }
       },
+
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = t.house;
+          this.houseName = val.house_name;
+          this.form.contract_id = val.id;
+          this.form.house_id = val.house_id;
+        }
+      },
+
       checkDetail() {
         this.$http.get(this.urls + 'bulletin/checkout').then((res) => {
           if (res.data.code === '51210') {
@@ -230,15 +240,9 @@
           } else {
             this.form.id = '';
           }
-          let t = this.$route.query;
-          if (t.house !== undefined && t.house !== '') {
-            let val = t.house;
-            this.houseName = val.house_name;
-            this.form.contract_id = val.id;
-            this.form.house_id = val.house_id;
-          }
         })
       },
+
       close_() {
         this.isClear = true;
         setTimeout(() => {

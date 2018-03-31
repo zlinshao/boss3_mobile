@@ -64,8 +64,8 @@
 
     <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1,1)">草稿</div>
-      <div class="" @click="saveCollect(0,1)">发布</div>
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
   </div>
 </template>
@@ -103,18 +103,15 @@
     },
     mounted() {
       this.specialDetail();
-      this.routerIndex();
+    },
+    activated() {
+      this.houseInfo();
     },
     methods: {
-      routerLink(val) {
-        this.$router.push({path: val});
-      },
       searchSelect(val) {
         if (val === '0') {
-          this.saveCollect(1, 2);
           this.$router.replace({path: '/collectHouse', query: {type: 'lord1'}});
         } else if (val === '1') {
-          this.saveCollect(1, 2);
           this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
         } else {
           Toast('请选择收租标记');
@@ -130,23 +127,35 @@
           this.form.screenshot = val[1]
         }
       },
-      saveCollect(val,num) {
+      saveCollect(val) {
         this.form.draft = val;
         if (this.picStatus) {
-        this.$http.post(globalConfig.server + 'bulletin/special', this.form).then((res) => {
-          if (res.data.code === '51010') {
-            Toast.success(res.data.msg);
-            this.routerDetail(res.data.data.data.id);
-          } else if (res.data.code === '51020') {
-            num === 1 ? Toast.success(res.data.msg) : false;
-          } else {
-            Toast.fail(res.data.msg);
-          }
-        })
-      } else {
-        Toast('图片上传中...');
-  }
+          this.$http.post(globalConfig.server + 'bulletin/special', this.form).then((res) => {
+            if (res.data.code === '51010') {
+              Toast.success(res.data.msg);
+              this.close_();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === '51020') {
+              Toast.success(res.data.msg);
+            } else {
+              Toast.fail(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
+
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = t.house;
+          this.houseName = val.house_name;
+          this.form.contract_id = val.id;
+          this.form.house_id = val.house_id;
+        }
+      },
+
       specialDetail() {
         this.$http.get(globalConfig.server + 'bulletin/special').then((res) => {
           if (res.data.code === '51010') {
@@ -169,13 +178,6 @@
             this.department_name = data.department_name;
           } else {
             this.form.id = '';
-          }
-          let t = this.$route.query;
-          if (t.house !== undefined && t.house !== '') {
-            let val = t.house;
-            this.houseName = val.house_name;
-            this.form.contract_id = val.id;
-            this.form.house_id = val.house_id;
           }
         })
       },

@@ -131,8 +131,8 @@
 
     <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1,1)">草稿</div>
-      <div class="" @click="saveCollect(0,1)">发布</div>
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
   </div>
 </template>
@@ -177,13 +177,11 @@
     },
     mounted() {
       this.refundDetail();
-      this.routerIndex();
+    },
+    activated() {
+      this.houseInfo();
     },
     methods: {
-      routerLink(val) {
-        this.$router.push({path: val});
-      },
-
       screenshot(val) {
         this.picStatus = !val[2];
         this.form.screenshot_leader = val[1];
@@ -205,10 +203,8 @@
       },
       searchSelect(val) {
         if (val === '0') {
-          this.saveCollect(1, 2);
           this.$router.replace({path: '/collectHouse', query: {type: 'lord1'}});
         } else if (val === '1') {
-          this.saveCollect(1, 2);
           this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
         } else {
           Toast('请选择收租标记');
@@ -227,15 +223,16 @@
       //   this.onCancel();
       // },
 
-      saveCollect(val, num) {
+      saveCollect(val) {
         this.form.draft = val;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
             if (res.data.code === '50810') {
               Toast.success(res.data.msg);
+              this.close_();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50820') {
-              num === 1 ? Toast.success(res.data.msg) : false;
+              Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
             }
@@ -244,6 +241,17 @@
           Toast('图片上传中...');
         }
       },
+
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = t.house;
+          this.houseName = val.house_name;
+          this.form.contract_id = val.id;
+          this.form.house_id = val.house_id;
+        }
+      },
+
       refundDetail() {
         this.$http.get(this.urls + 'bulletin/refund').then((res) => {
           if (res.data.code === '50810') {
@@ -266,13 +274,6 @@
             this.screenshots = data.screenshot_leader;
           } else {
             this.form.id = '';
-          }
-          let t = this.$route.query;
-          if (t.house !== undefined && t.house !== '') {
-            let val = t.house;
-            this.houseName = val.house_name;
-            this.form.contract_id = val.id;
-            this.form.house_id = val.house_id;
           }
         })
       },

@@ -37,12 +37,13 @@
       }
     },
     mounted() {
-      // document.getElementsByTagName('input')[0].focus();
-      // $("input").trigger("click").focus();
-
       this.types = this.$route.query.type;
-      this.ddReturn(true);
-      this.ddBack();
+    },
+    activated() {
+      this.lists = [];
+      this.searchValue = '';
+      this.formDetail = {};
+      this.types = this.$route.query.type;
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -103,50 +104,18 @@
               list.staff_name = '';
               list.department_name = '';
             }
-
             this.lists.push(list);
           }
         })
       },
       // 房屋地址
       houseAddress(data) {
-
         this.$router.replace({path: this.path, query: {house: data, type: this.types}});
-        this.ddReturn(false);
       },
       // select关闭
       onCancel() {
         this.$router.replace({path: this.path, query: {house: ''}});
-        this.ddReturn(false);
       },
-      ddReturn(val) {
-        let that = this;
-        // 钉钉头部左侧
-        dd.biz.navigation.setLeft({
-          control: val,
-          onSuccess: function (result) {
-            that.$router.replace({path: that.path, query: {house: ''}});
-            that.ddReturn(false);
-          },
-          onFail: function (err) {
-          }
-        });
-        // 钉钉头部右侧
-        dd.biz.navigation.setRight({
-          show: false,
-          onSuccess: function (result) {
-          },
-          onFail: function (err) {
-          }
-        });
-      },
-      ddBack() {
-        let that = this;
-        document.addEventListener('backbutton', function (e) {
-          e.preventDefault();
-          that.$router.replace({path: that.path, query: {house: ''}});
-        });
-      }
     },
   }
 </script>
@@ -178,7 +147,7 @@
       .searchList {
         @include flex;
         justify-content: space-between;
-        padding: .3rem;
+        padding: .46rem .3rem 0;
         &:hover {
           background: #DDDDDD;
         }
@@ -194,7 +163,6 @@
             margin-bottom: .1rem;
           }
           span {
-            font-size: .16rem;
             color: #aaaaaa;
           }
         }
@@ -204,7 +172,6 @@
       padding-top: 5px;
       .van-search__input{
         height: 22px;
-
       }
     }
   }

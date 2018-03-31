@@ -405,8 +405,8 @@
 
     <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1, 1)">草稿</div>
-      <div class="" @click="saveCollect(0, 1)">发布</div>
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
     <!--select 选择-->
@@ -554,14 +554,12 @@
         }
         this.manuscript();
       });
-      this.routerIndex();
+    },
+    activated() {
+      this.houseInfo();
     },
     methods: {
-      routerLink(val) {
-        this.$router.push({path: val});
-      },
       searchSelect(val) {
-        this.saveCollect(1, 2);
         switch (val) {
           case 1:
             if (this.form.city_id !== '') {
@@ -808,16 +806,17 @@
         })
       },
 
-      saveCollect(val, num) {
+      saveCollect(val) {
         this.form.share = this.joint ? '1' : '0';
         this.form.draft = val;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
             if (res.data.code === '50110') {
               Toast.success(res.data.msg);
+              this.close_();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50120') {
-              num === 1 ? Toast.success(res.data.msg) : false;
+              Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
             }
@@ -825,7 +824,32 @@
         } else {
           Toast('图片上传中...');
         }
+      },
 
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.city !== undefined && t.city !== '') {
+          let val = t.city;
+          this.form.community_id = val.id;
+          this.community_name = val.name;
+        }
+        if (t.staff !== undefined && t.staff !== '') {
+          let val = t.staff;
+          this.form.staff_id = val.staff_id;
+          this.staff_name = val.staff_name;
+          this.form.department_id = val.depart_id;
+          this.department_name = val.depart_name;
+          this.stick();
+        }
+        if (t.depart !== undefined && t.depart !== '') {
+          let val = t.depart;
+          this.department_name = val.name;
+          this.form.department_id = val.id;
+          this.stick();
+        }
+        if (t.staff === '' || t.depart === '') {
+          this.stick();
+        }
       },
 
       // 草稿
@@ -922,29 +946,6 @@
             this.department_name = data.department_name;
           } else {
             this.form.id = '';
-          }
-          let t = this.$route.query;
-          if (t.city !== undefined && t.city !== '') {
-            let val = t.city;
-            this.form.community_id = val.id;
-            this.community_name = val.name;
-          }
-          if (t.staff !== undefined && t.staff !== '') {
-            let val = t.staff;
-            this.form.staff_id = val.staff_id;
-            this.staff_name = val.staff_name;
-            this.form.department_id = val.depart_id;
-            this.department_name = val.depart_name;
-            window.scrollTo(0, document.body.scrollHeight);
-          }
-          if (t.depart !== undefined && t.depart !== '') {
-            let val = t.depart;
-            this.department_name = val.name;
-            this.form.department_id = val.id;
-            window.scrollTo(0, document.body.scrollHeight);
-          }
-          if (t.staff === '' || t.depart === '') {
-            window.scrollTo(0, document.body.scrollHeight);
           }
         })
       },

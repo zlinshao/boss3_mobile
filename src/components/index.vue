@@ -33,12 +33,12 @@
             <!--<div>收起</div>-->
           </div>
           <div class="mainMain">
-            <div v-for="(key,index) in paths" v-if="key.hidden === 'glad'" @click="routerLink(key.path)">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'glad'" :to="key.path" :key="index">
               <p :style="{'background': key.back}">
                 <i :class="key.icon"></i>
               </p>
               <h1>{{key.name}}</h1>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -52,12 +52,12 @@
             <!--<div>收起</div>-->
           </div>
           <div class="mainMain default">
-            <div v-for="key in 4">
+            <router-link to="">
               <p>
                 <i class="iconfont icon-qita1"></i>
               </p>
               <h1>敬请期待...</h1>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -120,7 +120,6 @@
       </div>
     </div>
 
-
     <!--底部-->
     <div class="footer">
       <div @click="routerLink('/index')" :class="{'onDiv': footActive === 1}">
@@ -163,17 +162,14 @@
         readActive: 0,
         footActive: 1,
         checks: '',
-
         params: {},
-
         paging: 0,
       }
     },
     mounted() {
       this.paths = this.$router.options.routes;
-      if (this.$route.query.tags !== undefined) {
-        this.tabTag(this.$route.query.tags, this.$route.query.read)
-      }
+    },
+    activated() {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
     methods: {
@@ -190,7 +186,7 @@
         data.tags = this.active;
         data.ids = id;
         data.read = this.readActive;
-        this.$router.push({path: '/publishDetail', query: {data: data}});
+        this.$router.push({path: '/publishDetail', query: {data: JSON.stringify(data)}});
       },
 
       routerLink(val) {
@@ -199,8 +195,6 @@
         }
         this.active = 0;
         this.disabled = false;
-        this.$router.push({path: val});
-        localStorage.setItem('address', val);
       },
       loadMore() {
         if (!this.disabled) {
@@ -414,7 +408,7 @@
             @include flex;
             flex-wrap: wrap;
             margin-top: .3rem;
-            div {
+            a {
               width: 25%;
               text-align: center;
               P {
@@ -433,7 +427,7 @@
             }
           }
           .mainMain.default {
-            div {
+            a {
               p {
                 background: #aaaaaa;
               }

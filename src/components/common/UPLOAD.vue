@@ -38,45 +38,7 @@
       }
     },
     mounted() {
-      let _this = this;
-      $(document).on('click', '.pic_delete', function () {
-        let id = $(this).attr("data-val");
-        let toremove = '';
-        for (let i in _this.uploader.files) {
-          if (_this.uploader.files[i].id === id) {
-            toremove = i;
-          }
-        }
-        $('#' + id).remove();
-        _this.uploader.splice(toremove, 1);
-
-        for (let i = 0; i < _this.imgArray.length; i++) {
-          if (_this.imgArray[i].name.indexOf(id) > -1) {
-
-            _this.imgId.forEach((item) => {
-              if (_this.imgArray[i].id === item) {
-                _this.imgId = _this.imgId.filter((x) => {
-                  return x !== item
-                })
-              }
-            });
-
-            _this.imgArray.splice(i, 1);
-            _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-          }
-        }
-
-      });
-
-      this.getTokenMessage();
-
-
-
-      setInterval(()=>{
-        if(_this.uploader){
-          this.uploader.refresh();
-        }
-      },1000)
+      this.active();
     },
     watch: {
       editImage: {
@@ -99,6 +61,43 @@
       }
     },
     methods: {
+      active() {
+        let _this = this;
+        $(document).on('click', '.pic_delete', function () {
+          let id = $(this).attr("data-val");
+          let toremove = '';
+          for (let i in _this.uploader.files) {
+            if (_this.uploader.files[i].id === id) {
+              toremove = i;
+            }
+          }
+          $('#' + id).remove();
+          _this.uploader.splice(toremove, 1);
+
+          for (let i = 0; i < _this.imgArray.length; i++) {
+            if (_this.imgArray[i].name.indexOf(id) > -1) {
+
+              _this.imgId.forEach((item) => {
+                if (_this.imgArray[i].id === item) {
+                  _this.imgId = _this.imgId.filter((x) => {
+                    return x !== item
+                  })
+                }
+              });
+
+              _this.imgArray.splice(i, 1);
+              _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+            }
+          }
+        });
+        this.getTokenMessage();
+        setInterval(()=>{
+          if(_this.uploader){
+            this.uploader.refresh();
+          }
+        },1000)
+      },
+
       deleteImage(key) {
         this.imgId = this.imgId.filter((x) => {
           return x !== key

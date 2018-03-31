@@ -56,10 +56,10 @@
       })
     },
     mounted() {
-      $("input").trigger("click").focus();
       this.getDepartment(1);
-      this.ddReturn(true);
-      this.ddBack();
+    },
+    activated() {
+      this.getDepartment(1);
     },
     methods: {
       getDepartment(id) {
@@ -74,11 +74,6 @@
             this.organizeList = res.data.data;
           }
         });
-      },
-      beforeRouteEnter(to, from, next) {
-        next(vm => {
-          vm.path = from.path;
-        })
       },
       //搜索下级部门
       getNextLevel(item) {
@@ -115,6 +110,7 @@
         this.selectDepart.id = item.id;
         this.selectDepart.name = item.name;
       },
+
       confirmAdd() {
         if (this.selectId) {
           this.$router.replace({path: this.path, query: {depart: this.selectDepart}});
@@ -122,35 +118,6 @@
           Toast.fail('请选择部门');
         }
       },
-      ddReturn(val) {
-        let that = this;
-        // 钉钉头部左侧
-        dd.biz.navigation.setLeft({
-          control: val,
-          text: '返回',
-          onSuccess: function (result) {
-            that.$router.replace({path: that.path, query: {depart: ''}});
-            that.ddReturn(false);
-          },
-          onFail: function (err) {
-          }
-        });
-        // 钉钉头部右侧
-        dd.biz.navigation.setRight({
-          show: false,
-          onSuccess: function (result) {
-          },
-          onFail: function (err) {
-          }
-        });
-      },
-      ddBack() {
-        let that = this;
-        document.addEventListener('backbutton', function (e) {
-          e.preventDefault();
-          that.$router.replace({path: that.path, query: {depart: ''}});
-        });
-      }
     },
   }
 </script>
@@ -175,7 +142,6 @@
     z-index: 999;
     .breadcrumb_box {
       width: 100%;
-      /*overflow: hidden;*/
       margin: .15rem 0;
       background: #F8F8F8;
       padding: .25rem;
@@ -212,7 +178,6 @@
         .depart_detail {
           flex-grow: 1;
           height: .9rem;
-          /*width: 100%;*/
           @include flex;
           align-items: center;
           justify-content: space-between;

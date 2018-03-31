@@ -79,8 +79,8 @@
 
     <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1,1)">草稿</div>
-      <div class="" @click="saveCollect(0,1)">发布</div>
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
   </div>
@@ -120,15 +120,12 @@
     },
     mounted() {
       this.friedDetail();
-      this.routerIndex();
+    },
+    activated() {
+      this.houseInfo();
     },
     methods: {
-      routerLink(val) {
-        this.$router.push({path: val});
-      },
-
       searchSelect() {
-        this.saveCollect(1, 2);
         this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
       },
 
@@ -138,15 +135,16 @@
         this.form.screenshot_leader = val[1];
       },
 
-      saveCollect(val, num) {
+      saveCollect(val) {
         this.form.draft = val;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/banish', this.form).then((res) => {
             if (res.data.code === '50410') {
               Toast.success(res.data.msg);
+              this.close_();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50420') {
-              num === 1 ? Toast.success(res.data.msg) : false;
+              Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
             }
@@ -155,6 +153,17 @@
           Toast('图片上传中...');
         }
       },
+
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = t.house;
+          this.houseName = val.house_name;
+          this.form.contract_id = val.id;
+          this.form.house_id = val.house_id;
+        }
+      },
+
       friedDetail() {
         this.$http.get(this.urls + 'bulletin/banish').then((res) => {
           if (res.data.code === '50410') {
@@ -172,13 +181,6 @@
             this.form.remark = draft.remark;
           } else {
             this.form.id = '';
-          }
-          let t = this.$route.query;
-          if (t.house !== undefined && t.house !== '') {
-            let val = t.house;
-            this.houseName = val.house_name;
-            this.form.contract_id = val.id;
-            this.form.house_id = val.house_id;
           }
         })
       },

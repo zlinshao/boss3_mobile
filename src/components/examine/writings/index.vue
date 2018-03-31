@@ -13,9 +13,9 @@
       </div>
       <h6></h6>
       <div class="icons">
-        <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i>10
-        <i class="iconfont icon-zan"></i>10
-        <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i>10
+        <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i>{{myData.comments_count}}
+        <i class="iconfont icon-zan"></i>{{myData.favor_num}}
+        <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i>{{myData.read_num}}
       </div>
       <div class="nextPrev">
         <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
@@ -29,58 +29,41 @@
         <div class="staff">
           <div>
             <p>
-              <img :src="key.staffs.avatar" alt="">
+              <img :src="key.staffs.avatar">
             </p>
             <span>{{key.staffs.name}}</span>
             <span v-for="role in key.staffs.role">{{role.display_name}}</span>
           </div>
-          <p>
+          <p class="times">
             {{key.create_time.substring(0,10)}}
           </p>
         </div>
-        <!--{{key.staffs.name}}-->
-        <!--{{key.staffs.avatar}}-->
-        <!--<span v-for="role in key.staffs.role">-->
-        <!--{{role.display_name}}-->
-        <!--</span>-->
-        <!--<div>{{key.content}}</div>-->
-        <!--<div class="commentTitle">-->
-        <!--<div class="staff">-->
-        <!--<p>-->
-        <!--<img :src="key.user.avatar" v-if="key.user.avatar !== ''">-->
-        <!--<img src="../../../assets/head.png" v-else>-->
-        <!--</p>-->
-        <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
-        <!--{{item.name}}&nbsp;-&nbsp;<span v-for="(i,index) in key.user.role" v-if="index === 0">{{i.display_name}}-->
-        <!--</span>-->
-        <!--</span>-->
-        <!--</div>-->
-        <!--<div class="times">-->
-        <!--{{key.created_at}}-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="contents">-->
-        <!--{{key.body}}-->
-        <!--</div>-->
-        <!--<div class="pics">-->
-        <!--<div v-for="(p,index) in key.album">-->
-        <!--<img :src="p.uri" @click="pics(key.album,index,2)">-->
-        <!--</div>-->
-        <!--</div>-->
+        <div class="contents">
+          {{key.content}}
+        </div>
+        <div class="pics">
+          <div v-for="item in key.album.image_pic">
+            <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
+          </div>
+        </div>
       </div>
       <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
         暂无评论
       </div>
 
       <div class="footer">
-        评论
+        <router-link to="/comment">评论</router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import {ImagePreview} from 'vant';
+  import {Toast} from 'vant';
+
   export default {
+    components: {ImagePreview, Toast},
     name: "index",
     data() {
       return {
@@ -119,6 +102,16 @@
           this.commentList = res.data.data.data;
         })
       },
+      pics(val, index) {
+        let photo = [];
+        for (let key in val) {
+          console.log(val[key]);
+          for (let i = 0; i < val[key].length; i++) {
+            photo.push(val[key][i].uri);
+          }
+        }
+        ImagePreview(photo, index);
+      },
       routerLink(val) {
         this.$router.push({path: '/writings', query: {id: val}});
         this.contentDetail(val);
@@ -155,6 +148,7 @@
     }
     img {
       width: 100%;
+      height: 100%;
     }
     p {
       line-height: .5rem;
@@ -183,8 +177,9 @@
       @include flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: .55rem;
       p {
-        @include minMaxWidth(5rem);
+        @include minMaxWidth(4.6rem);
         @include flow;
         font-size: .36rem;
         color: #101010;
@@ -197,8 +192,10 @@
     }
 
     .commentArea {
+      margin-top: .3rem;
       line-height: .4rem;
       background: #FFFFFF;
+      margin-bottom: 1.4rem;
       .headline {
         color: #444444;
         font-size: .33rem;
@@ -213,18 +210,41 @@
         }
       }
       .commentAreaMain {
+        padding: .3rem;
         .staff {
           @include flex;
           align-items: center;
-          @include border_radius(50%);
-          p {
-            @include minMaxWidth(.9rem);
-            @include minMaxHeight(.9rem);
-            overflow: hidden;
-            img {
-              width: 100%;
-              height: 100%;
+          justify-content: space-between;
+          div {
+            @include minMaxWidth(4.6rem);
+            @include flow;
+            @include flex;
+            align-items: center;
+            p, img {
+              margin-right: .16rem;
+              @include minMaxWidth(.9rem);
+              @include minMaxHeight(.9rem);
+              @include border_radius(50%);
+              overflow: hidden;
             }
+          }
+          .times {
+            @include minMaxWidth(2rem);
+            @include flow;
+            text-align: right;
+          }
+        }
+        .contents {
+          margin-left: 1.1rem;
+        }
+        .pics {
+          @include flex;
+          flex-wrap: wrap;
+          margin-left: 1.1rem;
+          div {
+            width: 1rem;
+            height: 1rem;
+            margin: .1rem .1rem 0 0;
           }
         }
       }
@@ -238,27 +258,17 @@
       }
     }
     .footer {
+      color: #409EFF;
       border-top: 1px solid #ebebeb;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: 1rem;
+      line-height: 1rem;
+      text-align: center;
       background: #FFFFFF;
       z-index: 999;
-      @include flex;
-      justify-content: space-around;
-      align-items: center;
-      div {
-        color: #409EFF;
-        width: 100%;
-        height: .6rem;
-        line-height: .6rem;
-        text-align: center;
-      }
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
     }
   }
 </style>

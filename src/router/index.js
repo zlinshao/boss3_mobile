@@ -4,11 +4,11 @@ import Router from 'vue-router'
 import Ding from '../components/ding.vue'
 import Index from '../components/index.vue'
 
-import Expense from '@/components/examine/Expense/index.vue'
+// import Expense from '@/components/examine/Expense/index.vue'
 import Warning from '@/components/examine/warning/index.vue'
 import Writings from '@/components/examine/writings/index.vue'
-import CardDetail from '@/components/examine/cardDetail/index.vue'
-import CreditCard from '@/components/examine/creditCard/index.vue'
+// import CardDetail from '@/components/examine/cardDetail/index.vue'
+// import CreditCard from '@/components/examine/creditCard/index.vue'
 
 import CollectReport from '../components/gladTidings/collectReport/index.vue'
 import RentReport from '../components/gladTidings/rentReport/index.vue'
@@ -228,41 +228,41 @@ export default new Router({
       component: FinalPayment
     },
 
+
+    // {
+    //   path: '/expense',
+    //   hidden: 'examine',
+    //   name: '研发部报销申请',
+    //   meta: {title: '研发部报销申请'},
+    //   component: Expense
+    // },
     {
       path: '/writings',
       hidden: 'glad',
-      name: '文章详情',
-      meta: {title: '文章详情'},
+      name: '文章',
+      meta: {title: '文章'},
       component: Writings
-    },
-
-    {
-      path: '/expense',
-      hidden: 'examine',
-      name: '研发部报销申请',
-      meta: {title: '研发部报销申请'},
-      component: Expense
     },
     {
       path: '/warning',
-      name: '公告',
-      meta: {title: '公告'},
+      name: '警告',
+      meta: {title: '警告'},
       hidden: 'glad',
       component: Warning
     },
-    {
-      path: '/cardDetail',
-      name: '研发补卡申请详情',
-      hidden: 'examine',
-      meta: {title: '研发补卡申请详情'},
-      component: CardDetail
-    },
-    {
-      path: '/creditCard',
-      name: '研发补卡申请',
-      hidden: 'examine',
-      meta: {title: '研发补卡申请'},
-      component: CreditCard
-    },
+    // {
+    //   path: '/cardDetail',
+    //   name: '研发补卡申请详情',
+    //   hidden: 'examine',
+    //   meta: {title: '研发补卡申请详情'},
+    //   component: CardDetail
+    // },
+    // {
+    //   path: '/creditCard',
+    //   name: '研发补卡申请',
+    //   hidden: 'examine',
+    //   meta: {title: '研发补卡申请'},
+    //   component: CreditCard
+    // },
   ]
 })

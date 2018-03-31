@@ -192,13 +192,11 @@
     },
     mounted() {
       this.agencyDetail();
-      this.routerIndex();
+    },
+    activated() {
+      this.houseInfo();
     },
     methods: {
-      routerLink(val) {
-        this.$router.push({path: val});
-      },
-
       searchSelect(val) {
         if (val === '0') {
           this.saveCollect(1, 2);
@@ -230,7 +228,7 @@
         })
       },
 
-      saveCollect(val, num) {
+      saveCollect(val) {
         if (this.settleStatus) {
           this.form.settle = 1;
         } else {
@@ -241,9 +239,10 @@
           this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
             if (res.data.code === '51110') {
               Toast.success(res.data.msg);
+              this.close_();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50320') {
-              num === 1 ? Toast.success(res.data.msg) : false;
+              Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
             }
@@ -252,6 +251,17 @@
           Toast('图片上传中...');
         }
       },
+
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = t.house;
+          this.houseName = val.house_name;
+          this.form.contract_id = val.id;
+          this.form.house_id = val.house_id;
+        }
+      },
+
       agencyDetail() {
         this.$http.get(this.urls + 'bulletin/agency').then((res) => {
           if (res.data.code === '50310') {
@@ -283,15 +293,9 @@
           } else {
             this.form.id = '';
           }
-          let t = this.$route.query;
-          if (t.house !== undefined && t.house !== '') {
-            let val = t.house;
-            this.houseName = val.house_name;
-            this.form.contract_id = val.id;
-            this.form.house_id = val.house_id;
-          }
         })
       },
+
       close_() {
         this.isClear = true;
         setTimeout(() => {

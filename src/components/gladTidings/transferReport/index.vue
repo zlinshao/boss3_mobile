@@ -260,8 +260,8 @@
 
     <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1,1)">草稿</div>
-      <div class="" @click="saveCollect(0,1)">发布</div>
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -376,15 +376,12 @@
     mounted() {
       this.getNowFormatDate();
       this.rentDetail();
-      this.routerIndex();
     },
-
+    activated() {
+      this.houseInfo();
+    },
     methods: {
-      routerLink(val) {
-        this.$router.push({path: val});
-      },
       searchSelect(val) {
-        this.saveCollect(1, 2);
         switch (val) {
           case 1:
             this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
@@ -520,6 +517,7 @@
           this.moneyNum.splice(index, 1);
         }
       },
+
       // 日期计算
       periodDate(val) {
         let per;
@@ -530,6 +528,7 @@
         }
         this.countDate(val, per);
       },
+
       // 日期计算
       countDate(val, per) {
         this.$http.get(this.urls + '/bulletin/helper/date', {
@@ -547,21 +546,56 @@
           }
         })
       },
-      saveCollect(val, num) {
+
+      saveCollect(val) {
         this.form.draft = val;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
             if (res.data.code === '50510') {
               Toast.success(res.data.msg);
+              this.close_();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50520') {
-              num === 1 ? Toast.success(res.data.msg) : false;
+              Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
             }
           })
         } else {
           Toast('图片上传中...');
+        }
+      },
+
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = t.house;
+          if (t.type === 'rent1') {
+            this.oldHouseName = val.house_name;
+            this.form.contract_id_rent = val.id;
+            this.form.house_id_rent = val.house_id;
+          } else {
+            this.newHouseName = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
+          }
+        }
+        if (t.staff !== undefined && t.staff !== '') {
+          let val = t.staff;
+          this.form.staff_id = val.staff_id;
+          this.staff_name = val.staff_name;
+          this.form.department_id = val.depart_id;
+          this.department_name = val.depart_name;
+          this.stick();
+        }
+        if (t.depart !== undefined && t.depart !== '') {
+          let val = t.depart;
+          this.department_name = val.name;
+          this.form.department_id = val.id;
+          this.stick();
+        }
+        if (t.staff === '' || t.depart === '') {
+          this.stick();
         }
       },
 
@@ -626,38 +660,9 @@
           } else {
             this.form.id = '';
           }
-          let t = this.$route.query;
-          if (t.house !== undefined && t.house !== '') {
-            let val = t.house;
-            if (t.type === 'rent1') {
-              this.oldHouseName = val.house_name;
-              this.form.contract_id_rent = val.id;
-              this.form.house_id_rent = val.house_id;
-            } else {
-              this.newHouseName = val.house_name;
-              this.form.contract_id = val.id;
-              this.form.house_id = val.house_id;
-            }
-          }
-          if (t.staff !== undefined && t.staff !== '') {
-            let val = t.staff;
-            this.form.staff_id = val.staff_id;
-            this.staff_name = val.staff_name;
-            this.form.department_id = val.depart_id;
-            this.department_name = val.depart_name;
-            window.scrollTo(0, document.body.scrollHeight);
-          }
-          if (t.depart !== undefined && t.depart !== '') {
-            let val = t.depart;
-            this.department_name = val.name;
-            this.form.department_id = val.id;
-            window.scrollTo(0, document.body.scrollHeight);
-          }
-          if (t.staff === '' || t.depart === '') {
-            window.scrollTo(0, document.body.scrollHeight);
-          }
         })
       },
+
       close_() {
         this.isClear = true;
         setTimeout(() => {

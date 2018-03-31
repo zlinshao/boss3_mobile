@@ -45,6 +45,7 @@
                   corpId: _config.corpId
                 }
               }).then((res) => {
+                alert(JSON.stringify(res.data));
                 if (res.data !== false) {
                   let data = {};
                   data.name = res.data.name;

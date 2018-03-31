@@ -35,10 +35,9 @@
         vm.path = from.path;
       })
     },
-    mounted() {
-      // $("input").trigger("click").focus();
-      this.ddReturn(true);
-      this.ddBack();
+    activated() {
+      this.lists = [];
+      this.searchValue = '';
     },
     methods: {
       organize() {
@@ -72,34 +71,11 @@
       // 开单人
       organizeSure(name) {
         this.$router.replace({path: this.path, query: {staff: name}});
-        this.ddReturn(false);
       },
       // select关闭
       onClose() {
         this.$router.replace({path: this.path, query: {staff: ''}});
-        this.ddReturn(false);
       },
-      ddReturn(val) {
-        let that = this;
-        // 钉钉头部左侧
-        dd.biz.navigation.setLeft({
-          control: val,
-          text: '返回',
-          onSuccess: function (result) {
-            that.$router.replace({path: that.path, query: {staff: ''}});
-            that.ddReturn(false);
-          },
-          onFail: function (err) {
-          }
-        });
-      },
-      ddBack() {
-        let that = this;
-        document.addEventListener('backbutton', function (e) {
-          e.preventDefault();
-          that.$router.replace({path: that.path, query: {staff: ''}});
-        });
-      }
     },
   }
 </script>
@@ -131,7 +107,7 @@
       .searchList {
         @include flex;
         justify-content: space-between;
-        padding: .3rem;
+        padding: .46rem .3rem 0;
         &:hover {
           background: #DDDDDD;
         }

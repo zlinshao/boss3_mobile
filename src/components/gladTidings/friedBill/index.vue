@@ -90,8 +90,8 @@
 
     <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1,1)">草稿</div>
-      <div class="" @click="saveCollect(0,1)">发布</div>
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
   </div>
@@ -133,19 +133,15 @@
     },
     mounted() {
       this.friedDetail();
-      this.routerIndex();
+    },
+    activated() {
+      this.houseInfo();
     },
     methods: {
-      routerLink(val) {
-        this.$router.push({path: val});
-      },
-
       searchSelect(val) {
         if (val === '0') {
-          this.saveCollect(1, 2);
           this.$router.replace({path: '/collectHouse', query: {type: 'lord4'}});
         } else if (val === '1') {
-          this.saveCollect(1, 2);
           this.$router.replace({path: '/collectHouse', query: {type: 'rent4'}});
         } else {
           Toast('请选择收租标记');
@@ -157,7 +153,7 @@
         this.form.screenshot_leader = val[1];
       },
 
-      saveCollect(val,num) {
+      saveCollect(val) {
         if (this.refundSta) {
           this.form.refund = '1';
         } else {
@@ -167,14 +163,26 @@
         this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
           if (res.data.code === '50710') {
             Toast.success(res.data.msg);
+            this.close_();
             this.routerDetail(res.data.data.data.id);
           } else if (res.data.code === '50720') {
-            num === 1 ? Toast.success(res.data.msg) : false;
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
         })
       },
+
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = t.house;
+          this.houseName = val.house_name;
+          this.form.contract_id = val.id;
+          this.form.house_id = val.house_id;
+        }
+      },
+
       friedDetail() {
         this.$http.get(this.urls + 'bulletin/lose').then((res) => {
           if (res.data.code === '50710') {
@@ -195,13 +203,6 @@
             this.form.remark = draft.remark;
           } else {
             this.form.id = '';
-          }
-          let t = this.$route.query;
-          if (t.house !== undefined && t.house !== '') {
-            let val = t.house;
-            this.houseName = val.house_name;
-            this.form.contract_id = val.id;
-            this.form.house_id = val.house_id;
           }
         })
       },

@@ -16,7 +16,8 @@
               <span v-for="(key,index) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>
             </p>
           </div>
-          <div style="height: 1.4rem;">
+          <div style="height: 1.4rem;"
+               :class="{'statusSuccess': place === 'published', 'statusFail':place === 'rejected'}">
 
           </div>
         </div>
@@ -52,38 +53,50 @@
           </div>
         </div>
 
-        <!--评论-->
-        <div class="commentArea">
-          <div class="headline">评论<span>{{commentList.length}}</span></div>
-          <div class="commentAreaMain" v-for="key in commentList">
-            <div class="commentTitle">
-              <div class="staff">
-                <p>
-                  <img :src="key.user.avatar" v-if="key.user.avatar !== ''">
-                  <img src="../../../assets/head.png" v-else>
-                </p>
-                <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
+        <ul v-show="commentList.length !== 0"
+            v-waterfall-lower="loadMore"
+            waterfall-disabled="disabled"
+            waterfall-offset="300">
+          <li class="started">
+            <!--评论-->
+            <div class="commentArea">
+              <div class="headline">评论<span>{{commentList.length}}</span></div>
+              <div class="commentAreaMain" v-for="key in commentList">
+                <div class="commentTitle">
+                  <div class="staff">
+                    <p>
+                      <img :src="key.user.avatar" v-if="key.user.avatar !== ''">
+                      <img src="../../../assets/head.png" v-else>
+                    </p>
+                    <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
                   {{item.name}}&nbsp;-&nbsp;<span v-for="(i,index) in key.user.role" v-if="index === 0">{{i.display_name}}
                 </span>
                 </span>
+                  </div>
+                  <div class="times">
+                    {{key.created_at}}
+                  </div>
+                </div>
+                <div class="contents">
+                  {{key.body}}
+                </div>
+                <div class="pics">
+                  <div v-for="(p,index) in key.album">
+                    <img :src="p.uri" @click="pics(key.album,index,2)">
+                  </div>
+                </div>
               </div>
-              <div class="times">
-                {{key.created_at}}
+              <div v-if="commentList.length === 0" style="text-align: center;padding-top: .3rem;">
+                暂无评论
               </div>
             </div>
-            <div class="contents">
-              {{key.body}}
-            </div>
-            <div class="pics">
-              <div v-for="(p,index) in key.album">
-                <img :src="p.uri" @click="pics(key.album,index,2)">
-              </div>
-            </div>
-          </div>
-          <div v-if="commentList.length === 0" style="text-align: center;padding-top: .3rem;">
-            暂无评论
-          </div>
+          </li>
+        </ul>
+        <div class="bottom">
+          <span v-show="disabled && commentList.length > 6">我是有底线的</span>
+          <van-loading v-show="!disabled" type="spinner" color="black"/>
         </div>
+
       </div>
       <div class="footer">
         <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
@@ -93,52 +106,78 @@
 </template>
 
 <script>
+  import {Waterfall} from 'vant';
   import {ImagePreview} from 'vant';
   import {Toast} from 'vant';
 
   export default {
     name: "index",
     components: {ImagePreview, Toast},
+    directives: {
+      WaterfallLower: Waterfall('lower'),
+      WaterfallUpper: Waterfall('upper')
+    },
     data() {
       return {
         vLoading: true,
+        disabled: false,
 
         routerData: {},
         personal: {},
+        place: {},
         active: false,
         urls: globalConfig.server_user,
         formList: {},
 
         operation: {},
         form: {},       //评论
-        commentList: {},
+        commentList: [],
+        page: 1,
       }
     },
     mounted() {
-      this.routerData = this.$route.query.data;
-      this.formDetail(this.$route.query.data.ids);
-      let that = this;
-      document.addEventListener('backbutton', function (e) {
-        e.preventDefault();
-        that.$router.push({path: '/index', query: {tags: that.routerData.tags, read: that.routerData.read}});
-      });
+      this.disabled = false;
+      this.routerData = JSON.parse(this.$route.query.data);
+      this.formDetail(this.routerData.ids);
+      this.disabled = false;
     },
-
+    // activated() {
+    //   this.disabled = false;
+    //   this.routerData = JSON.parse(this.$route.query.data);
+    //   this.formDetail(this.routerData.ids);
+    // },
     methods: {
+      loadMore() {
+        if (!this.disabled) {
+          this.comments(this.routerData.ids, this.page);
+          this.page++;
+        }
+      },
       formDetail(val) {
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           if (res.data.status === 'success') {
             this.formList = res.data.data.process.content.show_content;
             this.operation = res.data.data.operation;
             this.personal = res.data.data.process.user;
+            this.place = res.data.data.process.place;
             this.vLoading = false;
-            this.comments(val);
           }
         });
       },
-      comments(val) {
-        this.$http.get(this.urls + 'comments?id=' + val).then((res) => {
-          this.commentList = res.data.data;
+      comments(val, page) {
+        this.$http.get(this.urls + 'comments?id=' + val, {
+          params: {
+            page: page,
+          }
+        }).then((res) => {
+          let data = res.data.data;
+          if (res.data.status === 'success' && data.length !== 0) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              this.commentList.push(res.data.data[i]);
+            }
+          } else {
+            this.disabled = true;
+          }
         })
       },
       pics(val, index, num) {
@@ -155,7 +194,7 @@
 
       // 评论
       commentOn(val) {
-        this.$router.replace({path: '/comment', query: {detail: val, data: this.routerData}});
+        this.$router.push({path: '/comment', query: {detail: val, data: JSON.stringify(this.routerData)}});
       },
     },
   }
@@ -290,7 +329,7 @@
           background: url('../../../assets/tongguo.png') no-repeat;
         }
         .statusFail {
-          background: url('../../../assets/shibai.jpg') no-repeat;
+          background: url('../../../assets/shibai.png') no-repeat;
         }
         .statusSuccess, .statusFail {
           width: 1.4rem;
@@ -331,7 +370,6 @@
 
       .commentArea {
         margin-top: .3rem;
-        margin-bottom: 1.5rem;
         padding-bottom: .6rem;
         background: #ffffff;
         color: #101010;
@@ -404,7 +442,14 @@
         }
       }
     }
-
+    .bottom {
+      @include flex;
+      margin-bottom: 1.3rem;
+      justify-content: center;
+      align-items: center;
+      padding: .3rem 0;
+      color: #DDDDDD;
+    }
     .footer {
       border-top: 1px solid #ebebeb;
       position: fixed;

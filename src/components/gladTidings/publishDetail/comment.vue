@@ -12,7 +12,7 @@
       </div>
       <div class="pic">
         <div class="title">图片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
       </div>
       <div class="footerComment">
         <div @click="manager()">确认</div>
@@ -30,6 +30,7 @@
     components: {Toast, UpLoad},
     data() {
       return {
+        isClear: false,
         urls: globalConfig.server_user,
         form: {
           remark: '',
@@ -46,10 +47,14 @@
       })
     },
     mounted() {
-      this.pitch = this.$route.query.data;
+      this.close_();
+      this.pitch = JSON.parse(this.$route.query.data);
       this.detail = this.$route.query.detail;
-      this.ddReturn(true);
-      this.ddBack();
+    },
+    activated() {
+      this.close_();
+      this.pitch = JSON.parse(this.$route.query.data);
+      this.detail = this.$route.query.detail;
     },
     methods: {
       // 确认评论
@@ -73,7 +78,7 @@
         }).then((res) => {
           if (res.data.status === 'success') {
             Toast.success(res.data.message);
-            this.$router.replace({path: '/publishDetail', query: {data: this.pitch}});
+            this.$router.replace({path: '/publishDetail', query: {data: JSON.stringify(this.pitch)}});
           } else {
             Toast(res.data.message);
           }
@@ -84,26 +89,13 @@
         this.form.photo = val[1];
       },
 
-      ddBack() {
-        let that = this;
-        document.addEventListener('backbutton', function (e) {
-          e.preventDefault();
-          that.$router.replace({path: that.path, query: {data: that.pitch}});
+      close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
         });
-      },
-      ddReturn(val) {
-        let that = this;
-        // 钉钉头部左侧
-        dd.biz.navigation.setLeft({
-          control: val,
-          text: '返回',
-          onSuccess: function (result) {
-            that.$router.replace({path: that.path, query: {data: that.pitch}});
-            that.ddReturn(false);
-          },
-          onFail: function (err) {
-          }
-        });
+        this.form.remark = '';
+        this.form.photo = [];
       },
     },
   }
