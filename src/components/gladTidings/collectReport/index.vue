@@ -813,8 +813,8 @@
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
             if (res.data.code === '50110') {
               Toast.success(res.data.msg);
-              this.close_();
               this.routerDetail(res.data.data.data.id);
+              this.close_();
             } else if (res.data.code === '50120') {
               Toast.success(res.data.msg);
             } else {

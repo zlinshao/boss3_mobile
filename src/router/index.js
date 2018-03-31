@@ -7,6 +7,7 @@ import Index from '../components/index.vue'
 // import Expense from '@/components/examine/Expense/index.vue'
 import Warning from '@/components/examine/warning/index.vue'
 import Writings from '@/components/examine/writings/index.vue'
+import Comments from '@/components/examine/writings/comments.vue'
 // import CardDetail from '@/components/examine/cardDetail/index.vue'
 // import CreditCard from '@/components/examine/creditCard/index.vue'
 
@@ -238,10 +239,17 @@ export default new Router({
     // },
     {
       path: '/writings',
-      hidden: 'glad',
+      hidden: false,
       name: '文章',
       meta: {title: '文章'},
       component: Writings
+    },
+    {
+      path: '/comments',
+      hidden: false,
+      name: '评论',
+      meta: {title: '评论'},
+      component: Comments
     },
     {
       path: '/warning',

@@ -25,6 +25,7 @@
     data() {
       return {
         urls: globalConfig.server,
+
         searchValue: '',          //搜索
         city_id: '',
         lists: [],
@@ -63,11 +64,9 @@
         data.name = name;
         data.id = id;
         this.$router.replace({path: this.path, query: {city: data}});
-         this.ddReturn(false);
       },
       onCancel() {
         this.$router.replace({path: this.path, query: {city: ''}});
-         this.ddReturn(false);
       },
     },
   }
@@ -99,7 +98,7 @@
         .searchList {
           @include flex;
           justify-content: space-between;
-          padding: .46rem .3rem 0;
+          padding: .3rem;
           &:hover {
             background: #DDDDDD;
           }

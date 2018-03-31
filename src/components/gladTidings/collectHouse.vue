@@ -147,7 +147,7 @@
       .searchList {
         @include flex;
         justify-content: space-between;
-        padding: .46rem .3rem 0;
+        padding: .3rem;
         &:hover {
           background: #DDDDDD;
         }
@@ -172,6 +172,7 @@
       padding-top: 5px;
       .van-search__input{
         height: 22px;
+
       }
     }
   }

@@ -31,13 +31,12 @@
     data() {
       return {
         isClear: false,
-        urls: globalConfig.server_user,
+        urls: globalConfig.server,
         form: {
           remark: '',
           photo: [],
         },
-        pitch: {},
-        detail: '',
+        pitch: '',
         path: '',
       }
     },
@@ -48,39 +47,35 @@
     },
     mounted() {
       this.close_();
-      this.pitch = JSON.parse(this.$route.query.data);
-      this.detail = this.$route.query.detail;
+      this.pitch = this.$route.query.data;
     },
     activated() {
       this.close_();
-      this.pitch = JSON.parse(this.$route.query.data);
-      this.detail = this.$route.query.detail;
+      this.pitch = this.$route.query.data;
     },
     methods: {
       // 确认评论
       manager() {
-        if (this.detail !== 'to_comment') {
+        if (this.form.remark !== '' || this.form.photo.length !== 0) {
           this.sure();
         } else {
-          if (this.form.remark !== '' || this.form.photo.length !== 0) {
-            this.sure();
-          } else {
-            Toast('请填写评论内容');
-          }
+          Toast('请填写评论内容');
         }
       },
 
       sure() {
-        this.$http.put(this.urls + 'process/' + this.pitch.ids, {
-          operation: this.detail,
-          comment: this.form.remark,
-          album: this.form.photo
+        this.$http.put(this.urls + 'oa/portal/comment', {
+          content: this.form.remark,
+          obj_id: this.pitch,
+          parent_id: this.pitch,
+          image_pic: this.form.photo,
+          video_file: []
         }).then((res) => {
           if (res.data.status === 'success') {
-            Toast.success(res.data.message);
-            this.$router.replace({path: this.path, query: {data: JSON.stringify(this.pitch)}});
+            Toast.success(res.data.msg);
+            this.$router.replace({path: this.path, query: {id: this.pitch}});
           } else {
-            Toast(res.data.message);
+            Toast(res.data.msg);
           }
         })
       },

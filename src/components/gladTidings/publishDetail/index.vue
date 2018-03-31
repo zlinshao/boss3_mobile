@@ -55,12 +55,12 @@
 
         <ul v-show="commentList.length !== 0"
             v-waterfall-lower="loadMore"
-            waterfall-disabled="disabled"
+            waterfall-disabled="disabled1"
             waterfall-offset="300">
           <li class="started">
             <!--评论-->
             <div class="commentArea">
-              <div class="headline">评论<span>{{commentList.length}}</span></div>
+              <div class="headline">评论<span>{{paging}}</span></div>
               <div class="commentAreaMain" v-for="key in commentList">
                 <div class="commentTitle">
                   <div class="staff">
@@ -69,9 +69,9 @@
                       <img src="../../../assets/head.png" v-else>
                     </p>
                     <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
-                  {{item.name}}&nbsp;-&nbsp;<span v-for="(i,index) in key.user.role" v-if="index === 0">{{i.display_name}}
-                </span>
-                </span>
+                      {{item.name}}&nbsp;-&nbsp;
+                      <span v-for="(i,index) in key.user.role" v-if="index === 0">{{i.display_name}}</span>
+                    </span>
                   </div>
                   <div class="times">
                     {{key.created_at}}
@@ -86,15 +86,12 @@
                   </div>
                 </div>
               </div>
-              <div v-if="commentList.length === 0" style="text-align: center;padding-top: .3rem;">
-                暂无评论
-              </div>
             </div>
           </li>
         </ul>
         <div class="bottom">
-          <span v-show="disabled && commentList.length > 6">我是有底线的</span>
-          <van-loading v-show="!disabled" type="spinner" color="black"/>
+          <span v-show="disabled1 && commentList.length > 6">我是有底线的</span>
+          <van-loading v-show="!disabled1" type="spinner" color="black"/>
         </div>
 
       </div>
@@ -120,7 +117,7 @@
     data() {
       return {
         vLoading: true,
-        disabled: false,
+        disabled1: false,
 
         routerData: {},
         personal: {},
@@ -133,24 +130,27 @@
         form: {},       //评论
         commentList: [],
         page: 1,
+        paging: '',
       }
     },
     mounted() {
-      this.disabled = false;
+      this.disabled1 = false;
       this.routerData = JSON.parse(this.$route.query.data);
       this.formDetail(this.routerData.ids);
-      this.disabled = false;
     },
-    // activated() {
-    //   this.disabled = false;
-    //   this.routerData = JSON.parse(this.$route.query.data);
-    //   this.formDetail(this.routerData.ids);
-    // },
+    activated() {
+      this.routerData = JSON.parse(this.$route.query.data);
+      this.formDetail(this.routerData.ids);
+      this.disabled1 = false;
+      this.page = 1;
+      this.commentList = [];
+      this.comments(this.routerData.ids, 1);
+    },
     methods: {
       loadMore() {
-        if (!this.disabled) {
-          this.comments(this.routerData.ids, this.page);
+        if (!this.disabled1) {
           this.page++;
+          this.comments(this.routerData.ids, this.page);
         }
       },
       formDetail(val) {
@@ -171,12 +171,13 @@
           }
         }).then((res) => {
           let data = res.data.data;
+          this.paging = res.data.meta.total;
           if (res.data.status === 'success' && data.length !== 0) {
             for (let i = 0; i < res.data.data.length; i++) {
               this.commentList.push(res.data.data[i]);
             }
           } else {
-            this.disabled = true;
+            this.disabled1 = true;
           }
         })
       },

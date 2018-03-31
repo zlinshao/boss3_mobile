@@ -36,8 +36,9 @@
       })
     },
     activated() {
-      this.lists = [];
+
       this.searchValue = '';
+
     },
     methods: {
       organize() {
@@ -107,7 +108,7 @@
       .searchList {
         @include flex;
         justify-content: space-between;
-        padding: .46rem .3rem 0;
+        padding: .3rem;
         &:hover {
           background: #DDDDDD;
         }

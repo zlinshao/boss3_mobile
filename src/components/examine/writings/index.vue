@@ -14,7 +14,7 @@
       <h6></h6>
       <div class="icons">
         <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i>{{myData.comments_count}}
-        <i class="iconfont icon-zan"></i>{{myData.favor_num}}
+        <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i>{{myData.favor_num}}
         <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i>{{myData.read_num}}
       </div>
       <div class="nextPrev">
@@ -24,7 +24,7 @@
     </div>
 
     <div class="commentArea">
-      <div class="headline">评论<span>{{commentList.length}}</span></div>
+      <div class="headline">评论<span>{{paging}}</span></div>
       <div class="commentAreaMain" v-for="key in commentList">
         <div class="staff">
           <div>
@@ -52,7 +52,7 @@
       </div>
 
       <div class="footer">
-        <router-link to="/comment">评论</router-link>
+        <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
       </div>
     </div>
   </div>
@@ -68,6 +68,8 @@
     data() {
       return {
         urls: globalConfig.server,
+        assistId: false,
+        paging: '',
         myData: {},
         cover_pic: {},
         create_time: '',
@@ -75,13 +77,15 @@
         next_content: {},
         params: {},
         commentList: [],
+        pitch: '',
       }
     },
     mounted() {
+      this.pitch = this.$route.query.id;
       let data = this.$route.query.id;
       this.contentDetail(data);
+      this.comment(data, 1);
     },
-    watch: {},
     methods: {
       contentDetail(val) {
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
@@ -90,8 +94,17 @@
           this.before_content = res.data.data.before_content;
           this.next_content = res.data.data.next_content;
           this.cover_pic = res.data.data.album.cover_pic;
-          this.comment(val, 1);
-
+        })
+      },
+      assist(id) {
+        this.$http.get(this.urls + 'oa/portal/favor/' + id).then((res) => {
+          if (res.data.code === '80070') {
+            this.contentDetail(id);
+            this.assistId = true;
+            if (this.assistId) {
+              this.myData.favor_num++;
+            }
+          }
         })
       },
       comment(val, page) {
@@ -99,7 +112,10 @@
         this.$http.get(this.urls + 'oa/portal/comment/' + val, {
           params: this.params,
         }).then((res) => {
-          this.commentList = res.data.data.data;
+          if (res.data.code === '80090') {
+            this.commentList = res.data.data.data;
+            this.paging = res.data.data.count;
+          }
         })
       },
       pics(val, index) {
@@ -166,6 +182,10 @@
       i {
         vertical-align: middle;
       }
+      i.zan {
+        animation: color-me-in 1s;
+        color: #fb4699;
+      }
     }
     .writings {
       line-height: .5rem;
@@ -173,6 +193,7 @@
       padding: .3rem;
       background: #FFFFFF;
     }
+
     .titles {
       @include flex;
       justify-content: space-between;
