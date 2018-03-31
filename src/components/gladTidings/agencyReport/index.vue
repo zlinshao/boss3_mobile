@@ -200,10 +200,10 @@
       searchSelect(val) {
         if (val === '0') {
           this.saveCollect(1, 2);
-          this.$router.replace({path: '/collectHouse', query: {type: 'lord0'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'lord0'}});
         } else if (val === '1') {
           this.saveCollect(1, 2);
-          this.$router.replace({path: '/collectHouse', query: {type: 'rent0'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'rent0'}});
         } else {
           Toast('请选择收租标记');
         }

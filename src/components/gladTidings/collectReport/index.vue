@@ -563,16 +563,16 @@
         switch (val) {
           case 1:
             if (this.form.city_id !== '') {
-              this.$router.replace({path: '/citySearch', query: {city: this.form.city_id}});
+              this.$router.push({path: '/citySearch', query: {city: this.form.city_id}});
             } else {
               Toast('请选择城市');
             }
             break;
           case 2:
-            this.$router.replace({path: '/organize'});
+            this.$router.push({path: '/organize'});
             break;
           case 4:
-            this.$router.replace({path: '/depart'});
+            this.$router.push({path: '/depart'});
             break;
         }
       },

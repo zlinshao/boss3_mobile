@@ -389,13 +389,13 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
             break;
           case 2:
-            this.$router.replace({path: '/organize'});
+            this.$router.push({path: '/organize'});
             break;
           case 4:
-            this.$router.replace({path: '/depart'});
+            this.$router.push({path: '/depart'});
             break;
         }
       },

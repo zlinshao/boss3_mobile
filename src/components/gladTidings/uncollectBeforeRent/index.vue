@@ -397,10 +397,10 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.replace({path: '/organize'});
+            this.$router.push({path: '/organize'});
             break;
           case 3:
-            this.$router.replace({path: '/depart'});
+            this.$router.push({path: '/depart'});
             break;
         }
       },

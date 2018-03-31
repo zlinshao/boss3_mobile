@@ -126,7 +126,7 @@
     },
     methods: {
       searchSelect() {
-        this.$router.replace({path: '/collectHouse', query: {type: 'rent1'}});
+        this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
       },
 
       // 截图
