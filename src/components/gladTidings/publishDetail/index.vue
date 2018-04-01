@@ -134,16 +134,18 @@
       }
     },
     mounted() {
+      this.routerIndex('');
       this.disabled1 = false;
       this.routerData = JSON.parse(this.$route.query.data);
       this.formDetail(this.routerData.ids);
     },
     activated() {
+      this.routerIndex('');
       this.routerData = JSON.parse(this.$route.query.data);
-      this.formDetail(this.routerData.ids);
       this.disabled1 = false;
       this.page = 1;
       this.commentList = [];
+      this.formDetail(this.routerData.ids);
       this.comments(this.routerData.ids, 1);
     },
     methods: {

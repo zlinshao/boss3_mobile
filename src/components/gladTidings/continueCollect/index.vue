@@ -18,15 +18,25 @@
           placeholder="户型已禁用"
           disabled>
         </van-field>
-        <van-field
-          v-model="form.month"
-          type="number"
-          label="收房月数"
-          placeholder="请填写收房月数"
-          icon="clear"
-          @click-icon="form.month = ''"
-          required>
-        </van-field>
+        <div class="first_date">
+          <van-field
+            style="width: 110px;"
+            class="title"
+            label="收房月数"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.month"
+            type="number"
+            placeholder="请填写月数">
+          </van-field>
+          <van-field
+            class="twoBorder"
+            v-model="form.day"
+            type="number"
+            placeholder="请填写天数">
+          </van-field>
+        </div>
         <van-field
           v-model="form.begin_date"
           type="text"
@@ -49,7 +59,7 @@
             @click="timeChoose(2)"
             placeholder="第一次打款日期">
           </van-field>
-          <span class="cut">/</span>
+          <span class="cut">-</span>
           <van-field
             class="twoBorder"
             v-model="form.pay_second_date"
@@ -152,20 +162,25 @@
           @click-icon="form.vacancy = ''"
           required>
         </van-field>
-        <van-field
-          v-model="form.warranty"
-          label="保修期(月数)"
-          type="text"
-          placeholder="请填写保修期(月数)"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.warranty_day"
-          label="保修期(天数)"
-          type="text"
-          placeholder="请填写保修期(天数)"
-          required>
-        </van-field>
+        <div class="first_date">
+          <van-field
+            style="width: 110px;"
+            class="title"
+            label="保修期"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.warranty"
+            type="number"
+            placeholder="保修期(月)">
+          </van-field>
+          <van-field
+            class="twoBorder"
+            v-model="form.warranty_day"
+            type="number"
+            placeholder="保修期(天)">
+          </van-field>
+        </div>
         <van-field
           v-model="fromName"
           label="来源"
@@ -460,6 +475,7 @@
     },
     activated() {
       this.houseInfo();
+      this.routerIndex('')
     },
     methods: {
       searchSelect(val) {
@@ -662,13 +678,13 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
-          let val = t.house;
+          let val = JSON.parse(t.house);
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
         }
         if (t.staff !== undefined && t.staff !== '') {
-          let val = t.staff;
+          let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;
           this.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
@@ -676,12 +692,12 @@
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
-          let val = t.depart;
+          let val = JSON.parse(t.depart);
           this.department_name = val.name;
           this.form.department_id = val.id;
           this.stick();
         }
-        if (t.staff === '' || t.depart === '') {
+        if (t.tops === '') {
           this.stick();
         }
       },
@@ -863,24 +879,19 @@
       }
     }
     .first_date {
-      @include flex;
       .van-cell.van-hairline.van-field {
-        width: 33%;
+        width: 34%;
         .van-cell__value {
           padding-left: 0;
         }
       }
-      .title.van-cell.van-hairline.van-field {
-        width: 31%;
-      }
-    }
-    .first_date {
       span.cut {
         padding-right: 10px;
         line-height: 39px;
         color: #969696;
         border-bottom: 1px solid #F4F4F4;
       }
+      @include flex;
       .twoBorder {
         border-bottom: 1px solid #F4F4F4;
         padding-bottom: 9px;

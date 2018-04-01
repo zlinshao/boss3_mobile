@@ -31,18 +31,17 @@
         </van-field>
         <div class="fourth">
           <van-field
+            style="width: 110px;"
             label="门牌号"
             required>
           </van-field>
           <van-field
-            style="width: 22%;"
             v-model="form.building"
             type="text"
             placeholder="栋">
           </van-field>
           <span class="cut">-</span>
           <van-field
-            style="width: 22%;"
             v-model="form.unit"
             type="text"
             placeholder="单元">
@@ -64,15 +63,25 @@
           placeholder="请选择户型"
           required>
         </van-field>
-        <van-field
-          v-model="form.month"
-          type="number"
-          label="收房月数"
-          placeholder="请填写收房月数"
-          icon="clear"
-          @click-icon="form.month = ''"
-          required>
-        </van-field>
+        <div class="first_date">
+          <van-field
+            style="width: 110px;"
+            class="title"
+            label="收房月数"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.month"
+            type="number"
+            placeholder="请填写月数">
+          </van-field>
+          <van-field
+            class="twoBorder"
+            v-model="form.day"
+            type="number"
+            placeholder="请填写天数">
+          </van-field>
+        </div>
         <van-field
           v-model="form.begin_date"
           type="text"
@@ -216,17 +225,16 @@
         </van-field>
         <div class="first_date">
           <van-field
+            style="width: 110px;"
             class="title"
             label="保修期"
             required>
           </van-field>
           <van-field
-            style="width: 30%;"
             v-model="form.warranty"
             type="number"
             placeholder="保修期(月)">
           </van-field>
-          <span class="cut" style="padding-right: 27px;">-</span>
           <van-field
             class="twoBorder"
             v-model="form.warranty_day"
@@ -500,6 +508,7 @@
           house_type: [0, 1, 1],
           rooms_sum: '',                //合租时房间数量
           month: '',                    //收房月数
+          day: '',                      //收房天数
           begin_date: '',               //合同开始日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -557,6 +566,7 @@
     },
     activated() {
       this.houseInfo();
+      this.routerIndex('');
     },
     methods: {
       searchSelect(val) {
@@ -829,12 +839,12 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.city !== undefined && t.city !== '') {
-          let val = t.city;
+          let val = JSON.parse(t.city);
           this.form.community_id = val.id;
           this.community_name = val.name;
         }
         if (t.staff !== undefined && t.staff !== '') {
-          let val = t.staff;
+          let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;
           this.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
@@ -842,12 +852,12 @@
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
-          let val = t.depart;
+          let val = JSON.parse(t.depart);
           this.department_name = val.name;
           this.form.department_id = val.id;
           this.stick();
         }
-        if (t.staff === '' || t.depart === '') {
+        if (t.tops === '') {
           this.stick();
         }
       },

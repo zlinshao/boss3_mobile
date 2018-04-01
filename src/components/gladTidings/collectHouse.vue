@@ -48,6 +48,7 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
+        vm.routerIndex(from.path, 'staff');
       })
     },
     methods: {
@@ -110,7 +111,7 @@
       },
       // 房屋地址
       houseAddress(data) {
-        this.$router.replace({path: this.path, query: {house: data, type: this.types}});
+        this.$router.replace({path: this.path, query: {house: JSON.stringify(data)}});
       },
       // select关闭
       onCancel() {

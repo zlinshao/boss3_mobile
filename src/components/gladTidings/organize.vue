@@ -33,6 +33,7 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
+        vm.routerIndex(from.path);
       })
     },
     activated() {
@@ -71,11 +72,11 @@
       },
       // 开单人
       organizeSure(name) {
-        this.$router.replace({path: this.path, query: {staff: name}});
+        this.$router.replace({path: this.path, query: {staff: JSON.stringify(name)}});
       },
       // select关闭
       onClose() {
-        this.$router.replace({path: this.path, query: {staff: ''}});
+        this.$router.replace({path: this.path, query: {tops: ''}});
       },
     },
   }

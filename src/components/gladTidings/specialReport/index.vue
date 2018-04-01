@@ -106,6 +106,7 @@
     },
     activated() {
       this.houseInfo();
+      this.routerIndex('');
     },
     methods: {
       searchSelect(val) {
@@ -149,7 +150,7 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
-          let val = t.house;
+          let val = JSON.parse(t.house);
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;

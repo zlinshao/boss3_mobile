@@ -44,6 +44,7 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
+        vm.routerIndex(from.path);
       })
     },
     mounted() {

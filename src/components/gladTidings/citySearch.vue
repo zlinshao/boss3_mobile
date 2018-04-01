@@ -36,6 +36,7 @@
       this.city_id = this.$route.query.city;
     },
     activated() {
+      this.routerIndex(this.path);
       this.lists = [];
       this.searchValue = '';
       this.city_id = this.$route.query.city;
@@ -43,6 +44,7 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
+        vm.routerIndex(from.path, 'house');
       })
     },
     methods: {
@@ -63,10 +65,10 @@
         let data = {};
         data.name = name;
         data.id = id;
-        this.$router.replace({path: this.path, query: {city: data}});
+        this.$router.replace({path: this.path, query: {city: JSON.stringify(data)}});
       },
       onCancel() {
-        this.$router.replace({path: this.path, query: {city: ''}});
+        this.$router.replace({path: this.path});
       },
     },
   }

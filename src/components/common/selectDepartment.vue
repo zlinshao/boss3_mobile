@@ -53,6 +53,7 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
+        vm.routerIndex(from.path, 'depart');
       })
     },
     mounted() {
@@ -113,7 +114,7 @@
 
       confirmAdd() {
         if (this.selectId) {
-          this.$router.replace({path: this.path, query: {depart: this.selectDepart}});
+          this.$router.replace({path: this.path, query: {depart: JSON.stringify(this.selectDepart)}});
         } else {
           Toast.fail('请选择部门');
         }

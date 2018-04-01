@@ -10,15 +10,25 @@
           placeholder="请填写房屋地址"
           required>
         </van-field>
-        <van-field
-          v-model="form.month"
-          type="number"
-          label="租房月数"
-          placeholder="请填写租房月数"
-          icon="clear"
-          @click-icon="form.month = ''"
-          required>
-        </van-field>
+        <div class="first_date">
+          <van-field
+            style="width: 110px;"
+            class="title"
+            label="收房月数"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.month"
+            type="number"
+            placeholder="请填写月数">
+          </van-field>
+          <van-field
+            class="twoBorder"
+            v-model="form.day"
+            type="number"
+            placeholder="请填写天数">
+          </van-field>
+        </div>
         <van-field
           v-model="form.sign_date"
           label="签约日期"
@@ -349,6 +359,7 @@
           rwc_type: 1,
           rent_without_collect_address: '',
           month: '',                    //租房月数
+          day: '',                      //租房天数
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -392,6 +403,7 @@
     },
     activated() {
       this.houseInfo();
+      this.routerIndex('')
     },
     methods: {
       searchSelect(val) {
@@ -589,7 +601,7 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.staff !== undefined && t.staff !== '') {
-          let val = t.staff;
+          let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;
           this.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
@@ -597,12 +609,12 @@
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
-          let val = t.depart;
+          let val = JSON.parse(t.depart);
           this.department_name = val.name;
           this.form.department_id = val.id;
           this.stick();
         }
-        if (t.staff === '' || t.depart === '') {
+        if (t.tops === '') {
           this.stick();
         }
       },
@@ -754,6 +766,25 @@
       }
       .van-cell__value {
         padding-left: 110px;
+      }
+    }
+    .first_date {
+      .van-cell.van-hairline.van-field {
+        width: 34%;
+        .van-cell__value {
+          padding-left: 0;
+        }
+      }
+      span.cut {
+        padding-right: 10px;
+        line-height: 39px;
+        color: #969696;
+        border-bottom: 1px solid #F4F4F4;
+      }
+      @include flex;
+      .twoBorder {
+        border-bottom: 1px solid #F4F4F4;
+        padding-bottom: 9px;
       }
     }
     .aloneModel {
