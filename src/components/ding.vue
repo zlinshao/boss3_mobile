@@ -1,6 +1,9 @@
 <template>
   <div v-wechat-title="$route.meta.title">
-
+    <div class="module"></div>
+    <div class="loading" v-if="loading">
+      <img src="../assets/loding1.gif">
+    </div>
   </div>
 </template>
 
@@ -11,6 +14,7 @@
       return {
         urls: globalConfig.server,
         address: globalConfig.attestation,
+        loading: true,
       }
     },
     mounted() {
@@ -33,8 +37,10 @@
           // 钉钉头部右侧
           dd.biz.navigation.setRight({
             show: false,
-            onSuccess: function (result) {},
-            onFail: function (err) {}
+            onSuccess: function (result) {
+            },
+            onFail: function (err) {
+            }
           });
           dd.runtime.permission.requestAuthCode({
             corpId: _config.corpId,
@@ -62,6 +68,7 @@
                     username: res.data.phone,
                     password: res.data.code,
                   }).then((res) => {
+                    that.loading = false;
                     localStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
@@ -90,5 +97,22 @@
 </script>
 
 <style scoped>
+  div {
+    position: fixed;
+  }
 
+  .module {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #f1f1f1;
+  }
+
+  .loading {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
 </style>
