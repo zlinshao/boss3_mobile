@@ -3,21 +3,12 @@
 
     <div class="main">
       <van-cell-group>
-        <div class="checks">
-          <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group v-model="form.collect_or_rent">
-            <van-radio name="0">收房</van-radio>
-            <van-radio name="1">租房</van-radio>
-          </van-radio-group>
-        </div>
-      </van-cell-group>
-      <van-cell-group>
         <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
-          @click="searchSelect(form.collect_or_rent)"
+          @click="searchSelect()"
           placeholder="请选择房屋地址"
           required>
         </van-field>
@@ -159,7 +150,6 @@
         form: {
           id: '',
           draft: 0,
-          collect_or_rent: '',
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
           amount: '',                   //退款金额
@@ -207,14 +197,8 @@
         this.selectHide = false;
         this.timeShow = false;
       },
-      searchSelect(val) {
-        if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
-        } else if (val === '1') {
-          this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
-        } else {
-          Toast('请选择收租标记');
-        }
+      searchSelect() {
+        this.$router.push({path: '/collectHouse', query: {type: 'rent0'}});
       },
 
       // // 房屋地址
@@ -267,7 +251,6 @@
 
             this.form.id = data.id;
             this.houseName = data.address;
-            this.form.collect_or_rent = draft.collect_or_rent;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.amount = draft.amount;
@@ -320,9 +303,9 @@
       @include flex;
       align-items: center;
       height: 44px;
-      .van-radio-group{
+      .van-radio-group {
         @include flex;
-        .van-radio{
+        .van-radio {
           margin-right: .3rem;
         }
       }

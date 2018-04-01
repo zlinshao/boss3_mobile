@@ -205,7 +205,7 @@
         this.selectHide = false;
       },
       searchSelect() {
-        this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
+        this.$router.push({path: '/collectHouse', query: {type: 'rent0'}});
       },
 
       // select关闭

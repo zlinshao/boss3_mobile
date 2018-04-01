@@ -167,10 +167,12 @@
       }
     },
     mounted() {
+      this.disabled = false;
       this.paths = this.$router.options.routes;
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
     activated() {
+      this.disabled = false;
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
     methods: {
@@ -183,6 +185,7 @@
         this.disabled = false;
       },
       routerDetail(id) {
+        this.disabled = true;
         let data = {};
         data.tags = this.active;
         data.ids = id;
