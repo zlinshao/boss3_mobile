@@ -22,14 +22,14 @@
           v-model="price_arr"
           label="月单价"
           readonly
-          type="text"
+          type="textarea"
           placeholder="月单价已禁用"
           disabled>
         </van-field>
         <van-field
           v-model="payWay"
           label="付款方式"
-          type="text"
+          type="textarea"
           placeholder="付款方式已禁用"
           disabled>
         </van-field>
@@ -255,6 +255,8 @@
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
+          this.staff_name = val.staff_name;
+          this.department_name = val.department_name;
         }
       },
 
