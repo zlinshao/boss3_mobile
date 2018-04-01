@@ -242,7 +242,7 @@
         }).then((res) => {
           let data = res.data.data;
           if (res.data.status === 'success' && data.length !== 0) {
-            if ((val.published === 0 || val.type === 3) || (val.read_at === 0 || val.type === 4)) {
+            if ((val.published === 0 && val.type === 3) || (val.read_at === 0 && val.type === 4)) {
               this.paging = res.data.meta.total;
             }
             for (let i = 0; i < data.length; i++) {

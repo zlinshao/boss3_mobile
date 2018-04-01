@@ -13,9 +13,10 @@
       </div>
       <h6></h6>
       <div class="icons">
-        <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i>{{myData.comments_count}}
-        <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i>{{myData.favor_num}}
-        <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i>{{myData.read_num}}
+        <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i><span>{{myData.comments_count}}</span>
+        <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i><span
+        :class="{'zan': assistId}">{{myData.favor_num}}</span>
+        <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
       </div>
       <div class="nextPrev">
         <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
@@ -129,6 +130,7 @@
         ImagePreview(photo, index);
       },
       routerLink(val) {
+        this.pitch = val;
         this.$router.push({path: '/writings', query: {id: val}});
         this.contentDetail(val);
         document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -176,13 +178,15 @@
       margin-top: .3rem;
     }
     .icons {
-      text-align: right;
+      @include flex;
+      align-items: center;
+      justify-content: flex-end;
       padding: .3rem 0;
       border-bottom: 1px solid #f1f1f1;
       i {
         vertical-align: middle;
       }
-      i.zan {
+      .zan {
         animation: color-me-in 1s;
         color: #fb4699;
       }
