@@ -352,6 +352,7 @@
           contract_id: '',            //房屋地址id
           house_id: '',               //房屋地址id
           month: '',                    //租房月数
+          day: '',                    //租房天数
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -623,6 +624,7 @@
             this.form.house_id = draft.house_id;
             this.houseName = data.address;
             this.form.month = draft.month;
+            this.form.day = draft.day;
             this.form.sign_date = draft.sign_date;
             this.first_date = [];
             this.first_date.push(draft.sign_date);
@@ -691,6 +693,7 @@
         this.form.house_id = '';
         this.houseName = '';
         this.form.month = '';
+        this.form.day = '';
         this.form.sign_date = '';
         this.datePrice = [];
         this.datePay = [];

@@ -5,8 +5,10 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
-          <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
+          <van-radio-group v-model="form.collect_or_rent">
+            <van-radio name="0">收房</van-radio>
+            <van-radio name="1">租房</van-radio>
+          </van-radio-group>
         </div>
       </van-cell-group>
       <van-cell-group>
@@ -140,8 +142,8 @@
 
     <div class="footer">
       <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1,1)">草稿</div>
-      <div class="" @click="saveCollect(0,1)">发布</div>
+      <div class="" @click="saveCollect(1)">草稿</div>
+      <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
   </div>
@@ -200,10 +202,8 @@
     methods: {
       searchSelect(val) {
         if (val === '0') {
-          this.saveCollect(1, 2);
           this.$router.push({path: '/collectHouse', query: {type: 'lord0'}});
         } else if (val === '1') {
-          this.saveCollect(1, 2);
           this.$router.push({path: '/collectHouse', query: {type: 'rent0'}});
         } else {
           Toast('请选择收租标记');
@@ -238,7 +238,7 @@
         this.form.draft = val;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
-            if (res.data.code === '51110') {
+            if (res.data.code === '50310') {
               Toast.success(res.data.msg);
               this.close_();
               this.routerDetail(res.data.data.data.id);
@@ -337,9 +337,15 @@
       display: -webkit-flex;
     }
     .checks {
-      display: -webkit-flex;
+      @include flex;
       align-items: center;
       height: 44px;
+      .van-radio-group{
+        @include flex;
+        .van-radio{
+          margin-right: .3rem;
+        }
+      }
     }
     $color: #409EFF;
     .van-switch.van-switch--on {

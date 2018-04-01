@@ -4,8 +4,10 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
-          <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
+          <van-radio-group v-model="form.collect_or_rent">
+            <van-radio name="0">收房</van-radio>
+            <van-radio name="1">租房</van-radio>
+          </van-radio-group>
         </div>
       </van-cell-group>
       <van-cell-group>
@@ -136,14 +138,13 @@
     },
     activated() {
       this.houseInfo();
-      this.routerIndex('');
     },
     methods: {
       searchSelect(val) {
         if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord4'}});
+          this.$router.replace({path: '/collectHouse', query: {type: 'lord4'}});
         } else if (val === '1') {
-          this.$router.push({path: '/collectHouse', query: {type: 'rent4'}});
+          this.$router.replace({path: '/collectHouse', query: {type: 'rent4'}});
         } else {
           Toast('请选择收租标记');
         }
@@ -164,7 +165,6 @@
         this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
           if (res.data.code === '50710') {
             Toast.success(res.data.msg);
-            this.close_();
             this.routerDetail(res.data.data.data.id);
           } else if (res.data.code === '50720') {
             Toast.success(res.data.msg);
@@ -177,7 +177,7 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
+          let val = t.house;
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -250,9 +250,15 @@
     }
 
     .checks {
-      display: -webkit-flex;
+      @include flex;
       align-items: center;
       height: 44px;
+      .van-radio-group{
+        @include flex;
+        .van-radio{
+          margin-right: .3rem;
+        }
+      }
     }
 
     .van-switch.van-switch--on {

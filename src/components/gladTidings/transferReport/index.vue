@@ -351,6 +351,7 @@
           house_id_rent: '',
           house_id: '',
           month: '',                    //签约时长
+          day: '',                      //签约时长天
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -617,8 +618,9 @@
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
-            this.form.id = draft.id;
+            this.form.id = data.id;
             this.form.month = draft.month;
+            this.form.day = draft.day;
 
             this.form.begin_date = draft.begin_date;
             this.first_date = [];
@@ -681,6 +683,7 @@
         });
         this.form.id = '';
         this.form.month = '';
+        this.form.day = '';
 
         this.form.begin_date = '';
         this.first_date = [];

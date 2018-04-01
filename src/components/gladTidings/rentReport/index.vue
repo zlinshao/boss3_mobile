@@ -591,7 +591,7 @@
             if (res.data.code === '50210') {
               Toast.success(res.data.msg);
               this.close_();
-              this.$router.push({path: '/publishDetail', query: {ids: res.data.data.data.id}});
+              this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50220') {
               Toast.success(res.data.msg)
             } else {
@@ -642,6 +642,7 @@
             this.form.house_id = draft.house_id;
             this.houseName = data.address;
             this.form.month = draft.month;
+            this.form.day = draft.day;
             this.form.sign_date = draft.sign_date;
             this.first_date = [];
             this.first_date.push(draft.sign_date);
@@ -712,6 +713,7 @@
         this.form.house_id = '';
         this.houseName = '';
         this.form.month = '';
+        this.form.day = '';
         this.form.sign_date = '';
         this.datePrice = [];
         this.datePay = [];

@@ -5,8 +5,10 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
-          <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
+          <van-radio-group v-model="form.collect_or_rent">
+            <van-radio name="0">收房</van-radio>
+            <van-radio name="1">租房</van-radio>
+          </van-radio-group>
         </div>
       </van-cell-group>
       <van-cell-group>
@@ -183,6 +185,9 @@
       this.routerIndex('')
     },
     methods: {
+      changeRadio() {
+
+      },
       screenshot(val) {
         this.picStatus = !val[2];
         this.form.screenshot_leader = val[1];
@@ -246,7 +251,7 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
+          let val = JSON.t.house;
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -260,7 +265,7 @@
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
-            this.form.id = draft.id;
+            this.form.id = data.id;
             this.houseName = data.address;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.form.contract_id = draft.contract_id;
@@ -312,9 +317,15 @@
       display: -webkit-flex;
     }
     .checks {
-      display: -webkit-flex;
+      @include flex;
       align-items: center;
       height: 44px;
+      .van-radio-group{
+        @include flex;
+        .van-radio{
+          margin-right: .3rem;
+        }
+      }
     }
     $color: #409EFF;
     .van-switch.van-switch--on {

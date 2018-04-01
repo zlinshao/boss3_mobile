@@ -2,10 +2,12 @@
   <div id="special">
     <div class="main">
       <van-cell-group>
-        <div class="checks" style="">
+        <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio name="0" v-model="form.collect_or_rent">收房</van-radio>
-          <van-radio name="1" v-model="form.collect_or_rent" style="margin-left: 18px">租房</van-radio>
+          <van-radio-group v-model="form.collect_or_rent">
+            <van-radio name="0">收房</van-radio>
+            <van-radio name="1">租房</van-radio>
+          </van-radio-group>
         </div>
       </van-cell-group>
       <van-cell-group>
@@ -213,9 +215,15 @@
     }
     $color: #409EFF;
     .checks {
-      display: -webkit-flex;
+      @include flex;
       align-items: center;
       height: 44px;
+      .van-radio-group{
+        @include flex;
+        .van-radio{
+          margin-right: .3rem;
+        }
+      }
     }
 
     .van-switch.van-switch--on {

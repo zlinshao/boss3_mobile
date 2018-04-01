@@ -105,6 +105,9 @@
               list.staff_name = '';
               list.department_name = '';
             }
+            if(data[i].month_price !== null){
+
+            }
             this.lists.push(list);
           }
         })

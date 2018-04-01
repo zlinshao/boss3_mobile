@@ -187,6 +187,9 @@
       },
       close_() {
         this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
         this.bulletinDate = '';
         this.payWay = '';
         this.price_arr = '';

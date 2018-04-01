@@ -426,6 +426,7 @@
           contract_id_continued: '',    //合同
           house_id: '',                 //合同
           month: '',                    //收房月数
+          day: '',                      //收房天数
           begin_date: '',               //合同开始日期
           period_price_arr: [''],       //月单价周期
           price_arr: [''],              //月单价
@@ -711,6 +712,7 @@
 
             this.form.id = data.id;
             this.form.month = draft.month;
+            this.form.day = draft.day;
             this.form.contract_id_continued = draft.contract_id_continued;
             this.form.house_id = draft.house_id;
             this.houseName = data.address;
@@ -790,6 +792,7 @@
         this.form.house_id = '';
         this.houseName = '';
         this.form.month = '';
+        this.form.day = '';
         this.form.begin_date = '';
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';

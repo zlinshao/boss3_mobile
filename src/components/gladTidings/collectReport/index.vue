@@ -887,6 +887,7 @@
             this.form.unit = draft.unit;
             this.form.doorplate = draft.doorplate;
             this.form.month = draft.month;
+            this.form.day = draft.day;
 
             this.form.begin_date = draft.begin_date;
             this.form.pay_first_date = draft.pay_first_date;
@@ -977,6 +978,7 @@
         this.form.unit = '';
         this.form.doorplate = '';
         this.form.month = '';
+        this.form.day = '';
 
         this.form.begin_date = '';
         this.form.pay_first_date = '';

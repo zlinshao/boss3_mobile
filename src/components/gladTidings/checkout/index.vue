@@ -3,11 +3,20 @@
 
     <div class="main">
       <van-cell-group>
+        <div class="checks">
+          <div style="min-width: 110px;">收租标记</div>
+          <van-radio-group v-model="form.collect_or_rent">
+            <van-radio name="0">收房</van-radio>
+            <van-radio name="1">租房</van-radio>
+          </van-radio-group>
+        </div>
+      </van-cell-group>
+      <van-cell-group>
         <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchSelect()"
+          @click="searchSelect(form.collect_or_rent)"
           readonly
           placeholder="选择房屋地址"
           required>
@@ -125,6 +134,7 @@
         form: {
           id: '',
           draft: 0,
+          collect_or_rent: '',
           house_id: '',
           contract_id: '',              //合同id
           photo: [],                    //领导截图 数组
@@ -158,7 +168,13 @@
         this.currentDate = new Date(year, month, strDate);
       },
       searchSelect() {
-        this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
+        if (val === '0') {
+          this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
+        } else if (val === '1') {
+          this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
+        } else {
+          Toast('请选择收租标记');
+        }
       },
       // 日期选择
       timeChoose() {
@@ -228,6 +244,7 @@
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
+            this.form.collect_or_rent = draft.collect_or_rent;
             this.houseName = data.address;
             this.form.photo = draft.photo;
             this.photos = data.photo;
@@ -286,9 +303,15 @@
     }
 
     .checks {
-      display: -webkit-flex;
+      @include flex;
       align-items: center;
       height: 44px;
+      .van-radio-group{
+        @include flex;
+        .van-radio{
+          margin-right: .3rem;
+        }
+      }
     }
 
     .van-switch.van-switch--on {

@@ -629,6 +629,7 @@
             this.form.id = data.id;
             this.form.rent_without_collect_address = draft.rent_without_collect_address;
             this.form.month = draft.month;
+            this.form.day = draft.day;
             this.form.sign_date = draft.sign_date;
 
             this.first_date = [];
@@ -701,6 +702,7 @@
         this.form.house_id = '';
         this.houseName = '';
         this.form.month = '';
+        this.form.day = '';
         this.form.sign_date = '';
         this.datePrice = [];
         this.datePay = [];
