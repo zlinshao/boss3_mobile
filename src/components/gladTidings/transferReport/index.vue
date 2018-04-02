@@ -383,7 +383,7 @@
         screenshots: {},
         photos: {},
         staff_name: '',                  //开单人name
-        leader_name: '湮灭',                //负责人name
+        leader_name: '湮灭',             //负责人name
         department_name: '',             //部门name
       }
     },

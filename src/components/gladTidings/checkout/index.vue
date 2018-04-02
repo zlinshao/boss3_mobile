@@ -22,19 +22,38 @@
           required>
         </van-field>
         <van-field
+          :class="{'payWay': payStatus}"
+          @click="payWayClick(1)"
           v-model="payWay"
           label="付款方式"
-          type="textarea"
-          disabled
+          type="text"
+          readonly
+          icon="arrow"
           placeholder="付款方式已禁用">
         </van-field>
+        <div class="accordion" v-if="payStatus">
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        </div>
+
         <van-field
+          :class="{'payWay': priceStatus}"
           v-model="price_arr"
+          @click="payWayClick(2)"
           label="月单价"
-          type="textarea"
-          disabled
+          type="text"
+          readonly
+          icon="arrow"
           placeholder="月单价已禁用">
         </van-field>
+        <div class="accordion" v-if="priceStatus">
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        </div>
       </van-cell-group>
 
       <div class="aloneModel">
@@ -121,6 +140,9 @@
         isClear: false,           //删除图片
         picStatus: true,
 
+        payStatus: false,
+        priceStatus: false,
+
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
@@ -128,8 +150,8 @@
         timeIndex: '',
         timeValue: '',            //日期value
 
-        payWay: '',                   //付款方式
-        price_arr: '',                //月单价
+        payWay: '1',                   //付款方式
+        price_arr: '1',                //月单价
 
         form: {
           id: '',
@@ -160,6 +182,15 @@
       this.ddRent('');
     },
     methods: {
+      payWayClick(val) {
+        if (val === 1) {
+          this.payStatus = !this.payStatus;
+          this.priceStatus = false;
+        } else {
+          this.priceStatus = !this.priceStatus;
+          this.payStatus = false;
+        }
+      },
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -294,6 +325,16 @@
       display: -webkit-flex;
     }
     $color: #409EFF;
+
+    .accordion {
+      border-bottom: .01rem solid #ececec;
+      div {
+        color: #888888;
+        min-height: 44px;
+        line-height: 44px;
+      }
+    }
+
     .aloneModel {
       background: #fff;
       width: 100%;
@@ -308,9 +349,9 @@
       @include flex;
       align-items: center;
       height: 44px;
-      .van-radio-group{
+      .van-radio-group {
         @include flex;
-        .van-radio{
+        .van-radio {
           margin-right: .3rem;
         }
       }
@@ -330,14 +371,17 @@
       }
       .van-cell__value {
         padding-left: 110px;
+        i {
+          transform: rotate(90deg);
+          transition: all .5s;
+        }
       }
     }
-    .dingJin {
-      padding: 10px 15px 10px 0;
-      display: flex;
-      display: -webkit-flex; /* Safari */
-      align-items: center;
-      justify-content: space-between;
+    .payWay.van-cell.van-hairline.van-field {
+      i {
+        transform: rotate(-90deg);
+        transition: all .5s;
+      }
     }
 
     .searchClass {

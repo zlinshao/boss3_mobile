@@ -281,6 +281,7 @@
           @click-icon="form.penalty = ''"
           required>
         </van-field>
+        <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-field
           v-model="form.contract_number"
           label="合同编号"
@@ -411,6 +412,8 @@
         value2: ['个人', '中介'],
         value6: ['无', '房东', '租客', '公司'],
 
+        corp: true,                    //公司单
+
         form: {
           id: '',
           type: 2,
@@ -443,6 +446,7 @@
           account: '',                  //帐号
           relationship: '',             //房东与收款人关系
           penalty: '',                  //违约金
+          is_corp: 1,                   //是否公司单  0个人1公司
           contract_number: '',          //合同编号
           screenshot_leader: '',        //领导截图 数组
           photo: '',                    //合同照片 数组
@@ -650,6 +654,7 @@
 
       saveCollect(val) {
         this.form.draft = val;
+        this.form.is_corp = this.corp ? 1 : 0;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
             if (res.data.code === '50110') {
@@ -735,6 +740,8 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
+            this.is_corp = draft.is_corp;
+            this.corp = draft.is_corp === 1 ? true : false;
             this.form.deposit = draft.deposit;
             this.form.vacancy = draft.vacancy;
             this.form.vacancy_way = draft.vacancy_way;
@@ -804,6 +811,8 @@
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
 
+        this.is_corp = 1;
+        this.corp = true;
         this.form.deposit = '';
         this.form.vacancy = '';
         this.form.vacancy_way = '';
