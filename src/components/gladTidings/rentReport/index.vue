@@ -11,6 +11,16 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
+        <van-field
+          v-if="rooms.length !== 0"
+          v-model="roomsName"
+          type="text"
+          label="合租房"
+          readonly
+          @click="selectShow(4,'')"
+          placeholder="请选择合租房"
+          required>
+        </van-field>
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -360,12 +370,17 @@
         cusFrom: false,                //客户来源
         corp: true,                    //公司单
 
+        rooms: [],
+        roomsMate: [],
+        roomsName: '',
+
         form: {
           id: '',
           type: 1,
           draft: 0,
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
+          room_id: '',                 //合租房间
           month: '',                    //租房月数
           day: '',                      //租房天数
           sign_date: '',                //签约日期
@@ -503,7 +518,7 @@
             this.columns = this.value3;
             break;
           case 4:
-            this.columns = this.value4;
+            this.columns = this.rooms;
             break;
         }
       },
@@ -522,8 +537,12 @@
             this.form.pay_way_bet = value;
             break;
           case 4:
-            this.fromName = value;
-            this.form.from = index + 1;
+            this.roomsName = value;
+            for (let i = 0; i < this.roomsMate.length; i++) {
+              if (this.roomsMate[i].name === value) {
+                this.form.room_id = this.roomsMate[i].id;
+              }
+            }
             break;
         }
         this.selectHide = false;
@@ -547,24 +566,24 @@
       },
       // 删除月单价
       deleteAmount(index, val) {
-          if (val === 1) {
-            this.amountPrice--;
-            this.form.period_price_arr.splice(index, 1);
-            this.form.price_arr.splice(index, 1);
-            this.datePrice.splice(index, 1);
-            this.periodDate(val);
-          } else if (val === 2) {
-            this.amountPay--;
-            this.form.period_pay_arr.splice(index, 1);
-            this.form.pay_way_arr.splice(index, 1);
-            this.datePay.splice(index, 1);
-            this.periodDate(val);
-          } else {
-            this.amountMoney--;
-            this.form.money_sep.splice(index, 1);
-            this.form.money_way.splice(index, 1);
-            this.moneyNum.splice(index, 1);
-          }
+        if (val === 1) {
+          this.amountPrice--;
+          this.form.period_price_arr.splice(index, 1);
+          this.form.price_arr.splice(index, 1);
+          this.datePrice.splice(index, 1);
+          this.periodDate(val);
+        } else if (val === 2) {
+          this.amountPay--;
+          this.form.period_pay_arr.splice(index, 1);
+          this.form.pay_way_arr.splice(index, 1);
+          this.datePay.splice(index, 1);
+          this.periodDate(val);
+        } else {
+          this.amountMoney--;
+          this.form.money_sep.splice(index, 1);
+          this.form.money_way.splice(index, 1);
+          this.moneyNum.splice(index, 1);
+        }
       },
       // 日期计算
       periodDate(val) {
@@ -619,6 +638,12 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
+          let value = JSON.parse(sessionStorage.getItem("detail"));
+          this.rooms = [];
+          this.roomsMate = value.house.rooms;
+          for (let i = 0; i < value.house.rooms.length; i++) {
+            this.rooms.push(value.house.rooms[i].name);
+          }
           let val = JSON.parse(t.house);
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
@@ -692,9 +717,9 @@
 
             this.form.deposit = draft.deposit;
             this.form.receipt = draft.receipt;
-            this.is_agency  = draft.is_agency ;
+            this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
-            this.is_corp  = draft.is_corp ;
+            this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
@@ -748,9 +773,9 @@
         this.form.money_sep = [''];
         this.form.money_way = [''];
         this.form.deposit = '';
-        this.is_corp  = 1;
+        this.is_corp = 1;
         this.corp = true;
-        this.is_agency  = 0;
+        this.is_agency = 0;
         this.cusFrom = false;
         this.form.property = '';
         this.form.receipt = '';

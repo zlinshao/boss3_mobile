@@ -119,7 +119,11 @@
       },
       // 房屋地址
       houseAddress(data) {
-        this.$router.replace({path: this.path, query: {house: JSON.stringify(data), type: this.types}});
+        sessionStorage.setItem("detail", JSON.stringify(this.formDetail));
+        this.$router.replace({
+          path: this.path,
+          query: {house: JSON.stringify(data), type: this.types}
+        });
       },
       // select关闭
       onCancel() {

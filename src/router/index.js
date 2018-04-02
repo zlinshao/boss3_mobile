@@ -49,7 +49,6 @@ export default new Router({
       name: 'ding',
       hidden: false,
       meta: {title: '验证中'},
-
       component: Ding
     },
     {
@@ -262,8 +261,8 @@ export default new Router({
     },
     {
       path: '/warning',
-      name: '警告',
-      meta: {title: '警告'},
+      name: '公告',
+      meta: {title: '公告'},
       hidden: 'glad',
       component: Warning
     },
