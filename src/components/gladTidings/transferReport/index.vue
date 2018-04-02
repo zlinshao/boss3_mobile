@@ -347,7 +347,6 @@
 
         form: {
           id: '',
-          type: 1,
           draft: 0,
           contract_id_rent: '',         //原租房合同id
           contract_id: '',              //现房屋合同id
