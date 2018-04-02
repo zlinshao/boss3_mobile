@@ -23,14 +23,14 @@
         </van-field>
         <van-field
           v-model="payWay"
-          type="text"
+          type="textarea"
           label="付款方式"
           placeholder="付款方式已禁用"
           disabled>
         </van-field>
         <van-field
           v-model="monthPrice"
-          type="text"
+          type="textarea"
           label="月单价"
           placeholder="月单价已禁用"
           disabled>

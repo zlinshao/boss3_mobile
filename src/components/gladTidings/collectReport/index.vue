@@ -647,6 +647,8 @@
         switch (this.timeIndex) {
           case 1:
             this.form.begin_date = this.timeValue;
+            this.countDate(1, this.form.period_price_arr);
+            this.countDate(2, this.form.period_pay_arr);
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
@@ -656,6 +658,8 @@
             this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
+            this.countDate(1, this.form.period_price_arr);
+            this.countDate(2, this.form.period_pay_arr);
             break;
           case 3:
             this.form.pay_second_date = this.timeValue;
@@ -770,13 +774,11 @@
       // 删除月单价
       deleteAmount(index, val) {
         if (val === 1) {
-          if (this.amountPrice > 1) {
-            this.amountPrice--;
-            this.form.period_price_arr.splice(index, 1);
-            this.form.price_arr.splice(index, 1);
-            this.datePrice.splice(index, 1);
-            this.periodDate(val);
-          }
+          this.amountPrice--;
+          this.form.period_price_arr.splice(index, 1);
+          this.form.price_arr.splice(index, 1);
+          this.datePrice.splice(index, 1);
+          this.periodDate(val);
         } else {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
@@ -807,8 +809,10 @@
           if (res.data.code === '51110') {
             if (val === 1) {
               this.datePrice = this.first_date.concat(res.data.data);
+              console.log(this.datePrice)
             } else {
               this.datePay = this.first_date.concat(res.data.data);
+              console.log(this.datePay)
             }
           }
         })
@@ -931,11 +935,11 @@
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
             this.property_name = this.value6[draft.property_payer - 1];
-            this.is_agency  = draft.is_agency ;
+            this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
-            this.is_corp  = draft.is_corp;
+            this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
-            this.form.sign_date = draft.sign_date;  
+            this.form.sign_date = draft.sign_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
             this.form.bank = draft.bank;
@@ -1018,9 +1022,9 @@
         this.property_name = '';
         this.form.sign_date = '';
         this.form.name = '';
-        this.is_corp  = 1;
+        this.is_corp = 1;
         this.corp = true;
-        this.is_agency  = 0;
+        this.is_agency = 0;
         this.cusFrom = false;
         this.form.phone = '';
         this.form.bank = '';

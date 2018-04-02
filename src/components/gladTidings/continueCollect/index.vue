@@ -541,6 +541,8 @@
             this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
+            this.countDate(1, this.form.period_price_arr);
+            this.countDate(2, this.form.period_pay_arr);
             break;
           case 3:
             this.form.pay_second_date = this.timeValue;
@@ -603,13 +605,11 @@
       // 删除月单价
       deleteAmount(index, val) {
         if (val === 1) {
-          if (this.amountPrice > 1) {
-            this.amountPrice--;
-            this.form.period_price_arr.splice(index, 1);
-            this.form.price_arr.splice(index, 1);
-            this.datePrice.splice(index, 1);
-            this.periodDate(val);
-          }
+          this.amountPrice--;
+          this.form.period_price_arr.splice(index, 1);
+          this.form.price_arr.splice(index, 1);
+          this.datePrice.splice(index, 1);
+          this.periodDate(val);
         } else {
           this.amountPay--;
           this.form.period_pay_arr.splice(val, 1);

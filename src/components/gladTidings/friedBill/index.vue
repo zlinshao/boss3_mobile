@@ -24,26 +24,27 @@
           type="text"
           @click="searchSelect(form.collect_or_rent)"
           readonly
-          placeholder="选择房屋地址">
+          placeholder="选择房屋地址"
+          required>
         </van-field>
-        <van-field
-          v-model="bulletinDate"
-          label="喜报日期"
-          type="text"
-          disabled
-          placeholder="喜报日期已禁用">
-        </van-field>
+        <!--<van-field-->
+        <!--v-model="bulletinDate"-->
+        <!--label="喜报日期"-->
+        <!--type="text"-->
+        <!--disabled-->
+        <!--placeholder="喜报日期已禁用">-->
+        <!--</van-field>-->
         <van-field
           v-model="payWay"
           label="付款方式"
-          type="text"
+          type="textarea"
           disabled
           placeholder="付款方式已禁用">
         </van-field>
         <van-field
           v-model="price_arr"
           label="月单价"
-          type="text"
+          type="textarea"
           disabled
           placeholder="月单价已禁用">
         </van-field>

@@ -482,6 +482,8 @@
             this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
+            this.countDate(1, this.form.period_price_arr);
+            this.countDate(2, this.form.period_pay_arr);
             break;
         }
       },
@@ -545,7 +547,6 @@
       },
       // 删除月单价
       deleteAmount(index, val) {
-        if (this.amountPrice > 1) {
           if (val === 1) {
             this.amountPrice--;
             this.form.period_price_arr.splice(index, 1);
@@ -564,7 +565,6 @@
             this.form.money_way.splice(index, 1);
             this.moneyNum.splice(index, 1);
           }
-        }
       },
       // 日期计算
       periodDate(val) {

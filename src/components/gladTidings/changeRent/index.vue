@@ -489,6 +489,8 @@
             this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
+            this.countDate(1, this.form.period_price_arr);
+            this.countDate(2, this.form.period_pay_arr);
             break;
         }
       },
@@ -553,13 +555,11 @@
       // 删除月单价
       deleteAmount(index, val) {
         if (val === 1) {
-          if (this.amountPrice > 1) {
-            this.amountPrice--;
-            this.form.period_price_arr.splice(index, 1);
-            this.form.price_arr.splice(index, 1);
-            this.datePrice.splice(index, 1);
-            this.periodDate(val);
-          }
+          this.amountPrice--;
+          this.form.period_price_arr.splice(index, 1);
+          this.form.price_arr.splice(index, 1);
+          this.datePrice.splice(index, 1);
+          this.periodDate(val);
         } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
@@ -700,9 +700,9 @@
 
             this.form.deposit = draft.deposit;
             this.form.receipt = draft.receipt;
-            this.is_agency  = draft.is_agency ;
+            this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
-            this.is_corp  = draft.is_corp ;
+            this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
@@ -757,9 +757,9 @@
         this.form.money_sep = [''];
         this.form.money_way = [''];
         this.form.deposit = '';
-        this.is_corp  = 1;
+        this.is_corp = 1;
         this.corp = true;
-        this.is_agency  = 0;
+        this.is_agency = 0;
         this.cusFrom = false;
         this.form.property = '';
         this.form.receipt = '';

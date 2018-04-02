@@ -474,6 +474,8 @@
             this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
+            this.countDate(1, this.form.period_price_arr);
+            this.countDate(2, this.form.period_pay_arr);
             break;
         }
       },
@@ -532,13 +534,11 @@
       // 删除月单价
       deleteAmount(index, val) {
         if (val === 1) {
-          if (this.amountPrice > 1) {
-            this.amountPrice--;
-            this.form.period_price_arr.splice(index, 1);
-            this.price_arr.splice(index, 1);
-            this.datePrice.splice(index, 1);
-            this.periodDate(val);
-          }
+          this.amountPrice--;
+          this.form.period_price_arr.splice(index, 1);
+          this.price_arr.splice(index, 1);
+          this.datePrice.splice(index, 1);
+          this.periodDate(val);
         } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
@@ -590,7 +590,7 @@
               $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50220') {
-             Toast.success(res.data.msg);
+              Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
             }
