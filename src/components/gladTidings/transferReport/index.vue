@@ -202,6 +202,7 @@
       </div>
 
       <van-cell-group>
+        <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-field
           v-model="form.receipt"
           label="收据编号"
@@ -342,6 +343,8 @@
           money_sum: '',
         },
 
+        corp: true,                    //公司单
+
         form: {
           id: '',
           type: 1,
@@ -365,6 +368,7 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          is_corp: 1,                   //是否公司单  0个人1公司
           receipt: '',                  //收据编号
           retainage_date: '',           //尾款补齐时间
 
@@ -562,6 +566,7 @@
 
       saveCollect(val) {
         this.form.draft = val;
+        this.form.is_corp = this.corp ? 1 : 0;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
             if (res.data.code === '50510') {
@@ -654,6 +659,8 @@
               this.form.period_pay_arr.push('');
               this.form.pay_way_arr.push('');
             }
+            this.is_corp = draft.is_corp;
+            this.corp = draft.is_corp === 1 ? true : false;
             this.form.period_pay_arr = draft.period_pay_arr;
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
@@ -720,6 +727,8 @@
         this.form.money_sep = [];
         this.form.money_way = [];
 
+        this.is_corp = 1;
+        this.corp = true;
         this.form.receipt = '';
         this.form.retainage_date = '';
 

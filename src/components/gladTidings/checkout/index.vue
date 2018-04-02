@@ -168,7 +168,7 @@
         let strDate = date.getDate();
         this.currentDate = new Date(year, month, strDate);
       },
-      searchSelect() {
+      searchSelect(val) {
         if (val === '0') {
           this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
         } else if (val === '1') {

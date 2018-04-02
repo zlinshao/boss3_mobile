@@ -1,7 +1,6 @@
 <template>
   <div v-wechat-title="$route.meta.title">
     <div class="module">
-
     </div>
     <div class="loading" v-if="loading">
       <img src="../assets/loding1.gif">
@@ -108,13 +107,13 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: #000;
+    background: #f1f1f1;
   }
 
   .loading {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: ;
+    z-index: 1;
   }
 </style>

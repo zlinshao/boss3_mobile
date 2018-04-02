@@ -93,27 +93,32 @@
       myData(urls, val) {
         this.$http.get(this.address + urls + val).then((res) => {
           let data = res.data.data;
-          this.lists = [];
-          for (let i = 0; i < data.length; i++) {
-            this.formDetail = data[i];
-            let list = {};
-            list.id = data[i].id;
-            if (data[i].house !== null) {
+          if (data.length !== 0 && res.data.status === 'success') {
+            this.lists = [];
+            for (let i = 0; i < data.length; i++) {
+              this.formDetail = data[i];
+              let list = {};
+              list.id = data[i].id;
               list.house_name = data[i].house.name;
               list.house_id = data[i].house.id;
+              if (data[i].sign_user !== null) {
+                list.staff_name = data[i].sign_user.name;
+                list.department_name = data[i].sign_org.name;
+              } else {
+                list.staff_name = '';
+                list.department_name = '';
+              }
+              list.mortgage_price = data[i].mortgage_price;
+              list.month_price = data[i].month_price;
+              // for(let j=0;j<data[i].month_price.length;i++){
+              //
+              // }
+              list.pay_way = data[i].pay_way;
+              // for(let j=0;j<data[i].pay_way.length;i++){
+              //
+              // }
+              this.lists.push(list);
             }
-            list.pay_way = data[i].pay_way !== null ? data[i].pay_way : '';
-            if (data[i].sign_user !== null) {
-              list.staff_name = data[i].sign_user.name;
-              list.department_name = data[i].sign_user.org[0].name;
-            } else {
-              list.staff_name = '';
-              list.department_name = '';
-            }
-            if (data[i].month_price !== null) {
-
-            }
-            this.lists.push(list);
           }
         })
       },

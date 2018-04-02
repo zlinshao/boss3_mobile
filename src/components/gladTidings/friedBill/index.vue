@@ -106,10 +106,10 @@
         urls: globalConfig.server,
         isClear: false,           //删除图片
 
-        bulletinDate: '',             //喜报日期
         payWay: '',                   //付款方式
         price_arr: '',                //月单价
         refundSta: false,
+
         form: {
           id: '',
           type: '0',
@@ -172,10 +172,14 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
-          let val = t.house;
+          let val = JSON.parse(t.house);
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
+          this.payWay = val.pay_way;
+          this.price_arr = val.month_price;
+          this.staff_name = val.staff_name;
+          this.department_name = val.department_name;
         }
       },
 

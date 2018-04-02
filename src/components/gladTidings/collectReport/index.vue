@@ -31,17 +31,18 @@
         </van-field>
         <div class="fourth">
           <van-field
-            style="width: 110px;"
             label="门牌号"
             required>
           </van-field>
           <van-field
+            style="width: 22%"
             v-model="form.building"
             type="text"
             placeholder="栋">
           </van-field>
           <span class="cut">-</span>
           <van-field
+            style="width: 22%"
             v-model="form.unit"
             type="text"
             placeholder="单元">
