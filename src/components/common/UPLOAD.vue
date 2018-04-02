@@ -138,6 +138,9 @@
 
           init: {
             'FilesAdded': function (up, files) {
+              _this.isUploading = true;
+              _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+
               plupload.each(files, function (file) {
                 if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
 

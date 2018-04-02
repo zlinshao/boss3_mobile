@@ -53,7 +53,7 @@
           </div>
         </div>
 
-        <ul v-show="commentList.length !== 0"
+        <ul
             v-waterfall-lower="loadMore"
             waterfall-disabled="disabled1"
             waterfall-offset="300">
@@ -86,6 +86,9 @@
                   </div>
                 </div>
               </div>
+              <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0 0;">
+                暂无评论
+              </div>
             </div>
           </li>
         </ul>
@@ -112,7 +115,7 @@
     components: {ImagePreview, Toast},
     directives: {
       WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper')
+      WaterfallUpper: Waterfall('upper'),
     },
     data() {
       return {
@@ -130,13 +133,8 @@
         form: {},       //评论
         commentList: [],
         page: 1,
-        paging: '',
+        paging: 0,
       }
-    },
-    mounted() {
-      this.disabled1 = false;
-      this.routerData = JSON.parse(this.$route.query.data);
-      this.formDetail(this.routerData.ids);
     },
     activated() {
       this.routerIndex('');
@@ -146,13 +144,12 @@
       this.page = 1;
       this.commentList = [];
       this.formDetail(this.routerData.ids);
-      this.comments(this.routerData.ids, 1);
     },
     methods: {
       loadMore() {
         if (!this.disabled1) {
-          this.page++;
           this.comments(this.routerData.ids, this.page);
+          this.page++;
         }
       },
       formDetail(val) {
@@ -281,11 +278,6 @@
         }
       }
     }
-    .load {
-      display: flex;
-      justify-content: center;
-      margin: 3rem auto 0;
-    }
     .detail {
       position: fixed;
       top: 0;
@@ -355,7 +347,6 @@
         div {
           margin: .2rem 0;
           @include flex;
-          width: 100%;
           word-break: break-all;
           p {
             min-width: 1.8rem;
@@ -369,6 +360,11 @@
             color: #101010;
             line-height: .4rem;
           }
+        }
+        .load {
+          display: flex;
+          justify-content: center;
+          margin: 3rem auto 0;
         }
       }
 
@@ -451,7 +447,7 @@
       margin-bottom: 1.3rem;
       justify-content: center;
       align-items: center;
-      padding: .3rem 0;
+      padding: .4rem 0 0;
       color: #DDDDDD;
     }
     .footer {

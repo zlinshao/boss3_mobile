@@ -189,7 +189,7 @@
           readonly
           required>
         </van-field>
-        <van-switch-cell v-model="corp" title="是否个人单"/>
+        <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-field
           v-model="form.receipt"
           label="收据编号"

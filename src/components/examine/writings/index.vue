@@ -100,14 +100,17 @@
         page: 1,
       }
     },
-    mounted() {
+    activated() {
+      this.routerIndex('');
+      this.ddRent('');
       this.commentList = [];
       this.disabled = false;
       this.page = 1;
-      this.pitch = this.$route.query.id;
-      let data = this.$route.query.id;
+      // this.pitch = this.$route.query.id;
+      // let data = this.$route.query.id;
+      this.pitch = 45;
+      let data = 45;
       this.contentDetail(data);
-      this.comment(data, 1);
     },
     methods: {
       loadMore() {
@@ -165,6 +168,7 @@
       routerLink(val) {
         this.$router.push({path: '/writings', query: {id: val}});
         this.pitch = val;
+        this.paging = 0;
         this.commentList = [];
         this.disabled = false;
         this.page = 1;
@@ -323,7 +327,7 @@
       margin-bottom: 1.3rem;
       justify-content: center;
       align-items: center;
-      padding: .3rem 0;
+      padding: .4rem 0 0;
       color: #DDDDDD;
     }
     .footer {

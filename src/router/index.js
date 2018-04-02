@@ -248,7 +248,7 @@ export default new Router({
     // },
     {
       path: '/writings',
-      hidden: false,
+      hidden: 'glad',
       name: '文章',
       meta: {title: '文章'},
       component: Writings

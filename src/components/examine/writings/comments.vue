@@ -31,6 +31,7 @@
     data() {
       return {
         isClear: false,
+        picStatus: true,
         urls: globalConfig.server,
         form: {
           remark: '',
@@ -43,6 +44,8 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
+        vm.routerIndex(from.path);
+        vm.ddRent(from.path);
       })
     },
     mounted() {
@@ -56,6 +59,8 @@
     methods: {
       // 确认评论
       manager() {
+        alert(this.form.photo.length);
+        alert(this.form.remark);
         if (this.form.remark !== '' || this.form.photo.length !== 0) {
           this.sure();
         } else {
@@ -64,24 +69,30 @@
       },
 
       sure() {
-        this.$http.post(this.urls + 'oa/portal/comment', {
-          content: this.form.remark,
-          obj_id: this.pitch,
-          parent_id: 0,
-          image_pic: this.form.photo,
-          video_file: [],
-        }).then((res) => {
-          if (res.data.code === '80060') {
-            Toast.success(res.data.msg);
-            $('.imgItem').remove();
-            this.$router.replace({path: this.path, query: {id: this.pitch}});
-          } else {
-            Toast(res.data.msg);
-          }
-        })
+        if (this.picStatus) {
+          this.$http.post(this.urls + 'oa/portal/comment', {
+            content: this.form.remark,
+            obj_id: this.pitch,
+            parent_id: 0,
+            image_pic: this.form.photo,
+            video_file: [],
+          }).then((res) => {
+            if (res.data.code === '80060') {
+              Toast.success(res.data.msg);
+              this.$router.replace({path: this.path, query: {id: this.pitch}});
+              this.close_();
+              $('.imgItem').remove();
+            } else {
+              Toast(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
 
       getImgData(val) {
+        this.picStatus = !val[2];
         this.form.photo = val[1];
       },
 

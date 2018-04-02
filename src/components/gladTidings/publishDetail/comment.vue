@@ -31,6 +31,7 @@
     data() {
       return {
         isClear: false,
+        picStatus: true,
         urls: globalConfig.server_user,
         form: {
           remark: '',
@@ -71,23 +72,28 @@
       },
 
       sure() {
-        this.$http.put(this.urls + 'process/' + this.pitch.ids, {
-          operation: this.detail,
-          comment: this.form.remark,
-          album: this.form.photo
-        }).then((res) => {
-          if (res.data.status === 'success') {
-            Toast.success(res.data.message);
-            this.close_();
-            $('.imgItem').remove();
-            this.$router.replace({path: this.path, query: {data: JSON.stringify(this.pitch)}});
-          } else {
-            Toast(res.data.message);
-          }
-        })
+        if (this.picStatus) {
+          this.$http.put(this.urls + 'process/' + this.pitch.ids, {
+            operation: this.detail,
+            comment: this.form.remark,
+            album: this.form.photo
+          }).then((res) => {
+            if (res.data.status === 'success') {
+              Toast.success(res.data.message);
+              this.$router.replace({path: this.path, query: {data: JSON.stringify(this.pitch)}});
+              this.close_();
+              $('.imgItem').remove();
+            } else {
+              Toast(res.data.message);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
 
       getImgData(val) {
+        this.picStatus = !val[2];
         this.form.photo = val[1];
       },
 

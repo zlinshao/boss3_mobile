@@ -343,7 +343,7 @@
           @click-icon="form.penalty = ''"
           required>
         </van-field>
-        <van-switch-cell v-model="corp" title="是否个人单"/>
+        <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-field
           v-model="form.contract_number"
           label="合同编号"
@@ -933,9 +933,9 @@
             this.property_name = this.value6[draft.property_payer - 1];
             this.is_agency  = draft.is_agency ;
             this.cusFrom = draft.is_agency === 1 ? true : false;
-            this.is_corp  = draft.is_corp ;
+            this.is_corp  = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
-            this.form.sign_date = draft.sign_date;
+            this.form.sign_date = draft.sign_date;  
             this.form.name = draft.name;
             this.form.phone = draft.phone;
             this.form.bank = draft.bank;
