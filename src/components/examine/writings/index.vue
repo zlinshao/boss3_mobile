@@ -24,53 +24,71 @@
       </div>
     </div>
 
-    <div class="commentArea">
-      <div class="headline">评论<span>{{paging}}</span></div>
-      <div class="commentAreaMain" v-for="key in commentList">
-        <div class="staff">
-          <div>
-            <p>
-              <img :src="key.staffs.avatar">
-            </p>
-            <span>{{key.staffs.name}}</span>
-            <span v-for="role in key.staffs.role">{{role.display_name}}</span>
+    <ul
+      v-waterfall-lower="loadMore"
+      waterfall-disabled="disabled"
+      waterfall-offset="300">
+      <li class="started">
+        <div class="commentArea">
+          <div class="headline">评论<span>{{paging}}</span></div>
+          <div class="commentAreaMain" v-for="key in commentList">
+            <div class="staff">
+              <div>
+                <p>
+                  <img :src="key.staffs.avatar">
+                </p>
+                <span>{{key.staffs.name}}</span>
+                <span v-for="role in key.staffs.role">{{role.display_name}}</span>
+              </div>
+              <p class="times">
+                {{key.create_time.substring(0,10)}}
+              </p>
+            </div>
+            <div class="contents">
+              {{key.content}}
+            </div>
+            <div class="pics">
+              <div v-for="item in key.album.image_pic">
+                <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
+              </div>
+            </div>
           </div>
-          <p class="times">
-            {{key.create_time.substring(0,10)}}
-          </p>
-        </div>
-        <div class="contents">
-          {{key.content}}
-        </div>
-        <div class="pics">
-          <div v-for="item in key.album.image_pic">
-            <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
+          <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
+            暂无评论
           </div>
         </div>
-      </div>
-      <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
-        暂无评论
-      </div>
+      </li>
+    </ul>
 
-      <div class="footer">
-        <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
-      </div>
+    <div class="bottom">
+      <span v-show="disabled && commentList.length > 10">我是有底线的</span>
+      <van-loading v-show="!disabled" type="spinner" color="black"/>
+    </div>
+
+    <div class="footer">
+      <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
     </div>
   </div>
 </template>
 
 <script>
   import {ImagePreview} from 'vant';
+  import {Waterfall} from 'vant';
   import {Toast} from 'vant';
 
   export default {
     components: {ImagePreview, Toast},
+    directives: {
+      WaterfallLower: Waterfall('lower'),
+      WaterfallUpper: Waterfall('upper')
+    },
     name: "index",
     data() {
       return {
         urls: globalConfig.server,
         assistId: false,
-        paging: '',
+        disabled: false,
+        paging: 0,
         myData: {},
         cover_pic: {},
         create_time: '',
@@ -79,15 +97,25 @@
         params: {},
         commentList: [],
         pitch: '',
+        page: 1,
       }
     },
     mounted() {
+      this.commentList = [];
+      this.disabled = false;
+      this.page = 1;
       this.pitch = this.$route.query.id;
       let data = this.$route.query.id;
       this.contentDetail(data);
       this.comment(data, 1);
     },
     methods: {
+      loadMore() {
+        if (!this.disabled) {
+          this.comment(this.pitch, this.page);
+          this.page++;
+        }
+      },
       contentDetail(val) {
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
           this.myData = res.data.data;
@@ -109,13 +137,18 @@
         })
       },
       comment(val, page) {
-        this.params.page = page;
+        this.params.pages = page;
         this.$http.get(this.urls + 'oa/portal/comment/' + val, {
           params: this.params,
         }).then((res) => {
           if (res.data.code === '80090') {
-            this.commentList = res.data.data.data;
+            let data = res.data.data.data;
+            for (let i = 0; i < data.length; i++) {
+              this.commentList.push(data[i]);
+            }
             this.paging = res.data.data.count;
+          } else {
+            this.disabled = true;
           }
         })
       },
@@ -130,9 +163,13 @@
         ImagePreview(photo, index);
       },
       routerLink(val) {
-        this.pitch = val;
         this.$router.push({path: '/writings', query: {id: val}});
+        this.pitch = val;
+        this.commentList = [];
+        this.disabled = false;
+        this.page = 1;
         this.contentDetail(val);
+        this.comment(val, 1);
         document.body.scrollTop = document.documentElement.scrollTop = 0;
       }
     },
@@ -220,7 +257,6 @@
       margin-top: .3rem;
       line-height: .4rem;
       background: #FFFFFF;
-      margin-bottom: 1.4rem;
       .headline {
         color: #444444;
         font-size: .33rem;
@@ -281,6 +317,14 @@
         @include flow;
         color: #b1b1b1;
       }
+    }
+    .bottom {
+      @include flex;
+      margin-bottom: 1.3rem;
+      justify-content: center;
+      align-items: center;
+      padding: .3rem 0;
+      color: #DDDDDD;
     }
     .footer {
       color: #409EFF;

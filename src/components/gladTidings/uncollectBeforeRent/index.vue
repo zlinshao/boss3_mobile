@@ -121,7 +121,7 @@
             v-model="form.pay_way_arr[index]"
             label="付款方式"
             type="number"
-            placeholder="请选择付款方式"
+            placeholder="请填写付款方式"
             required>
           </van-field>
         </van-cell-group>

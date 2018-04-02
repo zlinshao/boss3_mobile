@@ -73,6 +73,7 @@
         }).then((res) => {
           if (res.data.code === '80060') {
             Toast.success(res.data.msg);
+            $('.imgItem').remove();
             this.$router.replace({path: this.path, query: {id: this.pitch}});
           } else {
             Toast(res.data.msg);
