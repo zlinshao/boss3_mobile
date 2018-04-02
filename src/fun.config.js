@@ -13,6 +13,23 @@ export default {
         }
       });
     };
+    Vue.prototype.ddRent = function (urls, house) {
+      let that = this;
+      dd.biz.navigation.setLeft({
+        control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+        onSuccess: function (result) {
+          if (urls !== '' && house === 'house') {
+            that.$router.push({path: urls});
+          } else if (urls !== '' && house !== 'house') {
+            that.$router.push({path: urls, query: {tops: ''}});
+          } else {
+            that.$router.push({path: '/index'});
+          }
+        },
+        onFail: function (err) {
+        }
+      });
+    };
     Vue.prototype.routerDetail = function (val) {
       this.$router.push({path: '/publishDetail', query: {data: JSON.stringify({ids: val})}});
     };

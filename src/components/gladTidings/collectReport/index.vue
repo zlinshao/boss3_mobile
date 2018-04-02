@@ -67,7 +67,7 @@
           <van-field
             style="width: 110px;"
             class="title"
-            label="收房月数"
+            label="签约时长"
             required>
           </van-field>
           <van-field
@@ -242,15 +242,7 @@
             placeholder="保修期(天)">
           </van-field>
         </div>
-        <van-field
-          v-model="fromName"
-          label="来源"
-          type="text"
-          readonly
-          placeholder="请选择客户来源"
-          @click="selectShow(5,'')"
-          required>
-        </van-field>
+        <van-switch-cell v-model="cusFrom" title="是否中介"/>
         <van-field
           v-model="form.property"
           label="物业费"
@@ -351,6 +343,7 @@
           @click-icon="form.penalty = ''"
           required>
         </van-field>
+        <van-switch-cell v-model="corp" title="是否个人单"/>
         <van-field
           v-model="form.contract_number"
           label="合同编号"
@@ -494,6 +487,9 @@
         value6: ['无', '房东', '租客', '公司'],
         value7: ['空置期开始后', '每年开始时', '合同开始结束各一半', '第二次付款时间前', '无'],
 
+        cusFrom: false,                //客户来源
+        corp: true,                    //公司单
+
         form: {
           id: '',
           type: 1,
@@ -521,7 +517,8 @@
           vacancy_other: '',            //空置期安排方式 随便填
           warranty: '',                 //保修期月
           warranty_day: '',             //保修期天
-          from: 1,                      //客户来源 1个人2中介
+          is_agency: 0,                 //客户来源    0个人1中介
+          is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
@@ -567,6 +564,7 @@
     activated() {
       this.houseInfo();
       this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -817,7 +815,9 @@
       },
 
       saveCollect(val) {
-        this.form.share = this.joint ? '1' : '0';
+        this.form.share = this.joint ? 1 : 0;
+        this.form.is_agency = this.cusFrom ? 1 : 0;
+        this.form.is_corp = this.corp ? 1 : 0;
         this.form.draft = val;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
@@ -825,6 +825,7 @@
               Toast.success(res.data.msg);
               this.routerDetail(res.data.data.data.id);
               this.close_();
+              $('.imgItem').remove();
             } else if (res.data.code === '50120') {
               Toast.success(res.data.msg);
             } else {
@@ -871,7 +872,7 @@
             let draft = res.data.data.draft_content;
             this.form.id = data.id;
             this.share = data.share;
-            this.joint = data.share == 1 ? true : false;
+            this.joint = data.share === 1 ? true : false;
             this.form.rooms_sum = draft.rooms_sum;
 
             this.form.city_id = draft.city_id;
@@ -930,8 +931,10 @@
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
             this.property_name = this.value6[draft.property_payer - 1];
-            this.form.from = draft.from;
-            this.fromName = draft.from === 1 ? '个人' : '中介';
+            this.is_agency  = draft.is_agency ;
+            this.cusFrom = draft.is_agency === 1 ? true : false;
+            this.is_corp  = draft.is_corp ;
+            this.corp = draft.is_corp === 1 ? true : false;
             this.form.sign_date = draft.sign_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -1015,8 +1018,10 @@
         this.property_name = '';
         this.form.sign_date = '';
         this.form.name = '';
-        this.form.from = 1;
-        this.fromName = '';
+        this.is_corp  = 1;
+        this.corp = true;
+        this.is_agency  = 0;
+        this.cusFrom = false;
         this.form.phone = '';
         this.form.bank = '';
         this.form.subbranch = '';

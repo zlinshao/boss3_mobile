@@ -172,7 +172,8 @@
     },
     activated() {
       this.houseInfo();
-      this.routerIndex('')
+      this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       changeRadio() {
@@ -220,6 +221,7 @@
             if (res.data.code === '50810') {
               Toast.success(res.data.msg);
               this.close_();
+              $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50820') {
               Toast.success(res.data.msg);

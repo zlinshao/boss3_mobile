@@ -111,7 +111,8 @@
     },
     activated() {
       this.houseInfo();
-      this.routerIndex('')
+      this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -129,7 +130,7 @@
         this.$http.post(this.urls + 'bulletin/confiscate', this.form).then((res) => {
           if (res.data.code === '50610') {
             Toast.success(res.data.msg);
-            this.close();
+            this.close_();
             this.routerDetail(res.data.data.data.id);
           } else if (res.data.code === '50620') {
             Toast.success(res.data.msg);

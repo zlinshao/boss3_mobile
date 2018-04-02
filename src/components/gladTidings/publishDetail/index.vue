@@ -134,13 +134,13 @@
       }
     },
     mounted() {
-      this.routerIndex('');
       this.disabled1 = false;
       this.routerData = JSON.parse(this.$route.query.data);
       this.formDetail(this.routerData.ids);
     },
     activated() {
       this.routerIndex('');
+      this.ddRent('');
       this.routerData = JSON.parse(this.$route.query.data);
       this.disabled1 = false;
       this.page = 1;
@@ -272,6 +272,7 @@
       }
       h1 {
         @include flex;
+        flex-wrap: wrap;
         span {
           width: 1rem;
           height: 1rem;

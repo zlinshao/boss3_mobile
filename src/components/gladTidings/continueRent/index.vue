@@ -16,7 +16,7 @@
           <van-field
             style="width: 110px;"
             class="title"
-            label="收房月数"
+            label="签约时长"
             required>
           </van-field>
           <van-field
@@ -32,12 +32,12 @@
           </van-field>
         </div>
         <van-field
-          v-model="form.sign_date"
-          label="签约日期"
+          v-model="form.begin_date"
+          label="合同开始日期"
           readonly
           type="text"
-          @click="timeChoose(1)"
-          placeholder="请选择签约日期"
+          @click="timeChoose(3)"
+          placeholder="请选择合同开始日期"
           required>
         </van-field>
       </van-cell-group>
@@ -199,6 +199,15 @@
           required>
         </van-field>
         <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(1)"
+          placeholder="请选择签约日期"
+          required>
+        </van-field>
+        <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
           readonly
@@ -347,12 +356,13 @@
 
         form: {
           id: '',
-          type: 2,
+          type: 3,
           draft: 0,
           contract_id: '',            //房屋地址id
           house_id: '',               //房屋地址id
           month: '',                    //租房月数
           day: '',                    //租房天数
+          begin_date: '',               //合同开始日期
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -395,7 +405,8 @@
     },
     activated() {
       this.houseInfo();
-      this.routerIndex('')
+      this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -451,15 +462,18 @@
         switch (this.timeIndex) {
           case 1:
             this.form.sign_date = this.timeValue;
+            break;
+          case 2:
+            this.form.retainage_date = this.timeValue;
+            break;
+          case 3:
+            this.form.begin_date = this.timeValue;
             this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
             this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
-            break;
-          case 2:
-            this.form.retainage_date = this.timeValue;
             break;
         }
       },
@@ -552,7 +566,7 @@
       countDate(val, per) {
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
-            begin_date: this.form.sign_date,
+            begin_date: this.form.begin_date,
             period: per,
           }
         }).then((res) => {
@@ -573,6 +587,7 @@
             if (res.data.code === '50210') {
               Toast.success(res.data.msg);
               this.close_();
+              $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50220') {
              Toast.success(res.data.msg);
@@ -613,7 +628,7 @@
       },
 
       rentDetail() {
-        this.$http.get(this.urls + 'bulletin/rent?type=2').then((res) => {
+        this.$http.get(this.urls + 'bulletin/rent?type=3').then((res) => {
           if (res.data.code === '50210') {
             this.isClear = false;
             let data = res.data.data;
@@ -626,8 +641,9 @@
             this.form.month = draft.month;
             this.form.day = draft.day;
             this.form.sign_date = draft.sign_date;
+            this.form.begin_date = draft.begin_date;
             this.first_date = [];
-            this.first_date.push(draft.sign_date);
+            this.first_date.push(draft.begin_date);
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
@@ -694,6 +710,7 @@
         this.houseName = '';
         this.form.month = '';
         this.form.day = '';
+        this.form.begin_date = '';
         this.form.sign_date = '';
         this.datePrice = [];
         this.datePay = [];

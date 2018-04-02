@@ -17,7 +17,8 @@ import TransferReport from '../components/gladTidings/transferReport/index.vue'
 import ContinueCollect from '../components/gladTidings/continueCollect/index.vue'
 
 
-import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'   //未收先祖
+import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'           //未收先祖
+import UncollectBeforeRentSure from '../components/gladTidings/uncollectBeforeRentSure/index.vue'   //未收先祖确定
 
 import ContinueRent from '../components/gladTidings/continueRent/index.vue'   //续租
 import ChangeRent from '../components/gladTidings/changeRent/index.vue'       //转租
@@ -153,6 +154,14 @@ export default new Router({
       icon: 'iconfont icon-weishouxianzu',
       meta: {title: '未收先租'},
       component: UncollectBeforeRent
+    },
+    {
+      path: '/unCollectBeforeRentSure',
+      name: '未收先租确定',
+      hidden: 'glad',
+      icon: 'iconfont icon-weishouxianzu',
+      meta: {title: '未收先租确定'},
+      component: UncollectBeforeRentSure
     },
     {
       path: '/continueRent',

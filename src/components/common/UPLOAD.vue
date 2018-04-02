@@ -56,7 +56,6 @@
           this.imgId = [];
           this.imgArray = [];
           this.editImg = [];
-          $('.imgItem').remove();
         }
       }
     },
@@ -91,11 +90,11 @@
           }
         });
         this.getTokenMessage();
-        setInterval(()=>{
-          if(_this.uploader){
+        setInterval(() => {
+          if (_this.uploader) {
             this.uploader.refresh();
           }
-        },1000)
+        }, 1000)
       },
 
       deleteImage(key) {

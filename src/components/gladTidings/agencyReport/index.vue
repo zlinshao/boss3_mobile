@@ -198,6 +198,7 @@
     activated() {
       this.houseInfo();
       this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -241,6 +242,7 @@
             if (res.data.code === '50310') {
               Toast.success(res.data.msg);
               this.close_();
+              $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50320') {
               Toast.success(res.data.msg);

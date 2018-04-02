@@ -54,6 +54,7 @@
       next(vm => {
         vm.path = from.path;
         vm.routerIndex(from.path, 'depart');
+        vm.ddRent(from.path, 'depart');
       })
     },
     mounted() {
@@ -119,6 +120,18 @@
           Toast.fail('请选择部门');
         }
       },
+      ddRent(urls, val) {
+        let that = this;
+        dd.biz.navigation.setLeft({
+          control: val,//是否控制点击事件，true 控制，false 不控制， 默认false
+          text: '',//控制显示文本，空字符串表示显示默认文本
+          onSuccess : function(result) {
+            that.$router.replace({path: urls, query: {tops: ''}});
+            that.ddRent(false);
+          },
+          onFail : function(err) {}
+        });
+      }
     },
   }
 </script>

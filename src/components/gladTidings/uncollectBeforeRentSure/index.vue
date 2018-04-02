@@ -1,46 +1,16 @@
 <template>
   <div id="transferReport">
     <div class="main">
-      <van-cell-group style="margin-bottom: 12px;">
+      <van-cell-group>
         <van-field
           v-model="oldHouseName"
-          label="原房屋地址"
+          label="原喜报地址"
           type="text"
           readonly
           @click="searchSelect(1)"
-          placeholder="请选择原房屋地址"
+          placeholder="请选择原喜报地址"
           required>
         </van-field>
-        <van-field
-          v-model="oldForm.staff_name"
-          label="原开单人"
-          type="text"
-          disabled
-          placeholder="原房屋原开单人已禁用">
-        </van-field>
-        <van-field
-          v-model="oldForm.pay_way_arr"
-          label="原付款方式"
-          type="text"
-          disabled
-          placeholder="原房屋付款方式已禁用">
-        </van-field>
-        <van-field
-          v-model="oldForm.price"
-          label="价格"
-          type="text"
-          disabled
-          placeholder="原房屋价格已禁用">
-        </van-field>
-        <van-field
-          v-model="oldForm.money_sum"
-          label="定金"
-          type="text"
-          disabled
-          placeholder="原房屋定金已禁用">
-        </van-field>
-      </van-cell-group>
-      <van-cell-group>
         <van-field
           v-model="newHouseName"
           label="现房屋地址"
@@ -71,11 +41,11 @@
         </div>
         <van-field
           v-model="form.begin_date"
-          type="text"
-          label="开始日期"
-          placeholder="获取开始日期"
-          @click="timeChoose(2)"
+          label="合同开始日期"
           readonly
+          type="text"
+          @click="timeChoose(3)"
+          placeholder="请选择合同开始日期"
           required>
         </van-field>
       </van-cell-group>
@@ -203,33 +173,41 @@
 
       <van-cell-group>
         <van-field
-          v-model="form.receipt"
-          label="收据编号"
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
           type="text"
-          placeholder="请填写收据编号">
+          @click="timeChoose(1)"
+          placeholder="请选择签约日期"
+          required>
         </van-field>
         <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(1)"
+          @click="timeChoose(2)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
-      </van-cell-group>
-
-      <div class="aloneModel">
-        <div class="title">截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
-      </div>
-
-      <div class="aloneModel">
-        <div class="title">合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
-      </div>
-
-      <van-cell-group>
+        <van-field
+          v-model="form.name"
+          label="客户姓名"
+          type="text"
+          placeholder="请填写客户姓名"
+          icon="clear"
+          @click-icon="form.name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.phone"
+          label="联系方式"
+          type="number"
+          placeholder="请填写联系方式"
+          icon="clear"
+          @click-icon="form.phone = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.remark"
           label="备注"
@@ -307,7 +285,6 @@
     data() {
       return {
         urls: globalConfig.server,
-        isClear: false,           //删除图片
         picStatus: true,
 
         tabs: '',
@@ -335,16 +312,9 @@
         value1: ['支付宝', '微信', '银行卡', 'pos机', '现金'],
         value2: ['0', '1', '2', '3'],
 
-        oldForm: {
-          staff_name: '',
-          pay_way_arr: '',
-          price: '',
-          money_sum: '',
-        },
-
         form: {
           id: '',
-          type: 1,
+          type: 0,
           draft: 0,
           contract_id_rent: '',         //原租房合同id
           contract_id: '',              //现房屋合同id
@@ -353,6 +323,7 @@
           month: '',                    //签约时长
           day: '',                      //签约时长天
           begin_date: '',               //合同开始日期
+          sign_date: '',                //签约日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -365,11 +336,10 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
-          receipt: '',                  //收据编号
           retainage_date: '',           //尾款补齐时间
 
-          screenshot: '',               //领导截图 数组
-          photo: '',                    //合同照片 数组
+          name: '',
+          phone: '',
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           leader_id: '92',              //负责人id
@@ -377,8 +347,6 @@
         },
         oldHouseName: '',
         newHouseName: '',
-        screenshots: {},
-        photos: {},
         staff_name: '',                  //开单人name
         leader_name: '湮灭',                //负责人name
         department_name: '',             //部门name
@@ -396,11 +364,11 @@
     methods: {
       searchSelect(val) {
         switch (val) {
-          case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
+          case 1 :
+            this.$router.push({path: '/collectHouse', query: {type: 'rent0'}});
             break;
           case 2:
-            this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'rent01'}});
             break;
           case 3:
             this.$router.push({path: '/organize'});
@@ -410,15 +378,7 @@
             break;
         }
       },
-      // 截图
-      getImgData(val) {
-        this.picStatus = !val[2];
-        if (val[0] === 'screenshot') {
-          this.form.screenshot = val[1];
-        } else {
-          this.form.photo = val[1];
-        }
-      },
+
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -442,9 +402,12 @@
         this.timeShow = false;
         switch (this.timeIndex) {
           case 1:
-            this.form.retainage_date = this.timeValue;
+            this.form.sign_date = this.timeValue;
             break;
           case 2:
+            this.form.retainage_date = this.timeValue;
+            break;
+          case 3:
             this.form.begin_date = this.timeValue;
             this.first_date = [];
             this.datePrice = [];
@@ -453,6 +416,7 @@
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
             break;
+
         }
       },
       // select 显示
@@ -563,13 +527,13 @@
       saveCollect(val) {
         this.form.draft = val;
         if (this.picStatus) {
-          this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
+          this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
             if (res.data.code === '50510') {
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '50520') {
+            } else if (res.data.code === '51210') {
               Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
@@ -584,7 +548,8 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          if (t.type === 'rent1') {
+          console.log(t.type);
+          if (t.type === 'rent0') {
             this.oldHouseName = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
@@ -614,27 +579,16 @@
       },
 
       rentDetail() {
-        this.$http.get(this.urls + 'bulletin/change').then((res) => {
-          if (res.data.code === '50510') {
-            this.isClear = false;
+        this.$http.get(this.urls + 'bulletin/rent_without_collect').then((res) => {
+          if (res.data.code === '51210') {
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
             this.form.month = draft.month;
             this.form.day = draft.day;
-            this.houseName = data.address;
-            this.form.contract_id = draft.contract_id;
-            this.form.house_id = draft.house_id;
-            this.oldHouseName = data.address_rent;
-            this.form.contract_id_rent = draft.contract_id_rent;
-            this.form.house_id_rent = draft.house_id_rent;
 
-            this.oldForm.staff_name = data.old_staff_name;
-            this.oldForm.pay_way_arr = data.old_pay_way;
-            this.oldForm.price = data.old_price;
-            this.oldForm.money_sum = data.old_money;
-
+            this.form.sign_date = draft.sign_date;
             this.form.begin_date = draft.begin_date;
             this.first_date = [];
             this.first_date.push(draft.begin_date);
@@ -668,14 +622,10 @@
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
 
-            this.form.receipt = draft.receipt;
             this.form.retainage_date = draft.retainage_date;
 
-            this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot;
-            this.form.photo = draft.photo;
-            this.photos = data.photo;
-
+            this.form.name = draft.name;
+            this.form.phone = draft.phone;
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
@@ -690,14 +640,11 @@
       },
 
       close_() {
-        this.isClear = true;
-        setTimeout(() => {
-          this.isClear = false;
-        });
         this.form.id = '';
         this.form.month = '';
         this.form.day = '';
 
+        this.form.sign_date = '';
         this.form.begin_date = '';
         this.first_date = [];
 
@@ -720,14 +667,10 @@
         this.form.money_sep = [];
         this.form.money_way = [];
 
-        this.form.receipt = '';
         this.form.retainage_date = '';
 
-        this.form.screenshot = [];
-        this.screenshots = {};
-        this.form.photo = [];
-        this.photos = {};
-
+        this.form.name = '';
+        this.form.phone = '';
         this.form.remark = '';
         this.form.staff_id = '';
         this.staff_name = '';

@@ -47,14 +47,8 @@
           disabled
           placeholder="月单价已禁用">
         </van-field>
+        <van-switch-cell v-model="refundSta" title="定金是否退还"/>
       </van-cell-group>
-      <van-cell-group>
-        <div class="dingJin">
-          <div>定金是否退还</div>
-          <van-switch v-model="refundSta"></van-switch>
-        </div>
-      </van-cell-group>
-
       <div class="aloneModel">
         <div class="title">特殊情况截图</div>
         <UpLoad :ID="'headman'" @getImg="headmanAgree" :isClear="isClear" :editImage="screenshots"></UpLoad>
@@ -138,6 +132,8 @@
     },
     activated() {
       this.houseInfo();
+      this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -156,15 +152,13 @@
       },
 
       saveCollect(val) {
-        if (this.refundSta) {
-          this.form.refund = '1';
-        } else {
-          this.form.refund = '0';
-        }
+        this.form.refund = this.refundSta ? 1 : 0;
         this.form.draft = val;
         this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
           if (res.data.code === '50710') {
             Toast.success(res.data.msg);
+            this.close_();
+            $('.imgItem').remove();
             this.routerDetail(res.data.data.data.id);
           } else if (res.data.code === '50720') {
             Toast.success(res.data.msg);
@@ -198,7 +192,7 @@
             this.form.type = draft.type;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
-            this.refundSta = draft.refund == '0' ? false : true;
+            this.refundSta = draft.refund === 0 ? false : true;
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots = data.screenshot_leader;
             this.form.remark = draft.remark;
@@ -217,7 +211,7 @@
         this.price_arr = '';
         this.form.id = '';
         this.form.collect_or_rent = '';
-        this.form.refund = '0';
+        this.form.refund = 0;
         this.form.type = '0';
         this.refundSta = false;
         this.form.screenshot_leader = [];
@@ -253,9 +247,9 @@
       @include flex;
       align-items: center;
       height: 44px;
-      .van-radio-group{
+      .van-radio-group {
         @include flex;
-        .van-radio{
+        .van-radio {
           margin-right: .3rem;
         }
       }
@@ -276,13 +270,6 @@
       .van-cell__value {
         padding-left: 110px;
       }
-    }
-    .dingJin {
-      padding: 10px 15px 10px 0;
-      display: flex;
-      display: -webkit-flex; /* Safari */
-      align-items: center;
-      justify-content: space-between;
     }
 
     .searchClass {

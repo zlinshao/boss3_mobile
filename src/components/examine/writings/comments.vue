@@ -64,14 +64,14 @@
       },
 
       sure() {
-        this.$http.put(this.urls + 'oa/portal/comment', {
+        this.$http.post(this.urls + 'oa/portal/comment', {
           content: this.form.remark,
           obj_id: this.pitch,
-          parent_id: this.pitch,
+          parent_id: 0,
           image_pic: this.form.photo,
-          video_file: []
+          video_file: [],
         }).then((res) => {
-          if (res.data.status === 'success') {
+          if (res.data.code === '80060') {
             Toast.success(res.data.msg);
             this.$router.replace({path: this.path, query: {id: this.pitch}});
           } else {

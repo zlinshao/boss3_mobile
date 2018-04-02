@@ -157,6 +157,7 @@
     activated() {
       this.houseInfo();
       this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       // 获取当前时间
@@ -212,6 +213,7 @@
             if (res.data.code === '51210') {
               Toast.success(res.data.msg);
               this.close_();
+              $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '51220') {
               Toast.success(res.data.msg);

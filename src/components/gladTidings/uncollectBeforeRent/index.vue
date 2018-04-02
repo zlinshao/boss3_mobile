@@ -14,7 +14,7 @@
           <van-field
             style="width: 110px;"
             class="title"
-            label="收房月数"
+            label="签约时长"
             required>
           </van-field>
           <van-field
@@ -30,12 +30,12 @@
           </van-field>
         </div>
         <van-field
-          v-model="form.sign_date"
-          label="签约日期"
+          v-model="form.begin_date"
+          label="合同开始日期"
           readonly
           type="text"
-          @click="timeChoose(1)"
-          placeholder="请选择签约日期"
+          @click="timeChoose(3)"
+          placeholder="请选择合同开始日期"
           required>
         </van-field>
       </van-cell-group>
@@ -170,6 +170,7 @@
         +增加付款方式
       </div>
       <van-cell-group>
+        <van-switch-cell v-model="cusFrom" title="是否中介"/>
         <van-field
           v-model="form.property"
           label="物业费"
@@ -188,20 +189,21 @@
           readonly
           required>
         </van-field>
-        <van-field
-          v-model="fromName"
-          label="来源"
-          type="text"
-          readonly
-          placeholder="请选择客户来源"
-          @click="selectShow(4,'')"
-          required>
-        </van-field>
+        <van-switch-cell v-model="corp" title="是否个人单"/>
         <van-field
           v-model="form.receipt"
           label="收据编号"
           type="text"
           placeholder="请填写收据编号"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(1)"
+          placeholder="请选择签约日期"
           required>
         </van-field>
         <van-field
@@ -334,7 +336,7 @@
         timeIndex: '',
         timeValue: '',            //日期value
 
-        first_date: '',            //日期value
+        first_date: [],            //日期value
 
         amountPrice: 1,
         datePrice: [],
@@ -352,15 +354,19 @@
         value3: ['0', '1', '2', '3'],
         value4: ['个人', '中介'],
 
+        cusFrom: false,                //客户来源
+        corp: true,                    //公司单
+
         form: {
           id: '',
-          type: 3,
+          type: 4,
           draft: 0,
           rwc_type: 1,
           rent_without_collect_address: '',
           month: '',                    //租房月数
           day: '',                      //租房天数
           sign_date: '',                //签约日期
+          begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -373,7 +379,8 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
-          from: 1,                      //客户来源
+          is_agency: 0,                 //客户来源    0个人1中介
+          is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
           property: '',                 //物业费
           receipt: '',                  //收据编号
@@ -387,7 +394,6 @@
           leader_id: '92',               //负责人id
           department_id: '',            //部门id
         },
-        fromName: '个人',
         screenshots: {},
         photos: {},
         property_name: '',              //物业费付款人
@@ -403,7 +409,8 @@
     },
     activated() {
       this.houseInfo();
-      this.routerIndex('')
+      this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -455,15 +462,18 @@
         switch (this.timeIndex) {
           case 1:
             this.form.sign_date = this.timeValue;
+            break;
+          case 2:
+            this.form.retainage_date = this.timeValue;
+            break;
+          case 3:
+            this.form.begin_date = this.timeValue;
             this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
             this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
-            break;
-          case 2:
-            this.form.retainage_date = this.timeValue;
             break;
         }
       },
@@ -563,7 +573,7 @@
       countDate(val, per) {
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
-            begin_date: this.form.sign_date,
+            begin_date: this.form.begin_date,
             period: per,
           }
         }).then((res) => {
@@ -581,11 +591,14 @@
 
       saveCollect(val) {
         this.form.draft = val;
+        this.form.is_agency = this.cusFrom ? 1 : 0;
+        this.form.is_corp = this.corp ? 1 : 0;
         if (this.picStatus) {
           this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
             if (res.data.code === '50210') {
               Toast.success(res.data.msg);
               this.close_();
+              $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50220') {
               Toast.success(res.data.msg);
@@ -620,7 +633,7 @@
       },
 
       rentDetail() {
-        this.$http.get(this.urls + 'bulletin/rent?type=3').then((res) => {
+        this.$http.get(this.urls + 'bulletin/rent?type=4').then((res) => {
           if (res.data.code === '50210') {
             this.isClear = false;
             let data = res.data.data;
@@ -631,9 +644,10 @@
             this.form.month = draft.month;
             this.form.day = draft.day;
             this.form.sign_date = draft.sign_date;
+            this.form.begin_date = draft.begin_date;
 
             this.first_date = [];
-            this.first_date.push(draft.sign_date);
+            this.first_date.push(draft.begin_date);
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
@@ -668,8 +682,10 @@
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
             this.property_name = this.value1[draft.property_payer - 1];
-            this.form.from = draft.from;
-            this.fromName = this.value4[draft.from - 1];
+            this.is_agency  = draft.is_agency ;
+            this.cusFrom = draft.is_agency === 1 ? true : false;
+            this.is_corp  = draft.is_corp ;
+            this.corp = draft.is_corp === 1 ? true : false;
             this.form.receipt = draft.receipt;
             this.form.retainage_date = draft.retainage_date;
             this.form.name = draft.name;
@@ -704,12 +720,12 @@
         this.form.month = '';
         this.form.day = '';
         this.form.sign_date = '';
+        this.form.begin_date = '';
         this.datePrice = [];
         this.datePay = [];
         this.amountPrice = 1;
         this.form.period_price_arr = [''];
         this.form.price_arr = [''];
-        this.form.period_price_arr = [''];
         this.form.pay_way_bet = '';
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
@@ -720,8 +736,10 @@
         this.form.money_sep = [''];
         this.form.money_way = [''];
         this.form.deposit = '';
-        this.form.from = 1;
-        this.fromName = '个人';
+        this.is_corp  = 1;
+        this.corp = true;
+        this.is_agency  = 0;
+        this.cusFrom = false;
         this.form.property = '';
         this.form.receipt = '';
         this.form.property_payer = '';

@@ -13,7 +13,7 @@
         </van-field>
         <van-field
           v-model="house_type"
-          type="number"
+          type="text"
           label="户型"
           placeholder="户型已禁用"
           disabled>
@@ -22,7 +22,7 @@
           <van-field
             style="width: 110px;"
             class="title"
-            label="收房月数"
+            label="签约时长"
             required>
           </van-field>
           <van-field
@@ -40,8 +40,8 @@
         <van-field
           v-model="form.begin_date"
           type="text"
-          label="开始时间"
-          placeholder="请选择合同时间"
+          label="合同开始时间"
+          placeholder="请选择合同开始时间"
           readonly
           @click="timeChoose(1)"
           required>
@@ -181,15 +181,6 @@
             placeholder="保修期(天)">
           </van-field>
         </div>
-        <van-field
-          v-model="fromName"
-          label="来源"
-          type="text"
-          readonly
-          placeholder="请选择客户来源"
-          @click="selectShow(5,'')"
-          required>
-        </van-field>
         <van-field
           v-model="form.property"
           label="物业费"
@@ -419,6 +410,7 @@
         value1: ['月付', '双月付', '季付', '半年付', '年付'],
         value2: ['个人', '中介'],
         value6: ['无', '房东', '租客', '公司'],
+
         form: {
           id: '',
           type: 2,
@@ -437,7 +429,6 @@
           vacancy: '',                  //空置期
           warranty: '',                 //保修期(月)
           warranty_day: '',             //保修期(天)
-          from: 1,                      //客户来源 1个人2中介
           deposit: '',                  //押金
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
@@ -461,7 +452,6 @@
           department_id: '',            //部门id
         },
         houseName: '',                //房屋地址name
-        fromName: '个人',             //客户来源
         property_name: '',              //物业费付款人
         photos: {},                     //照片
         screenshots: {},                //照片
@@ -476,7 +466,8 @@
     },
     activated() {
       this.houseInfo();
-      this.routerIndex('')
+      this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -541,15 +532,15 @@
         switch (this.timeIndex) {
           case 1:
             this.form.begin_date = this.timeValue;
+            break;
+          case 2:
+            this.form.pay_first_date = this.timeValue;
             this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
             this.first_date.push(this.timeValue);
             this.datePrice.push(this.timeValue);
             this.datePay.push(this.timeValue);
-            break;
-          case 2:
-            this.form.pay_first_date = this.timeValue;
             break;
           case 3:
             this.form.pay_second_date = this.timeValue;
@@ -643,7 +634,7 @@
       countDate(val, per) {
         this.$http.get(this.urls + '/bulletin/helper/date', {
           params: {
-            begin_date: this.form.begin_date,
+            begin_date: this.form.pay_first_date,
             period: per,
           }
         }).then((res) => {
@@ -664,6 +655,7 @@
             if (res.data.code === '50110') {
               Toast.success(res.data.msg);
               this.close_();
+              $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50120') {
               Toast.success(res.data.msg);
@@ -722,7 +714,7 @@
             this.first_date.push(draft.pay_first_date);
             this.form.pay_second_date = draft.pay_second_date;
 
-            this.house_type = draft.house_type;
+            this.house_type = data.house_type;
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
@@ -752,8 +744,6 @@
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
             this.property_name = this.value6[draft.property_payer - 1];
-            this.form.from = draft.from;
-            this.fromName = draft.from === 1 ? '个人' : '中介';
             this.form.sign_date = draft.sign_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -797,8 +787,7 @@
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 
-        this.house_type_name = '1室 1厅 1卫';
-        this.house_type = [0, 1, 1];
+        this.house_type = '1室1厅1卫';
 
         this.amountPrice = 1;
         this.form.period_price_arr = [''];
@@ -827,8 +816,6 @@
         this.property_name = '';
         this.form.sign_date = '';
         this.form.name = '';
-        this.form.from = 1;
-        this.fromName = '';
         this.form.phone = '';
         this.form.bank = '';
         this.form.subbranch = '';

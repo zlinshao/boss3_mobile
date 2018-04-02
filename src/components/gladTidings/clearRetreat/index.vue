@@ -124,6 +124,7 @@
     activated() {
       this.houseInfo();
       this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect() {
@@ -143,6 +144,7 @@
             if (res.data.code === '50410') {
               Toast.success(res.data.msg);
               this.close_();
+              $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50420') {
               Toast.success(res.data.msg);

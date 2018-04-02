@@ -34,12 +34,11 @@
       next(vm => {
         vm.path = from.path;
         vm.routerIndex(from.path);
+        vm.ddRent(from.path, 'staff');
       })
     },
     activated() {
-
       this.searchValue = '';
-
     },
     methods: {
       organize() {

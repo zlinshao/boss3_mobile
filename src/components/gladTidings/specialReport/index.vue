@@ -23,7 +23,7 @@
         <van-field
           v-model="form.content"
           label="报备内容"
-          type="text"
+          type="textarea"
           placeholder="请填写报备内容"
           required>
         </van-field>
@@ -109,6 +109,7 @@
     activated() {
       this.houseInfo();
       this.routerIndex('');
+      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -137,6 +138,7 @@
             if (res.data.code === '51010') {
               Toast.success(res.data.msg);
               this.close_();
+              $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '51020') {
               Toast.success(res.data.msg);

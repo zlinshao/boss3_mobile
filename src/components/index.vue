@@ -167,6 +167,7 @@
       }
     },
     mounted() {
+      this.ddRent('');
       this.disabled = false;
       this.paths = this.$router.options.routes;
       document.body.scrollTop = document.documentElement.scrollTop = 0;

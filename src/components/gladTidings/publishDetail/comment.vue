@@ -45,15 +45,14 @@
       next(vm => {
         vm.path = from.path;
         vm.routerIndex(from.path);
+        vm.ddRent(from.path);
       })
     },
     mounted() {
-      this.close_();
       this.pitch = JSON.parse(this.$route.query.data);
       this.detail = this.$route.query.detail;
     },
     activated() {
-      this.close_();
       this.pitch = JSON.parse(this.$route.query.data);
       this.detail = this.$route.query.detail;
     },
@@ -79,6 +78,8 @@
         }).then((res) => {
           if (res.data.status === 'success') {
             Toast.success(res.data.message);
+            this.close_();
+            $('.imgItem').remove();
             this.$router.replace({path: this.path, query: {data: JSON.stringify(this.pitch)}});
           } else {
             Toast(res.data.message);

@@ -45,6 +45,7 @@
       next(vm => {
         vm.path = from.path;
         vm.routerIndex(from.path, 'house');
+        vm.ddRent(from.path, 'house');
       })
     },
     methods: {

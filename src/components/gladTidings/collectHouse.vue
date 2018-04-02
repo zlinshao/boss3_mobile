@@ -48,7 +48,8 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
-        vm.routerIndex(from.path, 'staff');
+        vm.routerIndex(from.path, 'house');
+        vm.ddRent(from.path, 'house');
       })
     },
     methods: {
@@ -63,6 +64,10 @@
               this.myData(type, value);
               break;
             case 'rent0':
+              type = 'renter?q=';
+              this.myData(type, value);
+              break;
+            case 'rent01':
               type = 'renter?q=';
               this.myData(type, value);
               break;
@@ -93,7 +98,7 @@
             this.formDetail = data[i];
             let list = {};
             list.id = data[i].id;
-            if(data[i].house !== null){
+            if (data[i].house !== null) {
               list.house_name = data[i].house.name;
               list.house_id = data[i].house.id;
             }
@@ -105,7 +110,7 @@
               list.staff_name = '';
               list.department_name = '';
             }
-            if(data[i].month_price !== null){
+            if (data[i].month_price !== null) {
 
             }
             this.lists.push(list);
@@ -114,11 +119,11 @@
       },
       // 房屋地址
       houseAddress(data) {
-        this.$router.replace({path: this.path, query: {house: JSON.stringify(data)}});
+        this.$router.replace({path: this.path, query: {house: JSON.stringify(data), type: this.types}});
       },
       // select关闭
       onCancel() {
-        this.$router.replace({path: this.path, query: {house: ''}});
+        this.$router.replace({path: this.path, query: {house: '', type: this.types}});
       },
     },
   }
@@ -172,9 +177,9 @@
         }
       }
     }
-    .van-search__input-wrap{
+    .van-search__input-wrap {
       padding-top: 5px;
-      .van-search__input{
+      .van-search__input {
         height: 22px;
 
       }
