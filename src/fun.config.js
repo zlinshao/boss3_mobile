@@ -36,5 +36,17 @@ export default {
     Vue.prototype.stick = function () {
       window.scrollTo(0, document.body.scrollHeight);
     };
+
+    Vue.prototype.dictionary = function (data, flag) {
+      return new Promise((resolve, reject) => {
+        this.$http.get(globalConfig.server + 'setting/dictionary/' + data, {
+          params: {status: flag}
+        }).then((res) => {
+          if (res.data.code === '30010') {
+            resolve(res.data)
+          }
+        })
+      })
+    };
   }
 }

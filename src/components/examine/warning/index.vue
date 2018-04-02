@@ -21,7 +21,7 @@
         </b>
       </div>
     </div>
-    <div class="main">
+    <div class="mainWarning">
       <div class="mainTop">公司各部门：</div>
       <div class="mainTitle">
         <p v-html="myData.content"></p>
@@ -101,7 +101,7 @@
     }
   }
 
-  .main {
+  .mainWarning {
     padding: .4rem;
     @include flex;
     flex-wrap: wrap;

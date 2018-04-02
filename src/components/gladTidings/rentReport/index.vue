@@ -156,7 +156,7 @@
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
-          <span>已收金额付款方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span>已收金额支付方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
         </div>
         <van-cell-group>
@@ -170,16 +170,16 @@
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="付款方式"
+            label="支付方式"
             type="text"
             readonly
-            placeholder="请选择付款方式"
+            placeholder="请选择支付方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
       <div @click="priceAmount(3)" class="addInput">
-        +增加付款方式
+        +增加支付方式
       </div>
 
       <van-cell-group>
@@ -362,11 +362,6 @@
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
 
-        value1: ['无', '房东', '租客', '公司'],
-        value2: ['支付宝', '微信', '银行卡', 'pos机', '现金'],
-        value3: ['0', '1', '2', '3'],
-        value4: ['个人', '中介'],
-
         cusFrom: false,                //客户来源
         corp: true,                    //公司单
 
@@ -509,13 +504,13 @@
         this.selectHide = true;
         switch (val) {
           case 1:
-            this.columns = this.value1;
+            this.columns = dicts.value6;
             break;
           case 2:
-            this.columns = this.value2;
+            this.columns = dicts.value8;
             break;
           case 3:
-            this.columns = this.value3;
+            this.columns = dicts.value9;
             break;
           case 4:
             this.columns = this.rooms;
@@ -710,7 +705,7 @@
               this.amountMoney = i + 1;
               this.form.money_sep.push('');
               this.form.money_way.push('');
-              this.moneyNum[i] = this.value2[draft.money_way[i] - 1]
+              this.moneyNum[i] = dicts.value8[draft.money_way[i] - 1]
             }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
@@ -723,7 +718,7 @@
             this.corp = draft.is_corp === 1 ? true : false;
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
-            this.property_name = this.value1[draft.property_payer - 1];
+            this.property_name = dicts.value6[draft.property_payer - 1];
             this.form.retainage_date = draft.retainage_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -802,127 +797,6 @@
 
 <style lang="scss">
   #rentReport {
-    @mixin flex {
-      display: flex;
-      display: -webkit-flex;
-    }
-
-    $color: #409EFF;
-    .van-switch.van-switch--on {
-      background: $color;
-    }
-    .van-icon.van-icon-checked {
-      color: $color;
-    }
-    .van-cell.van-hairline.van-field {
-      .van-cell__title {
-        width: 110px;
-        span {
-          font-size: 16px;
-        }
-      }
-      .van-cell__value {
-        padding-left: 110px;
-      }
-    }
-    .first_date {
-      .van-cell.van-hairline.van-field {
-        width: 34%;
-        .van-cell__value {
-          padding-left: 0;
-        }
-      }
-      span.cut {
-        padding-right: 10px;
-        line-height: 39px;
-        color: #969696;
-        border-bottom: 1px solid #F4F4F4;
-      }
-      @include flex;
-      .twoBorder {
-        border-bottom: 1px solid #F4F4F4;
-        padding-bottom: 9px;
-      }
-    }
-
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: .2rem 0;
-      padding-bottom: .26rem;
-      .title {
-        padding: .26rem .3rem 0;
-      }
-    }
-    .paddingTitle {
-      @include flex;
-      justify-content: space-between;
-      padding: .26rem .3rem;
-      color: #aaaaaa;
-      .colors {
-        color: $color;
-      }
-    }
-    .addInput {
-      height: .9rem;
-      line-height: .9rem;
-      text-align: center;
-      color: $color;
-      background: #ffffff;
-      margin-bottom: .2rem;
-    }
-
-    .top, .footer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      height: .9rem;
-      z-index: 666;
-      background: #ffffff;
-    }
-
-    .main {
-      margin: .2rem 0 1.2rem;
-    }
-    .top {
-      top: 0;
-      box-shadow: 0 3px 10px 0 #dddddd;
-      .van-hairline--top-bottom::after {
-        border-bottom: 0;
-      }
-    }
-    .footer {
-      bottom: 0;
-      height: 1rem;
-      padding: 10px;
-      @include flex;
-      align-items: center;
-      border-top: 1px solid #ebebeb;
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
-      div {
-        height: .6rem;
-        line-height: .6rem;
-        width: 50%;
-        text-align: center;
-        color: $color;
-      }
-    }
-    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-      color: #dddddd;
-    }
-
-    input::-moz-placeholder, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
-      color: #dddddd;
-    }
-
-    input:-moz-placeholder, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-      color: #dddddd;
-    }
-
-    input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
-      color: #dddddd;
-    }
+    overflow: hidden;
   }
 </style>

@@ -408,8 +408,7 @@
 
         house_type: '321321',
 
-        value1: ['月付', '双月付', '季付', '半年付', '年付'],
-        value2: ['个人', '中介'],
+        value4: ['月付', '双月付', '季付', '半年付', '年付'],
         value6: ['无', '房东', '租客', '公司'],
 
         corp: true,                    //公司单
@@ -429,7 +428,6 @@
           period_pay_arr: [''],         //付款方式周期
           pay_way_arr: [''],            //付款方式
 
-          vacancy: '',                  //空置期
           warranty: '',                 //保修期(月)
           warranty_day: '',             //保修期(天)
           deposit: '',                  //押金
@@ -563,13 +561,10 @@
         this.selectHide = true;
         switch (val) {
           case 4:
-            this.columns = this.value1;
-            break;
-          case 5:
-            this.columns = this.value2;
+            this.columns = dicts.value4;
             break;
           case 6:
-            this.columns = this.value6;
+            this.columns = dicts.value6;
             break;
         }
       },
@@ -579,10 +574,6 @@
           case 4:
             this.payTypeNum[this.payIndex] = value;
             this.form.pay_way_arr[this.payIndex] = index + 1;
-            break;
-          case 5:
-            this.fromName = value;
-            this.form.from = index + 1;
             break;
           case 6:
             this.form.property_payer = index + 1;
@@ -734,7 +725,7 @@
               this.amountPay = i + 1;
               this.form.period_pay_arr.push('');
               this.form.pay_way_arr.push('');
-              this.payTypeNum[i] = this.value1[draft.pay_way_arr[i] - 1]
+              this.payTypeNum[i] = dicts.value4[draft.pay_way_arr[i] - 1]
             }
             this.form.period_pay_arr = draft.period_pay_arr;
             this.countDate(2, draft.period_pay_arr);
@@ -750,7 +741,7 @@
             this.form.warranty_day = draft.warranty_day;
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
-            this.property_name = this.value6[draft.property_payer - 1];
+            this.property_name = dicts.value6[draft.property_payer - 1];
             this.form.sign_date = draft.sign_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -854,157 +845,6 @@
 
 <style lang="scss">
   #collectReport {
-    @mixin flex {
-      display: flex;
-      display: -webkit-flex;
-    }
-
-    $color: #409EFF;
-    .van-switch.van-switch--on {
-      background: $color;
-    }
-    .van-icon.van-icon-checked {
-      color: $color;
-    }
-    .van-cell.van-hairline.van-field {
-      .van-cell__title {
-        width: 110px;
-        span {
-          font-size: 16px;
-        }
-      }
-      .van-cell__value {
-        padding-left: 110px;
-      }
-    }
-    .first_date {
-      .van-cell.van-hairline.van-field {
-        width: 34%;
-        .van-cell__value {
-          padding-left: 0;
-        }
-      }
-      span.cut {
-        padding-right: 10px;
-        line-height: 39px;
-        color: #969696;
-        border-bottom: 1px solid #F4F4F4;
-      }
-      @include flex;
-      .twoBorder {
-        border-bottom: 1px solid #F4F4F4;
-        padding-bottom: 9px;
-      }
-    }
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: .2rem 0;
-      padding-bottom: .26rem;
-      .title {
-        padding: .26rem .3rem 0;
-      }
-    }
-
-    .aloneModel.required {
-      .title {
-        padding-left: .2rem;
-        span {
-          color: #f44;
-        }
-      }
-    }
-    .paddingTitle {
-      @include flex;
-      justify-content: space-between;
-      padding: .26rem .3rem;
-      color: #aaaaaa;
-      .colors {
-        color: $color;
-      }
-    }
-    .addInput {
-      height: .88rem;
-      line-height: .88rem;
-      text-align: center;
-      color: $color;
-      background: #ffffff;
-    }
-    .addInput.bottom {
-      margin-bottom: .2rem;
-    }
-    .searchClass {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      z-index: 999;
-      .searchContent {
-        overflow: auto;
-        height: 77%;
-        .searchList {
-          @include flex;
-          justify-content: space-between;
-          padding: 15px 20px;
-          &:hover {
-            background: #DDDDDD;
-          }
-        }
-      }
-    }
-    .top, .footer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      height: .9rem;
-      z-index: 666;
-      background: #ffffff;
-    }
-
-    .main {
-      margin: .2rem 0 1.2rem;
-    }
-    .top {
-      top: 0;
-      box-shadow: 0 3px 10px 0 #dddddd;
-      .van-hairline--top-bottom::after {
-        border-bottom: 0;
-      }
-    }
-    .footer {
-      bottom: 0;
-      height: 1rem;
-      padding: 10px;
-      @include flex;
-      align-items: center;
-      border-top: 1px solid #ebebeb;
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
-      div {
-        height: .6rem;
-        line-height: .6rem;
-        width: 50%;
-        text-align: center;
-        color: $color;
-      }
-    }
-    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-      color: #dddddd;
-    }
-
-    input::-moz-placeholder, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
-      color: #dddddd;
-    }
-
-    input:-moz-placeholder, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-      color: #dddddd;
-    }
-
-    input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
-      color: #dddddd;
-    }
+    overflow: hidden;
   }
 </style>

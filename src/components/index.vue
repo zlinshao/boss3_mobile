@@ -24,7 +24,7 @@
 
     <div class="okFinish" v-if="footActive === 1">
       <div class="inRough">
-        <div class="main">
+        <div class="mainIndex">
           <div class="mainTop">
             <div>
               <span>报备</span>
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="inRough">
-        <div class="main">
+        <div class="mainIndex">
           <div class="mainTop">
             <div>
               <span>审批</span>
@@ -121,7 +121,7 @@
     </div>
 
     <!--底部-->
-    <div class="footer">
+    <div class="footerIndex">
       <div @click="routerLink('/index')" :class="{'onDiv': footActive === 1}">
         <h2>
           <i class="iconfont icon-shenpi"></i>
@@ -167,8 +167,7 @@
       }
     },
     mounted() {
-      this.ddRent('');
-      this.disabled = false;
+
       this.paths = this.$router.options.routes;
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     },
@@ -398,7 +397,7 @@
       .inRough {
         padding: .4rem;
         margin-top: .3rem;
-        .main {
+        .mainIndex {
           .mainTop {
             @include flex;
             justify-content: space-between;
@@ -619,7 +618,7 @@
       }
     }
 
-    .footer {
+    .footerIndex {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -652,7 +651,7 @@
       }
     }
 
-    .top, .footer {
+    .top, .footerIndex {
       .onDiv {
         h1, h2 {
           color: $onColor;

@@ -450,28 +450,6 @@
       padding: .4rem 0 0;
       color: #DDDDDD;
     }
-    .footer {
-      border-top: 1px solid #ebebeb;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1rem;
-      background: #FFFFFF;
-      z-index: 999;
-      @include flex;
-      justify-content: space-around;
-      align-items: center;
-      div {
-        color: $onColor;
-        width: 100%;
-        height: .6rem;
-        line-height: .6rem;
-        text-align: center;
-      }
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
-    }
+
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="clearRetreat">
+  <div id="checkout">
 
     <div class="main">
       <van-cell-group>
@@ -37,7 +37,6 @@
           <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
           <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
         </div>
-
         <van-field
           :class="{'payWay': priceStatus}"
           v-model="price_arr"
@@ -140,9 +139,6 @@
         isClear: false,           //删除图片
         picStatus: true,
 
-        payStatus: false,
-        priceStatus: false,
-
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
@@ -152,6 +148,8 @@
 
         payWay: '1',                   //付款方式
         price_arr: '1',                //月单价
+        payStatus: false,
+        priceStatus: false,
 
         form: {
           id: '',
@@ -319,171 +317,7 @@
 </script>
 
 <style lang="scss">
-  #clearRetreat {
-    @mixin flex {
-      display: flex;
-      display: -webkit-flex;
-    }
-    $color: #409EFF;
-
-    .accordion {
-      border-bottom: .01rem solid #ececec;
-      div {
-        color: #888888;
-        min-height: 44px;
-        line-height: 44px;
-      }
-    }
-
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: 5px 0;
-      padding-bottom: 10px;
-      .title {
-        padding: 10px 15px;
-      }
-    }
-
-    .checks {
-      @include flex;
-      align-items: center;
-      height: 44px;
-      .van-radio-group {
-        @include flex;
-        .van-radio {
-          margin-right: .3rem;
-        }
-      }
-    }
-
-    .van-switch.van-switch--on {
-      background: $color;
-    }
-
-    .van-icon.van-icon-checked {
-      color: $color;
-    }
-
-    .van-cell.van-hairline.van-field {
-      .van-cell__title {
-        width: 110px;
-      }
-      .van-cell__value {
-        padding-left: 110px;
-        i {
-          transform: rotate(90deg);
-          transition: all .5s;
-        }
-      }
-    }
-    .payWay.van-cell.van-hairline.van-field {
-      i {
-        transform: rotate(-90deg);
-        transition: all .5s;
-      }
-    }
-
-    .searchClass {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      z-index: 999;
-      .searchContent {
-        overflow: auto;
-        height: 77%;
-        .searchList {
-          display: flex;
-          display: -webkit-flex;
-          justify-content: space-between;
-          padding: 15px 20px;
-          &:hover {
-            background: #DDDDDD;
-          }
-        }
-      }
-    }
-
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: .2rem 0;
-      padding-bottom: .26rem;
-      .title {
-        padding: .26rem .3rem 0;
-      }
-    }
-    .paddingTitle {
-      @include flex;
-      justify-content: space-between;
-      padding: .26rem .3rem;
-      color: #aaaaaa;
-      .colors {
-        color: $color;
-      }
-    }
-    .addInput {
-      height: .9rem;
-      line-height: .9rem;
-      text-align: center;
-      color: $color;
-      background: #ffffff;
-      margin-bottom: .2rem;
-    }
-
-    .top, .footer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      height: .9rem;
-      z-index: 666;
-      background: #ffffff;
-    }
-    .main {
-      margin: .2rem 0 1.2rem;
-    }
-    .top {
-      top: 0;
-      box-shadow: 0 3px 10px 0 #dddddd;
-      .van-hairline--top-bottom::after {
-        border-bottom: 0;
-      }
-    }
-    .footer {
-      bottom: 0;
-      height: 1rem;
-      padding: 10px;
-      @include flex;
-      align-items: center;
-      border-top: 1px solid #ebebeb;
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
-      div {
-        height: .6rem;
-        line-height: .6rem;
-        width: 50%;
-        text-align: center;
-        color: $color;
-      }
-    }
-    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-      color: #dddddd;
-    }
-
-    input::-moz-placeholder, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
-      color: #dddddd;
-    }
-
-    input:-moz-placeholder, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-      color: #dddddd;
-    }
-
-    input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
-      color: #dddddd;
-    }
+  #checkout {
+    overflow: hidden;
   }
 </style>

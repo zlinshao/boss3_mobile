@@ -6,6 +6,7 @@ import router from './router'
 import axios from 'axios'
 // import FastClick from 'fastclick'
 import Fun from './fun.config.js'
+import '@/assets/js/api.js'
 
 
 import { Cell, CellGroup, Icon, DatetimePicker,PasswordInput, NumberKeyboard ,Row, Col,Badge,Button,

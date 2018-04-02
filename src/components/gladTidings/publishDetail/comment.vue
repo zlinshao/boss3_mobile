@@ -14,7 +14,7 @@
         <div class="title">图片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
       </div>
-      <div class="footerComment">
+      <div class="footer">
         <div @click="manager()">确认</div>
       </div>
     </div>
@@ -93,6 +93,7 @@
       },
 
       getImgData(val) {
+        alert(!val[2]);
         this.picStatus = !val[2];
         this.form.photo = val[1];
       },
@@ -111,7 +112,6 @@
 
 <style lang="scss">
   #commentOn {
-
     @mixin flex {
       display: flex;
       display: -webkit-flex;
@@ -126,11 +126,16 @@
     $onColor: #39b1ff;
     $borColor: #9c9c9c;
 
-    background: #f8f8f8;
     .contents, .pic {
       background: #ffffff;
     }
+    .van-cell.van-hairline.van-field {
+      .van-cell__value {
+        padding-left: 0;
+      }
+    }
     .contents {
+      text-align: center;
       margin-bottom: .2rem;
       .van-cell-group {
         .van-field--has-textarea {
@@ -147,26 +152,6 @@
       .title {
         font-size: .36rem;
         padding: .26rem .4rem;
-      }
-    }
-    .footerComment {
-      border-top: 1px solid #ebebeb;
-      position: fixed;
-      background: #ffffff;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1rem;
-      z-index: 666;
-      @include flex;
-      justify-content: space-around;
-      align-items: center;
-      div {
-        color: $onColor;
-        width: 100%;
-        height: .6rem;
-        line-height: .6rem;
-        text-align: center;
       }
     }
   }

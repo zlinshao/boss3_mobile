@@ -139,59 +139,5 @@
 </script>
 
 <style lang="scss">
-  @mixin flex {
-    display: flex;
-    display: -webkit-flex;
-  }
 
-  .notData {
-    text-align: center;
-    padding: 24px 0;
-    font-size: .33rem;
-    color: #b3afaf;
-  }
-
-  .searchClass {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #ffffff;
-    z-index: 999;
-    .searchContent {
-      overflow: auto;
-      height: 77%;
-      .searchList {
-        @include flex;
-        justify-content: space-between;
-        padding: .3rem;
-        &:hover {
-          background: #DDDDDD;
-        }
-        div:first-child {
-          width: 48%;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-        }
-        div:last-of-type {
-          text-align: right;
-          p {
-            margin-bottom: .1rem;
-          }
-          span {
-            color: #aaaaaa;
-          }
-        }
-      }
-    }
-    .van-search__input-wrap {
-      padding-top: 5px;
-      .van-search__input {
-        height: 22px;
-
-      }
-    }
-  }
 </style>

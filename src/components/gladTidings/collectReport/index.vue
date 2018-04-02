@@ -437,9 +437,6 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import Organization from '../organize.vue'
-  import SelectDepart from '../../common/selectDepartment.vue'
-
   import {Toast} from 'vant';
 
   export default {
@@ -451,7 +448,6 @@
         address: globalConfig.server_user,
         picStatus: true,
         isClear: false,
-
         allCity: [],              //城市
         cities: [],               //城市
 
@@ -479,14 +475,6 @@
         payIndex: '',               //付款方式index
         community_name: '',         //小区名字
         house_type_name: '1室1厅1卫',
-
-        value1: ['1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'],
-        value2: ['无', '1厅', '2厅', '3厅', '4卫', '5卫'],
-        value3: ['无', '1卫', '2卫', '3卫', '4卫', '5卫'],
-        value4: ['月付', '双月付', '季付', '半年付', '年付'],
-        value5: ['个人', '中介'],
-        value6: ['无', '房东', '租客', '公司'],
-        value7: ['空置期开始后', '每年开始时', '合同开始结束各一半', '第二次付款时间前', '无'],
 
         cusFrom: false,                //客户来源
         corp: true,                    //公司单
@@ -679,17 +667,17 @@
           case 1:
             this.columns = [
               {
-                values: this.value1,
+                values: dicts.value1,
                 className: 'column1',
                 defaultIndex: 0
               },
               {
-                values: this.value2,
+                values: dicts.value2,
                 className: 'column2',
                 defaultIndex: 1
               },
               {
-                values: this.value3,
+                values: dicts.value3,
                 className: 'column3',
                 defaultIndex: 1
               }
@@ -699,16 +687,16 @@
             this.columns = this.cities;
             break;
           case 4:
-            this.columns = this.value4;
+            this.columns = dicts.value4;
             break;
           case 5:
-            this.columns = this.value5;
+            this.columns = dicts.value5;
             break;
           case 6:
-            this.columns = this.value6;
+            this.columns = dicts.value6;
             break;
           case 7:
-            this.columns = this.value7;
+            this.columns = dicts.value7;
             break;
         }
       },
@@ -722,7 +710,7 @@
             if (value[2] === '无') {
               value[2] = '0卫';
             }
-            this.house_type_name = value.join(' ');
+            this.house_type_name = value.join('');
             this.form.house_type = index;
             break;
           case 2:
@@ -810,10 +798,8 @@
           if (res.data.code === '51110') {
             if (val === 1) {
               this.datePrice = this.first_date.concat(res.data.data);
-              console.log(this.datePrice)
             } else {
               this.datePay = this.first_date.concat(res.data.data);
-              console.log(this.datePay)
             }
           }
         })
@@ -903,9 +889,9 @@
 
             this.house_type = draft.house_type;
             let house = draft.house_type;
-            let room = this.value2[house[1]] === '无' ? '0厅' : this.value2[house[1]];
-            let hall = this.value3[house[2]] === '无' ? '0厅' : this.value3[house[2]];
-            this.house_type_name = this.value1[house[0]] + room + hall;
+            let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
+            let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
+            this.house_type_name = dicts.value1[house[0]] + room + hall;
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
@@ -920,7 +906,7 @@
               this.amountPay = i + 1;
               this.form.period_pay_arr.push('');
               this.form.pay_way_arr.push('');
-              this.payTypeNum[i] = this.value4[draft.pay_way_arr[i] - 1]
+              this.payTypeNum[i] = dicts.value4[draft.pay_way_arr[i] - 1]
             }
             this.form.period_pay_arr = draft.period_pay_arr;
             this.countDate(2, draft.period_pay_arr);
@@ -929,13 +915,13 @@
             this.form.deposit = draft.deposit;
             this.form.vacancy = draft.vacancy;
             this.form.vacancy_way = draft.vacancy_way;
-            this.vacancy_way_name = this.value7[draft.vacancy_way - 1];
+            this.vacancy_way_name = dicts.value7[draft.vacancy_way - 1];
             this.form.vacancy_other = draft.vacancy_other;
             this.form.warranty = draft.warranty;
             this.form.warranty_day = draft.warranty_day;
             this.form.property = draft.property;
             this.form.property_payer = draft.property_payer;
-            this.property_name = this.value6[draft.property_payer - 1];
+            this.property_name = dicts.value6[draft.property_payer - 1];
             this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
             this.is_corp = draft.is_corp;
@@ -1056,149 +1042,5 @@
 <style lang="scss">
   #collectReport {
     overflow: hidden;
-    @mixin flex {
-      display: flex;
-      display: -webkit-flex;
-    }
-
-    $color: #409EFF;
-    .van-switch.van-switch--on {
-      background: $color;
-    }
-    .van-icon.van-icon-checked {
-      color: $color;
-    }
-    .van-cell.van-hairline.van-field {
-      .van-cell__title {
-        width: 110px;
-        span {
-          font-size: 16px;
-        }
-      }
-      .van-cell__value {
-        padding-left: 110px;
-      }
-    }
-    .fourth {
-      .van-cell.van-hairline.van-field {
-        width: 25%;
-        .van-cell__value {
-          padding-left: 20px;
-        }
-      }
-    }
-    .first_date {
-      .van-cell.van-hairline.van-field {
-        width: 33%;
-        .van-cell__value {
-          padding-left: 0;
-        }
-      }
-      .title.van-cell.van-hairline.van-field {
-        width: 31%;
-      }
-    }
-    .fourth, .first_date {
-      span.cut {
-        padding-right: 10px;
-        line-height: 39px;
-        color: #969696;
-        border-bottom: 1px solid #F4F4F4;
-      }
-      @include flex;
-      .twoBorder {
-        border-bottom: 1px solid #F4F4F4;
-        padding-bottom: 9px;
-      }
-    }
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: .2rem 0;
-      padding-bottom: .26rem;
-      .title {
-        padding: .26rem .3rem 0;
-      }
-    }
-    .aloneModel.required {
-      .title {
-        padding-left: .2rem;
-        span {
-          color: #f44;
-        }
-      }
-    }
-    .paddingTitle {
-      @include flex;
-      justify-content: space-between;
-      padding: .26rem .3rem;
-      color: #aaaaaa;
-      .colors {
-        color: $color;
-      }
-    }
-    .addInput {
-      height: .88rem;
-      line-height: .88rem;
-      text-align: center;
-      color: $color;
-      background: #ffffff;
-    }
-    .addInput.bottom {
-      margin-bottom: .2rem;
-    }
-
-    .main {
-      margin: .2rem 0 1.2rem;
-    }
-    .top, .footer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      height: .9rem;
-      z-index: 666;
-      background: #ffffff;
-    }
-
-    .top {
-      top: 0;
-      box-shadow: 0 3px 10px 0 #dddddd;
-      .van-hairline--top-bottom::after {
-        border-bottom: 0;
-      }
-    }
-    .footer {
-      bottom: 0;
-      height: 1rem;
-      padding: 10px;
-      @include flex;
-      align-items: center;
-      border-top: 1px solid #ebebeb;
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
-      div {
-        height: .6rem;
-        line-height: .6rem;
-        width: 50%;
-        text-align: center;
-        color: $color;
-      }
-    }
-    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-      color: #dddddd;
-    }
-
-    input::-moz-placeholder, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
-      color: #dddddd;
-    }
-
-    input:-moz-placeholder, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-      color: #dddddd;
-    }
-
-    input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
-      color: #dddddd;
-    }
   }
 </style>

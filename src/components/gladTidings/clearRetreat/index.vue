@@ -5,8 +5,10 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">报备性质</div>
-          <van-radio name="0" v-model="form.type">清退报备</van-radio>
-          <van-radio name="1" v-model="form.type" style="margin-left: 18px">取消报备</van-radio>
+          <van-radio-group v-model="form.type">
+            <van-radio name="0">清退报备</van-radio>
+            <van-radio name="1">取消报备</van-radio>
+          </van-radio-group>
         </div>
       </van-cell-group>
       <van-cell-group>
@@ -19,27 +21,38 @@
           placeholder="选择房屋地址"
           required>
         </van-field>
-        <!--<van-field-->
-          <!--v-model="bulletinDate"-->
-          <!--label="喜报日期"-->
-          <!--type="text"-->
-          <!--disabled-->
-          <!--placeholder="喜报日期已禁用">-->
-        <!--</van-field>-->
         <van-field
+          :class="{'payWay': payStatus}"
+          @click="payWayClick(1)"
           v-model="payWay"
           label="付款方式"
-          type="textarea"
-          disabled
+          type="text"
+          readonly
+          icon="arrow"
           placeholder="付款方式已禁用">
         </van-field>
+        <div class="accordion" v-if="payStatus">
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        </div>
         <van-field
+          :class="{'payWay': priceStatus}"
           v-model="price_arr"
+          @click="payWayClick(2)"
           label="月单价"
-          type="textarea"
-          disabled
+          type="text"
+          readonly
+          icon="arrow"
           placeholder="月单价已禁用">
         </van-field>
+        <div class="accordion" v-if="priceStatus">
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        </div>
       </van-cell-group>
 
       <div class="aloneModel">
@@ -99,9 +112,10 @@
         isClear: false,           //删除图片
         picStatus: true,
 
-        bulletinDate: '',             //喜报日期
-        payWay: '',                   //付款方式
-        price_arr: '',                //月单价
+        payWay: '1',                   //付款方式
+        price_arr: '1',                //月单价
+        payStatus: false,
+        priceStatus: false,
 
         form: {
           id: '',
@@ -127,6 +141,15 @@
       this.ddRent('');
     },
     methods: {
+      payWayClick(val) {
+        if (val === 1) {
+          this.payStatus = !this.payStatus;
+          this.priceStatus = false;
+        } else {
+          this.priceStatus = !this.priceStatus;
+          this.payStatus = false;
+        }
+      },
       searchSelect() {
         this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
       },
@@ -210,152 +233,7 @@
 </script>
 
 <style lang="scss">
-  #clearRetreat {
-    @mixin flex {
-      display: flex;
-      display: -webkit-flex;
-    }
-    $color: #409EFF;
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: 5px 0;
-      padding-bottom: 10px;
-      .title {
-        padding: 10px 15px;
-      }
-    }
-
-    .checks {
-      display: -webkit-flex;
-      align-items: center;
-      height: 44px;
-    }
-
-    .van-switch.van-switch--on {
-      background: $color;
-    }
-
-    .van-icon.van-icon-checked {
-      color: $color;
-    }
-
-    .van-cell.van-hairline.van-field {
-      .van-cell__title {
-        width: 110px;
-      }
-      .van-cell__value {
-        padding-left: 110px;
-      }
-    }
-    .dingJin {
-      padding: 10px 15px 10px 0;
-      display: flex;
-      display: -webkit-flex; /* Safari */
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .searchClass {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      z-index: 999;
-      .searchContent {
-        overflow: auto;
-        height: 77%;
-        .searchList {
-          display: flex;
-          display: -webkit-flex;
-          justify-content: space-between;
-          padding: 15px 20px;
-          &:hover {
-            background: #DDDDDD;
-          }
-        }
-      }
-    }
-
-    .aloneModel {
-      background: #fff;
-      width: 100%;
-      margin: .2rem 0;
-      padding-bottom: .26rem;
-      .title {
-        padding: .26rem .3rem 0;
-      }
-    }
-    .paddingTitle {
-      @include flex;
-      justify-content: space-between;
-      padding: .26rem .3rem;
-      color: #aaaaaa;
-      .colors {
-        color: $color;
-      }
-    }
-    .addInput {
-      height: .9rem;
-      line-height: .9rem;
-      text-align: center;
-      color: $color;
-      background: #ffffff;
-      margin-bottom: .2rem;
-    }
-
-    .top, .footer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      height: .9rem;
-      z-index: 666;
-      background: #ffffff;
-    }
-    .main {
-      margin: .2rem 0 1.2rem;
-    }
-    .top {
-      top: 0;
-      box-shadow: 0 3px 10px 0 #dddddd;
-      .van-hairline--top-bottom::after {
-        border-bottom: 0;
-      }
-    }
-    .footer {
-      bottom: 0;
-      height: 1rem;
-      padding: 10px;
-      @include flex;
-      align-items: center;
-      border-top: 1px solid #ebebeb;
-      div + div {
-        border-left: 1px solid #ebebeb;
-      }
-      div {
-        height: .6rem;
-        line-height: .6rem;
-        width: 50%;
-        text-align: center;
-        color: $color;
-      }
-    }
-    input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-      color: #dddddd;
-    }
-
-    input::-moz-placeholder, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
-      color: #dddddd;
-    }
-
-    input:-moz-placeholder, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-      color: #dddddd;
-    }
-
-    input:-ms-input-placeholder, textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
-      color: #dddddd;
-    }
+  #clearRetreat{
+    overflow: hidden;
   }
 </style>
