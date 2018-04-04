@@ -58,13 +58,6 @@
           disabled>
         </van-field>
         <van-field
-          v-model="leader_name"
-          label="负责人"
-          type="text"
-          placeholder="负责人已禁用"
-          disabled>
-        </van-field>
-        <van-field
           v-model="department_name"
           label="部门"
           type="text"
@@ -111,7 +104,6 @@
         },
         houseName: '',
         staff_name: '',                 //开单人name
-        leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -159,6 +151,10 @@
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
+          this.payWay = val.pay_way;
+          this.price_arr = val.month_price;
+          this.staff_name = val.staff_name;
+          this.department_name = val.department_name;
         }
       },
 
@@ -176,7 +172,6 @@
             this.form.price_arr = data.price_arr;
             this.form.remark = draft.remark;
             this.staff_name = data.staff_name;
-            this.leader_name = data.leader_name;
             this.department_name = data.department_name;
           } else {
             this.form.id = '';
@@ -191,7 +186,6 @@
         this.form.contract_id = '';
         this.form.remark = '';
         this.staff_name = '';
-        this.leader_name = '';
         this.department_name = '';
       }
     },
