@@ -525,18 +525,18 @@
         screenshots: {},                //照片
         staff_name: '',                 //开单人name
         department_name: '',            //部门name
+
+        dictValue4: [],         //付款方式
+        value4: [],
+        dictValue6: [],         //房东租客
+        value6: [],
+        dictValue7: [],         //安置方式
+        value7: [],
       }
     },
     mounted() {
       this.getNowFormatDate();
-      this.$http.get(this.urls + 'setting/dictionary/306').then((res) => {
-        this.allCity = res.data.data;
-        this.cities = [];
-        for (let i = 0; i < res.data.data.length; i++) {
-          this.cities.push(res.data.data[i].dictionary_name);
-        }
-        this.manuscript();
-      });
+      this.dicts();
     },
     activated() {
       this.houseInfo();
@@ -544,6 +544,47 @@
       this.ddRent('');
     },
     methods: {
+      dicts() {
+        //城市
+        this.dictionary(306, 1).then((res) => {
+          this.cities = [];
+          this.allCity = res.data;
+          for (let i = 0; i < res.data.length; i++) {
+            this.cities.push(res.data[i].dictionary_name);
+          }
+
+          //付款方式
+          this.dictionary(443, 1).then((res) => {
+            this.value4 = [];
+            this.dictValue4 = res.data;
+            for (let i = 0; i < res.data.length; i++) {
+              this.value4.push(res.data[i].dictionary_name);
+            }
+
+            //房东租客
+            this.dictionary(449, 1).then((res) => {
+              this.value6 = [];
+              this.dictValue6 = res.data;
+              for (let i = 0; i < res.data.length; i++) {
+                this.value6.push(res.data[i].dictionary_name);
+              }
+
+              //安置方式
+              this.dictionary(437, 1).then((res) => {
+                this.value7 = [];
+                this.dictValue7 = res.data;
+                for (let i = 0; i < res.data.length; i++) {
+                  this.value7.push(res.data[i].dictionary_name);
+                }
+                this.manuscript();
+              });
+
+            });
+
+          });
+
+        });
+      },
       searchSelect(val) {
         switch (val) {
           case 1:
@@ -675,16 +716,13 @@
             this.columns = this.cities;
             break;
           case 4:
-            this.columns = dicts.value4;
-            break;
-          case 5:
-            this.columns = dicts.value5;
+            this.columns = this.value4;
             break;
           case 6:
-            this.columns = dicts.value6;
+            this.columns = this.value6;
             break;
           case 7:
-            this.columns = dicts.value7;
+            this.columns = this.value7;
             break;
         }
       },
@@ -714,20 +752,28 @@
             break;
           case 4:
             this.payTypeNum[this.payIndex] = value;
-            this.form.pay_way_arr[this.payIndex] = index + 1;
-            break;
-          case 5:
-            this.fromName = value;
-            this.form.from = index + 1;
+            for (let i = 0; i < this.dictValue4.length; i++) {
+              if (this.dictValue4[i].dictionary_name === value) {
+                this.form.pay_way_arr[this.payIndex] = this.dictValue4[i].id;
+              }
+            }
             break;
           case 6:
-            this.form.property_payer = index + 1;
             this.property_name = value;
+            for (let i = 0; i < this.dictValue6.length; i++) {
+              if (this.dictValue6[i].dictionary_name === value) {
+                this.form.property_payer = this.dictValue6[i].id;
+              }
+            }
             break;
           case 7:
-            this.form.vacancy_way = index + 1;
             this.vacancy_way_name = value;
-            if (index === 4) {
+            for (let i = 0; i < this.dictValue7.length; i++) {
+              if (this.dictValue7[i].dictionary_name === value) {
+                this.form.vacancy_way = this.dictValue7[i].id;
+              }
+            }
+            if (value === '其他') {
               this.form.vacancy_other = '';
             }
             break;
@@ -888,9 +934,12 @@
 
             for (let i = 0; i < draft.pay_way_arr.length; i++) {
               this.amountPay = i + 1;
-              this.form.period_pay_arr.push('');
               this.form.pay_way_arr.push('');
-              this.payTypeNum[i] = dicts.value4[draft.pay_way_arr[i] - 1]
+              for (let j = 0; j < this.dictValue4.length; j++) {
+                if(this.dictValue4[j].id === draft.pay_way_arr[i]){
+                  this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
+                }
+              }
             }
             this.form.period_pay_arr = draft.period_pay_arr;
             this.countDate(2, draft.period_pay_arr);
@@ -899,13 +948,25 @@
             this.form.deposit = draft.deposit;
             this.form.vacancy = draft.vacancy;
             this.form.vacancy_way = draft.vacancy_way;
-            this.vacancy_way_name = dicts.value7[draft.vacancy_way - 1];
+
+            for (let j = 0; j < this.dictValue7.length; j++) {
+              if(this.dictValue7[j].id === draft.pay_way_arr){
+                this.vacancy_way_name = this.dictValue7[j].dictionary_name;
+              }
+            }
+
             this.form.vacancy_other = draft.vacancy_other;
             this.form.warranty = draft.warranty;
             this.form.warranty_day = draft.warranty_day;
             this.form.property = draft.property;
+
             this.form.property_payer = draft.property_payer;
-            this.property_name = dicts.value6[draft.property_payer - 1];
+            for (let j = 0; j < this.dictValue6.length; j++) {
+              if(this.dictValue6[j].id === draft.property_payer){
+                this.property_name = this.dictValue6[j].dictionary_name;
+              }
+            }
+
             this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
             this.is_corp = draft.is_corp;

@@ -396,11 +396,14 @@
         photos: {},
         staff_name: '',                  //开单人name
         department_name: '',             //部门name
+
+        dictValue8: [],         //支付方式
+        value8: [],
       }
     },
     mounted() {
       this.getNowFormatDate();
-      this.rentDetail();
+      this.dicts();
     },
     activated() {
       this.houseInfo();
@@ -408,6 +411,17 @@
       this.ddRent('');
     },
     methods: {
+      dicts() {
+        //支付方式
+        this.dictionary(508, 1).then((res) => {
+          this.value8 = [];
+          this.dictValue8 = res.data;
+          for (let i = 0; i < res.data.length; i++) {
+            this.value8.push(res.data[i].dictionary_name);
+          }
+            this.rentDetail();
+        });
+      },
       payWayClick() {
         this.payStatus = !this.payStatus;
       },
@@ -482,7 +496,7 @@
         this.selectHide = true;
         switch (val) {
           case 2:
-            this.columns = dicts.value8;
+            this.columns = this.value8;
             break;
           case 3:
             this.columns = dicts.value9;
@@ -497,7 +511,11 @@
         switch (this.tabs) {
           case 2:
             this.moneyNum[this.payIndex] = value;
-            this.form.money_way[this.payIndex] = index + 1;
+            for (let i = 0; i < this.dictValue8.length; i++) {
+              if (this.dictValue8[i].dictionary_name === value) {
+                this.form.money_way[this.payIndex] = this.dictValue8[i].id;
+              }
+            }
             break;
           case 3:
             this.form.pay_way_bet = value;
@@ -664,7 +682,7 @@
             this.rooms = [];
             for (let i = 0; i < draft.rooms_mate.length; i++) {
               this.rooms.push(draft.rooms_mate[i].name);
-              if(draft.room_id === draft.rooms_mate[i].id){
+              if (draft.room_id === draft.rooms_mate[i].id) {
                 this.roomsName = draft.rooms_mate[i].name;
               }
             }
@@ -708,9 +726,12 @@
             this.form.money_sum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
-              this.form.money_sep.push('');
               this.form.money_way.push('');
-              this.moneyNum[i] = dicts.value9[draft.money_way[i] - 1]
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].id === draft.money_way[i]) {
+                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
+                }
+              }
             }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;

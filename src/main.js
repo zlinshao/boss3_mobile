@@ -8,7 +8,6 @@ import axios from 'axios'
 import Fun from './fun.config.js'
 import '@/assets/js/api.js'
 
-
 import { Cell, CellGroup, Icon, DatetimePicker,PasswordInput, NumberKeyboard ,Row, Col,Badge,Button,
   Loading,NavBar,Panel,Stepper,Step, Steps,Swipe, SwipeItem,Tab, Tabs,Tabbar, TabbarItem,Tag,
   Checkbox, CheckboxGroup,Field,RadioGroup,Radio,Search,Switch,Uploader,Actionsheet,Dialog,Picker,PullRefresh,CellSwipe,Popup,
@@ -44,6 +43,7 @@ if (localStorage.myData !== undefined) {
 if (localStorage.personal !== undefined) {
   globalConfig.personal = JSON.parse(localStorage.personal);
 }
+
 
 let u = navigator.userAgent, app = navigator.appVersion;
 let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g

@@ -167,15 +167,18 @@
       }
     },
     mounted() {
-
       this.paths = this.$router.options.routes;
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
+      this.scrollTops();
     },
     activated() {
       this.disabled = false;
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
+      this.scrollTops();
     },
     methods: {
+      // 返回顶部
+      scrollTops() {
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+      },
       tabTag(val, red) {
         this.list = [];
         this.footActive = 0;
@@ -190,6 +193,7 @@
       },
 
       routerLink(val) {
+        this.scrollTops();
         if (val === '/index') {
           this.footActive = 1;
         }
