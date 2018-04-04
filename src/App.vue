@@ -5,9 +5,11 @@
     <!--<router-link :to="{path: key.path}">{{key.name}}</router-link>-->
     <!--</div>-->
     <!--</div>-->
-    <keep-alive>
-      <router-view v-wechat-title="$route.meta.title"/>
-    </keep-alive>
+    <!--<transition :name="transitionName">   </transition>-->
+      <keep-alive>
+        <router-view v-wechat-title="$route.meta.title"/>
+      </keep-alive>
+
     <!--<van-cell-group class="item-list">-->
     <!--<van-cell isLink icon="points" title="我的积分" ></van-cell>-->
     <!--<van-cell isLink icon="gift" title="我收到的礼物" ></van-cell>-->
@@ -63,7 +65,19 @@
         currentDate: new Date(2018, 0, 1),
         value: '',
         showKeyboard: false,
+        transitionName: '',
       };
+    },
+    watch: {//使用watch 监听$router的变化
+      $route(to, from) {
+        //如果to索引大于from索引,判断为前进状态,反之则为后退状态
+        if (to.meta.index > from.meta.index) {
+          //设置动画名称
+          this.transitionName = 'slide-left';
+        } else {
+          this.transitionName = 'slide-right';
+        }
+      }
     },
     mounted() {
       this.paths = this.$router.options.routes;
@@ -86,5 +100,34 @@
 
   .van-cell__title .van-icon {
     font-size: 18px;
+  }
+
+  .slide-right-enter-active,
+  .slide-right-leave-active,
+  .slide-left-enter-active,
+  .slide-left-leave-active {
+    will-change: transform;
+    transition: all 500ms;
+    position: absolute;
+  }
+
+  .slide-right-enter {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  .slide-right-leave-active {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .slide-left-enter {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .slide-left-leave-active {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
   }
 </style>

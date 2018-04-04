@@ -323,15 +323,6 @@
           required>
         </van-field>
         <van-field
-          v-model="leader_name"
-          @click="searchSelect(3)"
-          readonly
-          label="负责人"
-          type="text"
-          placeholder="请选择负责人"
-          required>
-        </van-field>
-        <van-field
           v-model="department_name"
           @click="searchSelect(4)"
           readonly
@@ -406,10 +397,7 @@
         payTypeNum: [''],               //付款方式
         payIndex: '',                   //付款方式index
 
-        house_type: '321321',
-
-        value4: ['月付', '双月付', '季付', '半年付', '年付'],
-        value6: ['无', '房东', '租客', '公司'],
+        house_type: '',
 
         corp: true,                    //公司单
 
@@ -450,7 +438,6 @@
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
-          leader_id: '92',               //负责人id
           department_id: '',            //部门id
         },
         houseName: '',                //房屋地址name
@@ -458,7 +445,6 @@
         photos: {},                     //照片
         screenshots: {},                //照片
         staff_name: '',               //开单人name
-        leader_name: '湮灭',           //负责人name
         department_name: '',          //部门name
       }
     },
@@ -475,7 +461,7 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_collect_continued'}});
             break;
           case 2:
             this.$router.push({path: '/organize'});
@@ -668,6 +654,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
+          this.house_type = val.house.room + '室' + val.house.unit + '厅'+ val.house.toilet + '卫';
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -761,8 +748,6 @@
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
-            this.form.leader_id = draft.leader_id;
-            this.leader_name = data.leader_name;
             this.form.department_id = draft.department_id;
             this.department_name = data.department_name;
           } else {
@@ -834,8 +819,6 @@
 
         this.form.staff_id = '';
         this.staff_name = '';
-        this.form.leader_id = '92';
-        this.leader_name = '';
         this.form.department_id = '';
         this.department_name = '';
       }

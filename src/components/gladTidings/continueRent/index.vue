@@ -12,6 +12,16 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
+        <van-field
+          v-if="rooms.length !== 0"
+          v-model="roomsName"
+          type="text"
+          label="合租房"
+          readonly
+          @click="selectShow(4,'')"
+          placeholder="请选择合租房"
+          required>
+        </van-field>
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -266,15 +276,6 @@
           required>
         </van-field>
         <van-field
-          v-model="leader_name"
-          @click="searchSelect(3)"
-          readonly
-          label="负责人"
-          type="text"
-          placeholder="请选择负责人"
-          required>
-        </van-field>
-        <van-field
           v-model="department_name"
           @click="searchSelect(4)"
           readonly
@@ -350,12 +351,17 @@
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
 
+        rooms: [],
+        roomsName: '',
+
         form: {
           id: '',
           type: 3,
           draft: 0,
           contract_id: '',            //房屋地址id
           house_id: '',               //房屋地址id
+          room_id: '',                  //合租房间ID
+          rooms_mate: [],               //合租房间
           month: '',                    //租房月数
           day: '',                    //租房天数
           begin_date: '',               //合同开始日期
@@ -383,7 +389,6 @@
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
-          leader_id: '92',               //负责人id
           department_id: '',            //部门id
         },
         houseName: '',                  //房屋地址name
@@ -391,7 +396,6 @@
         photos: {},
         property_name: '',              //物业费付款人
         staff_name: '',                  //开单人name
-        leader_name: '湮灭',              //负责人name
         department_name: '',             //部门name
       }
     },
@@ -408,7 +412,7 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_rent_continued'}});
             break;
           case 2:
             this.$router.push({path: '/organize'});
@@ -490,6 +494,9 @@
           case 3:
             this.columns = dicts.value9;
             break;
+          case 4:
+            this.columns = this.rooms;
+            break;
         }
       },
       // select选择
@@ -505,6 +512,14 @@
             break;
           case 3:
             this.form.pay_way_bet = value;
+            break;
+          case 4:
+            this.roomsName = value;
+            for (let i = 0; i < this.form.rooms_mate.length; i++) {
+              if (this.form.rooms_mate[i].name === value) {
+                this.form.room_id = this.form.rooms_mate[i].id;
+              }
+            }
             break;
         }
         this.selectHide = false;
@@ -600,6 +615,11 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
+          this.rooms = [];
+          this.form.rooms_mate = val.house.rooms;
+          for (let i = 0; i < val.house.rooms.length; i++) {
+            this.rooms.push(val.house.rooms[i].name);
+          }
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -633,6 +653,15 @@
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
+            this.form.rooms_mate = draft.rooms_mate;
+            this.form.room_id = draft.room_id;
+            this.rooms = [];
+            for (let i = 0; i < draft.rooms_mate.length; i++) {
+              this.rooms.push(draft.rooms_mate[i].name);
+              if(draft.room_id === draft.rooms_mate[i].id){
+                this.roomsName = draft.rooms_mate[i].name;
+              }
+            }
             this.houseName = data.address;
             this.form.month = draft.month;
             this.form.day = draft.day;
@@ -685,8 +714,6 @@
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
-            this.form.leader_id = draft.leader_id;
-            this.leader_name = data.leader_name;
             this.form.department_id = draft.department_id;
             this.department_name = data.department_name;
           } else {
@@ -703,6 +730,10 @@
         this.form.id = '';
         this.form.contract_id = '';
         this.form.house_id = '';
+        this.form.rooms_mate = [];
+        this.form.room_id = '';
+        this.rooms = [];
+        this.roomsName = '';
         this.houseName = '';
         this.form.month = '';
         this.form.day = '';
@@ -740,8 +771,6 @@
         this.form.remark = '';
         this.form.staff_id = '';
         this.staff_name = '';
-        this.form.leader_id = '92';
-        this.leader_name = '湮灭';
         this.form.department_id = '';
         this.department_name = '';
       }

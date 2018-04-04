@@ -227,9 +227,9 @@
       },
       searchSelect(val) {
         if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord0'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_agency'}});
         } else if (val === '1') {
-          this.$router.push({path: '/collectHouse', query: {type: 'rent0'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_agency'}});
         } else {
           Toast('请选择收租标记');
         }

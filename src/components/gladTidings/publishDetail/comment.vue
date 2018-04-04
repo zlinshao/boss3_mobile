@@ -37,7 +37,7 @@
           remark: '',
           photo: [],
         },
-        pitch: {},
+        pitch: '',
         detail: '',
         path: '',
       }
@@ -73,14 +73,14 @@
 
       sure() {
         if (this.picStatus) {
-          this.$http.put(this.urls + 'process/' + this.pitch.ids, {
+          this.$http.put(this.urls + 'process/' + this.pitch, {
             operation: this.detail,
             comment: this.form.remark,
             album: this.form.photo
           }).then((res) => {
             if (res.data.status === 'success') {
               Toast.success(res.data.message);
-              this.$router.replace({path: this.path, query: {data: JSON.stringify(this.pitch)}});
+              this.$router.replace({path: this.path, query: {ids: this.pitch}});
               this.close_();
               $('.imgItem').remove();
             } else {
@@ -93,7 +93,6 @@
       },
 
       getImgData(val) {
-        alert(!val[2]);
         this.picStatus = !val[2];
         this.form.photo = val[1];
       },

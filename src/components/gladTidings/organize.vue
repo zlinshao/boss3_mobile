@@ -63,6 +63,7 @@
                 list.depart_name = data[i].org[0].name;
               } else {
                 list.depart_name = '---';
+                list.depart_id = '';
               }
               this.lists.push(list);
             }

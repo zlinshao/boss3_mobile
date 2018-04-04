@@ -385,15 +385,6 @@
           required>
         </van-field>
         <van-field
-          v-model="leader_name"
-          @click="searchSelect(3)"
-          label="负责人"
-          type="text"
-          readonly
-          placeholder="请选择负责人"
-          required>
-        </van-field>
-        <van-field
           v-model="department_name"
           @click="searchSelect(4)"
           label="部门"
@@ -525,7 +516,6 @@
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
-          leader_id: '92',               //负责人id
           department_id: '',            //部门id
 
         },
@@ -534,9 +524,7 @@
         photos: {},                     //照片
         screenshots: {},                //照片
         staff_name: '',                 //开单人name
-        leader_name: '灭霸',            //负责人name
         department_name: '',            //部门name
-        fromName: '个人',               //客户来源
       }
     },
     mounted() {
@@ -818,6 +806,7 @@
               this.close_();
               $('.imgItem').remove();
             } else if (res.data.code === '50120') {
+              this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
@@ -868,11 +857,6 @@
 
             this.form.city_id = draft.city_id;
             this.form.city_name = draft.city_name;
-            // for (let i = 0; i < this.allCity.length; i++) {
-            //   if (this.allCity[i].variable.city_id === draft.city_id) {
-            //     this.city_name = this.allCity[i].dictionary_name;
-            //   }
-            // }
             this.form.community_id = draft.community_id;
             this.community_name = data.community_name;
             this.form.building = draft.building;
@@ -945,8 +929,6 @@
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
-            this.form.leader_id = draft.leader_id;
-            this.leader_name = data.leader_name;
             this.form.department_id = draft.department_id;
             this.department_name = data.department_name;
           } else {
@@ -1030,8 +1012,6 @@
 
         this.form.staff_id = '';
         this.staff_name = '';
-        this.form.leader_id = '92';
-        this.leader_name = '';
         this.form.department_id = '';
         this.department_name = '';
       }

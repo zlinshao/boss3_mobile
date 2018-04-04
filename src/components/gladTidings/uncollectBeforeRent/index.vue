@@ -264,15 +264,6 @@
           required>
         </van-field>
         <van-field
-          v-model="leader_name"
-          @click="searchSelect(2)"
-          readonly
-          label="负责人"
-          type="text"
-          placeholder="请选择负责人"
-          required>
-        </van-field>
-        <van-field
           v-model="department_name"
           @click="searchSelect(3)"
           readonly
@@ -386,7 +377,6 @@
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                //开单人id
-          leader_id: '92',               //负责人id
           department_id: '',            //部门id
         },
         screenshots: {},
@@ -394,7 +384,6 @@
         property_name: '',              //物业费付款人
         houseName: '',                   //房屋地址name
         staff_name: '',                  //开单人name
-        leader_name: '湮灭',              //负责人name
         department_name: '',             //部门name
       }
     },
@@ -685,8 +674,6 @@
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
-            this.form.leader_id = draft.leader_id;
-            this.leader_name = data.leader_name;
             this.form.department_id = draft.department_id;
             this.department_name = data.department_name;
           } else {
@@ -742,8 +729,6 @@
         this.form.remark = '';
         this.form.staff_id = '';
         this.staff_name = '';
-        this.form.leader_id = '92';
-        this.leader_name = '湮灭';
         this.form.department_id = '';
         this.department_name = '';
       },

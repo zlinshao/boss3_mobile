@@ -13,6 +13,7 @@ export default {
         }
       });
     };
+
     Vue.prototype.ddRent = function (urls, house) {
       let that = this;
       dd.biz.navigation.setLeft({
@@ -30,9 +31,11 @@ export default {
         }
       });
     };
+
     Vue.prototype.routerDetail = function (val) {
-      this.$router.push({path: '/publishDetail', query: {data: JSON.stringify({ids: val})}});
+      this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
+
     Vue.prototype.stick = function () {
       window.scrollTo(0, document.body.scrollHeight);
     };

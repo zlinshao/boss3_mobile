@@ -16,7 +16,7 @@
           v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchSelect()"
+          @click="searchSelect(form.type)"
           readonly
           placeholder="选择房屋地址"
           required>
@@ -74,13 +74,6 @@
           disabled>
         </van-field>
         <van-field
-          v-model="leader_name"
-          label="负责人"
-          type="text"
-          placeholder="负责人已禁用"
-          disabled>
-        </van-field>
-        <van-field
           v-model="department_name"
           label="部门"
           type="text"
@@ -128,7 +121,6 @@
         houseName: '',
         screenshots: {},
         staff_name: '',                 //开单人name
-        leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -150,8 +142,12 @@
           this.payStatus = false;
         }
       },
-      searchSelect() {
-        this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
+      searchSelect(val) {
+        if(val === '0'){
+          this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_banish'}});
+        }else{
+          this.$router.push({path: '/collectHouse', query: {type: 'able_type2', bulletin: 'bulletin_banish'}});
+        }
       },
 
       // 截图
@@ -196,7 +192,6 @@
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
-
             this.form.id = data.id;
             this.houseName = data.address;
             this.form.contract_id = draft.contract_id;
@@ -225,7 +220,6 @@
         this.form.remark = '';
         this.houseName = '';
         this.staff_name = '';
-        this.leader_name = '';
         this.department_name = '';
       },
     },

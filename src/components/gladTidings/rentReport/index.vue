@@ -156,7 +156,7 @@
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
-          <span>已收金额支付方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
+          <span>已收金额付款方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
         </div>
         <van-cell-group>
@@ -170,16 +170,16 @@
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="支付方式"
+            label="付款方式"
             type="text"
             readonly
-            placeholder="请选择支付方式"
+            placeholder="请选择付款方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
       <div @click="priceAmount(3)" class="addInput">
-        +增加支付方式
+        +增加付款方式
       </div>
 
       <van-cell-group>
@@ -279,15 +279,6 @@
           required>
         </van-field>
         <van-field
-          v-model="leader_name"
-          @click="searchSelect(3)"
-          readonly
-          label="负责人"
-          type="text"
-          placeholder="请选择负责人"
-          required>
-        </van-field>
-        <van-field
           v-model="department_name"
           @click="searchSelect(4)"
           readonly
@@ -366,7 +357,6 @@
         corp: true,                    //公司单
 
         rooms: [],
-        roomsMate: [],
         roomsName: '',
 
         form: {
@@ -375,7 +365,10 @@
           draft: 0,
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
-          room_id: '',                 //合租房间
+
+          room_id: '',                  //合租房间ID
+          rooms_mate: [],               //合租房间
+
           month: '',                    //租房月数
           day: '',                      //租房天数
           sign_date: '',                //签约日期
@@ -405,15 +398,13 @@
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
-          leader_id: '92',              //负责人id
           department_id: '',            //部门id
         },
         screenshots: {},
         photos: {},
-        property_name: '',              //物业费付款人
+        property_name: '',               //物业费付款人
         houseName: '',                   //房屋地址name
         staff_name: '',                  //开单人name
-        leader_name: '湮灭',              //负责人name
         department_name: '',             //部门name
       }
     },
@@ -430,7 +421,7 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_rent_basic'}});
             break;
           case 2:
             this.$router.push({path: '/organize'});
@@ -533,9 +524,9 @@
             break;
           case 4:
             this.roomsName = value;
-            for (let i = 0; i < this.roomsMate.length; i++) {
-              if (this.roomsMate[i].name === value) {
-                this.form.room_id = this.roomsMate[i].id;
+            for (let i = 0; i < this.form.rooms_mate.length; i++) {
+              if (this.form.rooms_mate[i].name === value) {
+                this.form.room_id = this.form.rooms_mate[i].id;
               }
             }
             break;
@@ -620,6 +611,7 @@
               $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50220') {
+              this.form.id = res.data.data.id;
               Toast.success(res.data.msg)
             } else {
               Toast(res.data.msg);
@@ -633,13 +625,12 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
-          let value = JSON.parse(sessionStorage.getItem("detail"));
-          this.rooms = [];
-          this.roomsMate = value.house.rooms;
-          for (let i = 0; i < value.house.rooms.length; i++) {
-            this.rooms.push(value.house.rooms[i].name);
-          }
           let val = JSON.parse(t.house);
+          this.rooms = [];
+          this.form.rooms_mate = val.house.rooms;
+          for (let i = 0; i < val.house.rooms.length; i++) {
+            this.rooms.push(val.house.rooms[i].name);
+          }
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -673,6 +664,15 @@
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
+            this.form.rooms_mate = draft.rooms_mate;
+            this.form.room_id = draft.room_id;
+            this.rooms = [];
+            for (let i = 0; i < draft.rooms_mate.length; i++) {
+              this.rooms.push(draft.rooms_mate[i].name);
+              if (draft.room_id === draft.rooms_mate[i].id) {
+                this.roomsName = draft.rooms_mate[i].name;
+              }
+            }
             this.houseName = data.address;
             this.form.month = draft.month;
             this.form.day = draft.day;
@@ -729,8 +729,6 @@
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
-            this.form.leader_id = draft.leader_id;
-            this.leader_name = data.leader_name;
             this.form.department_id = draft.department_id;
             this.department_name = data.department_name;
           } else {
@@ -747,6 +745,12 @@
         this.form.id = '';
         this.form.contract_id = '';
         this.form.house_id = '';
+
+        this.form.rooms_mate = [];
+        this.form.room_id = '';
+        this.rooms = [];
+        this.roomsName = '';
+
         this.houseName = '';
         this.form.month = '';
         this.form.day = '';
@@ -786,8 +790,6 @@
         this.form.remark = '';
         this.form.staff_id = '';
         this.staff_name = '';
-        this.form.leader_id = '92';
-        this.leader_name = '湮灭';
         this.form.department_id = '';
         this.department_name = '';
       }

@@ -8,7 +8,8 @@
         @cancel="onCancel"/>
 
       <div class="searchContent">
-        <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
         <div class="searchList" v-for="key in lists" @click="houseAddress(key)">
           <div>{{key.house_name}}</div>
           <div>
@@ -30,7 +31,7 @@
         address: globalConfig.server_user,
         searchValue: '',          //搜索
         lists: [],
-        form: {},
+        params: {},
         formDetail: {},
         types: '',
         path: '',
@@ -38,12 +39,14 @@
     },
     mounted() {
       this.types = this.$route.query.type;
+      this.bulletin = this.$route.query.bulletin;
     },
     activated() {
       this.lists = [];
       this.searchValue = '';
       this.formDetail = {};
       this.types = this.$route.query.type;
+      this.bulletin = this.$route.query.bulletin;
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -56,58 +59,54 @@
       // 搜索
       onSearch(val) {
         let value = this.searchValue.replace(/\s+/g, '');
-        if (value !== '') {
-          let type;
+        if (value.length !== 0) {
+          this.params = {};
           switch (val) {
-            case 'lord0':
-              type = 'lord?q=';
-              this.myData(type, value);
+            case 'lord':
+              this.params.report = this.bulletin;
+              this.params.q = value;
+              this.myData(val, this.params);
               break;
-            case 'rent0':
-              type = 'renter?q=';
-              this.myData(type, value);
+            case 'renter':
+              this.params.report = this.bulletin;
+              this.params.q = value;
+              this.myData(val, this.params);
               break;
-            case 'rent01':
-              type = 'renter?q=';
-              this.myData(type, value);
+            case 'able_type1':
+              this.params.report = this.bulletin;
+              this.params.q = value;
+              this.params.able_type = 1;
+              this.myData('lord', this.params);
               break;
-            case 'lord1':
-              type = 'lord?status=1&q=';
-              this.myData(type, value);
-              break;
-            case 'rent1':
-              type = 'renter?status=1&q=';
-              this.myData(type, value);
-              break;
-            case 'lord4':
-              type = 'lord?status=4&q=';
-              this.myData(type, value);
-              break;
-            case 'rent4':
-              type = 'renter?status=4&q=';
-              this.myData(type, value);
+            case 'able_type2':
+              this.params.report = this.bulletin;
+              this.params.q = value;
+              this.params.able_type = 1;
+              this.myData('renter', this.params);
               break;
           }
+        } else {
+          this.lists = [];
         }
       },
       myData(urls, val) {
-        this.$http.get(this.address + urls + val).then((res) => {
+        this.$http.get(this.address + urls, {
+          params: val,
+        }).then((res) => {
+          this.lists = [];
           let data = res.data.data;
           if (data.length !== 0 && res.data.status === 'success') {
             this.lists = [];
             for (let i = 0; i < data.length; i++) {
-              this.formDetail = data[i];
               let list = {};
               list.id = data[i].id;
+              list.house = data[i].house;
               list.house_name = data[i].house.name;
               list.house_id = data[i].house.id;
-              if (data[i].sign_user !== null) {
-                list.staff_name = data[i].sign_user.name;
-                list.department_name = data[i].sign_org.name;
-              } else {
-                list.staff_name = '';
-                list.department_name = '';
-              }
+
+              list.staff_name = data[i].sign_user.name;
+              list.department_name = data[i].sign_org.name;
+
               list.mortgage_price = data[i].mortgage_price;
               list.month_price = data[i].month_price;
               // for(let j=0;j<data[i].month_price.length;i++){
@@ -124,7 +123,6 @@
       },
       // 房屋地址
       houseAddress(data) {
-        sessionStorage.setItem("detail", JSON.stringify(this.formDetail));
         this.$router.replace({
           path: this.path,
           query: {house: JSON.stringify(data), type: this.types}

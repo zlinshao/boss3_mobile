@@ -24,7 +24,7 @@
           v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchSelect(form.collect_or_rent)"
+          @click="searchSelect(form.collect_or_rent,form.type)"
           readonly
           placeholder="选择房屋地址"
           required>
@@ -82,13 +82,6 @@
           disabled>
         </van-field>
         <van-field
-          v-model="leader_name"
-          label="负责人"
-          type="text"
-          placeholder="负责人已禁用"
-          disabled>
-        </van-field>
-        <van-field
           v-model="department_name"
           label="部门"
           type="text"
@@ -140,7 +133,6 @@
         houseName: '',
         screenshots: {},                //截图
         staff_name: '',                 //开单人name
-        leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -162,11 +154,19 @@
           this.payStatus = false;
         }
       },
-      searchSelect(val) {
+      searchSelect(val,t) {
         if (val === '0') {
-          this.$router.replace({path: '/collectHouse', query: {type: 'lord4'}});
+          if(t === '0'){
+            this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_lose'}});
+          }else{
+            this.$router.push({path: '/collectHouse', query: {type: 'able_type1', bulletin: 'bulletin_lose'}});
+          }
         } else if (val === '1') {
-          this.$router.replace({path: '/collectHouse', query: {type: 'rent4'}});
+          if(t === '0'){
+            this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_lose'}});
+          }else{
+            this.$router.push({path: '/collectHouse', query: {type: 'able_type2', bulletin: 'bulletin_lose'}});
+          }
         } else {
           Toast('请选择收租标记');
         }
@@ -236,7 +236,6 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.bulletinDate = '';
         this.payWay = '';
         this.price_arr = '';
         this.form.id = '';
@@ -249,7 +248,6 @@
         this.form.remark = '';
         this.houseName = '';
         this.staff_name = '';
-        this.leader_name = '';
         this.department_name = '';
       },
     },

@@ -122,7 +122,7 @@
         vLoading: true,
         disabled1: false,
 
-        routerData: {},
+        ids: '',
         personal: {},
         place: {},
         active: false,
@@ -139,16 +139,16 @@
     activated() {
       this.routerIndex('');
       this.ddRent('');
-      this.routerData = JSON.parse(this.$route.query.data);
+      this.ids = JSON.parse(this.$route.query.ids);
       this.disabled1 = false;
       this.page = 1;
       this.commentList = [];
-      this.formDetail(this.routerData.ids);
+      this.formDetail(this.ids);
     },
     methods: {
       loadMore() {
         if (!this.disabled1) {
-          this.comments(this.routerData.ids, this.page);
+          this.comments(this.ids, this.page);
           this.page++;
         }
       },
@@ -194,7 +194,7 @@
 
       // 评论
       commentOn(val) {
-        this.$router.push({path: '/comment', query: {detail: val, data: JSON.stringify(this.routerData)}});
+        this.$router.push({path: '/comment', query: {detail: val, data: this.ids}});
       },
     },
   }

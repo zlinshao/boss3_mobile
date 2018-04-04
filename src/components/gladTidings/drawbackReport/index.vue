@@ -229,7 +229,7 @@
         this.timeShow = false;
       },
       searchSelect() {
-        this.$router.push({path: '/collectHouse', query: {type: 'rent0'}});
+        this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_refund'}});
       },
 
       // // 房屋地址

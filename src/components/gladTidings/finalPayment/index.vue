@@ -125,13 +125,6 @@
           placeholder="开单人已禁用">
         </van-field>
         <van-field
-          v-model="leader_name"
-          label="负责人"
-          type="text"
-          readonly
-          placeholder="负责人已禁用">>
-        </van-field>
-        <van-field
           v-model="department_name"
           label="部门"
           type="text"
@@ -218,12 +211,10 @@
           retainage_date: '',
           screenshot: [],               //领导截图 数组
           remark: '',                   //备注
-
         },
         houseName: '',                  //房屋名称
         screenshots: {},                 //房屋名称
         staff_name: '',                  //开单人name
-        leader_name: '',                 //负责人name
         department_name: '',             //部门name
       }
     },
@@ -289,7 +280,7 @@
         this.selectHide = false;
       },
       searchSelect() {
-        this.$router.push({path: '/collectHouse', query: {type: 'rent0'}});
+        this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_retainage'}});
       },
 
       // select关闭
@@ -374,7 +365,6 @@
             this.screenshots = data.screenshot;
             this.form.remark = draft.remark;
             this.staff_name = data.staff_name;
-            this.leader_name = data.leader_name;
             this.department_name = data.department_name;
           } else {
             this.form.id = ''
@@ -404,7 +394,6 @@
         this.screenshots = {};
         this.form.remark = '';
         this.staff_name = '';
-        this.leader_name = '';
         this.department_name = '';
       }
     },

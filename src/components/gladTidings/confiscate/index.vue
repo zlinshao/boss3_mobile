@@ -3,21 +3,12 @@
 
     <div class="main">
       <van-cell-group>
-        <div class="checks">
-          <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group v-model="form.collect_or_rent">
-            <van-radio name="0">收房</van-radio>
-            <van-radio name="1">租房</van-radio>
-          </van-radio-group>
-        </div>
-      </van-cell-group>
-      <van-cell-group>
         <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
-          @click="searchSelect(form.collect_or_rent)"
+          @click="searchSelect()"
           placeholder="选择房屋地址"
           required>
         </van-field>
@@ -113,9 +104,7 @@
 
         form: {
           id: '',
-          type: 0,
           draft: 0,
-          collect_or_rent: '',
           contract_id: '',            //合同id
           house_id: '',
           remark: '',                   //备注
@@ -144,14 +133,8 @@
           this.payStatus = false;
         }
       },
-      searchSelect(val) {
-        if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
-        } else if (val === '1') {
-          this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
-        } else {
-          Toast('请选择收租标记');
-        }
+      searchSelect() {
+        this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_confiscate'}});
       },
 
       saveCollect(val) {
@@ -191,8 +174,6 @@
             this.houseName = data.address;
             this.form.payWay = data.payWay;
             this.form.price_arr = data.price_arr;
-            this.form.type = draft.type;
-            this.form.collect_or_rent = draft.collect_or_rent;
             this.form.remark = draft.remark;
             this.staff_name = data.staff_name;
             this.leader_name = data.leader_name;
@@ -209,9 +190,6 @@
         this.form.house_id = '';
         this.form.contract_id = '';
         this.form.remark = '';
-        this.form.type = 0;
-        this.form.collect_or_rent = '';
-        this.collect_or_rent = '';
         this.staff_name = '';
         this.leader_name = '';
         this.department_name = '';

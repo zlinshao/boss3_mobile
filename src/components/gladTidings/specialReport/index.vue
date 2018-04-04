@@ -48,13 +48,6 @@
           disabled>
         </van-field>
         <van-field
-          v-model="leader_name"
-          label="负责人"
-          type="text"
-          placeholder="负责人已被禁用"
-          disabled>
-        </van-field>
-        <van-field
           v-model="department_name"
           label="部门"
           type="text"
@@ -99,7 +92,6 @@
         screenshots: {},
         screenshots_leader: {},
         staff_name: '',                 //开单人name
-        leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -114,9 +106,9 @@
     methods: {
       searchSelect(val) {
         if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_special'}});
         } else if (val === '1') {
-          this.$router.push({path: '/collectHouse', query: {type: 'rent1'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_special'}});
         } else {
           Toast('请选择收租标记');
         }
@@ -179,7 +171,6 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots_leader = data.screenshot_leader;
             this.staff_name = data.staff_name;
-            this.leader_name = data.leader_name;
             this.department_name = data.department_name;
           } else {
             this.form.id = '';
@@ -202,7 +193,6 @@
         this.form.screenshot_leader = [];
         this.screenshots_leader = {};
         this.staff_name = '';
-        this.leader_name = '';
         this.department_name = '';
       }
     },

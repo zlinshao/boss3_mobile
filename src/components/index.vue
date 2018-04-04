@@ -186,11 +186,7 @@
       },
       routerDetail(id) {
         this.disabled = true;
-        let data = {};
-        data.tags = this.active;
-        data.ids = id;
-        data.read = this.readActive;
-        this.$router.push({path: '/publishDetail', query: {data: JSON.stringify(data)}});
+        this.$router.push({path: '/publishDetail', query: {ids: id}});
       },
 
       routerLink(val) {
@@ -322,7 +318,7 @@
     $onColor: #39b1ff;
     $color: #a4a5a8;
 
-    .top, .started, .inRough, .footer {
+    .top, .started, .inRough, .footerIndex {
       background: #FFFFFF;
       P, h2 {
         text-align: center;
