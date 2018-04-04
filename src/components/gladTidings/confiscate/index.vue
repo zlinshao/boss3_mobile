@@ -3,12 +3,21 @@
 
     <div class="main">
       <van-cell-group>
+        <div class="checks">
+          <div style="min-width: 110px;">充公性质</div>
+          <van-radio-group v-model="form.type">
+            <van-radio name="0">充公报备</van-radio>
+            <van-radio name="1">取消充公</van-radio>
+          </van-radio-group>
+        </div>
+      </van-cell-group>
+      <van-cell-group>
         <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
           readonly
-          @click="searchSelect()"
+          @click="searchSelect(form.type)"
           placeholder="选择房屋地址"
           required>
         </van-field>
@@ -97,6 +106,8 @@
 
         form: {
           id: '',
+          collect_or_rent: '0',
+          type: '0',
           draft: 0,
           contract_id: '',            //合同id
           house_id: '',
@@ -125,8 +136,12 @@
           this.payStatus = false;
         }
       },
-      searchSelect() {
-        this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_confiscate'}});
+      searchSelect(val) {
+        if (val === '0') {
+          this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_confiscate'}});
+        } else {
+          this.$router.push({path: '/collectHouse', query: {type: 'able_type1', bulletin: 'bulletin_confiscate'}});
+        }
       },
 
       saveCollect(val) {
@@ -165,6 +180,8 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
+            this.form.type = draft.type;
+            this.form.collect_or_rent = draft.collect_or_rent;
             this.form.house_id = draft.house_id;
             this.form.contract_id = draft.contract_id;
             this.houseName = data.address;
@@ -179,10 +196,13 @@
         })
       },
       close_() {
+        this.houseName = '';
         this.form.id = '';
-        this.form.payWay = '';
-        this.form.price_arr = '';
+        this.payWay = '';
+        this.price_arr = '';
+        this.form.collect_or_rent = '0';
         this.form.house_id = '';
+        this.form.type = '0';
         this.form.contract_id = '';
         this.form.remark = '';
         this.staff_name = '';

@@ -396,7 +396,7 @@
           id: '',
           type: 2,
           draft: 0,
-          contract_id_continued: '',    //合同
+          contract_id: '',    //合同
           house_id: '',                 //合同
           month: '',                    //收房月数
           day: '',                      //收房天数
@@ -713,7 +713,7 @@
             this.form.id = data.id;
             this.form.month = draft.month;
             this.form.day = draft.day;
-            this.form.contract_id_continued = draft.contract_id_continued;
+            this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.houseName = data.address;
             this.form.begin_date = draft.begin_date;
@@ -792,7 +792,7 @@
           this.isClear = false;
         });
         this.form.id = '';
-        this.form.contract_id_continued = '';
+        this.form.contract_id = '';
         this.form.house_id = '';
         this.houseName = '';
         this.form.month = '';

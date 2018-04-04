@@ -131,17 +131,21 @@
         </van-field>
         <van-field
           v-model="staff_name"
-          disabled
+          @click="search(1)"
+          readonly
           label="开单人"
           type="text"
-          placeholder="开单人已禁用">
+          placeholder="请选择开单人"
+          required>
         </van-field>
         <van-field
           v-model="department_name"
-          disabled
+          @click="search(2)"
+          readonly
           label="部门"
           type="text"
-          placeholder="部门已禁用">
+          placeholder="请选择部门"
+          required>
         </van-field>
       </van-cell-group>
     </div>
@@ -191,6 +195,8 @@
           screenshot: [],               //结清截图
           screenshot_leader: [],        //特殊情况
           remark: '',                   //备注
+          staff_id: '',
+          department_id: '',
         },
         screenshots: {},
         screenshots_leader: {},
@@ -215,6 +221,16 @@
         } else {
           this.priceStatus = !this.priceStatus;
           this.payStatus = false;
+        }
+      },
+      search(val) {
+        switch (val) {
+          case 1:
+            this.$router.push({path: '/organize'});
+            break;
+          case 2:
+            this.$router.push({path: '/depart'});
+            break;
         }
       },
       searchSelect(val) {
@@ -280,8 +296,23 @@
           this.form.house_id = val.house_id;
           this.payWay = val.pay_way;
           this.price_arr = val.month_price;
+        }
+        if (t.staff !== undefined && t.staff !== '') {
+          let val = JSON.parse(t.staff);
+          this.form.staff_id = val.staff_id;
           this.staff_name = val.staff_name;
-          this.department_name = val.department_name;
+          this.form.department_id = val.depart_id;
+          this.department_name = val.depart_name;
+          this.stick();
+        }
+        if (t.depart !== undefined && t.depart !== '') {
+          let val = JSON.parse(t.depart);
+          this.department_name = val.name;
+          this.form.department_id = val.id;
+          this.stick();
+        }
+        if (t.tops === '') {
+          this.stick();
         }
       },
 
@@ -310,8 +341,10 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots_leader = data.screenshot_leader;
             this.form.remark = draft.remark;
+            this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
-            this.department_name = data.department_name;
+            this.form.department_id = draft.depart_id;
+            this.department_name = data.depart_name;
           } else {
             this.form.id = '';
           }
@@ -344,6 +377,8 @@
         this.screenshots_leader = {};
         this.form.remark = '';
         this.staff_name = '';
+        this.form.staff_id = '';
+        this.form.department_id = '';
         this.department_name = '';
       }
     },

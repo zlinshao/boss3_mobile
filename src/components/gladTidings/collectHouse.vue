@@ -38,6 +38,7 @@
       }
     },
     mounted() {
+      this.lists = [];
       this.types = this.$route.query.type;
       this.bulletin = this.$route.query.bulletin;
     },

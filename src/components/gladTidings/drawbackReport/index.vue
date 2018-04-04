@@ -124,13 +124,6 @@
           placeholder="开单人已禁用">
         </van-field>
         <van-field
-          v-model="leader_name"
-          disabled
-          label="负责人"
-          type="text"
-          placeholder="负责人已禁用">
-        </van-field>
-        <van-field
           v-model="department_name"
           disabled
           label="部门"
@@ -184,7 +177,6 @@
         screenshots: {},                //截图
         houseName: '',                  //房屋名称
         staff_name: '',                 //开单人name
-        leader_name: '',                //负责人name
         department_name: '',            //部门name
       }
     },
@@ -323,7 +315,6 @@
         this.screenshots = {};
         this.houseName = '';
         this.staff_name = '';
-        this.leader_name = '';
         this.department_name = '';
       },
     },
