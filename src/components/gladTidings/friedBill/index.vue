@@ -111,6 +111,7 @@
       return {
         urls: globalConfig.server,
         isClear: false,           //删除图片
+        picStatus: true,
 
         payWay: '1',                   //付款方式
         price_arr: '1',                //月单价
@@ -154,17 +155,17 @@
           this.payStatus = false;
         }
       },
-      searchSelect(val,t) {
+      searchSelect(val, t) {
         if (val === '0') {
-          if(t === '0'){
+          if (t === '0') {
             this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_lose'}});
-          }else{
+          } else {
             this.$router.push({path: '/collectHouse', query: {type: 'able_type1', bulletin: 'bulletin_lose'}});
           }
         } else if (val === '1') {
-          if(t === '0'){
+          if (t === '0') {
             this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_lose'}});
-          }else{
+          } else {
             this.$router.push({path: '/collectHouse', query: {type: 'able_type2', bulletin: 'bulletin_lose'}});
           }
         } else {
@@ -174,24 +175,29 @@
 
       // 截图
       headmanAgree(val) {
+        this.picStatus = !val[2];
         this.form.screenshot_leader = val[1];
       },
 
       saveCollect(val) {
-        this.form.refund = this.refundSta ? 1 : 0;
-        this.form.draft = val;
-        this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
-          if (res.data.code === '50710') {
-            Toast.success(res.data.msg);
-            this.close_();
-            $('.imgItem').remove();
-            this.routerDetail(res.data.data.data.id);
-          } else if (res.data.code === '50720') {
-            Toast.success(res.data.msg);
-          } else {
-            Toast(res.data.msg);
-          }
-        })
+        if (this.picStatus) {
+          this.form.refund = this.refundSta ? 1 : 0;
+          this.form.draft = val;
+          this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
+            if (res.data.code === '50710') {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === '50720') {
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          })
+        } else {
+          Toast('图片上传中...');
+        }
       },
 
       houseInfo() {
