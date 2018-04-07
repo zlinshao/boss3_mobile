@@ -92,7 +92,9 @@
                 <span class="times">{{item.created_at}}</span>
               </div>
               <h3>
-                报备类型：{{item.title}}
+                报备类型：
+                <span v-if="active !== 3">{{item.title}}</span>
+                <span v-if="active === 3">我的{{item.bulletin}}报备</span>
               </h3>
               <h3>
                 <!--结束时间：0000-00-00 00:00:00-->
