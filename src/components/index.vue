@@ -21,7 +21,7 @@
         <h1>抄送我的</h1>
       </div>
     </div>
-
+    
     <div class="okFinish" v-if="footActive === 1">
       <div class="inRough">
         <div class="mainIndex">
@@ -244,6 +244,7 @@
           params: val,
         }).then((res) => {
           let data = res.data.data;
+          alert(JSON.stringify(data[0]));
           if (res.data.status === 'success' && data.length !== 0) {
             if ((val.published === 0 && val.type === 3) || (val.read_at === 0 && val.type === 4)) {
               this.paging = res.data.meta.total;
