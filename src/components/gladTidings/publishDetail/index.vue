@@ -29,6 +29,7 @@
           <div class="load" v-if="vLoading">
             <van-loading type="spinner" color="black"/>
           </div>
+          <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message !== ''">{{message}}</p>
           <div v-for="(key,index) in formList"
                v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图'">
             <p>{{index}}</p>
@@ -54,9 +55,9 @@
         </div>
 
         <ul
-            v-waterfall-lower="loadMore"
-            waterfall-disabled="disabled1"
-            waterfall-offset="300">
+          v-waterfall-lower="loadMore"
+          waterfall-disabled="disabled1"
+          waterfall-offset="300">
           <li class="started">
             <!--评论-->
             <div class="commentArea">
@@ -122,30 +123,38 @@
         vLoading: true,
         disabled1: false,
 
+        message: '',
         ids: '',
-        personal: {},
-        place: {},
         active: false,
         urls: globalConfig.server_user,
-        formList: {},
 
+        personal: {},
+        place: {},
+        formList: {},
         operation: {},
-        form: {},       //评论
         commentList: [],
+
         page: 1,
         paging: 0,
       }
     },
     activated() {
+      this.ids = JSON.parse(this.$route.query.ids);
       this.routerIndex('');
       this.ddRent('');
-      this.ids = JSON.parse(this.$route.query.ids);
       this.disabled1 = false;
       this.page = 1;
-      this.commentList = [];
+      this.close_();
       this.formDetail(this.ids);
     },
     methods: {
+      close_() {
+        this.formList = {};
+        this.operation = {};
+        this.personal = {};
+        this.place = {};
+        this.commentList = [];
+      },
       loadMore() {
         if (!this.disabled1) {
           this.comments(this.ids, this.page);
@@ -154,11 +163,15 @@
       },
       formDetail(val) {
         this.$http.get(this.urls + 'process/' + val).then((res) => {
-          if (res.data.status === 'success') {
+          this.message = '';
+          if (res.data.status === 'success' && res.data.data.length !== 0) {
             this.formList = res.data.data.process.content.show_content;
             this.operation = res.data.data.operation;
             this.personal = res.data.data.process.user;
             this.place = res.data.data.process.place;
+            this.vLoading = false;
+          } else {
+            this.message = res.data.message;
             this.vLoading = false;
           }
         });
