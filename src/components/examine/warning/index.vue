@@ -132,17 +132,21 @@
           //   alert('dd error: ' + JSON.stringify(err));
           // });
           DingTalkPC.ready(function () {
+            alert(1);
             DingTalkPC.runtime.permission.requestAuthCode({
               corpId: _config.corpId,
               onSuccess: function (info) {
+                alert(2);
+                alert(info.code);
+                alert(_config.corpId);
                 that.$http.get(that.urls + 'special/special/userInfo', {
                   params: {
                     'code': info.code,
                     corpId: _config.corpId
                   }
                 }).then((res) => {
+                  alert(3);
                   alert(JSON.stringify(res.data));
-                  alert('DingTalkPC');
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
@@ -189,7 +193,7 @@
             });
           });
           DingTalkPC.error(function (err) {
-            alert('dd error: ' + JSON.stringify(err));
+            alert('DingTalkPC error: ' + JSON.stringify(err));
           });
         })
       }
