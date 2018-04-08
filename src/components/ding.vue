@@ -36,14 +36,6 @@
             'biz.util.openLink']
         });
         dd.ready(function () {
-          // 钉钉头部右侧
-          dd.biz.navigation.setRight({
-            show: false,
-            onSuccess: function (result) {
-            },
-            onFail: function (err) {
-            }
-          });
           dd.runtime.permission.requestAuthCode({
             corpId: _config.corpId,
             onSuccess: function (info) {
