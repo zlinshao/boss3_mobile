@@ -67,6 +67,70 @@
         this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
           alert(JSON.stringify(res.data));
+          // dd.ready(function () {
+          //   dd.runtime.permission.requestAuthCode({
+          //     corpId: _config.corpId,
+          //     onSuccess: function (info) {
+          //       that.$http.get(that.urls + 'special/special/userInfo', {
+          //         params: {
+          //           'code': info.code,
+          //           corpId: _config.corpId
+          //         }
+          //       }).then((res) => {
+          //         alert(JSON.stringify(res.data));
+          //         alert('dd');
+          //         if (res.data !== false) {
+          //           let data = {};
+          //           data.name = res.data.name;
+          //           data.avatar = res.data.avatar;
+          //           data.phone = res.data.phone;
+          //           data.depart = res.data.org[0].name;
+          //           data.display_name = res.data.role[0].display_name;
+          //           sessionStorage.setItem('personal', JSON.stringify(data));
+          //           globalConfig.personal = data;
+          //
+          //           that.$http.post(that.address + 'oauth/token', {
+          //             client_secret: globalConfig.client_secret,
+          //             client_id: globalConfig.client_id,
+          //             grant_type: 'password',
+          //             username: res.data.phone,
+          //             password: res.data.code,
+          //           }).then((res) => {
+          //             that.loading = false;
+          //             sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+          //             let head = res.data.data;
+          //             globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+          //           });
+          //
+          //         } else {
+          //           setTimeout(() => {
+          //             alert('请求超时请稍后再试');
+          //             dd.biz.navigation.close({
+          //               onSuccess : function(result) {
+          //               },
+          //               onFail : function(err) {
+          //               }
+          //             });
+          //           }, 3000);
+          //         }
+          //       })
+          //     },
+          //     onFail: function (err) {
+          //       alert('fail: ' + JSON.stringify(err));
+          //     }
+          //   });
+          //   // 钉钉头部右侧
+          //   dd.biz.navigation.setRight({
+          //     show: false,
+          //     onSuccess: function (result) {
+          //     },
+          //     onFail: function (err) {
+          //     }
+          //   });
+          // });
+          // dd.error(function (err) {
+          //   alert('dd error: ' + JSON.stringify(err));
+          // });
           DingTalkPC.ready(function () {
             DingTalkPC.runtime.permission.requestAuthCode({
               corpId: _config.corpId,
@@ -103,7 +167,7 @@
                   } else {
                     setTimeout(() => {
                       alert('请求超时请稍后再试');
-                      dd.biz.navigation.close({
+                      DingTalkPC.biz.navigation.close({
                         onSuccess : function(result) {
                         },
                         onFail : function(err) {
@@ -126,69 +190,6 @@
           });
           DingTalkPC.error(function (err) {
             alert('dd error: ' + JSON.stringify(err));
-          });
-          dd.ready(function () {
-            dd.runtime.permission.requestAuthCode({
-              corpId: _config.corpId,
-              onSuccess: function (info) {
-                that.$http.get(that.urls + 'special/special/userInfo', {
-                  params: {
-                    'code': info.code,
-                    corpId: _config.corpId
-                  }
-                }).then((res) => {
-                  alert(JSON.stringify(res.data));
-                  alert('dd');
-                  if (res.data !== false) {
-                    let data = {};
-                    data.name = res.data.name;
-                    data.avatar = res.data.avatar;
-                    data.phone = res.data.phone;
-                    data.depart = res.data.org[0].name;
-                    data.display_name = res.data.role[0].display_name;
-                    sessionStorage.setItem('personal', JSON.stringify(data));
-                    globalConfig.personal = data;
-                    that.$http.post(that.address + 'oauth/token', {
-                      client_secret: globalConfig.client_secret,
-                      client_id: globalConfig.client_id,
-                      grant_type: 'password',
-                      username: res.data.phone,
-                      password: res.data.code,
-                    }).then((res) => {
-                      that.loading = false;
-                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                      let head = res.data.data;
-                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                    });
-                  } else {
-                    setTimeout(() => {
-                      alert('请求超时请稍后再试');
-                      dd.biz.navigation.close({
-                        onSuccess : function(result) {
-                        },
-                        onFail : function(err) {
-                        }
-                      });
-                    }, 3000);
-                  }
-                })
-              },
-              onFail: function (err) {
-                alert('fail: ' + JSON.stringify(err));
-              }
-            });
-            // 钉钉头部右侧
-            dd.biz.navigation.setRight({
-              show: false,
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            });
-          });
-          dd.error(function (err) {
-            alert('dd error: ' + JSON.stringify(err));
-
           });
         })
       }
