@@ -78,7 +78,7 @@
                   }
                 }).then((res) => {
                   alert(JSON.stringify(res.data));
-                  alert(res.data);
+                  alert('DingTalkPC');
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
@@ -138,7 +138,7 @@
                   }
                 }).then((res) => {
                   alert(JSON.stringify(res.data));
-                  alert(res.data);
+                  alert('dd');
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
