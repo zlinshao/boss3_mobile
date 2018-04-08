@@ -36,7 +36,7 @@
                     corpId: _config.corpId
                   }
                 }).then((res) => {
-                  alert(JSON.stringify(res.data));
+                  // alert(JSON.stringify(res.data));
                   // alert(res.data);
                   if (res.data !== false) {
                     let data = {};
@@ -48,9 +48,9 @@
                     sessionStorage.setItem('personal', JSON.stringify(data));
                     globalConfig.personal = data;
                     that.$http.post(that.address + 'oauth/token', {
-                      client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
+                      client_secret: globalConfig.client_secret,
+                      client_id: globalConfig.client_id,
                       grant_type: 'password',
-                      client_id: '2',
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {

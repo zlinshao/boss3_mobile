@@ -4,6 +4,8 @@ globalConfig = {
   attestation :'http://test.boss-support.lejias.cn/',                 //认证接口
   env: 'dev',   //用户名
   personal: {},
+  client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
+  client_id: '2',
   header:{
     'Accept': 'application/json',
   }

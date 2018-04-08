@@ -57,7 +57,6 @@
       let ids = this.$route.query.id;
       this.$http.get(this.urls + 'announcement/' + ids).then((res) => {
         this.myData = res.data.data;
-        alert(JSON.stringify(this.myData))
       })
     },
     watch: {},
@@ -76,6 +75,8 @@
                     corpId: _config.corpId
                   }
                 }).then((res) => {
+                  // alert(JSON.stringify(res.data));
+                  // alert(res.data);
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
@@ -85,7 +86,6 @@
                     data.display_name = res.data.role[0].display_name;
                     sessionStorage.setItem('personal', JSON.stringify(data));
                     globalConfig.personal = data;
-
                     that.$http.post(that.address + 'oauth/token', {
                       client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
                       grant_type: 'password',
@@ -98,7 +98,6 @@
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                     });
-
                   } else {
                     setTimeout(() => {
                       alert('请求超时请稍后再试');
@@ -127,6 +126,7 @@
           });
           dd.error(function (err) {
             alert('dd error: ' + JSON.stringify(err));
+
           });
         })
       }
