@@ -19,6 +19,7 @@
       }
     },
     mounted() {
+      alert(window.location.href);
       let that = this;
       this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
         let _config = res.data;
