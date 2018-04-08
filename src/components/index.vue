@@ -94,7 +94,7 @@
               <h3>
                 报备类型：
                 <span v-if="active !== 3">{{item.title}}</span>
-                <span v-if="active === 3">我的{{item.bulletin}}报备</span>
+                <span v-if="active === 3">我的{{item.bulletin}}</span>
               </h3>
               <h3>
                 <!--结束时间：0000-00-00 00:00:00-->

@@ -4,6 +4,7 @@
       <div class="detail">
         <div class="detailLeft">
           <div>
+            {{personal.avatar}}
             <img :src="personal.avatar" v-if="personal.avatar !== '' && personal.avatar !== undefined">
             <img src="../../../assets/head.png" v-else>
           </div>
@@ -139,7 +140,7 @@
       }
     },
     activated() {
-      this.ids = JSON.parse(this.$route.query.ids);
+      this.ids = this.$route.query.ids;
       this.routerIndex('');
       this.ddRent('');
       this.disabled1 = false;

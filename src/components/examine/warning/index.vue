@@ -46,8 +46,8 @@
       }
     },
     mounted() {
-      // let ids = this.$route.query.id;
-      this.$http.get(this.urls + 'announcement/' + 387).then((res) => {
+      let ids = this.$route.query.id;
+      this.$http.get(this.urls + 'announcement/' + ids).then((res) => {
         this.myData = res.data.data;
       })
     },

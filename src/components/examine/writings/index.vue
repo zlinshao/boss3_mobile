@@ -35,7 +35,8 @@
             <div class="staff">
               <div>
                 <p>
-                  <img :src="key.staffs.avatar">
+                  <img :src="key.staffs.avatar" v-if="key.staffs.avatar !== null && key.staffs.avatar !== ''">
+                  <img src="../../../assets/head.png" v-else>
                 </p>
                 <span>{{key.staffs.name}}</span>
                 <span v-for="role in key.staffs.role">{{role.display_name}}</span>
@@ -101,15 +102,13 @@
       }
     },
     activated() {
+      this.pitch = this.$route.query.id;
+      let data = this.$route.query.id;
       this.routerIndex('');
       this.ddRent('');
       this.commentList = [];
       this.disabled = false;
       this.page = 1;
-      // this.pitch = this.$route.query.id;
-      // let data = this.$route.query.id;
-      this.pitch = 45;
-      let data = 45;
       this.contentDetail(data);
     },
     methods: {
