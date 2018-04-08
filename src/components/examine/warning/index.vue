@@ -65,9 +65,8 @@
         let that = this;
         this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
-          alert(res.data.corpId);
           dd.ready(function () {
-            dd.runtime.permission.requestAuthCode({
+            DingTalkPC.runtime.permission.requestAuthCode({
               corpId: _config.corpId,
               onSuccess: function (info) {
                 that.$http.get(that.urls + 'special/special/userInfo', {
@@ -77,7 +76,7 @@
                   }
                 }).then((res) => {
                   alert(JSON.stringify(res.data));
-                  alert(res.data);
+                  // alert(res.data);
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
