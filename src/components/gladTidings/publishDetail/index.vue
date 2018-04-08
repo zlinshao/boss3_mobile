@@ -139,6 +139,10 @@
         paging: 0,
       }
     },
+    mounted() {
+      alert(localStorage.personal);
+      alert(localStorage.myData);
+    },
     activated() {
       this.ids = this.$route.query.ids;
       this.routerIndex('');

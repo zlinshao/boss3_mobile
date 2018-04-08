@@ -44,6 +44,8 @@ if (localStorage.personal !== undefined) {
   globalConfig.personal = JSON.parse(localStorage.personal);
 }
 
+alert(localStorage.personal);
+alert(localStorage.myData);
 
 let u = navigator.userAgent, app = navigator.appVersion;
 let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
