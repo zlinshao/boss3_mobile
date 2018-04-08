@@ -56,6 +56,7 @@
       this.corp();
       let ids = this.$route.query.id;
       this.$http.get(this.urls + 'announcement/' + ids).then((res) => {
+        alert(JSON.stringify(res.data.data));
         this.myData = res.data.data;
       })
     },
@@ -65,6 +66,7 @@
         let that = this;
         this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
+          alert(JSON.stringify(res.data));
           DingTalkPC.ready(function () {
             DingTalkPC.runtime.permission.requestAuthCode({
               corpId: _config.corpId,
@@ -76,7 +78,7 @@
                   }
                 }).then((res) => {
                   alert(JSON.stringify(res.data));
-                  // alert(res.data);
+                  alert(res.data);
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
@@ -116,12 +118,10 @@
               }
             });
             // 钉钉头部右侧
-            dd.biz.navigation.setRight({
+            DingTalkPC.biz.navigation.setRight({
               show: false,
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
+              onSuccess: function (result) {},
+              onFail: function (err) {}
             });
           });
           DingTalkPC.error(function (err) {
@@ -138,7 +138,7 @@
                   }
                 }).then((res) => {
                   alert(JSON.stringify(res.data));
-                  // alert(res.data);
+                  alert(res.data);
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
