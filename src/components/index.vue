@@ -81,7 +81,7 @@
         <li class="started">
           <div class="startedMain" v-for="item in list" @click="routerDetail(item.id)">
             <div class="leftPic">
-              <img :src="item.avatar" v-if="item.avatar !== ''">
+              <img :src="item.avatar" v-if="item.avatar !== '' && item.avatar !== null">
               <img src="../assets/head.png" v-else>
             </div>
             <div class="rightTitle">
@@ -169,6 +169,7 @@
       }
     },
     mounted() {
+      alert(window.location.href);
       // 钉钉头部右侧
       dd.biz.navigation.setRight({
         show: false,
@@ -266,8 +267,8 @@
               if (data[i].user) {
                 user.avatar = data[i].user.avatar;
                 user.name = data[i].user.name;
-                user.staff = data[i].user.org[0].name;
-                user.depart = data[i].user.role[0].display_name;
+                // user.staff = data[i].user.org[0].name;
+                // user.depart = data[i].user.role[0].display_name;
               } else {
                 user.avatar = '';
                 user.name = '';
