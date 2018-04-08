@@ -54,10 +54,10 @@
     },
     mounted() {
       this.corp();
-      this.close();
       let ids = this.$route.query.id;
       this.$http.get(this.urls + 'announcement/' + ids).then((res) => {
         this.myData = res.data.data;
+        alert(JSON.stringify(this.myData))
       })
     },
     watch: {},
@@ -102,6 +102,12 @@
                   } else {
                     setTimeout(() => {
                       alert('请求超时请稍后再试');
+                      dd.biz.navigation.close({
+                        onSuccess : function(result) {
+                        },
+                        onFail : function(err) {
+                        }
+                      });
                     }, 3000);
                   }
                 })

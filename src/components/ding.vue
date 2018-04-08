@@ -36,6 +36,8 @@
                     corpId: _config.corpId
                   }
                 }).then((res) => {
+                  alert(JSON.stringify(res.data));
+                  // alert(res.data);
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
@@ -61,6 +63,12 @@
                   } else {
                     setTimeout(() => {
                       alert('请求超时请稍后再试');
+                      dd.biz.navigation.close({
+                        onSuccess : function(result) {
+                        },
+                        onFail : function(err) {
+                        }
+                      });
                     }, 3000);
                   }
                 })

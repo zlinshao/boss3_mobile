@@ -223,6 +223,12 @@
                   } else {
                     setTimeout(() => {
                       alert('请求超时请稍后再试');
+                      dd.biz.navigation.close({
+                        onSuccess : function(result) {
+                        },
+                        onFail : function(err) {
+                        }
+                      });
                     }, 3000);
                   }
                 })
