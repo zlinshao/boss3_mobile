@@ -169,7 +169,6 @@
       }
     },
     mounted() {
-      alert(window.location.href);
       // 钉钉头部右侧
       dd.biz.navigation.setRight({
         show: false,

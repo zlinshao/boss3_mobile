@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div class="navTop">
+    <div class="module" v-if="loading"></div>
+    <div class="loading" v-if="loading">
+      <img src="../../../assets/loding1.gif">
+    </div>
+
+    <div class="navTop" v-if="!loading">
       <div class="top0">
         <div class="top1">
           {{myData.title}}
@@ -21,7 +26,7 @@
         </b>
       </div>
     </div>
-    <div class="mainWarning">
+    <div class="mainWarning" v-if="!loading">
       <div class="mainTop">公司各部门：</div>
       <div class="mainTitle">
         <p v-html="myData.content"></p>
@@ -42,17 +47,84 @@
     data() {
       return {
         urls: globalConfig.server,
+        address: globalConfig.attestation,
         myData: {},
+        loading: true,
       }
     },
     mounted() {
+      this.corp();
+      this.close();
       let ids = this.$route.query.id;
       this.$http.get(this.urls + 'announcement/' + ids).then((res) => {
         this.myData = res.data.data;
       })
     },
     watch: {},
-    methods: {},
+    methods: {
+      corp() {
+        let that = this;
+        this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
+          let _config = res.data;
+          dd.ready(function () {
+            dd.runtime.permission.requestAuthCode({
+              corpId: _config.corpId,
+              onSuccess: function (info) {
+                that.$http.get(that.urls + 'special/special/userInfo', {
+                  params: {
+                    'code': info.code,
+                    corpId: _config.corpId
+                  }
+                }).then((res) => {
+                  if (res.data !== false) {
+                    let data = {};
+                    data.name = res.data.name;
+                    data.avatar = res.data.avatar;
+                    data.phone = res.data.phone;
+                    data.depart = res.data.org[0].name;
+                    data.display_name = res.data.role[0].display_name;
+                    sessionStorage.setItem('personal', JSON.stringify(data));
+                    globalConfig.personal = data;
+
+                    that.$http.post(that.address + 'oauth/token', {
+                      client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
+                      grant_type: 'password',
+                      client_id: '2',
+                      username: res.data.phone,
+                      password: res.data.code,
+                    }).then((res) => {
+                      that.loading = false;
+                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                      let head = res.data.data;
+                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                    });
+
+                  } else {
+                    setTimeout(() => {
+                      alert('请求超时请稍后再试');
+                    }, 3000);
+                  }
+                })
+              },
+              onFail: function (err) {
+                alert('fail: ' + JSON.stringify(err));
+              }
+            });
+            // 钉钉头部右侧
+            dd.biz.navigation.setRight({
+              show: false,
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
+            });
+          });
+          dd.error(function (err) {
+            alert('dd error: ' + JSON.stringify(err));
+          });
+        })
+      }
+    },
   }
 </script>
 
@@ -60,6 +132,25 @@
   @mixin flex {
     display: flex;
     display: -webkit-flex;
+  }
+
+  .module, .loading {
+    position: fixed;
+  }
+
+  .module {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #f1f1f1;
+  }
+
+  .loading {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
   }
 
   .navTop {

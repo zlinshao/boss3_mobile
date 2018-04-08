@@ -1,4 +1,3 @@
-
 import Vue from 'vue'
 import App from './App'
 import Boss from './boss.config.js'
@@ -8,10 +7,46 @@ import axios from 'axios'
 import Fun from './fun.config.js'
 import '@/assets/js/api.js'
 
-import { Cell, CellGroup, Icon, DatetimePicker,PasswordInput, NumberKeyboard ,Row, Col,Badge,Button,
-  Loading,NavBar,Panel,Stepper,Step, Steps,Swipe, SwipeItem,Tab, Tabs,Tabbar, TabbarItem,Tag,
-  Checkbox, CheckboxGroup,Field,RadioGroup,Radio,Search,Switch,Uploader,Actionsheet,Dialog,Picker,PullRefresh,CellSwipe,Popup,
-  SwitchCell} from 'vant';
+import {
+  Cell,
+  CellGroup,
+  Icon,
+  DatetimePicker,
+  PasswordInput,
+  NumberKeyboard,
+  Row,
+  Col,
+  Badge,
+  Button,
+  Loading,
+  NavBar,
+  Panel,
+  Stepper,
+  Step,
+  Steps,
+  Swipe,
+  SwipeItem,
+  Tab,
+  Tabs,
+  Tabbar,
+  TabbarItem,
+  Tag,
+  Checkbox,
+  CheckboxGroup,
+  Field,
+  RadioGroup,
+  Radio,
+  Search,
+  Switch,
+  Uploader,
+  Actionsheet,
+  Dialog,
+  Picker,
+  PullRefresh,
+  CellSwipe,
+  Popup,
+  SwitchCell
+} from 'vant';
 
 Vue.use(Row).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(CellSwipe).use(SwitchCell).use(Picker).use(Popup);
 Vue.use(require('vue-wechat-title'));
@@ -35,17 +70,14 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-if (localStorage.myData !== undefined) {
-  let head = JSON.parse(localStorage.myData);
+if (sessionStorage.myData !== undefined) {
+  let head = JSON.parse(sessionStorage.myData);
   globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
 }
 
-if (localStorage.personal !== undefined) {
-  globalConfig.personal = JSON.parse(localStorage.personal);
+if (sessionStorage.personal !== undefined) {
+  globalConfig.personal = JSON.parse(sessionStorage.personal);
 }
-
-alert(localStorage.personal);
-alert(localStorage.myData);
 
 let u = navigator.userAgent, app = navigator.appVersion;
 let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
@@ -63,13 +95,15 @@ if (isIOS) {
 // 钉钉头部右侧
 dd.biz.navigation.setRight({
   show: false,
-  onSuccess: function (result) {},
-  onFail: function (err) {}
+  onSuccess: function (result) {
+  },
+  onFail: function (err) {
+  }
 });
 
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 });

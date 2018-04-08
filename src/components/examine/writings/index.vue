@@ -1,73 +1,80 @@
 <template>
   <div id="writings">
-    <div class="writings">
-      <div class="titles">
-        <p>{{myData.title}}</p>
-        <span>{{create_time.substring(0,10)}}</span>
-      </div>
-      <div v-for="key in cover_pic">
-        <img v-for="p in key" :src="p.uri">
-      </div>
-      <div v-html="myData.content">
-
-      </div>
-      <h6></h6>
-      <div class="icons">
-        <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i><span>{{myData.comments_count}}</span>
-        <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i><span
-        :class="{'zan': assistId}">{{myData.favor_num}}</span>
-        <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
-      </div>
-      <div class="nextPrev">
-        <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
-        <p @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span></p>
-      </div>
+    <div class="module" v-if="loading"></div>
+    <div class="loading" v-if="loading">
+      <img src="../../../assets/loding1.gif">
     </div>
 
-    <ul
-      v-waterfall-lower="loadMore"
-      waterfall-disabled="disabled"
-      waterfall-offset="300">
-      <li class="started">
-        <div class="commentArea">
-          <div class="headline">评论<span>{{paging}}</span></div>
-          <div class="commentAreaMain" v-for="key in commentList">
-            <div class="staff">
-              <div>
-                <p>
-                  <img :src="key.staffs.avatar" v-if="key.staffs.avatar !== null && key.staffs.avatar !== ''">
-                  <img src="../../../assets/head.png" v-else>
-                </p>
-                <span>{{key.staffs.name}}</span>
-                <span v-for="role in key.staffs.role">{{role.display_name}}</span>
-              </div>
-              <p class="times">
-                {{key.create_time.substring(0,10)}}
-              </p>
-            </div>
-            <div class="contents">
-              {{key.content}}
-            </div>
-            <div class="pics">
-              <div v-for="item in key.album.image_pic">
-                <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
-              </div>
-            </div>
-          </div>
-          <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
-            暂无评论
-          </div>
+    <div v-if="!loading">
+      <div class="writings">
+        <div class="titles">
+          <p>{{myData.title}}</p>
+          <span>{{create_time.substring(0,10)}}</span>
         </div>
-      </li>
-    </ul>
+        <div v-for="key in cover_pic">
+          <img v-for="p in key" :src="p.uri">
+        </div>
+        <div v-html="myData.content">
 
-    <div class="bottom">
-      <span v-show="disabled && commentList.length > 10">我是有底线的</span>
-      <van-loading v-show="!disabled" type="spinner" color="black"/>
-    </div>
+        </div>
+        <h6></h6>
+        <div class="icons">
+          <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i><span>{{myData.comments_count}}</span>
+          <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i><span
+          :class="{'zan': assistId}">{{myData.favor_num}}</span>
+          <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
+        </div>
+        <div class="nextPrev">
+          <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
+          <p @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span></p>
+        </div>
+      </div>
 
-    <div class="footer">
-      <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
+      <ul
+        v-waterfall-lower="loadMore"
+        waterfall-disabled="disabled"
+        waterfall-offset="300">
+        <li class="started">
+          <div class="commentArea">
+            <div class="headline">评论<span>{{paging}}</span></div>
+            <div class="commentAreaMain" v-for="key in commentList">
+              <div class="staff">
+                <div>
+                  <p>
+                    <img :src="key.staffs.avatar" v-if="key.staffs.avatar !== null && key.staffs.avatar !== ''">
+                    <img src="../../../assets/head.png" v-else>
+                  </p>
+                  <span>{{key.staffs.name}}</span>
+                  <span v-for="role in key.staffs.role">{{role.display_name}}</span>
+                </div>
+                <p class="times">
+                  {{key.create_time.substring(0,10)}}
+                </p>
+              </div>
+              <div class="contents">
+                {{key.content}}
+              </div>
+              <div class="pics">
+                <div v-for="item in key.album.image_pic">
+                  <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
+                </div>
+              </div>
+            </div>
+            <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
+              暂无评论
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="bottom">
+        <span v-show="disabled && commentList.length > 10">我是有底线的</span>
+        <van-loading v-show="!disabled" type="spinner" color="black"/>
+      </div>
+
+      <div class="footer">
+        <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -99,9 +106,11 @@
         commentList: [],
         pitch: '',
         page: 1,
+        loading: true,
       }
     },
-    activated() {
+    mounted() {
+      this.corp();
       this.pitch = this.$route.query.id;
       let data = this.$route.query.id;
       this.routerIndex('');
@@ -174,6 +183,67 @@
         this.contentDetail(val);
         this.comment(val, 1);
         document.body.scrollTop = document.documentElement.scrollTop = 0;
+      },
+      corp() {
+        let that = this;
+        this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
+          let _config = res.data;
+          dd.ready(function () {
+            dd.runtime.permission.requestAuthCode({
+              corpId: _config.corpId,
+              onSuccess: function (info) {
+                that.$http.get(that.urls + 'special/special/userInfo', {
+                  params: {
+                    'code': info.code,
+                    corpId: _config.corpId
+                  }
+                }).then((res) => {
+                  alert(JSON.stringify(res.data));
+                  if (res.data !== false) {
+                    let data = {};
+                    data.name = res.data.name;
+                    data.avatar = res.data.avatar;
+                    data.phone = res.data.phone;
+                    data.depart = res.data.org[0].name;
+                    data.display_name = res.data.role[0].display_name;
+                    sessionStorage.setItem('personal', JSON.stringify(data));
+                    globalConfig.personal = data;
+                    that.$http.post(that.address + 'oauth/token', {
+                      client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
+                      grant_type: 'password',
+                      client_id: '2',
+                      username: res.data.phone,
+                      password: res.data.code,
+                    }).then((res) => {
+                      that.loading = false;
+                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                      let head = res.data.data;
+                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                    });
+                  } else {
+                    setTimeout(() => {
+                      alert('请求超时请稍后再试');
+                    }, 3000);
+                  }
+                })
+              },
+              onFail: function (err) {
+                alert('fail: ' + JSON.stringify(err));
+              }
+            });
+            // 钉钉头部右侧
+            dd.biz.navigation.setRight({
+              show: false,
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
+            });
+          });
+          dd.error(function (err) {
+            alert('dd error: ' + JSON.stringify(err));
+          });
+        })
       }
     },
   }
@@ -231,6 +301,26 @@
         color: #fb4699;
       }
     }
+
+    .module, .loading {
+      position: fixed;
+    }
+
+    .module {
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: #f1f1f1;
+    }
+
+    .loading {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
     .writings {
       line-height: .5rem;
       margin-top: .3rem;

@@ -247,7 +247,7 @@ export default new Router({
     // },
     {
       path: '/writings',
-      hidden: 'glad',
+      hidden: false,
       name: '文章',
       meta: {title: '文章'},
       component: Writings
@@ -263,7 +263,7 @@ export default new Router({
       path: '/warning',
       name: '公告',
       meta: {title: '公告'},
-      hidden: 'glad',
+      hidden: false,
       component: Warning
     },
     // {

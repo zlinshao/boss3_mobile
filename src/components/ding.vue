@@ -1,7 +1,6 @@
 <template>
   <div v-wechat-title="$route.meta.title">
-    <div class="module">
-    </div>
+    <div class="module"></div>
     <div class="loading" v-if="loading">
       <img src="../assets/loding1.gif">
     </div>
@@ -19,8 +18,8 @@
       }
     },
     mounted() {
-      alert(window.location.href);
       this.corp();
+      this.loading = true;
     },
     methods: {
       corp() {
@@ -37,7 +36,6 @@
                     corpId: _config.corpId
                   }
                 }).then((res) => {
-                  alert(JSON.stringify(res.data));
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
@@ -45,7 +43,7 @@
                     data.phone = res.data.phone;
                     data.depart = res.data.org[0].name;
                     data.display_name = res.data.role[0].display_name;
-                    localStorage.setItem('personal', JSON.stringify(data));
+                    sessionStorage.setItem('personal', JSON.stringify(data));
                     globalConfig.personal = data;
                     that.$http.post(that.address + 'oauth/token', {
                       client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
@@ -55,7 +53,7 @@
                       password: res.data.code,
                     }).then((res) => {
                       that.loading = false;
-                      localStorage.setItem('myData', JSON.stringify(res.data.data));
+                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                       that.$router.push({path: '/index'});
@@ -71,9 +69,18 @@
                 alert('fail: ' + JSON.stringify(err));
               }
             });
+            // 钉钉头部右侧
+            dd.biz.navigation.setRight({
+              show: false,
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
+            });
           });
           dd.error(function (err) {
             alert('dd error: ' + JSON.stringify(err));
+
           });
         })
       }
@@ -82,7 +89,7 @@
 </script>
 
 <style scoped>
-  div {
+  .module, .loading {
     position: fixed;
   }
 
