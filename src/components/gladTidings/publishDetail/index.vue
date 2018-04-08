@@ -67,7 +67,7 @@
                 <div class="commentTitle">
                   <div class="staff">
                     <p>
-                      <img :src="key.user.avatar" v-if="key.user.avatar !== ''">
+                      <img :src="key.user.avatar" v-if="key.user.avatar !== '' && key.user.avatar !== null">
                       <img src="../../../assets/head.png" v-else>
                     </p>
                     <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
