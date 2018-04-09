@@ -116,6 +116,7 @@
         if (from.path === '/') {
           vm.loading = true;
           vm.disabled = true;
+          alert(1);
           vm.corp();
         } else {
           vm.search();
@@ -204,6 +205,7 @@
         let that = this;
         this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
+          alert(_config.corpId);
           DingTalkPC.runtime.permission.requestAuthCode({
             corpId: _config.corpId,
             onSuccess: function (info) {
@@ -221,7 +223,7 @@
                   // data.display_name = res.data.role[0].display_name;
                   sessionStorage.setItem('personal', JSON.stringify(data));
                   globalConfig.personal = data;
-
+                  alert(_config.corpId);
                   that.$http.post(that.address + 'oauth/token', {
                     client_secret: globalConfig.client_secret,
                     client_id: globalConfig.client_id,
@@ -229,6 +231,7 @@
                     username: res.data.phone,
                     password: res.data.code,
                   }).then((res) => {
+                    alert(_config.corpId);
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
@@ -261,6 +264,7 @@
                     'code': info.code,
                   }
                 }).then((res) => {
+                  alert(_config.corpId);
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
@@ -277,6 +281,7 @@
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {
+                      alert(_config.corpId);
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
