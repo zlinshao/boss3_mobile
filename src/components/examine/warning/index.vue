@@ -49,7 +49,7 @@
         urls: globalConfig.server,
         address: globalConfig.attestation,
         myData: {},
-        loading: true,
+        loading: false,
         ids: '',
       }
     },

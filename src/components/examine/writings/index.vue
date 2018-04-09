@@ -126,6 +126,7 @@
     },
     activated() {
       this.pitch = this.$route.query.id;
+      alert(this.pitch);
       this.close_();
     },
     methods: {
@@ -276,7 +277,6 @@
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {
-
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
