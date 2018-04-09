@@ -1,6 +1,6 @@
 export default {
   install(Vue, options) {
-    Vue.prototype.routerIndex = function (url, house) {
+    Vue.prototype.routerIndex = function (url, house, id) {
       let that = this;
       document.addEventListener('backbutton', function (e) {
         e.preventDefault();
@@ -8,21 +8,31 @@ export default {
           that.$router.push({path: url});
         } else if (url !== '' && house !== 'house') {
           that.$router.push({path: url, query: {tops: ''}});
+        } else if (house === 'close') {
+          dd.biz.navigation.close({
+            onSuccess: function (result) {},
+            onFail: function (err) {}
+          });
         } else {
           that.$router.push({path: '/index'});
         }
       });
     };
 
-    Vue.prototype.ddRent = function (urls, house) {
+    Vue.prototype.ddRent = function (url, house) {
       let that = this;
       dd.biz.navigation.setLeft({
         control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
         onSuccess: function (result) {
-          if (urls !== '' && house === 'house') {
-            that.$router.push({path: urls});
-          } else if (urls !== '' && house !== 'house') {
-            that.$router.push({path: urls, query: {tops: ''}});
+          if (url !== '' && house === 'house') {
+            that.$router.push({path: url});
+          } else if (url !== '' && house !== 'house') {
+            that.$router.push({path: url, query: {tops: ''}});
+          } else if (house === 'close') {
+            dd.biz.navigation.close({
+              onSuccess: function (result) {},
+              onFail: function (err) {}
+            });
           } else {
             that.$router.push({path: '/index'});
           }

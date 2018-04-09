@@ -25,7 +25,7 @@
           <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
         </div>
         <div class="nextPrev">
-          <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
+          <p @click="routerLink(before_content.id)">{{disabled}}上一篇：<span>{{before_content.title}}</span></p>
           <p @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span></p>
         </div>
       </div>
@@ -105,28 +105,28 @@
         next_content: {},
         params: {},
         commentList: [],
-        pitch: '',
         page: 1,
-        loading: true,
+        path: '',
+        loading: false,
       }
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
         if (from.path === '/') {
+          vm.loading = true;
+          vm.disabled = true;
           vm.corp();
         } else {
           vm.search();
+          vm.loading = false;
+          vm.disabled = false;
         }
       })
     },
-    mounted() {
+    activated() {
       this.pitch = this.$route.query.id;
-      // this.routerIndex('');
-      // this.ddRent('');
-      this.commentList = [];
-      this.disabled = false;
-      this.page = 1;
+      this.close_();
     },
     methods: {
       loadMore() {
@@ -137,6 +137,10 @@
       },
       search() {
         this.contentDetail(this.pitch);
+      },
+      close_() {
+        this.commentList = [];
+        this.page = 1;
       },
       contentDetail(val) {
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
@@ -199,7 +203,6 @@
         let that = this;
         this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
-
           DingTalkPC.runtime.permission.requestAuthCode({
             corpId: _config.corpId,
             onSuccess: function (info) {
@@ -208,13 +211,6 @@
                   'code': info.code,
                 }
               }).then((res) => {
-                // DingTalkPC.device.notification.alert({
-                //   message: JSON.stringify(res.data),
-                //   title: JSON.stringify(res.data),
-                //   buttonName: JSON.stringify(res.data),
-                //   onSuccess: function () {},
-                //   onFail: function (err) {}
-                // });
                 if (res.data !== false) {
                   let data = {};
                   data.name = res.data.name;
@@ -232,11 +228,12 @@
                     username: res.data.phone,
                     password: res.data.code,
                   }).then((res) => {
-                    that.loading = false;
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                     that.contentDetail(that.pitch);
+                    that.loading = false;
+                    that.disabled = false;
                   });
                 }
               })
@@ -279,11 +276,13 @@
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {
-                      that.loading = false;
+
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                       that.contentDetail(that.pitch);
+                      that.loading = false;
+                      that.disabled = false;
                     });
                   } else {
                     setTimeout(() => {

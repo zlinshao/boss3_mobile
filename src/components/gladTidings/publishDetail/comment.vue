@@ -45,8 +45,8 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
-        vm.routerIndex(from.path);
-        vm.ddRent(from.path);
+        vm.ddBack(1, from.path);
+        vm.ddBack(2, from.path);
       })
     },
     mounted() {
@@ -105,6 +105,24 @@
         this.form.remark = '';
         this.form.photo = [];
       },
+
+      ddBack(val, urls) {
+        let that = this;
+        if (val === 1) {
+          dd.biz.navigation.setLeft({
+            control: true, //是否控制点击事件，true 控制，false 不控制， 默认false
+            onSuccess: function (result) {
+              that.$router.push({path: urls, query: {ids: that.pitch}});
+            },
+            onFail: function (err) {}
+          });
+        } else {
+          document.addEventListener('backbutton', function (e) {
+            e.preventDefault();
+            that.$router.push({path: urls, query: {ids: that.pitch}});
+          });
+        }
+      }
     },
   }
 </script>

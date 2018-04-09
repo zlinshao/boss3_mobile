@@ -11,7 +11,7 @@
         <div class="detailLeft">
           <div>
             {{personal.avatar}}
-            <img :src="personal.avatar" v-if="personal.avatar !== '' && personal.avatar !== undefined">
+            <img :src="personal.avatar" v-if="personal.avatar !== '' && personal.avatar !== null">
             <img src="../../../assets/head.png" v-else>
           </div>
         </div>
@@ -107,7 +107,7 @@
 
       </div>
       <div class="footer">
-        <div @click="commentOn('to_comment')" v-if="path === '/'">评论</div>
+        <div @click="commentOn('on_comment')" v-if="path === '/'">评论</div>
         <div v-for="(key,index) in operation" @click="commentOn(index)" v-else>{{key}}</div>
       </div>
     </div>
@@ -148,25 +148,36 @@
         page: 1,
         paging: 0,
         path: '',
-        loading: true,
+        loading: false,
       }
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
         if (from.path === '/') {
-          vm.corp();
+          sessionStorage.setItem('path', vm.path);
+        }
+        vm.path = sessionStorage.path;
+        if (sessionStorage.path === '/') {
+          vm.loading = true;
+          vm.disabled1 = true;
+          if (from.path === '/') {
+            vm.corp();
+          } else {
+            vm.search();
+            vm.loading = false;
+            vm.disabled1 = false;
+          }
         } else {
           vm.search();
+          vm.routerIndex('');
+          vm.ddRent('');
+          vm.disabled1 = false;
         }
       })
     },
     activated() {
-      alert(this.$route.query.ids);
       this.ids = this.$route.query.ids;
-      this.routerIndex('');
-      this.ddRent('');
-      this.disabled1 = false;
       this.page = 1;
       this.close_();
     },
@@ -270,6 +281,7 @@
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                     that.formDetail(that.ids);
+                    that.disabled1 = false;
                   });
                 }
               })
@@ -317,8 +329,8 @@
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                       that.formDetail(that.ids);
+                      that.disabled1 = false;
                     });
-
                   } else {
                     setTimeout(() => {
                       alert('请求超时请稍后再试');
