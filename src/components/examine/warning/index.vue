@@ -63,10 +63,10 @@
     watch: {},
     methods: {
       corp() {
-        let that = this;
-        this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
-          let _config = res.data;
-          alert(JSON.stringify(res.data));
+        // let that = this;
+        // this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
+        //   let _config = res.data;
+        //   alert(JSON.stringify(res.data));
           // dd.ready(function () {
           //   dd.runtime.permission.requestAuthCode({
           //     corpId: _config.corpId,
@@ -131,66 +131,93 @@
           // dd.error(function (err) {
           //   alert('dd error: ' + JSON.stringify(err));
           // });
-
+          DingTalkPC.device.notification.alert({
+            message: '1111',
+            title: '1111',
+            buttonName: '1111',
+            onSuccess : function() {},
+            onFail : function(err) {}
+          });
           DingTalkPC.runtime.permission.requestAuthCode({
-            corpId: _config.corpId,
+            corpId: 'dingd2e027985e84ce6835c2f4657eb6378f',
             onSuccess: function (info) {
-              alert(_config.corpId);
-              that.$http.get(that.urls + 'special/special/userInfo', {
-                params: {
-                  'code': info.code,
-                  corpId: _config.corpId
-                }
-              }).then((res) => {
-                alert(3);
-                alert(JSON.stringify(res.data));
-                if (res.data !== false) {
-                  let data = {};
-                  data.name = res.data.name;
-                  data.avatar = res.data.avatar;
-                  data.phone = res.data.phone;
-                  data.depart = res.data.org[0].name;
-                  data.display_name = res.data.role[0].display_name;
-                  sessionStorage.setItem('personal', JSON.stringify(data));
-                  globalConfig.personal = data;
-                  that.$http.post(that.address + 'oauth/token', {
-                    client_secret: globalConfig.client_secret,
-                    client_id: globalConfig.client_id,
-                    grant_type: 'password',
-                    username: res.data.phone,
-                    password: res.data.code,
-                  }).then((res) => {
-                    that.loading = false;
-                    sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                    let head = res.data.data;
-                    globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                  });
-                } else {
-                  setTimeout(() => {
-                    alert('请求超时请稍后再试');
-                    DingTalkPC.biz.navigation.close({
-                      onSuccess: function (result) {
-                      },
-                      onFail: function (err) {
-                      }
-                    });
-                  }, 3000);
-                }
-              })
+              DingTalkPC.device.notification.alert({
+                message: "'"+JSON.stringify(info)+"'",
+                title: "'"+JSON.stringify(info)+"'",
+                buttonName: "'"+JSON.stringify(info)+"'",
+                onSuccess : function() {},
+                onFail : function(err) {}
+              });
             },
             onFail: function (err) {
-              alert('fail: ' + JSON.stringify(err));
+              DingTalkPC.device.notification.alert({
+                message: "'"+JSON.stringify(err)+"'",
+                title: "'"+JSON.stringify(err)+"'",
+                buttonName: "'"+JSON.stringify(err)+"'",
+                onSuccess : function() {},
+                onFail : function(err) {}
+              });
             }
           });
-          // 钉钉头部右侧
-          DingTalkPC.biz.navigation.setRight({
-            show: false,
-            onSuccess: function (result) {
-            },
-            onFail: function (err) {
-            }
-          });
-        });
+          // DingTalkPC.runtime.permission.requestAuthCode({
+          //   corpId: _config.corpId,
+          //   onSuccess: function (info) {
+          //     alert(_config.corpId);
+          //     that.$http.get(that.urls + 'special/special/userInfo', {
+          //       params: {
+          //         'code': info.code,
+          //         corpId: _config.corpId
+          //       }
+          //     }).then((res) => {
+          //       alert(3);
+          //       alert(JSON.stringify(res.data));
+          //       if (res.data !== false) {
+          //         let data = {};
+          //         data.name = res.data.name;
+          //         data.avatar = res.data.avatar;
+          //         data.phone = res.data.phone;
+          //         data.depart = res.data.org[0].name;
+          //         data.display_name = res.data.role[0].display_name;
+          //         sessionStorage.setItem('personal', JSON.stringify(data));
+          //         globalConfig.personal = data;
+          //         that.$http.post(that.address + 'oauth/token', {
+          //           client_secret: globalConfig.client_secret,
+          //           client_id: globalConfig.client_id,
+          //           grant_type: 'password',
+          //           username: res.data.phone,
+          //           password: res.data.code,
+          //         }).then((res) => {
+          //           that.loading = false;
+          //           sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+          //           let head = res.data.data;
+          //           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+          //         });
+          //       } else {
+          //         setTimeout(() => {
+          //           alert('请求超时请稍后再试');
+          //           DingTalkPC.biz.navigation.close({
+          //             onSuccess: function (result) {
+          //             },
+          //             onFail: function (err) {
+          //             }
+          //           });
+          //         }, 3000);
+          //       }
+          //     })
+          //   },
+          //   onFail: function (err) {
+          //     alert('fail: ' + JSON.stringify(err));
+          //   }
+          // });
+          // // 钉钉头部右侧
+          // DingTalkPC.biz.navigation.setRight({
+          //   show: false,
+          //   onSuccess: function (result) {
+          //   },
+          //   onFail: function (err) {
+          //   }
+          // });
+        // });
       }
     },
   }
