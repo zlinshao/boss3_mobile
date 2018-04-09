@@ -25,7 +25,7 @@
           <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
         </div>
         <div class="nextPrev">
-          <p @click="routerLink(before_content.id)">{{disabled}}上一篇：<span>{{before_content.title}}</span></p>
+          <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
           <p @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span></p>
         </div>
       </div>
