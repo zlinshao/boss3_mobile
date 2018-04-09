@@ -63,7 +63,7 @@
     watch: {},
     methods: {
       corp() {
-        // let that = this;
+        let that = this;
         // this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
         //   let _config = res.data;
         //   alert(JSON.stringify(res.data));
@@ -146,7 +146,15 @@
                   'code': info.code,
                 }
               }).then((res) => {
+                alert(3);
                 alert(JSON.stringify(res.data));
+                DingTalkPC.device.notification.alert({
+                  message: JSON.stringify(res.data),
+                  title: JSON.stringify(res.data),
+                  buttonName: JSON.stringify(res.data),
+                  onSuccess : function() {},
+                  onFail : function(err) {}
+                });
               })
             },
             onFail: function (err) {
