@@ -74,24 +74,23 @@
                   'code': info.code,
                 }
               }).then((res) => {
-                DingTalkPC.device.notification.alert({
-                  message: JSON.stringify(res.data),
-                  title: JSON.stringify(res.data),
-                  buttonName: JSON.stringify(res.data),
-                  onSuccess: function () {
-                  },
-                  onFail: function (err) {
-                  }
-                });
+                // DingTalkPC.device.notification.alert({
+                //   message: JSON.stringify(res.data),
+                //   title: JSON.stringify(res.data),
+                //   buttonName: JSON.stringify(res.data),
+                //   onSuccess: function () {},
+                //   onFail: function (err) {}
+                // });
                 if (res.data !== false) {
                   let data = {};
                   data.name = res.data.name;
                   data.avatar = res.data.avatar;
                   data.phone = res.data.phone;
-                  data.depart = res.data.org[0].name;
-                  data.display_name = res.data.role[0].display_name;
+                  // data.depart = res.data.org[0].name;
+                  // data.display_name = res.data.role[0].display_name;
                   sessionStorage.setItem('personal', JSON.stringify(data));
                   globalConfig.personal = data;
+
                   that.$http.post(that.address + 'oauth/token', {
                     client_secret: globalConfig.client_secret,
                     client_id: globalConfig.client_id,
@@ -103,6 +102,7 @@
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+
                   });
                 }
               })
@@ -129,18 +129,15 @@
                     'code': info.code,
                   }
                 }).then((res) => {
-                  alert(JSON.stringify(res.data));
-                  alert('dd');
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
                     data.avatar = res.data.avatar;
                     data.phone = res.data.phone;
-                    data.depart = res.data.org[0].name;
-                    data.display_name = res.data.role[0].display_name;
+                    // data.depart = res.data.org[0].name;
+                    // data.display_name = res.data.role[0].display_name;
                     sessionStorage.setItem('personal', JSON.stringify(data));
                     globalConfig.personal = data;
-
                     that.$http.post(that.address + 'oauth/token', {
                       client_secret: globalConfig.client_secret,
                       client_id: globalConfig.client_id,
