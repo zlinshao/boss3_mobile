@@ -141,13 +141,13 @@
           DingTalkPC.runtime.permission.requestAuthCode({
             corpId: 'dingd2e027985e84ce6835c2f4657eb6378f',
             onSuccess: function (info) {
-              DingTalkPC.device.notification.alert({
-                message: "'"+JSON.stringify(info)+"'",
-                title: "'"+JSON.stringify(info)+"'",
-                buttonName: "'"+JSON.stringify(info)+"'",
-                onSuccess : function() {},
-                onFail : function(err) {}
-              });
+              that.$http.get(that.urls + 'special/special/userInfo', {
+                params: {
+                  'code': info.code,
+                }
+              }).then((res) => {
+                alert(JSON.stringify(res.data));
+              })
             },
             onFail: function (err) {
               DingTalkPC.device.notification.alert({
