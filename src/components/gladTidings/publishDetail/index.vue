@@ -141,6 +141,7 @@
     },
 
     activated() {
+      alert(sessionStorage.myData);
       this.ids = this.$route.query.ids;
       this.routerIndex('');
       this.ddRent('');

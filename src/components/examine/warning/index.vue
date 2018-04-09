@@ -134,6 +134,7 @@
                     data.name = res.data.name;
                     data.avatar = res.data.avatar;
                     data.phone = res.data.phone;
+                    alert(JSON.stringify(res.data))
                     // data.depart = res.data.org[0].name;
                     // data.display_name = res.data.role[0].display_name;
                     sessionStorage.setItem('personal', JSON.stringify(data));

@@ -33,18 +33,15 @@
                 that.$http.get(that.urls + 'special/special/userInfo', {
                   params: {
                     'code': info.code,
-                    corpId: _config.corpId
                   }
                 }).then((res) => {
-                  // alert(JSON.stringify(res.data));
-                  // alert(res.data);
                   if (res.data !== false) {
                     let data = {};
                     data.name = res.data.name;
                     data.avatar = res.data.avatar;
                     data.phone = res.data.phone;
-                    data.depart = res.data.org[0].name;
-                    data.display_name = res.data.role[0].display_name;
+                    // data.depart = res.data.org[0].name;
+                    // data.display_name = res.data.role[0].display_name;
                     sessionStorage.setItem('personal', JSON.stringify(data));
                     globalConfig.personal = data;
                     that.$http.post(that.address + 'oauth/token', {
