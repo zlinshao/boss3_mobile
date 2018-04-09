@@ -113,6 +113,7 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
+        alert(from.path);
         if (from.path === '/') {
           vm.loading = true;
           vm.disabled = true;
