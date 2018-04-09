@@ -107,7 +107,8 @@
 
       </div>
       <div class="footer">
-        <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
+        <div @click="commentOn('to_comment')" v-if="path === '/'">评论</div>
+        <div v-for="(key,index) in operation" @click="commentOn(index)" v-else>{{key}}</div>
       </div>
     </div>
   </div>
@@ -133,7 +134,10 @@
         message: '',
         ids: '',
         active: false,
+
         urls: globalConfig.server_user,
+        address1: globalConfig.server,
+        address: globalConfig.attestation,
 
         personal: {},
         place: {},
@@ -143,24 +147,28 @@
 
         page: 1,
         paging: 0,
-
+        path: '',
         loading: true,
       }
     },
-
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.path = from.path;
+        if (from.path === '/') {
+          vm.corp();
+        } else {
+          vm.search();
+        }
+      })
+    },
     activated() {
-      if(sessionStorage.myData === undefined){
-        alert(sessionStorage.myData);
-        this.corp();
-      }
-
+      alert(this.$route.query.ids);
       this.ids = this.$route.query.ids;
       this.routerIndex('');
       this.ddRent('');
       this.disabled1 = false;
       this.page = 1;
       this.close_();
-      this.formDetail(this.ids);
     },
     methods: {
       close_() {
@@ -175,6 +183,9 @@
           this.comments(this.ids, this.page);
           this.page++;
         }
+      },
+      search() {
+        this.formDetail(this.ids);
       },
       formDetail(val) {
         this.$http.get(this.urls + 'process/' + val).then((res) => {
@@ -227,24 +238,16 @@
 
       corp() {
         let that = this;
-        this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
+        this.$http.get(this.address1 + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
-
           DingTalkPC.runtime.permission.requestAuthCode({
             corpId: _config.corpId,
             onSuccess: function (info) {
-              that.$http.get(that.urls + 'special/special/userInfo', {
+              that.$http.get(that.address1 + 'special/special/userInfo', {
                 params: {
                   'code': info.code,
                 }
               }).then((res) => {
-                // DingTalkPC.device.notification.alert({
-                //   message: JSON.stringify(res.data),
-                //   title: JSON.stringify(res.data),
-                //   buttonName: JSON.stringify(res.data),
-                //   onSuccess: function () {},
-                //   onFail: function (err) {}
-                // });
                 if (res.data !== false) {
                   let data = {};
                   data.name = res.data.name;
@@ -266,7 +269,7 @@
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-
+                    that.formDetail(that.ids);
                   });
                 }
               })
@@ -288,7 +291,7 @@
             dd.runtime.permission.requestAuthCode({
               corpId: _config.corpId,
               onSuccess: function (info) {
-                that.$http.get(that.urls + 'special/special/userInfo', {
+                that.$http.get(that.address1 + 'special/special/userInfo', {
                   params: {
                     'code': info.code,
                   }
@@ -313,6 +316,7 @@
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                      that.formDetail(that.ids);
                     });
 
                   } else {
@@ -428,6 +432,26 @@
         }
       }
     }
+
+    .module, .loading {
+      position: fixed;
+    }
+
+    .module {
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: #f1f1f1;
+    }
+
+    .loading {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
     .detail {
       position: fixed;
       top: 0;

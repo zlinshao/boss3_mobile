@@ -50,17 +50,20 @@
         address: globalConfig.attestation,
         myData: {},
         loading: true,
+        ids: '',
       }
     },
     mounted() {
       this.corp();
-      let ids = this.$route.query.id;
-      this.$http.get(this.urls + 'announcement/' + ids).then((res) => {
-        this.myData = res.data.data;
-      })
+      this.ids = this.$route.query.id;
     },
     watch: {},
     methods: {
+      warningList(val) {
+        this.$http.get(this.urls + 'announcement/' + val).then((res) => {
+          this.myData = res.data.data;
+        })
+      },
       corp() {
         let that = this;
         this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
@@ -74,13 +77,6 @@
                   'code': info.code,
                 }
               }).then((res) => {
-                // DingTalkPC.device.notification.alert({
-                //   message: JSON.stringify(res.data),
-                //   title: JSON.stringify(res.data),
-                //   buttonName: JSON.stringify(res.data),
-                //   onSuccess: function () {},
-                //   onFail: function (err) {}
-                // });
                 if (res.data !== false) {
                   let data = {};
                   data.name = res.data.name;
@@ -102,7 +98,7 @@
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-
+                    that.warningList(that.ids);
                   });
                 }
               })
@@ -149,8 +145,8 @@
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                      that.warningList(that.ids);
                     });
-
                   } else {
                     setTimeout(() => {
                       alert('请求超时请稍后再试');

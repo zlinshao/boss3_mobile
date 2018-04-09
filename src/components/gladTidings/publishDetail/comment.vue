@@ -50,11 +50,11 @@
       })
     },
     mounted() {
-      this.pitch = JSON.parse(this.$route.query.data);
+      this.pitch = this.$route.query.data;
       this.detail = this.$route.query.detail;
     },
     activated() {
-      this.pitch = JSON.parse(this.$route.query.data);
+      this.pitch = this.$route.query.data;
       this.detail = this.$route.query.detail;
     },
     methods: {

@@ -94,6 +94,7 @@
     data() {
       return {
         urls: globalConfig.server,
+        address: globalConfig.attestation,
         assistId: false,
         disabled: false,
         paging: 0,
@@ -109,16 +110,23 @@
         loading: true,
       }
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.path = from.path;
+        if (from.path === '/') {
+          vm.corp();
+        } else {
+          vm.search();
+        }
+      })
+    },
     mounted() {
-      this.corp();
       this.pitch = this.$route.query.id;
-      let data = this.$route.query.id;
-      this.routerIndex('');
-      this.ddRent('');
+      // this.routerIndex('');
+      // this.ddRent('');
       this.commentList = [];
       this.disabled = false;
       this.page = 1;
-      this.contentDetail(data);
     },
     methods: {
       loadMore() {
@@ -126,6 +134,9 @@
           this.comment(this.pitch, this.page);
           this.page++;
         }
+      },
+      search() {
+        this.contentDetail(this.pitch);
       },
       contentDetail(val) {
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
@@ -225,7 +236,7 @@
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-
+                    that.contentDetail(that.pitch);
                   });
                 }
               })
@@ -272,8 +283,8 @@
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                      that.contentDetail(that.pitch);
                     });
-
                   } else {
                     setTimeout(() => {
                       alert('请求超时请稍后再试');

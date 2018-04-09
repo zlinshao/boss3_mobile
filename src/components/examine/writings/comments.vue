@@ -48,10 +48,10 @@
         vm.ddRent(from.path);
       })
     },
-    mounted() {
-      this.close_();
-      this.pitch = this.$route.query.data;
-    },
+    // mounted() {
+    //   this.close_();
+    //   this.pitch = this.$route.query.data;
+    // },
     activated() {
       this.close_();
       this.pitch = this.$route.query.data;
