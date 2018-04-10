@@ -186,6 +186,9 @@
             photo.push(val[key][i].uri);
           }
         }
+        alert(index);
+        alert(JSON.stringify(val));
+        alert(JSON.stringify(photo));
         ImagePreview(photo, index);
       },
       routerLink(val) {
