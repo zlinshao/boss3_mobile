@@ -19,7 +19,6 @@
     },
     mounted() {
       this.corp();
-      this.loading = true;
     },
     methods: {
       corp() {
