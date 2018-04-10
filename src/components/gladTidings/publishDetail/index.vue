@@ -77,8 +77,8 @@
                       <img src="../../../assets/head.png" v-else>
                     </p>
                     <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
-                      {{item.name}}&nbsp;-&nbsp;
-                      <span v-for="(i,index) in key.user.role" v-if="index === 0">{{i.display_name}}</span>
+                      {{item.name}}
+                      <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
                     </span>
                   </div>
                   <div class="times">

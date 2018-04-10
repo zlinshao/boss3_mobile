@@ -46,7 +46,7 @@
                     <img src="../../../assets/head.png" v-else>
                   </p>
                   <span>{{key.staffs.name}}</span>
-                  <span v-for="role in key.staffs.role">{{role.display_name}}</span>
+                  <span v-for="role in key.staffs.role">&nbsp;-&nbsp;{{role.display_name}}</span>
                 </div>
                 <p class="times">
                   {{key.create_time.substring(0,10)}}
@@ -125,7 +125,6 @@
       })
     },
     activated() {
-      alert(window.location.href);
       this.pitch = this.$route.query.id;
       this.page = 1;
       this.close_();
