@@ -56,8 +56,8 @@
                 {{key.content}}
               </div>
               <div class="pics">
-                <div v-for="item in key.album.image_pic">
-                  <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
+                <div v-for="(item,index) in key.album.image_pic">
+                  <img v-for="(p) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
                 </div>
               </div>
             </div>
@@ -187,8 +187,6 @@
           }
         }
         alert(index);
-        alert(JSON.stringify(val));
-        alert(JSON.stringify(photo));
         ImagePreview(photo, index);
       },
       routerLink(val) {
