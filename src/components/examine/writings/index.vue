@@ -56,7 +56,7 @@
                 {{key.content}}
               </div>
               <div class="pics">
-                <div >
+                <div>
                   <img v-for="(p,index) in key.photos" :src="p" @click="pics(key.photos, index)">
                 </div>
                 <div v-for="(p,index) in key.photos">
@@ -181,12 +181,16 @@
               comment.role = data[i].staffs.role;
               comment.create_time = data[i].create_time;
               let val = key.album.image_pic;
-              for (let key in val) {
-                for (let i = 0; i < val[key].length; i++) {
-                  comment.photos.push(val[key][i].uri);
+              alert(JSON.stringify(val));
+              if (val.length !== 0) {
+                for (let key in val) {
+                  for (let i = 0; i < val[key].length; i++) {
+                    comment.photos.push(val[key][i].uri);
+                  }
                 }
+              } else {
+                comment.photos = [];
               }
-
               this.commentList.push(comment);
             }
             this.paging = res.data.data.count;
