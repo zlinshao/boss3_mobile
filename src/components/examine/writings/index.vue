@@ -96,7 +96,7 @@
         urls: globalConfig.server,
         address: globalConfig.attestation,
         assistId: false,
-        disabled: false,
+        disabled: true,
         paging: 0,
         myData: {},
         cover_pic: {},
@@ -115,13 +115,12 @@
         vm.path = from.path;
         if (from.path === '/') {
           vm.loading = true;
-          vm.disabled = true;
           vm.corp();
         } else {
+          vm.search();
           vm.loading = false;
           vm.disabled = false;
         }
-        vm.search();
       })
     },
     activated() {
@@ -143,6 +142,7 @@
         this.commentList = [];
       },
       contentDetail(val) {
+        this.loading = false;
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
           this.myData = res.data.data;
           alert(JSON.stringify(this.myData));
@@ -233,6 +233,7 @@
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                    that.contentDetail(that.pitch);
                     that.disabled = false;
                   });
                 }
@@ -279,6 +280,7 @@
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                      that.contentDetail(that.pitch);
                       that.disabled = false;
                     });
                   } else {
