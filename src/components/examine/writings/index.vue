@@ -116,15 +116,21 @@
         vm.path = from.path;
         if (from.path === '/') {
           vm.loading = true;
+          alert(3);
           vm.corp();
         } else {
           vm.search();
+          alert(4);
           vm.loading = false;
           vm.disabled = false;
         }
       })
     },
+    mounted(){
+      alert(1);
+    },
     activated() {
+      alert(2);
       this.pitch = this.$route.query.id;
       this.page = 1;
       this.close_();

@@ -60,7 +60,7 @@
     watch: {},
     methods: {
       warningList(val) {
-        that.loading = false;
+        this.loading = false;
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
           this.myData = res.data.data;
         })
