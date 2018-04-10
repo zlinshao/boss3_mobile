@@ -113,20 +113,20 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
-        alert(from.path);
         if (from.path === '/') {
           vm.loading = true;
           vm.disabled = true;
           vm.corp();
         } else {
-          vm.search();
           vm.loading = false;
           vm.disabled = false;
         }
+        vm.search();
       })
     },
     activated() {
       this.pitch = this.$route.query.id;
+      this.page = 1;
       this.close_();
     },
     methods: {
@@ -141,21 +141,14 @@
       },
       close_() {
         this.commentList = [];
-        this.page = 1;
       },
       contentDetail(val) {
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
-          alert(JSON.stringify(res.data.data));
           this.myData = res.data.data;
-          alert(JSON.stringify(res.data.data));
           this.create_time = res.data.data.create_time;
-          alert(JSON.stringify(res.data.data));
           this.before_content = res.data.data.before_content;
-          alert(JSON.stringify(res.data.data));
           this.next_content = res.data.data.next_content;
-          alert(JSON.stringify(res.data.data));
           this.cover_pic = res.data.data.album.cover_pic;
-          alert(JSON.stringify(res.data.data));
         })
       },
       assist(id) {
@@ -228,6 +221,7 @@
                   // data.display_name = res.data.role[0].display_name;
                   sessionStorage.setItem('personal', JSON.stringify(data));
                   globalConfig.personal = data;
+
                   that.$http.post(that.address + 'oauth/token', {
                     client_secret: globalConfig.client_secret,
                     client_id: globalConfig.client_id,
@@ -238,8 +232,6 @@
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                    that.contentDetail(that.pitch);
-                    that.loading = false;
                     that.disabled = false;
                   });
                 }
@@ -252,7 +244,8 @@
                 buttonName: "'" + JSON.stringify(err) + "'",
                 onSuccess: function () {
                 },
-                onFail: function (err) {}
+                onFail: function (err) {
+                }
               });
             }
           });
@@ -285,8 +278,6 @@
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                      that.contentDetail(that.pitch);
-                      that.loading = false;
                       that.disabled = false;
                     });
                   } else {

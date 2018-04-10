@@ -159,9 +159,9 @@
         }
         vm.path = sessionStorage.path;
         if (sessionStorage.path === '/') {
-          vm.loading = true;
-          vm.disabled1 = true;
           if (from.path === '/') {
+            vm.loading = true;
+            vm.disabled1 = true;
             vm.corp();
           } else {
             vm.search();
@@ -199,6 +199,7 @@
         this.formDetail(this.ids);
       },
       formDetail(val) {
+        this.loading = false;
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
@@ -276,7 +277,6 @@
                     username: res.data.phone,
                     password: res.data.code,
                   }).then((res) => {
-                    that.loading = false;
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
@@ -324,7 +324,6 @@
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {
-                      that.loading = false;
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;

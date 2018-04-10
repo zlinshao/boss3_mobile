@@ -60,11 +60,13 @@
     watch: {},
     methods: {
       warningList(val) {
+        that.loading = false;
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
           this.myData = res.data.data;
         })
       },
       corp() {
+        this.loading = true;
         let that = this;
         this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
@@ -94,7 +96,6 @@
                     username: res.data.phone,
                     password: res.data.code,
                   }).then((res) => {
-                    that.loading = false;
                     sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                     let head = res.data.data;
                     globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
@@ -141,7 +142,6 @@
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {
-                      that.loading = false;
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
