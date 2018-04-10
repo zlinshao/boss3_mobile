@@ -26,7 +26,8 @@
         </div>
         <div class="nextPrev">
           <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
-          <p @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span></p>
+          <p v-if="next_content !== null" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
+          </p>
         </div>
       </div>
 
