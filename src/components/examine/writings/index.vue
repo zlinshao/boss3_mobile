@@ -145,6 +145,7 @@
       contentDetail(val) {
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
           this.myData = res.data.data;
+          alert(JSON.stringify(this.myData));
           this.create_time = res.data.data.create_time;
           this.before_content = res.data.data.before_content;
           this.next_content = res.data.data.next_content;
