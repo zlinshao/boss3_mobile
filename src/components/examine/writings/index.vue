@@ -125,6 +125,7 @@
       })
     },
     activated() {
+      alert(window.location.href);
       this.pitch = this.$route.query.id;
       this.page = 1;
       this.close_();
@@ -146,7 +147,6 @@
         this.loading = false;
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
           this.myData = res.data.data;
-          alert(JSON.stringify(this.myData));
           this.create_time = res.data.data.create_time;
           this.before_content = res.data.data.before_content;
           this.next_content = res.data.data.next_content;
@@ -183,7 +183,6 @@
       pics(val, index) {
         let photo = [];
         for (let key in val) {
-          console.log(val[key]);
           for (let i = 0; i < val[key].length; i++) {
             photo.push(val[key][i].uri);
           }

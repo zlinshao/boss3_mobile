@@ -129,7 +129,7 @@
     data() {
       return {
         vLoading: true,
-        disabled1: false,
+        disabled1: true,
 
         message: '',
         ids: '',
@@ -161,18 +161,12 @@
         if (sessionStorage.path === '/') {
           if (from.path === '/') {
             vm.loading = true;
-            vm.disabled1 = true;
             vm.corp();
           } else {
             vm.search();
             vm.loading = false;
             vm.disabled1 = false;
           }
-        } else {
-          vm.search();
-          vm.routerIndex('');
-          vm.ddRent('');
-          vm.disabled1 = false;
         }
       })
     },
