@@ -57,7 +57,10 @@
               </div>
               <div class="pics">
                 <div v-for="item in key.album.image_pic">
-                  <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">{{index}}
+                  <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
+                </div>
+                <div v-for="item in key.album.image_pic">
+                  <span v-for="(p,index) in item">{{p}}<br>{{p.uri}}<br>{{index}}</span>
                 </div>
               </div>
             </div>
