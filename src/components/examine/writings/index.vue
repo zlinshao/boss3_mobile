@@ -42,11 +42,11 @@
               <div class="staff">
                 <div>
                   <p>
-                    <img :src="key.staffs.avatar" v-if="key.staffs.avatar !== null && key.staffs.avatar !== ''">
+                    <img :src="key.avatar" v-if="key.staffs.avatar !== null && key.avatar !== ''">
                     <img src="../../../assets/head.png" v-else>
                   </p>
                   <span>{{key.staffs.name}}</span>
-                  <span v-for="role in key.staffs.role">&nbsp;-&nbsp;{{role.display_name}}</span>
+                  <span v-for="role in key.role">&nbsp;-&nbsp;{{role.display_name}}</span>
                 </div>
                 <p class="times">
                   {{key.create_time.substring(0,10)}}
@@ -56,11 +56,12 @@
                 {{key.content}}
               </div>
               <div class="pics">
-                <div v-for="item in key.album.image_pic">
-                  <img v-for="(p,index) in item" :src="p.uri" @click="pics(key.album.image_pic, index)">
+                <div >
+                  <img v-for="(p,index) in key.photos" :src="p" @click="pics(key.photos, index)">
                 </div>
-                <div v-for="item in key.album.image_pic">
-                  <span v-for="(p,index) in item">{{p}}<br>{{p.uri}}<br>{{index}}</span>
+                <div v-for="(p,index) in key.photos">
+                  {{key.photos}}<br>
+                  {{index}}
                 </div>
               </div>
             </div>
@@ -174,7 +175,19 @@
           if (res.data.code === '80090') {
             let data = res.data.data.data;
             for (let i = 0; i < data.length; i++) {
-              this.commentList.push(data[i]);
+              let comment = {};
+              comment.avatar = data[i].staffs.avatar;
+              comment.name = data[i].staffs.name;
+              comment.role = data[i].staffs.role;
+              comment.create_time = data[i].create_time;
+              let val = key.album.image_pic;
+              for (let key in val) {
+                for (let i = 0; i < val[key].length; i++) {
+                  comment.photos.push(val[key][i].uri);
+                }
+              }
+
+              this.commentList.push(comment);
             }
             this.paging = res.data.data.count;
           } else {
@@ -183,14 +196,7 @@
         })
       },
       pics(val, index) {
-        let photo = [];
-        for (let key in val) {
-          for (let i = 0; i < val[key].length; i++) {
-            photo.push(val[key][i].uri);
-          }
-        }
-        alert(index);
-        ImagePreview(photo, index);
+        ImagePreview(val, index);
       },
       routerLink(val) {
         this.$router.push({path: '/writings', query: {id: val}});
