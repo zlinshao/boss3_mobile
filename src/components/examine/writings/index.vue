@@ -42,11 +42,11 @@
               <div class="staff">
                 <div>
                   <p>
-                    <img :src="key.avatar" v-if="key.staffs.avatar !== null && key.avatar !== ''">
+                    <img :src="key.avatar" v-if="key.avatar !== null && key.avatar !== ''">
                     <img src="../../../assets/head.png" v-else>
                   </p>
-                  <span>{{key.staffs.name}}</span>
-                  <span v-for="role in key.role">&nbsp;-&nbsp;{{role.display_name}}</span>
+                  <span>{{key.name}}</span>
+                  <span v-for="role in key.role">&nbsp;-&nbsp;{{role}}</span>
                 </div>
                 <p class="times">
                   {{key.create_time.substring(0,10)}}
@@ -56,12 +56,8 @@
                 {{key.content}}
               </div>
               <div class="pics">
-                <div>
-                  <img v-for="(p,index) in key.photos" :src="p" @click="pics(key.photos, index)">
-                </div>
                 <div v-for="(p,index) in key.photos">
-                  {{key.photos}}<br>
-                  {{index}}
+                  <img :src="p" @click="pics(key.photos, index)">
                 </div>
               </div>
             </div>
@@ -103,6 +99,7 @@
         assistId: false,
         disabled: true,
         paging: 0,
+        pitch: '',
         myData: {},
         cover_pic: {},
         create_time: '',
@@ -175,23 +172,20 @@
           if (res.data.code === '80090') {
             let data = res.data.data.data;
             for (let i = 0; i < data.length; i++) {
-              let comment = {};
-              comment.avatar = data[i].staffs.avatar;
-              comment.name = data[i].staffs.name;
-              comment.role = data[i].staffs.role;
-              comment.create_time = data[i].create_time;
-              let val = key.album.image_pic;
-              alert(JSON.stringify(val));
-              if (val.length !== 0) {
+              let com = {};
+              com.avatar = data[i].staffs.avatar;
+              com.name = data[i].staffs.name;
+              com.role = data[i].staffs.role;
+              com.create_time = data[i].create_time;
+              com.content = data[i].content;
+              let val = data[i].album.image_pic;
+              com.photos = [];
+              if (typeof val === "object") {
                 for (let key in val) {
-                  for (let i = 0; i < val[key].length; i++) {
-                    comment.photos.push(val[key][i].uri);
-                  }
+                  com.photos.push(val[key][0].uri);
                 }
-              } else {
-                comment.photos = [];
               }
-              this.commentList.push(comment);
+              this.commentList.push(com);
             }
             this.paging = res.data.data.count;
           } else {
@@ -226,28 +220,46 @@
                   'code': info.code,
                 }
               }).then((res) => {
-                if (res.data !== false) {
-                  let data = {};
-                  data.name = res.data.name;
-                  data.avatar = res.data.avatar;
-                  data.phone = res.data.phone;
-                  // data.depart = res.data.org[0].name;
-                  // data.display_name = res.data.role[0].display_name;
-                  sessionStorage.setItem('personal', JSON.stringify(data));
-                  globalConfig.personal = data;
+                if (res.data.status !== 'fail') {
+                  if (res.data !== false) {
+                    let data = {};
+                    data.name = res.data.name;
+                    data.avatar = res.data.avatar;
+                    data.phone = res.data.phone;
+                    // data.depart = res.data.org[0].name;
+                    // data.display_name = res.data.role[0].display_name;
+                    sessionStorage.setItem('personal', JSON.stringify(data));
+                    globalConfig.personal = data;
 
-                  that.$http.post(that.address + 'oauth/token', {
-                    client_secret: globalConfig.client_secret,
-                    client_id: globalConfig.client_id,
-                    grant_type: 'password',
-                    username: res.data.phone,
-                    password: res.data.code,
-                  }).then((res) => {
-                    sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                    let head = res.data.data;
-                    globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                    that.contentDetail(that.pitch);
-                    that.disabled = false;
+                    that.$http.post(that.address + 'oauth/token', {
+                      client_secret: globalConfig.client_secret,
+                      client_id: globalConfig.client_id,
+                      grant_type: 'password',
+                      username: res.data.phone,
+                      password: res.data.code,
+                    }).then((res) => {
+                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                      let head = res.data.data;
+                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                      that.contentDetail(that.pitch);
+                      that.disabled = false;
+                    });
+                  }
+                } else {
+                  DingTalkPC.device.notification.alert({
+                    message: "您不在系统内，请联系管理员添加！",
+                    title: "提示信息",
+                    buttonName: "关闭",
+                    onSuccess: function () {
+                    },
+                    onFail: function (err) {
+                    }
+                  });
+                  dd.biz.navigation.close({
+                    onSuccess: function (result) {
+                    },
+                    onFail: function (err) {
+                    }
                   });
                 }
               })
@@ -274,38 +286,48 @@
                     'code': info.code,
                   }
                 }).then((res) => {
-                  if (res.data !== false) {
-                    let data = {};
-                    data.name = res.data.name;
-                    data.avatar = res.data.avatar;
-                    data.phone = res.data.phone;
-                    // data.depart = res.data.org[0].name;
-                    // data.display_name = res.data.role[0].display_name;
-                    sessionStorage.setItem('personal', JSON.stringify(data));
-                    globalConfig.personal = data;
-                    that.$http.post(that.address + 'oauth/token', {
-                      client_secret: globalConfig.client_secret,
-                      client_id: globalConfig.client_id,
-                      grant_type: 'password',
-                      username: res.data.phone,
-                      password: res.data.code,
-                    }).then((res) => {
-                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                      let head = res.data.data;
-                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                      that.contentDetail(that.pitch);
-                      that.disabled = false;
-                    });
-                  } else {
-                    setTimeout(() => {
-                      alert('请求超时请稍后再试');
-                      dd.biz.navigation.close({
-                        onSuccess: function (result) {
-                        },
-                        onFail: function (err) {
-                        }
+                  if (res.data.status !== 'fail') {
+                    if (res.data !== false) {
+                      let data = {};
+                      data.name = res.data.name;
+                      data.avatar = res.data.avatar;
+                      data.phone = res.data.phone;
+                      // data.depart = res.data.org[0].name;
+                      // data.display_name = res.data.role[0].display_name;
+                      sessionStorage.setItem('personal', JSON.stringify(data));
+                      globalConfig.personal = data;
+                      that.$http.post(that.address + 'oauth/token', {
+                        client_secret: globalConfig.client_secret,
+                        client_id: globalConfig.client_id,
+                        grant_type: 'password',
+                        username: res.data.phone,
+                        password: res.data.code,
+                      }).then((res) => {
+                        sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                        let head = res.data.data;
+                        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                        that.contentDetail(that.pitch);
+                        that.disabled = false;
                       });
-                    }, 3000);
+                    } else {
+                      setTimeout(() => {
+                        alert('请求超时请稍后再试');
+                        dd.biz.navigation.close({
+                          onSuccess: function (result) {
+                          },
+                          onFail: function (err) {
+                          }
+                        });
+                      }, 3000);
+                    }
+                  } else {
+                    alert('您不在系统内，请联系管理员添加！');
+                    dd.biz.navigation.close({
+                      onSuccess: function (result) {
+                      },
+                      onFail: function (err) {
+                      }
+                    });
                   }
                 })
               },
@@ -417,7 +439,6 @@
       margin-bottom: .55rem;
       p {
         @include minMaxWidth(4.6rem);
-        @include flow;
         font-size: .36rem;
         color: #101010;
       }
