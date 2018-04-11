@@ -69,7 +69,6 @@ axios.interceptors.response.use(function (response) {
         error.message = '请求错误';
         break;
       case 401:
-        console.log(error.response);
         error.message = '未授权，请登录';
         break;
       case 403:

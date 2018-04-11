@@ -1,6 +1,5 @@
 <template>
   <div id="hello" class="hello">
-
     <div class="top" :class="{'shadow': active !== 3 && active !== 4}">
       <div @click="tabTag(1,0)" :class="{'onDiv': active === 1}">
         <p>
@@ -172,10 +171,8 @@
       // 钉钉头部右侧
       dd.biz.navigation.setRight({
         show: false,
-        onSuccess: function (result) {
-        },
-        onFail: function (err) {
-        }
+        onSuccess: function (result) {},
+        onFail: function (err) {}
       });
       this.paths = this.$router.options.routes;
       this.scrollTops();

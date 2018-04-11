@@ -4,37 +4,44 @@
     <div class="loading" v-if="loading">
       <img src="../../../assets/loding1.gif">
     </div>
-
-    <div class="navTop" v-if="!loading">
-      <div class="top0">
-        <div class="top1">
-          {{myData.title}}
+    <div v-if="!loading">
+      <div class="disappear" v-if="recall">
+        <div class="a1">
+          <img src="../../../assets/disappear.png">
         </div>
-        <div class="top2">
-          <span>{{myData.date}}</span>
-          <span>南京乐伽商业管理有限公司</span>
+        <div class="a2">此消息已被撤回</div>
+      </div>
+      <div class="navTop" v-if="!recall">
+        <div class="top0">
+          <div class="top1">
+            {{myData.title}}
+          </div>
+          <div class="top2">
+            <span>{{myData.date}}</span>
+            <span>南京乐伽商业管理有限公司</span>
+          </div>
+        </div>
+        <div class="top3">
+          <b>
+            <i class="iconfont icon-yanjing"></i>
+            <span>{{myData.read_count}}人</span>
+          </b>
+          <b>
+            <i class="iconfont icon-yanjingclose"></i>
+            <span>{{myData.unread_count}}人</span>
+          </b>
         </div>
       </div>
-      <div class="top3">
-        <b>
-          <i class="iconfont icon-yanjing"></i>
-          <span>{{myData.read_count}}人</span>
-        </b>
-        <b>
-          <i class="iconfont icon-yanjingclose"></i>
-          <span>{{myData.unread_count}}人</span>
-        </b>
-      </div>
-    </div>
-    <div class="mainWarning" v-if="!loading">
-      <div class="mainTop">公司各部门：</div>
-      <div class="mainTitle">
-        <p v-html="myData.content"></p>
-      </div>
-      <div class="mainFooter">
-        <div>
-          <p>南京乐伽商业管理有限公司</p>
-          <p>{{myData.date}}</p>
+      <div class="mainWarning" v-if="!recall">
+        <div class="mainTop">公司各部门：</div>
+        <div class="mainTitle">
+          <p v-html="myData.content"></p>
+        </div>
+        <div class="mainFooter">
+          <div>
+            <p>南京乐伽商业管理有限公司</p>
+            <p>{{myData.date}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -51,6 +58,7 @@
         myData: {},
         loading: false,
         ids: '',
+        recall: false,
       }
     },
     mounted() {
@@ -62,7 +70,12 @@
       warningList(val) {
         this.loading = false;
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
-          this.myData = res.data.data;
+          if (res.data.code === '"80010"') {
+            this.myData = res.data.data;
+            this.recall = false;
+          } else if (res.data.code === '80044') {
+            this.recall = true;
+          }
         })
       },
       corp() {
