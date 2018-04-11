@@ -10,7 +10,7 @@
         <div class="a1">
           <img src="../../../assets/disappear.png">
         </div>
-        <div class="a2">此消息已被撤回</div>
+        <div class="a2">{{contents}}</div>
       </div>
 
       <div v-if="dercarriage">
@@ -122,6 +122,7 @@
         loading: false,
         undercarriage: false,
         dercarriage: false,
+        contents: '',
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -164,6 +165,7 @@
               this.undercarriage = true;
               this.dercarriage = false;
             } else {
+              this.contents = '该文章已下架';
               this.undercarriage = false;
               this.dercarriage = true;
             }
@@ -171,6 +173,10 @@
             this.before_content = res.data.data.before_content;
             this.next_content = res.data.data.next_content;
             this.cover_pic = res.data.data.album.cover_pic;
+          } else {
+            this.contents = '该文章已删除';
+            this.undercarriage = false;
+            this.dercarriage = true;
           }
         })
       },
