@@ -162,10 +162,10 @@
           if (res.data.code === "80020") {
             this.myData = res.data.data;
             if (res.data.data.status === 150) {
+              this.contents = '该文章已下架';
               this.undercarriage = true;
               this.dercarriage = false;
             } else {
-              this.contents = '该文章已下架';
               this.undercarriage = false;
               this.dercarriage = true;
             }
@@ -175,8 +175,8 @@
             this.cover_pic = res.data.data.album.cover_pic;
           } else {
             this.contents = '该文章已删除';
-            this.undercarriage = false;
-            this.dercarriage = true;
+            this.undercarriage = true;
+            this.dercarriage = false;
           }
         })
       },
