@@ -171,8 +171,10 @@
       // 钉钉头部右侧
       dd.biz.navigation.setRight({
         show: false,
-        onSuccess: function (result) {},
-        onFail: function (err) {}
+        onSuccess: function (result) {
+        },
+        onFail: function (err) {
+        }
       });
       this.paths = this.$router.options.routes;
       this.scrollTops();

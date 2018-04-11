@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="warning">
     <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
       <img src="../../../assets/loding1.gif">
@@ -11,7 +11,7 @@
         </div>
         <div class="a2">此消息已被撤回</div>
       </div>
-      <div class="navTop" v-if="!recall">
+      <div class="navTop" v-if="recall1">
         <div class="top0">
           <div class="top1">
             {{myData.title}}
@@ -32,7 +32,7 @@
           </b>
         </div>
       </div>
-      <div class="mainWarning" v-if="!recall">
+      <div class="mainWarning" v-if="recall1">
         <div class="mainTop">公司各部门：</div>
         <div class="mainTitle">
           <p v-html="myData.content"></p>
@@ -59,6 +59,7 @@
         loading: false,
         ids: '',
         recall: false,
+        recall1: false,
       }
     },
     mounted() {
@@ -70,13 +71,13 @@
       warningList(val) {
         this.loading = false;
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
-          alert(res.data.code);
-          alert(res.data.code === "80044");
           if (res.data.code === '"80010"') {
             this.myData = res.data.data;
             this.recall = false;
+            this.recall1 = true;
           } else if (res.data.code === "80044") {
             this.recall = true;
+            this.recall1 = false;
           }
         })
       },
@@ -197,89 +198,109 @@
   }
 </script>
 
-<style scoped lang="scss">
-  @mixin flex {
-    display: flex;
-    display: -webkit-flex;
-  }
-
-  .module, .loading {
-    position: fixed;
-  }
-
-  .module {
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: #f1f1f1;
-  }
-
-  .loading {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-  }
-
-  .navTop {
-    padding: .4rem;
-    /*margin-top: .4rem;*/
-    height: 3.54rem;
-    background: url("../../../assets/shenp1.jpg") no-repeat;
-    background-size: 100% 100%;
-    @include flex;
-    flex-wrap: wrap;
-    align-content: space-between;
-    .top0 {
-      width: 100%;
-      .top1 {
-        color: #ff943e;
-        font-weight: bold;
-        font-size: .4rem;
-        margin-bottom: .3rem;
+<style lang="scss">
+  #warning {
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
+    }
+    .disappear {
+      div {
+        text-align: center;
       }
-      .top2 {
-        width: 100%;
-        @include flex;
-        justify-content: space-between;
+      .a1 {
+        width: 3rem;
+        height: 3rem;
+        margin: 2rem auto 0;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .a2 {
+        margin-top: .6rem;
+        font-size: .4rem;
+        color: #aaaaaa;
       }
     }
-    .top3 {
-      width: 100%;
+    .module, .loading {
+      position: fixed;
+    }
+
+    .module {
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: #f1f1f1;
+    }
+
+    .loading {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    .navTop {
+      padding: .4rem;
+      /*margin-top: .4rem;*/
+      height: 3.54rem;
+      background: url("../../../assets/shenp1.jpg") no-repeat;
+      background-size: 100% 100%;
       @include flex;
-      justify-content: flex-end;
-      b {
+      flex-wrap: wrap;
+      align-content: space-between;
+      .top0 {
+        width: 100%;
+        .top1 {
+          color: #ff943e;
+          font-weight: bold;
+          font-size: .4rem;
+          margin-bottom: .3rem;
+        }
+        .top2 {
+          width: 100%;
+          @include flex;
+          justify-content: space-between;
+        }
+      }
+      .top3 {
+        width: 100%;
         @include flex;
-        margin-left: .36rem;
-        i {
-          color: #e0e0e0;
-          padding-right: .1rem;
-          font-size: .36rem;
+        justify-content: flex-end;
+        b {
+          @include flex;
+          margin-left: .36rem;
+          i {
+            color: #e0e0e0;
+            padding-right: .1rem;
+            font-size: .36rem;
+          }
         }
       }
     }
-  }
 
-  .mainWarning {
-    padding: .4rem;
-    @include flex;
-    flex-wrap: wrap;
-    align-content: space-around;
-    .mainTop, .mainTitle, .mainFooter {
-      width: 100%;
-    }
-    .mainTitle {
-      line-height: .5rem;
-      margin: .36rem 0 .6rem;
-    }
-    .mainFooter {
+    .mainWarning {
+      padding: .4rem;
       @include flex;
-      justify-content: flex-end;
-      div {
-        p {
-          margin: .12rem 0;
-          text-align: center;
+      flex-wrap: wrap;
+      align-content: space-around;
+      .mainTop, .mainTitle, .mainFooter {
+        width: 100%;
+      }
+      .mainTitle {
+        line-height: .5rem;
+        margin: .36rem 0 .6rem;
+      }
+      .mainFooter {
+        @include flex;
+        justify-content: flex-end;
+        div {
+          p {
+            margin: .12rem 0;
+            text-align: center;
+          }
         }
       }
     }
