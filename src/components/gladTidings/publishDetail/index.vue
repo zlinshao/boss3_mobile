@@ -10,7 +10,6 @@
       <div class="detail">
         <div class="detailLeft">
           <div>
-            {{personal.avatar}}
             <img :src="personal.avatar" v-if="personal.avatar !== '' && personal.avatar !== null">
             <img src="../../../assets/head.png" v-else>
           </div>
@@ -174,17 +173,13 @@
         vm.path = sessionStorage.path;
         if (sessionStorage.path === '/') {
           if (from.path === '/') {
-            alert(vm.$route.query.ids);
-            alert(1);
             vm.loading = true;
             vm.corp();
-          } else {
-            alert(vm.$route.query.ids);
-            alert(2);
-            vm.search();
-            vm.loading = false;
-            vm.disabled1 = false;
           }
+        } else {
+          vm.search();
+          vm.loading = false;
+          vm.disabled1 = false;
         }
       })
     },
@@ -224,12 +219,9 @@
       },
       formDetail(val) {
         this.loading = false;
-        alert(3);
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           this.message = '';
-          alert(4);
           if (res.data.status === 'success' && res.data.data.length !== 0) {
-            alert(5);
             this.formList = res.data.data.process.content.show_content;
             this.operation = res.data.data.operation;
             this.personal = res.data.data.process.user;
