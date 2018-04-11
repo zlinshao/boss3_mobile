@@ -429,6 +429,26 @@
       }
     }
 
+    .disappear {
+      div {
+        text-align: center;
+      }
+      .a1 {
+        width: 3rem;
+        height: 3rem;
+        margin: 2rem auto 0;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .a2 {
+        margin-top: .6rem;
+        font-size: .4rem;
+        color: #aaaaaa;
+      }
+    }
+
     .module, .loading {
       position: fixed;
     }
