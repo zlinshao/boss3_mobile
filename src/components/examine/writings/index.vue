@@ -178,11 +178,13 @@
               com.role = data[i].staffs.role;
               com.create_time = data[i].create_time;
               com.content = data[i].content;
-              let val = data[i].album.image_pic;
               com.photos = [];
-              if (typeof val === "object") {
-                for (let key in val) {
-                  com.photos.push(val[key][0].uri);
+              if(data[i].album !== null){
+                let val = data[i].album.image_pic;
+                if (typeof val === "object") {
+                  for (let key in val) {
+                    com.photos.push(val[key][0].uri);
+                  }
                 }
               }
               this.commentList.push(com);
