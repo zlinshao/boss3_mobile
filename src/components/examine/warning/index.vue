@@ -71,7 +71,7 @@
       warningList(val) {
         this.loading = false;
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
-          if (res.data.code === '"80010"') {
+          if (res.data.code === "80010") {
             this.myData = res.data.data;
             this.recall = false;
             this.recall1 = true;

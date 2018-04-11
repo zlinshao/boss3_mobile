@@ -6,76 +6,86 @@
     </div>
 
     <div v-if="!loading">
-      <div class="writings">
-        <div class="titles">
-          <p>{{myData.title}}</p>
-          <span>{{create_time.substring(0,10)}}</span>
+      <div class="disappear" v-if="undercarriage">
+        <div class="a1">
+          <img src="../../../assets/disappear.png">
         </div>
-        <div v-for="key in cover_pic">
-          <img v-for="p in key" :src="p.uri">
-        </div>
-        <div v-html="myData.content">
-
-        </div>
-        <h6></h6>
-        <div class="icons">
-          <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i><span>{{myData.comments_count}}</span>
-          <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i><span
-          :class="{'zan': assistId}">{{myData.favor_num}}</span>
-          <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
-        </div>
-        <div class="nextPrev">
-          <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
-          <p v-if="next_content !== null" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
-          </p>
-        </div>
+        <div class="a2">此消息已被撤回</div>
       </div>
 
-      <ul
-        v-waterfall-lower="loadMore"
-        waterfall-disabled="disabled"
-        waterfall-offset="300">
-        <li class="started">
-          <div class="commentArea">
-            <div class="headline">评论<span>{{paging}}</span></div>
-            <div class="commentAreaMain" v-for="key in commentList">
-              <div class="staff">
-                <div>
-                  <p>
-                    <img :src="key.avatar" v-if="key.avatar !== null && key.avatar !== ''">
-                    <img src="../../../assets/head.png" v-else>
-                  </p>
-                  <span>{{key.name}}</span>
-                  <span v-for="role in key.role">&nbsp;-&nbsp;{{role}}</span>
-                </div>
-                <p class="times">
-                  {{key.create_time.substring(0,10)}}
-                </p>
-              </div>
-              <div class="contents">
-                {{key.content}}
-              </div>
-              <div class="pics">
-                <div v-for="(p,index) in key.photos">
-                  <img :src="p" @click="pics(key.photos, index)">
-                </div>
-              </div>
-            </div>
-            <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
-              暂无评论
-            </div>
+      <div v-if="dercarriage">
+        <div class="writings">
+          <div class="titles">
+            <p>{{myData.title}}</p>
+            <span>{{create_time.substring(0,10)}}</span>
           </div>
-        </li>
-      </ul>
+          <div v-for="key in cover_pic">
+            <img v-for="p in key" :src="p.uri">
+          </div>
+          <div v-html="myData.content">
 
-      <div class="bottom">
-        <span v-show="disabled && commentList.length > 10">我是有底线的</span>
-        <van-loading v-show="!disabled" type="spinner" color="black"/>
+          </div>
+          <h6></h6>
+          <div class="icons">
+            <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i><span>{{myData.comments_count}}</span>
+            <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i><span
+            :class="{'zan': assistId}">{{myData.favor_num}}</span>
+            <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
+          </div>
+          <div class="nextPrev">
+            <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
+            <p v-if="next_content !== null" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
+            </p>
+          </div>
+        </div>
+
+        <ul
+          v-waterfall-lower="loadMore"
+          waterfall-disabled="disabled"
+          waterfall-offset="300">
+          <li class="started">
+            <div class="commentArea">
+              <div class="headline">评论<span>{{paging}}</span></div>
+              <div class="commentAreaMain" v-for="key in commentList">
+                <div class="staff">
+                  <div>
+                    <p>
+                      <img :src="key.avatar" v-if="key.avatar !== null && key.avatar !== ''">
+                      <img src="../../../assets/head.png" v-else>
+                    </p>
+                    <span>{{key.name}}</span>
+                    <span v-for="role in key.role">&nbsp;-&nbsp;{{role}}</span>
+                  </div>
+                  <p class="times">
+                    {{key.create_time.substring(0,10)}}
+                  </p>
+                </div>
+                <div class="contents">
+                  {{key.content}}
+                </div>
+                <div class="pics">
+                  <div v-for="(p,index) in key.photos">
+                    <img :src="p" @click="pics(key.photos, index)">
+                  </div>
+                </div>
+              </div>
+              <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
+                暂无评论
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <div class="bottom">
+          <span v-show="disabled && commentList.length > 10">我是有底线的</span>
+          <van-loading v-show="!disabled" type="spinner" color="black"/>
+        </div>
+
+        <div class="footer">
+          <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
+        </div>
       </div>
 
-      <div class="footer">
-        <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
-      </div>
     </div>
   </div>
 </template>
@@ -110,6 +120,8 @@
         page: 1,
         path: '',
         loading: false,
+        undercarriage: false,
+        dercarriage: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -146,11 +158,20 @@
       contentDetail(val) {
         this.loading = false;
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
-          this.myData = res.data.data;
-          this.create_time = res.data.data.create_time;
-          this.before_content = res.data.data.before_content;
-          this.next_content = res.data.data.next_content;
-          this.cover_pic = res.data.data.album.cover_pic;
+          if (res.data.code === "80020") {
+            this.myData = res.data.data;
+            if (res.data.data.status === 150) {
+              this.undercarriage = true;
+              this.dercarriage = false;
+            } else {
+              this.undercarriage = false;
+              this.dercarriage = true;
+            }
+            this.create_time = res.data.data.create_time;
+            this.before_content = res.data.data.before_content;
+            this.next_content = res.data.data.next_content;
+            this.cover_pic = res.data.data.album.cover_pic;
+          }
         })
       },
       assist(id) {
@@ -179,7 +200,7 @@
               com.create_time = data[i].create_time;
               com.content = data[i].content;
               com.photos = [];
-              if(data[i].album !== null){
+              if (data[i].album !== null) {
                 let val = data[i].album.image_pic;
                 if (typeof val === "object") {
                   for (let key in val) {
