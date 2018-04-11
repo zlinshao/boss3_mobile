@@ -18,8 +18,8 @@
           <div class="personal">
             <p>{{personal.name}}</p>
             <p>
-              <span v-for="(key,index) in personal.org">{{key.name}}</span>
-              <span v-for="(key,index) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>
+              <span v-for="(key) in personal.org">{{key.name}}</span>
+              <span v-for="(key) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>
             </p>
           </div>
           <div style="height: 1.4rem;"
@@ -75,9 +75,12 @@
                       <img :src="key.user.avatar" v-if="key.user.avatar !== '' && key.user.avatar !== null">
                       <img src="../../../assets/head.png" v-else>
                     </p>
-                    <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
-                      {{item.name}}
-                      <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
+                    <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
+                    <!--{{item.name}}-->
+                    <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
+                    <!--</span>-->
+                    <span class="a">
+                      {{key.user.name}}
                     </span>
                   </div>
                   <div class="times">
@@ -175,9 +178,15 @@
           if (from.path === '/') {
             vm.loading = true;
             vm.corp();
+          } else {
+            vm.search();
+            vm.loading = false;
+            vm.disabled1 = false;
           }
         } else {
           vm.search();
+          vm.routerIndex('');
+          vm.ddRent('');
           vm.loading = false;
           vm.disabled1 = false;
         }
@@ -242,8 +251,8 @@
           let data = res.data.data;
           this.paging = res.data.meta.total;
           if (res.data.status === 'success' && data.length !== 0) {
-            for (let i = 0; i < res.data.data.length; i++) {
-              this.commentList.push(res.data.data[i]);
+            for (let i = 0; i < data.length; i++) {
+              this.commentList.push(data[i]);
             }
           } else {
             this.disabled1 = true;
@@ -251,7 +260,7 @@
         })
       },
 
-      pics(val, index,num) {
+      pics(val, index, num) {
         let arr = [];
         if (num === 1) {
           arr = val;
