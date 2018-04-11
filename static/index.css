@@ -1,3 +1,7 @@
+.showContainer {
+  height: 100%;
+  overflow: hidden; }
+
 .accordion {
   padding-left: 20px;
   border-bottom: .02rem solid #ececec; }

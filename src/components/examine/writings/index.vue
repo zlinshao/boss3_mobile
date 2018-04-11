@@ -86,7 +86,15 @@
           <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
         </div>
       </div>
+    </div>
 
+    <div class="bigPhotos" v-if="bigPicShow">
+      <div>
+        <p class="nextPic" @click="next(photo)"><i class="iconfont icon-xiayibu"></i></p>
+        <p class="prePic" @click="pre(photo)"><i class="iconfont icon-xiayibu"></i></p>
+        <p class="close" @click="closePic"><i class="iconfont icon-cuowutishi"></i></p>
+      </div>
+      <img :src="bigPic">
     </div>
   </div>
 </template>
@@ -124,6 +132,9 @@
         undercarriage: false,
         dercarriage: false,
         contents: '',
+        active: '',
+        bigPic: '',
+        bigPicShow: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -145,6 +156,18 @@
       this.close_();
     },
     methods: {
+      IsPC() {
+        let userAgentInfo = navigator.userAgent;
+        let Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPod");
+        let flag = true;
+        for (let v = 0; v < Agents.length; v++) {
+          if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+          }
+        }
+        return flag;
+      },
       loadMore() {
         if (!this.disabled) {
           this.comment(this.pitch, this.page);
@@ -224,8 +247,35 @@
         })
       },
       pics(val, index) {
-        ImagePreview(val, index);
+        if (this.IsPC()) {
+          this.photo = val;
+          this.active = index;
+          this.bigPic = val[index];
+          this.bigPicShow = true;
+          document.getElementsByTagName('body')[0].className = 'showContainer';
+        } else {
+          ImagePreview(val, index);
+        }
       },
+      next(val) {
+        this.active++;
+        if (this.active === val.length) {
+          this.active = 0;
+        }
+        this.bigPic = val[this.active];
+      },
+      pre(val) {
+        this.active--;
+        if (this.active < 0) {
+          this.active = val.length - 1;
+        }
+        this.bigPic = val[this.active];
+      },
+      closePic() {
+        this.bigPicShow = false;
+        document.getElementsByTagName('body')[0].className = '';
+      },
+
       routerLink(val) {
         this.$router.push({path: '/writings', query: {id: val}});
         this.pitch = val;
@@ -408,9 +458,11 @@
       -moz-border-radius: $p;
       border-radius: $p;
     }
-    img {
-      width: 100%;
-      height: 100%;
+    .writings, .disappear, .started {
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
     p {
       line-height: .5rem;
@@ -421,6 +473,70 @@
       width: .6rem;
       margin-top: .3rem;
     }
+
+    .bigPhotos {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, .4);
+      z-index: 1000;
+      text-align: center;
+      @include flex;
+      align-items: center;
+      justify-content: center;
+      div {
+        p {
+          position: absolute;
+          bottom: 0;
+          width: 50%;
+          height: 1rem;
+          line-height: 1rem;
+          text-align: center;
+          font-weight: bold;
+          color: #FFFFFF;
+          margin: 0 .2rem;
+          border-radius: 50%;
+          i {
+            display: inline-block;
+            font-size: 1rem;
+          }
+        }
+        .nextPic, .prePic {
+          height: 100%;
+          @include flex;
+          align-items: center;
+        }
+        .nextPic {
+          left: 0;
+          text-align: left;
+          justify-content: flex-start;
+          i {
+            transform: rotate(180deg);
+          }
+        }
+        .prePic {
+          right: 0;
+          text-align: right;
+          justify-content: flex-end;
+        }
+        .close {
+          width: 1rem;
+          bottom: .6rem;
+          left: 50%;
+          transform: translate(-50%);
+          i {
+            font-size: .6rem;
+          }
+        }
+      }
+      img {
+        max-width: 100%;
+        max-height: 100%
+      }
+    }
+
     .icons {
       @include flex;
       align-items: center;
