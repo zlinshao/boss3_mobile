@@ -54,7 +54,8 @@
                       <img src="../../../assets/head.png" v-else>
                     </p>
                     <span>{{key.name}}</span>
-                    <span v-for="role in key.role">&nbsp;-&nbsp;{{role}}</span>
+                    <span v-if="key.role.length !== 0"
+                          v-for="role in key.role">&nbsp;-&nbsp;{{role.display_name}}</span>
                   </div>
                   <p class="times">
                     {{key.create_time.substring(0,10)}}
