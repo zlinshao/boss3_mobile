@@ -641,6 +641,7 @@
     .nextPrev {
       padding: .36rem 0;
       p {
+        margin-top: .1rem;
         cursor: pointer;
         @include flow;
         color: #b1b1b1;
