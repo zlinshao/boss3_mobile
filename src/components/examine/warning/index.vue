@@ -29,6 +29,7 @@
     </div>
     <div class="mainWarning" v-if="recall1">
       <div class="mainTop">公司各部门：</div>
+      {{myData}}
       <div class="mainTitle">
         <p v-html="myData.content"></p>
       </div>
@@ -84,20 +85,22 @@
     methods: {
       warningList(val) {
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
-          alert(JSON.stringify(res.data));
-          alert(JSON.stringify(this.urls + 'announcement/' + val));
           if (res.data.code === "80010") {
+            alert(res.data.code);
             this.myData = res.data.data;
             this.attachment = res.data.data.attachment;
             this.recall = false;
             this.recall1 = true;
           } else if (res.data.code === "80044") {
+            alert(res.data.code);
             this.recall = true;
             this.recall1 = false;
             this.titles = '此消息已被撤回';
           } else if (res.data === 'pass') {
+            alert(1);
             this.warningList(val);
           } else {
+            alert(2);
             this.recall = true;
             this.recall1 = false;
             this.titles = '此消息消失不见了';
