@@ -1,68 +1,16 @@
 <template>
   <div id="app">
-    <!--<div class="routerLink">-->
-    <!--<div v-for="(key,index) in paths" v-if="key.hidden">-->
-    <!--<router-link :to="{path: key.path}">{{key.name}}</router-link>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<transition :name="transitionName">   </transition>-->
-      <keep-alive>
-        <router-view v-wechat-title="$route.meta.title"/>
-      </keep-alive>
-
-    <!--<van-cell-group class="item-list">-->
-    <!--<van-cell isLink icon="points" title="我的积分" ></van-cell>-->
-    <!--<van-cell isLink icon="gift" title="我收到的礼物" ></van-cell>-->
-    <!--</van-cell-group>-->
-
-
-    <!--<van-datetime-picker-->
-    <!--v-model="currentDate"-->
-    <!--type="date"-->
-    <!--:min-hour="minHour"-->
-    <!--:max-hour="maxHour"-->
-    <!--:min-date="minDate"-->
-    <!--&gt;</van-datetime-picker>-->
-
-    <!--&lt;!&ndash; 密码输入框 &ndash;&gt;-->
-    <!--<van-password-input-->
-    <!--:value="value"-->
-    <!--info="密码为 4 位数字"-->
-    <!--lenght="4"-->
-    <!--@focus="showKeyboard = true"-->
-    <!--&gt;</van-password-input>-->
-
-    <!--&lt;!&ndash; 数字键盘 &ndash;&gt;-->
-    <!--<van-number-keyboard-->
-    <!--:show="showKeyboard"-->
-    <!--@input="onInput"-->
-    <!--@delete="onDelete"-->
-    <!--@blur="showKeyboard = false"-->
-    <!--&gt;</van-number-keyboard>-->
+    <keep-alive>
+      <router-view v-wechat-title="$route.meta.title"/>
+    </keep-alive>
   </div>
 </template>
 
 <script>
-  import {Cell, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard} from 'vant';
 
   export default {
-    components: {
-      [Cell.name]: Cell,
-      [CellGroup.name]: CellGroup,
-      [Icon.name]: Icon,
-      [DatetimePicker.name]: DatetimePicker,
-      [PasswordInput.name]: PasswordInput,
-      [NumberKeyboard.name]: NumberKeyboard,
-
-    },
     data() {
       return {
-        paths: [],
-        minHour: 10,
-        maxHour: 20,
-        minDate: new Date(1000, 1, 1),
-        maxDate: new Date(2070, 10, 1),
-        currentDate: new Date(2018, 0, 1),
         value: '',
         showKeyboard: false,
         transitionName: '',
@@ -79,10 +27,180 @@
         }
       }
     },
+    created() {
+      this.responses();
+    },
     mounted() {
       this.paths = this.$router.options.routes;
     },
     methods: {
+      responses() {
+        if (sessionStorage.myData !== undefined) {
+          let head = JSON.parse(sessionStorage.myData);
+          globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+        } else {
+          this.$router.push('/');
+        }
+
+        if (sessionStorage.personal !== undefined) {
+          globalConfig.personal = JSON.parse(sessionStorage.personal);
+        }
+        let that = this;
+        this.$http.interceptors.response.use(function (response) {
+          return response;
+        }, function (error) {
+          if (error && error.response) {
+            if (error.response.data.status_code === 401) {
+              that.corp();
+            }
+          }
+          return Promise.reject(error);
+        });
+
+      },
+      corp() {
+        let that = this;
+        this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
+          let _config = res.data;
+          DingTalkPC.runtime.permission.requestAuthCode({
+            corpId: _config.corpId,
+            onSuccess: function (info) {
+              that.$http.get(that.urls + 'special/special/userInfo', {
+                params: {
+                  'code': info.code,
+                }
+              }).then((res) => {
+                if (res.data.status !== 'fail') {
+                  if (res.data !== false) {
+                    let data = {};
+                    data.name = res.data.name;
+                    data.avatar = res.data.avatar;
+                    data.phone = res.data.phone;
+                    // data.depart = res.data.org[0].name;
+                    // data.display_name = res.data.role[0].display_name;
+                    sessionStorage.setItem('personal', JSON.stringify(data));
+                    globalConfig.personal = data;
+
+                    that.$http.post(that.address + 'oauth/token', {
+                      client_secret: globalConfig.client_secret,
+                      client_id: globalConfig.client_id,
+                      grant_type: 'password',
+                      username: res.data.phone,
+                      password: res.data.code,
+                    }).then((res) => {
+                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                      let head = res.data.data;
+                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                    });
+                  }
+                } else {
+                  DingTalkPC.device.notification.alert({
+                    message: "您不在系统内，请联系管理员添加！",
+                    title: "提示信息",
+                    buttonName: "关闭",
+                    onSuccess: function () {
+                    },
+                    onFail: function (err) {
+                    }
+                  });
+                  dd.biz.navigation.close({
+                    onSuccess: function (result) {
+                    },
+                    onFail: function (err) {
+                    }
+                  });
+                }
+              })
+            },
+            onFail: function (err) {
+              DingTalkPC.device.notification.alert({
+                message: "您不在系统内，请联系管理员添加！",
+                title: "提示信息",
+                buttonName: "关闭",
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
+              });
+            }
+          });
+
+          dd.ready(function () {
+            dd.runtime.permission.requestAuthCode({
+              corpId: _config.corpId,
+              onSuccess: function (info) {
+                that.$http.get(that.urls + 'special/special/userInfo', {
+                  params: {
+                    'code': info.code,
+                  }
+                }).then((res) => {
+                  if (res.data.status !== 'fail') {
+                    if (res.data !== false) {
+                      let data = {};
+                      data.name = res.data.name;
+                      data.avatar = res.data.avatar;
+                      data.phone = res.data.phone;
+                      // data.depart = res.data.org[0].name;
+                      // data.display_name = res.data.role[0].display_name;
+                      sessionStorage.setItem('personal', JSON.stringify(data));
+                      globalConfig.personal = data;
+                      that.$http.post(that.address + 'oauth/token', {
+                        client_secret: globalConfig.client_secret,
+                        client_id: globalConfig.client_id,
+                        grant_type: 'password',
+                        username: res.data.phone,
+                        password: res.data.code,
+                      }).then((res) => {
+                        sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                        let head = res.data.data;
+                        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                      });
+                    } else {
+                      setTimeout(() => {
+                        alert('请求超时请稍后再试');
+                        dd.biz.navigation.close({
+                          onSuccess: function (result) {
+                          },
+                          onFail: function (err) {
+                          }
+                        });
+                      }, 3000);
+                    }
+                  } else {
+                    alert('您不在系统内，请联系管理员添加！');
+                    dd.biz.navigation.close({
+                      onSuccess: function (result) {
+                      },
+                      onFail: function (err) {
+                      }
+                    });
+                  }
+                })
+              },
+              onFail: function (err) {
+                alert('您不在系统内，请联系管理员添加！');
+                dd.biz.navigation.close({
+                  onSuccess: function (result) {
+                  },
+                  onFail: function (err) {
+                  }
+                });
+              }
+            });
+            // 钉钉头部右侧
+            dd.biz.navigation.setRight({
+              show: false,
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
+            });
+          });
+          dd.error(function (err) {
+            alert('dd error: ' + JSON.stringify(err));
+          });
+        })
+      },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
       },

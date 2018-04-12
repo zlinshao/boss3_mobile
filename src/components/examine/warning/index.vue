@@ -9,7 +9,7 @@
         <div class="a1">
           <img src="../../../assets/disappear.png">
         </div>
-        <div class="a2">此消息已被撤回</div>
+        <div class="a2">{{titles}}</div>
       </div>
       <div class="navTop" v-if="recall1">
         <div class="top0">
@@ -44,6 +44,21 @@
           </div>
         </div>
       </div>
+      <div class="appendix" v-if="recall1 && attachment.length !== 0">
+        <div class="appendixMain">
+          <div class="appendixTitle">附件：</div>
+          <a class="upload" v-for="key in attachment" :href="key.data.uri">
+            <p v-if="key.data.uri.indexOf('.docx') > -1 || key.data.uri.indexOf('.doc') > -1" class="a1"></p>
+            <p v-if="key.data.uri.indexOf('.xls') > -1" class="a2"></p>
+            <p v-if="key.data.uri.indexOf('.txt') > -1" class="a3"></p>
+            <p v-if="key.data.uri.indexOf('.pdf') > -1" class="a4"></p>
+            <p v-if="key.data.uri.indexOf('.jpg') > -1" class="a5"></p>
+            <p v-if="key.data.uri.indexOf('.png') > -1" class="a5"></p>
+            <p v-if="key.data.uri.indexOf('.pptx') > -1" class="a5"></p>
+            <span>{{key.data.display_name}}</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -56,15 +71,24 @@
         urls: globalConfig.server,
         address: globalConfig.attestation,
         myData: {},
+        attachment: {},
         loading: false,
         ids: '',
         recall: false,
         recall1: false,
+        titles: '',
       }
     },
     mounted() {
-      this.corp();
       this.ids = this.$route.query.id;
+      if (sessionStorage.myData !== undefined) {
+        this.loading = false;
+        this.recall = false;
+        this.recall1 = false;
+        this.warningList(this.ids);
+      } else {
+        this.corp();
+      }
     },
     watch: {},
     methods: {
@@ -73,11 +97,19 @@
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
           if (res.data.code === "80010") {
             this.myData = res.data.data;
+            this.attachment = res.data.data.attachment;
             this.recall = false;
             this.recall1 = true;
           } else if (res.data.code === "80044") {
             this.recall = true;
             this.recall1 = false;
+            this.titles = '此消息已被撤回';
+          } else if (res.data === 'pass') {
+            this.warningList(val);
+          } else {
+            this.recall = true;
+            this.recall1 = false;
+            this.titles = '此消息消失不见了';
           }
         })
       },
@@ -95,6 +127,7 @@
                   'code': info.code,
                 }
               }).then((res) => {
+                if (res.data.status !== 'fail') {
                 if (res.data !== false) {
                   let data = {};
                   data.name = res.data.name;
@@ -118,13 +151,24 @@
                     that.warningList(that.ids);
                   });
                 }
+                }else{
+                  DingTalkPC.device.notification.alert({
+                    message: "您不在系统内，请联系管理员添加！",
+                    title: "提示信息",
+                    buttonName: "关闭",
+                    onSuccess: function () {
+                    },
+                    onFail: function (err) {
+                    }
+                  });
+                }
               })
             },
             onFail: function (err) {
               DingTalkPC.device.notification.alert({
-                message: "'" + JSON.stringify(err) + "'",
-                title: "'" + JSON.stringify(err) + "'",
-                buttonName: "'" + JSON.stringify(err) + "'",
+                message: "您不在系统内，请联系管理员添加！",
+                title: "提示信息",
+                buttonName: "关闭",
                 onSuccess: function () {
                 },
                 onFail: function (err) {
@@ -142,42 +186,58 @@
                     'code': info.code,
                   }
                 }).then((res) => {
-                  if (res.data !== false) {
-                    let data = {};
-                    data.name = res.data.name;
-                    data.avatar = res.data.avatar;
-                    data.phone = res.data.phone;
-                    // data.depart = res.data.org[0].name;
-                    // data.display_name = res.data.role[0].display_name;
-                    sessionStorage.setItem('personal', JSON.stringify(data));
-                    globalConfig.personal = data;
-                    that.$http.post(that.address + 'oauth/token', {
-                      client_secret: globalConfig.client_secret,
-                      client_id: globalConfig.client_id,
-                      grant_type: 'password',
-                      username: res.data.phone,
-                      password: res.data.code,
-                    }).then((res) => {
-                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                      let head = res.data.data;
-                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                      that.warningList(that.ids);
-                    });
-                  } else {
-                    setTimeout(() => {
-                      alert('请求超时请稍后再试');
-                      dd.biz.navigation.close({
-                        onSuccess: function (result) {
-                        },
-                        onFail: function (err) {
-                        }
+                  if (res.data.status !== 'fail') {
+                    if (res.data !== false) {
+                      let data = {};
+                      data.name = res.data.name;
+                      data.avatar = res.data.avatar;
+                      data.phone = res.data.phone;
+                      // data.depart = res.data.org[0].name;
+                      // data.display_name = res.data.role[0].display_name;
+                      sessionStorage.setItem('personal', JSON.stringify(data));
+                      globalConfig.personal = data;
+                      that.$http.post(that.address + 'oauth/token', {
+                        client_secret: globalConfig.client_secret,
+                        client_id: globalConfig.client_id,
+                        grant_type: 'password',
+                        username: res.data.phone,
+                        password: res.data.code,
+                      }).then((res) => {
+                        sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                        let head = res.data.data;
+                        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                        that.warningList(that.ids);
                       });
-                    }, 3000);
+                    } else {
+                      setTimeout(() => {
+                        alert('请求超时请稍后再试');
+                        dd.biz.navigation.close({
+                          onSuccess: function (result) {
+                          },
+                          onFail: function (err) {
+                          }
+                        });
+                      }, 3000);
+                    }
+                  } else {
+                    alert('您不在系统内，请联系管理员添加！');
+                    dd.biz.navigation.close({
+                      onSuccess: function (result) {
+                      },
+                      onFail: function (err) {
+                      }
+                    });
                   }
                 })
               },
               onFail: function (err) {
-                alert('fail: ' + JSON.stringify(err));
+                alert('您不在系统内，请联系管理员添加！');
+                dd.biz.navigation.close({
+                  onSuccess: function (result) {
+                  },
+                  onFail: function (err) {
+                  }
+                });
               }
             });
             // 钉钉头部右侧
@@ -190,7 +250,13 @@
             });
           });
           dd.error(function (err) {
-            alert('dd error: ' + JSON.stringify(err));
+            alert('您不在系统内，请联系管理员添加！');
+            dd.biz.navigation.close({
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
+            });
           });
         })
       }
@@ -204,6 +270,12 @@
       display: flex;
       display: -webkit-flex;
     }
+
+    @mixin bgPic($n) {
+      background: url($n) no-repeat;
+      background-size: 100% 100%;
+    }
+
     .disappear {
       div {
         text-align: center;
@@ -303,6 +375,41 @@
           }
         }
       }
+    }
+    .appendix {
+      .appendixMain {
+        padding: .3rem;
+        border-top: .03rem solid #DDDDDD;
+        .appendixTitle {
+
+        }
+        .upload {
+          @include flex;
+          align-items: center;
+          margin-top: .3rem;
+          p {
+            min-width: .8rem;
+            min-height: .8rem;
+            margin-right: .2rem;
+          }
+          .a1 {
+            @include bgPic("../../../assets/doc.png");
+          }
+          .a2 {
+            @include bgPic("../../../assets/xls.png");
+          }
+          .a3 {
+            @include bgPic("../../../assets/txt.png");
+          }
+          .a4 {
+            @include bgPic("../../../assets/pdf.png");
+          }
+          .a5 {
+            @include bgPic("../../../assets/file.png");
+          }
+        }
+      }
+
     }
   }
 </style>

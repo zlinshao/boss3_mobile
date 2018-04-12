@@ -34,43 +34,59 @@
                     'code': info.code,
                   }
                 }).then((res) => {
-                  if (res.data !== false) {
-                    let data = {};
-                    data.name = res.data.name;
-                    data.avatar = res.data.avatar;
-                    data.phone = res.data.phone;
-                    // data.depart = res.data.org[0].name;
-                    // data.display_name = res.data.role[0].display_name;
-                    sessionStorage.setItem('personal', JSON.stringify(data));
-                    globalConfig.personal = data;
-                    that.$http.post(that.address + 'oauth/token', {
-                      client_secret: globalConfig.client_secret,
-                      client_id: globalConfig.client_id,
-                      grant_type: 'password',
-                      username: res.data.phone,
-                      password: res.data.code,
-                    }).then((res) => {
-                      that.loading = false;
-                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                      let head = res.data.data;
-                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                      that.$router.push({path: '/index'});
-                    });
-                  } else {
-                    setTimeout(() => {
-                      alert('请求超时请稍后再试');
-                      dd.biz.navigation.close({
-                        onSuccess : function(result) {
-                        },
-                        onFail : function(err) {
-                        }
+                  if (res.data.status !== 'fail') {
+                    if (res.data !== false) {
+                      let data = {};
+                      data.name = res.data.name;
+                      data.avatar = res.data.avatar;
+                      data.phone = res.data.phone;
+                      // data.depart = res.data.org[0].name;
+                      // data.display_name = res.data.role[0].display_name;
+                      sessionStorage.setItem('personal', JSON.stringify(data));
+                      globalConfig.personal = data;
+                      that.$http.post(that.address + 'oauth/token', {
+                        client_secret: globalConfig.client_secret,
+                        client_id: globalConfig.client_id,
+                        grant_type: 'password',
+                        username: res.data.phone,
+                        password: res.data.code,
+                      }).then((res) => {
+                        that.loading = false;
+                        sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                        let head = res.data.data;
+                        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                        that.$router.push({path: '/index'});
                       });
-                    }, 3000);
+                    } else {
+                      setTimeout(() => {
+                        alert('请求超时请稍后再试');
+                        dd.biz.navigation.close({
+                          onSuccess: function (result) {
+                          },
+                          onFail: function (err) {
+                          }
+                        });
+                      }, 3000);
+                    }
+                  } else {
+                    alert('您不在系统内，请联系管理员添加！');
+                    dd.biz.navigation.close({
+                      onSuccess: function (result) {
+                      },
+                      onFail: function (err) {
+                      }
+                    });
                   }
                 })
               },
               onFail: function (err) {
-                alert('fail: ' + JSON.stringify(err));
+                alert('您不在系统内，请联系管理员添加！');
+                dd.biz.navigation.close({
+                  onSuccess: function (result) {
+                  },
+                  onFail: function (err) {
+                  }
+                });
               }
             });
             // 钉钉头部右侧

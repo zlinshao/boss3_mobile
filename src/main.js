@@ -60,15 +60,6 @@ axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
-if (sessionStorage.myData !== undefined) {
-  let head = JSON.parse(sessionStorage.myData);
-  globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-}
-
-if (sessionStorage.personal !== undefined) {
-  globalConfig.personal = JSON.parse(sessionStorage.personal);
-}
-
 let u = navigator.userAgent, app = navigator.appVersion;
 let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
 let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端

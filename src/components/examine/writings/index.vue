@@ -135,7 +135,6 @@
 
         active: '',
         bigPic: '',
-        photo: [],
         bigPicShow: false,
       }
     },
@@ -163,6 +162,7 @@
         let Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPod"];
         let flag = true;
         for (let v = 0; v < Agents.length; v++) {
+          alert(Agents[v]);
           if (userAgentInfo.indexOf(Agents[v]) > 0) {
             flag = false;
             break;
@@ -348,9 +348,9 @@
             },
             onFail: function (err) {
               DingTalkPC.device.notification.alert({
-                message: "'" + JSON.stringify(err) + "'",
-                title: "'" + JSON.stringify(err) + "'",
-                buttonName: "'" + JSON.stringify(err) + "'",
+                message: "您不在系统内，请联系管理员添加！",
+                title: "提示信息",
+                buttonName: "关闭",
                 onSuccess: function () {
                 },
                 onFail: function (err) {
@@ -414,7 +414,13 @@
                 })
               },
               onFail: function (err) {
-                alert('fail: ' + JSON.stringify(err));
+                alert('您不在系统内，请联系管理员添加！');
+                dd.biz.navigation.close({
+                  onSuccess: function (result) {
+                  },
+                  onFail: function (err) {
+                  }
+                });
               }
             });
             // 钉钉头部右侧
