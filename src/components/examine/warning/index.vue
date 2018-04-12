@@ -29,7 +29,6 @@
     </div>
     <div class="mainWarning" v-if="recall1">
       <div class="mainTop">公司各部门：</div>
-      {{myData}}
       <div class="mainTitle">
         <p v-html="myData.content"></p>
       </div>
@@ -43,19 +42,18 @@
     <div class="appendix" v-if="recall1 && attachment.length !== 0">
       <div class="appendixMain">
         <div class="appendixTitle">附件：</div>
-        <a class="upload" v-for="key in attachment" :href="key.data.uri">
-          <p v-if="key.data.uri.indexOf('.docx') > -1 || key.data.uri.indexOf('.doc') > -1" class="a1"></p>
-          <p v-if="key.data.uri.indexOf('.xls') > -1" class="a2"></p>
-          <p v-if="key.data.uri.indexOf('.txt') > -1" class="a3"></p>
-          <p v-if="key.data.uri.indexOf('.pdf') > -1" class="a4"></p>
-          <p v-if="key.data.uri.indexOf('.jpg') > -1" class="a5"></p>
-          <p v-if="key.data.uri.indexOf('.png') > -1" class="a5"></p>
-          <p v-if="key.data.uri.indexOf('.pptx') > -1" class="a5"></p>
+        <a class="upload" v-for="key in attachment" :href="key.uri">
+          <p v-if="key.uri.indexOf('.docx') > -1 || key.uri.indexOf('.doc') > -1" class="a1"></p>
+          <p v-if="key.uri.indexOf('.xls') > -1" class="a2"></p>
+          <p v-if="key.uri.indexOf('.txt') > -1" class="a3"></p>
+          <p v-if="key.uri.indexOf('.pdf') > -1" class="a4"></p>
+          <p v-if="key.uri.indexOf('.jpg') > -1" class="a5"></p>
+          <p v-if="key.uri.indexOf('.png') > -1" class="a5"></p>
+          <p v-if="key.uri.indexOf('.pptx') > -1" class="a5"></p>
           <span>{{key.data.display_name}}</span>
         </a>
       </div>
     </div>
-
   </div>
 </template>
 
