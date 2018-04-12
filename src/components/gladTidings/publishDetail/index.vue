@@ -109,8 +109,8 @@
 
     <div class="bigPhotos" v-if="bigPicShow">
       <div>
-        <p class="nextPic" @click="next(photo)"><i class="iconfont icon-xiayibu"></i></p>
-        <p class="prePic" @click="pre(photo)"><i class="iconfont icon-xiayibu"></i></p>
+        <p v-if="photo.length > 1" class="nextPic" @click="next(photo)"><i class="iconfont icon-xiayibu"></i></p>
+        <p v-if="photo.length > 1" class="prePic" @click="pre(photo)"><i class="iconfont icon-xiayibu"></i></p>
         <p class="close" @click="closePic"><i class="iconfont icon-cuowutishi"></i></p>
       </div>
       <img :src="bigPic">
