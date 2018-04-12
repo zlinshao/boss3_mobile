@@ -47,9 +47,7 @@
           <p v-if="key.uri.indexOf('.xls') > -1" class="a2"></p>
           <p v-if="key.uri.indexOf('.txt') > -1" class="a3"></p>
           <p v-if="key.uri.indexOf('.pdf') > -1" class="a4"></p>
-          <p v-if="key.uri.indexOf('.jpg') > -1" class="a5"></p>
-          <p v-if="key.uri.indexOf('.png') > -1" class="a5"></p>
-          <p v-if="key.uri.indexOf('.pptx') > -1" class="a5"></p>
+          <p v-if="key.uri.indexOf('.pptx') > -1 || key.uri.indexOf('.ppt') > -1 || key.uri.indexOf('.jpg') > -1 || key.uri.indexOf('.png') > -1" class="a5"></p>
           <span>{{key.display_name}}</span>
         </a>
       </div>
