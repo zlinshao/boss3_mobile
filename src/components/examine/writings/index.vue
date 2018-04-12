@@ -1,92 +1,86 @@
 <template>
   <div id="writings">
-    <div class="module" v-if="loading"></div>
-    <div class="loading" v-if="loading">
-      <img src="../../../assets/loding1.gif">
+    <div class="disappear" v-if="undercarriage">
+      <div class="a1">
+        <img src="../../../assets/disappear.png">
+      </div>
+      <div class="a2">{{contents}}</div>
     </div>
 
-    <div v-if="!loading">
-      <div class="disappear" v-if="undercarriage">
-        <div class="a1">
-          <img src="../../../assets/disappear.png">
+    <div v-if="dercarriage">
+      <div class="writings">
+        <div class="titles">
+          <p>{{myData.title}}</p>
+          <span>{{create_time.substring(0,10)}}</span>
         </div>
-        <div class="a2">{{contents}}</div>
+        <div v-for="key in cover_pic">
+          <img v-for="p in key" :src="p.uri">
+        </div>
+        <div v-html="myData.content">
+
+        </div>
+        <h6></h6>
+        <div class="icons">
+          <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i><span>{{myData.comments_count}}</span>
+          <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i><span
+          :class="{'zan': assistId}">{{myData.favor_num}}</span>
+          <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
+        </div>
+        <div class="nextPrev">
+          <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
+          <p v-if="next_content !== null" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
+          </p>
+        </div>
       </div>
 
-      <div v-if="dercarriage">
-        <div class="writings">
-          <div class="titles">
-            <p>{{myData.title}}</p>
-            <span>{{create_time.substring(0,10)}}</span>
-          </div>
-          <div v-for="key in cover_pic">
-            <img v-for="p in key" :src="p.uri">
-          </div>
-          <div v-html="myData.content">
-
-          </div>
-          <h6></h6>
-          <div class="icons">
-            <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i><span>{{myData.comments_count}}</span>
-            <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i><span
-            :class="{'zan': assistId}">{{myData.favor_num}}</span>
-            <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
-          </div>
-          <div class="nextPrev">
-            <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
-            <p v-if="next_content !== null" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
-            </p>
-          </div>
-        </div>
-
-        <ul
-          v-waterfall-lower="loadMore"
-          waterfall-disabled="disabled"
-          waterfall-offset="300">
-          <li class="started">
-            <div class="commentArea">
-              <div class="headline">评论<span>{{paging}}</span></div>
-              <div class="commentAreaMain" v-for="key in commentList">
-                <div class="staff">
-                  <div>
-                    <p>
-                      <img :src="key.avatar" v-if="key.avatar !== null && key.avatar !== ''">
-                      <img src="../../../assets/head.png" v-else>
-                    </p>
-                    <span>{{key.name}}</span>
-                    <span v-if="key.role.length !== 0"
-                          v-for="role in key.role">&nbsp;-&nbsp;{{role.display_name}}</span>
-                  </div>
-                  <p class="times">
-                    {{key.create_time.substring(0,10)}}
+      <ul
+        v-waterfall-lower="loadMore"
+        waterfall-disabled="disabled"
+        waterfall-offset="300">
+        <li class="started">
+          <div class="commentArea">
+            <div class="headline">评论<span>{{paging}}</span></div>
+            <div class="commentAreaMain" v-for="key in commentList">
+              <div class="staff">
+                <div>
+                  <p>
+                    <img :src="key.avatar" v-if="key.avatar !== null && key.avatar !== ''">
+                    <img src="../../../assets/head.png" v-else>
                   </p>
+                  <span>{{key.name}}</span>
+                  <span v-if="key.role.length !== 0"
+                        v-for="role in key.role">&nbsp;-&nbsp;{{role.display_name}}</span>
                 </div>
-                <div class="contents">
-                  {{key.content}}
-                </div>
-                <div class="pics">
-                  <div v-for="(p,index) in key.photos">
-                    <img :src="p" @click="pics(key.photos, index)">
-                  </div>
-                </div>
+                <p class="times">
+                  {{key.create_time.substring(0,10)}}
+                </p>
               </div>
-              <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
-                暂无评论
+              <div class="contents">
+                {{key.content}}
+              </div>
+              <div class="pics">
+                <div v-for="(p,index) in key.photos">
+                  <img :src="p" @click="pics(key.photos, index)">
+                </div>
               </div>
             </div>
-          </li>
-        </ul>
+            <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0;">
+              暂无评论
+            </div>
+          </div>
+        </li>
+      </ul>
 
-        <div class="bottom">
-          <span v-show="disabled && commentList.length > 10">我是有底线的</span>
-          <van-loading v-show="!disabled" type="spinner" color="black"/>
-        </div>
+      <div class="bottom">
+        <span v-show="disabled && commentList.length > 10">我是有底线的</span>
+        <van-loading v-show="!disabled" type="spinner" color="black"/>
+      </div>
 
-        <div class="footer">
-          <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
-        </div>
+      <div class="footer">
+        <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
       </div>
     </div>
+
 
     <div class="bigPhotos" v-if="bigPicShow">
       <div>
@@ -116,7 +110,7 @@
         urls: globalConfig.server,
         address: globalConfig.attestation,
         assistId: false,
-        disabled: true,
+        disabled: false,
         paging: 0,
         pitch: '',
         myData: {},
@@ -128,7 +122,6 @@
         commentList: [],
         page: 1,
         path: '',
-        loading: false,
         undercarriage: false,
         dercarriage: false,
         contents: '',
@@ -138,23 +131,12 @@
         bigPicShow: false,
       }
     },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        vm.path = from.path;
-        if (from.path === '/') {
-          vm.loading = true;
-          vm.corp();
-        } else {
-          vm.search();
-          vm.loading = false;
-          vm.disabled = false;
-        }
-      })
-    },
+
     activated() {
       this.pitch = this.$route.query.id;
       this.page = 1;
       this.close_();
+      this.search();
     },
     methods: {
       IsPC() {
@@ -183,7 +165,6 @@
         this.commentList = [];
       },
       contentDetail(val) {
-        this.loading = false;
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
           if (res.data.code === "80020") {
             this.myData = res.data.data;
@@ -348,9 +329,9 @@
             },
             onFail: function (err) {
               DingTalkPC.device.notification.alert({
-                message: "您不在系统内，请联系管理员添加！",
-                title: "提示信息",
-                buttonName: "关闭",
+                message: "'" + JSON.stringify(err) + "'",
+                title: "'" + JSON.stringify(err) + "'",
+                buttonName: "'" + JSON.stringify(err) + "'",
                 onSuccess: function () {
                 },
                 onFail: function (err) {
@@ -414,13 +395,7 @@
                 })
               },
               onFail: function (err) {
-                alert('您不在系统内，请联系管理员添加！');
-                dd.biz.navigation.close({
-                  onSuccess: function (result) {
-                  },
-                  onFail: function (err) {
-                  }
-                });
+                alert('fail: ' + JSON.stringify(err));
               }
             });
             // 钉钉头部右侧
@@ -578,25 +553,6 @@
         font-size: .4rem;
         color: #aaaaaa;
       }
-    }
-
-    .module, .loading {
-      position: fixed;
-    }
-
-    .module {
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      background: #f1f1f1;
-    }
-
-    .loading {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
     }
 
     .writings {

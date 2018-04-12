@@ -1,65 +1,60 @@
 <template>
   <div id="warning">
-    <div class="module" v-if="loading"></div>
-    <div class="loading" v-if="loading">
-      <img src="../../../assets/loding1.gif">
+    <div class="disappear" v-if="recall">
+      <div class="a1">
+        <img src="../../../assets/disappear.png">
+      </div>
+      <div class="a2">{{titles}}</div>
     </div>
-    <div v-if="!loading">
-      <div class="disappear" v-if="recall">
-        <div class="a1">
-          <img src="../../../assets/disappear.png">
+    <div class="navTop" v-if="recall1">
+      <div class="top0">
+        <div class="top1">
+          {{myData.title}}
         </div>
-        <div class="a2">{{titles}}</div>
-      </div>
-      <div class="navTop" v-if="recall1">
-        <div class="top0">
-          <div class="top1">
-            {{myData.title}}
-          </div>
-          <div class="top2">
-            <span>{{myData.date}}</span>
-            <span>南京乐伽商业管理有限公司</span>
-          </div>
-        </div>
-        <div class="top3">
-          <b>
-            <i class="iconfont icon-yanjing"></i>
-            <span>{{myData.read_count}}人</span>
-          </b>
-          <b>
-            <i class="iconfont icon-yanjingclose"></i>
-            <span>{{myData.unread_count}}人</span>
-          </b>
+        <div class="top2">
+          <span>{{myData.date}}</span>
+          <span>南京乐伽商业管理有限公司</span>
         </div>
       </div>
-      <div class="mainWarning" v-if="recall1">
-        <div class="mainTop">公司各部门：</div>
-        <div class="mainTitle">
-          <p v-html="myData.content"></p>
-        </div>
-        <div class="mainFooter">
-          <div>
-            <p>南京乐伽商业管理有限公司</p>
-            <p>{{myData.date}}</p>
-          </div>
-        </div>
+      <div class="top3">
+        <b>
+          <i class="iconfont icon-yanjing"></i>
+          <span>{{myData.read_count}}人</span>
+        </b>
+        <b>
+          <i class="iconfont icon-yanjingclose"></i>
+          <span>{{myData.unread_count}}人</span>
+        </b>
       </div>
-      <div class="appendix" v-if="recall1 && attachment.length !== 0">
-        <div class="appendixMain">
-          <div class="appendixTitle">附件：</div>
-          <a class="upload" v-for="key in attachment" :href="key.data.uri">
-            <p v-if="key.data.uri.indexOf('.docx') > -1 || key.data.uri.indexOf('.doc') > -1" class="a1"></p>
-            <p v-if="key.data.uri.indexOf('.xls') > -1" class="a2"></p>
-            <p v-if="key.data.uri.indexOf('.txt') > -1" class="a3"></p>
-            <p v-if="key.data.uri.indexOf('.pdf') > -1" class="a4"></p>
-            <p v-if="key.data.uri.indexOf('.jpg') > -1" class="a5"></p>
-            <p v-if="key.data.uri.indexOf('.png') > -1" class="a5"></p>
-            <p v-if="key.data.uri.indexOf('.pptx') > -1" class="a5"></p>
-            <span>{{key.data.display_name}}</span>
-          </a>
+    </div>
+    <div class="mainWarning" v-if="recall1">
+      <div class="mainTop">公司各部门：</div>
+      <div class="mainTitle">
+        <p v-html="myData.content"></p>
+      </div>
+      <div class="mainFooter">
+        <div>
+          <p>南京乐伽商业管理有限公司</p>
+          <p>{{myData.date}}</p>
         </div>
       </div>
     </div>
+    <div class="appendix" v-if="recall1 && attachment.length !== 0">
+      <div class="appendixMain">
+        <div class="appendixTitle">附件：</div>
+        <a class="upload" v-for="key in attachment" :href="key.data.uri">
+          <p v-if="key.data.uri.indexOf('.docx') > -1 || key.data.uri.indexOf('.doc') > -1" class="a1"></p>
+          <p v-if="key.data.uri.indexOf('.xls') > -1" class="a2"></p>
+          <p v-if="key.data.uri.indexOf('.txt') > -1" class="a3"></p>
+          <p v-if="key.data.uri.indexOf('.pdf') > -1" class="a4"></p>
+          <p v-if="key.data.uri.indexOf('.jpg') > -1" class="a5"></p>
+          <p v-if="key.data.uri.indexOf('.png') > -1" class="a5"></p>
+          <p v-if="key.data.uri.indexOf('.pptx') > -1" class="a5"></p>
+          <span>{{key.data.display_name}}</span>
+        </a>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -72,7 +67,6 @@
         address: globalConfig.attestation,
         myData: {},
         attachment: {},
-        loading: false,
         ids: '',
         recall: false,
         recall1: false,
@@ -81,19 +75,14 @@
     },
     mounted() {
       this.ids = this.$route.query.id;
-      if (sessionStorage.myData !== undefined) {
-        this.loading = false;
-        this.recall = false;
-        this.recall1 = false;
-        this.warningList(this.ids);
-      } else {
-        this.corp();
-      }
+      this.ddRent('', 'close');
+      this.recall = false;
+      this.recall1 = false;
+      this.warningList(this.ids);
     },
     watch: {},
     methods: {
       warningList(val) {
-        this.loading = false;
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
           if (res.data.code === "80010") {
             this.myData = res.data.data;
@@ -113,153 +102,6 @@
           }
         })
       },
-      corp() {
-        this.loading = true;
-        let that = this;
-        this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
-          let _config = res.data;
-
-          DingTalkPC.runtime.permission.requestAuthCode({
-            corpId: _config.corpId,
-            onSuccess: function (info) {
-              that.$http.get(that.urls + 'special/special/userInfo', {
-                params: {
-                  'code': info.code,
-                }
-              }).then((res) => {
-                if (res.data.status !== 'fail') {
-                if (res.data !== false) {
-                  let data = {};
-                  data.name = res.data.name;
-                  data.avatar = res.data.avatar;
-                  data.phone = res.data.phone;
-                  // data.depart = res.data.org[0].name;
-                  // data.display_name = res.data.role[0].display_name;
-                  sessionStorage.setItem('personal', JSON.stringify(data));
-                  globalConfig.personal = data;
-
-                  that.$http.post(that.address + 'oauth/token', {
-                    client_secret: globalConfig.client_secret,
-                    client_id: globalConfig.client_id,
-                    grant_type: 'password',
-                    username: res.data.phone,
-                    password: res.data.code,
-                  }).then((res) => {
-                    sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                    let head = res.data.data;
-                    globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                    that.warningList(that.ids);
-                  });
-                }
-                }else{
-                  DingTalkPC.device.notification.alert({
-                    message: "您不在系统内，请联系管理员添加！",
-                    title: "提示信息",
-                    buttonName: "关闭",
-                    onSuccess: function () {
-                    },
-                    onFail: function (err) {
-                    }
-                  });
-                }
-              })
-            },
-            onFail: function (err) {
-              DingTalkPC.device.notification.alert({
-                message: "您不在系统内，请联系管理员添加！",
-                title: "提示信息",
-                buttonName: "关闭",
-                onSuccess: function () {
-                },
-                onFail: function (err) {
-                }
-              });
-            }
-          });
-
-          dd.ready(function () {
-            dd.runtime.permission.requestAuthCode({
-              corpId: _config.corpId,
-              onSuccess: function (info) {
-                that.$http.get(that.urls + 'special/special/userInfo', {
-                  params: {
-                    'code': info.code,
-                  }
-                }).then((res) => {
-                  if (res.data.status !== 'fail') {
-                    if (res.data !== false) {
-                      let data = {};
-                      data.name = res.data.name;
-                      data.avatar = res.data.avatar;
-                      data.phone = res.data.phone;
-                      // data.depart = res.data.org[0].name;
-                      // data.display_name = res.data.role[0].display_name;
-                      sessionStorage.setItem('personal', JSON.stringify(data));
-                      globalConfig.personal = data;
-                      that.$http.post(that.address + 'oauth/token', {
-                        client_secret: globalConfig.client_secret,
-                        client_id: globalConfig.client_id,
-                        grant_type: 'password',
-                        username: res.data.phone,
-                        password: res.data.code,
-                      }).then((res) => {
-                        sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                        let head = res.data.data;
-                        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                        that.warningList(that.ids);
-                      });
-                    } else {
-                      setTimeout(() => {
-                        alert('请求超时请稍后再试');
-                        dd.biz.navigation.close({
-                          onSuccess: function (result) {
-                          },
-                          onFail: function (err) {
-                          }
-                        });
-                      }, 3000);
-                    }
-                  } else {
-                    alert('您不在系统内，请联系管理员添加！');
-                    dd.biz.navigation.close({
-                      onSuccess: function (result) {
-                      },
-                      onFail: function (err) {
-                      }
-                    });
-                  }
-                })
-              },
-              onFail: function (err) {
-                alert('您不在系统内，请联系管理员添加！');
-                dd.biz.navigation.close({
-                  onSuccess: function (result) {
-                  },
-                  onFail: function (err) {
-                  }
-                });
-              }
-            });
-            // 钉钉头部右侧
-            dd.biz.navigation.setRight({
-              show: false,
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            });
-          });
-          dd.error(function (err) {
-            alert('您不在系统内，请联系管理员添加！');
-            dd.biz.navigation.close({
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            });
-          });
-        })
-      }
     },
   }
 </script>
@@ -294,24 +136,6 @@
         font-size: .4rem;
         color: #aaaaaa;
       }
-    }
-    .module, .loading {
-      position: fixed;
-    }
-
-    .module {
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      background: #f1f1f1;
-    }
-
-    .loading {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
     }
 
     .navTop {

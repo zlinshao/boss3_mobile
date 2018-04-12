@@ -180,6 +180,8 @@
       this.scrollTops();
     },
     activated() {
+      this.routerIndex('');
+      this.ddRent('', 'close');
       this.disabled = false;
       this.scrollTops();
     },

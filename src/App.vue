@@ -1,8 +1,14 @@
 <template>
   <div id="app">
-    <keep-alive>
-      <router-view v-wechat-title="$route.meta.title"/>
-    </keep-alive>
+    <div class="module" v-if="loading"></div>
+    <div class="loading" v-if="loading">
+      <img src="./assets/loding1.gif">
+    </div>
+    <div v-if="!loading">
+      <keep-alive>
+        <router-view v-wechat-title="$route.meta.title"/>
+      </keep-alive>
+    </div>
   </div>
 </template>
 
@@ -11,9 +17,12 @@
   export default {
     data() {
       return {
+        urls: globalConfig.server,
+        address: globalConfig.attestation,
         value: '',
         showKeyboard: false,
         transitionName: '',
+        loading: false,
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -30,6 +39,7 @@
     created() {
       this.responses();
     },
+
     mounted() {
       this.paths = this.$router.options.routes;
     },
@@ -39,7 +49,8 @@
           let head = JSON.parse(sessionStorage.myData);
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
         } else {
-          this.$router.push('/');
+          this.loading = true;
+          this.corp();
         }
 
         if (sessionStorage.personal !== undefined) {
@@ -51,6 +62,7 @@
         }, function (error) {
           if (error && error.response) {
             if (error.response.data.status_code === 401) {
+              this.loading = false;
               that.corp();
             }
           }
@@ -91,6 +103,7 @@
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                      that.loading = false;
                     });
                   }
                 } else {
@@ -154,6 +167,7 @@
                         sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                         let head = res.data.data;
                         globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                        that.loading = false;
                       });
                     } else {
                       setTimeout(() => {
@@ -211,7 +225,28 @@
   };
 </script>
 
-<style>
+<style lang="scss">
+  #app {
+    .module, .loading {
+      position: fixed;
+    }
+
+    .module {
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: #f1f1f1;
+    }
+
+    .loading {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+  }
+
   body {
     background-color: #f8f8f8;
   }

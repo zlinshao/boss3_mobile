@@ -1,12 +1,5 @@
 <template>
   <div id="cardDetail">
-
-    <div class="module" v-if="loading"></div>
-    <div class="loading" v-if="loading">
-      <img src="../../../assets/loding1.gif">
-    </div>
-
-    <div v-if="!loading">
       <div class="detail">
         <div class="detailLeft">
           <div>
@@ -76,11 +69,12 @@
                       <img src="../../../assets/head.png" v-else>
                     </p>
                     <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
-                    <!--{{item.name}}-->
-                    <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
-                    <!--</span>-->
-                    <span class="a">
-                      {{key.user.name}}
+                      <!--{{item.name}}-->
+                      <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
+                    </span>
+                    <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
+                      {{item.name}}
+                      <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
                     </span>
                   </div>
                   <div class="times">
@@ -112,7 +106,6 @@
         <div @click="commentOn('on_comment')" v-if="path === '/'">评论</div>
         <div v-for="(key,index) in operation" @click="commentOn(index)" v-else>{{key}}</div>
       </div>
-    </div>
 
     <div class="bigPhotos" v-if="bigPicShow">
       <div>
@@ -140,7 +133,7 @@
     data() {
       return {
         vLoading: true,
-        disabled1: true,
+        disabled1: false,
 
         message: '',
         ids: '',
@@ -159,7 +152,6 @@
         page: 1,
         paging: 0,
         path: '',
-        loading: false,
 
         onIndex: '',
         bigPic: '',
@@ -174,21 +166,9 @@
           sessionStorage.setItem('path', vm.path);
         }
         vm.path = sessionStorage.path;
-        if (sessionStorage.path === '/') {
-          if (from.path === '/') {
-            vm.loading = true;
-            vm.corp();
-          } else {
-            vm.search();
-            vm.loading = false;
-            vm.disabled1 = false;
-          }
-        } else {
-          vm.search();
+        if (sessionStorage.path !== '/') {
           vm.routerIndex('');
           vm.ddRent('');
-          vm.loading = false;
-          vm.disabled1 = false;
         }
       })
     },
@@ -196,6 +176,7 @@
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
+      this.search();
     },
     methods: {
       IsPC() {
@@ -227,7 +208,6 @@
         this.formDetail(this.ids);
       },
       formDetail(val) {
-        this.loading = false;
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
@@ -260,7 +240,7 @@
         })
       },
 
-      pics(val, index, num) {
+      pics(val, index,num) {
         let arr = [];
         if (num === 1) {
           arr = val;
@@ -555,25 +535,6 @@
           margin-right: .2rem;
         }
       }
-    }
-
-    .module, .loading {
-      position: fixed;
-    }
-
-    .module {
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      background: #f1f1f1;
-    }
-
-    .loading {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
     }
 
     .detail {

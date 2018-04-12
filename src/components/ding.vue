@@ -1,9 +1,9 @@
 <template>
   <div v-wechat-title="$route.meta.title">
-    <div class="module"></div>
-    <div class="loading" v-if="loading">
-      <img src="../assets/loding1.gif">
-    </div>
+    <!--<div class="module" v-if="loading"></div>-->
+    <!--<div class="loading" v-if="loading">-->
+      <!--<img src="../assets/loding1.gif">-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -18,7 +18,8 @@
       }
     },
     mounted() {
-      this.corp();
+      this.$router.push('/index');
+      // this.corp();
     },
     methods: {
       corp() {
