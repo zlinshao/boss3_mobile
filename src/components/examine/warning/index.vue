@@ -50,7 +50,7 @@
           <p v-if="key.uri.indexOf('.jpg') > -1" class="a5"></p>
           <p v-if="key.uri.indexOf('.png') > -1" class="a5"></p>
           <p v-if="key.uri.indexOf('.pptx') > -1" class="a5"></p>
-          <span>{{key.data.display_name}}</span>
+          <span>{{key.display_name}}</span>
         </a>
       </div>
     </div>
