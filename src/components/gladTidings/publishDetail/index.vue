@@ -177,6 +177,7 @@
       this.page = 1;
       this.close_();
       this.search();
+      this.disabled1 = false;
     },
     methods: {
       IsPC() {
