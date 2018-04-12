@@ -84,21 +84,17 @@
       warningList(val) {
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
           if (res.data.code === "80010") {
-            alert(res.data.code);
             this.myData = res.data.data;
             this.attachment = res.data.data.attachment;
             this.recall = false;
             this.recall1 = true;
           } else if (res.data.code === "80044") {
-            alert(res.data.code);
             this.recall = true;
             this.recall1 = false;
             this.titles = '此消息已被撤回';
           } else if (res.data === 'pass') {
-            alert(1);
             this.warningList(val);
           } else {
-            alert(2);
             this.recall = true;
             this.recall1 = false;
             this.titles = '此消息消失不见了';
