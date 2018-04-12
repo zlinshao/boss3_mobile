@@ -84,6 +84,8 @@
     methods: {
       warningList(val) {
         this.$http.get(this.urls + 'announcement/' + val).then((res) => {
+          alert(JSON.stringify(res.data));
+          alert(JSON.stringify(this.urls + 'announcement/' + val));
           if (res.data.code === "80010") {
             this.myData = res.data.data;
             this.attachment = res.data.data.attachment;
