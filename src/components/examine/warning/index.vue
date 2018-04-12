@@ -72,7 +72,6 @@
     },
     mounted() {
       this.ids = this.$route.query.id;
-      this.ddRent('', 'close');
       this.recall = false;
       this.recall1 = false;
       this.warningList(this.ids);
