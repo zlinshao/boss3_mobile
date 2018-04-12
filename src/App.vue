@@ -147,6 +147,7 @@
                     'code': info.code,
                   }
                 }).then((res) => {
+                  alert(JSON.stringify(res.data));
                   if (res.data.status !== 'fail') {
                     if (res.data !== false) {
                       let data = {};
@@ -157,6 +158,7 @@
                       // data.display_name = res.data.role[0].display_name;
                       sessionStorage.setItem('personal', JSON.stringify(data));
                       globalConfig.personal = data;
+                      alert(JSON.stringify(res.data));
                       that.$http.post(that.address + 'oauth/token', {
                         client_secret: globalConfig.client_secret,
                         client_id: globalConfig.client_id,
@@ -167,6 +169,7 @@
                         sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                         let head = res.data.data;
                         globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+                        alert(JSON.stringify(res.data));
                         that.loading = false;
                       });
                     } else {
