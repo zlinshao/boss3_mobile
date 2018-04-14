@@ -446,7 +446,7 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_rent_basic'}});
+            this.$router.push({path: '/collectHouse'});
             break;
           case 2:
             this.$router.push({path: '/organize'});

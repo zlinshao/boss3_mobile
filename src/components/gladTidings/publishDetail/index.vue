@@ -1,111 +1,118 @@
 <template>
   <div id="cardDetail">
-      <div class="detail">
-        <div class="detailLeft">
-          <div>
-            <img :src="personal.avatar" v-if="personal.avatar !== '' && personal.avatar !== null">
-            <img src="../../../assets/head.png" v-else>
-          </div>
-        </div>
-        <div class="topRight">
-          <div class="personal">
-            <p>{{personal.name}}</p>
-            <p>
-              <span v-for="(key) in personal.org">{{key.name}}</span>
-              <span v-for="(key) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>
-            </p>
-          </div>
-          <div style="height: 1.4rem;"
-               :class="{'statusSuccess': place === 'published', 'statusFail':place === 'rejected'}">
-
-          </div>
+    <div class="detail">
+      <div class="detailLeft">
+        <div>
+          <img :src="personal.avatar" v-if="personal.avatar !== '' && personal.avatar !== null">
+          <img src="../../../assets/head.png" v-else>
         </div>
       </div>
+      <div class="topRight">
+        <div class="personal">
+          <p>{{personal.name}}</p>
+          <p>
+            <span v-for="(key) in personal.org">{{key.name}}</span>
+            <span v-for="(key) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>
+          </p>
+        </div>
+        <div style="height: 1.4rem;"
+             :class="{'statusSuccess': place === 'published', 'statusFail':place === 'rejected'}">
+        </div>
+      </div>
+    </div>
 
-      <div class="detailRight">
-        <!--收房报备-->
-        <div class="topTitle">
-          <div class="load" v-if="vLoading">
-            <van-loading type="spinner" color="black"/>
-          </div>
-          <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message !== ''">{{message}}</p>
-          <div v-for="(key,index) in formList"
-               v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图'">
-            <p>{{index}}</p>
-            <h1>
+    <div class="detailRight">
+      <!--收房报备-->
+      <div class="topTitle">
+        <div class="load" v-if="vLoading">
+          <van-loading type="spinner" color="black"/>
+        </div>
+        <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message !== ''">{{message}}</p>
+        <div v-for="(key,index) in formList"
+             v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图'">
+          <p>{{index}}</p>
+          <h1>
               <span v-if="Array.isArray(key)" v-for="item in key">
                 <span style="display: block;">{{item.msg}}</span>
                 <span style="display: block;">{{item.period}}</span>
               </span>
-              <span v-if="index === '定金和收款方式'" v-for="item in key">
+            <span v-if="index === '定金和收款方式'" v-for="item in key">
                 <span style="display: block;">{{item}}</span>
               </span>
-              <span v-if="!Array.isArray(key)">{{key}}</span>
-            </h1>
-          </div>
-          <div class="photo" v-else>
-            <p>{{index}}</p>
-            <h1>
+            <span v-if="!Array.isArray(key)">{{key}}</span>
+          </h1>
+        </div>
+        <div class="photo" v-else>
+          <p>{{index}}</p>
+          <h1>
             <span v-for="(pic,index) in key">
               <img @click="pics(key,index,1)" :src="pic">
             </span>
-            </h1>
-          </div>
+          </h1>
         </div>
+      </div>
 
-        <ul
-          v-waterfall-lower="loadMore"
-          waterfall-disabled="disabled1"
-          waterfall-offset="300">
-          <li class="started">
-            <!--评论-->
-            <div class="commentArea">
-              <div class="headline">评论<span>{{paging}}</span></div>
-              <div class="commentAreaMain" v-for="key in commentList">
-                <div class="commentTitle">
-                  <div class="staff">
-                    <p>
-                      <img :src="key.user.avatar" v-if="key.user.avatar !== '' && key.user.avatar !== null">
-                      <img src="../../../assets/head.png" v-else>
-                    </p>
-                    <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
-                      <!--{{item.name}}-->
-                      <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
-                    </span>
-                    <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
+      <ul
+        v-waterfall-lower="loadMore"
+        waterfall-disabled="disabled1"
+        waterfall-offset="300">
+        <li class="started">
+          <!--评论-->
+          <div class="commentArea">
+            <div class="headline">评论<span>{{paging}}</span></div>
+            <div class="commentAreaMain" v-for="key in commentList">
+              <div class="commentTitle">
+                <div class="staff">
+                  <p>
+                    <img :src="key.user.avatar" v-if="key.user.avatar !== '' && key.user.avatar !== null">
+                    <img src="../../../assets/head.png" v-else>
+                  </p>
+                  <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
+                  <!--{{item.name}}-->
+                  <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
+                  <!--</span>-->
+                  <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
                       {{item.name}}
                       <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
                     </span>
-                  </div>
-                  <div class="times">
-                    {{key.created_at}}
-                  </div>
                 </div>
-                <div class="contents">
-                  {{key.body}}
-                </div>
-                <div class="pics">
-                  <div v-for="(p,index) in key.album">
-                    <img :src="p.uri" @click="pics(key.album,index,2)">
-                  </div>
+                <div class="times">
+                  {{key.created_at}}
                 </div>
               </div>
-              <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0 0;">
-                暂无评论
+              <div class="contents">
+                {{key.body}}
+              </div>
+              <!--<div class="pics" v-for="(p) in key.album">-->
+                 <!--12312{{p.uri}}-->
+                <!--<video controls @click="play()" width="100" height="100">-->
+                  <!--<source :src="p.uri" type="video/mp4">-->
+                  <!--<source :src="p.uri" type="video/ogg">-->
+                  <!--Your browser does not support the video tag.-->
+                <!--</video>-->
+              <!--</div>-->
+              <div class="pics">
+                <div v-for="(p,index) in key.album">
+                  <img :src="p.uri" @click="pics(key.album,index,2)">
+                </div>
               </div>
             </div>
-          </li>
-        </ul>
-        <div class="bottom">
-          <span v-show="disabled1 && commentList.length > 6">我是有底线的</span>
-          <van-loading v-show="!disabled1" type="spinner" color="black"/>
-        </div>
+            <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0 0;">
+              暂无评论
+            </div>
+          </div>
+        </li>
+      </ul>
+      <div class="bottom">
+        <span v-show="disabled1 && commentList.length > 6">我是有底线的</span>
+        <van-loading v-show="!disabled1" type="spinner" color="black"/>
+      </div>
 
-      </div>
-      <div class="footer">
-        <div @click="commentOn('on_comment')" v-if="path === '/'">评论</div>
-        <div v-for="(key,index) in operation" @click="commentOn(index)" v-else>{{key}}</div>
-      </div>
+    </div>
+    <div class="footer">
+      <div @click="commentOn('on_comment')" v-if="path === '/'">评论</div>
+      <div v-for="(key,index) in operation" @click="commentOn(index)" v-else>{{key}}</div>
+    </div>
 
     <div class="bigPhotos" v-if="bigPicShow">
       <div>
@@ -192,6 +199,10 @@
         }
         return flag;
       },
+      play() {
+        let myVideo = document.getElementById("my_video");
+        myVideo.play();
+      },
       close_() {
         this.formList = {};
         this.operation = {};
@@ -241,7 +252,7 @@
         })
       },
 
-      pics(val, index,num) {
+      pics(val, index, num) {
         let arr = [];
         if (num === 1) {
           arr = val;

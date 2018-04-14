@@ -49,7 +49,7 @@
           let head = JSON.parse(sessionStorage.myData);
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
         } else {
-          this.loading = true;
+          this.loading = false;
           this.corp();
         }
 
@@ -62,7 +62,7 @@
         }, function (error) {
           if (error && error.response) {
             if (error.response.data.status_code === 401) {
-              this.loading = false;
+              that.loading = false;
               that.corp();
             }
           }

@@ -4,11 +4,11 @@
       <van-search
         v-model="searchValue"
         show-action
-        @keyup="onSearch(types)"
+        @keyup="onSearch()"
         @cancel="onCancel"/>
 
       <div class="searchContent">
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜4444444索内容</div>
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
         <div class="searchList" v-for="key in lists" @click="houseAddress(key)">
           <div>{{key.house_name}}</div>
@@ -32,22 +32,20 @@
         searchValue: '',          //搜索
         lists: [],
         params: {},
-        formDetail: {},
         types: '',
         path: '',
       }
     },
     mounted() {
       this.lists = [];
-      this.types = this.$route.query.type;
-      this.bulletin = this.$route.query.bulletin;
+      // this.types = this.$route.query.type;
+      // this.bulletin = this.$route.query.bulletin;
     },
     activated() {
       this.lists = [];
       this.searchValue = '';
-      this.formDetail = {};
-      this.types = this.$route.query.type;
-      this.bulletin = this.$route.query.bulletin;
+      // this.types = this.$route.query.type;
+      // this.bulletin = this.$route.query.bulletin;
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -58,43 +56,41 @@
     },
     methods: {
       // 搜索
-      onSearch(val) {
+      onSearch() {
         let value = this.searchValue.replace(/\s+/g, '');
-        if (value.length !== 0) {
-          this.params = {};
-          switch (val) {
-            case 'lord':
-              this.params.report = this.bulletin;
-              this.params.q = value;
-              this.myData(val, this.params);
-              break;
-            case 'renter':
-              this.params.report = this.bulletin;
-              this.params.q = value;
-              this.myData(val, this.params);
-              break;
-            case 'able_type1':
-              this.params.report = this.bulletin;
-              this.params.q = value;
-              this.params.able_type = 1;
-              this.myData('lord', this.params);
-              break;
-            case 'able_type2':
-              this.params.report = this.bulletin;
-              this.params.q = value;
-              this.params.able_type = 1;
-              this.myData('renter', this.params);
-              break;
-          }
-        } else {
-          this.lists = [];
-        }
+        this.myData('houses?q=', value);
+        // if (value.length !== 0) {
+        //   this.params = {};
+        //   switch (val) {
+        //     case 'lord':
+        //       this.params.report = this.bulletin;
+        //       this.params.q = value;
+        //       this.myData(val, this.params);
+        //       break;
+        //     case 'renter':
+        //       this.params.report = this.bulletin;
+        //       this.params.q = value;
+        //       this.myData(val, this.params);
+        //       break;
+        //     case 'able_type1':
+        //       this.params.report = this.bulletin;
+        //       this.params.q = value;
+        //       this.params.able_type = 1;
+        //       this.myData('lord', this.params);
+        //       break;
+        //     case 'able_type2':
+        //       this.params.report = this.bulletin;
+        //       this.params.q = value;
+        //       this.params.able_type = 1;
+        //       this.myData('renter', this.params);
+        //       break;
+        //   }
+        // } else {
+        //   this.lists = [];
+        // }
       },
       myData(urls, val) {
-        this.$http.get(this.address + urls, {
-          params: val,
-        }).then((res) => {
-          this.lists = [];
+        this.$http.get(this.address + urls + val).then((res) => {
           let data = res.data.data;
           if (data.length !== 0 && res.data.status === 'success') {
             this.lists = [];
@@ -119,6 +115,8 @@
               // }
               this.lists.push(list);
             }
+          } else {
+            this.lists = [];
           }
         })
       },
@@ -131,7 +129,7 @@
       },
       // select关闭
       onCancel() {
-        this.$router.replace({path: this.path, query: {house: '', type: this.types}});
+        this.$router.push({path: this.path, query: {house: '', type: this.types}});
       },
     },
   }
