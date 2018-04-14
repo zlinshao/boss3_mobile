@@ -153,10 +153,9 @@
       }
     },
     mounted() {
-      this.friedDetail();
+
     },
     activated() {
-      this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
     },

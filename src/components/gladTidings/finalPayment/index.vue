@@ -298,7 +298,7 @@
         this.selectHide = false;
       },
       searchSelect() {
-        this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_retainage'}});
+        this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
       },
 
       // select关闭

@@ -67,10 +67,7 @@
                     <img :src="key.user.avatar" v-if="key.user.avatar !== '' && key.user.avatar !== null">
                     <img src="../../../assets/head.png" v-else>
                   </p>
-                  <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
-                  <!--{{item.name}}-->
                   <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
-                  <!--</span>-->
                   <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
                       {{item.name}}
                       <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
@@ -83,14 +80,6 @@
               <div class="contents">
                 {{key.body}}
               </div>
-              <!--<div class="pics" v-for="(p) in key.album">-->
-                 <!--12312{{p.uri}}-->
-                <!--<video controls @click="play()" width="100" height="100">-->
-                  <!--<source :src="p.uri" type="video/mp4">-->
-                  <!--<source :src="p.uri" type="video/ogg">-->
-                  <!--Your browser does not support the video tag.-->
-                <!--</video>-->
-              <!--</div>-->
               <div class="pics">
                 <div v-for="(p,index) in key.album">
                   <img :src="p.uri" @click="pics(key.album,index,2)">
@@ -198,10 +187,6 @@
           }
         }
         return flag;
-      },
-      play() {
-        let myVideo = document.getElementById("my_video");
-        myVideo.play();
       },
       close_() {
         this.formList = {};

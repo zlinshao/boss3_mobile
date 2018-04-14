@@ -453,7 +453,7 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_rent_trans'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
             break;
           case 2:
             this.$router.push({path: '/organize'});
@@ -666,9 +666,9 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.rooms = [];
-          this.roomsMate = val.house.rooms;
-          for (let i = 0; i < val.house.rooms.length; i++) {
-            this.rooms.push(val.house.rooms[i].name);
+          this.roomsMate = val.rooms;
+          for (let i = 0; i < val.rooms.length; i++) {
+            this.rooms.push(val.rooms[i].name);
           }
           this.houseName = val.house_name;
           this.form.contract_id = val.id;

@@ -16,7 +16,7 @@
           v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchSelect(form.type)"
+          @click="searchSelect()"
           readonly
           placeholder="选择房屋地址"
           required>
@@ -142,12 +142,8 @@
           this.payStatus = false;
         }
       },
-      searchSelect(val) {
-        if(val === '0'){
-          this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_banish'}});
-        }else{
-          this.$router.push({path: '/collectHouse', query: {type: 'able_type2', bulletin: 'bulletin_banish'}});
-        }
+      searchSelect() {
+        this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
       },
 
       // 截图

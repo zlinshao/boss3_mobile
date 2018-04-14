@@ -17,7 +17,7 @@
           label="房屋地址"
           type="text"
           readonly
-          @click="searchSelect(form.type)"
+          @click="searchSelect()"
           placeholder="选择房屋地址"
           required>
         </van-field>
@@ -137,11 +137,7 @@
         }
       },
       searchSelect(val) {
-        if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_confiscate'}});
-        } else {
-          this.$router.push({path: '/collectHouse', query: {type: 'able_type1', bulletin: 'bulletin_confiscate'}});
-        }
+        this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
       },
 
       saveCollect(val) {

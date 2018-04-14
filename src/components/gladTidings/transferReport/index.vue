@@ -429,10 +429,10 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_change'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
             break;
           case 2:
-            this.$router.push({path: '/collectHouse', query: {type: 'able_type1', bulletin: 'bulletin_change'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
             break;
           case 3:
             this.$router.push({path: '/organize'});
@@ -639,9 +639,9 @@
             this.form.house_id_rent = val.house_id;
           } else {
             this.rooms = [];
-            this.form.rooms_mate = val.house.rooms;
-            for (let i = 0; i < val.house.rooms.length; i++) {
-              this.rooms.push(val.house.rooms[i].name);
+            this.form.rooms_mate = val.rooms;
+            for (let i = 0; i < val.rooms.length; i++) {
+              this.rooms.push(val.rooms[i].name);
             }
             this.newHouseName = val.house_name;
             this.form.contract_id = val.id;

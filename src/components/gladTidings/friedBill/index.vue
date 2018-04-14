@@ -24,7 +24,7 @@
           v-model="houseName"
           label="房屋地址"
           type="text"
-          @click="searchSelect(form.collect_or_rent,form.type)"
+          @click="searchSelect(form.collect_or_rent)"
           readonly
           placeholder="选择房屋地址"
           required>
@@ -155,19 +155,11 @@
           this.payStatus = false;
         }
       },
-      searchSelect(val, t) {
+      searchSelect(val) {
         if (val === '0') {
-          if (t === '0') {
-            this.$router.push({path: '/collectHouse', query: {type: 'lord', bulletin: 'bulletin_lose'}});
-          } else {
-            this.$router.push({path: '/collectHouse', query: {type: 'able_type1', bulletin: 'bulletin_lose'}});
-          }
+          this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
         } else if (val === '1') {
-          if (t === '0') {
-            this.$router.push({path: '/collectHouse', query: {type: 'renter', bulletin: 'bulletin_lose'}});
-          } else {
-            this.$router.push({path: '/collectHouse', query: {type: 'able_type2', bulletin: 'bulletin_lose'}});
-          }
+          this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
         } else {
           Toast('请选择收租标记');
         }
