@@ -640,15 +640,13 @@
           this.form.is_fill = this.is_fillOn ? 1 : 0;               //家电是否齐全
           this.form.is_lord_fill = this.is_lordOn ? 1 : 0;          //房东是否予以配齐
           this.form.is_draft = val;
-          alert(JSON.stringify(this.form));
           this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
-            if (res.data.code === '51410') {
+            if (res.data.code === "51410") {
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              alert(res.data.data.data.id);
               this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '51420') {
+            } else if (res.data.code === "51420") {
               Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
@@ -661,7 +659,7 @@
 
       qualityDetail() {
         this.$http.get(this.urls + 'bulletin/quality').then((res) => {
-          if (res.data.code === '51420') {
+          if (res.data.code === "51420") {
             this.isClear = false;
             let data = res.data.data;
             this.form.id = res.data.id;
@@ -770,8 +768,8 @@
         this.picStatus = true;
         this.form.id = '';
         this.form.city_id = '';                   //城市
-        this.form.city_name = '';                //城市
-        this.form.community = {};                //小区id
+        this.form.city_name = '';                 //城市
+        this.form.community = {};                 //小区id
         this.community_name = '';                 //小区名称
         this.form.door_address = ['', '', ''];
 
@@ -796,7 +794,7 @@
         this.form.microwave = 1;               //微波炉
         this.form.wash_machine = 1;            //洗衣机
         this.form.water_heater = 1;            //热水器
-        this.form.sofa = data.sofa;                       //沙发
+        this.form.sofa = '';            //沙发
         this.form.clothe_rack = 1;             //晾衣架
         this.form.heater = 1;                    //暖气
         this.heaterOn = true;               //是否暖气
@@ -809,7 +807,7 @@
         this.wardrobeOn = true;                 //衣柜
         this.form.wardrobe_remark = '';          //衣柜备注
         this.form.curtain = 1;                   //窗帘
-        this.curtainOn = true;                //窗帘
+        this.curtainOn = true;                    //窗帘
         this.form.curtain_remark = '';           //窗帘备注
         this.form.is_fill = 1;                   //家电是否齐全
         this.is_fillOn = true;                    //家电是否齐全

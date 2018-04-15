@@ -29,7 +29,7 @@
         </div>
         <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message !== ''">{{message}}</p>
         <div v-for="(key,index) in formList"
-             v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图'">
+             v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图' && index!== '房屋影像'">
           <p>{{index}}</p>
           <h1>
               <span v-if="Array.isArray(key)" v-for="item in key">
