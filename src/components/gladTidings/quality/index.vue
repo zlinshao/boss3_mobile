@@ -63,6 +63,15 @@
           placeholder="请填写面积">
         </van-field>
         <van-field
+          @click="selectShow(14)"
+          v-model="form.decorate.name"
+          label="装修"
+          required
+          readonly
+          type="text"
+          placeholder="请选择装修">
+        </van-field>
+        <van-field
           @click="selectShow(3)"
           v-model="form.direction.name"
           label="朝向"
@@ -422,6 +431,9 @@
         sofa_name: '1个',                    //沙发
         clothe_rack_name: '1个',             //晾衣架
 
+        decorateAll: [],
+        decorate_name: [],
+
         form: {
           id: '',
           is_draft: 0,
@@ -433,6 +445,10 @@
           area: '',                     //面积
           direction: {
             id: '',                     //朝向
+            name: '',
+          },
+          decorate: {
+            id: '',                    //装修
             name: '',
           },
           floor: '',                    //楼层
@@ -496,6 +512,16 @@
           for (let i = 0; i < res.data.length; i++) {
             this.cities.push(res.data[i].dictionary_name);
           }
+
+          //安置方式
+          this.dictionary(404, 1).then((res) => {
+            this.decorate_name = [];
+            this.decorateAll = res.data;
+            for (let i = 0; i < res.data.length; i++) {
+              this.decorate_name.push(res.data[i].dictionary_name);
+            }
+          });
+
           this.qualityDetail();
         });
       },
@@ -560,6 +586,9 @@
             break;
           case 13:
             this.columns = dicts.value4;
+            break;
+          case 14:
+            this.columns = this.decorate_name;
             break;
           default:
             this.columns = dicts.value5;
@@ -631,6 +660,14 @@
             this.clothe_rack_name = value;
             this.form.clothe_rack = index;
             break;
+          case 14: //装修
+            this.form.decorate.name = value;
+            for (let i = 0; i < this.decorateAll.length; i++) {
+              if (this.decorateAll[i].dictionary_name === value) {
+                this.form.decorate.id = this.decorateAll[i].id;
+              }
+            }
+            break;
         }
         this.selectHide = false;
       },
@@ -697,6 +734,8 @@
             let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
             let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
             this.house_type_name = dicts.value1[house[0]] + room + hall;
+
+            this.form.decorate = data.decorate;
 
             this.form.area = data.area;                                     //面积
             this.form.direction = data.direction;                           //朝向
