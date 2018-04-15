@@ -4,68 +4,68 @@
       <van-cell-group>
         <!--<van-switch-cell v-model="joint" title="是否合租"/>-->
         <!--<van-field-->
-          <!--v-if="joint"-->
-          <!--v-model="form.rooms_sum"-->
-          <!--label="房间数量"-->
-          <!--type="number"-->
-          <!--placeholder="请填写房间数量"-->
-          <!--required>-->
+        <!--v-if="joint"-->
+        <!--v-model="form.rooms_sum"-->
+        <!--label="房间数量"-->
+        <!--type="number"-->
+        <!--placeholder="请填写房间数量"-->
+        <!--required>-->
         <!--</van-field>-->
         <!--<van-field-->
-          <!--v-model="form.city_name"-->
-          <!--label="城市"-->
-          <!--@click="selectShow(2,'')"-->
-          <!--type="text"-->
-          <!--readonly-->
-          <!--placeholder="请选择城市"-->
-          <!--required>-->
+        <!--v-model="form.city_name"-->
+        <!--label="城市"-->
+        <!--@click="selectShow(2,'')"-->
+        <!--type="text"-->
+        <!--readonly-->
+        <!--placeholder="请选择城市"-->
+        <!--required>-->
         <!--</van-field>-->
         <!--<van-field-->
-          <!--v-model="community_name"-->
-          <!--label="小区"-->
-          <!--@click="searchSelect(1)"-->
-          <!--type="text"-->
-          <!--readonly-->
-          <!--placeholder="请选择小区地址"-->
-          <!--required>-->
+        <!--v-model="community_name"-->
+        <!--label="小区"-->
+        <!--@click="searchSelect(1)"-->
+        <!--type="text"-->
+        <!--readonly-->
+        <!--placeholder="请选择小区地址"-->
+        <!--required>-->
         <!--</van-field>-->
         <!--<div class="fourth">-->
-          <!--<van-field-->
-            <!--label="门牌号"-->
-            <!--required>-->
-          <!--</van-field>-->
-          <!--<van-field-->
-            <!--style="width: 22%"-->
-            <!--v-model="form.building"-->
-            <!--type="text"-->
-            <!--placeholder="栋">-->
-          <!--</van-field>-->
-          <!--<span class="cut">-</span>-->
-          <!--<van-field-->
-            <!--style="width: 22%"-->
-            <!--v-model="form.unit"-->
-            <!--type="text"-->
-            <!--placeholder="单元">-->
-          <!--</van-field>-->
-          <!--<span class="cut">-</span>-->
-          <!--<van-field-->
-            <!--class="twoBorder"-->
-            <!--v-model="form.doorplate"-->
-            <!--type="text"-->
-            <!--placeholder="门牌">-->
-          <!--</van-field>-->
+        <!--<van-field-->
+        <!--label="门牌号"-->
+        <!--required>-->
+        <!--</van-field>-->
+        <!--<van-field-->
+        <!--style="width: 22%"-->
+        <!--v-model="form.building"-->
+        <!--type="text"-->
+        <!--placeholder="栋">-->
+        <!--</van-field>-->
+        <!--<span class="cut">-</span>-->
+        <!--<van-field-->
+        <!--style="width: 22%"-->
+        <!--v-model="form.unit"-->
+        <!--type="text"-->
+        <!--placeholder="单元">-->
+        <!--</van-field>-->
+        <!--<span class="cut">-</span>-->
+        <!--<van-field-->
+        <!--class="twoBorder"-->
+        <!--v-model="form.doorplate"-->
+        <!--type="text"-->
+        <!--placeholder="门牌">-->
+        <!--</van-field>-->
         <!--</div>-->
         <!--<van-field-->
-          <!--@click="selectShow(1,'')"-->
-          <!--v-model="house_type_name"-->
-          <!--readonly-->
-          <!--type="text"-->
-          <!--label="户型"-->
-          <!--placeholder="请选择户型"-->
-          <!--required>-->
+        <!--@click="selectShow(1,'')"-->
+        <!--v-model="house_type_name"-->
+        <!--readonly-->
+        <!--type="text"-->
+        <!--label="户型"-->
+        <!--placeholder="请选择户型"-->
+        <!--required>-->
         <!--</van-field>-->
         <van-field
-          v-model="houseName"
+          v-model="form.house.name"
           label="房屋地址"
           type="text"
           readonly
@@ -482,6 +482,10 @@
           id: '',
           type: 1,
           draft: 0,
+          house: {
+            id: '',
+            name: '',
+          },
           // share: '',                    //合租整租标记 0整租1合租
           // city_id: '',                  //城市
           // city_name: '',                //城市
@@ -526,7 +530,6 @@
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
         },
-        houseName: '',                  //房屋地址name
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
         photos: {},                     //照片
@@ -562,35 +565,35 @@
         //     this.cities.push(res.data[i].dictionary_name);
         //   }
 
-          //付款方式
-          this.dictionary(443, 1).then((res) => {
-            this.value4 = [];
-            this.dictValue4 = res.data;
+        //付款方式
+        this.dictionary(443, 1).then((res) => {
+          this.value4 = [];
+          this.dictValue4 = res.data;
+          for (let i = 0; i < res.data.length; i++) {
+            this.value4.push(res.data[i].dictionary_name);
+          }
+
+          //房东租客
+          this.dictionary(449, 1).then((res) => {
+            this.value6 = [];
+            this.dictValue6 = res.data;
             for (let i = 0; i < res.data.length; i++) {
-              this.value4.push(res.data[i].dictionary_name);
+              this.value6.push(res.data[i].dictionary_name);
             }
 
-            //房东租客
-            this.dictionary(449, 1).then((res) => {
-              this.value6 = [];
-              this.dictValue6 = res.data;
+            //安置方式
+            this.dictionary(437, 1).then((res) => {
+              this.value7 = [];
+              this.dictValue7 = res.data;
               for (let i = 0; i < res.data.length; i++) {
-                this.value6.push(res.data[i].dictionary_name);
+                this.value7.push(res.data[i].dictionary_name);
               }
-
-              //安置方式
-              this.dictionary(437, 1).then((res) => {
-                this.value7 = [];
-                this.dictValue7 = res.data;
-                for (let i = 0; i < res.data.length; i++) {
-                  this.value7.push(res.data[i].dictionary_name);
-                }
-                this.manuscript();
-              });
-
+              this.manuscript();
             });
 
           });
+
+        });
 
         // });
       },
@@ -875,9 +878,8 @@
           // for (let i = 0; i < val.rooms.length; i++) {
           //   this.rooms.push(val.rooms[i].name);
           // }
-          this.houseName = val.house_name;
-          this.form.contract_id = val.id;
-          this.form.house_id = val.house_id;
+          this.form.house.id = val.house_id;
+          this.form.house.name = val.house_name;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -917,6 +919,7 @@
             // this.form.building = draft.building;
             // this.form.unit = draft.unit;
             // this.form.doorplate = draft.doorplate;
+            this.form.house= draft.house;
             this.form.month = draft.month;
             this.form.day = draft.day;
 
@@ -945,7 +948,7 @@
               this.amountPay = i + 1;
               this.form.pay_way_arr.push('');
               for (let j = 0; j < this.dictValue4.length; j++) {
-                if(this.dictValue4[j].id === draft.pay_way_arr[i]){
+                if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
                   this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
                 }
               }
@@ -959,7 +962,7 @@
             this.form.vacancy_way = draft.vacancy_way;
 
             for (let j = 0; j < this.dictValue7.length; j++) {
-              if(this.dictValue7[j].id === draft.pay_way_arr){
+              if (this.dictValue7[j].id === draft.pay_way_arr) {
                 this.vacancy_way_name = this.dictValue7[j].dictionary_name;
               }
             }
@@ -971,7 +974,7 @@
 
             this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
-              if(this.dictValue6[j].id === draft.property_payer){
+              if (this.dictValue6[j].id === draft.property_payer) {
                 this.property_name = this.dictValue6[j].dictionary_name;
               }
             }

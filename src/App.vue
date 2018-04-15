@@ -60,7 +60,6 @@
         this.$http.interceptors.response.use(function (response) {
           return response;
         }, function (error) {
-          alert(JSON.stringify(error.response));
           if (error && error.response) {
             if (error.response.data.status_code === 401) {
               that.loading = false;
@@ -83,6 +82,7 @@
                   'code': info.code,
                 }
               }).then((res) => {
+                alert(JSON.stringify(res.data));
                 if (res.data.status !== 'fail') {
                   if (res.data !== false) {
                     let data = {};
@@ -101,6 +101,7 @@
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {
+                      alert(JSON.stringify(res.data));
                       sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;

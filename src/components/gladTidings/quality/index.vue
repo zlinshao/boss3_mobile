@@ -389,27 +389,27 @@
       return {
         urls: globalConfig.server,
         selectHide: false,
-        columns: [],                //select值
+        columns: [],                  //select值
         tabs: '',
 
-        isClear: false,             //删除图片
+        isClear: false,               //删除图片
         picStatus: true,
 
-        allCity: [],                //城市
-        cities: [],                 //城市
+        allCity: [],                  //城市
+        cities: [],                   //城市
         house_type_name: '1室1厅1卫',
         refundSta: true,
         direction_name: '',
 
-        is_agencyOn: false,         //是否中介
-        heaterOn: true,             //暖气
-        gasOn: true,                //天然气
-        is_cleanOn: true,           //房屋交接是否干净
-        bedOn: true,                //床+床垫
-        wardrobeOn: true,           //衣柜
-        curtainOn: true,            //窗帘
-        is_fillOn: true,            //家电是否齐全
-        is_lordOn: false,            //房东是否予以配齐
+        is_agencyOn: false,           //是否中介
+        heaterOn: true,               //暖气
+        gasOn: true,                  //天然气
+        is_cleanOn: true,             //房屋交接是否干净
+        bedOn: true,                  //床+床垫
+        wardrobeOn: true,             //衣柜
+        curtainOn: true,              //窗帘
+        is_fillOn: true,              //家电是否齐全
+        is_lordOn: false,             //房东是否予以配齐
 
         air_condition_name: '1台',           //空调
         fridge_name: '1台',                  //冰箱
@@ -432,25 +432,25 @@
           house_type: [0, 1, 1],
           area: '',                     //面积
           direction: {
-            id: '',
+            id: '',                     //朝向
             name: '',
-          },                //朝向
+          },
           floor: '',                    //楼层
           floors: '',                   //总楼层
           house_age: '',                //年限
           vacancy: '',                  //空置期
           price: '',                    //价格
           is_agency: 0,                 //是否中介
-          air_condition: 1,           //空调
-          fridge: 1,                  //冰箱
-          television: 1,              //电视
-          gas_stove: 1,               //燃气灶
-          hood: 1,                    //油烟机
-          microwave: 1,               //微波炉
-          wash_machine: 1,            //洗衣机
-          water_heater: 1,            //热水器
-          sofa: 1,                    //沙发
-          clothe_rack: 1,             //晾衣架
+          air_condition: 1,             //空调
+          fridge: 1,                    //冰箱
+          television: 1,                //电视
+          gas_stove: 1,                 //燃气灶
+          hood: 1,                      //油烟机
+          microwave: 1,                 //微波炉
+          wash_machine: 1,              //洗衣机
+          water_heater: 1,              //热水器
+          sofa: 1,                      //沙发
+          clothe_rack: 1,               //晾衣架
           heater: 1,                    //暖气
           gas: 1,                       //天然气
           bed: 1,                       //床
@@ -471,12 +471,12 @@
           photo: [],                    //房屋影像
           staff_id: '',
           department_id: '',
-          staff_name: '',                 //开单人name
-          department_name: '',            //部门name
+          staff_name: '',               //开单人name
+          department_name: '',          //部门name
         },
         city_name: '',
         community_name: '',
-        photos: {},                       //房屋影像
+        photos: {},                     //房屋影像
       }
     },
     mounted() {
@@ -686,9 +686,9 @@
             this.isClear = false;
             let data = res.data.data;
             this.form.id = res.data.id;
-            this.form.city_id = data.city_id;                   //城市
-            this.form.city_name = data.city_name;                //城市
-            this.form.community = data.community;                //小区id
+            this.form.city_id = data.city_id;                     //城市
+            this.form.city_name = data.city_name;                 //城市
+            this.form.community = data.community;                 //小区id
             this.community_name = data.community.village_name;    //小区id
             this.form.door_address = data.door_address;
 
@@ -698,63 +698,63 @@
             let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
             this.house_type_name = dicts.value1[house[0]] + room + hall;
 
-            this.form.area = data.area;                             //面积
-            this.form.direction = data.direction;                   //朝向
-            this.form.floor = data.floor;                    //楼层
-            this.form.floors = data.floors;                   //总楼层
-            this.form.house_age = data.house_age;                //年限
-            this.form.vacancy = data.vacancy;                 //空置期
-            this.form.price = data.price;                    //价格
-            this.form.is_agency = data.is_agency;                 //是否中介
-            this.is_agencyOn = data.is_agency === 1 ? true : false;    //是否中介
-            this.form.air_condition = data.air_condition;             //空调
-            this.air_condition_name = dicts.value5[data.air_condition];           //空调
-            this.form.fridge = data.fridge;                       //冰箱
-            this.fridge_name = dicts.value5[data.fridge];                       //冰箱
-            this.form.television = data.television;              //电视
-            this.television_name = dicts.value5[data.television];               //电视
-            this.form.gas_stove = data.gas_stove;               //燃气灶
-            this.gas_stove_name = dicts.value4[data.gas_stove];               //燃气灶
-            this.form.hood = data.hood;                       //油烟机
+            this.form.area = data.area;                                     //面积
+            this.form.direction = data.direction;                           //朝向
+            this.form.floor = data.floor;                                   //楼层
+            this.form.floors = data.floors;                                 //总楼层
+            this.form.house_age = data.house_age;                           //年限
+            this.form.vacancy = data.vacancy;                               //空置期
+            this.form.price = data.price;                                   //价格
+            this.form.is_agency = data.is_agency;                           //是否中介
+            this.is_agencyOn = data.is_agency === 1 ? true : false;         //是否中介
+            this.form.air_condition = data.air_condition;                   //空调
+            this.air_condition_name = dicts.value5[data.air_condition];     //空调
+            this.form.fridge = data.fridge;                                 //冰箱
+            this.fridge_name = dicts.value5[data.fridge];                   //冰箱
+            this.form.television = data.television;                         //电视
+            this.television_name = dicts.value5[data.television];           //电视
+            this.form.gas_stove = data.gas_stove;                           //燃气灶
+            this.gas_stove_name = dicts.value4[data.gas_stove];             //燃气灶
+            this.form.hood = data.hood;                                     //油烟机
             this.hood_name = dicts.value4[data.hood];                       //油烟机
-            this.form.microwave = data.microwave;               //微波炉
-            this.microwave_name = dicts.value5[data.microwave];               //微波炉
-            this.form.wash_machine = data.wash_machine;            //洗衣机
-            this.wash_machine_name = dicts.value5[data.wash_machine];            //洗衣机
-            this.form.water_heater = data.water_heater;            //热水器
-            this.water_heater_name = dicts.value5[data.water_heater];            //热水器
-            this.form.sofa = data.sofa;                       //沙发
+            this.form.microwave = data.microwave;                           //微波炉
+            this.microwave_name = dicts.value5[data.microwave];             //微波炉
+            this.form.wash_machine = data.wash_machine;                     //洗衣机
+            this.wash_machine_name = dicts.value5[data.wash_machine];       //洗衣机
+            this.form.water_heater = data.water_heater;                     //热水器
+            this.water_heater_name = dicts.value5[data.water_heater];       //热水器
+            this.form.sofa = data.sofa;                                     //沙发
             this.sofa_name = dicts.value4[data.sofa];                       //沙发
-            this.form.clothe_rack = data.clothe_rack;             //晾衣架
-            this.clothe_rack_name = dicts.value4[data.clothe_rack];             //晾衣架
-            this.form.heater = data.heater;                    //暖气
-            this.heaterOn = data.heater === 1 ? true : false;    //是否暖气
-            this.form.gas = data.gas;                           //天然气
-            this.gasOn = data.gas === 1 ? true : false;       //是否天然气
-            this.form.bed = data.bed;                            //床
-            this.bedOn = data.bed === 1 ? true : false;       //床
-            this.form.bed_remark = data.bed_remark;               //床备注
-            this.form.wardrobe = data.wardrobe;                  //衣柜
-            this.wardrobeOn = data.wardrobe === 1 ? true : false;       //衣柜
-            this.form.wardrobe_remark = data.wardrobe_remark;          //衣柜备注
-            this.form.curtain = data.curtain;                   //窗帘
-            this.curtainOn = data.curtain === 1 ? true : false;       //窗帘
-            this.form.curtain_remark = data.curtain_remark;           //窗帘备注
-            this.form.is_fill = data.is_fill;                   //家电是否齐全
-            this.is_fillOn = data.is_fill === 1 ? true : false;       //家电是否齐全
-            this.form.is_lord_fill = data.is_lord_fill;               //房东是否补齐
-            this.is_lordOn = data.is_lord_fill === 1 ? true : false;  //房东是否补齐
-            this.form.is_lord_fill_days = data.is_lord_fill_days;        //房东是否补齐天数
-            this.form.dining_table = data.dining_table;             //餐桌
-            this.form.chair = data.chair;                       //椅子
-            this.form.is_clean = data.is_clean;                //是否干净
-            this.is_cleanOn = data.is_clean === 1 ? true : false;       //是否干净
-            this.form.other_remark = data.other_remark;             //其他问题
-            this.form.other_furniture = data.other_furniture;          //其他家具
-            this.photos = data.photo;                         //房屋影像
-            this.form.photo = [];                             //房屋影像
+            this.form.clothe_rack = data.clothe_rack;                       //晾衣架
+            this.clothe_rack_name = dicts.value4[data.clothe_rack];         //晾衣架
+            this.form.heater = data.heater;                                 //暖气
+            this.heaterOn = data.heater === 1 ? true : false;               //是否暖气
+            this.form.gas = data.gas;                                       //天然气
+            this.gasOn = data.gas === 1 ? true : false;                     //是否天然气
+            this.form.bed = data.bed;                                       //床
+            this.bedOn = data.bed === 1 ? true : false;                     //床
+            this.form.bed_remark = data.bed_remark;                         //床备注
+            this.form.wardrobe = data.wardrobe;                             //衣柜
+            this.wardrobeOn = data.wardrobe === 1 ? true : false;           //衣柜
+            this.form.wardrobe_remark = data.wardrobe_remark;               //衣柜备注
+            this.form.curtain = data.curtain;                               //窗帘
+            this.curtainOn = data.curtain === 1 ? true : false;             //窗帘
+            this.form.curtain_remark = data.curtain_remark;                 //窗帘备注
+            this.form.is_fill = data.is_fill;                               //家电是否齐全
+            this.is_fillOn = data.is_fill === 1 ? true : false;             //家电是否齐全
+            this.form.is_lord_fill = data.is_lord_fill;                     //房东是否补齐
+            this.is_lordOn = data.is_lord_fill === 1 ? true : false;        //房东是否补齐
+            this.form.is_lord_fill_days = data.is_lord_fill_days;           //房东是否补齐天数
+            this.form.dining_table = data.dining_table;                     //餐桌
+            this.form.chair = data.chair;                                   //椅子
+            this.form.is_clean = data.is_clean;                             //是否干净
+            this.is_cleanOn = data.is_clean === 1 ? true : false;           //是否干净
+            this.form.other_remark = data.other_remark;                     //其他问题
+            this.form.other_furniture = data.other_furniture;               //其他家具
+            this.photos = data.photo;                                       //房屋影像
+            this.form.photo = [];                                           //房屋影像
             for (let key in data.photo) {
-              this.form.photo.push(key);                           //房屋影像
+              this.form.photo.push(key);                                    //房屋影像
             }
 
             this.form.staff_id = data.staff_id;
