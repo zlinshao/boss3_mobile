@@ -332,6 +332,7 @@
               $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50920') {
+              this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
