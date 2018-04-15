@@ -151,6 +151,11 @@
                   // list.sign_org = data[i].renters[j].sign_org.name;
                   this.lists.push(list);
                 }
+              } else {
+                let list = {};
+                list.house_id = data[i].id;
+                list.house_name = data[i].name;
+                this.lists.push(list);
               }
             }
           } else {

@@ -607,7 +607,7 @@
           //   }
           //   break;
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+            this.$router.push({path: '/collectHouse', query: {type: ''}});
             break;
           case 2:
             this.$router.push({path: '/organize'});
