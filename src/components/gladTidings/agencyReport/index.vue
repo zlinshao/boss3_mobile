@@ -278,21 +278,27 @@
           this.form.settle = 0;
         }
         this.form.draft = val;
-        if (this.picStatus) {
-          this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
-            if (res.data.code === '50310') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '50320') {
-              Toast.success(res.data.msg);
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          if (this.picStatus) {
+            this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
+              this.haveInHand = true;
+              if (res.data.code === '50310') {
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === '50320') {
+                Toast.success(res.data.msg);
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('图片上传中...');
+          }
         } else {
-          Toast('图片上传中...');
+          Toast('正在提交...');
         }
       },
 

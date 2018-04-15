@@ -362,6 +362,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
+        haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -654,24 +655,30 @@
       },
 
       saveCollect(val) {
-        this.form.draft = val;
-        this.form.is_corp = this.corp ? 1 : 0;
-        if (this.picStatus) {
-          this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
-            if (res.data.code === '50110') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '50120') {
-              this.form.id = res.data.data.id;
-              Toast.success(res.data.msg);
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.draft = val;
+          this.form.is_corp = this.corp ? 1 : 0;
+          if (this.picStatus) {
+            this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+              this.haveInHand = true;
+              if (res.data.code === '50110') {
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === '50120') {
+                this.form.id = res.data.data.id;
+                Toast.success(res.data.msg);
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('图片上传中...');
+          }
         } else {
-          Toast('图片上传中...');
+          Toast('正在提交...');
         }
       },
 
@@ -736,7 +743,7 @@
               this.amountPay = i + 1;
               this.form.pay_way_arr.push('');
               for (let j = 0; j < this.dictValue4.length; j++) {
-                if(this.dictValue4[j].id === draft.pay_way_arr[i]){
+                if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
                   this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
                 }
               }
@@ -754,7 +761,7 @@
 
             this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
-              if(this.dictValue6[j].id === draft.property_payer){
+              if (this.dictValue6[j].id === draft.property_payer) {
                 this.property_name = this.dictValue6[j].dictionary_name;
               }
             }

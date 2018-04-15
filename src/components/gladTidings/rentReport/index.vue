@@ -12,14 +12,14 @@
           required>
         </van-field>
         <!--<van-field-->
-          <!--v-if="rooms.length !== 0"-->
-          <!--v-model="roomsName"-->
-          <!--type="text"-->
-          <!--label="合租房"-->
-          <!--readonly-->
-          <!--@click="selectShow(4,'')"-->
-          <!--placeholder="请选择合租房"-->
-          <!--required>-->
+        <!--v-if="rooms.length !== 0"-->
+        <!--v-model="roomsName"-->
+        <!--type="text"-->
+        <!--label="合租房"-->
+        <!--readonly-->
+        <!--@click="selectShow(4,'')"-->
+        <!--placeholder="请选择合租房"-->
+        <!--required>-->
         <!--</van-field>-->
         <div class="first_date">
           <van-field
@@ -162,7 +162,7 @@
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
-            type="text"
+            type="number"
             label="金额"
             placeholder="请填写金额"
             required>
@@ -187,7 +187,7 @@
         <van-field
           v-model="form.property"
           label="物业费"
-          type="text"
+          type="number"
           placeholder="请填写物业费"
           icon="clear"
           @click-icon="form.property = ''"
@@ -327,6 +327,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
+        haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -633,25 +634,31 @@
       },
 
       saveCollect(val) {
-        this.form.draft = val;
-        this.form.is_agency = this.cusFrom ? 1 : 0;
-        this.form.is_corp = this.corp ? 1 : 0;
-        if (this.picStatus) {
-          this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-            if (res.data.code === '50210') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '50220') {
-              this.form.id = res.data.data.id;
-              Toast.success(res.data.msg)
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.draft = val;
+          this.form.is_agency = this.cusFrom ? 1 : 0;
+          this.form.is_corp = this.corp ? 1 : 0;
+          if (this.picStatus) {
+            this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+              this.haveInHand = true;
+              if (res.data.code === '50210') {
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === '50220') {
+                this.form.id = res.data.data.id;
+                Toast.success(res.data.msg)
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('图片上传中...');
+          }
         } else {
-          Toast('图片上传中...');
+          Toast('正在提交...');
         }
       },
 

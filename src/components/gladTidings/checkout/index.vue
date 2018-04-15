@@ -128,6 +128,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
+        haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -232,23 +233,29 @@
         this.form.contract_id = '';
       },
       saveCollect(val) {
-        this.form.draft = val;
-        if (this.picStatus) {
-          this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
-            if (res.data.code === '51210') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '51220') {
-              this.form.id = res.data.data.id;
-              Toast.success(res.data.msg);
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.draft = val;
+          if (this.picStatus) {
+            this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
+              this.haveInHand = true;
+              if (res.data.code === '51210') {
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === '51220') {
+                this.form.id = res.data.data.id;
+                Toast.success(res.data.msg);
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('图片上传中...');
+          }
         } else {
-          Toast('图片上传中...');
+          Toast('正在提交...');
         }
       },
 
@@ -317,7 +324,7 @@
 </script>
 
 <style lang="scss">
-  #checkout{
+  #checkout {
     overflow: hidden;
   }
 </style>

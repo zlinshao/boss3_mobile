@@ -13,14 +13,14 @@
           required>
         </van-field>
         <!--<van-field-->
-          <!--v-if="rooms.length !== 0"-->
-          <!--v-model="roomsName"-->
-          <!--type="text"-->
-          <!--label="合租房"-->
-          <!--readonly-->
-          <!--@click="selectShow(4,'')"-->
-          <!--placeholder="请选择合租房"-->
-          <!--required>-->
+        <!--v-if="rooms.length !== 0"-->
+        <!--v-model="roomsName"-->
+        <!--type="text"-->
+        <!--label="合租房"-->
+        <!--readonly-->
+        <!--@click="selectShow(4,'')"-->
+        <!--placeholder="请选择合租房"-->
+        <!--required>-->
         <!--</van-field>-->
         <div class="first_date">
           <van-field
@@ -324,6 +324,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
+        haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -624,23 +625,29 @@
       },
 
       saveCollect(val) {
-        this.form.draft = val;
-        if (this.picStatus) {
-          this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-            if (res.data.code === '50210') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '50220') {
-              this.form.id = res.data.data.id;
-              Toast.success(res.data.msg);
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.draft = val;
+          if (this.picStatus) {
+            this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+              this.haveInHand = true;
+              if (res.data.code === '50210') {
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === '50220') {
+                this.form.id = res.data.data.id;
+                Toast.success(res.data.msg);
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('图片上传中...');
+          }
         } else {
-          Toast('图片上传中...');
+          Toast('正在提交...');
         }
       },
 

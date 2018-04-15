@@ -30,6 +30,7 @@
     components: {Toast, UpLoad},
     data() {
       return {
+        haveInHand: true,
         isClear: false,
         picStatus: true,
         urls: globalConfig.server,
@@ -64,6 +65,8 @@
       },
 
       sure() {
+        if (this.haveInHand) {
+          this.haveInHand = false;
         if (this.picStatus) {
           this.$http.post(this.urls + 'oa/portal/comment', {
             content: this.form.remark,
@@ -72,6 +75,7 @@
             image_pic: this.form.photo,
             video_file: [],
           }).then((res) => {
+            this.haveInHand = true;
             if (res.data.code === '80060') {
               Toast.success(res.data.msg);
               this.$router.replace({path: this.path, query: {id: this.pitch}});
@@ -83,6 +87,9 @@
           })
         } else {
           Toast('图片上传中...');
+        }
+        } else {
+          Toast('正在提交...');
         }
       },
 

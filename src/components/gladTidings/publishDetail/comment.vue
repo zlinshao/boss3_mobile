@@ -30,6 +30,7 @@
     components: {Toast, UpLoad},
     data() {
       return {
+        haveInHand: true,
         isClear: false,
         picStatus: true,
         urls: globalConfig.server_user,
@@ -72,23 +73,29 @@
       },
 
       sure() {
-        if (this.picStatus) {
-          this.$http.put(this.urls + 'process/' + this.pitch, {
-            operation: this.detail,
-            comment: this.form.remark,
-            album: this.form.photo
-          }).then((res) => {
-            if (res.data.status === 'success') {
-              Toast.success(res.data.message);
-              this.$router.replace({path: this.path, query: {ids: this.pitch}});
-              this.close_();
-              $('.imgItem').remove();
-            } else {
-              Toast(res.data.message);
-            }
-          })
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          if (this.picStatus) {
+            this.$http.put(this.urls + 'process/' + this.pitch, {
+              operation: this.detail,
+              comment: this.form.remark,
+              album: this.form.photo
+            }).then((res) => {
+              this.haveInHand = true;
+              if (res.data.status === 'success') {
+                Toast.success(res.data.message);
+                this.$router.replace({path: this.path, query: {ids: this.pitch}});
+                this.close_();
+                $('.imgItem').remove();
+              } else {
+                Toast(res.data.message);
+              }
+            })
+          } else {
+            Toast('图片上传中...');
+          }
         } else {
-          Toast('图片上传中...');
+          Toast('正在提交...');
         }
       },
 
@@ -114,7 +121,8 @@
             onSuccess: function (result) {
               that.$router.push({path: urls, query: {ids: that.pitch}});
             },
-            onFail: function (err) {}
+            onFail: function (err) {
+            }
           });
         } else {
           document.addEventListener('backbutton', function (e) {

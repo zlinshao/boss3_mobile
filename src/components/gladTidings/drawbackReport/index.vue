@@ -150,6 +150,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
+        haveInHand: false,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -237,23 +238,29 @@
       // },
 
       saveCollect(val) {
-        this.form.draft = val;
-        if (this.picStatus) {
-          this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
-            if (res.data.code === '50810') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '50820') {
-              this.form.id = res.data.data.id;
-              Toast.success(res.data.msg);
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.draft = val;
+          if (this.picStatus) {
+            this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
+              this.haveInHand = true;
+              if (res.data.code === '50810') {
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === '50820') {
+                this.form.id = res.data.data.id;
+                Toast.success(res.data.msg);
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('图片上传中...');
+          }
         } else {
-          Toast('图片上传中...');
+          Toast('正在提交...');
         }
       },
 

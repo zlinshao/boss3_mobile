@@ -86,7 +86,7 @@
             <div class="rightTitle">
               <div class="title">
                 <h2>
-                  <span>{{item.name}}</span>- <span>{{item.depart}}</span>
+                  <span>{{item.name}}</span><span>&nbsp;-&nbsp;{{item.depart}}</span>
                 </h2>
                 <span class="times">{{item.created_at}}</span>
               </div>
@@ -278,11 +278,7 @@
               if (val.type === 3) {
                 user.place = data[i].place.display_name;
                 user.status = data[i].place.status;
-                if (data[i].content.type) {
-                  user.bulletin = data[i].content.type.name;
-                } else {
-                  user.bulletin = '';
-                }
+                user.bulletin = data[i].content.bulletin_name;
               } else if (val.type === 1 || val.type === 2 || val.type === 4) {
                 if (data[i].flow) {
                   user.place = data[i].flow.place.display_name;

@@ -172,6 +172,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
+        haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -323,9 +324,12 @@
       },
 
       saveCollect(val) {
+        if (this.haveInHand) {
+          this.haveInHand = false;
         this.form.draft = val;
         if (this.picStatus) {
           this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
+            this.haveInHand = true;
             if (res.data.code === '50910') {
               Toast.success(res.data.msg);
               this.close_();
@@ -340,6 +344,9 @@
           })
         } else {
           Toast('图片上传中...');
+        }
+        } else {
+          Toast('正在提交...');
         }
       },
 

@@ -394,6 +394,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
+        haveInHand: true,
         urls: globalConfig.server,
         selectHide: false,
         columns: [],                  //select值
@@ -685,32 +686,38 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus) {
-          this.form.is_agency = this.is_agencyOn ? 1 : 0;
-          this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
-          this.form.gas = this.gasOn ? 1 : 0;                       //天然气
-          this.form.is_clean = this.is_cleanOn ? 1 : 0;             //房屋交接是否干净
-          this.form.bed = this.bedOn ? 1 : 0;                       //床+床垫
-          this.form.wardrobe = this.wardrobeOn ? 1 : 0;             //衣柜
-          this.form.curtain = this.curtainOn ? 1 : 0;               //窗帘
-          this.form.is_fill = this.is_fillOn ? 1 : 0;               //家电是否齐全
-          this.form.is_lord_fill = this.is_lordOn ? 1 : 0;          //房东是否予以配齐
-          this.form.is_draft = val;
-          this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
-            if (res.data.code === "51410") {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === "51420") {
-              this.form.id = res.data.data.id;
-              Toast.success(res.data.msg);
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          if (this.picStatus) {
+            this.form.is_agency = this.is_agencyOn ? 1 : 0;
+            this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
+            this.form.gas = this.gasOn ? 1 : 0;                       //天然气
+            this.form.is_clean = this.is_cleanOn ? 1 : 0;             //房屋交接是否干净
+            this.form.bed = this.bedOn ? 1 : 0;                       //床+床垫
+            this.form.wardrobe = this.wardrobeOn ? 1 : 0;             //衣柜
+            this.form.curtain = this.curtainOn ? 1 : 0;               //窗帘
+            this.form.is_fill = this.is_fillOn ? 1 : 0;               //家电是否齐全
+            this.form.is_lord_fill = this.is_lordOn ? 1 : 0;          //房东是否予以配齐
+            this.form.is_draft = val;
+            this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
+              this.haveInHand = true;
+              if (res.data.code === "51410") {
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === "51420") {
+                this.form.id = res.data.data.id;
+                Toast.success(res.data.msg);
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('图片上传中...');
+          }
         } else {
-          Toast('图片上传中...');
+          Toast('正在提交...');
         }
       },
 
