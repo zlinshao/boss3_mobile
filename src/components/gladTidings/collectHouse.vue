@@ -8,10 +8,16 @@
         @cancel="onCancel"/>
 
       <div class="searchContent">
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入uiyui搜索内容</div>
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
         <div class="searchHouse" v-for="key in lists" @click="houseAddress(key)">
-          <div class="contract">
+          <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
+            <div>
+              <span>房屋地址：</span>
+              <span>{{key.house_name}}</span>
+            </div>
+          </div>
+          <div class="contract" v-else>
             <div>
               <span>房屋地址：</span>
               <span>{{key.house_name}}</span>
@@ -24,7 +30,9 @@
               <p><span>开单人：</span><span>{{key.staff_name}}</span></p>
               <p><span>客户姓名：</span><span>{{key.customers}}</span></p>
             </div>
-            <div><span>所属部门：</span><span>{{key.department_name}}</span></div>
+            <div>
+              <span>所属部门：</span><span>{{key.department_name}}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -43,6 +51,7 @@
         params: {},
         types: '',
         path: '',
+        showInfo: [],
       }
     },
     mounted() {
@@ -67,92 +76,23 @@
       onSearch(type) {
         let value = this.searchValue.replace(/\s+/g, '');
         this.myData(type, value);
-        // if (value.length !== 0) {
-        //   this.params = {};
-        //   switch (val) {
-        //     case 'lord':
-        //       this.params.report = this.bulletin;
-        //       this.params.q = value;
-        //       this.myData(val, this.params);
-        //       break;
-        //     case 'renter':
-        //       this.params.report = this.bulletin;
-        //       this.params.q = value;
-        //       this.myData(val, this.params);
-        //       break;
-        //     case 'able_type1':
-        //       this.params.report = this.bulletin;
-        //       this.params.q = value;
-        //       this.params.able_type = 1;
-        //       this.myData('lord', this.params);
-        //       break;
-        //     case 'able_type2':
-        //       this.params.report = this.bulletin;
-        //       this.params.q = value;
-        //       this.params.able_type = 1;
-        //       this.myData('renter', this.params);
-        //       break;
-        //   }
-        // } else {
-        //   this.lists = [];
-        // }
       },
       myData(type, val) {
         this.$http.get(this.address + 'houses?q=' + val).then((res) => {
           let data = res.data.data;
           if (data.length !== 0 && res.data.status === 'success') {
             this.lists = [];
+            this.showInfo = [];
             for (let i = 0; i < data.length; i++) {
-              if (type === 'lord' && data[i].lords.length !== 0) {
-                for (let j = 0; j < data[i].lords.length; j++) {
-                  let list = {};
-                  list.house_id = data[i].id;
-                  list.house_name = data[i].name;
-                  list.rooms = data[i].rooms;
-                  list.created_at = data[i].created_at.substring(0, 10);
-                  list.id = data[i].lords[j].id;
-                  list.duration_days = data[i].lords[j].duration_days;
-                  list.customers = data[i].lords[j].customers[0].name;
-                  if (data[i].lords[j].sign_user !== null) {
-                    list.staff_name = data[i].lords[j].sign_user.name;
-                  } else {
-                    list.staff_name = '---';
-                  }
-                  if (data[i].lords[j].sign_user !== null) {
-                    list.department_name = data[i].lords[j].sign_org.name;
-                  } else {
-                    list.department_name = '---';
-                  }
-                  // list.sign_user = data[i].lords[j].sign_user.name;
-                  // list.sign_org = data[i].lords[j].sign_org.name;
-                  this.lists.push(list);
-                }
-              } else if (type === 'renter' && data[i].renters.length !== 0) {
-                for (let j = 0; j < data[i].renters.length; j++) {
-                  let list = {};
-                  list.house_id = data[i].id;
-                  list.house_name = data[i].name;
-                  list.rooms = data[i].rooms;
-                  list.created_at = data[i].created_at.substring(0, 10);
-                  list.id = data[i].renters[j].id;
-                  list.duration_days = data[i].renters[j].duration_days;
-                  list.customers = data[i].renters[j].customers[0].name;
-                  if (data[i].renters[j].sign_user !== null) {
-                    list.staff_name = data[i].renters[j].sign_user.name;
-                  } else {
-                    list.staff_name = '---';
-                  }
-                  if (data[i].renters[j].sign_org !== null) {
-                    list.department_name = data[i].renters[j].sign_org.name;
-                  } else {
-                    list.department_name = '---';
-                  }
-                  // list.sign_user = data[i].renters[j].sign_user.name;
-                  // list.sign_org = data[i].renters[j].sign_org.name;
-                  this.lists.push(list);
-                }
-              } else {
+              if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
+                this.lord(data[i]);
+              }
+              if ((type === 'renter' || type === '') && data[i].renters.length !== 0) {
+                this.renter(data[i]);
+              }
+              if (data[i].lords.length === 0 && data[i].renters.length === 0) {
                 let list = {};
+                this.showInfo.push(data[i].id);
                 list.house_id = data[i].id;
                 list.house_name = data[i].name;
                 this.lists.push(list);
@@ -162,6 +102,54 @@
             this.lists = [];
           }
         })
+      },
+      // 收房合同
+      lord(val) {
+        for (let j = 0; j < val.lords.length; j++) {
+          let list = {};
+          list.house_id = val.id;
+          list.house_name = val.name;
+          list.rooms = val.rooms;
+          list.created_at = val.created_at.substring(0, 10);
+          list.id = val.lords[j].id;
+          list.duration_days = val.lords[j].duration_days;
+          list.customers = val.lords[j].customers[0].name;
+          if (val.lords[j].sign_user !== null) {
+            list.staff_name = val.lords[j].sign_user.name;
+          } else {
+            list.staff_name = '---';
+          }
+          if (val.lords[j].sign_org !== null) {
+            list.department_name = val.lords[j].sign_org.name;
+          } else {
+            list.department_name = '---';
+          }
+          this.lists.push(list);
+        }
+      },
+      // 租房合同
+      renter(val) {
+        for (let j = 0; j < val.renters.length; j++) {
+          let list = {};
+          list.house_id = val.id;
+          list.house_name = val.name;
+          list.rooms = val.rooms;
+          list.created_at = val.created_at.substring(0, 10);
+          list.id = val.renters[j].id;
+          list.duration_days = val.renters[j].duration_days;
+          list.customers = val.renters[j].customers[0].name;
+          if (val.renters[j].sign_user !== null) {
+            list.staff_name = val.renters[j].sign_user.name;
+          } else {
+            list.staff_name = '---';
+          }
+          if (val.renters[j].sign_org !== null) {
+            list.department_name = val.renters[j].sign_org.name;
+          } else {
+            list.department_name = '---';
+          }
+          this.lists.push(list);
+        }
       },
       // 房屋地址
       houseAddress(data) {
