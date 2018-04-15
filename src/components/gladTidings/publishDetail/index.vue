@@ -86,7 +86,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="commentList.length === 0" style="text-align: center;padding: .3rem 0 0;">
+            <div v-if="commentList.length === 0 && disabled1" style="text-align: center;padding: .3rem 0 0;">
               暂无评论
             </div>
           </div>
@@ -278,120 +278,6 @@
       commentOn(val) {
         this.$router.push({path: '/comment', query: {detail: val, data: this.ids}});
       },
-
-      corp() {
-        let that = this;
-        this.$http.get(this.address1 + 'special/special/dingConfig').then((res) => {
-          let _config = res.data;
-          DingTalkPC.runtime.permission.requestAuthCode({
-            corpId: _config.corpId,
-            onSuccess: function (info) {
-              that.$http.get(that.address1 + 'special/special/userInfo', {
-                params: {
-                  'code': info.code,
-                }
-              }).then((res) => {
-                if (res.data !== false) {
-                  let data = {};
-                  data.name = res.data.name;
-                  data.avatar = res.data.avatar;
-                  data.phone = res.data.phone;
-                  // data.depart = res.data.org[0].name;
-                  // data.display_name = res.data.role[0].display_name;
-                  sessionStorage.setItem('personal', JSON.stringify(data));
-                  globalConfig.personal = data;
-
-                  that.$http.post(that.address + 'oauth/token', {
-                    client_secret: globalConfig.client_secret,
-                    client_id: globalConfig.client_id,
-                    grant_type: 'password',
-                    username: res.data.phone,
-                    password: res.data.code,
-                  }).then((res) => {
-                    sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                    let head = res.data.data;
-                    globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                    that.formDetail(that.ids);
-                    that.disabled1 = false;
-                  });
-                }
-              })
-            },
-            onFail: function (err) {
-              DingTalkPC.device.notification.alert({
-                message: "'" + JSON.stringify(err) + "'",
-                title: "'" + JSON.stringify(err) + "'",
-                buttonName: "'" + JSON.stringify(err) + "'",
-                onSuccess: function () {
-                },
-                onFail: function (err) {
-                }
-              });
-            }
-          });
-
-          dd.ready(function () {
-            dd.runtime.permission.requestAuthCode({
-              corpId: _config.corpId,
-              onSuccess: function (info) {
-                that.$http.get(that.address1 + 'special/special/userInfo', {
-                  params: {
-                    'code': info.code,
-                  }
-                }).then((res) => {
-                  if (res.data !== false) {
-                    let data = {};
-                    data.name = res.data.name;
-                    data.avatar = res.data.avatar;
-                    data.phone = res.data.phone;
-                    // data.depart = res.data.org[0].name;
-                    // data.display_name = res.data.role[0].display_name;
-                    sessionStorage.setItem('personal', JSON.stringify(data));
-                    globalConfig.personal = data;
-                    that.$http.post(that.address + 'oauth/token', {
-                      client_secret: globalConfig.client_secret,
-                      client_id: globalConfig.client_id,
-                      grant_type: 'password',
-                      username: res.data.phone,
-                      password: res.data.code,
-                    }).then((res) => {
-                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
-                      let head = res.data.data;
-                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                      that.formDetail(that.ids);
-                      that.disabled1 = false;
-                    });
-                  } else {
-                    setTimeout(() => {
-                      alert('请求超时请稍后再试');
-                      dd.biz.navigation.close({
-                        onSuccess: function (result) {
-                        },
-                        onFail: function (err) {
-                        }
-                      });
-                    }, 3000);
-                  }
-                })
-              },
-              onFail: function (err) {
-                alert('fail: ' + JSON.stringify(err));
-              }
-            });
-            // 钉钉头部右侧
-            dd.biz.navigation.setRight({
-              show: false,
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            });
-          });
-          dd.error(function (err) {
-            alert('dd error: ' + JSON.stringify(err));
-          });
-        })
-      }
     },
   }
 </script>
