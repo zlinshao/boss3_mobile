@@ -8,7 +8,7 @@
         @cancel="onCancel"/>
 
       <div class="searchContent">
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入uiyui搜索内容</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
         <div class="searchHouse" v-for="key in lists" @click="houseAddress(key)">
           <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
