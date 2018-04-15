@@ -108,7 +108,7 @@ export default new Router({
       name: '房屋质量报备',
       hidden: 'glad',
       back: '#E3705B',
-      icon: 'iconfont icon-shoufang',
+      icon: 'iconfont icon-fangwuzhiliangbaobei',
       meta: {title: '房屋质量报备'},
       component: Quality
     },
@@ -160,7 +160,7 @@ export default new Router({
       path: '/unCollectBeforeRent',
       name: '未收先租未知',
       hidden: 'glad',
-      icon: 'iconfont icon-weishouxianzu',
+      icon: 'iconfont icon-weishouxianzubaobei',
       meta: {title: '未收先租未知'},
       component: UncollectBeforeRent
     },
@@ -168,7 +168,7 @@ export default new Router({
       path: '/unCollectBeforeRentSure',
       name: '未收先租确定',
       hidden: 'glad',
-      icon: 'iconfont icon-weishouxianzu',
+      icon: 'iconfont icon-weishouxianzuquedingbaobei',
       meta: {title: '未收先租确定'},
       component: UncollectBeforeRentSure
     },
@@ -184,7 +184,7 @@ export default new Router({
       path: '/drawback',
       name: '退款报备',
       hidden: 'glad',
-      icon: 'iconfont icon-tuikuan',
+      icon: 'iconfont icon-tuizubaobei',
       meta: {title: '退款报备'},
       component: Drawback
     },
@@ -200,7 +200,7 @@ export default new Router({
       path: '/clearRetreat',
       name: '清退报备',
       hidden: 'glad',
-      icon: 'iconfont icon-qingtui-',
+      icon: 'iconfont icon-qingtuibaobei',
       meta: {title: '清退报备'},
       component: ClearRetreat
     },

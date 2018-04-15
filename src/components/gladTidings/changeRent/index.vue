@@ -254,8 +254,8 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel">
-        <div class="title">截图</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
@@ -271,8 +271,7 @@
           type="textarea"
           placeholder="请填写备注"
           icon="clear"
-          @click-icon="form.remark = ''"
-          required>
+          @click-icon="form.remark = ''">
         </van-field>
         <van-field
           v-model="staff_name"

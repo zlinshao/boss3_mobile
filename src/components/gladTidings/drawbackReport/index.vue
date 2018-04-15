@@ -102,8 +102,8 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel">
-        <div class="title">特殊情况截图</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>特殊情况截图</div>
         <UpLoad :ID="'screenshot'" @getImg="screenshot" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 

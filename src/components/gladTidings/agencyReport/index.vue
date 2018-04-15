@@ -5,7 +5,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group v-model="form.collect_or_rent">
+          <van-radio-group v-model="form.collect_or_rent" @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -108,11 +108,11 @@
           @click-icon="form.account_name = ''"
           required>
         </van-field>
-        <van-switch-cell v-model="settleStatus" title="是否结清"/>
+        <van-switch-cell v-if="form.collect_or_rent === '1'" v-model="settleStatus" title="是否结清"/>
       </van-cell-group>
 
-      <div class="aloneModel">
-        <div class="title">结清截图</div>
+      <div class="aloneModel required" v-if="form.collect_or_rent === '1'">
+        <div class="title"><span>*</span>结清截图</div>
         <UpLoad :ID="'settle'" @getImg="screen" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
@@ -261,7 +261,16 @@
           }
         })
       },
-
+      rentChange(val) {
+        this.houseName = '';
+        this.form.house_id = '';
+        this.form.contract_id = '';
+        if (val === '1') {
+          this.form.screenshot = [];
+          this.screenshots = {};
+          this.settleStatus = false;
+        }
+      },
       saveCollect(val) {
         if (this.settleStatus) {
           this.form.settle = 1;
@@ -277,7 +286,6 @@
               $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50320') {
-              this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);

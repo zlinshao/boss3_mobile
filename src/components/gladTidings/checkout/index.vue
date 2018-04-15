@@ -5,7 +5,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group v-model="form.collect_or_rent">
+          <van-radio-group v-model="form.collect_or_rent" @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -60,8 +60,8 @@
         <UpLoad :ID="'photos'" @getImg="headmanAgree" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
-      <div class="aloneModel">
-        <div class="title">退租交接单照片</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>退租交接单照片</div>
         <UpLoad :ID="'checkouts'" @getImg="headmanAgree" :isClear="isClear" :editImage="checkouts"></UpLoad>
 
       </div>
@@ -226,7 +226,11 @@
           this.form.checkout_photo = val[1];
         }
       },
-
+      rentChange() {
+        this.houseName = '';
+        this.form.house_id = '';
+        this.form.contract_id = '';
+      },
       saveCollect(val) {
         this.form.draft = val;
         if (this.picStatus) {

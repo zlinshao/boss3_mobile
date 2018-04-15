@@ -250,8 +250,8 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel">
-        <div class="title">截图</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 

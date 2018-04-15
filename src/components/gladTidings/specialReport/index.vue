@@ -4,7 +4,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group v-model="form.collect_or_rent">
+          <van-radio-group v-model="form.collect_or_rent" @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -123,6 +123,13 @@
           this.form.screenshot = val[1]
         }
       },
+
+      rentChange() {
+        this.houseName = '';
+        this.form.house_id = '';
+        this.form.contract_id = '';
+      },
+
       saveCollect(val) {
         this.form.draft = val;
         if (this.picStatus) {

@@ -90,7 +90,7 @@
               if ((type === 'renter' || type === '') && data[i].renters.length !== 0) {
                 this.renter(data[i]);
               }
-              if (data[i].lords.length === 0 && data[i].renters.length === 0) {
+              if (type === '' && data[i].lords.length === 0 && data[i].renters.length === 0) {
                 let list = {};
                 this.showInfo.push(data[i].id);
                 list.house_id = data[i].id;

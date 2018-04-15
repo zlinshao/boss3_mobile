@@ -301,8 +301,7 @@
           type="textarea"
           placeholder="请填写备注"
           icon="clear"
-          @click-icon="form.remark = ''"
-          required>
+          @click-icon="form.remark = ''">
         </van-field>
         <van-field
           v-model="staff_name"
