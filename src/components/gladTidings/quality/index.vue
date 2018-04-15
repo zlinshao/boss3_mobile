@@ -121,7 +121,7 @@
 
         <van-field
           @click="selectShow(4)"
-          v-model="form.air_condition"
+          v-model="air_condition_name"
           label="空调"
           required
           type="text"
@@ -130,7 +130,7 @@
         </van-field>
         <van-field
           @click="selectShow(5)"
-          v-model="form.fridge"
+          v-model="fridge_name"
           label="冰箱"
           required
           type="text"
@@ -139,7 +139,7 @@
         </van-field>
         <van-field
           @click="selectShow(6)"
-          v-model="form.television"
+          v-model="television_name"
           label="电视"
           required
           type="text"
@@ -148,7 +148,7 @@
         </van-field>
         <van-field
           @click="selectShow(7)"
-          v-model="form.gas_stove"
+          v-model="gas_stove_name"
           label="燃气灶"
           required
           type="text"
@@ -157,7 +157,7 @@
         </van-field>
         <van-field
           @click="selectShow(8)"
-          v-model="form.hood"
+          v-model="hood_name"
           label="油烟机"
           required
           type="text"
@@ -166,7 +166,7 @@
         </van-field>
         <van-field
           @click="selectShow(9)"
-          v-model="form.microwave"
+          v-model="microwave_name"
           label="微波炉"
           required
           type="text"
@@ -175,7 +175,7 @@
         </van-field>
         <van-field
           @click="selectShow(10)"
-          v-model="form.wash_machine"
+          v-model="wash_machine_name"
           label="洗衣机"
           required
           type="text"
@@ -184,7 +184,7 @@
         </van-field>
         <van-field
           @click="selectShow(11)"
-          v-model="form.water_heater"
+          v-model="water_heater_name"
           label="热水器"
           required
           type="text"
@@ -193,7 +193,7 @@
         </van-field>
         <van-field
           @click="selectShow(12)"
-          v-model="form.sofa"
+          v-model="sofa_name"
           label="沙发"
           required
           type="text"
@@ -202,7 +202,7 @@
         </van-field>
         <van-field
           @click="selectShow(13)"
-          v-model="form.clothe_rack"
+          v-model="clothe_rack_name"
           label="晾衣架"
           required
           type="text"
@@ -549,6 +549,18 @@
           case 3:
             this.columns = dicts.value6;
             break;
+          case 7:
+            this.columns = dicts.value4;
+            break;
+          case 8:
+            this.columns = dicts.value4;
+            break;
+          case 12:
+            this.columns = dicts.value4;
+            break;
+          case 13:
+            this.columns = dicts.value4;
+            break;
           default:
             this.columns = dicts.value5;
         }
@@ -580,34 +592,44 @@
             this.form.direction.name = value;
             break;
           case 4: //空调
-            this.form.air_condition = value;
+            this.air_condition_name = value;
+            this.form.air_condition = index;
             break;
           case 5: //冰箱
-            this.form.fridge = value;
+            this.fridge_name = value;
+            this.form.fridge = index;
             break;
           case 6: //电视
-            this.form.television = value;
+            this.television_name = value;
+            this.form.television = index;
             break;
           case 7: //燃气灶
-            this.form.gas_stove = value;
+            this.gas_stove_name = value;
+            this.form.gas_stove = index;
             break;
           case 8: //油烟机
-            this.form.hood = value;
+            this.hood_name = value;
+            this.form.hood = index;
             break;
           case 9: //微波炉
-            this.form.microwave = value;
+            this.microwave_name = value;
+            this.form.microwave = index;
             break;
           case 10: //洗衣机
-            this.form.wash_machine = value;
+            this.wash_machine_name = value;
+            this.form.wash_machine = index;
             break;
           case 11: //热水器
-            this.form.water_heater = value;
+            this.water_heater_name = value;
+            this.form.water_heater = index;
             break;
           case 12: //沙发
-            this.form.sofa = value;
+            this.sofa_name = value;
+            this.form.sofa = index;
             break;
           case 13: //晾衣架
-            this.form.clothe_rack = value;
+            this.clothe_rack_name = value;
+            this.form.clothe_rack = index;
             break;
         }
         this.selectHide = false;
@@ -685,16 +707,26 @@
             this.form.price = data.price;                    //价格
             this.form.is_agency = data.is_agency;                 //是否中介
             this.is_agencyOn = data.is_agency === 1 ? true : false;    //是否中介
-            this.form.air_condition = data.air_condition;           //空调
+            this.form.air_condition = data.air_condition;             //空调
+            this.air_condition_name = dicts.value5[data.air_condition];           //空调
             this.form.fridge = data.fridge;                       //冰箱
+            this.fridge_name = dicts.value5[data.fridge];                       //冰箱
             this.form.television = data.television;              //电视
+            this.television_name = dicts.value5[data.television];               //电视
             this.form.gas_stove = data.gas_stove;               //燃气灶
+            this.gas_stove_name = dicts.value4[data.gas_stove];               //燃气灶
             this.form.hood = data.hood;                       //油烟机
+            this.hood_name = dicts.value4[data.hood];                       //油烟机
             this.form.microwave = data.microwave;               //微波炉
+            this.microwave_name = dicts.value5[data.microwave];               //微波炉
             this.form.wash_machine = data.wash_machine;            //洗衣机
+            this.wash_machine_name = dicts.value5[data.wash_machine];            //洗衣机
             this.form.water_heater = data.water_heater;            //热水器
+            this.water_heater_name = dicts.value5[data.water_heater];            //热水器
             this.form.sofa = data.sofa;                       //沙发
+            this.sofa_name = dicts.value4[data.sofa];                       //沙发
             this.form.clothe_rack = data.clothe_rack;             //晾衣架
+            this.clothe_rack_name = dicts.value4[data.clothe_rack];             //晾衣架
             this.form.heater = data.heater;                    //暖气
             this.heaterOn = data.heater === 1 ? true : false;    //是否暖气
             this.form.gas = data.gas;                           //天然气

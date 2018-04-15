@@ -490,7 +490,7 @@
           // unit: '',                     //单元
           // doorplate: '',                //门牌
           // house_type: [0, 1, 1],
-          // rooms_sum: '',                //合租时房间数量
+          // rooms_sum: '',             //合租时房间数量
           month: '',                    //收房月数
           day: '',                      //收房天数
           begin_date: '',               //合同开始日期
