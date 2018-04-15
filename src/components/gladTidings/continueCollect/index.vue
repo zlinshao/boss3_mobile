@@ -679,7 +679,6 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.house_type = val.house.room + '室' + val.house.unit + '厅' + val.house.toilet + '卫';
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -791,6 +790,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.id = '';
         this.form.contract_id = '';
         this.form.house_id = '';

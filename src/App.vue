@@ -60,6 +60,7 @@
         this.$http.interceptors.response.use(function (response) {
           return response;
         }, function (error) {
+          alert(JSON.stringify(error.response));
           if (error && error.response) {
             if (error.response.data.status_code === 401) {
               that.loading = false;

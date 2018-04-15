@@ -769,6 +769,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.id = '';
         this.form.contract_id = '';
         this.form.house_id = '';
@@ -798,7 +799,6 @@
         this.form.money_way = [''];
         this.form.deposit = '';
         this.form.from = 1;
-        this.fromName = '个人';
         this.form.property = '';
         this.form.receipt = '';
         this.form.property_payer = '';

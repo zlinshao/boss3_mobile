@@ -292,6 +292,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.house_id = '';
         this.payWay = '';
         this.price_arr = '';

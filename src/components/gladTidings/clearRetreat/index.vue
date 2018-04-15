@@ -210,7 +210,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.bulletinDate = '';
+        this.picStatus = true;
         this.payWay = '';
         this.price_arr = '';
         this.form.id = '';

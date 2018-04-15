@@ -729,6 +729,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.id = '';
         this.form.rent_without_collect_address = '';
         this.form.contract_id = '';

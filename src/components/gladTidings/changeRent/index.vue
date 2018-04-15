@@ -781,6 +781,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.id = '';
         this.form.trans_type = '0';
         this.form.contract_id = '';

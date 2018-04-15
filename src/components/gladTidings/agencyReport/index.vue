@@ -356,8 +356,8 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.payWay = '';
-        this.monthPrice = '';
         this.houseName = '';
         this.form.id = '';
         this.form.contract_id = '';

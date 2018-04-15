@@ -784,6 +784,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.id = '';
         this.form.contract_id = '';
         this.form.house_id = '';

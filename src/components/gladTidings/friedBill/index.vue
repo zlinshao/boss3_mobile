@@ -234,6 +234,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.payWay = '';
         this.price_arr = '';
         this.form.id = '';

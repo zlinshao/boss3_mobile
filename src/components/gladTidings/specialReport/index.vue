@@ -184,6 +184,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.id = '';
         this.houseName = '';
         this.form.collect_or_rent = '';

@@ -760,6 +760,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.oldHouseName = '';
         this.oldForm.staff_name = '';
         this.oldForm.pay_way_arr = '';

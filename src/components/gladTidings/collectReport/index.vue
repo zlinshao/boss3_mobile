@@ -2,66 +2,75 @@
   <div id="collectReport">
     <div class="main">
       <van-cell-group>
-        <van-switch-cell v-model="joint" title="是否合租"/>
+        <!--<van-switch-cell v-model="joint" title="是否合租"/>-->
+        <!--<van-field-->
+          <!--v-if="joint"-->
+          <!--v-model="form.rooms_sum"-->
+          <!--label="房间数量"-->
+          <!--type="number"-->
+          <!--placeholder="请填写房间数量"-->
+          <!--required>-->
+        <!--</van-field>-->
+        <!--<van-field-->
+          <!--v-model="form.city_name"-->
+          <!--label="城市"-->
+          <!--@click="selectShow(2,'')"-->
+          <!--type="text"-->
+          <!--readonly-->
+          <!--placeholder="请选择城市"-->
+          <!--required>-->
+        <!--</van-field>-->
+        <!--<van-field-->
+          <!--v-model="community_name"-->
+          <!--label="小区"-->
+          <!--@click="searchSelect(1)"-->
+          <!--type="text"-->
+          <!--readonly-->
+          <!--placeholder="请选择小区地址"-->
+          <!--required>-->
+        <!--</van-field>-->
+        <!--<div class="fourth">-->
+          <!--<van-field-->
+            <!--label="门牌号"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--style="width: 22%"-->
+            <!--v-model="form.building"-->
+            <!--type="text"-->
+            <!--placeholder="栋">-->
+          <!--</van-field>-->
+          <!--<span class="cut">-</span>-->
+          <!--<van-field-->
+            <!--style="width: 22%"-->
+            <!--v-model="form.unit"-->
+            <!--type="text"-->
+            <!--placeholder="单元">-->
+          <!--</van-field>-->
+          <!--<span class="cut">-</span>-->
+          <!--<van-field-->
+            <!--class="twoBorder"-->
+            <!--v-model="form.doorplate"-->
+            <!--type="text"-->
+            <!--placeholder="门牌">-->
+          <!--</van-field>-->
+        <!--</div>-->
+        <!--<van-field-->
+          <!--@click="selectShow(1,'')"-->
+          <!--v-model="house_type_name"-->
+          <!--readonly-->
+          <!--type="text"-->
+          <!--label="户型"-->
+          <!--placeholder="请选择户型"-->
+          <!--required>-->
+        <!--</van-field>-->
         <van-field
-          v-if="joint"
-          v-model="form.rooms_sum"
-          label="房间数量"
-          type="number"
-          placeholder="请填写房间数量"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.city_name"
-          label="城市"
-          @click="selectShow(2,'')"
+          v-model="houseName"
+          label="房屋地址"
           type="text"
           readonly
-          placeholder="请选择城市"
-          required>
-        </van-field>
-        <van-field
-          v-model="community_name"
-          label="小区"
           @click="searchSelect(1)"
-          type="text"
-          readonly
-          placeholder="请选择小区地址"
-          required>
-        </van-field>
-        <div class="fourth">
-          <van-field
-            label="门牌号"
-            required>
-          </van-field>
-          <van-field
-            style="width: 22%"
-            v-model="form.building"
-            type="text"
-            placeholder="栋">
-          </van-field>
-          <span class="cut">-</span>
-          <van-field
-            style="width: 22%"
-            v-model="form.unit"
-            type="text"
-            placeholder="单元">
-          </van-field>
-          <span class="cut">-</span>
-          <van-field
-            class="twoBorder"
-            v-model="form.doorplate"
-            type="text"
-            placeholder="门牌">
-          </van-field>
-        </div>
-        <van-field
-          @click="selectShow(1,'')"
-          v-model="house_type_name"
-          readonly
-          type="text"
-          label="户型"
-          placeholder="请选择户型"
+          placeholder="请选择房屋地址"
           required>
         </van-field>
         <div class="first_date">
@@ -243,7 +252,7 @@
             placeholder="保修期(天)">
           </van-field>
         </div>
-        <van-switch-cell v-model="cusFrom" title="是否中介"/>
+        <!--<van-switch-cell v-model="cusFrom" title="是否中介"/>-->
         <van-field
           v-model="form.property"
           label="物业费"
@@ -438,8 +447,8 @@
         address: globalConfig.server_user,
         picStatus: true,
         isClear: false,
-        allCity: [],              //城市
-        cities: [],               //城市
+        // allCity: [],              //城市
+        // cities: [],               //城市
 
         lists: [],
         tabs: '',
@@ -463,25 +472,25 @@
         payType: [''],              //付款方式ID
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
-        community_name: '',         //小区名字
-        house_type_name: '1室1厅1卫',
+        // community_name: '',         //小区名字
+        // house_type_name: '1室1厅1卫',
 
-        cusFrom: false,                //客户来源
+        // cusFrom: false,                //客户来源
         corp: true,                    //公司单
 
         form: {
           id: '',
           type: 1,
           draft: 0,
-          share: '',                    //合租整租标记 0整租1合租
-          city_id: '',                  //城市
-          city_name: '',                //城市
-          community_id: '',             //小区id
-          building: '',                 //栋
-          unit: '',                     //单元
-          doorplate: '',                //门牌
-          house_type: [0, 1, 1],
-          rooms_sum: '',                //合租时房间数量
+          // share: '',                    //合租整租标记 0整租1合租
+          // city_id: '',                  //城市
+          // city_name: '',                //城市
+          // community_id: '',             //小区id
+          // building: '',                 //栋
+          // unit: '',                     //单元
+          // doorplate: '',                //门牌
+          // house_type: [0, 1, 1],
+          // rooms_sum: '',                //合租时房间数量
           month: '',                    //收房月数
           day: '',                      //收房天数
           begin_date: '',               //合同开始日期
@@ -496,7 +505,7 @@
           vacancy_other: '',            //空置期安排方式 随便填
           warranty: '',                 //保修期月
           warranty_day: '',             //保修期天
-          is_agency: 0,                 //客户来源    0个人1中介
+          // is_agency: 0,                 //客户来源    0个人1中介
           is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
           property: '',                 //物业费
@@ -517,6 +526,7 @@
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
         },
+        houseName: '',                  //房屋地址name
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
         photos: {},                     //照片
@@ -545,12 +555,12 @@
     methods: {
       dicts() {
         //城市
-        this.dictionary(306, 1).then((res) => {
-          this.cities = [];
-          this.allCity = res.data;
-          for (let i = 0; i < res.data.length; i++) {
-            this.cities.push(res.data[i].dictionary_name);
-          }
+        // this.dictionary(306, 1).then((res) => {
+        //   this.cities = [];
+        //   this.allCity = res.data;
+        //   for (let i = 0; i < res.data.length; i++) {
+        //     this.cities.push(res.data[i].dictionary_name);
+        //   }
 
           //付款方式
           this.dictionary(443, 1).then((res) => {
@@ -582,16 +592,19 @@
 
           });
 
-        });
+        // });
       },
       searchSelect(val) {
         switch (val) {
+          // case 1:
+          //   if (this.form.city_id !== '') {
+          //     this.$router.push({path: '/citySearch', query: {city: this.form.city_id}});
+          //   } else {
+          //     Toast('请选择城市');
+          //   }
+          //   break;
           case 1:
-            if (this.form.city_id !== '') {
-              this.$router.push({path: '/citySearch', query: {city: this.form.city_id}});
-            } else {
-              Toast('请选择城市');
-            }
+            this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
             break;
           case 2:
             this.$router.push({path: '/organize'});
@@ -679,28 +692,28 @@
         this.payIndex = index;
         this.selectHide = true;
         switch (val) {
-          case 1:
-            this.columns = [
-              {
-                values: dicts.value1,
-                className: 'column1',
-                defaultIndex: 0
-              },
-              {
-                values: dicts.value2,
-                className: 'column2',
-                defaultIndex: 1
-              },
-              {
-                values: dicts.value3,
-                className: 'column3',
-                defaultIndex: 1
-              }
-            ];
-            break;
-          case 2:
-            this.columns = this.cities;
-            break;
+          // case 1:
+          //   this.columns = [
+          //     {
+          //       values: dicts.value1,
+          //       className: 'column1',
+          //       defaultIndex: 0
+          //     },
+          //     {
+          //       values: dicts.value2,
+          //       className: 'column2',
+          //       defaultIndex: 1
+          //     },
+          //     {
+          //       values: dicts.value3,
+          //       className: 'column3',
+          //       defaultIndex: 1
+          //     }
+          //   ];
+          //   break;
+          // case 2:
+          //   this.columns = this.cities;
+          //   break;
           case 4:
             this.columns = this.value4;
             break;
@@ -715,27 +728,26 @@
       // select选择
       onConfirm(value, index) {
         switch (this.tabs) {
-          case 1:
-            if (value[1] === '无') {
-              value[1] = '0厅';
-            }
-            if (value[2] === '无') {
-              value[2] = '0卫';
-            }
-            this.house_type_name = value.join('');
-            this.form.house_type = index;
-            break;
-          case 2:
-            for (let i = 0; i < this.allCity.length; i++) {
-              if (this.allCity[i].dictionary_name === value) {
-                this.form.city_id = this.allCity[i].variable.city_id;
-              }
-            }
-            this.form.city_name = value;
-            this.form.community_id = '';
-            this.community_name = '';
-
-            break;
+          // case 1:
+          //   if (value[1] === '无') {
+          //     value[1] = '0厅';
+          //   }
+          //   if (value[2] === '无') {
+          //     value[2] = '0卫';
+          //   }
+          //   this.house_type_name = value.join('');
+          //   this.form.house_type = index;
+          //   break;
+          // case 2:
+          //   for (let i = 0; i < this.allCity.length; i++) {
+          //     if (this.allCity[i].dictionary_name === value) {
+          //       this.form.city_id = this.allCity[i].variable.city_id;
+          //     }
+          //   }
+          //   this.form.city_name = value;
+          //   this.form.community_id = '';
+          //   this.community_name = '';
+          //   break;
           case 4:
             this.payTypeNum[this.payIndex] = value;
             for (let i = 0; i < this.dictValue4.length; i++) {
@@ -826,8 +838,8 @@
       },
 
       saveCollect(val) {
-        this.form.share = this.joint ? 1 : 0;
-        this.form.is_agency = this.cusFrom ? 1 : 0;
+        // this.form.share = this.joint ? 1 : 0;
+        // this.form.is_agency = this.cusFrom ? 1 : 0;
         this.form.is_corp = this.corp ? 1 : 0;
         this.form.draft = val;
         if (this.picStatus) {
@@ -851,10 +863,21 @@
 
       houseInfo() {
         let t = this.$route.query;
-        if (t.city !== undefined && t.city !== '') {
-          let val = JSON.parse(t.city);
-          this.form.community_id = val.id;
-          this.community_name = val.name;
+        // if (t.city !== undefined && t.city !== '') {
+        //   let val = JSON.parse(t.city);
+        //   this.form.community_id = val.id;
+        //   this.community_name = val.name;
+        // }
+        if (t.house !== undefined && t.house !== '') {
+          let val = JSON.parse(t.house);
+          // this.rooms = [];
+          // this.form.rooms_mate = val.rooms;
+          // for (let i = 0; i < val.rooms.length; i++) {
+          //   this.rooms.push(val.rooms[i].name);
+          // }
+          this.houseName = val.house_name;
+          this.form.contract_id = val.id;
+          this.form.house_id = val.house_id;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -883,17 +906,17 @@
             let data = res.data.data;
             let draft = res.data.data.draft_content;
             this.form.id = data.id;
-            this.share = data.share;
-            this.joint = data.share === 1 ? true : false;
-            this.form.rooms_sum = draft.rooms_sum;
+            // this.share = data.share;
+            // this.joint = data.share === 1 ? true : false;
+            // this.form.rooms_sum = draft.rooms_sum;
 
-            this.form.city_id = draft.city_id;
-            this.form.city_name = draft.city_name;
-            this.form.community_id = draft.community_id;
-            this.community_name = data.community_name;
-            this.form.building = draft.building;
-            this.form.unit = draft.unit;
-            this.form.doorplate = draft.doorplate;
+            // this.form.city_id = draft.city_id;
+            // this.form.city_name = draft.city_name;
+            // this.form.community_id = draft.community_id;
+            // this.community_name = data.community_name;
+            // this.form.building = draft.building;
+            // this.form.unit = draft.unit;
+            // this.form.doorplate = draft.doorplate;
             this.form.month = draft.month;
             this.form.day = draft.day;
 
@@ -903,11 +926,11 @@
             this.first_date.push(draft.pay_first_date);
             this.form.pay_second_date = draft.pay_second_date;
 
-            this.house_type = draft.house_type;
-            let house = draft.house_type;
-            let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
-            let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
-            this.house_type_name = dicts.value1[house[0]] + room + hall;
+            // this.house_type = draft.house_type;
+            // let house = draft.house_type;
+            // let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
+            // let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
+            // this.house_type_name = dicts.value1[house[0]] + room + hall;
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
@@ -953,8 +976,8 @@
               }
             }
 
-            this.is_agency = draft.is_agency;
-            this.cusFrom = draft.is_agency === 1 ? true : false;
+            // this.is_agency = draft.is_agency;
+            // this.cusFrom = draft.is_agency === 1 ? true : false;
             this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
             this.form.sign_date = draft.sign_date;
@@ -989,17 +1012,17 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.share = 0;
+        // this.share = 0;
         this.joint = false;
         this.form.id = '';
-        this.form.rooms_sum = '';
-        this.form.city_id = '';
-        this.form.city_name = '';
-        this.form.community_id = '';
-        this.community_name = '';
-        this.form.building = '';
-        this.form.unit = '';
-        this.form.doorplate = '';
+        // this.form.rooms_sum = '';
+        // this.form.city_id = '';
+        // this.form.city_name = '';
+        // this.form.community_id = '';
+        // this.community_name = '';
+        // this.form.building = '';
+        // this.form.unit = '';
+        // this.form.doorplate = '';
         this.form.month = '';
         this.form.day = '';
 
@@ -1007,8 +1030,8 @@
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 
-        this.house_type_name = '1室 1厅 1卫';
-        this.house_type = [0, 1, 1];
+        // this.house_type_name = '1室 1厅 1卫';
+        // this.house_type = [0, 1, 1];
 
         this.amountPrice = 1;
         this.form.period_price_arr = [''];
@@ -1040,8 +1063,8 @@
         this.form.name = '';
         this.is_corp = 1;
         this.corp = true;
-        this.is_agency = 0;
-        this.cusFrom = false;
+        // this.is_agency = 0;
+        // this.cusFrom = false;
         this.form.phone = '';
         this.form.bank = '';
         this.form.subbranch = '';

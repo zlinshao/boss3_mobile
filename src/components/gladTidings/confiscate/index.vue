@@ -192,6 +192,7 @@
         })
       },
       close_() {
+        this.picStatus = true;
         this.houseName = '';
         this.form.id = '';
         this.payWay = '';

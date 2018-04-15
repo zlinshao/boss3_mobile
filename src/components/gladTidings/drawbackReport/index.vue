@@ -301,6 +301,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.payWay = '';
         this.form.price_arr = '';
         this.form.recMoney = '';

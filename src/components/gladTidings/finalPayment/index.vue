@@ -400,6 +400,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.picStatus = true;
         this.form.id = '';
         this.houseName = '';
         this.month = '';

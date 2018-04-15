@@ -645,6 +645,7 @@
       },
 
       close_() {
+        this.picStatus = true;
         this.form.id = '';
         this.form.month = '';
         this.form.day = '';
