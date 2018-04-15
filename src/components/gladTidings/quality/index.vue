@@ -351,7 +351,6 @@
           @click="searchSelect(2)"
           v-model="form.staff_name"
           label="开单人"
-          required
           type="text"
           placeholder="请选择开单人"
           required
@@ -361,7 +360,6 @@
           @click="searchSelect(4)"
           v-model="form.department_name"
           label="部门"
-          required
           type="text"
           placeholder="请选择部门"
           required
@@ -490,7 +488,6 @@
           staff_name: '',               //开单人name
           department_name: '',          //部门name
         },
-        city_name: '',
         community_name: '',
         photos: {},                     //房屋影像
       }
