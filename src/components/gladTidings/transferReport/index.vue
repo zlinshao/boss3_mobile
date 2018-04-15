@@ -59,16 +59,16 @@
           placeholder="请选择房现房屋地址"
           required>
         </van-field>
-        <van-field
-          v-if="rooms.length !== 0"
-          v-model="roomsName"
-          type="text"
-          label="合租房"
-          readonly
-          @click="selectShow(4,'')"
-          placeholder="请选择合租房"
-          required>
-        </van-field>
+        <!--<van-field-->
+          <!--v-if="rooms.length !== 0"-->
+          <!--v-model="roomsName"-->
+          <!--type="text"-->
+          <!--label="合租房"-->
+          <!--readonly-->
+          <!--@click="selectShow(4,'')"-->
+          <!--placeholder="请选择合租房"-->
+          <!--required>-->
+        <!--</van-field>-->
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -638,11 +638,11 @@
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
           } else {
-            this.rooms = [];
-            this.form.rooms_mate = val.rooms;
-            for (let i = 0; i < val.rooms.length; i++) {
-              this.rooms.push(val.rooms[i].name);
-            }
+            // this.rooms = [];
+            // this.form.rooms_mate = val.rooms;
+            // for (let i = 0; i < val.rooms.length; i++) {
+            //   this.rooms.push(val.rooms[i].name);
+            // }
             this.newHouseName = val.house_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
@@ -677,15 +677,15 @@
             this.form.id = data.id;
             this.form.month = draft.month;
             this.form.day = draft.day;
-            this.form.rooms_mate = draft.rooms_mate;
-            this.form.room_id = draft.room_id;
-            this.rooms = [];
-            for (let i = 0; i < draft.rooms_mate.length; i++) {
-              this.rooms.push(draft.rooms_mate[i].name);
-              if (draft.room_id === draft.rooms_mate[i].id) {
-                this.roomsName = draft.rooms_mate[i].name;
-              }
-            }
+            // this.form.rooms_mate = draft.rooms_mate;
+            // this.form.room_id = draft.room_id;
+            // this.rooms = [];
+            // for (let i = 0; i < draft.rooms_mate.length; i++) {
+            //   this.rooms.push(draft.rooms_mate[i].name);
+            //   if (draft.room_id === draft.rooms_mate[i].id) {
+            //     this.roomsName = draft.rooms_mate[i].name;
+            //   }
+            // }
             this.houseName = data.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;

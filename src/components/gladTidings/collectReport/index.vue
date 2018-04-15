@@ -402,7 +402,6 @@
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
-    <!--select 选择-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
       <van-picker
         show-toolbar
@@ -445,7 +444,7 @@
         lists: [],
         tabs: '',
         columns: [],              //select值
-        selectHide: false,        //房型
+        selectHide: false,
         joint: false,             //是否合租
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
@@ -517,7 +516,6 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
-
         },
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
@@ -535,10 +533,11 @@
       }
     },
     mounted() {
-      this.getNowFormatDate();
-      this.dicts();
+
     },
     activated() {
+      this.getNowFormatDate();
+      this.dicts();
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
@@ -600,19 +599,6 @@
           case 4:
             this.$router.push({path: '/depart'});
             break;
-        }
-      },
-      onSearch() {
-        if (this.searchValue.length > 1) {
-          this.$http.get(this.urls + 'setting/community/', {
-            params: {
-              num: 30,
-              city: this.form.city_id,
-              keywords: this.searchValue,
-            }
-          }).then((res) => {
-            this.lists = res.data.data.list;
-          })
         }
       },
 

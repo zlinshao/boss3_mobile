@@ -18,16 +18,16 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
-        <van-field
-          v-if="rooms.length !== 0"
-          v-model="roomsName"
-          type="text"
-          label="合租房"
-          readonly
-          @click="selectShow(4,'')"
-          placeholder="请选择合租房"
-          required>
-        </van-field>
+        <!--<van-field-->
+          <!--v-if="rooms.length !== 0"-->
+          <!--v-model="roomsName"-->
+          <!--type="text"-->
+          <!--label="合租房"-->
+          <!--readonly-->
+          <!--@click="selectShow(4,'')"-->
+          <!--placeholder="请选择合租房"-->
+          <!--required>-->
+        <!--</van-field>-->
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -665,11 +665,11 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.rooms = [];
-          this.roomsMate = val.rooms;
-          for (let i = 0; i < val.rooms.length; i++) {
-            this.rooms.push(val.rooms[i].name);
-          }
+          // this.rooms = [];
+          // this.roomsMate = val.rooms;
+          // for (let i = 0; i < val.rooms.length; i++) {
+          //   this.rooms.push(val.rooms[i].name);
+          // }
           this.houseName = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;

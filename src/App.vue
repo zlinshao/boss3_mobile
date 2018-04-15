@@ -49,7 +49,7 @@
           let head = JSON.parse(sessionStorage.myData);
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
         } else {
-          this.loading = true;
+          this.loading = false;
           this.corp();
         }
 
@@ -127,7 +127,7 @@
             },
             onFail: function (err) {
               DingTalkPC.device.notification.alert({
-                message: "您不在系统内，请联系管理员添加！",
+                message: "您不在系统内，请联系管理员添加！！",
                 title: "提示信息",
                 buttonName: "关闭",
                 onSuccess: function () {
@@ -192,7 +192,7 @@
                 })
               },
               onFail: function (err) {
-                alert('您不在系统内，请联系管理员添加！');
+                alert('您不在系统内，请联系管理员添加！！');
                 dd.biz.navigation.close({
                   onSuccess: function (result) {
                   },
