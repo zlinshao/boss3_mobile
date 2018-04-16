@@ -267,13 +267,11 @@
               if (data[i].user) {
                 user.avatar = data[i].user.avatar;
                 user.name = data[i].user.name;
-                // user.staff = data[i].user.org[0].name;
-                // user.depart = data[i].user.role[0].display_name;
+                user.depart = data[i].user.org[0].name;
               } else {
                 user.avatar = '';
                 user.name = '';
                 user.staff = '';
-                user.depart = '';
               }
               if (val.type === 3) {
                 user.place = data[i].place.display_name;

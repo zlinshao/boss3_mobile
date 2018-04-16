@@ -1,23 +1,76 @@
 <template>
   <div>
     <div id="commentOn">
-      <div class="contents">
+      <header v-if="marking === 1">
+        <div class="address">
+          {{this.address}}
+        </div>
+        <div class="marking">
+          <div>
+            <p>{{status[active-1]}}</p>
+          </div>
+          <div>
+            <p v-for="key in 5" @click="onClick(key)">
+              <i v-if="key > active" class="iconfont icon-favorite"></i>
+              <i v-if="key <= active" class="iconfont icon-favoritesfilling"></i>
+            </p>
+          </div>
+        </div>
         <van-cell-group>
           <van-field
-            v-model="form.remark"
-            type="textarea"
-            placeholder="说点什么吧！">
+            v-model="forms.suggest_price"
+            label="总金额"
+            type="number"
+            placeholder="请填写总金额">
+          </van-field>
+          <van-field
+            @click="selectShow(1)"
+            v-model="decorationOn"
+            label="装修"
+            type="text"
+            readonly
+            placeholder="请选择装修">
+          </van-field>
+          <van-field
+            @click="selectShow(2)"
+            v-model="propertyOn"
+            type="text"
+            readonly
+            label="房屋特色"
+            placeholder="请选择房屋特色">
           </van-field>
         </van-cell-group>
-      </div>
-      <div class="pic">
-        <div class="title">图片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
-      </div>
-      <div class="footer">
-        <div @click="manager()">确认</div>
+        <div class="footer">
+          <div @click="manager()">确认</div>
+        </div>
+      </header>
+      <div v-if="marking !== 1">
+        <div class="contents">
+          <van-cell-group>
+            <van-field
+              v-model="form.remark"
+              type="textarea"
+              placeholder="说点什么吧！">
+            </van-field>
+          </van-cell-group>
+        </div>
+        <div class="pic">
+          <div class="title">图片</div>
+          <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
+        </div>
+        <div class="footer">
+          <div @click="manager()">确认</div>
+        </div>
       </div>
     </div>
+
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @cancel="onCancel"
+        @confirm="onConfirm"/>
+    </van-popup>
   </div>
 </template>
 
@@ -30,17 +83,40 @@
     components: {Toast, UpLoad},
     data() {
       return {
+        urls: globalConfig.server_user,
+        active: 1,
         haveInHand: true,
         isClear: false,
         picStatus: true,
-        urls: globalConfig.server_user,
+
+        tabs: '',
+        columns: [],              //select值
+        selectHide: false,
+
+        decorateAll: [],
+        decorate_name: [],
+        decorationOn: '',
+
+        propertyAll: [],
+        property_name: [],
+        propertyOn: '',
+
         form: {
           remark: '',
           photo: [],
         },
+        forms: {
+          suggest_price: '',      //价格
+          house_grade: '',        //评分
+          decoration: '',         //装修
+          house_feature: '',      //特色
+        },
+        status: ['很差', '一般', '满意', '很满意', '非常满意'],
+        path: '',
         pitch: '',
         detail: '',
-        path: '',
+        address: '',
+        marking: '',
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -51,14 +127,79 @@
       })
     },
     mounted() {
-      this.pitch = this.$route.query.data;
-      this.detail = this.$route.query.detail;
+      this.dict();
     },
     activated() {
       this.pitch = this.$route.query.data;
       this.detail = this.$route.query.detail;
+      this.address = this.$route.query.address;
+      this.marking = this.$route.query.marking;
+      this.pitch = this.$route.query.data;
+      this.detail = this.$route.query.detail;
     },
     methods: {
+      onClick(key) {
+        this.active = key;
+      },
+      dict() {
+        // 装修
+        this.dictionary(404, 1).then((res) => {
+          this.decorate_name = [];
+          this.decorateAll = res.data;
+          for (let i = 0; i < res.data.length; i++) {
+            this.decorate_name.push(res.data[i].dictionary_name);
+          }
+          // 房屋特色
+          this.dictionary(425, 1).then((res) => {
+            this.property_name = [];
+            this.propertyAll = res.data;
+            for (let i = 0; i < res.data.length; i++) {
+              this.property_name.push(res.data[i].dictionary_name);
+            }
+            this.qualityDetail();
+          });
+
+        });
+      },
+      selectShow(val) {
+        this.tabs = val;
+        this.selectHide = true;
+        switch (val) {
+          case 1:
+            this.columns = this.decorate_name;
+            break;
+          case 2:
+            this.columns = this.property_name;
+            break;
+        }
+      },
+
+      onConfirm(value, index) {
+        switch (this.tabs) {
+          case 1: // 装修
+            this.decorationOn = value;
+            for (let i = 0; i < this.decorateAll.length; i++) {
+              if (this.decorateAll[i].dictionary_name === value) {
+                this.forms.decoration = this.decorateAll[i].id;
+              }
+            }
+            break;
+          case 2: // 特色
+            this.propertyOn = value;
+            for (let i = 0; i < this.propertyAll.length; i++) {
+              if (this.propertyAll[i].dictionary_name === value) {
+                this.forms.house_feature = this.propertyAll[i].id;
+              }
+            }
+            break;
+        }
+        this.selectHide = false;
+      },
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+      },
+
       // 确认评论
       manager() {
         if (this.detail !== 'to_comment') {
@@ -151,12 +292,42 @@
     $onColor: #39b1ff;
     $borColor: #9c9c9c;
 
+    header {
+      padding: .3rem;
+      background: #FFFFFF;
+      .address {
+        font-size: .4rem;
+        border-bottom: .02rem solid #F4F4F4;
+        text-align: center;
+        padding: .3rem;
+      }
+      .marking {
+        margin: .3rem 0;
+        div {
+          @include flex;
+          justify-content: center;
+          p {
+            margin: 0 .1rem;
+            i {
+              font-size: .5rem;
+              color: #FFD000;
+            }
+          }
+        }
+        div:first-of-type {
+          margin-bottom: .24rem;
+        }
+      }
+    }
+
     .contents, .pic {
       background: #ffffff;
     }
-    .van-cell.van-hairline.van-field {
-      .van-cell__value {
-        padding-left: 0;
+    .contents {
+      .van-cell.van-hairline.van-field {
+        .van-cell__value {
+          padding-left: 0;
+        }
       }
     }
     .contents {

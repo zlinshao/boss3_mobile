@@ -546,11 +546,11 @@
 
         });
       },
+
       // select关闭
       onCancel() {
         this.selectHide = false;
-      }
-      ,
+      },
       searchSelect(val) {
         switch (val) {
           case 1:
@@ -567,8 +567,8 @@
             this.$router.push({path: '/depart'});
             break;
         }
-      }
-      ,
+      },
+
       selectShow(val) {
         this.tabs = val;
         this.selectHide = true;
@@ -619,8 +619,8 @@
           default:
             this.columns = dicts.value5;
         }
-      }
-      ,
+      },
+
       onConfirm(value, index) {
         switch (this.tabs) {
           case 1:
@@ -705,8 +705,8 @@
             break;
         }
         this.selectHide = false;
-      }
-      ,
+      },
+
       payWayClick(val) {
         if (val === 1) {
           this.payStatus = !this.payStatus;
@@ -715,15 +715,13 @@
           this.priceStatus = !this.priceStatus;
           this.payStatus = false;
         }
-      }
-      ,
+      },
 
       // 截图
       myGetImg(val) {
         this.picStatus = !val[2];
         this.form.photo = val[1];
-      }
-      ,
+      },
 
       saveCollect(val) {
         if (this.picStatus) {
@@ -760,8 +758,7 @@
           Toast('图片上传中...');
 
         }
-      }
-      ,
+      },
 
       qualityDetail() {
         this.$http.get(this.urls + 'bulletin/quality').then((res) => {
@@ -851,8 +848,7 @@
             this.form.id = '';
           }
         })
-      }
-      ,
+      },
 
       houseInfo() {
         let t = this.$route.query;
@@ -878,8 +874,7 @@
         if (t.tops === '') {
           this.stick();
         }
-      }
-      ,
+      },
 
       close_() {
         this.isClear = true;
@@ -951,8 +946,7 @@
         this.form.staff_name = '';
         this.form.department_id = '';
         this.form.department_name = '';
-      }
-      ,
+      },
     },
   }
 </script>

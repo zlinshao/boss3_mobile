@@ -16,7 +16,7 @@
           </p>
         </div>
         <div style="height: 1.4rem;"
-             :class="{'statusSuccess': place === 'published', 'statusFail':place === 'rejected'}">
+             :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected'}">
         </div>
       </div>
     </div>
@@ -36,11 +36,11 @@
                 <span style="display: block;">{{item.msg}}</span>
                 <span style="display: block;">{{item.period}}</span>
               </span>
-              <span v-if="index === '定金和收款方式'" v-for="item in key">
+            <span v-if="index === '定金和收款方式'" v-for="item in key">
                 <span style="display: block;">{{item.money_sep}}/{{item.money_way_str}}</span>
               </span>
-              <span v-if="!Array.isArray(key)&& index !== '房屋类型'">{{key}}</span>
-              <span v-if="!Array.isArray(key) && index === '房屋类型'">
+            <span v-if="!Array.isArray(key)&& index !== '房屋类型'">{{key}}</span>
+            <span v-if="!Array.isArray(key) && index === '房屋类型'">
                 <span style="display: block;">{{key.name}}</span>
               </span>
           </h1>
@@ -73,8 +73,8 @@
                   <span>{{key.user.name}}</span>
                   <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
                   <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
-                    <!--{{item.name}}-->
-                    <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
+                  <!--{{item.name}}-->
+                  <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
                   <!--</span>-->
                 </div>
                 <div class="times">
@@ -132,17 +132,14 @@
     },
     data() {
       return {
+        urls: globalConfig.server_user,
         vLoading: true,
         disabled1: false,
 
+        address: '',
         message: '',
         ids: '',
         active: false,
-
-        urls: globalConfig.server_user,
-        address1: globalConfig.server,
-        address: globalConfig.attestation,
-
         personal: {},
         place: {},
         formList: {},
@@ -213,6 +210,7 @@
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
             this.formList = res.data.data.process.content.show_content;
+            this.address = res.data.data.process.content.address;
             this.operation = res.data.data.operation;
             this.personal = res.data.data.process.user;
             this.place = res.data.data.process.place;
@@ -280,7 +278,7 @@
       },
       // 评论
       commentOn(val) {
-        this.$router.push({path: '/comment', query: {detail: val, data: this.ids}});
+        this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 1}});
       },
     },
   }

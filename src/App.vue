@@ -49,7 +49,7 @@
           let head = JSON.parse(sessionStorage.myData);
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
         } else {
-          this.loading = true;
+          this.loading = false;
           this.corp();
         }
 
@@ -62,9 +62,9 @@
         }, function (error) {
           if (error && error.response) {
             if(error.response.status === 500){
-              alert('服务器,请联系产品经理');
+              alert('服务器故障,请联系产品经理');
               DingTalkPC.device.notification.alert({
-                message: "服务器,请联系产品经理！",
+                message: "服务器故障,请联系产品经理！",
                 title: "提示信息",
                 buttonName: "关闭",
                 onSuccess: function () {
