@@ -152,6 +152,7 @@
             v-model="form.period_price_arr[index]"
             type="number"
             label="付款周期"
+            :disabled="amountPrice === 1"
             @keyup="periodDate(1)"
             placeholder="请填写月单价周期"
             required>
@@ -166,7 +167,7 @@
         </van-cell-group>
       </div>
       <div @click="priceAmount(1)" class="addInput">
-        +增加月单价
+        +月单价变化
       </div>
 
       <div class="changes" v-for="(key,index) in amountPay">
@@ -187,6 +188,7 @@
             v-model="form.period_pay_arr[index]"
             type="number"
             label="付款周期"
+            :disabled="amountPay === 1"
             @keyup="periodDate(2)"
             placeholder="请填写付款方式周期"
             required>
@@ -203,7 +205,7 @@
         </van-cell-group>
       </div>
       <div @click="priceAmount(2)" class="addInput bottom">
-        +增加付款方式
+        +付款方式变化
       </div>
 
       <van-cell-group>
@@ -302,7 +304,6 @@
           v-model="form.account"
           label="卡号"
           type="number"
-          @keyup="subAccount(form.account)"
           placeholder="请填写卡号"
           icon="clear"
           @click-icon="form.account = ''"
@@ -632,16 +633,7 @@
         let strDate = date.getDate();
         this.currentDate = new Date(year, month, strDate);
       },
-      // 获取银行
-      subAccount(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
-          if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
-          } else {
-            this.form.bank = '';
-          }
-        })
-      },
+
       // 日期选择
       timeChoose(val) {
         this.timeShow = true;
@@ -657,11 +649,11 @@
         switch (this.timeIndex) {
           case 1:
             this.form.begin_date = this.timeValue;
-            this.countDate(1, this.form.period_price_arr);
-            this.countDate(2, this.form.period_pay_arr);
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
+            this.form.period_price_arr[0] = this.form.month;
+            this.form.period_pay_arr[0] = this.form.month;
             this.first_date = [];
             this.datePrice = [];
             this.datePay = [];

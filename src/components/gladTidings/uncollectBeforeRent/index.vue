@@ -56,6 +56,7 @@
             v-model="form.period_price_arr[index]"
             type="number"
             label="周期"
+            :disabled="amountPrice === 1"
             @keyup="periodDate(1)"
             placeholder="请填写月单价周期"
             required>
@@ -70,33 +71,24 @@
         </van-cell-group>
       </div>
       <div @click="priceAmount(1)" class="addInput">
-        +增加月单价
+        +月单价变化
       </div>
 
       <van-cell-group>
         <van-field
           v-model="form.pay_way_bet"
           type="number"
-          label="付款方式-押"
+          label="押"
           placeholder="请填写付款方式-押"
           @click="selectShow(3, '')"
           readonly
-          required>
-        </van-field>
-        <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="number"
-          placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''"
           required>
         </van-field>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amountPay">
         <div class="paddingTitle">
-          <span>付款方式-付<span v-if="amountPay > 1">({{index + 1}})</span></span>
+          <span>付<span v-if="amountPay > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountPay > 1" @click="deleteAmount(index,2)">删除</span>
         </div>
         <van-cell-group>
@@ -112,6 +104,7 @@
             v-model="form.period_pay_arr[index]"
             type="number"
             label="周期"
+            :disabled="amountPay === 1"
             @keyup="periodDate(2)"
             placeholder="请填写付款方式周期"
             required>
@@ -126,7 +119,7 @@
         </van-cell-group>
       </div>
       <div @click="priceAmount(2)" class="addInput">
-        +增加付款方式
+        +付款方式变化
       </div>
 
       <van-cell-group>
@@ -166,9 +159,18 @@
         </van-cell-group>
       </div>
       <div @click="priceAmount(3)" class="addInput">
-        +增加支付方式
+        +支付方式变化
       </div>
       <van-cell-group>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="number"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
+          required>
+        </van-field>
         <van-switch-cell v-model="cusFrom" title="是否中介"/>
         <van-field
           v-model="form.property"
@@ -477,6 +479,8 @@
             break;
           case 3:
             this.form.begin_date = this.timeValue;
+            this.form.period_price_arr[0] = this.form.month;
+            this.form.period_pay_arr[0] = this.form.month;
             this.first_date = [];
             this.datePrice = [];
             this.datePay = [];

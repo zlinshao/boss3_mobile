@@ -91,7 +91,7 @@
         </van-cell-group>
       </div>
       <div @click="priceAmount" class="addInput">
-        +增加支付方式
+        +支付方式变化
       </div>
 
       <div class="aloneModel required">

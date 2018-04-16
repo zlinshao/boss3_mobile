@@ -41,7 +41,7 @@
           </van-field>
         </van-cell-group>
         <div class="footer">
-          <div @click="mark()">确认</div>
+          <div @click="mark()">确认111</div>
         </div>
       </header>
       <div v-if="marking !== 1">
@@ -84,6 +84,7 @@
     data() {
       return {
         urls: globalConfig.server_user,
+        addr: globalConfig.server,
         active: 1,
         haveInHand: true,
         isClear: false,
@@ -107,7 +108,7 @@
         },
         forms: {
           suggest_price: '',      //价格
-          house_grade: '',        //评分
+          house_grade: 1,         //评分
           decoration: '',         //装修
           house_feature: '',      //特色
         },
@@ -139,10 +140,11 @@
     methods: {
       onClick(key) {
         this.active = key;
+        this.form.house_grade = key;
       },
       // 评分
       mark() {
-        this.$http.put(this.urls + 'house/house/info/' + this.pitch).then((res) => {
+        this.$http.put(this.addr + 'house/house/info/' + this.pitch, this.forms).then((res) => {
 
         })
       },
