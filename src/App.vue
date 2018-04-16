@@ -61,6 +61,18 @@
           return response;
         }, function (error) {
           if (error && error.response) {
+            if(error.response.status === 500){
+              alert('服务器,请联系产品经理');
+              DingTalkPC.device.notification.alert({
+                message: "服务器,请联系产品经理！",
+                title: "提示信息",
+                buttonName: "关闭",
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
+              });
+            }
             if (error.response.data.status_code === 401) {
               that.loading = false;
               that.corp();
