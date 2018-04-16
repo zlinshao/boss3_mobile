@@ -36,8 +36,8 @@
                 <span style="display: block;">{{item.msg}}</span>
                 <span style="display: block;">{{item.period}}</span>
               </span>
-            <span v-if="index === '定金和收款方式'" v-for="item in key">
-                <span style="display: block;">{{item}}</span>
+              <span v-if="index === '定金和收款方式'" v-for="item in key">
+                <span style="display: block;">{{item.money_sep}}/{{item.money_way_str}}</span>
               </span>
             <span v-if="!Array.isArray(key)">{{key}}</span>
           </h1>

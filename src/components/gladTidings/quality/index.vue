@@ -688,7 +688,6 @@
         if (this.picStatus) {
         if (this.haveInHand) {
           this.haveInHand = false;
-
             this.form.is_agency = this.is_agencyOn ? 1 : 0;
             this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
             this.form.gas = this.gasOn ? 1 : 0;                       //天然气
@@ -842,6 +841,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
         this.form.city_id = '';                   //城市

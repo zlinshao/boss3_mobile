@@ -40,6 +40,15 @@
           </van-field>
         </div>
         <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(1)"
+          placeholder="请选择签约日期"
+          required>
+        </van-field>
+        <van-field
           v-model="form.begin_date"
           label="合同开始日期"
           readonly
@@ -172,15 +181,6 @@
       </div>
 
       <van-cell-group>
-        <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(1)"
-          placeholder="请选择签约日期"
-          required>
-        </van-field>
         <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
@@ -631,10 +631,58 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           console.log(t.type);
-          if (t.type === 'renter') {
+          if (t.type === 'is_nrcy') {
             this.form.oldHouseName = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
+            console.log(val.renters);
+            let rent = val.renters;
+            let rentDate = rent.start_at.substring(0, 10);
+            this.form.begin_date = rentDate;
+            this.first_date = [];
+            this.first_date.push(rentDate);
+            this.form.sign_date = rent.sign_at.substring(0, 10);
+            this.form.period_price_arr = [];
+            this.form.price_arr = [];
+            for (let i = 0; i < rent.month_price.length; i++) {
+              this.amountPrice = i + 1;
+              this.form.period_price_arr.push(rent.month_price[i].period);
+              this.form.price_arr.push(rent.month_price[i].price);
+            }
+            this.countDate(1, this.form.period_price_arr);
+
+            this.form.pay_way_bet = rent.pay_way[0].pay_way_bet;
+            this.form.period_pay_arr = [];
+            this.form.pay_way_arr = [];
+            for (let i = 0; i < rent.pay_way.length; i++) {
+              this.amountPay = i + 1;
+              this.form.period_pay_arr.push(rent.pay_way[i].period);
+              this.form.pay_way_arr.push(rent.pay_way[i].pay_way);
+            }
+            this.countDate(2, this.form.period_pay_arr);
+
+            this.form.money_sum = rent.mortgage_price;
+            this.form.money_sep = [];
+            this.form.money_way = [];
+            for (let i = 0; i < rent.month_price.length; i++) {
+              this.amountMoney = i + 1;
+              this.form.money_sep.push(rent.month_price[i].price);
+              this.form.money_way.push(rent.month_price[i].period);
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].id === rent.month_price[i].period) {
+                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
+                }
+              }
+            }
+            this.form.retainage_date = rent.end_at.substring(0, 10);
+            this.form.name = rent.customers[0].name;
+            this.form.phone = rent.customers[0].phone;
+            this.form.remark = rent.remark;
+
+            this.form.staff_id = rent.sign_user.id;
+            this.form.staff_name = rent.sign_user.name;
+            this.form.department_id = rent.sign_org.id;
+            this.form.department_name = rent.sign_org.name;
           } else {
             this.form.newHouseName = val.house_name;
             this.form.contract_id = val.id;
@@ -688,6 +736,8 @@
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.moneyNum = [''];
+        this.sign_date = '';
+        this.begin_date = '';
 
         this.form.money_sep = [''];
         this.form.money_way = [''];

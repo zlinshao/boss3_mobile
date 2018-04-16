@@ -96,7 +96,7 @@
                 this.lord(data[i]);
               }
               if ((type === 'renter' || type === 'is_nrcy' || type === '') && data[i].renters.length !== 0) {
-                this.renter(data[i]);
+                this.renter(data[i], type);
               }
               if (type === '' && data[i].lords.length === 0 && data[i].renters.length === 0) {
                 let list = {};
@@ -136,9 +136,12 @@
         }
       },
       // 租房合同
-      renter(val) {
+      renter(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
           let list = {};
+          if(type === 'is_nrcy'){
+            list.renters = val.renters[j];
+          }
           list.house_id = val.id;
           list.house_name = val.name;
           list.rooms = val.rooms;
