@@ -107,6 +107,7 @@ div .payWay.van-cell.van-hairline.van-field i {
   background: #ffffff; }
 
 .main {
+  width: 100%;
   margin: .2rem 0 1.2rem;
   position: absolute;
   top: 0;

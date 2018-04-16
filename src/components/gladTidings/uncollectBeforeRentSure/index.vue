@@ -483,13 +483,13 @@
         if (val === 1) {
           this.amountPrice--;
           this.form.period_price_arr.splice(index, 1);
-          this.price_arr.splice(index, 1);
+          this.form.price_arr.splice(index, 1);
           this.datePrice.splice(index, 1);
           this.periodDate(val);
         } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
-          this.pay_way_arr.splice(index, 1);
+          this.form.pay_way_arr.splice(index, 1);
           this.datePay.splice(index, 1);
           this.periodDate(val);
         } else {
@@ -561,7 +561,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           console.log(t.type);
-          if (t.type === 'rent0') {
+          if (t.type === 'lord') {
             this.oldHouseName = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;

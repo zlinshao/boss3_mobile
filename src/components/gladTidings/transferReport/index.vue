@@ -562,13 +562,13 @@
         if (val === 1) {
           this.amountPrice--;
           this.form.period_price_arr.splice(index, 1);
-          this.price_arr.splice(index, 1);
+          this.form.price_arr.splice(index, 1);
           this.datePrice.splice(index, 1);
           this.periodDate(val);
         } else if (val === 2) {
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
-          this.pay_way_arr.splice(index, 1);
+          this.form.pay_way_arr.splice(index, 1);
           this.datePay.splice(index, 1);
           this.periodDate(val);
         } else {
