@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <van-field
-          v-model="oldHouseName"
+          v-model="form.oldHouseName"
           label="原喜报地址"
           type="text"
           readonly
@@ -12,7 +12,7 @@
           required>
         </van-field>
         <van-field
-          v-model="newHouseName"
+          v-model="form.newHouseName"
           label="现房屋地址"
           type="text"
           readonly
@@ -217,7 +217,7 @@
           @click-icon="form.remark = ''">
         </van-field>
         <van-field
-          v-model="staff_name"
+          v-model="form.staff_name"
           @click="searchSelect(3)"
           readonly
           label="开单人"
@@ -226,7 +226,7 @@
           required>
         </van-field>
         <van-field
-          v-model="department_name"
+          v-model="form.department_name"
           @click="searchSelect(5)"
           readonly
           label="部门"
@@ -305,6 +305,8 @@
           id: '',
           type: 0,
           draft: 0,
+          oldHouseName: '',
+          newHouseName: '',
           contract_id_rent: '',         //原租房合同id
           contract_id: '',              //现房屋合同id
           house_id_rent: '',
@@ -332,12 +334,9 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
+          staff_name: '',                  //开单人name
+          department_name: '',             //部门name
         },
-        oldHouseName: '',
-        newHouseName: '',
-        staff_name: '',                  //开单人name
-        department_name: '',             //部门name
-
         dictValue8: [],                  //支付方式
         value8: [],
       }
@@ -557,40 +556,6 @@
         }
       },
 
-      houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
-          console.log(t.type);
-          if (t.type === 'renter') {
-            this.oldHouseName = val.house_name;
-            this.form.contract_id_rent = val.id;
-            this.form.house_id_rent = val.house_id;
-          } else {
-            this.newHouseName = val.house_name;
-            this.form.contract_id = val.id;
-            this.form.house_id = val.house_id;
-          }
-        }
-        if (t.staff !== undefined && t.staff !== '') {
-          let val = JSON.parse(t.staff);
-          this.form.staff_id = val.staff_id;
-          this.staff_name = val.staff_name;
-          this.form.department_id = val.depart_id;
-          this.department_name = val.depart_name;
-          this.stick();
-        }
-        if (t.depart !== undefined && t.depart !== '') {
-          let val = JSON.parse(t.depart);
-          this.department_name = val.name;
-          this.form.department_id = val.id;
-          this.stick();
-        }
-        if (t.tops === '') {
-          this.stick();
-        }
-      },
-
       rentDetail() {
         this.$http.get(this.urls + 'bulletin/rent_without_collect').then((res) => {
           if (res.data.code === '51320') {
@@ -600,6 +565,13 @@
             this.form.id = data.id;
             this.form.month = draft.month;
             this.form.day = draft.day;
+
+            this.form.oldHouseName = draft.oldHouseName;
+            this.form.newHouseName = draft.newHouseName;
+            this.form.contract_id_rent = draft.contract_id_rent;
+            this.form.contract_id = draft.contract_id;
+            this.form.house_id_rent = draft.house_id_rent;
+            this.form.house_id = draft.house_id;
 
             this.form.sign_date = draft.sign_date;
             this.form.begin_date = draft.begin_date;
@@ -644,13 +616,48 @@
             this.form.phone = draft.phone;
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
-            this.staff_name = data.staff_name;
+            this.form.staff_name = draft.staff_name;
             this.form.department_id = draft.department_id;
-            this.department_name = data.department_name;
+            this.form.department_name = draft.department_name;
           } else {
             this.form.id = '';
           }
         })
+      },
+
+
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = JSON.parse(t.house);
+          console.log(t.type);
+          if (t.type === 'renter') {
+            this.form.oldHouseName = val.house_name;
+            this.form.contract_id_rent = val.id;
+            this.form.house_id_rent = val.house_id;
+          } else {
+            this.form.newHouseName = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
+          }
+        }
+        if (t.staff !== undefined && t.staff !== '') {
+          let val = JSON.parse(t.staff);
+          this.form.staff_id = val.staff_id;
+          this.form.staff_name = val.staff_name;
+          this.form.department_id = val.depart_id;
+          this.form.department_name = val.depart_name;
+          this.stick();
+        }
+        if (t.depart !== undefined && t.depart !== '') {
+          let val = JSON.parse(t.depart);
+          this.form.department_name = val.name;
+          this.form.department_id = val.id;
+          this.stick();
+        }
+        if (t.tops === '') {
+          this.stick();
+        }
       },
 
       close_() {
@@ -663,8 +670,8 @@
         this.form.contract_id = '';
         this.form.house_id_rent = '';
         this.form.house_id = '';
-        this.oldHouseName = '';
-        this.newHouseName = '';
+        this.form.oldHouseName = '';
+        this.form.newHouseName = '';
 
         this.amountPrice = 1;
 
@@ -691,9 +698,9 @@
         this.form.phone = '';
         this.form.remark = '';
         this.form.staff_id = '';
-        this.staff_name = '';
+        this.form.staff_name = '';
         this.form.department_id = '';
-        this.department_name = '';
+        this.form.department_name = '';
       },
     },
   }
