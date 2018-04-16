@@ -853,8 +853,8 @@
         this.house_type_name = '1室1厅1卫';
 
         this.form.area = '';                      //面积
-        this.form.direction.id = '';               //朝向
         this.form.direction.name = '';              //朝向
+        this.form.direction.id = '';               //朝向
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
         this.form.house_age = '';                //年限
@@ -870,7 +870,7 @@
         this.form.microwave = 1;               //微波炉
         this.form.wash_machine = 1;            //洗衣机
         this.form.water_heater = 1;            //热水器
-        this.form.sofa = '';            //沙发
+        this.form.sofa = 1;                   //沙发
         this.form.clothe_rack = 1;             //晾衣架
         this.form.heater = 1;                    //暖气
         this.heaterOn = true;               //是否暖气
