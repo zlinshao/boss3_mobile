@@ -70,11 +70,12 @@
                     <img :src="key.user.avatar" v-if="key.user.avatar !== '' && key.user.avatar !== null">
                     <img src="../../../assets/head.png" v-else>
                   </p>
-                  <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
-                  <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
-                      {{item.name}}
-                      <span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>
-                    </span>
+                  <span>{{key.user.name}}</span>
+                  <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
+                  <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
+                    <!--{{item.name}}-->
+                    <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
+                  <!--</span>-->
                 </div>
                 <div class="times">
                   {{key.created_at}}

@@ -76,11 +76,10 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-
             this.$http.put(this.urls + 'process/' + this.pitch, {
               operation: this.detail,
               comment: this.form.remark,
-              album: this.form.photo
+              album: this.form.photo,
             }).then((res) => {
               this.haveInHand = true;
               if (res.data.status === 'success') {

@@ -168,7 +168,7 @@
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
-            type="text"
+            type="number"
             label="金额"
             placeholder="请填写金额"
             required>
@@ -740,16 +740,16 @@
             this.form.pay_way_arr = draft.pay_way_arr;
 
             this.form.money_sum = draft.money_sum;
+            this.form.money_way = draft.money_way;
+            this.form.money_sep = draft.money_sep;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
-              this.form.money_way.push('');
               for (let j = 0; j < this.dictValue8.length; j++) {
                 if (this.dictValue8[j].id === draft.money_way[i]) {
                   this.moneyNum[i] = this.dictValue8[j].dictionary_name;
                 }
               }
             }
-            this.form.money_sep = draft.money_sep;
 
             this.form.deposit = draft.deposit;
             this.form.receipt = draft.receipt;
