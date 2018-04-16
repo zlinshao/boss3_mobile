@@ -68,7 +68,7 @@
             v-model="form.period_price_arr[index]"
             type="number"
             label="周期"
-            :disabled="amountPrice === 1"
+            :disabled="amountPrice === 1 && form.period_price_arr[index] === form.month"
             @keyup="periodDate(1)"
             placeholder="请填写月单价周期"
             required>
@@ -116,7 +116,7 @@
             v-model="form.period_pay_arr[index]"
             type="number"
             label="周期"
-            :disabled="amountPay === 1"
+            :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
             @keyup="periodDate(2)"
             placeholder="请填写付款方式周期"
             required>
