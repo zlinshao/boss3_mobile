@@ -238,7 +238,7 @@
           v-model="form.vacancy_other"
           label="空置期规则"
           type="text"
-          v-if="vacancy_way_name === '无'"
+          v-if="vacancy_way_name === '其他'"
           placeholder="空置期规则"
           required>
         </van-field>
@@ -958,7 +958,7 @@
             this.form.vacancy_way = draft.vacancy_way;
 
             for (let j = 0; j < this.dictValue7.length; j++) {
-              if (this.dictValue7[j].id === draft.pay_way_arr) {
+              if (this.dictValue7[j].id === draft.vacancy_way) {
                 this.vacancy_way_name = this.dictValue7[j].dictionary_name;
               }
             }

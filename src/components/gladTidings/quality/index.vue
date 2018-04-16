@@ -72,6 +72,15 @@
           placeholder="请选择装修">
         </van-field>
         <van-field
+          @click="selectShow(15)"
+          v-model="form.property_type.name"
+          label="房屋类型"
+          required
+          readonly
+          type="text"
+          placeholder="请选择房屋类型">
+        </van-field>
+        <van-field
           @click="selectShow(3)"
           v-model="form.direction.name"
           label="朝向"
@@ -432,6 +441,9 @@
         decorateAll: [],
         decorate_name: [],
 
+        propertyAll: [],
+        property_name: [],
+
         form: {
           id: '',
           is_draft: 0,
@@ -447,6 +459,10 @@
           },
           decorate: {
             id: '',                    //装修
+            name: '',
+          },
+          property_type: {
+            id: '',
             name: '',
           },
           floor: '',                    //楼层
@@ -502,30 +518,39 @@
     },
     methods: {
       dicts() {
-        //城市
+        // 城市
         this.dictionary(306, 1).then((res) => {
           this.cities = [];
           this.allCity = res.data;
           for (let i = 0; i < res.data.length; i++) {
             this.cities.push(res.data[i].dictionary_name);
           }
-
-          //安置方式
+          // 装修
           this.dictionary(404, 1).then((res) => {
             this.decorate_name = [];
             this.decorateAll = res.data;
             for (let i = 0; i < res.data.length; i++) {
               this.decorate_name.push(res.data[i].dictionary_name);
             }
+            // 房屋类型
+            this.dictionary(410, 1).then((res) => {
+              this.property_name = [];
+              this.propertyAll = res.data;
+              for (let i = 0; i < res.data.length; i++) {
+                this.property_name.push(res.data[i].dictionary_name);
+              }
+              this.qualityDetail();
+            });
+
           });
 
-          this.qualityDetail();
         });
       },
       // select关闭
       onCancel() {
         this.selectHide = false;
-      },
+      }
+      ,
       searchSelect(val) {
         switch (val) {
           case 1:
@@ -542,7 +567,8 @@
             this.$router.push({path: '/depart'});
             break;
         }
-      },
+      }
+      ,
       selectShow(val) {
         this.tabs = val;
         this.selectHide = true;
@@ -587,10 +613,14 @@
           case 14:
             this.columns = this.decorate_name;
             break;
+          case 15:
+            this.columns = this.property_name;
+            break;
           default:
             this.columns = dicts.value5;
         }
-      },
+      }
+      ,
       onConfirm(value, index) {
         switch (this.tabs) {
           case 1:
@@ -665,9 +695,18 @@
               }
             }
             break;
+          case 15: //类型
+            this.form.property_type.name = value;
+            for (let i = 0; i < this.propertyAll.length; i++) {
+              if (this.propertyAll[i].dictionary_name === value) {
+                this.form.property_type.id = this.propertyAll[i].id;
+              }
+            }
+            break;
         }
         this.selectHide = false;
-      },
+      }
+      ,
       payWayClick(val) {
         if (val === 1) {
           this.payStatus = !this.payStatus;
@@ -676,18 +715,20 @@
           this.priceStatus = !this.priceStatus;
           this.payStatus = false;
         }
-      },
+      }
+      ,
 
       // 截图
       myGetImg(val) {
         this.picStatus = !val[2];
         this.form.photo = val[1];
-      },
+      }
+      ,
 
       saveCollect(val) {
         if (this.picStatus) {
-        if (this.haveInHand) {
-          this.haveInHand = false;
+          if (this.haveInHand) {
+            this.haveInHand = false;
             this.form.is_agency = this.is_agencyOn ? 1 : 0;
             this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
             this.form.gas = this.gasOn ? 1 : 0;                       //天然气
@@ -713,13 +754,14 @@
               }
             })
           } else {
-          Toast('正在提交...');
+            Toast('正在提交...');
           }
         } else {
           Toast('图片上传中...');
 
         }
-      },
+      }
+      ,
 
       qualityDetail() {
         this.$http.get(this.urls + 'bulletin/quality').then((res) => {
@@ -743,6 +785,7 @@
 
             this.form.area = data.area;                                     //面积
             this.form.direction = data.direction;                           //朝向
+            this.form.property_type = data.property_type;                   //类型
             this.form.floor = data.floor;                                   //楼层
             this.form.floors = data.floors;                                 //总楼层
             this.form.house_age = data.house_age;                           //年限
@@ -808,7 +851,8 @@
             this.form.id = '';
           }
         })
-      },
+      }
+      ,
 
       houseInfo() {
         let t = this.$route.query;
@@ -834,7 +878,8 @@
         if (t.tops === '') {
           this.stick();
         }
-      },
+      }
+      ,
 
       close_() {
         this.isClear = true;
@@ -857,6 +902,8 @@
         this.form.area = '';                      //面积
         this.form.direction.name = '';              //朝向
         this.form.direction.id = '';               //朝向
+        this.form.property_type.id = '';          //类型
+        this.form.property_type.name = '';        //类型
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
         this.form.house_age = '';                //年限
@@ -904,7 +951,8 @@
         this.form.staff_name = '';
         this.form.department_id = '';
         this.form.department_name = '';
-      },
+      }
+      ,
     },
   }
 </script>
