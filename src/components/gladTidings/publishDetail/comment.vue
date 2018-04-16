@@ -41,7 +41,7 @@
           </van-field>
         </van-cell-group>
         <div class="footer">
-          <div @click="mark()">确认111</div>
+          <div @click="mark()">确认</div>
         </div>
       </header>
       <div v-if="marking !== 1">
@@ -140,7 +140,7 @@
     methods: {
       onClick(key) {
         this.active = key;
-        this.form.house_grade = key;
+        this.forms.house_grade = key;
       },
       // 评分
       mark() {
