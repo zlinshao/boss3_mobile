@@ -73,9 +73,10 @@
       },
 
       sure() {
-        if (this.haveInHand) {
-          this.haveInHand = false;
-          if (this.picStatus) {
+        if (this.picStatus) {
+          if (this.haveInHand) {
+            this.haveInHand = false;
+
             this.$http.put(this.urls + 'process/' + this.pitch, {
               operation: this.detail,
               comment: this.form.remark,
@@ -92,10 +93,10 @@
               }
             })
           } else {
-            Toast('图片上传中...');
+            Toast('正在提交...');
           }
         } else {
-          Toast('正在提交...');
+          Toast('图片上传中...');
         }
       },
 

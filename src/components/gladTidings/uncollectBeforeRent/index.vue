@@ -87,7 +87,7 @@
         <van-field
           v-model="form.deposit"
           label="押金"
-          type="text"
+          type="number"
           placeholder="请填写押金"
           icon="clear"
           @click-icon="form.deposit = ''"
@@ -150,7 +150,7 @@
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
-            type="text"
+            type="number"
             label="金额"
             placeholder="请填写金额"
             required>
@@ -174,7 +174,7 @@
         <van-field
           v-model="form.property"
           label="物业费"
-          type="text"
+          type="number"
           placeholder="请填写物业费"
           icon="clear"
           @click-icon="form.property = ''"
@@ -601,12 +601,12 @@
       },
 
       saveCollect(val) {
-        if (this.haveInHand) {
-          this.haveInHand = false;
-          this.form.draft = val;
-          this.form.is_agency = this.cusFrom ? 1 : 0;
-          this.form.is_corp = this.corp ? 1 : 0;
-          if (this.picStatus) {
+        if (this.picStatus) {
+          if (this.haveInHand) {
+            this.haveInHand = false;
+            this.form.draft = val;
+            this.form.is_agency = this.cusFrom ? 1 : 0;
+            this.form.is_corp = this.corp ? 1 : 0;
             this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50210') {
@@ -622,10 +622,11 @@
               }
             })
           } else {
-            Toast('图片上传中...');
+            Toast('正在提交...');
           }
         } else {
-          Toast('正在提交...');
+          Toast('图片上传中...');
+
         }
       },
 

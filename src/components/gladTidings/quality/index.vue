@@ -685,9 +685,10 @@
       },
 
       saveCollect(val) {
+        if (this.picStatus) {
         if (this.haveInHand) {
           this.haveInHand = false;
-          if (this.picStatus) {
+
             this.form.is_agency = this.is_agencyOn ? 1 : 0;
             this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
             this.form.gas = this.gasOn ? 1 : 0;                       //天然气
@@ -713,10 +714,11 @@
               }
             })
           } else {
-            Toast('图片上传中...');
+          Toast('正在提交...');
           }
         } else {
-          Toast('正在提交...');
+          Toast('图片上传中...');
+
         }
       },
 

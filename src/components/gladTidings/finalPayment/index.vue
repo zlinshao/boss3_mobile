@@ -324,29 +324,29 @@
       },
 
       saveCollect(val) {
-        if (this.haveInHand) {
-          this.haveInHand = false;
-        this.form.draft = val;
         if (this.picStatus) {
-          this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
-            this.haveInHand = true;
-            if (res.data.code === '50910') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
-            } else if (res.data.code === '50920') {
-              this.form.id = res.data.data.id;
-              Toast.success(res.data.msg);
-            } else {
-              Toast(res.data.msg);
-            }
-          })
+          if (this.haveInHand) {
+            this.haveInHand = false;
+            this.form.draft = val;
+            this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
+              this.haveInHand = true;
+              if (res.data.code === '50910') {
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                this.routerDetail(res.data.data.data.id);
+              } else if (res.data.code === '50920') {
+                this.form.id = res.data.data.id;
+                Toast.success(res.data.msg);
+              } else {
+                Toast(res.data.msg);
+              }
+            })
+          } else {
+            Toast('正在提交...');
+          }
         } else {
           Toast('图片上传中...');
-        }
-        } else {
-          Toast('正在提交...');
         }
       },
 

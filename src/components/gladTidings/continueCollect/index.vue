@@ -655,11 +655,11 @@
       },
 
       saveCollect(val) {
-        if (this.haveInHand) {
-          this.haveInHand = false;
-          this.form.draft = val;
-          this.form.is_corp = this.corp ? 1 : 0;
-          if (this.picStatus) {
+        if (this.picStatus) {
+          if (this.haveInHand) {
+            this.haveInHand = false;
+            this.form.draft = val;
+            this.form.is_corp = this.corp ? 1 : 0;
             this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50110') {
@@ -675,10 +675,10 @@
               }
             })
           } else {
-            Toast('图片上传中...');
+            Toast('正在提交...');
           }
         } else {
-          Toast('正在提交...');
+          Toast('图片上传中...');
         }
       },
 

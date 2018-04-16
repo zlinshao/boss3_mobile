@@ -177,9 +177,9 @@
         this.form.contract_id = '';
       },
       saveCollect(val) {
-        if (this.haveInHand) {
-          this.haveInHand = false;
-          if (this.picStatus) {
+        if (this.picStatus) {
+          if (this.haveInHand) {
+            this.haveInHand = false;
             this.form.refund = this.refundSta ? 1 : 0;
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
@@ -197,10 +197,11 @@
               }
             })
           } else {
-            Toast('图片上传中...');
+            Toast('正在提交...');
           }
         } else {
-          Toast('正在提交...');
+          Toast('图片上传中...');
+
         }
       },
 

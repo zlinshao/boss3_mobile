@@ -278,9 +278,9 @@
           this.form.settle = 0;
         }
         this.form.draft = val;
-        if (this.haveInHand) {
-          this.haveInHand = false;
-          if (this.picStatus) {
+        if (this.picStatus) {
+          if (this.haveInHand) {
+            this.haveInHand = false;
             this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50310') {
@@ -295,10 +295,11 @@
               }
             })
           } else {
-            Toast('图片上传中...');
+            Toast('正在提交...');
           }
         } else {
-          Toast('正在提交...');
+          Toast('图片上传中...');
+
         }
       },
 

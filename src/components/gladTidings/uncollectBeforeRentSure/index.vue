@@ -151,7 +151,7 @@
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
-            type="text"
+            type="number"
             label="金额"
             placeholder="请填写金额"
             required>
@@ -366,10 +366,10 @@
       searchSelect(val) {
         switch (val) {
           case 1 :
-            this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
             break;
           case 2:
-            this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
             break;
           case 3:
             this.$router.push({path: '/organize'});
@@ -530,10 +530,10 @@
       },
 
       saveCollect(val) {
-        if (this.haveInHand) {
-          this.haveInHand = false;
-          this.form.draft = val;
-          if (this.picStatus) {
+        if (this.picStatus) {
+          if (this.haveInHand) {
+            this.haveInHand = false;
+            this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50510') {
@@ -549,10 +549,11 @@
               }
             })
           } else {
-            Toast('图片上传中...');
+            Toast('正在提交...');
           }
         } else {
-          Toast('正在提交...');
+          Toast('图片上传中...');
+
         }
       },
 
@@ -561,7 +562,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           console.log(t.type);
-          if (t.type === 'lord') {
+          if (t.type === 'renter') {
             this.oldHouseName = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
