@@ -72,6 +72,10 @@
                 onFail: function (err) {
                 }
               });
+              dd.biz.navigation.close({
+                onSuccess: function (result) {},
+                onFail: function (err) {}
+              });
             }
             if (error.response.data.status_code === 401) {
               that.loading = false;
