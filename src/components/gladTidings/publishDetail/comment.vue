@@ -19,9 +19,9 @@
         <van-cell-group>
           <van-field
             v-model="forms.suggest_price"
-            label="总金额"
+            label="价格"
             type="number"
-            placeholder="请填写总金额">
+            placeholder="请填写金额">
           </van-field>
           <van-field
             @click="selectShow(1)"
@@ -41,7 +41,7 @@
           </van-field>
         </van-cell-group>
         <div class="footer">
-          <div @click="manager()">确认</div>
+          <div @click="mark()">确认</div>
         </div>
       </header>
       <div v-if="marking !== 1">
@@ -134,12 +134,17 @@
       this.detail = this.$route.query.detail;
       this.address = this.$route.query.address;
       this.marking = this.$route.query.marking;
-      this.pitch = this.$route.query.data;
       this.detail = this.$route.query.detail;
     },
     methods: {
       onClick(key) {
         this.active = key;
+      },
+      // 评分
+      mark() {
+        this.$http.put(this.urls + 'house/house/info/' + this.pitch).then((res) => {
+
+        })
       },
       dict() {
         // 装修

@@ -736,8 +736,8 @@
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.moneyNum = [''];
-        this.sign_date = '';
-        this.begin_date = '';
+        this.form.sign_date = '';
+        this.form.begin_date = '';
 
         this.form.money_sep = [''];
         this.form.money_way = [''];
