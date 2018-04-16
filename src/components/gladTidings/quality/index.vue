@@ -462,7 +462,7 @@
             name: '',
           },
           property_type: {
-            id: '',
+            id: '',                     //房屋类型
             name: '',
           },
           floor: '',                    //楼层
