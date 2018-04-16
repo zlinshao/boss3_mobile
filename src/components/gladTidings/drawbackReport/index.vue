@@ -150,7 +150,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
-        haveInHand: false,
+        haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,

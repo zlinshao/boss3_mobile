@@ -171,6 +171,7 @@
         urls: globalConfig.server,
         isClear: '',              //删除图片
         picStatus: true,
+        haveInHand: true,
 
         settleStatus: false,      //是否结清
 

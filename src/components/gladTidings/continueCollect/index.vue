@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <van-field
-          v-model="houseName"
+          v-model="form.house.name"
           label="房屋地址"
           type="text"
           readonly
@@ -397,7 +397,10 @@
           type: 2,
           draft: 0,
           contract_id: '',    //合同
-          house_id: '',                 //合同
+          house: {
+            id: '',
+            name: '',
+          },
           month: '',                    //收房月数
           day: '',                      //收房天数
           begin_date: '',               //合同开始日期
@@ -686,9 +689,9 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.houseName = val.house_name;
           this.form.contract_id = val.id;
-          this.form.house_id = val.house_id;
+          this.form.house.id = val.house_id;
+          this.form.house.name = val.house_name;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -720,8 +723,7 @@
             this.form.month = draft.month;
             this.form.day = draft.day;
             this.form.contract_id = draft.contract_id;
-            this.form.house_id = draft.house_id;
-            this.houseName = data.address;
+            this.form.house = draft.house;
             this.form.begin_date = draft.begin_date;
             this.form.pay_first_date = draft.pay_first_date;
             this.first_date = [];
@@ -800,8 +802,8 @@
         this.picStatus = true;
         this.form.id = '';
         this.form.contract_id = '';
-        this.form.house_id = '';
-        this.houseName = '';
+        this.form.house.id = '';
+        this.form.house.name = '';
         this.form.month = '';
         this.form.day = '';
         this.form.begin_date = '';
