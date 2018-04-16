@@ -1,7 +1,6 @@
 <template>
   <div id="uncollectBeforeRent">
-    <div class="main">
-
+    <div class="main" id="main">
       <van-cell-group>
         <van-field
           v-model="form.rent_without_collect_address"

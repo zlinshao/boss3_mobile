@@ -230,6 +230,7 @@ div {
   z-index: 999;
   .searchContent {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     height: 77%;
     .searchList {
       @include flex;

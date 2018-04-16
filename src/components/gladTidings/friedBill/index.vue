@@ -1,6 +1,6 @@
 <template>
   <div id="friedBill">
-    <div class="main">
+    <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>

@@ -1,6 +1,6 @@
 <template>
   <div id="rentReport">
-    <div class="main">
+    <div class="main" id="main">
       <van-cell-group>
         <van-field
           v-model="houseName"

@@ -1,6 +1,6 @@
 <template>
   <div id="transferReport">
-    <div class="main">
+    <div class="main" id="main">
       <van-cell-group style="margin-bottom: 12px;">
         <van-field
           v-model="oldHouseName"

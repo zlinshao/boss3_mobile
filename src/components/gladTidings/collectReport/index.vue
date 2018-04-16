@@ -1,6 +1,6 @@
 <template>
   <div id="collectReport">
-    <div class="main">
+    <div class="main" id="main">
       <van-cell-group>
         <!--<van-switch-cell v-model="joint" title="是否合租"/>-->
         <!--<van-field-->
@@ -92,6 +92,15 @@
             placeholder="请填写天数">
           </van-field>
         </div>
+        <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(4)"
+          placeholder="请选择签约日期"
+          required>
+        </van-field>
         <van-field
           v-model="form.begin_date"
           type="text"
@@ -269,15 +278,6 @@
           placeholder="请选择物业费付款人"
           @click="selectShow(6,'')"
           readonly
-          required>
-        </van-field>
-        <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(4)"
-          placeholder="请选择签约日期"
           required>
         </van-field>
         <van-field
@@ -547,25 +547,16 @@
       }
     },
     mounted() {
-
-    },
-    activated() {
       this.getNowFormatDate();
       this.dicts();
+    },
+    activated() {
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
     },
     methods: {
       dicts() {
-        //城市
-        // this.dictionary(306, 1).then((res) => {
-        //   this.cities = [];
-        //   this.allCity = res.data;
-        //   for (let i = 0; i < res.data.length; i++) {
-        //     this.cities.push(res.data[i].dictionary_name);
-        //   }
-
         //付款方式
         this.dictionary(443, 1).then((res) => {
           this.value4 = [];
@@ -595,8 +586,6 @@
           });
 
         });
-
-        // });
       },
       searchSelect(val) {
         switch (val) {
@@ -1025,6 +1014,8 @@
         // this.share = 0;
         this.joint = false;
         this.form.id = '';
+        this.form.house.id = '';
+        this.form.house.name = '';
         // this.form.rooms_sum = '';
         // this.form.city_id = '';
         // this.form.city_name = '';

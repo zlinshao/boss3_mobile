@@ -166,6 +166,7 @@ div .payWay.van-cell.van-hairline.van-field i {
   z-index: 999; }
   .searchClass .searchContent {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     height: 77%; }
     .searchClass .searchContent .searchList {
       display: flex;

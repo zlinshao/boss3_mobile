@@ -1,6 +1,6 @@
 <template>
   <div id="quality">
-    <div class="main">
+    <div class="main" id="main">
       <van-cell-group>
         <van-field
           v-model="form.city_name"

@@ -1,7 +1,7 @@
 <template>
   <div id="clearRetreat">
 
-    <div class="main">
+    <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">报备性质</div>

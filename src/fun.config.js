@@ -47,7 +47,8 @@ export default {
     };
 
     Vue.prototype.stick = function () {
-      window.scrollTo(0, document.body.scrollHeight);
+      document.getElementById('main').scrollTop = document.getElementById('main').scrollHeight;
+      // console.log(document.getElementsByTagName('.main')[0].scrollHeight);
     };
 
     Vue.prototype.dictionary = function (data, flag) {

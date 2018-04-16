@@ -1,6 +1,6 @@
 <template>
   <div id="uncollectBeforeRentSure">
-    <div class="main">
+    <div class="main" id="main">
       <van-cell-group>
         <van-field
           v-model="oldHouseName"
@@ -338,7 +338,7 @@
         staff_name: '',                  //开单人name
         department_name: '',             //部门name
 
-        dictValue8: [],         //支付方式
+        dictValue8: [],                  //支付方式
         value8: [],
       }
     },
@@ -536,12 +536,12 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50510') {
+              if (res.data.code === '51310') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '51220') {
+              } else if (res.data.code === '51320') {
                 this.form.id = res.data.data.id;
                 Toast.success(res.data.msg);
               } else {
@@ -593,7 +593,7 @@
 
       rentDetail() {
         this.$http.get(this.urls + 'bulletin/rent_without_collect').then((res) => {
-          if (res.data.code === '51210') {
+          if (res.data.code === '51320') {
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 
@@ -659,9 +659,12 @@
         this.form.month = '';
         this.form.day = '';
 
-        this.form.sign_date = '';
-        this.form.begin_date = '';
-        this.first_date = [];
+        this.form.contract_id_rent = '';
+        this.form.contract_id = '';
+        this.form.house_id_rent = '';
+        this.form.house_id = '';
+        this.oldHouseName = '';
+        this.newHouseName = '';
 
         this.amountPrice = 1;
 
@@ -679,8 +682,8 @@
         this.amountMoney = 1;
         this.moneyNum = [''];
 
-        this.form.money_sep = [];
-        this.form.money_way = [];
+        this.form.money_sep = [''];
+        this.form.money_way = [''];
 
         this.form.retainage_date = '';
 

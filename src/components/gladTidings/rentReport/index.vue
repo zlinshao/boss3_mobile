@@ -1,6 +1,6 @@
 <template>
   <div id="rentReport">
-    <div class="main">
+    <div class="main" id="main">
       <van-cell-group>
         <van-field
           v-model="houseName"
@@ -40,6 +40,15 @@
             placeholder="请填写天数">
           </van-field>
         </div>
+        <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(1)"
+          placeholder="请选择签约日期"
+          required>
+        </van-field>
         <van-field
           v-model="form.begin_date"
           label="合同开始日期"
@@ -210,15 +219,6 @@
           placeholder="请填写收据编号"
           icon="clear"
           @click-icon="form.receipt = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(1)"
-          placeholder="请选择签约日期"
           required>
         </van-field>
         <van-field
