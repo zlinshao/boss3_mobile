@@ -75,10 +75,18 @@
       // 搜索
       onSearch(type) {
         let value = this.searchValue.replace(/\s+/g, '');
-        this.myData(type, value);
+        let urls;
+        switch (type) {
+          case 'is_nrcy':
+            urls = 'houses?is_nrcy=1&&q=';
+            break;
+          default:
+            urls = 'houses?q=';
+        }
+        this.myData(type, value, urls);
       },
-      myData(type, val) {
-        this.$http.get(this.address + 'houses?q=' + val).then((res) => {
+      myData(type, val, urls) {
+        this.$http.get(this.address + urls + val).then((res) => {
           let data = res.data.data;
           if (data.length !== 0 && res.data.status === 'success') {
             this.lists = [];
@@ -87,7 +95,7 @@
               if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                 this.lord(data[i]);
               }
-              if ((type === 'renter' || type === '') && data[i].renters.length !== 0) {
+              if ((type === 'renter' || type === 'is_nrcy' || type === '') && data[i].renters.length !== 0) {
                 this.renter(data[i]);
               }
               if (type === '' && data[i].lords.length === 0 && data[i].renters.length === 0) {
