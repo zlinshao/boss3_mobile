@@ -535,12 +535,12 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '51310') {
+              if (res.data.code === "51310") {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '51320') {
+              } else if (res.data.code === "51320") {
                 this.form.id = res.data.data.id;
                 Toast.success(res.data.msg);
               } else {
@@ -558,7 +558,7 @@
 
       rentDetail() {
         this.$http.get(this.urls + 'bulletin/rent_without_collect').then((res) => {
-          if (res.data.code === '51320') {
+          if (res.data.code === "51320") {
             let data = res.data.data;
             let draft = res.data.data.draft_content;
 

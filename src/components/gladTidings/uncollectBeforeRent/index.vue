@@ -652,7 +652,7 @@
 
       rentDetail() {
         this.$http.get(this.urls + 'bulletin/rent?type=4').then((res) => {
-          if (res.data.code === '50210') {
+          if (res.data.code === '50220') {
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
