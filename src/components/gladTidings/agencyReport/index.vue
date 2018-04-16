@@ -75,7 +75,6 @@
           v-model="form.account"
           label="卡号"
           type="number"
-          @keyup="subAccount(form.account)"
           placeholder="请填写卡号"
           icon="clear"
           @click-icon="form.account = ''"
@@ -252,16 +251,6 @@
         }
       },
 
-      // 获取银行
-      subAccount(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
-          if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
-          } else {
-            this.form.bank = '';
-          }
-        })
-      },
       rentChange(val) {
         this.houseName = '';
         this.form.house_id = '';

@@ -223,7 +223,6 @@
           v-model="form.account"
           label="卡号"
           type="number"
-          @keyup="subAccount(form.account)"
           placeholder="请填写卡号"
           icon="clear"
           @click-icon="form.account = ''"
@@ -516,16 +515,7 @@
         let strDate = date.getDate();
         this.currentDate = new Date(year, month, strDate);
       },
-      // 获取银行
-      subAccount(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
-          if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
-          } else {
-            this.form.bank = '';
-          }
-        })
-      },
+
       // 日期选择
       timeChoose(val) {
         this.timeShow = true;

@@ -67,7 +67,6 @@
           v-model="form.account"
           label="卡号"
           type="number"
-          @keyup="subAccount(form.account)"
           placeholder="请填写卡号"
           icon="clear"
           @click-icon="form.account = ''"
@@ -206,16 +205,7 @@
         this.picStatus = !val[2];
         this.form.screenshot_leader = val[1];
       },
-      // 获取银行
-      subAccount(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
-          if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
-          } else {
-            this.form.bank = '';
-          }
-        })
-      },
+
       // select关闭
       onCancel() {
         this.selectHide = false;
