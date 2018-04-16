@@ -69,9 +69,9 @@
         <van-field
           v-model="form.checkout_date"
           type="text"
-          label="开始时间"
+          label="开始日期"
           @click="timeChoose()"
-          placeholder="获取周期开始日期"
+          placeholder="请选择开始日期"
           readonly
           required>
         </van-field>
