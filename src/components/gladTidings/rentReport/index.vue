@@ -441,7 +441,6 @@
             }
             this.rentDetail();
           });
-
         });
       },
       searchSelect(val) {

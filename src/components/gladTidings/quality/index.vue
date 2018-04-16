@@ -407,7 +407,6 @@
         cities: [],                   //城市
         house_type_name: '1室1厅1卫',
         refundSta: true,
-        direction_name: '',
 
         is_agencyOn: false,           //是否中介
         heaterOn: true,               //暖气
@@ -845,7 +844,8 @@
         this.form.id = '';
         this.form.city_id = '';                   //城市
         this.form.city_name = '';                 //城市
-        this.form.community = {};                 //小区id
+        this.form.community.id = '';               //小区id
+        this.form.community.name = '';             //小区id
         this.community_name = '';                 //小区名称
         this.form.door_address = ['', '', ''];
 
@@ -853,8 +853,8 @@
         this.house_type_name = '1室1厅1卫';
 
         this.form.area = '';                      //面积
-        this.form.direction = '';                  //朝向
-        this.direction_name = '';                 //朝向
+        this.form.direction.id = '';               //朝向
+        this.form.direction.name = '';              //朝向
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
         this.form.house_age = '';                //年限
