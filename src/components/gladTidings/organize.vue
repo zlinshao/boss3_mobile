@@ -39,12 +39,23 @@
     },
     activated() {
       this.searchValue = '';
+      this.lists = [];
+    },
+    watch:{
+      searchValue(val){
+        if (val.length !== 0) {
+          this.organize(val);
+        } else {
+          this.lists = [];
+          this.searchValue = '';
+        }
+      }
     },
     methods: {
-      organize() {
+      organize(val) {
         this.$http.get(this.address + 'users', {
           params: {
-            q: this.searchValue,
+            q: val,
             page: 1,
             per_page_number: 30,
             org_id: 1,

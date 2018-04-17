@@ -4,7 +4,6 @@
       <van-search
         v-model="searchValue"
         show-action
-        @keyup="onSearch(types)"
         @cancel="onCancel"/>
 
       <div class="searchContent">
@@ -55,8 +54,6 @@
       }
     },
     mounted() {
-      this.lists = [];
-      this.types = this.$route.query.type;
 
     },
     activated() {
@@ -71,10 +68,20 @@
         vm.ddRent(from.path, 'house');
       })
     },
+    watch: {
+      searchValue(val) {
+        if (val.length !== 0) {
+          this.onSearch(this.types, val);
+        } else {
+          this.lists = [];
+          this.searchValue = '';
+        }
+      }
+    },
     methods: {
       // 搜索
-      onSearch(type) {
-        let value = this.searchValue.replace(/\s+/g, '');
+      onSearch(type, val) {
+        let value = val.replace(/\s+/g, '');
         let urls;
         switch (type) {
           case 'is_nrcy':
@@ -139,7 +146,7 @@
       renter(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
           let list = {};
-          if(type === 'is_nrcy'){
+          if (type === 'is_nrcy') {
             list.renters = val.renters[j];
           }
           list.house_id = val.id;

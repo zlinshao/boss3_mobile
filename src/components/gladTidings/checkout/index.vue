@@ -14,11 +14,11 @@
       <van-cell-group>
         <van-field
           v-model="form.check_type.name"
-          label="房屋地址"
+          label="退房性质"
           type="text"
           @click="selectShow()"
           readonly
-          placeholder="选择房屋地址"
+          placeholder="请选择退房性质"
           required>
         </van-field>
         <van-field
@@ -27,7 +27,7 @@
           type="text"
           @click="searchSelect(form.collect_or_rent)"
           readonly
-          placeholder="选择房屋地址"
+          placeholder="请选择房屋地址"
           required>
         </van-field>
         <van-field
@@ -258,9 +258,9 @@
       // select选择
       onConfirm(value) {
         this.form.check_type.name = value;
-        for (let i = 0; i < this.check_name.length; i++) {
-          if (this.check_name[i].dictionary_name === value) {
-            this.form.check_type.id = this.check_name[i].id;
+        for (let i = 0; i < this.checkAll.length; i++) {
+          if (this.checkAll[i].dictionary_name === value) {
+            this.form.check_type.id = this.checkAll[i].id;
           }
         }
         this.selectHide = false;
