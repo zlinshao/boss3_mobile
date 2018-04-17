@@ -59,7 +59,7 @@
     },
     methods: {
       onSearch(val) {
-        if (this.searchValue.length > 1) {
+        if (val.length > 1) {
           this.$http.get(this.urls + 'setting/community/', {
             params: {
               num: 30,

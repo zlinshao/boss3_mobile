@@ -45,7 +45,9 @@
         let value = val.replace(/\s+/g, '');
         this.searchValue = value;
         if (value !== '') {
-          this.organize(value);
+          if (value.length > 1) {
+            this.organize(value);
+          }
         } else {
           this.close_();
         }

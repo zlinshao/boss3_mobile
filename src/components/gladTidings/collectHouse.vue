@@ -86,7 +86,9 @@
           default:
             urls = 'houses?q=';
         }
-        this.myData(type, val, urls);
+        if (val.length > 1) {
+          this.myData(type, val, urls);
+        }
       },
       myData(type, val, urls) {
         this.$http.get(this.address + urls + val).then((res) => {
