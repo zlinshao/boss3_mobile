@@ -211,11 +211,16 @@
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
             this.formList = res.data.data.process.content.show_content;
-            if (res.data.data.process.content.address) {
-              this.address = res.data.data.process.content.address;
+
+            let houseName = res.data.data.process.content;
+            if (houseName.rent_without_collect_address) {
+              this.address = houseName.address;
+            } else if (houseName.rent_without_collect_address) {
+              this.address = houseName.rent_without_collect_address;
             } else {
-              this.address = res.data.data.process.content.house.name;
+              this.address = houseName.house.name;
             }
+
             this.operation = res.data.data.operation;
             this.personal = res.data.data.process.user;
             this.place = res.data.data.process.place;

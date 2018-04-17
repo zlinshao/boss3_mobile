@@ -9,7 +9,6 @@
           placeholder="请填写房屋地址"
           required>
         </van-field>
-        <input type="hidden" v-model="form.address">
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -347,7 +346,6 @@
         corp: true,                    //公司单
 
         form: {
-          address: '',
           id: '',
           type: 4,
           draft: 0,

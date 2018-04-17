@@ -179,7 +179,7 @@
         </van-cell-group>
       </div>
       <div @click="priceAmount(2)" class="addInput">
-        +增加付款方式
+        +付款方式变化
       </div>
 
       <van-cell-group>

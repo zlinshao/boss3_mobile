@@ -149,7 +149,7 @@
         <van-field
           v-model="form.deposit"
           label="押金"
-          type="text"
+          type="number"
           placeholder="请填写押金"
           icon="clear"
           @click-icon="form.deposit = ''"
@@ -177,7 +177,7 @@
         <van-field
           v-model="form.property"
           label="物业费"
-          type="text"
+          type="number"
           placeholder="请填写物业费"
           icon="clear"
           @click-icon="form.property = ''"
@@ -267,7 +267,7 @@
         <van-field
           v-model="form.penalty"
           label="违约金"
-          type="text"
+          type="number"
           placeholder="请填写违约金"
           icon="clear"
           @click-icon="form.penalty = ''"

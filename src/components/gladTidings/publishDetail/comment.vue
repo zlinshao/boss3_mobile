@@ -125,13 +125,13 @@
         vm.path = from.path;
         vm.ddBack(1, from.path);
         vm.ddBack(2, from.path);
-        document.title = '点评';
       })
     },
     mounted() {
       this.dict();
     },
     activated() {
+
       this.pitch = this.$route.query.data;
       this.detail = this.$route.query.detail;
       this.address = this.$route.query.address;
