@@ -213,7 +213,7 @@
             this.formList = res.data.data.process.content.show_content;
 
             let houseName = res.data.data.process.content;
-            if (houseName.rent_without_collect_address) {
+            if (houseName.address) {
               this.address = houseName.address;
             } else if (houseName.rent_without_collect_address) {
               this.address = houseName.rent_without_collect_address;
