@@ -13,6 +13,15 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
+          v-model="form.check_type.name"
+          label="房屋地址"
+          type="text"
+          @click="selectShow()"
+          readonly
+          placeholder="选择房屋地址"
+          required>
+        </van-field>
+        <van-field
           v-model="houseName"
           label="房屋地址"
           type="text"
@@ -104,6 +113,14 @@
       <div class="" @click="saveCollect(0)">发布</div>
     </div>
 
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @cancel="onCancel"
+        @confirm="onConfirm"/>
+    </van-popup>
+
     <!--日期-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
       <van-datetime-picker
@@ -132,6 +149,8 @@
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
+        selectHide: false,
+        columns: [],
 
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
@@ -145,10 +164,17 @@
         payStatus: false,
         priceStatus: false,
 
+        check_name: [],
+        checkAll: [],
+
         form: {
           id: '',
           draft: 0,
           collect_or_rent: '',
+          check_type: {
+            id: '',
+            name: '',
+          },
           house_id: '',
           contract_id: '',              //合同id
           photo: [],                    //领导截图 数组
@@ -164,6 +190,7 @@
       }
     },
     mounted() {
+      this.dict();
       this.getNowFormatDate();
       this.checkDetail();
     },
@@ -173,6 +200,16 @@
       this.ddRent('');
     },
     methods: {
+      dict() {
+        // 退租性质
+        this.dictionary(328, 1).then((res) => {
+          this.check_name = [];
+          this.checkAll = res.data;
+          for (let i = 0; i < res.data.length; i++) {
+            this.check_name.push(res.data[i].dictionary_name);
+          }
+        });
+      },
       payWayClick(val) {
         if (val === 1) {
           this.payStatus = !this.payStatus;
@@ -213,8 +250,24 @@
         this.onCancel();
       },
 
+      // select 显示
+      selectShow() {
+        this.selectHide = true;
+        this.columns = this.check_name;
+      },
+      // select选择
+      onConfirm(value) {
+        this.form.check_type.name = value;
+        for (let i = 0; i < this.check_name.length; i++) {
+          if (this.check_name[i].dictionary_name === value) {
+            this.form.check_type.id = this.check_name[i].id;
+          }
+        }
+        this.selectHide = false;
+      },
       // select关闭
       onCancel() {
+        this.selectHide = false;
         this.timeShow = false;
       },
 
@@ -283,6 +336,7 @@
 
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
+            this.form.check_type = draft.check_type;
             this.form.house_id = draft.house_id;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.houseName = data.address;
@@ -307,6 +361,8 @@
         });
         this.picStatus = true;
         this.form.house_id = '';
+        this.form.check_type.id = '';
+        this.form.check_type.name = '';
         this.payWay = '';
         this.price_arr = '';
         this.form.id = '';
@@ -320,7 +376,8 @@
         this.staff_name = '';
         this.department_name = '';
       },
-    },
+    }
+    ,
   }
 </script>
 

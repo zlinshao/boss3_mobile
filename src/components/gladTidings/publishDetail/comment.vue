@@ -18,12 +18,6 @@
         </div>
         <van-cell-group>
           <van-field
-            v-model="forms.suggest_price"
-            label="价格"
-            type="number"
-            placeholder="请填写金额">
-          </van-field>
-          <van-field
             @click="selectShow(1)"
             v-model="decorationOn"
             label="装修"
@@ -38,6 +32,12 @@
             readonly
             label="房屋特色"
             placeholder="请选择房屋特色">
+          </van-field>
+          <van-field
+            v-model="forms.suggest_price"
+            label="价格"
+            type="number"
+            placeholder="请填写金额">
           </van-field>
         </van-cell-group>
         <div class="footer">
@@ -125,6 +125,7 @@
         vm.path = from.path;
         vm.ddBack(1, from.path);
         vm.ddBack(2, from.path);
+        document.title = '点评';
       })
     },
     mounted() {
@@ -135,7 +136,6 @@
       this.detail = this.$route.query.detail;
       this.address = this.$route.query.address;
       this.marking = this.$route.query.marking;
-      this.detail = this.$route.query.detail;
     },
     methods: {
       onClick(key) {

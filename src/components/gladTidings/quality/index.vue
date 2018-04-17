@@ -108,13 +108,25 @@
             placeholder="请填写总楼层">
           </van-field>
         </div>
-        <van-field
-          v-model="form.house_age"
-          label="年限"
-          required
-          type="number"
-          placeholder="请填写年限">
-        </van-field>
+        <div class="first_date">
+          <van-field
+            style="width: 110px;"
+            class="title"
+            label="签约时长"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.month"
+            type="number"
+            placeholder="请填写月数">
+          </van-field>
+          <van-field
+            class="twoBorder"
+            v-model="form.day"
+            type="number"
+            placeholder="请填写天数">
+          </van-field>
+        </div>
         <van-field
           v-model="form.vacancy"
           label="空置期"
@@ -467,7 +479,8 @@
           },
           floor: '',                    //楼层
           floors: '',                   //总楼层
-          house_age: '',                //年限
+          month: '',                    //签约时长
+          day: '',                      //签约时长
           vacancy: '',                  //空置期
           price: '',                    //价格
           is_agency: 0,                 //是否中介
@@ -785,7 +798,8 @@
             this.form.property_type = data.property_type;                   //类型
             this.form.floor = data.floor;                                   //楼层
             this.form.floors = data.floors;                                 //总楼层
-            this.form.house_age = data.house_age;                           //年限
+            this.form.month = data.month;                                   //签约时长
+            this.form.day = data.day;                                       //签约时长
             this.form.vacancy = data.vacancy;                               //空置期
             this.form.price = data.price;                                   //价格
             this.form.is_agency = data.is_agency;                           //是否中介
@@ -895,13 +909,14 @@
         this.house_type_name = '1室1厅1卫';
 
         this.form.area = '';                      //面积
-        this.form.direction.name = '';              //朝向
-        this.form.direction.id = '';               //朝向
+        this.form.direction.name = '';            //朝向
+        this.form.direction.id = '';              //朝向
         this.form.property_type.id = '';          //类型
         this.form.property_type.name = '';        //类型
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
-        this.form.house_age = '';                //年限
+        this.form.month = '';                    //签约时长
+        this.form.day = '';                     //签约时长
         this.form.vacancy = '';                 //空置期
         this.form.price = '';                    //价格
         this.form.is_agency = 0;                 //是否中介

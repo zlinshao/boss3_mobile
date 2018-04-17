@@ -459,11 +459,6 @@
         }
       },
 
-      // select关闭
-      onCancel() {
-        this.selectHide = false;
-        this.timeShow = false;
-      },
       // 截图
       getImgData(val) {
         this.picStatus = !val[2];
@@ -569,6 +564,11 @@
             break;
         }
         this.selectHide = false;
+      },
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeShow = false;
       },
       // 月单价增加
       priceAmount(val) {
