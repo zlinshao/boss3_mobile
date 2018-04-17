@@ -110,7 +110,7 @@
         <van-switch-cell v-if="form.collect_or_rent === '1'" v-model="settleStatus" title="是否结清"/>
       </van-cell-group>
 
-      <div class="aloneModel required" v-if="form.collect_or_rent === '1'">
+      <div class="aloneModel required" v-if="form.collect_or_rent === '1' && settleStatus">
         <div class="title"><span>*</span>结清截图</div>
         <UpLoad :ID="'settle'" @getImg="screen" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
@@ -130,21 +130,17 @@
         </van-field>
         <van-field
           v-model="staff_name"
-          @click="search(1)"
-          readonly
+          disabled
           label="开单人"
           type="text"
-          placeholder="请选择开单人"
-          required>
+          placeholder="请选择开单人">
         </van-field>
         <van-field
           v-model="department_name"
-          @click="search(2)"
-          readonly
+          disabled
           label="部门"
           type="text"
-          placeholder="请选择部门"
-          required>
+          placeholder="请选择部门">
         </van-field>
       </van-cell-group>
     </div>
@@ -172,7 +168,7 @@
         picStatus: true,
         haveInHand: true,
 
-        settleStatus: false,      //是否结清
+        settleStatus: true,      //是否结清
 
         payWay: '1',                   //付款方式
         price_arr: '1',                //月单价
@@ -192,7 +188,7 @@
           account_name: '',             //帐户名称
           account: '',                  //帐号
           name: '',                     //中介名称
-          settle: 0,                    //是否结清
+          settle: 1,                    //是否结清
           screenshot: [],               //结清截图
           screenshot_leader: [],        //特殊情况
           remark: '',                   //备注
@@ -203,6 +199,7 @@
         screenshots_leader: {},
         staff_name: '',                 //开单人name
         department_name: '',            //部门name
+        numbers: '',
       }
     },
     mounted() {
@@ -223,16 +220,7 @@
           this.payStatus = false;
         }
       },
-      search(val) {
-        switch (val) {
-          case 1:
-            this.$router.push({path: '/organize'});
-            break;
-          case 2:
-            this.$router.push({path: '/depart'});
-            break;
-        }
-      },
+
       searchSelect(val) {
         if (val === '0') {
           this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
@@ -252,13 +240,19 @@
       },
 
       rentChange(val) {
-        this.form.address = '';
-        this.form.house_id = '';
-        this.form.contract_id = '';
-        if (val === '1') {
-          this.form.screenshot = [];
-          this.screenshots = {};
-          this.settleStatus = false;
+        if (this.numbers !== val) {
+          this.form.address = '';
+          this.form.house_id = '';
+          this.form.contract_id = '';
+          if (val === '0') {
+            this.form.screenshot = [];
+            this.screenshots = {};
+            this.settleStatus = false;
+            this.form.collect_or_rent = val;
+          } else {
+            this.settleStatus = true;
+          }
+          this.numbers = val;
         }
       },
       saveCollect(val) {
@@ -300,29 +294,15 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
+          this.staff_name = val.staff_name;
+          this.department_name = val.department_name;
           this.payWay = val.pay_way;
           this.price_arr = val.month_price;
-        }
-        if (t.staff !== undefined && t.staff !== '') {
-          let val = JSON.parse(t.staff);
-          this.form.staff_id = val.staff_id;
-          this.staff_name = val.staff_name;
-          this.form.department_id = val.depart_id;
-          this.department_name = val.depart_name;
-          this.stick();
-        }
-        if (t.depart !== undefined && t.depart !== '') {
-          let val = JSON.parse(t.depart);
-          this.department_name = val.name;
-          this.form.department_id = val.id;
-          this.stick();
-        }
-        if (t.tops === '') {
-          this.stick();
         }
       },
 
       agencyDetail() {
+
         this.$http.get(this.urls + 'bulletin/agency').then((res) => {
           if (res.data.code === '50310') {
             this.isClear = false;
@@ -334,6 +314,7 @@
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.collect_or_rent = draft.collect_or_rent;
+            this.numbers = draft.collect_or_rent;
             this.form.amount = draft.amount;
             this.form.bank = draft.bank;
             this.form.subbranch = draft.subbranch;
@@ -347,9 +328,7 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots_leader = data.screenshot_leader;
             this.form.remark = draft.remark;
-            this.form.staff_id = draft.staff_id;
             this.staff_name = data.staff_name;
-            this.form.department_id = draft.depart_id;
             this.department_name = data.depart_name;
           } else {
             this.form.id = '';
@@ -376,7 +355,7 @@
         this.form.account = '';
         this.form.name = '';
         this.form.settle = 0;
-        this.settleStatus = false;
+        this.settleStatus = true;
         this.form.screenshot = [];
         this.screenshots = {};
         this.form.screenshot_leader = [];

@@ -4,9 +4,9 @@
       <van-search
         v-model="searchValue"
         show-action
-        @keyup="organize"
         @cancel="onClose"/>
-      <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
       <div class="searchContent">
         <div class="searchList" v-for="key in lists" @click="organizeSure(key)">
           <div>{{key.staff_name}}</div>

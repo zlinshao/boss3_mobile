@@ -95,6 +95,7 @@
         screenshots_leader: {},
         staff_name: '',                 //开单人name
         department_name: '',            //部门name
+        numbers: '',
       }
     },
     mounted() {
@@ -126,10 +127,13 @@
         }
       },
 
-      rentChange() {
-        this.form.address = '';
-        this.form.house_id = '';
-        this.form.contract_id = '';
+      rentChange(val) {
+        if (this.numbers !== val) {
+          this.form.address = '';
+          this.form.house_id = '';
+          this.form.contract_id = '';
+          this.numbers = val;
+        }
       },
 
       saveCollect(val) {
@@ -181,6 +185,7 @@
             this.form.id = data.id;
             this.form.address = data.address;
             this.form.collect_or_rent = draft.collect_or_rent;
+            this.numbers = draft.collect_or_rent;
             this.form.house_id = draft.house_id;
             this.form.contract_id = draft.contract_id;
             this.form.content = draft.content;
