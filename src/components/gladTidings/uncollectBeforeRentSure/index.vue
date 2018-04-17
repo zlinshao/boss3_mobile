@@ -12,7 +12,7 @@
           required>
         </van-field>
         <van-field
-          v-model="form.newHouseName"
+          v-model="form.address"
           label="现房屋地址"
           type="text"
           readonly
@@ -308,7 +308,7 @@
           type: 0,
           draft: 0,
           oldHouseName: '',
-          newHouseName: '',
+          address: '',
           contract_id_rent: '',         //原租房合同id
           contract_id: '',              //现房屋合同id
           house_id_rent: '',
@@ -571,7 +571,7 @@
             this.form.day = draft.day;
 
             this.form.oldHouseName = draft.oldHouseName;
-            this.form.newHouseName = draft.newHouseName;
+            this.form.form.address = draft.form.address;
             this.form.contract_id_rent = draft.contract_id_rent;
             this.form.contract_id = draft.contract_id;
             this.form.house_id_rent = draft.house_id_rent;
@@ -639,7 +639,7 @@
             this.form.oldHouseName = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
-            console.log(val.renters);
+
             let rent = val.renters;
             let rentDate = rent.start_at.substring(0, 10);
             this.form.begin_date = rentDate;
@@ -688,7 +688,7 @@
             this.form.department_id = rent.sign_org.id;
             this.form.department_name = rent.sign_org.name;
           } else {
-            this.form.newHouseName = val.house_name;
+            this.form.address = val.house_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
           }
@@ -723,7 +723,7 @@
         this.form.house_id_rent = '';
         this.form.house_id = '';
         this.form.oldHouseName = '';
-        this.form.newHouseName = '';
+        this.form.address = '';
 
         this.amountPrice = 1;
 

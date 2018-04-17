@@ -13,7 +13,7 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="houseName"
+          v-model="form.address"
           label="房屋地址"
           type="text"
           @click="searchSelect()"
@@ -112,6 +112,7 @@
         priceStatus: false,
 
         form: {
+          address: '',
           id: '',
           type: '0',
           draft: 0,
@@ -119,7 +120,6 @@
           screenshot_leader: [],        //领导截图 数组
           remark: '',                   //备注
         },
-        houseName: '',
         screenshots: {},
         staff_name: '',                 //开单人name
         department_name: '',            //部门name
@@ -185,7 +185,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.houseName = val.house_name;
+          this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.payWay = val.pay_way;
@@ -202,7 +202,7 @@
             let data = res.data.data;
             let draft = res.data.data.draft_content;
             this.form.id = data.id;
-            this.houseName = data.address;
+            this.form.address = data.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.type = draft.type;
@@ -227,7 +227,7 @@
         this.form.screenshot_leader = [];
         this.screenshots = {};
         this.form.remark = '';
-        this.houseName = '';
+        this.form.address = '';
         this.staff_name = '';
         this.department_name = '';
       },

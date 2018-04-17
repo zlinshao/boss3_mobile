@@ -22,7 +22,7 @@
           required>
         </van-field>
         <van-field
-          v-model="houseName"
+          v-model="form.address"
           label="房屋地址"
           type="text"
           @click="searchSelect(form.collect_or_rent)"
@@ -168,6 +168,7 @@
         checkAll: [],
 
         form: {
+          address: '',
           id: '',
           draft: 0,
           collect_or_rent: '',
@@ -182,7 +183,6 @@
           checkout_date: '',            //退租时间
           remark: '',                   //备注
         },
-        houseName: '',
         photos: {},
         checkouts: {},
         staff_name: '',                 //开单人name
@@ -281,7 +281,7 @@
         }
       },
       rentChange() {
-        this.houseName = '';
+        this.form.address = '';
         this.form.house_id = '';
         this.form.contract_id = '';
       },
@@ -317,7 +317,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.houseName = val.house_name;
+          this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.payWay = val.pay_way;
@@ -339,7 +339,7 @@
             this.form.check_type = draft.check_type;
             this.form.house_id = draft.house_id;
             this.form.collect_or_rent = draft.collect_or_rent;
-            this.houseName = data.address;
+            this.form.address = data.address;
             this.form.photo = draft.photo;
             this.photos = data.photo;
             this.form.checkout_photo = draft.checkout_photo;
@@ -372,7 +372,7 @@
         this.photos = {};
         this.form.remark = '';
         this.form.checkout_date = '';
-        this.houseName = '';
+        this.form.address = '';
         this.staff_name = '';
         this.department_name = '';
       },

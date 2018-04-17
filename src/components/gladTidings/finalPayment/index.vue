@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <van-field
-          v-model="houseName"
+          v-model="form.address"
           label="房屋地址"
           type="text"
           readonly
@@ -201,6 +201,7 @@
         payIndex: '',                 //分金额方式index
 
         form: {
+          address: '',
           id: '',
           draft: 0,
           contract_id: '',            //房屋地址id
@@ -213,7 +214,6 @@
           screenshot: [],               //领导截图 数组
           remark: '',                   //备注
         },
-        houseName: '',                  //房屋名称
         screenshots: {},                 //房屋名称
         staff_name: '',                  //开单人name
         department_name: '',             //部门name
@@ -354,7 +354,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.houseName = val.house_name;
+          this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.payWay = val.pay_way;
@@ -372,7 +372,7 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
-            this.houseName = data.address;
+            this.form.address = data.address;
             this.month = data.month;
             this.price_arr = data.price_arr;
             this.payWay = data.payWay;
@@ -410,7 +410,7 @@
         });
         this.picStatus = true;
         this.form.id = '';
-        this.houseName = '';
+        this.form.address = '';
         this.month = '';
         this.price_arr = '';
         this.payWay = '';

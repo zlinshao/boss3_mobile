@@ -9,6 +9,7 @@
           placeholder="请填写房屋地址"
           required>
         </van-field>
+        <input type="hidden" v-model="form.address">
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -346,6 +347,7 @@
         corp: true,                    //公司单
 
         form: {
+          address: '',
           id: '',
           type: 4,
           draft: 0,
@@ -384,7 +386,6 @@
         screenshots: {},
         photos: {},
         property_name: '',              //物业费付款人
-        houseName: '',                   //房屋地址name
         staff_name: '',                  //开单人name
         department_name: '',             //部门name
 
@@ -746,7 +747,7 @@
         this.form.rent_without_collect_address = '';
         this.form.contract_id = '';
         this.form.house_id = '';
-        this.houseName = '';
+        this.form.address = '';
         this.form.month = '';
         this.form.day = '';
         this.form.sign_date = '';

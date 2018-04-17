@@ -435,7 +435,6 @@
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
         },
-        houseName: '',                  //房屋地址name
         property_name: '',              //物业费付款人
         photos: {},                     //照片
         screenshots: {},                //照片

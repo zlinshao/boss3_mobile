@@ -13,7 +13,7 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="houseName"
+          v-model="form.address"
           label="房屋地址"
           type="text"
           readonly
@@ -106,6 +106,7 @@
         priceStatus: false,
 
         form: {
+          address: '',
           id: '',
           collect_or_rent: '0',
           type: '0',
@@ -114,7 +115,6 @@
           house_id: '',
           remark: '',                   //备注
         },
-        houseName: '',
         staff_name: '',                 //开单人name
         department_name: '',            //部门name
       }
@@ -137,7 +137,7 @@
           this.payStatus = false;
         }
       },
-      searchSelect(val) {
+      searchSelect() {
         this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
       },
 
@@ -167,7 +167,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.houseName = val.house_name;
+          this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.payWay = val.pay_way;
@@ -188,7 +188,7 @@
             this.form.collect_or_rent = draft.collect_or_rent;
             this.form.house_id = draft.house_id;
             this.form.contract_id = draft.contract_id;
-            this.houseName = data.address;
+            this.form.address = data.address;
             this.form.payWay = data.payWay;
             this.form.price_arr = data.price_arr;
             this.form.remark = draft.remark;
@@ -201,7 +201,7 @@
       },
       close_() {
         this.picStatus = true;
-        this.houseName = '';
+        this.form.address = '';
         this.form.id = '';
         this.payWay = '';
         this.price_arr = '';

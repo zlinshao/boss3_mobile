@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <van-field
-          v-model="houseName"
+          v-model="form.address"
           label="房屋地址"
           type="text"
           readonly
@@ -363,6 +363,7 @@
         roomsName: '',
 
         form: {
+          address: '',
           id: '',
           type: 1,
           draft: 0,
@@ -406,7 +407,6 @@
         screenshots: {},
         photos: {},
         property_name: '',               //物业费付款人
-        houseName: '',                   //房屋地址name
         staff_name: '',                  //开单人name
         department_name: '',             //部门name
 
@@ -674,7 +674,7 @@
           // for (let i = 0; i < val.rooms.length; i++) {
           //   this.rooms.push(val.rooms[i].name);
           // }
-          this.houseName = val.house_name;
+          this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
         }
@@ -716,7 +716,7 @@
             //     this.roomsName = draft.rooms_mate[i].name;
             //   }
             // }
-            this.houseName = data.address;
+            this.form.address = data.address;
             this.form.month = draft.month;
             this.form.day = draft.day;
             this.form.sign_date = draft.sign_date;
@@ -804,7 +804,7 @@
         this.rooms = [];
         this.roomsName = '';
 
-        this.houseName = '';
+        this.form.address = '';
         this.form.month = '';
         this.form.day = '';
         this.form.sign_date = '';

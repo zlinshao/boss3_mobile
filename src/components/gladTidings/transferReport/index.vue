@@ -51,7 +51,7 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="newHouseName"
+          v-model="form.address"
           label="现房屋地址"
           type="text"
           readonly
@@ -360,6 +360,7 @@
         },
 
         form: {
+          address: '',
           id: '',
           draft: 0,
           contract_id_rent: '',         //原租房合同id
@@ -394,7 +395,6 @@
           department_id: '',            //部门id
         },
         oldHouseName: '',
-        newHouseName: '',
         screenshots: {},
         photos: {},
         staff_name: '',                  //开单人name
@@ -655,7 +655,7 @@
             // for (let i = 0; i < val.rooms.length; i++) {
             //   this.rooms.push(val.rooms[i].name);
             // }
-            this.newHouseName = val.house_name;
+            this.form.address = val.house_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
           }
@@ -698,7 +698,7 @@
             //     this.roomsName = draft.rooms_mate[i].name;
             //   }
             // }
-            this.houseName = data.address;
+            this.form.address = data.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.oldHouseName = data.address_rent;
@@ -774,6 +774,7 @@
         });
         this.picStatus = true;
         this.oldHouseName = '';
+        this.form.address = '';
         this.oldForm.staff_name = '';
         this.oldForm.pay_way_arr = '';
         this.oldForm.price = '';

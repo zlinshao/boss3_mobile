@@ -4,7 +4,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <van-field
-          v-model="houseName"
+          v-model="form.address"
           label="房屋地址"
           type="text"
           readonly
@@ -151,7 +151,7 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        isClear: false,           //删除图片
+        isClear: false,               //删除图片
         picStatus: true,
 
         payWay: '1',                   //付款方式
@@ -162,6 +162,7 @@
         priceStatus: false,
 
         form: {
+          address: '',
           id: '',
           draft: 0,
           contract_id: '',              //房屋地址id
@@ -175,7 +176,6 @@
           remark: '',                   //备注
         },
         screenshots: {},                //截图
-        houseName: '',                  //房屋名称
         staff_name: '',                 //开单人name
         department_name: '',            //部门name
       }
@@ -258,7 +258,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.houseName = val.house_name;
+          this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.payWay = val.pay_way;
@@ -277,7 +277,7 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
-            this.houseName = data.address;
+            this.form.address = data.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.amount = draft.amount;
@@ -312,7 +312,7 @@
         this.form.account_name = '';
         this.form.screenshot_leader = [];
         this.screenshots = {};
-        this.houseName = '';
+        this.form.address = '';
         this.staff_name = '';
         this.department_name = '';
       },

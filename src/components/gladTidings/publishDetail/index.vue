@@ -17,6 +17,7 @@
         </div>
         <div style="height: 1.4rem;"
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected'}">
+
         </div>
       </div>
     </div>

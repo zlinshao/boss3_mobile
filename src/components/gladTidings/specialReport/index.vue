@@ -12,7 +12,7 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="houseName"
+          v-model="form.address"
           label="房屋地址"
           type="text"
           @click="searchSelect(form.collect_or_rent)"
@@ -81,6 +81,7 @@
         picStatus: true,
 
         form: {
+          address: '',
           id: '',
           draft: 0,
           collect_or_rent: '',
@@ -90,7 +91,6 @@
           screenshot: [],
           screenshot_leader: [],
         },
-        houseName: '',
         screenshots: {},
         screenshots_leader: {},
         staff_name: '',                 //开单人name
@@ -127,7 +127,7 @@
       },
 
       rentChange() {
-        this.houseName = '';
+        this.form.address = '';
         this.form.house_id = '';
         this.form.contract_id = '';
       },
@@ -163,7 +163,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.houseName = val.house_name;
+          this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.staff_name = val.staff_name;
@@ -179,7 +179,7 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
-            this.houseName = data.address;
+            this.form.address = data.address;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.form.house_id = draft.house_id;
             this.form.contract_id = draft.contract_id;
@@ -202,7 +202,7 @@
         });
         this.picStatus = true;
         this.form.id = '';
-        this.houseName = '';
+        this.form.address = '';
         this.form.collect_or_rent = '';
         this.form.house_id = '';
         this.form.contract_id = '';
