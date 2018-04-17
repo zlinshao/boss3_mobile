@@ -288,7 +288,7 @@
       },
       // 评论
       commentOn(val) {
-        this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 1}});
+        this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2}});
       },
     },
   }

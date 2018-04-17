@@ -370,7 +370,7 @@
           room_id: '',                  //合租房间ID
           rooms_mate: [],               //合租房间
           month: '',                    //签约时长
-          day: '0',                      //签约时长天
+          day: '',                      //签约时长天
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -618,6 +618,7 @@
             this.haveInHand = false;
             this.form.draft = val;
             this.form.is_corp = this.corp ? 1 : 0;
+            this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50510') {
@@ -688,7 +689,7 @@
 
             this.form.id = data.id;
             this.form.month = draft.month;
-            this.form.day = draft.day;
+            this.form.day = draft.day === '0' ? '' : draft.day;
             // this.form.rooms_mate = draft.rooms_mate;
             // this.form.room_id = draft.room_id;
             // this.rooms = [];
@@ -786,7 +787,7 @@
         this.form.house_id_rent = '';
         this.form.house_id = '';
         this.form.month = '';
-        this.form.day = '0';
+        this.form.day = '';
         this.form.rooms_mate = [];
         this.form.room_id = '';
         this.rooms = [];

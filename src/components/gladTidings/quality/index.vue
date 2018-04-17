@@ -480,7 +480,7 @@
           floor: '',                    //楼层
           floors: '',                   //总楼层
           month: '',                    //签约时长
-          day: '0',                      //签约时长
+          day: '',                      //签约时长
           vacancy: '',                  //空置期
           price: '',                    //价格
           is_agency: 0,                 //是否中介
@@ -740,6 +740,7 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
+            this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.form.is_agency = this.is_agencyOn ? 1 : 0;
             this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
             this.form.gas = this.gasOn ? 1 : 0;                       //天然气
@@ -799,7 +800,7 @@
             this.form.floor = data.floor;                                   //楼层
             this.form.floors = data.floors;                                 //总楼层
             this.form.month = data.month;                                   //签约时长
-            this.form.day = data.day;                                       //签约时长
+            this.form.day = data.day === '0' ? '' : data.day;               //签约时长
             this.form.vacancy = data.vacancy;                               //空置期
             this.form.price = data.price;                                   //价格
             this.form.is_agency = data.is_agency;                           //是否中介
@@ -916,7 +917,7 @@
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
         this.form.month = '';                    //签约时长
-        this.form.day = '0';                     //签约时长
+        this.form.day = '';                     //签约时长
         this.form.vacancy = '';                 //空置期
         this.form.price = '';                    //价格
         this.form.is_agency = 0;                 //是否中介

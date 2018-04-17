@@ -314,7 +314,7 @@
           house_id_rent: '',
           house_id: '',
           month: '',                    //签约时长
-          day: '0',                      //签约时长天
+          day: '',                      //签约时长天
           begin_date: '',               //合同开始日期
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -537,6 +537,7 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
+            this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === "51310") {
@@ -568,7 +569,7 @@
 
             this.form.id = data.id;
             this.form.month = draft.month;
-            this.form.day = draft.day;
+            this.form.day = draft.day === '0' ? '' : draft.day;
 
             this.form.oldHouseName = draft.oldHouseName;
             this.form.form.address = draft.form.address;
@@ -716,7 +717,7 @@
         this.picStatus = true;
         this.form.id = '';
         this.form.month = '';
-        this.form.day = '0';
+        this.form.day = '';
 
         this.form.contract_id_rent = '';
         this.form.contract_id = '';

@@ -403,7 +403,7 @@
             name: '',
           },
           month: '',                    //收房月数
-          day: '0',                      //收房天数
+          day: '',                      //收房天数
           begin_date: '',               //合同开始日期
           period_price_arr: [''],       //月单价周期
           price_arr: [''],              //月单价
@@ -412,7 +412,7 @@
           pay_way_arr: [''],            //付款方式
 
           warranty: '',                 //保修期(月)
-          warranty_day: '0',             //保修期(天)
+          warranty_day: '',             //保修期(天)
           deposit: '',                  //押金
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
@@ -656,6 +656,8 @@
             this.haveInHand = false;
             this.form.draft = val;
             this.form.is_corp = this.corp ? 1 : 0;
+            this.form.day = this.form.day === '' ? '0' : this.form.day;
+            this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
             this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50110') {
@@ -714,7 +716,7 @@
 
             this.form.id = data.id;
             this.form.month = draft.month;
-            this.form.day = draft.day;
+            this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.contract_id = draft.contract_id;
             this.form.house = draft.house;
             this.form.begin_date = draft.begin_date;
@@ -751,7 +753,7 @@
             this.corp = draft.is_corp === 1 ? true : false;
             this.form.deposit = draft.deposit;
             this.form.warranty = draft.warranty;
-            this.form.warranty_day = draft.warranty_day;
+            this.form.warranty_day = draft.warranty_day === '0' ? '' : draft.warranty_day;
             this.form.property = draft.property;
 
             this.form.property_payer = draft.property_payer;
@@ -798,7 +800,7 @@
         this.form.house.id = '';
         this.form.house.name = '';
         this.form.month = '';
-        this.form.day = '0';
+        this.form.day = '';
         this.form.begin_date = '';
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
@@ -824,7 +826,7 @@
         this.corp = true;
         this.form.deposit = '';
         this.form.warranty = '';
-        this.form.warranty_day = '0';
+        this.form.warranty_day = '';
         this.form.property = '';
         this.form.property_payer = '';
         this.property_name = '';

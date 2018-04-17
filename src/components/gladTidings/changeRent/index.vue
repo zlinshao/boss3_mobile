@@ -380,7 +380,7 @@
           rooms_mate: [],               //合租房间
 
           month: '',                    //租房月数
-          day: '0',                      //租房天数
+          day: '',                      //租房天数
           begin_date: '',               //合同开始日期
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -650,6 +650,7 @@
             this.form.draft = val;
             this.form.is_agency = this.cusFrom ? 1 : 0;
             this.form.is_corp = this.corp ? 1 : 0;
+            this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50210') {
@@ -718,7 +719,7 @@
             this.form.house_id = draft.house_id;
             this.form.address = data.address;
             this.form.month = draft.month;
-            this.form.day = draft.day;
+            this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.sign_date = draft.sign_date;
             this.form.begin_date = draft.begin_date;
             this.first_date = [];
@@ -800,7 +801,7 @@
         this.form.house_id = '';
         this.form.address = '';
         this.form.month = '';
-        this.form.day = '0';
+        this.form.day = '';
         this.form.begin_date = '';
         this.form.sign_date = '';
         this.datePrice = [];
