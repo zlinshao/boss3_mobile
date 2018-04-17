@@ -314,7 +314,7 @@
           house_id_rent: '',
           house_id: '',
           month: '',                    //签约时长
-          day: '',                      //签约时长天
+          day: '0',                      //签约时长天
           begin_date: '',               //合同开始日期
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -716,7 +716,7 @@
         this.picStatus = true;
         this.form.id = '';
         this.form.month = '';
-        this.form.day = '';
+        this.form.day = '0';
 
         this.form.contract_id_rent = '';
         this.form.contract_id = '';

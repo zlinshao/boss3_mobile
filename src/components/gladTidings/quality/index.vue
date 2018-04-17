@@ -480,7 +480,7 @@
           floor: '',                    //楼层
           floors: '',                   //总楼层
           month: '',                    //签约时长
-          day: '',                      //签约时长
+          day: '0',                      //签约时长
           vacancy: '',                  //空置期
           price: '',                    //价格
           is_agency: 0,                 //是否中介
@@ -916,7 +916,7 @@
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
         this.form.month = '';                    //签约时长
-        this.form.day = '';                     //签约时长
+        this.form.day = '0';                     //签约时长
         this.form.vacancy = '';                 //空置期
         this.form.price = '';                    //价格
         this.form.is_agency = 0;                 //是否中介

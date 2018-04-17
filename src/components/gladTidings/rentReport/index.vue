@@ -374,7 +374,7 @@
           rooms_mate: [],               //合租房间
 
           month: '',                    //租房月数
-          day: '',                      //租房天数
+          day: '0',                      //租房天数
           sign_date: '',                //签约日期
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
@@ -806,7 +806,7 @@
 
         this.form.address = '';
         this.form.month = '';
-        this.form.day = '';
+        this.form.day = '0';
         this.form.sign_date = '';
         this.form.begin_date = '';
         this.datePrice = [];

@@ -370,7 +370,7 @@
           room_id: '',                  //合租房间ID
           rooms_mate: [],               //合租房间
           month: '',                    //签约时长
-          day: '',                      //签约时长天
+          day: '0',                      //签约时长天
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -786,7 +786,7 @@
         this.form.house_id_rent = '';
         this.form.house_id = '';
         this.form.month = '';
-        this.form.day = '';
+        this.form.day = '0';
         this.form.rooms_mate = [];
         this.form.room_id = '';
         this.rooms = [];

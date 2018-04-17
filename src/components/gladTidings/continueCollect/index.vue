@@ -403,7 +403,7 @@
             name: '',
           },
           month: '',                    //收房月数
-          day: '',                      //收房天数
+          day: '0',                      //收房天数
           begin_date: '',               //合同开始日期
           period_price_arr: [''],       //月单价周期
           price_arr: [''],              //月单价
@@ -412,7 +412,7 @@
           pay_way_arr: [''],            //付款方式
 
           warranty: '',                 //保修期(月)
-          warranty_day: '',             //保修期(天)
+          warranty_day: '0',             //保修期(天)
           deposit: '',                  //押金
           property: '',                 //物业费
           property_payer: '',           //物业费付款人
@@ -798,7 +798,7 @@
         this.form.house.id = '';
         this.form.house.name = '';
         this.form.month = '';
-        this.form.day = '';
+        this.form.day = '0';
         this.form.begin_date = '';
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
@@ -824,7 +824,7 @@
         this.corp = true;
         this.form.deposit = '';
         this.form.warranty = '';
-        this.form.warranty_day = '';
+        this.form.warranty_day = '0';
         this.form.property = '';
         this.form.property_payer = '';
         this.property_name = '';

@@ -498,7 +498,7 @@
           // house_type: [0, 1, 1],
           // rooms_sum: '',             //合租时房间数量
           month: '',                    //收房月数
-          day: '',                      //收房天数
+          day: '0',                      //收房天数
           begin_date: '',               //合同开始日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -510,7 +510,7 @@
           vacancy_way: '',              //空置期安排方式
           vacancy_other: '',            //空置期安排方式 随便填
           warranty: '',                 //保修期月
-          warranty_day: '',             //保修期天
+          warranty_day: '0',             //保修期天
           // is_agency: 0,                 //客户来源    0个人1中介
           is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
@@ -1017,7 +1017,7 @@
         // this.form.unit = '';
         // this.form.doorplate = '';
         this.form.month = '';
-        this.form.day = '';
+        this.form.day = '0';
 
         this.form.begin_date = '';
         this.form.pay_first_date = '';
@@ -1048,7 +1048,7 @@
         this.vacancy_way_name = '';
         this.form.vacancy_other = '';
         this.form.warranty = '';
-        this.form.warranty_day = '';
+        this.form.warranty_day = '0';
         this.form.property = '';
         this.form.property_payer = '';
         this.property_name = '';
