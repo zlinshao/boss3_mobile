@@ -53,12 +53,8 @@
         showInfo: [],
       }
     },
-    mounted() {
-
-    },
     activated() {
-      this.lists = [];
-      this.searchValue = '';
+      this.close_();
       this.types = this.$route.query.type;
     },
     beforeRouteEnter(to, from, next) {
@@ -70,18 +66,18 @@
     },
     watch: {
       searchValue(val) {
-        if (val.length !== 0) {
-          this.onSearch(this.types, val);
+        let value = val.replace(/\s+/g, '');
+        this.searchValue = value;
+        if (value.length !== 0) {
+          this.onSearch(this.types, value);
         } else {
-          this.lists = [];
-          this.searchValue = '';
+          this.close_();
         }
       }
     },
     methods: {
       // 搜索
       onSearch(type, val) {
-        let value = val.replace(/\s+/g, '');
         let urls;
         switch (type) {
           case 'is_nrcy':
@@ -90,31 +86,35 @@
           default:
             urls = 'houses?q=';
         }
-        this.myData(type, value, urls);
+        this.myData(type, val, urls);
       },
       myData(type, val, urls) {
         this.$http.get(this.address + urls + val).then((res) => {
-          let data = res.data.data;
-          if (data.length !== 0 && res.data.status === 'success') {
-            this.lists = [];
-            this.showInfo = [];
-            for (let i = 0; i < data.length; i++) {
-              if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
-                this.lord(data[i]);
+          if (this.searchValue !== '') {
+            let data = res.data.data;
+            if (data.length !== 0 && res.data.status === 'success') {
+              this.lists = [];
+              this.showInfo = [];
+              for (let i = 0; i < data.length; i++) {
+                if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
+                  this.lord(data[i]);
+                }
+                if ((type === 'renter' || type === 'is_nrcy' || type === '') && data[i].renters.length !== 0) {
+                  this.renter(data[i], type);
+                }
+                if (type === '' && data[i].lords.length === 0 && data[i].renters.length === 0) {
+                  let list = {};
+                  this.showInfo.push(data[i].id);
+                  list.house_id = data[i].id;
+                  list.house_name = data[i].name;
+                  this.lists.push(list);
+                }
               }
-              if ((type === 'renter' || type === 'is_nrcy' || type === '') && data[i].renters.length !== 0) {
-                this.renter(data[i], type);
-              }
-              if (type === '' && data[i].lords.length === 0 && data[i].renters.length === 0) {
-                let list = {};
-                this.showInfo.push(data[i].id);
-                list.house_id = data[i].id;
-                list.house_name = data[i].name;
-                this.lists.push(list);
-              }
+            } else {
+              this.lists = [];
             }
           } else {
-            this.lists = [];
+            this.close_();
           }
         })
       },
@@ -175,6 +175,10 @@
           path: this.path,
           query: {house: JSON.stringify(data), type: this.types}
         });
+      },
+      close_() {
+        this.lists = [];
+        this.searchValue = '';
       },
       // select关闭
       onCancel() {

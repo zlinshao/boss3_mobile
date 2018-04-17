@@ -38,16 +38,16 @@
       })
     },
     activated() {
-      this.searchValue = '';
-      this.lists = [];
+      this.close_();
     },
-    watch:{
-      searchValue(val){
-        if (val.length !== 0) {
-          this.organize(val);
+    watch: {
+      searchValue(val) {
+        let value = val.replace(/\s+/g, '');
+        this.searchValue = value;
+        if (value !== '') {
+          this.organize(value);
         } else {
-          this.lists = [];
-          this.searchValue = '';
+          this.close_();
         }
       }
     },
@@ -62,24 +62,32 @@
             is_recursion: 1,
           }
         }).then((res) => {
-          let data = res.data.data;
-          this.lists = [];
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].name !== null) {
-              let list = {};
-              list.staff_id = data[i].id;
-              list.staff_name = data[i].name;
-              if (data[i].org.length !== 0) {
-                list.depart_id = data[i].org[0].id;
-                list.depart_name = data[i].org[0].name;
-              } else {
-                list.depart_name = '---';
-                list.depart_id = '';
+          if (this.searchValue !== '') {
+            let data = res.data.data;
+            this.lists = [];
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].name !== null) {
+                let list = {};
+                list.staff_id = data[i].id;
+                list.staff_name = data[i].name;
+                if (data[i].org.length !== 0) {
+                  list.depart_id = data[i].org[0].id;
+                  list.depart_name = data[i].org[0].name;
+                } else {
+                  list.depart_name = '---';
+                  list.depart_id = '';
+                }
+                this.lists.push(list);
               }
-              this.lists.push(list);
             }
+          } else {
+            this.close_();
           }
         })
+      },
+      close_() {
+        this.searchValue = '';
+        this.lists = [];
       },
       // 开单人
       organizeSure(name) {
