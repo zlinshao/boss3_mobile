@@ -1,6 +1,5 @@
 <template>
   <div id="checkout">
-
     <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
@@ -324,8 +323,8 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
-          this.payWay = val.pay_way;
-          this.price_arr = val.month_price;
+          // this.payWay = val.pay_way;
+          // this.price_arr = val.month_price;
           this.staff_name = val.staff_name;
           this.department_name = val.department_name;
         }
@@ -366,6 +365,7 @@
         });
         this.picStatus = true;
         this.form.house_id = '';
+        this.form.collect_or_rent = '';
         this.form.check_type.id = '';
         this.form.check_type.name = '';
         this.payWay = '';

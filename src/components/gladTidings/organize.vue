@@ -5,15 +5,17 @@
         v-model="searchValue"
         show-action
         @cancel="onClose"/>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入33搜索内容</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
       <div class="searchContent">
+
         <div class="searchList" v-for="key in lists" @click="organizeSure(key)">
           <div>{{key.staff_name}}</div>
           <div>
             <p>{{key.depart_name}}</p>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -59,7 +61,7 @@
           params: {
             q: val,
             page: 1,
-            per_page_number: 30,
+            per_page_number: 15,
             org_id: 1,
             is_recursion: 1,
           }
