@@ -455,9 +455,9 @@
     methods: {
       userInfo() {
         this.form.staff_id = this.personal.id;
-        this.staff_name = this.personal.name;
+        this.form.staff_name = this.personal.name;
         this.form.department_id = this.personal.department_id;
-        this.department_name = this.personal.department_name;
+        this.form.department_name = this.personal.department_name;
       },
       dicts() {
         // 城市
