@@ -357,7 +357,7 @@
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
 
-        cusFrom: false,                //客户来源
+        cusFrom: false,                //是否中介
         corp: true,                    //公司单
 
         rooms: [],
@@ -650,6 +650,8 @@
             this.haveInHand = false;
             this.form.draft = val;
             this.form.is_agency = this.cusFrom ? 1 : 0;
+            alert(this.cusFrom);
+            alert(this.form.is_agency);
             this.form.is_corp = this.corp ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.form.discount = this.form.discount === '' ? 0 : this.form.discount;

@@ -166,6 +166,7 @@
                   if (res.data.status !== 'fail') {
                     if (res.data !== false) {
                       let data = {};
+                      alert(JSON.stringify(res.data));
                       data.id = res.data.id;
                       data.name = res.data.name;
                       data.avatar = res.data.avatar;

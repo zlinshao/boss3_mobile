@@ -101,11 +101,19 @@
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i]);
                 }
-                if (type === 'lord1' && data[i].lords.length !== 0 && data[i].lords.is_agency == 1) {
-                  this.lord(data[i]);
+                if (type === 'lord1' && data[i].lords.length !== 0) {
+                  for (let j = 0; j < data[i].lords.length; j++) {
+                    if(data[i].lords[j].is_agency === 1){
+                      this.lord(data[i]);
+                    }
+                  }
                 }
-                if (type === 'renter1' && data[i].renters.length !== 0 && data[i].renters.is_agency == 1) {
-                  this.lord(data[i]);
+                if (type === 'renter1' && data[i].renters.length !== 0) {
+                  for (let j = 0; j < data[i].renters.length; j++) {
+                    if(data[i].renters[j].is_agency === 1){
+                      this.renter(data[i]);
+                    }
+                  }
                 }
                 if ((type === 'renter' || type === 'is_nrcy' || type === '') && data[i].renters.length !== 0) {
                   this.renter(data[i], type);
