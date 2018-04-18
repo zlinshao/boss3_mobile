@@ -418,10 +418,7 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
-      this.form.staff_id = this.personal.id;
-      this.staff_name = this.personal.name;
-      this.form.department_id = this.personal.department_id;
-      this.department_name = this.personal.department_name;
+      this.userInfo();
     },
     activated() {
       this.houseInfo();
@@ -429,6 +426,13 @@
       this.ddRent('');
     },
     methods: {
+      userInfo() {
+        this.form.staff_id = this.personal.id;
+        this.staff_name = this.personal.name;
+        this.form.department_id = this.personal.department_id;
+        this.department_name = this.personal.department_name;
+      },
+
       dicts() {
         //支付方式
         this.dictionary(508, 1).then((res) => {
@@ -666,11 +670,6 @@
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
           } else {
-            // this.rooms = [];
-            // this.form.rooms_mate = val.rooms;
-            // for (let i = 0; i < val.rooms.length; i++) {
-            //   this.rooms.push(val.rooms[i].name);
-            // }
             this.form.address = val.house_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
@@ -705,15 +704,7 @@
             this.form.id = data.id;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
-            // this.form.rooms_mate = draft.rooms_mate;
-            // this.form.room_id = draft.room_id;
-            // this.rooms = [];
-            // for (let i = 0; i < draft.rooms_mate.length; i++) {
-            //   this.rooms.push(draft.rooms_mate[i].name);
-            //   if (draft.room_id === draft.rooms_mate[i].id) {
-            //     this.roomsName = draft.rooms_mate[i].name;
-            //   }
-            // }
+
             this.form.address = data.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
@@ -790,6 +781,8 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.userInfo();
+        $('.imgItem').remove();
         this.picStatus = true;
         this.oldHouseName = '';
         this.form.address = '';

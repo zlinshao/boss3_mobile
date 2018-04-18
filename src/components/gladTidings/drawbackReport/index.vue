@@ -215,18 +215,6 @@
         this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
       },
 
-      // // 房屋地址
-      // house_(val, type, form) {
-      //   for (let i = 0; i < form.month_price.length; i++) {
-      //     this.payWay = '第' + (i + 1) + '期' + form.pay_way[i].period + '个月' + form.pay_way[i].pay_way_str + ';';
-      //     this.price_arr = '第' + (i + 1) + '期' + form.month_price[i].period + '个月' + form.month_price[i].price + '元/月' + ';';
-      //   }
-      //   this.houseName = val.houseName;
-      //   this.form.contract_id = val.contract_id;
-      //   this.form.house_id = val.house_id;
-      //   this.onCancel();
-      // },
-
       saveCollect(val) {
         if (this.picStatus) {
           if (this.haveInHand) {
@@ -261,9 +249,6 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
-          this.payWay = val.pay_way;
-          this.price_arr = val.month_price;
-          this.recMoney = val.mortgage_price;
           this.staff_name = val.staff_name;
           this.department_name = val.department_name;
         }
@@ -299,6 +284,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         this.picStatus = true;
         this.form.payWay = '';
         this.form.price_arr = '';

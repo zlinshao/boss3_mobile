@@ -256,15 +256,15 @@
         }
       },
       saveCollect(val) {
-        if (this.settleStatus) {
-          this.form.settle = 1;
-        } else {
-          this.form.settle = 0;
-        }
-        this.form.draft = val;
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
+            if (this.settleStatus) {
+              this.form.settle = 1;
+            } else {
+              this.form.settle = 0;
+            }
+            this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50310') {
@@ -341,6 +341,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         this.picStatus = true;
         this.payWay = '';
         this.form.address = '';

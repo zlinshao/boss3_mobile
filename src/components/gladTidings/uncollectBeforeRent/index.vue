@@ -397,10 +397,7 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
-      this.form.staff_id = this.personal.id;
-      this.staff_name = this.personal.name;
-      this.form.department_id = this.personal.department_id;
-      this.department_name = this.personal.department_name;
+      this.userInfo();
     },
     activated() {
       this.houseInfo();
@@ -408,6 +405,12 @@
       this.ddRent('');
     },
     methods: {
+      userInfo() {
+        this.form.staff_id = this.personal.id;
+        this.staff_name = this.personal.name;
+        this.form.department_id = this.personal.department_id;
+        this.department_name = this.personal.department_name;
+      },
       dicts() {
         //房东租客
         this.dictionary(449, 1).then((res) => {
@@ -748,6 +751,8 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.userInfo();
+        $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
         this.form.rent_without_collect_address = '';

@@ -216,8 +216,6 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
-          this.payWay = val.pay_way;
-          this.price_arr = val.month_price;
           this.staff_name = val.staff_name;
           this.department_name = val.department_name;
         }
@@ -252,6 +250,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         this.picStatus = true;
         this.payWay = '';
         this.price_arr = '';

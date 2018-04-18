@@ -271,7 +271,7 @@
           type="text"
           placeholder="请填写收房合同编号"
           icon="clear"
-          @click-icon="form.contract_number = ''"
+          @click-icon="form.contract_number = 'ljsf'"
           required>
         </van-field>
       </van-cell-group>
@@ -441,10 +441,7 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
-      this.form.staff_id = this.personal.id;
-      this.staff_name = this.personal.name;
-      this.form.department_id = this.personal.department_id;
-      this.department_name = this.personal.department_name;
+      this.userInfo();
     },
     activated() {
       this.houseInfo();
@@ -452,6 +449,12 @@
       this.ddRent('');
     },
     methods: {
+      userInfo() {
+        this.form.staff_id = this.personal.id;
+        this.staff_name = this.personal.name;
+        this.form.department_id = this.personal.department_id;
+        this.department_name = this.personal.department_name;
+      },
       dicts() {
         //付款方式
         this.dictionary(443, 1).then((res) => {
@@ -790,6 +793,8 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.userInfo();
+        $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
         this.form.contract_id = '';

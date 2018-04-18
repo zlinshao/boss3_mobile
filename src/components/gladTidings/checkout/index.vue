@@ -363,6 +363,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         this.picStatus = true;
         this.form.house_id = '';
         this.form.collect_or_rent = '';

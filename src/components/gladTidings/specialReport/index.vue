@@ -205,6 +205,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
         this.form.address = '';

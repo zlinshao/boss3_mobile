@@ -219,6 +219,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         this.picStatus = true;
         this.payWay = '';
         this.price_arr = '';
