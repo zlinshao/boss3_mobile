@@ -11,16 +11,7 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
-        <!--<van-field-->
-        <!--v-if="rooms.length !== 0"-->
-        <!--v-model="roomsName"-->
-        <!--type="text"-->
-        <!--label="合租房"-->
-        <!--readonly-->
-        <!--@click="selectShow(4,'')"-->
-        <!--placeholder="请选择合租房"-->
-        <!--required>-->
-        <!--</van-field>-->
+
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -360,9 +351,6 @@
         cusFrom: false,                //是否中介
         corp: true,                    //公司单
 
-        rooms: [],
-        roomsName: '',
-
         form: {
           address: '',
           id: '',
@@ -370,9 +358,6 @@
           draft: 0,
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
-
-          room_id: '',                  //合租房间ID
-          rooms_mate: [],               //合租房间
           discount: 0,               //让价金额
 
           month: '',                    //租房月数
@@ -535,9 +520,6 @@
           case 3:
             this.columns = dicts.value9;
             break;
-          case 4:
-            this.columns = this.rooms;
-            break;
         }
       },
       // select选择
@@ -561,14 +543,6 @@
             break;
           case 3:
             this.form.pay_way_bet = value;
-            break;
-          case 4:
-            this.roomsName = value;
-            for (let i = 0; i < this.form.rooms_mate.length; i++) {
-              if (this.form.rooms_mate[i].name === value) {
-                this.form.room_id = this.form.rooms_mate[i].id;
-              }
-            }
             break;
         }
         this.selectHide = false;
@@ -650,8 +624,6 @@
             this.haveInHand = false;
             this.form.draft = val;
             this.form.is_agency = this.cusFrom ? 1 : 0;
-            alert(this.cusFrom);
-            alert(this.form.is_agency);
             this.form.is_corp = this.corp ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.form.discount = this.form.discount === '' ? 0 : this.form.discount;
@@ -681,11 +653,6 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          // this.rooms = [];
-          // this.form.rooms_mate = val.rooms;
-          // for (let i = 0; i < val.rooms.length; i++) {
-          //   this.rooms.push(val.rooms[i].name);
-          // }
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -719,15 +686,7 @@
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
-            // this.form.rooms_mate = draft.rooms_mate;
-            // this.form.room_id = draft.room_id;
-            // this.rooms = [];
-            // for (let i = 0; i < draft.rooms_mate.length; i++) {
-            //   this.rooms.push(draft.rooms_mate[i].name);
-            //   if (draft.room_id === draft.rooms_mate[i].id) {
-            //     this.roomsName = draft.rooms_mate[i].name;
-            //   }
-            // }
+
             this.form.address = data.address;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
@@ -814,11 +773,6 @@
         this.form.id = '';
         this.form.contract_id = '';
         this.form.house_id = '';
-
-        this.form.rooms_mate = [];
-        this.form.room_id = '';
-        this.rooms = [];
-        this.roomsName = '';
 
         this.form.address = '';
         this.form.month = '';

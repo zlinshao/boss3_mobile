@@ -10,6 +10,7 @@
           @click="searchSelect()"
           placeholder="请选择房屋地址"
           required>
+          <div>手机号格式错误</div>
         </van-field>
         <van-field
           v-model="month"
