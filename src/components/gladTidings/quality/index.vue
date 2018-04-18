@@ -448,8 +448,6 @@
       this.userInfo();
     },
     activated() {
-      console.log(this.personal);
-      console.log(JSON.parse(sessionStorage.personal));
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');

@@ -98,15 +98,6 @@
                   'code': info.code,
                 }
               }).then((res) => {
-                DingTalkPC.device.notification.alert({
-                  message: JSON.stringify(res.data),
-                  title: "提示信息",
-                  buttonName: "关闭",
-                  onSuccess: function () {
-                  },
-                  onFail: function (err) {
-                  }
-                });
                 if (res.data.status !== 'fail') {
                   if (res.data !== false) {
                     let data = {};
@@ -175,7 +166,6 @@
                   if (res.data.status !== 'fail') {
                     if (res.data !== false) {
                       let data = {};
-                      console.log(res.data);
                       data.id = res.data.id;
                       data.name = res.data.name;
                       data.avatar = res.data.avatar;
