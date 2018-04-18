@@ -278,6 +278,7 @@
     data() {
       return {
         haveInHand: true,
+        personal: JSON.parse(sessionStorage.personal),
         urls: globalConfig.server,
         picStatus: true,
 
@@ -314,7 +315,7 @@
           house_id_rent: '',
           house_id: '',
           month: '',                    //签约时长
-          day: '',                      //签约时长天
+          day: '0',                      //签约时长天
           begin_date: '',               //合同开始日期
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -346,6 +347,10 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
+      this.form.staff_id = this.personal.id;
+      this.staff_name = this.personal.name;
+      this.form.department_id = this.personal.department_id;
+      this.department_name = this.personal.department_name;
     },
     activated() {
       this.houseInfo();
@@ -569,7 +574,7 @@
 
             this.form.id = data.id;
             this.form.month = draft.month;
-            this.form.day = draft.day === '0' ? '' : draft.day;
+            this.form.day = draft.day;
 
             this.form.oldHouseName = draft.oldHouseName;
             this.form.form.address = draft.form.address;
@@ -717,7 +722,7 @@
         this.picStatus = true;
         this.form.id = '';
         this.form.month = '';
-        this.form.day = '';
+        this.form.day = '0';
 
         this.form.contract_id_rent = '';
         this.form.contract_id = '';

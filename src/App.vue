@@ -166,10 +166,12 @@
                   if (res.data.status !== 'fail') {
                     if (res.data !== false) {
                       let data = {};
+                      data.id = res.data.name;
                       data.name = res.data.name;
                       data.avatar = res.data.avatar;
                       data.phone = res.data.phone;
-                      // data.depart = res.data.org[0].name;
+                      data.department_name = res.data.org[0].name;
+                      data.department_id= res.data.org[0].id;
                       // data.display_name = res.data.role[0].display_name;
                       sessionStorage.setItem('personal', JSON.stringify(data));
                       globalConfig.personal = data;

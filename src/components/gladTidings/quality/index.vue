@@ -108,32 +108,6 @@
             placeholder="请填写总楼层">
           </van-field>
         </div>
-        <div class="first_date">
-          <van-field
-            style="width: 110px;"
-            class="title"
-            label="签约时长"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.month"
-            type="number"
-            placeholder="请填写月数">
-          </van-field>
-          <van-field
-            class="twoBorder"
-            v-model="form.day"
-            type="number"
-            placeholder="请填写天数">
-          </van-field>
-        </div>
-        <van-field
-          v-model="form.vacancy"
-          label="空置期"
-          required
-          type="number"
-          placeholder="请填写空置期">
-        </van-field>
         <van-field
           v-model="form.price"
           label="价格"
@@ -142,18 +116,19 @@
           placeholder="请填写价格">
         </van-field>
 
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="is_agencyOn" title="是否中介"/>
-          </div>
-        </div>
+        <!--<div class="titleSwitch">-->
+          <!--<div class="cellGroup">-->
+            <!--<span class="requiredIcon">*</span>-->
+            <!--<van-switch-cell v-model="is_agencyOn" title="是否中介"/>-->
+          <!--</div>-->
+        <!--</div>-->
+
+        <van-switch-cell v-model="is_agencyOn" title="是否中介"/>
 
         <van-field
           @click="selectShow(4)"
           v-model="air_condition_name"
           label="空调"
-          required
           type="text"
           readonly
           placeholder="请选择空调数量">
@@ -162,7 +137,6 @@
           @click="selectShow(5)"
           v-model="fridge_name"
           label="冰箱"
-          required
           type="text"
           readonly
           placeholder="请选择冰箱数量">
@@ -171,7 +145,6 @@
           @click="selectShow(6)"
           v-model="television_name"
           label="电视"
-          required
           type="text"
           readonly
           placeholder="请选择电视数量">
@@ -180,7 +153,6 @@
           @click="selectShow(7)"
           v-model="gas_stove_name"
           label="燃气灶"
-          required
           type="text"
           readonly
           placeholder="请选择燃气灶数量">
@@ -189,7 +161,6 @@
           @click="selectShow(8)"
           v-model="hood_name"
           label="油烟机"
-          required
           type="text"
           readonly
           placeholder="请选择油烟机数量">
@@ -198,7 +169,6 @@
           @click="selectShow(9)"
           v-model="microwave_name"
           label="微波炉"
-          required
           type="text"
           readonly
           placeholder="请选择微波炉数量">
@@ -207,7 +177,6 @@
           @click="selectShow(10)"
           v-model="wash_machine_name"
           label="洗衣机"
-          required
           type="text"
           readonly
           placeholder="请选择洗衣机数量">
@@ -216,7 +185,6 @@
           @click="selectShow(11)"
           v-model="water_heater_name"
           label="热水器"
-          required
           type="text"
           readonly
           placeholder="请选择热水器数量">
@@ -225,7 +193,6 @@
           @click="selectShow(12)"
           v-model="sofa_name"
           label="沙发"
-          required
           type="text"
           readonly
           placeholder="请填写沙发数量">
@@ -234,7 +201,6 @@
           @click="selectShow(13)"
           v-model="clothe_rack_name"
           label="晾衣架"
-          required
           type="text"
           readonly
           placeholder="请填写晾衣架数量">
@@ -243,7 +209,6 @@
           <van-field
             v-model="form.dining_table"
             label="餐桌"
-            required
             type="number"
             placeholder="请填写餐桌数量">
           </van-field>
@@ -253,37 +218,16 @@
           <van-field
             v-model="form.chair"
             label="椅子"
-            required
             type="number"
             placeholder="请填写椅子数量">
           </van-field>
           <b>把</b>
         </div>
 
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="heaterOn" title="暖气"/>
-          </div>
-        </div>
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="gasOn" title="天然气"/>
-          </div>
-        </div>
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="is_cleanOn" title="房屋交接是否干净"/>
-          </div>
-        </div>
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="bedOn" title="是否每个房间有床+床垫"/>
-          </div>
-        </div>
+        <van-switch-cell v-model="heaterOn" title="暖气"/>
+        <van-switch-cell v-model="gasOn" title="天然气"/>
+        <van-switch-cell v-model="is_cleanOn" title="房屋交接是否干净"/>
+        <van-switch-cell v-model="bedOn" title="是否每个房间有床+床垫"/>
 
         <van-field
           v-if="!bedOn"
@@ -294,12 +238,7 @@
           placeholder="请填写床+床垫备注">
         </van-field>
 
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="wardrobeOn" title="是否每个房间有衣柜"/>
-          </div>
-        </div>
+        <van-switch-cell v-model="wardrobeOn" title="是否每个房间有衣柜"/>
 
         <van-field
           v-if="!wardrobeOn"
@@ -310,12 +249,7 @@
           placeholder="请填写衣柜备注">
         </van-field>
 
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="curtainOn" title="是否每个房间有窗帘"/>
-          </div>
-        </div>
+        <van-switch-cell v-model="curtainOn" title="是否每个房间有窗帘"/>
 
         <van-field
           v-if="!curtainOn"
@@ -326,19 +260,9 @@
           placeholder="请填写窗帘备注">
         </van-field>
 
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="is_fillOn" title="家电是否齐全"/>
-          </div>
-        </div>
+        <van-switch-cell v-model="is_fillOn" title="家电是否齐全"/>
 
-        <div class="titleSwitch" v-if="!is_fillOn">
-          <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="is_lordOn" title="房东是否予以配齐"/>
-          </div>
-        </div>
+        <van-switch-cell v-model="is_lordOn" title="房东是否予以配齐"/>
         <van-field
           v-if="!is_fillOn && is_lordOn"
           v-model="form.is_lord_fill_days"
@@ -417,6 +341,7 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
+        personal: JSON.parse(sessionStorage.personal),
         selectHide: false,
         columns: [],                  //select值
         tabs: '',
@@ -479,9 +404,6 @@
           },
           floor: '',                    //楼层
           floors: '',                   //总楼层
-          month: '',                    //签约时长
-          day: '',                      //签约时长
-          vacancy: '',                  //空置期
           price: '',                    //价格
           is_agency: 0,                 //是否中介
           air_condition: 1,             //空调
@@ -523,6 +445,10 @@
     },
     mounted() {
       this.dicts();
+      this.form.staff_id = this.personal.id;
+      this.form.staff_name = this.personal.name;
+      this.form.department_id = this.personal.department_id;
+      this.form.department_name = this.personal.department_name;
     },
     activated() {
       this.houseInfo();
@@ -799,9 +725,6 @@
             this.form.property_type = data.property_type;                   //类型
             this.form.floor = data.floor;                                   //楼层
             this.form.floors = data.floors;                                 //总楼层
-            this.form.month = data.month;                                   //签约时长
-            this.form.day = data.day === '0' ? '' : data.day;               //签约时长
-            this.form.vacancy = data.vacancy;                               //空置期
             this.form.price = data.price;                                   //价格
             this.form.is_agency = data.is_agency;                           //是否中介
             this.is_agencyOn = data.is_agency === 1 ? true : false;         //是否中介
@@ -916,9 +839,6 @@
         this.form.property_type.name = '';        //类型
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
-        this.form.month = '';                    //签约时长
-        this.form.day = '';                     //签约时长
-        this.form.vacancy = '';                 //空置期
         this.form.price = '';                    //价格
         this.form.is_agency = 0;                 //是否中介
         this.is_agencyOn = false;               //是否中介

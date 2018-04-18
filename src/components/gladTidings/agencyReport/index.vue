@@ -133,14 +133,14 @@
           disabled
           label="开单人"
           type="text"
-          placeholder="请选择开单人">
+          placeholder="开单人已禁用">
         </van-field>
         <van-field
           v-model="department_name"
           disabled
           label="部门"
           type="text"
-          placeholder="请选择部门">
+          placeholder="部门已禁用">
         </van-field>
       </van-cell-group>
     </div>

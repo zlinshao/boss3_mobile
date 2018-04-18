@@ -220,7 +220,7 @@
         </van-field>
         <van-field
           v-model="form.vacancy"
-          label="空置期"
+          label="空置期(天)"
           type="number"
           placeholder="请填写空置期"
           icon="clear"
@@ -264,15 +264,6 @@
           </van-field>
         </div>
         <!--<van-switch-cell v-model="cusFrom" title="是否中介"/>-->
-        <van-field
-          v-model="form.property"
-          label="物业费"
-          type="number"
-          placeholder="请填写物业费"
-          icon="clear"
-          @click-icon="form.property = ''"
-          required>
-        </van-field>
         <van-field
           v-model="property_name"
           label="物业费付款人"
@@ -354,7 +345,7 @@
           @click-icon="form.penalty = ''"
           required>
         </van-field>
-        <van-switch-cell v-model="corp" title="是否公司单"/>
+        <van-switch-cell v-model="corp" @change="isCorp" title="是否公司单"/>
         <van-field
           v-model="form.contract_number"
           label="合同编号"
@@ -444,6 +435,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
+        personal: JSON.parse(sessionStorage.personal),
         haveInHand: true,
         urls: globalConfig.server,
         address: globalConfig.server_user,
@@ -514,7 +506,6 @@
           // is_agency: 0,                 //客户来源    0个人1中介
           is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
-          property: '',                 //物业费
           property_payer: '',           //物业费付款人
           sign_date: '',                //签约日期
           name: '',                     //房东姓名
@@ -525,7 +516,7 @@
           account: '',                  //帐号
           relationship: '',             //房东与收款人关系
           penalty: '',                  //违约金
-          contract_number: '',          //合同编号
+          contract_number: 'ljsf',      //合同编号
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
@@ -550,6 +541,10 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
+      this.form.staff_id = this.personal.id;
+      this.staff_name = this.personal.name;
+      this.form.department_id = this.personal.department_id;
+      this.department_name = this.personal.department_name;
     },
     activated() {
       this.houseInfo();
@@ -557,6 +552,13 @@
       this.ddRent('');
     },
     methods: {
+      isCorp(val) {
+        // if (val) {
+        //   this.form.contract_number = 'ljsf';
+        // } else {
+        //   this.form.contract_number = '';
+        // }
+      },
       dicts() {
         //付款方式
         this.dictionary(443, 1).then((res) => {
@@ -960,7 +962,6 @@
             this.form.vacancy_other = draft.vacancy_other;
             this.form.warranty = draft.warranty;
             this.form.warranty_day = draft.warranty_day === '0' ? '' : draft.warranty_day;
-            this.form.property = draft.property;
 
             this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
@@ -1005,6 +1006,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         // this.share = 0;
         this.joint = false;
         this.form.id = '';
@@ -1051,7 +1053,6 @@
         this.form.vacancy_other = '';
         this.form.warranty = '';
         this.form.warranty_day = '';
-        this.form.property = '';
         this.form.property_payer = '';
         this.property_name = '';
         this.form.sign_date = '';

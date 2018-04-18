@@ -5,7 +5,17 @@
         v-model="searchValue"
         show-action
         @cancel="onCancel"/>
-      <div class="notData" v-if="lists.length === 0">请输入搜索内容</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
+      <!--<ul-->
+        <!--v-waterfall-lower="loadMore"-->
+        <!--waterfall-disabled="disabled"-->
+        <!--waterfall-offset="300">-->
+        <!--<li>-->
+
+        <!--</li>-->
+      <!--</ul>-->
+
       <div class="searchContent">
         <div class="searchList" v-for="key in lists" @click="village(key)">
           <div>{{key.village_name}}</div>
@@ -19,8 +29,14 @@
 </template>
 
 <script>
+  // import {Waterfall} from 'vant';
+
   export default {
     name: "city-search",
+    // directives: {
+    //   WaterfallLower: Waterfall('lower'),
+    //   WaterfallUpper: Waterfall('upper'),
+    // },
     data() {
       return {
         urls: globalConfig.server,
@@ -28,16 +44,15 @@
         city_id: '',
         lists: [],
         path: '',
+        page: 1,
+        disabled: true,
       }
     },
-    mounted() {
-      this.city_id = this.$route.query.city;
-    },
+
     activated() {
-      this.routerIndex(this.path);
-      this.lists = [];
-      this.searchValue = '';
       this.city_id = this.$route.query.city;
+      this.routerIndex(this.path);
+      this.close_();
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -51,24 +66,33 @@
         let value = val.replace(/\s+/g, '');
         this.searchValue = value;
         if (value !== '') {
-          this.onSearch(value);
+          this.onSearch(value, this.page);
         } else {
           this.close_();
         }
       }
     },
     methods: {
-      onSearch(val) {
+      // loadMore() {
+      //   if (!this.disabled) {
+      //     this.comments(this.searchValue, this.page);
+      //     this.page++;
+      //   }
+      // },
+      onSearch(val, page) {
         if (val.length > 1) {
           this.$http.get(this.urls + 'setting/community/', {
             params: {
               num: 30,
               city: this.city_id,
               keywords: val,
+              pages: page,
             }
           }).then((res) => {
             if (this.searchValue !== '') {
-              this.lists = res.data.data.list;
+              if (res.data.code === '10000') {
+                this.lists = res.data.data.list;
+              }
             } else {
               this.close_();
             }

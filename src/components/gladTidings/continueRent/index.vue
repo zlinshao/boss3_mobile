@@ -185,12 +185,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form.property"
-          label="物业费"
-          type="text"
-          placeholder="请填写物业费"
+          v-model="form.discount"
+          label="让价金额"
+          type="number"
+          placeholder="请填写金额"
           icon="clear"
-          @click-icon="form.property = ''"
+          @click-icon="form.discount = 0"
           required>
         </van-field>
         <van-field
@@ -326,6 +326,7 @@
     data() {
       return {
         haveInHand: true,
+        personal: JSON.parse(sessionStorage.personal),
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -381,8 +382,8 @@
           money_way: [''],              //分金额 方式
 
           deposit: '',                  //押金
+          discount: 0,                  //让价金额
           property_payer: '',           //物业费付款人
-          property: '',                 //物业费
           receipt: '',                 //收据 编号
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
@@ -408,6 +409,10 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
+      this.form.staff_id = this.personal.id;
+      this.staff_name = this.personal.name;
+      this.form.department_id = this.personal.department_id;
+      this.department_name = this.personal.department_name;
     },
     activated() {
       this.houseInfo();
@@ -633,6 +638,7 @@
             this.haveInHand = false;
             this.form.draft = val;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
+            this.form.discount = this.form.discount === '' ? 0 : this.form.discount;
             this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50210') {
@@ -748,7 +754,7 @@
 
             this.form.deposit = draft.deposit;
             this.form.receipt = draft.receipt;
-            this.form.property = draft.property;
+            this.form.discount = draft.discount;
 
             this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
@@ -810,8 +816,8 @@
         this.form.money_way = [''];
         this.form.deposit = '';
         this.form.from = 1;
-        this.form.property = '';
         this.form.receipt = '';
+        this.form.discount = 0;
         this.form.property_payer = '';
         this.property_name = '';
         this.form.retainage_date = '';

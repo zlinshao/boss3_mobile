@@ -210,8 +210,7 @@
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
-            this.formList = res.data.data.process.content.show_content;
-
+            this.formList = JSON.parse(res.data.data.process.content.show_content_compress);
             let houseName = res.data.data.process.content;
             if (houseName.address) {
               this.address = houseName.address;
@@ -220,7 +219,6 @@
             } else {
               this.address = houseName.house.name;
             }
-
             this.operation = res.data.data.operation;
             this.personal = res.data.data.process.user;
             this.place = res.data.data.process.place;

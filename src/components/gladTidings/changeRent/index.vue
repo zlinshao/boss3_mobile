@@ -191,16 +191,16 @@
           @click-icon="form.deposit = ''"
           required>
         </van-field>
-        <van-switch-cell v-model="cusFrom" title="是否中介"/>
         <van-field
-          v-model="form.property"
-          label="物业费"
-          type="text"
-          placeholder="请填写物业费"
+          v-model="form.discount"
+          label="让价金额"
+          type="number"
+          placeholder="请填写金额"
           icon="clear"
-          @click-icon="form.property = ''"
+          @click-icon="form.discount = 0"
           required>
         </van-field>
+        <van-switch-cell v-model="cusFrom" title="是否中介"/>
         <van-field
           v-model="property_name"
           label="物业费付款人"
@@ -335,6 +335,7 @@
     data() {
       return {
         haveInHand: true,
+        personal: JSON.parse(sessionStorage.personal),
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -398,7 +399,7 @@
           is_agency: 0,                 //客户来源    0个人1中介
           is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
-          property: '',                 //物业费
+          discount: 0,                  //让价金额
           receipt: '',                  //收据编号
           property_payer: '',           //物业费付款人
           retainage_date: '',           //尾款补齐时间
@@ -425,6 +426,10 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
+      this.form.staff_id = this.personal.id;
+      this.staff_name = this.personal.name;
+      this.form.department_id = this.personal.department_id;
+      this.department_name = this.personal.department_name;
     },
     activated() {
       this.houseInfo();
@@ -651,6 +656,7 @@
             this.form.is_agency = this.cusFrom ? 1 : 0;
             this.form.is_corp = this.corp ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
+            this.form.discount = this.form.discount === '' ? 0 : this.form.discount;
             this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50210') {
@@ -719,6 +725,7 @@
             this.form.house_id = draft.house_id;
             this.form.address = data.address;
             this.form.month = draft.month;
+            this.form.discount = draft.discount;
             this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.sign_date = draft.sign_date;
             this.form.begin_date = draft.begin_date;
@@ -762,7 +769,6 @@
             this.cusFrom = draft.is_agency === 1 ? true : false;
             this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
-            this.form.property = draft.property;
 
             this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
@@ -820,11 +826,11 @@
         this.form.money_sep = [''];
         this.form.money_way = [''];
         this.form.deposit = '';
+        this.form.discount = 0;
         this.is_corp = 1;
         this.corp = true;
         this.is_agency = 0;
         this.cusFrom = false;
-        this.form.property = '';
         this.form.receipt = '';
         this.form.property_payer = '';
         this.property_name = '';

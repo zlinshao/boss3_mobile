@@ -223,6 +223,15 @@
       </div>
 
       <van-cell-group>
+        <van-field
+          v-model="form.discount"
+          label="让价金额"
+          type="number"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.discount = 0"
+          required>
+        </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-field
           v-model="form.receipt"
@@ -320,6 +329,7 @@
     data() {
       return {
         haveInHand: true,
+        personal: JSON.parse(sessionStorage.personal),
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -384,6 +394,7 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          discount: 0,                   //让价金额
           is_corp: 1,                   //是否公司单  0个人1公司
           receipt: '',                  //收据编号
           retainage_date: '',           //尾款补齐时间
@@ -407,6 +418,10 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
+      this.form.staff_id = this.personal.id;
+      this.staff_name = this.personal.name;
+      this.form.department_id = this.personal.department_id;
+      this.department_name = this.personal.department_name;
     },
     activated() {
       this.houseInfo();
@@ -750,6 +765,7 @@
             this.form.money_way = draft.money_way;
 
             this.form.receipt = draft.receipt;
+            this.form.discount = draft.discount;
             this.form.retainage_date = draft.retainage_date;
 
             this.form.screenshot = draft.screenshot;
@@ -817,6 +833,7 @@
         this.is_corp = 1;
         this.corp = true;
         this.form.receipt = '';
+        this.form.discount = 0;
         this.form.retainage_date = '';
 
         this.form.screenshot = [];

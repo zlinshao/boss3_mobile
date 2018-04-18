@@ -184,15 +184,6 @@
           required>
         </van-field>
         <van-field
-          v-model="property_name"
-          label="物业费付款人"
-          type="text"
-          placeholder="请选择物业费付款人"
-          @click="selectShow(6,'')"
-          readonly
-          required>
-        </van-field>
-        <van-field
           v-model="form.sign_date"
           label="签约日期"
           readonly
@@ -364,6 +355,7 @@
     data() {
       return {
         haveInHand: true,
+        personal: JSON.parse(sessionStorage.personal),
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -414,7 +406,6 @@
           warranty: '',                 //保修期(月)
           warranty_day: '',             //保修期(天)
           deposit: '',                  //押金
-          property: '',                 //物业费
           property_payer: '',           //物业费付款人
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -428,7 +419,7 @@
           relationship: '',             //房东与收款人关系
           penalty: '',                  //违约金
           is_corp: 1,                   //是否公司单  0个人1公司
-          contract_number: '',          //合同编号
+          contract_number: 'ljsf',          //合同编号
           screenshot_leader: '',        //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
@@ -450,6 +441,10 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts();
+      this.form.staff_id = this.personal.id;
+      this.staff_name = this.personal.name;
+      this.form.department_id = this.personal.department_id;
+      this.department_name = this.personal.department_name;
     },
     activated() {
       this.houseInfo();
@@ -754,7 +749,6 @@
             this.form.deposit = draft.deposit;
             this.form.warranty = draft.warranty;
             this.form.warranty_day = draft.warranty_day === '0' ? '' : draft.warranty_day;
-            this.form.property = draft.property;
 
             this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
@@ -827,7 +821,6 @@
         this.form.deposit = '';
         this.form.warranty = '';
         this.form.warranty_day = '';
-        this.form.property = '';
         this.form.property_payer = '';
         this.property_name = '';
         this.form.sign_date = '';
@@ -839,7 +832,7 @@
         this.form.account = '';
         this.form.relationship = '';
         this.form.penalty = '';
-        this.form.contract_number = '';
+        this.form.contract_number = 'ljsf';
 
         this.form.photo = [];
         this.photos = {};
