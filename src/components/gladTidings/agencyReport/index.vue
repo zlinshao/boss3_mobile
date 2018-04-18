@@ -296,8 +296,8 @@
           this.form.house_id = val.house_id;
           this.staff_name = val.staff_name;
           this.department_name = val.department_name;
-          this.payWay = val.pay_way;
-          this.price_arr = val.month_price;
+          this.form.staff_id = val.staff_id;
+          this.form.department_id = val.department_id;
         }
       },
 
@@ -330,6 +330,8 @@
             this.form.remark = draft.remark;
             this.staff_name = data.staff_name;
             this.department_name = data.depart_name;
+            this.form.staff_id = draft.staff_id;
+            this.form.department_id = draft.department_id;
           } else {
             this.form.id = '';
           }

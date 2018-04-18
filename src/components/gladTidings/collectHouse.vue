@@ -146,14 +146,18 @@
           list.duration_days = val.lords[j].duration_days;
           list.customers = val.lords[j].customers[0].name;
           if (val.lords[j].sign_user !== null) {
+            list.staff_name = val.lords[j].sign_user.id;
             list.staff_name = val.lords[j].sign_user.name;
           } else {
             list.staff_name = '---';
+            list.staff_id = '';
           }
           if (val.lords[j].sign_org !== null) {
+            list.department_name = val.lords[j].sign_org.id;
             list.department_name = val.lords[j].sign_org.name;
           } else {
             list.department_name = '---';
+            list.department_id = '';
           }
           this.lists.push(list);
         }

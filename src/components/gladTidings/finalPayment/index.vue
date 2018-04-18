@@ -214,6 +214,8 @@
           retainage_date: '',
           screenshot: [],               //领导截图 数组
           remark: '',                   //备注
+          staff_id: '',                 //开单人id
+          department_id: '',            //部门id
         },
         screenshots: {},                 //房屋名称
         staff_name: '',                  //开单人name
@@ -358,10 +360,10 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
-          this.payWay = val.pay_way;
-          this.price_arr = val.month_price;
           this.staff_name = val.staff_name;
           this.department_name = val.department_name;
+          this.form.staff_id = val.staff_id;
+          this.form.department_id = val.department_id;
         }
       },
 
@@ -398,6 +400,8 @@
             this.form.remark = draft.remark;
             this.staff_name = data.staff_name;
             this.department_name = data.department_name;
+            this.form.staff_id = draft.staff_id;
+            this.form.department_id = draft.department_id;
           } else {
             this.form.id = ''
           }
@@ -429,6 +433,8 @@
         this.form.remark = '';
         this.staff_name = '';
         this.department_name = '';
+        this.form.staff_id = '';
+        this.form.department_id = '';
       }
     },
   }

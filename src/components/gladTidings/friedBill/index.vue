@@ -132,6 +132,8 @@
           refund: '0',                  //定金退还
           screenshot_leader: [],        //领导同意截图
           remark: '',                   //备注
+          staff_id: '',                 //开单人id
+          department_id: '',            //部门id
         },
         screenshots: {},                //截图
         staff_name: '',                 //开单人name
@@ -218,6 +220,8 @@
           this.form.house_id = val.house_id;
           this.staff_name = val.staff_name;
           this.department_name = val.department_name;
+          this.form.staff_id = val.staff_id;
+          this.form.department_id = val.department_id;
         }
       },
 
@@ -240,6 +244,8 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots = data.screenshot_leader;
             this.form.remark = draft.remark;
+            this.form.staff_id = draft.staff_id;
+            this.form.department_id = draft.department_id;
           } else {
             this.form.id = '';
           }
@@ -265,6 +271,8 @@
         this.form.address = '';
         this.staff_name = '';
         this.department_name = '';
+        this.form.staff_id = '';
+        this.form.department_id = '';
       },
     },
   }
