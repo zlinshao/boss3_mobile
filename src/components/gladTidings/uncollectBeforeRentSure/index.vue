@@ -762,10 +762,6 @@
         this.form.name = '';
         this.form.phone = '';
         this.form.remark = '';
-        this.form.staff_id = '';
-        this.form.staff_name = '';
-        this.form.department_id = '';
-        this.form.department_name = '';
       },
     },
   }

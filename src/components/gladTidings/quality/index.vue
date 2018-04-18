@@ -841,6 +841,8 @@
         this.form.direction.id = '';              //朝向
         this.form.property_type.id = '';          //类型
         this.form.property_type.name = '';        //类型
+        this.form.decorate.id = '';             //装修
+        this.form.decorate.name = '';           //装修
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
         this.form.price = '';                    //价格
@@ -882,10 +884,6 @@
         this.form.other_furniture = '';          //其他家具
         this.form.photo = [];                    //房屋影像
         this.photos = {};                    //房屋影像
-        this.form.staff_id = '';
-        this.form.staff_name = '';
-        this.form.department_id = '';
-        this.form.department_name = '';
       },
     },
   }

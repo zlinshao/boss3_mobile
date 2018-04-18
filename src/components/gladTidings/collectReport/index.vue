@@ -902,11 +902,6 @@
         this.form.screenshot_leader = [];
         this.screenshots = {};
         this.form.remark = '';
-
-        this.form.staff_id = '';
-        this.staff_name = '';
-        this.form.department_id = '';
-        this.department_name = '';
       }
     },
   }
