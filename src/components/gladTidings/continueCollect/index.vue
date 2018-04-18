@@ -718,6 +718,8 @@
             this.form.pay_first_date = draft.pay_first_date;
             this.first_date = [];
             this.first_date.push(draft.pay_first_date);
+            this.datePrice[0] = draft.pay_first_date;
+            this.datePay[0] = draft.pay_first_date;
             this.form.pay_second_date = draft.pay_second_date;
 
             this.house_type = data.house_type;

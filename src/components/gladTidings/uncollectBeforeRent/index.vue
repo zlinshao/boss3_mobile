@@ -676,7 +676,8 @@
 
             this.first_date = [];
             this.first_date.push(draft.begin_date);
-
+            this.datePrice[0] = draft.begin_date;
+            this.datePay[0] = draft.begin_date;
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
               this.form.period_price_arr.push('');

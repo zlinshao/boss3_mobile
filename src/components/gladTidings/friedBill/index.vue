@@ -173,7 +173,7 @@
         this.form.screenshot_leader = val[1];
       },
       rentChange(val) {
-        if (this.numbers !== val) {
+        if (this.numbers === val) {
           this.form.address = '';
           this.form.house_id = '';
           this.form.contract_id = '';
