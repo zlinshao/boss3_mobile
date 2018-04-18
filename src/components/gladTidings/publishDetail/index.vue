@@ -87,7 +87,7 @@
               </div>
               <div class="pics">
                 <div v-for="(p,index) in key.album">
-                  <img :src="p.uri" @click="pics(key.album,index,2)">
+                  <img :src="p.uri" @click="pics(key.album, index, 2)">
                 </div>
               </div>
             </div>

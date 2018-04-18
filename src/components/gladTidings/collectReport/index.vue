@@ -290,7 +290,7 @@
           type="text"
           placeholder="请填写收房合同编号"
           icon="clear"
-          @click-icon="form.contract_number = 'ljsf'"
+          @click-icon="form.contract_number = ''"
           required>
         </van-field>
       </van-cell-group>

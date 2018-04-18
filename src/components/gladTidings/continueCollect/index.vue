@@ -175,12 +175,12 @@
           </van-field>
         </div>
         <van-field
-          v-model="form.property"
-          label="物业费"
-          type="number"
-          placeholder="请填写物业费"
-          icon="clear"
-          @click-icon="form.property = ''"
+          v-model="property_name"
+          label="物业费付款人"
+          type="text"
+          placeholder="请选择物业费付款人"
+          @click="selectShow(6,'')"
+          readonly
           required>
         </van-field>
         <van-field
@@ -271,7 +271,7 @@
           type="text"
           placeholder="请填写收房合同编号"
           icon="clear"
-          @click-icon="form.contract_number = 'ljsf'"
+          @click-icon="form.contract_number = ''"
           required>
         </van-field>
       </van-cell-group>
