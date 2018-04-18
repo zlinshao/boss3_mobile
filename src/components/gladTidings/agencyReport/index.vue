@@ -223,9 +223,9 @@
 
       searchSelect(val) {
         if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
         } else if (val === '1') {
-          this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'renter1'}});
         } else {
           Toast('请选择收租标记');
         }

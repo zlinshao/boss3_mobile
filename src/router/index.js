@@ -230,14 +230,14 @@ export default new Router({
       meta: {title: '特殊事项报备'},
       component: Special
     },
-    {
-      path: '/confiscate',
-      name: '充公报备',
-      hidden: 'glad',
-      icon: 'iconfont icon-chonggong',
-      meta: {title: '充公报备'},
-      component: Confiscate
-    },
+    // {
+    //   path: '/confiscate',
+    //   name: '充公报备',
+    //   hidden: 'glad',
+    //   icon: 'iconfont icon-chonggong',
+    //   meta: {title: '充公报备'},
+    //   component: Confiscate
+    // },
     {
       path: '/finalPayment',
       name: '尾款房租报备',
