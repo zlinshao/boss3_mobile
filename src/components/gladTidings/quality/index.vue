@@ -444,7 +444,7 @@
       }
     },
     mounted() {
-      alert(JSON.stringify(this.personal));
+      console.log(JSON.stringify(this.personal));
       this.dicts();
       this.userInfo();
     },
