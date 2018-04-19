@@ -283,10 +283,11 @@
       },
 
       routerLink(val) {
-        this.$router.push({path: '/writings', query: {id: val}});
         this.pitch = val;
         this.close_();
         this.paging = 0;
+        this.page = 1;
+        this.$router.push({path: '/writings', query: {id: val}});
         this.contentDetail(val);
         this.comment(val, 1);
         document.body.scrollTop = document.documentElement.scrollTop = 0;
