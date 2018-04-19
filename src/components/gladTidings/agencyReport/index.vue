@@ -95,8 +95,7 @@
           type="text"
           placeholder="请填写支行"
           icon="clear"
-          @click-icon="form.subbranch = ''"
-          required>
+          @click-icon="form.subbranch = ''">
         </van-field>
         <van-field
           v-model="form.account_name"

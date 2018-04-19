@@ -187,7 +187,7 @@
         </van-field>
         <van-field
           v-model="form.discount"
-          label="让价金额"
+          label="让总价金额"
           type="number"
           placeholder="请填写金额"
           icon="clear"
@@ -358,7 +358,7 @@
           draft: 0,
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
-          discount: 0,               //让价金额
+          discount: 0,               //让价总金额
 
           month: '',                    //租房月数
           day: '',                      //租房天数

@@ -17,7 +17,6 @@
           type="number"
           placeholder="请填写丘号"
           icon="clear"
-          required
           @click-icon="form.remark = ''">
         </van-field>
         <van-field

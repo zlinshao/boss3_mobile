@@ -234,8 +234,7 @@
           type="text"
           placeholder="请填写支行"
           icon="clear"
-          @click-icon="form.subbranch = ''"
-          required>
+          @click-icon="form.subbranch = ''">
         </van-field>
         <van-field
           v-model="form.account_name"
@@ -619,7 +618,12 @@
           this.periodDate(val);
         }
       },
+      // 银行卡
+      gainBank(val) {
+        this.$http.get(this.urls + '').then((res) => {
 
+        })
+      },
       // 日期计算
       periodDate(val) {
         let per;

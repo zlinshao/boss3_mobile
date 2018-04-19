@@ -225,7 +225,7 @@
       <van-cell-group>
         <van-field
           v-model="form.discount"
-          label="让价金额"
+          label="让价总金额"
           type="number"
           placeholder="请填写金额"
           icon="clear"

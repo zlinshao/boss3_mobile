@@ -30,7 +30,8 @@
               <p><span>客户姓名：</span><span>{{key.customers}}</span></p>
             </div>
             <div>
-              <span>所属部门：</span><span>{{key.department_name}}</span>
+              <p><span>所属部门：</span><span>{{key.department_name}}</span></p>
+              <p v-if="key.end_at !== ''"><span>结束时间：</span><span>{{key.end_at}}</span></p>
             </div>
           </div>
         </div>
@@ -141,6 +142,7 @@
           list.house_id = val.id;
           list.house_name = val.name;
           list.rooms = val.rooms;
+          list.end_at = val.end_at;
           list.created_at = val.created_at.substring(0, 10);
           list.id = val.lords[j].id;
           list.duration_days = val.lords[j].duration_days;
@@ -173,17 +175,22 @@
           list.house_name = val.name;
           list.rooms = val.rooms;
           list.created_at = val.created_at.substring(0, 10);
+          list.end_at = '';
           list.id = val.renters[j].id;
           list.duration_days = val.renters[j].duration_days;
           list.customers = val.renters[j].customers[0].name;
           if (val.renters[j].sign_user !== null) {
+            list.staff_id = val.renters[j].sign_user.id;
             list.staff_name = val.renters[j].sign_user.name;
           } else {
+            list.staff_id = '---';
             list.staff_name = '---';
           }
           if (val.renters[j].sign_org !== null) {
+            list.department_id = val.renters[j].sign_org.id;
             list.department_name = val.renters[j].sign_org.name;
           } else {
+            list.department_id = '---';
             list.department_name = '---';
           }
           this.lists.push(list);
