@@ -260,6 +260,9 @@ div {
       div:first-child {
         line-height: .5rem;
       }
+      p {
+        margin-bottom: 0;
+      }
     }
   }
   .van-search__input-wrap {

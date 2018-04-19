@@ -190,6 +190,8 @@ div .payWay.van-cell.van-hairline.van-field i {
       align-items: center; }
       .searchClass .searchContent .searchList.city div:first-child {
         line-height: .5rem; }
+      .searchClass .searchContent .searchList.city p {
+        margin-bottom: 0; }
   .searchClass .van-search__input-wrap {
     padding-top: 5px; }
     .searchClass .van-search__input-wrap .van-search__input {
