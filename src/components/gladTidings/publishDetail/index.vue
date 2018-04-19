@@ -168,7 +168,7 @@
           vm.routerIndex('');
           vm.ddRent('');
         }
-        this.search();
+        vm.search();
       })
     },
     activated() {
