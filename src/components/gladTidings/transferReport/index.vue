@@ -240,6 +240,14 @@
           placeholder="请填写收据编号">
         </van-field>
         <van-field
+          v-model="form.contract_number"
+          label="合同编号"
+          type="text"
+          placeholder="请填写合同编号"
+          icon="clear"
+          @click-icon="form.contract_number = ''">
+        </van-field>
+        <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
           readonly
@@ -395,6 +403,7 @@
           money_way: [''],              //分金额 方式
 
           discount: 0,                   //让价金额
+          contract_number: 'LJZF',           //合同编号
           is_corp: 1,                   //是否公司单  0个人1公司
           receipt: '',                  //收据编号
           retainage_date: '',           //尾款补齐时间
@@ -638,6 +647,7 @@
             this.form.draft = val;
             this.form.is_corp = this.corp ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
+            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
             this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50510') {
@@ -646,6 +656,8 @@
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
               } else if (res.data.code === '50520') {
+                this.form.day = this.form.day === '0' ? '' : this.form.day;
+                this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
                 this.form.id = res.data.data.id;
                 Toast.success(res.data.msg);
               } else {
@@ -704,6 +716,7 @@
             this.form.id = data.id;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
+            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
 
             this.form.address = data.address;
             this.form.contract_id = draft.contract_id;
@@ -829,7 +842,7 @@
         this.form.receipt = '';
         this.form.discount = 0;
         this.form.retainage_date = '';
-
+        this.form.contract_number = 'LJZF';
         this.form.screenshot = [];
         this.screenshots = {};
         this.form.photo = [];

@@ -44,14 +44,14 @@
           v-model="staff_name"
           label="开单人"
           type="text"
-          placeholder="开单人已被禁用"
+          placeholder="开单人已禁用"
           disabled>
         </van-field>
         <van-field
           v-model="department_name"
           label="部门"
           type="text"
-          placeholder="部门已被禁用"
+          placeholder="部门已禁用"
           disabled>
         </van-field>
       </van-cell-group>

@@ -238,12 +238,20 @@
         </van-field>
         <van-field
           v-model="form.phone"
-          label="客户手机"
+          label="联系方式"
           type="number"
-          placeholder="请填写客户手机号"
+          placeholder="请填写联系方式"
           icon="clear"
           @click-icon="form.phone = ''"
           required>
+        </van-field>
+        <van-field
+          v-model="form.contract_number"
+          label="合同编号"
+          type="text"
+          placeholder="请填写合同编号"
+          icon="clear"
+          @click-icon="form.contract_number = ''">
         </van-field>
       </van-cell-group>
 
@@ -382,6 +390,7 @@
           money_way: [''],              //分金额 方式
 
           deposit: '',                  //押金
+          contract_number: 'LJZF',       //合同编号
           discount: 0,                  //让价金额
           property_payer: '',           //物业费付款人
           receipt: '',                 //收据 编号
@@ -429,7 +438,9 @@
           this.value6 = [];
           this.dictValue6 = res.data;
           for (let i = 0; i < res.data.length; i++) {
-            this.value6.push(res.data[i].dictionary_name);
+            if(res.data[i].dictionary_name !== '房东承担'){
+              this.value6.push(res.data[i].dictionary_name);
+            }
           }
           //支付方式
           this.dictionary(508, 1).then((res) => {
@@ -641,6 +652,7 @@
             this.haveInHand = false;
             this.form.draft = val;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
+            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
             this.form.discount = this.form.discount === '' ? 0 : this.form.discount;
             this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
@@ -650,6 +662,8 @@
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
               } else if (res.data.code === '50220') {
+                this.form.day = this.form.day === '0' ? '' : this.form.day;
+                this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
                 this.form.id = res.data.data.id;
                 Toast.success(res.data.msg);
               } else {
@@ -718,6 +732,7 @@
             this.form.address = data.address;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
+            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
             this.form.sign_date = draft.sign_date;
             this.form.begin_date = draft.begin_date;
             this.first_date = [];
@@ -823,6 +838,7 @@
         this.form.deposit = '';
         this.form.from = 1;
         this.form.receipt = '';
+        this.form.contract_number = 'LJZF';
         this.form.discount = 0;
         this.form.property_payer = '';
         this.property_name = '';

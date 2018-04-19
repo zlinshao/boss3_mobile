@@ -104,7 +104,7 @@
 
     </div>
     <div class="footer">
-      <div @click="commentOn('on_comment')" v-if="path === '/'">评论</div>
+      <div @click="commentOn('to_comment')" v-if="path === '/'">评论</div>
       <div v-for="(key,index) in operation" @click="commentOn(index)" v-else>{{key}}</div>
     </div>
 

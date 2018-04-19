@@ -176,6 +176,27 @@
       </div>
 
       <van-cell-group>
+        <van-switch-cell v-model="other_fee_status" title="是否有其他金额"/>
+        <van-field
+          v-if="other_fee_status"
+          v-model="form.other_fee_name"
+          label="费用名称"
+          type="text"
+          placeholder="请填写名称"
+          icon="clear"
+          @click-icon="form.other_fee_name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-if="other_fee_status"
+          v-model="form.other_fee"
+          label="费用金额"
+          type="number"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.other_fee = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.deposit"
           label="押金"
@@ -241,10 +262,18 @@
           @click-icon="form.phone = ''"
           required>
         </van-field>
+        <van-field
+          v-model="form.contract_number"
+          label="合同编号"
+          type="text"
+          placeholder="请填写合同编号"
+          icon="clear"
+          @click-icon="form.contract_number = ''">
+        </van-field>
       </van-cell-group>
 
       <div class="aloneModel required">
-        <div class="title"><span>*</span>截图</div>
+        <div class="title"><span>*</span>凭证截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
@@ -350,6 +379,7 @@
 
         cusFrom: false,                //是否中介
         corp: true,                    //公司单
+        other_fee_status: false,
 
         form: {
           address: '',
@@ -358,7 +388,7 @@
           draft: 0,
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
-          discount: 0,               //让价总金额
+          discount: 0,                  //让价总金额
 
           month: '',                    //租房月数
           day: '',                      //租房天数
@@ -376,9 +406,14 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+
+          is_other_fee: 0,
+          other_fee: '',
+          other_fee_name: '',
           deposit: '',                  //押金
           is_agency: 0,                 //客户来源    0个人1中介
           is_corp: 1,                   //是否公司单  0个人1公司
+          contract_number: 'LJZF',       //合同编号
           receipt: '',                  //收据编号
           property_payer: '',           //物业费付款人
           retainage_date: '',           //尾款补齐时间
@@ -425,7 +460,9 @@
           this.value6 = [];
           this.dictValue6 = res.data;
           for (let i = 0; i < res.data.length; i++) {
-            this.value6.push(res.data[i].dictionary_name);
+            if (res.data[i].dictionary_name !== '租客承担') {
+              this.value6.push(res.data[i].dictionary_name);
+            }
           }
           //支付方式
           this.dictionary(508, 1).then((res) => {
@@ -461,7 +498,12 @@
           this.form.photo = val[1];
         }
       },
-
+      fee_status(val) {
+        if (!val) {
+          this.form.other_fee_name = '';
+          this.form.other_fee = '';
+        }
+      },
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -625,8 +667,10 @@
             this.form.draft = val;
             this.form.is_agency = this.cusFrom ? 1 : 0;
             this.form.is_corp = this.corp ? 1 : 0;
+            this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
-            this.form.discount = this.form.discount === '' ? 0 : this.form.discount;
+            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+            this.form.discount = this.form.discount === 0 ? '' : this.form.discount;
             this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50210') {
@@ -636,6 +680,8 @@
                 this.routerDetail(res.data.data.data.id);
               } else if (res.data.code === '50220') {
                 this.form.id = res.data.data.id;
+                this.form.day = this.form.day === '0' ? '' : this.form.day;
+                this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
                 Toast.success(res.data.msg)
               } else {
                 Toast(res.data.msg);
@@ -690,6 +736,7 @@
             this.form.address = data.address;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
+            this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
             this.form.sign_date = draft.sign_date;
             this.form.begin_date = draft.begin_date;
             this.first_date = [];
@@ -729,7 +776,12 @@
             this.form.money_way = draft.money_way;
 
             this.form.deposit = draft.deposit;
-            this.form.discount = draft.discount;
+            this.form.discount = draft.discount === 0 ? '' : draft.discount;
+
+            this.other_fee_status = draft.is_other_fee == 1 ? true : false;
+            this.form.other_fee_name = draft.other_fee_name;
+            this.form.other_fee = draft.other_fee;
+
             this.form.receipt = draft.receipt;
             this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
@@ -801,6 +853,11 @@
         this.is_agency = 0;
         this.cusFrom = false;
         this.form.receipt = '';
+        this.form.other_fee_name = '';
+        this.form.other_fee = '';
+        this.form.is_other_fee = 0;
+        this.other_fee_status = false;
+        this.form.contract_number = 'LJZF';
         this.form.property_payer = '';
         this.property_name = '';
         this.form.retainage_date = '';

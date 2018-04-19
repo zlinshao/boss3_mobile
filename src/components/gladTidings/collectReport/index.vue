@@ -438,7 +438,7 @@
           account: '',                  //帐号
           relationship: '',             //房东与收款人关系
           penalty: '',                  //违约金
-          contract_number: 'ljsf',      //合同编号
+          contract_number: 'LJSF',      //合同编号
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
@@ -491,7 +491,9 @@
             this.value6 = [];
             this.dictValue6 = res.data;
             for (let i = 0; i < res.data.length; i++) {
-              this.value6.push(res.data[i].dictionary_name);
+              if(res.data[i].dictionary_name !== '租客承担'){
+                this.value6.push(res.data[i].dictionary_name);
+              }
             }
 
             //安置方式
@@ -893,7 +895,7 @@
         this.form.account = '';
         this.form.relationship = '';
         this.form.penalty = '';
-        this.form.contract_number = 'ljsf';
+        this.form.contract_number = 'LJSF';
 
         this.form.photo = [];
         this.photos = {};
