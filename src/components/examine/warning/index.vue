@@ -84,7 +84,6 @@
       this.ids = this.$route.query.id;
       this.recall = false;
       this.recall1 = false;
-
     },
     watch: {},
     methods: {
