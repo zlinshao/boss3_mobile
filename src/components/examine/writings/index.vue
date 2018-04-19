@@ -27,8 +27,8 @@
           <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
         </div>
         <div class="nextPrev">
-          <p v-if="before_content !== null" @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
-          <p v-if="next_content !== null" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
+          <p @click="routerLink(before_content.id)">上一篇：<span v-if="before_content !== null">{{before_content.title}}</span></p>
+          <p @click="routerLink(next_content.id)">下一篇：<span v-if="next_content !== null">{{next_content.title}}</span>
           </p>
         </div>
       </div>
