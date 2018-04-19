@@ -142,14 +142,14 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
-        vm.page = 1;
-        vm.close_();
-        vm.disabled = false;
         vm.search();
       })
     },
     activated() {
       this.pitch = this.$route.query.id;
+      this.close_();
+      this.page = 1;
+      this.disabled = false;
     },
     methods: {
       IsPC() {
