@@ -432,6 +432,10 @@
       this.userInfo();
     },
     activated() {
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.rentDetail(newID.newID);
+      }
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
@@ -460,7 +464,7 @@
             for (let i = 0; i < res.data.length; i++) {
               this.value8.push(res.data[i].dictionary_name);
             }
-            this.rentDetail();
+            this.rentDetail('');
           });
 
         });
@@ -705,8 +709,14 @@
         }
       },
 
-      rentDetail() {
-        this.$http.get(this.urls + 'bulletin/rent?type=4').then((res) => {
+      rentDetail(val) {
+        let type;
+        if (val !== '') {
+          type = 'bulletin/rent/' + val;
+        } else {
+          type = 'bulletin/rent?type=4';
+        }
+        this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === '50220') {
             this.isClear = false;
             let data = res.data.data;

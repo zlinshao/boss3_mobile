@@ -443,6 +443,10 @@
       this.userInfo();
     },
     activated() {
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.manuscript(newID.newID);
+      }
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
@@ -472,7 +476,7 @@
                 this.value6.push(res.data[i].dictionary_name);
               }
             }
-            this.manuscript();
+            this.manuscript('');
           });
 
         });
@@ -711,9 +715,15 @@
         }
       },
 
-      manuscript() {
-        this.$http.get(this.urls + 'bulletin/collect?type=2').then((res) => {
-          if (res.data.code === '50110') {
+      manuscript(val) {
+        let type;
+        if (val !== '') {
+          type = 'bulletin/collect/' + val;
+        } else {
+          type = 'bulletin/collect?type=2';
+        }
+        this.$http.get(this.urls + type).then((res) => {
+          if (res.data.code === '50120') {
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;

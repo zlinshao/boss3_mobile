@@ -202,9 +202,13 @@
       }
     },
     mounted() {
-      this.agencyDetail();
+      this.agencyDetail('');
     },
     activated() {
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.agencyDetail(newID.newID);
+      }
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
@@ -300,10 +304,15 @@
         }
       },
 
-      agencyDetail() {
-
-        this.$http.get(this.urls + 'bulletin/agency').then((res) => {
-          if (res.data.code === '50310') {
+      agencyDetail(val) {
+        let type;
+        if (val !== '') {
+          type = 'bulletin/agency/' + val;
+        } else {
+          type = 'bulletin/agency';
+        }
+        this.$http.get(this.urls + type).then((res) => {
+          if (res.data.code === '50320') {
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;

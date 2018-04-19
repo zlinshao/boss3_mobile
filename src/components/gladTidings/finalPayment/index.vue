@@ -266,6 +266,10 @@
       this.dicts();
     },
     activated() {
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.finalDetail(newID.newID);
+      }
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
@@ -279,7 +283,7 @@
           for (let i = 0; i < res.data.length; i++) {
             this.value8.push(res.data[i].dictionary_name);
           }
-          this.finalDetail();
+          this.finalDetail('');
         });
       },
       payWayClick(val) {
@@ -378,7 +382,7 @@
             this.haveInHand = false;
             this.form.draft = val;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
-            this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
+            this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50910') {
                 Toast.success(res.data.msg);
@@ -414,9 +418,15 @@
         }
       },
 
-      finalDetail() {
-        this.$http.get(globalConfig.server + 'bulletin/retainage').then((res) => {
-          if (res.data.code === '50910') {
+      finalDetail(val) {
+        let type;
+        if (val !== '') {
+          type = 'bulletin/retainage/' + val;
+        } else {
+          type = 'bulletin/retainage';
+        }
+        this.$http.get(this.urls + type).then((res) => {
+          if (res.data.code === '50920') {
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;

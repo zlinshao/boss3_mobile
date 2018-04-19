@@ -142,9 +142,13 @@
       }
     },
     mounted() {
-      this.friedDetail();
+      this.friedDetail('');
     },
     activated() {
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.friedDetail(newID.newID);
+      }
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
@@ -225,9 +229,15 @@
         }
       },
 
-      friedDetail() {
-        this.$http.get(this.urls + 'bulletin/lose').then((res) => {
-          if (res.data.code === '50710') {
+      friedDetail(val) {
+        let type;
+        if (val !== '') {
+          type = 'bulletin/lose/' + val;
+        } else {
+          type = 'bulletin/lose';
+        }
+        this.$http.get(this.urls + type).then((res) => {
+          if (res.data.code === '50720') {
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;

@@ -117,10 +117,10 @@
         </van-field>
 
         <!--<div class="titleSwitch">-->
-          <!--<div class="cellGroup">-->
-            <!--<span class="requiredIcon">*</span>-->
-            <!--<van-switch-cell v-model="is_agencyOn" title="是否中介"/>-->
-          <!--</div>-->
+        <!--<div class="cellGroup">-->
+        <!--<span class="requiredIcon">*</span>-->
+        <!--<van-switch-cell v-model="is_agencyOn" title="是否中介"/>-->
+        <!--</div>-->
         <!--</div>-->
 
         <van-switch-cell v-model="is_agencyOn" title="是否中介"/>
@@ -445,9 +445,13 @@
     },
     mounted() {
       this.dicts();
-      this.userInfo();
+      this.userInfo('');
     },
     activated() {
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.qualityDetail(newID.newID);
+      }
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
@@ -481,7 +485,7 @@
               for (let i = 0; i < res.data.length; i++) {
                 this.property_name.push(res.data[i].dictionary_name);
               }
-              this.qualityDetail();
+              this.qualityDetail('');
             });
 
           });
@@ -703,8 +707,14 @@
         }
       },
 
-      qualityDetail() {
-        this.$http.get(this.urls + 'bulletin/quality').then((res) => {
+      qualityDetail(val) {
+        let type;
+        if (val !== '') {
+          type = 'bulletin/quality/' + val;
+        } else {
+          type = 'bulletin/quality';
+        }
+        this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === "51420") {
             this.isClear = false;
             let data = res.data.data;

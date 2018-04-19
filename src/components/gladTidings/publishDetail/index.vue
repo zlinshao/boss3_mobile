@@ -104,6 +104,7 @@
 
     </div>
     <div class="footer">
+      <div @click="newly()">重新提交</div>
       <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
     </div>
 
@@ -144,6 +145,7 @@
         place: {},
         formList: {},
         operation: {},
+        process: {},
         commentList: [],
 
         page: 1,
@@ -219,8 +221,12 @@
               this.address = houseName.house.name;
             }
             this.operation = res.data.data.operation;
-            this.personal = res.data.data.process.user;
-            this.place = res.data.data.process.place;
+
+            let pro = res.data.data.process;
+            this.personal = pro.user;
+            this.place = pro.place;
+            this.process = pro;
+
             this.vLoading = false;
           } else {
             this.message = res.data.message;
@@ -286,6 +292,60 @@
       // 评论
       commentOn(val) {
         this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2}});
+      },
+      // 重新提交
+      newly() {
+        let proId = this.process.processable_id;
+        switch (this.process.processable_type) {
+          case 'bulletin_quality'://质量
+            this.$router.push({path: '/quality', query: {newID: proId}});
+            break;
+          case 'bulletin_collect_basic'://收
+            this.$router.push({path: '/collectReport', query: {newID: proId}});
+            break;
+          case 'bulletin_collect_continued'://续收报备
+            this.$router.push({path: '/continueCollect', query: {newID: proId}});
+            break;
+          case 'bulletin_rent_basic'://租
+            this.$router.push({path: '/rentReport', query: {newID: proId}});
+            break;
+          case 'bulletin_rent_trans'://转租
+            this.$router.push({path: '/changeRent', query: {newID: proId}});
+            break;
+          case 'bulletin_rent_continued'://续租
+            this.$router.push({path: '/continueRent', query: {newID: proId}});
+            break;
+          case 'bulletin_rent_RWC'://未收先祖
+            this.$router.push({path: '/unCollectBeforeRent', query: {newID: proId}});
+            break;
+          case 'bulletin_RWC_confirm'://未收先祖确定
+            this.$router.push({path: '/unCollectBeforeRentSure', query: {newID: proId}});
+            break;
+          case 'bulletin_agency'://中介费报备
+            this.$router.push({path: '/agencyRent', query: {newID: proId}});
+            break;
+          case 'bulletin_banish'://清退
+            this.$router.push({path: '/clearRetreat', query: {newID: proId}});
+            break;
+          case 'bulletin_change'://调房
+            this.$router.push({path: '/transferReport', query: {newID: proId}});
+            break;
+          case 'bulletin_lose'://炸单
+            this.$router.push({path: '/friedBill', query: {newID: proId}});
+            break;
+          case 'bulletin_refund'://退款
+            this.$router.push({path: '/drawback', query: {newID: proId}});
+            break;
+          case 'bulletin_retainage'://尾款
+            this.$router.push({path: '/finalPayment', query: {newID: proId}});
+            break;
+          case 'bulletin_special'://特殊
+            this.$router.push({path: '/special', query: {newID: proId}});
+            break;
+          case 'bulletin_checkout'://退租
+            this.$router.push({path: '/checkout', query: {newID: proId}});
+            break;
+        }
       },
     },
   }

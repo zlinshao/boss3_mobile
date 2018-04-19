@@ -101,9 +101,13 @@
       }
     },
     mounted() {
-      this.specialDetail();
+      this.specialDetail('');
     },
     activated() {
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.specialDetail(newID.newID);
+      }
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
@@ -179,9 +183,15 @@
         }
       },
 
-      specialDetail() {
-        this.$http.get(globalConfig.server + 'bulletin/special').then((res) => {
-          if (res.data.code === '51010') {
+      specialDetail(val) {
+        let type;
+        if (val !== '') {
+          type = 'bulletin/special/' + val;
+        } else {
+          type = 'bulletin/special';
+        }
+        this.$http.get(this.urls + type).then((res) => {
+          if (res.data.code === '51020') {
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
