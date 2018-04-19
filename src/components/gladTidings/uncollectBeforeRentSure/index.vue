@@ -183,6 +183,36 @@
       </div>
 
       <van-cell-group>
+        <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
+        <van-field
+          v-if="other_fee_status"
+          v-model="form.other_fee_name"
+          label="费用名称"
+          type="text"
+          placeholder="请填写名称"
+          icon="clear"
+          @click-icon="form.other_fee_name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-if="other_fee_status"
+          v-model="form.other_fee"
+          label="费用金额"
+          type="number"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.other_fee = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.discount"
+          label="让总价金额"
+          type="number"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.discount = 0"
+          required>
+        </van-field>
         <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
@@ -210,6 +240,14 @@
           @click-icon="form.phone = ''"
           required>
         </van-field>
+      </van-cell-group>
+
+      <div class="aloneModel">
+        <div class="title">领导同意截图</div>
+        <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
+      </div>
+
+      <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
@@ -281,6 +319,7 @@
         personal: JSON.parse(sessionStorage.personal),
         urls: globalConfig.server,
         picStatus: true,
+        isClear: false,           //删除图片
 
         tabs: '',
         columns: [],              //select值
@@ -304,6 +343,7 @@
         amountMoney: 1,
         moneyNum: [''],             //分金额 付款方式
 
+        other_fee_status: false,
         form: {
           id: '',
           type: 0,
@@ -315,7 +355,7 @@
           house_id_rent: '',
           house_id: '',
           month: '',                    //签约时长
-          day: '0',                      //签约时长天
+          day: '',                      //签约时长天
           begin_date: '',               //合同开始日期
           sign_date: '',                //签约日期
           price_arr: [''],              //月单价
@@ -330,16 +370,23 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          is_other_fee: 0,
+          other_fee: '',
+          other_fee_name: '',
+          discount: 0,                  //让价金额
           retainage_date: '',           //尾款补齐时间
-
           name: '',
           phone: '',
+
+          screenshot_leader: [],        //领导截图 数组
+
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
           staff_name: '',                  //开单人name
           department_name: '',             //部门name
         },
+        leaders: {},
         dictValue8: [],                  //支付方式
         value8: [],
       }
@@ -388,7 +435,12 @@
             break;
         }
       },
-
+      fee_status(val) {
+        if (!val) {
+          this.form.other_fee_name = '';
+          this.form.other_fee = '';
+        }
+      },
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -539,12 +591,19 @@
           }
         })
       },
-
+      // 截图
+      getImgData(val) {
+        this.picStatus = !val[2];
+       if (val[0] === 'leader') {
+          this.form.screenshot_leader = val[1];
+        }
+      },
       saveCollect(val) {
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
+            this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
               this.haveInHand = true;
@@ -577,7 +636,7 @@
 
             this.form.id = data.id;
             this.form.month = draft.month;
-            this.form.day = draft.day;
+            this.form.day = draft.day === '0' ? '' : draft.day;
 
             this.form.oldHouseName = draft.oldHouseName;
             this.form.form.address = draft.form.address;
@@ -623,8 +682,11 @@
             }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
-
+            this.form.discount = draft.discount;
             this.form.retainage_date = draft.retainage_date;
+
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.leaders = data.leaders;
 
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -688,6 +750,10 @@
                 }
               }
             }
+            this.other_fee_status = draft.is_other_fee === 1 ? true : false;
+            this.form.other_fee_name = draft.other_fee_name;
+            this.form.other_fee = draft.other_fee;
+
             this.form.retainage_date = rent.end_at.substring(0, 10);
             this.form.name = rent.customers[0].name;
             this.form.phone = rent.customers[0].phone;
@@ -723,11 +789,16 @@
       },
 
       close_() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
         this.userInfo();
+        $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
         this.form.month = '';
-        this.form.day = '0';
+        this.form.day = '';
 
         this.form.contract_id_rent = '';
         this.form.contract_id = '';
@@ -756,12 +827,20 @@
 
         this.form.money_sep = [''];
         this.form.money_way = [''];
-
+        this.form.discount = 0;
         this.form.retainage_date = '';
 
         this.form.name = '';
         this.form.phone = '';
         this.form.remark = '';
+
+        this.form.screenshot_leader = [];
+        this.leaders = {};
+
+        this.form.other_fee_name = '';
+        this.form.other_fee = '';
+        this.form.is_other_fee = 0;
+        this.other_fee_status = false;
       },
     },
   }

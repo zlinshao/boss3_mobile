@@ -95,21 +95,51 @@
         +支付方式变化
       </div>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot" :isClear="isClear" :editImage="screenshots"></UpLoad>
-      </div>
 
       <van-cell-group>
+        <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
+        <van-field
+          v-if="other_fee_status"
+          v-model="form.other_fee_name"
+          label="费用名称"
+          type="text"
+          placeholder="请填写名称"
+          icon="clear"
+          @click-icon="form.other_fee_name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-if="other_fee_status"
+          v-model="form.other_fee"
+          label="费用金额"
+          type="number"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.other_fee = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(1)"
+          @click="timeChoose()"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
+      </van-cell-group>
+
+      <div class="aloneModel">
+        <div class="title">领导同意截图</div>
+        <UpLoad :ID="'leader'" @getImg="screenshot" :isClear="isClear" :editImage="leaders"></UpLoad>
+      </div>
+
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>凭证截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="screenshot" :isClear="isClear" :editImage="screenshots"></UpLoad>
+      </div>
+
+      <van-cell-group>
         <van-field
           v-model="form.remark"
           label="备注"
@@ -200,7 +230,7 @@
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
         payIndex: '',                 //分金额方式index
-
+        other_fee_status: false,
         form: {
           address: '',
           id: '',
@@ -208,15 +238,21 @@
           contract_id: '',            //房屋地址id
           house_id: '',               //房屋地址id
 
+          is_other_fee: 0,
+          other_fee: '',
+          other_fee_name: '',
+
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
           retainage_date: '',
+          screenshot_leader: [],        //领导截图 数组
           screenshot: [],               //领导截图 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
         },
+        leaders: {},
         screenshots: {},                 //房屋名称
         staff_name: '',                  //开单人name
         department_name: '',             //部门name
@@ -255,10 +291,20 @@
           this.payStatus = false;
         }
       },
+      fee_status(val) {
+        if (!val) {
+          this.form.other_fee_name = '';
+          this.form.other_fee = '';
+        }
+      },
       // 截图
       screenshot(val) {
         this.picStatus = !val[2];
-        this.form.screenshot = val[1];
+        if (val[0] === 'leader') {
+          this.form.screenshot_leader = val[1];
+        } else {
+          this.form.screenshot = val[1];
+        }
       },
 
       // 获取当前时间
@@ -331,6 +377,7 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
+            this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.$http.post(globalConfig.server + 'bulletin/retainage', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50910') {
@@ -395,8 +442,14 @@
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
 
+            this.other_fee_status = draft.is_other_fee === 1 ? true : false;
+            this.form.other_fee_name = draft.other_fee_name;
+            this.form.other_fee = draft.other_fee;
+
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.leaders = data.leaders;
             this.form.remark = draft.remark;
             this.staff_name = data.staff_name;
             this.department_name = data.department_name;
@@ -430,6 +483,13 @@
         this.form.money_way = [''];
         this.form.screenshot = [];
         this.screenshots = {};
+        this.form.screenshot_leader = [];
+        this.leaders = {};
+        this.form.other_fee_name = '';
+        this.form.other_fee = '';
+        this.form.is_other_fee = 0;
+        this.other_fee_status = false;
+
         this.form.remark = '';
         this.staff_name = '';
         this.department_name = '';

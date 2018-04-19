@@ -223,6 +223,27 @@
       </div>
 
       <van-cell-group>
+        <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
+        <van-field
+          v-if="other_fee_status"
+          v-model="form.other_fee_name"
+          label="费用名称"
+          type="text"
+          placeholder="请填写名称"
+          icon="clear"
+          @click-icon="form.other_fee_name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-if="other_fee_status"
+          v-model="form.other_fee"
+          label="费用金额"
+          type="number"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.other_fee = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.discount"
           label="让价总金额"
@@ -258,8 +279,13 @@
         </van-field>
       </van-cell-group>
 
+      <div class="aloneModel">
+        <div class="title">领导同意截图</div>
+        <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
+      </div>
+
       <div class="aloneModel required">
-        <div class="title"><span>*</span>截图</div>
+        <div class="title"><span>*</span>凭证截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
@@ -369,7 +395,7 @@
         roomsName: '',
 
         payStatus: false,
-
+        other_fee_status: false,
         oldForm: {
           staff_name: '',
           pay_way_arr: '',
@@ -408,7 +434,12 @@
           receipt: '',                  //收据编号
           retainage_date: '',           //尾款补齐时间
 
+          is_other_fee: 0,
+          other_fee: '',
+          other_fee_name: '',
+
           screenshot: '',               //领导截图 数组
+          screenshot_leader: [],        //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
@@ -417,6 +448,7 @@
         oldHouseName: '',
         screenshots: {},
         photos: {},
+        leaders: {},
         staff_name: '',                  //开单人name
         department_name: '',             //部门name
 
@@ -456,7 +488,12 @@
       payWayClick() {
         this.payStatus = !this.payStatus;
       },
-
+      fee_status(val) {
+        if (!val) {
+          this.form.other_fee_name = '';
+          this.form.other_fee = '';
+        }
+      },
       searchSelect(val) {
         switch (val) {
           case 1:
@@ -478,6 +515,8 @@
         this.picStatus = !val[2];
         if (val[0] === 'screenshot') {
           this.form.screenshot = val[1];
+        } else if (val[0] === 'leader') {
+          this.form.screenshot_leader = val[1];
         } else {
           this.form.photo = val[1];
         }
@@ -646,6 +685,7 @@
             this.haveInHand = false;
             this.form.draft = val;
             this.form.is_corp = this.corp ? 1 : 0;
+            this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
             this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
@@ -773,8 +813,14 @@
             this.form.discount = draft.discount;
             this.form.retainage_date = draft.retainage_date;
 
+            this.other_fee_status = draft.is_other_fee === 1 ? true : false;
+            this.form.other_fee_name = draft.other_fee_name;
+            this.form.other_fee = draft.other_fee;
+
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.leaders = data.leaders;
             this.form.photo = draft.photo;
             this.photos = data.photo;
 
@@ -845,10 +891,16 @@
         this.form.contract_number = 'LJZF';
         this.form.screenshot = [];
         this.screenshots = {};
+        this.form.screenshot_leader = [];
+        this.leaders = {};
         this.form.photo = [];
         this.photos = {};
-
         this.form.remark = '';
+
+        this.form.other_fee_name = '';
+        this.form.other_fee = '';
+        this.form.is_other_fee = 0;
+        this.other_fee_status = false;
       },
     },
   }
