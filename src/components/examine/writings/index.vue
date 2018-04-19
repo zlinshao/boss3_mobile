@@ -16,7 +16,7 @@
         <div v-for="key in cover_pic">
           <img v-for="p in key" :src="p.uri">
         </div>
-        <div v-html="myData.content">
+        <div class="post_text ql-editor" v-html="myData.content">
 
         </div>
         <h6></h6>
