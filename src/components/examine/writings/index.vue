@@ -285,6 +285,7 @@
       routerLink(val) {
         this.$router.push({path: '/writings', query: {id: val}});
         this.pitch = val;
+        this.close_();
         this.paging = 0;
         this.contentDetail(val);
         this.comment(val, 1);
