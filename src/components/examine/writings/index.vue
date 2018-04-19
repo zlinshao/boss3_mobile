@@ -27,7 +27,7 @@
           <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
         </div>
         <div class="nextPrev">
-          <p @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
+          <p v-if="before_content !== null" @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
           <p v-if="next_content !== null" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
           </p>
         </div>
@@ -293,7 +293,7 @@
       overflow: hidden;
       -ms-text-overflow: ellipsis;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      white-space: nowrap;xx
     }
     @mixin border_radius($p) {
       -webkit-border-radius: $p;
