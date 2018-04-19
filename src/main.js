@@ -6,7 +6,7 @@ import axios from 'axios'
 // import FastClick from 'fastclick'
 import Fun from './fun.config.js'
 import '@/assets/js/api.js'
-import 'vue2-editor/node_modules/quill/dist/quill.core.css'
+import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 
 import {
   Cell,
