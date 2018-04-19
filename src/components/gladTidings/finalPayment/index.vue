@@ -10,34 +10,30 @@
           @click="searchSelect()"
           placeholder="请选择房屋地址"
           required>
-          <div>手机号格式错误</div>
         </van-field>
         <van-field
-          v-model="month"
+          v-model="form.month"
           type="text"
           label="租房月数"
           placeholder="租房月数已禁用"
           disabled>
         </van-field>
         <van-field
-          :class="{'payWay': payStatus}"
+          :class="{'payWay': payStatus && form.payWay.length > 1}"
           @click="payWayClick(1)"
-          v-model="payWay"
+          v-model="form.payWay[0]"
           label="付款方式"
           type="text"
           readonly
           icon="arrow"
           placeholder="付款方式已禁用">
         </van-field>
-        <div class="accordion" v-if="payStatus">
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        <div class="accordion" v-if="payStatus && form.payWay.length > 1">
+          <div v-for="(key,index) in form.payWay" v-show="index !== 0">{{key}}</div>
         </div>
         <van-field
-          :class="{'payWay': priceStatus}"
-          v-model="price_arr"
+          :class="{'payWay': priceStatus && form.price_arr.length > 1}"
+          v-model="form.price_arr[0]"
           @click="payWayClick(2)"
           label="月单价"
           type="text"
@@ -45,14 +41,11 @@
           icon="arrow"
           placeholder="月单价已禁用">
         </van-field>
-        <div class="accordion" v-if="priceStatus">
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        <div class="accordion" v-if="priceStatus && form.price_arr.length > 1">
+          <div v-for="(key,index) in form.price_arr" v-show="index !== 0">{{key}}</div>
         </div>
         <van-field
-          v-model="periods"
+          v-model="form.periods"
           label="房租期数"
           type="text"
           placeholder="房租期数已禁用"
@@ -149,14 +142,14 @@
           @click-icon="form.remark = ''">
         </van-field>
         <van-field
-          v-model="staff_name"
+          v-model="form.staff_name"
           label="开单人"
           type="text"
           disabled
           placeholder="开单人已禁用">
         </van-field>
         <van-field
-          v-model="department_name"
+          v-model="form.department_name"
           label="部门"
           type="text"
           readonly
@@ -218,14 +211,8 @@
         columns: [],              //select值
         selectHide: false,        //select选择
 
-
-        payWay: '1',                   //付款方式
-        price_arr: '1',                //月单价
         payStatus: false,
         priceStatus: false,
-
-        month: '',
-        periods: '',
 
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
@@ -235,9 +222,12 @@
           address: '',
           id: '',
           draft: 0,
+          month: '',
+          periods: '',
           contract_id: '',            //房屋地址id
           house_id: '',               //房屋地址id
-
+          payWay: [''],               //付款方式
+          price_arr: [''],            //月单价
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
@@ -251,13 +241,13 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
+          staff_name: '',               //开单人name
+          department_name: '',          //部门name
         },
         leaders: {},
-        screenshots: {},                 //房屋名称
-        staff_name: '',                  //开单人name
-        department_name: '',             //部门name
+        screenshots: {},                //房屋名称
 
-        dictValue8: [],         //支付方式
+        dictValue8: [],                 //支付方式
         value8: [],
       }
     },
@@ -411,10 +401,26 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
-          this.staff_name = val.staff_name;
-          this.department_name = val.department_name;
+          this.form.staff_name = val.staff_name;
+          this.form.department_name = val.department_name;
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
+
+          this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
+            if (res.data.code === '51110') {
+              let pay = res.data.data;
+              this.form.month = pay.month;
+              this.form.periods = pay.terms;
+              this.form.payWay = [];
+              this.form.price_arr = [];
+              for (let i = 0; i < pay.pay_way.length; i++) {
+                this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ' : ' + pay.pay_way[i].pay_way_str);
+              }
+              for (let i = 0; i < pay.price.length; i++) {
+                this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ' : ' + pay.price[i].price_str);
+              }
+            }
+          })
         }
       },
 
@@ -433,10 +439,10 @@
 
             this.form.id = data.id;
             this.form.address = data.address;
-            this.month = data.month;
-            this.price_arr = data.price_arr;
-            this.payWay = data.payWay;
-            this.periods = data.periods;
+            this.form.month = data.month;
+            this.form.price_arr = draft.price_arr;
+            this.form.payWay = draft.payWay;
+            this.form.periods = draft.periods;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.money_sum = draft.money_sum;
@@ -461,8 +467,8 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.leaders;
             this.form.remark = draft.remark;
-            this.staff_name = data.staff_name;
-            this.department_name = data.department_name;
+            this.form.staff_name = draft.staff_name;
+            this.form.department_name = draft.department_name;
             this.form.staff_id = draft.staff_id;
             this.form.department_id = draft.department_id;
           } else {
@@ -480,10 +486,10 @@
         this.picStatus = true;
         this.form.id = '';
         this.form.address = '';
-        this.month = '';
-        this.price_arr = '';
-        this.payWay = '';
-        this.periods = '';
+        this.form.month = '';
+        this.form.price_arr = [''];
+        this.form.payWay = [''];
+        this.form.periods = '';
         this.form.contract_id = '';
         this.form.house_id = '';
         this.form.money_sum = '';
@@ -501,8 +507,8 @@
         this.other_fee_status = false;
 
         this.form.remark = '';
-        this.staff_name = '';
-        this.department_name = '';
+        this.form.staff_name = '';
+        this.form.department_name = '';
         this.form.staff_id = '';
         this.form.department_id = '';
       }

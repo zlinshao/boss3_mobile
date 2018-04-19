@@ -22,24 +22,21 @@
           required>
         </van-field>
         <van-field
-          :class="{'payWay': payStatus}"
+          :class="{'payWay': payStatus && form.payWay.length > 1}"
           @click="payWayClick(1)"
-          v-model="payWay"
+          v-model="form.payWay[0]"
           label="付款方式"
           type="text"
           readonly
           icon="arrow"
           placeholder="付款方式已禁用">
         </van-field>
-        <div class="accordion" v-if="payStatus">
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        <div class="accordion" v-if="payStatus && form.payWay.length > 1">
+          <div v-for="(key,index) in form.payWay" v-show="index !== 0">{{key}}</div>
         </div>
         <van-field
-          :class="{'payWay': priceStatus}"
-          v-model="price_arr"
+          :class="{'payWay': priceStatus && form.price_arr.length > 1}"
+          v-model="form.price_arr[0]"
           @click="payWayClick(2)"
           label="月单价"
           type="text"
@@ -47,11 +44,8 @@
           icon="arrow"
           placeholder="月单价已禁用">
         </van-field>
-        <div class="accordion" v-if="priceStatus">
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        <div class="accordion" v-if="priceStatus && form.price_arr.length > 1">
+          <div v-for="(key,index) in form.price_arr" v-show="index !== 0">{{key}}</div>
         </div>
       </van-cell-group>
 
@@ -67,14 +61,14 @@
           placeholder="请填写备注">
         </van-field>
         <van-field
-          v-model="staff_name"
+          v-model="form.staff_name"
           label="开单人"
           type="text"
           placeholder="开单人已禁用"
           disabled>
         </van-field>
         <van-field
-          v-model="department_name"
+          v-model="form.department_name"
           label="部门"
           type="text"
           placeholder="部门已禁用"
@@ -106,8 +100,6 @@
         isClear: false,           //删除图片
         picStatus: true,
 
-        payWay: '1',                   //付款方式
-        price_arr: '1',                //月单价
         payStatus: false,
         priceStatus: false,
 
@@ -116,15 +108,17 @@
           id: '',
           type: '0',
           draft: 0,
+          payWay: [''],                   //付款方式
+          price_arr: [''],                //月单价
           contract_id: '',              //合同id
           screenshot_leader: [],        //领导截图 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
+          staff_name: '',                 //开单人name
+          department_name: '',            //部门name
         },
         screenshots: {},
-        staff_name: '',                 //开单人name
-        department_name: '',            //部门name
       }
     },
     mounted() {
@@ -194,10 +188,23 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
-          this.staff_name = val.staff_name;
-          this.department_name = val.department_name;
+          this.form.staff_name = val.staff_name;
+          this.form.department_name = val.department_name;
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
+          this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
+            if (res.data.code === '51110') {
+              let pay = res.data.data;
+              this.form.payWay = [];
+              this.form.price_arr = [];
+              for (let i = 0; i < pay.pay_way.length; i++) {
+                this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ' : ' + pay.pay_way[i].pay_way_str);
+              }
+              for (let i = 0; i < pay.price.length; i++) {
+                this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ' : ' + pay.price[i].price_str);
+              }
+            }
+          })
         }
       },
 
@@ -221,8 +228,10 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots = data.screenshot_leader;
             this.form.remark = draft.remark;
-            this.staff_name = data.staff_name;
-            this.department_name = data.depart_name;
+            this.form.payWay = draft.payWay;
+            this.form.price_arr = draft.price_arr;
+            this.form.staff_name = draft.staff_name;
+            this.form.department_name = draft.depart_name;
             this.form.staff_id = draft.staff_id;
             this.form.department_id = draft.department_id;
           } else {
@@ -237,16 +246,16 @@
         });
         $('.imgItem').remove();
         this.picStatus = true;
-        this.payWay = '';
-        this.price_arr = '';
+        this.form.payWay = [''];
+        this.form.price_arr = [''];
         this.form.id = '';
         this.form.type = '0';
         this.form.screenshot_leader = [];
         this.screenshots = {};
         this.form.remark = '';
         this.form.address = '';
-        this.staff_name = '';
-        this.department_name = '';
+        this.form.staff_name = '';
+        this.form.department_name = '';
         this.form.staff_id = '';
         this.form.department_id = '';
       },

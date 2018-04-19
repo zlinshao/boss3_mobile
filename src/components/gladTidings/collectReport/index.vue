@@ -314,7 +314,7 @@
           @click-icon="form.remark = ''">
         </van-field>
         <van-field
-          v-model="staff_name"
+          v-model="form.staff_name"
           @click="searchSelect(2)"
           label="开单人"
           type="text"
@@ -323,7 +323,7 @@
           required>
         </van-field>
         <van-field
-          v-model="department_name"
+          v-model="form.department_name"
           @click="searchSelect(4)"
           label="部门"
           type="text"
@@ -444,19 +444,19 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
+          staff_name: '',                 //开单人name
+          department_name: '',            //部门name
         },
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
         photos: {},                     //照片
         screenshots: {},                //照片
-        staff_name: '',                 //开单人name
-        department_name: '',            //部门name
 
-        dictValue4: [],         //付款方式
+        dictValue4: [],                 //付款方式
         value4: [],
-        dictValue6: [],         //房东租客
+        dictValue6: [],                 //房东租客
         value6: [],
-        dictValue7: [],         //安置方式
+        dictValue7: [],                 //安置方式
         value7: [],
       }
     },
@@ -477,9 +477,9 @@
     methods: {
       userInfo() {
         this.form.staff_id = this.personal.id;
-        this.staff_name = this.personal.name;
+        this.form.staff_name = this.personal.name;
         this.form.department_id = this.personal.department_id;
-        this.department_name = this.personal.department_name;
+        this.form.department_name = this.personal.department_name;
       },
       dicts() {
         //付款方式
@@ -741,12 +741,12 @@
           this.form.staff_id = val.staff_id;
           this.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
-          this.department_name = val.depart_name;
+          this.form.department_name = val.depart_name;
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
           let val = JSON.parse(t.depart);
-          this.department_name = val.name;
+          this.form.department_name = val.name;
           this.form.department_id = val.id;
           this.stick();
         }
@@ -843,9 +843,9 @@
 
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
-            this.staff_name = data.staff_name;
+            this.form.staff_name = draft.staff_name;
             this.form.department_id = draft.department_id;
-            this.department_name = data.department_name;
+            this.form.department_name = draft.department_name;
           } else {
             this.form.id = '';
           }
@@ -858,6 +858,7 @@
           this.isClear = false;
         });
         $('.imgItem').remove();
+        this.userInfo();
         this.joint = false;
         this.form.id = '';
         this.form.house.id = '';
@@ -912,11 +913,6 @@
         this.form.screenshot_leader = [];
         this.screenshots = {};
         this.form.remark = '';
-
-        this.form.staff_id = '';
-        this.staff_name = '';
-        this.form.department_id = '';
-        this.department_name = '';
       }
     },
   }

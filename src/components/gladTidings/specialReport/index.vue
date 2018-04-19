@@ -41,14 +41,14 @@
 
       <van-cell-group>
         <van-field
-          v-model="staff_name"
+          v-model="form.staff_name"
           label="开单人"
           type="text"
           placeholder="开单人已禁用"
           disabled>
         </van-field>
         <van-field
-          v-model="department_name"
+          v-model="form.department_name"
           label="部门"
           type="text"
           placeholder="部门已禁用"
@@ -92,11 +92,11 @@
           screenshot_leader: [],
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
+          staff_name: '',               //开单人name
+          department_name: '',          //部门name
         },
         screenshots: {},
         screenshots_leader: {},
-        staff_name: '',                 //开单人name
-        department_name: '',            //部门name
         numbers: '',
       }
     },
@@ -176,8 +176,8 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
-          this.staff_name = val.staff_name;
-          this.department_name = val.department_name;
+          this.form.staff_name = val.staff_name;
+          this.form.department_name = val.department_name;
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
         }
@@ -207,8 +207,8 @@
             this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots_leader = data.screenshot_leader;
-            this.staff_name = data.staff_name;
-            this.department_name = data.depart_name;
+            this.form.staff_name = draft.staff_name;
+            this.form.department_name = draft.depart_name;
             this.form.staff_id = draft.staff_id;
             this.form.department_id = draft.department_id;
           } else {
@@ -233,8 +233,8 @@
         this.screenshots = {};
         this.form.screenshot_leader = [];
         this.screenshots_leader = {};
-        this.staff_name = '';
-        this.department_name = '';
+        this.form.staff_name = '';
+        this.form.department_name = '';
         this.form.staff_id = '';
         this.form.department_id = '';
       }
