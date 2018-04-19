@@ -298,6 +298,7 @@
         document.body.scrollTop = document.documentElement.scrollTop = 0;
       },
       corp() {
+        alert(2);
         let that = this;
         this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
