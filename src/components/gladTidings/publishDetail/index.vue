@@ -104,7 +104,7 @@
 
     </div>
     <div class="footer">
-      <div v-for="(key,index) in operation" @click="commentOn(index)" v-else>{{key}}</div>
+      <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
     </div>
 
     <div class="bigPhotos" v-if="bigPicShow">
