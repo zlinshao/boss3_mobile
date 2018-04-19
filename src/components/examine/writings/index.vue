@@ -234,6 +234,7 @@
               com.avatar = data[i].staffs.avatar;
               com.name = data[i].staffs.name;
               com.role = data[i].staffs.role;
+              com.org = data[i].staffs.org;
               com.create_time = data[i].create_time;
               com.content = data[i].content;
               com.photos = [];
