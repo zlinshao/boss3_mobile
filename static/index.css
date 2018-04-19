@@ -186,6 +186,10 @@ div .payWay.van-cell.van-hairline.van-field i {
           margin-bottom: .1rem; }
         .searchClass .searchContent .searchList div:last-of-type span {
           color: #aaaaaa; }
+    .searchClass .searchContent .searchList.city {
+      align-items: center; }
+      .searchClass .searchContent .searchList.city div:first-child {
+        line-height: .5rem; }
   .searchClass .van-search__input-wrap {
     padding-top: 5px; }
     .searchClass .van-search__input-wrap .van-search__input {

@@ -17,10 +17,10 @@
       <!--</ul>-->
 
       <div class="searchContent">
-        <div class="searchList" v-for="key in lists" @click="village(key)">
+        <div class="searchList city" v-for="key in lists" @click="village(key)">
           <div>{{key.village_name}}</div>
           <div>
-            <p>{{key.province_name}}-{{key.city_name}}</p>
+            <p>{{key.province.province_name}}-{{key.city.city_name}}</p>
           </div>
         </div>
       </div>

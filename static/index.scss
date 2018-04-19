@@ -255,6 +255,12 @@ div {
         }
       }
     }
+    .searchList.city {
+      align-items: center;
+      div:first-child {
+        line-height: .5rem;
+      }
+    }
   }
   .van-search__input-wrap {
     padding-top: 5px;
