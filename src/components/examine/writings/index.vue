@@ -27,8 +27,8 @@
           <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
         </div>
         <div class="nextPrev">
-          <p @click="routerLink(before_content.id)">上一篇：<span v-if="before_content !== null">{{before_content.title}}</span></p>
-          <p @click="routerLink(next_content.id)">下一篇：<span v-if="next_content !== null">{{next_content.title}}</span>
+          <p  v-if="before_content.id !== '' && before_content.name !== ''" @click="routerLink(before_content.id)">上一篇：<span>{{before_content.title}}</span></p>
+          <p  v-if="next_content.id !== '' && next_content.name !== ''" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
           </p>
         </div>
       </div>
@@ -178,8 +178,19 @@
               this.dercarriage = true;
             }
             this.create_time = res.data.data.create_time;
-            this.before_content = res.data.data.before_content;
-            this.next_content = res.data.data.next_content;
+            if (res.data.data.before_content !== null) {
+              this.before_content = res.data.data.before_content;
+            } else {
+              this.before_content.id = '';
+              this.before_content.title = '';
+            }
+            if (res.data.data.next_content) {
+              this.next_content = res.data.data.next_content;
+            } else {
+              this.next_content.id = '';
+              this.next_content.title = '';
+            }
+
             this.cover_pic = res.data.data.album.cover_pic;
           } else {
             this.contents = '该文章已删除';
@@ -293,7 +304,8 @@
       overflow: hidden;
       -ms-text-overflow: ellipsis;
       text-overflow: ellipsis;
-      white-space: nowrap;xx
+      white-space: nowrap;
+      xx
     }
     @mixin border_radius($p) {
       -webkit-border-radius: $p;
