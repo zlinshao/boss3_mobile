@@ -116,8 +116,14 @@
         myData: {},
         cover_pic: {},
         create_time: '',
-        before_content: {},
-        next_content: {},
+        before_content: {
+          id: '',
+          name: '',
+        },
+        next_content: {
+          id: '',
+          name: '',
+        },
         params: {},
         commentList: [],
         page: 1,
@@ -305,7 +311,6 @@
       -ms-text-overflow: ellipsis;
       text-overflow: ellipsis;
       white-space: nowrap;
-      xx
     }
     @mixin border_radius($p) {
       -webkit-border-radius: $p;
