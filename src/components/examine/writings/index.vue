@@ -146,6 +146,7 @@
       })
     },
     activated() {
+      alert(2)
       this.pitch = this.$route.query.id;
       this.close_();
       this.page = 1;
@@ -283,17 +284,18 @@
       },
 
       routerLink(val) {
+        alert(1)
         this.$router.push({path: '/writings', query: {id: val}});
+        this.close_();
         this.pitch = val;
         this.paging = 0;
-        this.commentList = [];
         this.disabled = false;
         this.page = 1;
+        this.pitch = val;
         this.contentDetail(val);
         this.comment(val, 1);
         document.body.scrollTop = document.documentElement.scrollTop = 0;
       },
-
     },
   }
 </script>
