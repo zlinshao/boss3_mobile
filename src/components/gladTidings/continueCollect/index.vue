@@ -12,7 +12,7 @@
           required>
         </van-field>
         <van-field
-          v-model="house_type"
+          v-model="form.house_type"
           type="text"
           label="户型"
           placeholder="户型已禁用"
@@ -380,8 +380,6 @@
         payTypeNum: [''],               //付款方式
         payIndex: '',                   //付款方式index
 
-        house_type: '',
-
         corp: true,                    //公司单
 
         form: {
@@ -389,6 +387,7 @@
           type: 2,
           draft: 0,
           contract_id: '',    //合同
+          house_type: '',
           house: {
             id: '',
             name: '',
@@ -409,6 +408,7 @@
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
           sign_date: '',                //签约日期
+          is_agency: 0,
           name: '',                     //房东姓名
           phone: '',                    //电话号码
           bank: '',                     //银行名称
@@ -695,6 +695,7 @@
           this.form.contract_id = val.id;
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
+          this.form.house_type = val.house_type;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -741,7 +742,7 @@
             this.datePay[0] = draft.pay_first_date;
             this.form.pay_second_date = draft.pay_second_date;
 
-            this.house_type = data.house_type;
+            this.form.house_type = draft.house_type;
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
@@ -822,7 +823,7 @@
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 
-        this.house_type = '1室1厅1卫';
+        this.form.house_type = '';
 
         this.amountPrice = 1;
         this.form.period_price_arr = [''];

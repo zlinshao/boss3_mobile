@@ -130,7 +130,7 @@
       // 中介费
       lord1(val) {
         for (let j = 0; j < val.lords.length; j++) {
-          if(val.lords[j].is_agency === 1){
+          if (val.lords[j].is_agency === 1) {
             let list = {};
             list.house_id = val.id;
             list.house_name = val.name;
@@ -159,7 +159,7 @@
       },
       renter1(val) {
         for (let j = 0; j < val.renters.length; j++) {
-          if(val.renters[j].is_agency === 1){
+          if (val.renters[j].is_agency === 1) {
             let list = {};
             list.house_id = val.id;
             list.house_name = val.name;
@@ -193,6 +193,7 @@
           let list = {};
           list.house_id = val.id;
           list.house_name = val.name;
+          list.house_type = (Number(val.room) + 1) + '室' + val.hall + '厅' + val.toilet + '卫';
           list.created_at = val.created_at.substring(0, 10);
           list.id = val.lords[j].id;
           list.end_at = val.lords[j].end_at;
