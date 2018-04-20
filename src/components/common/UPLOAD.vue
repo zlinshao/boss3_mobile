@@ -12,7 +12,7 @@
           </div>
         </div>
 
-        <div class="upButton" :id="ID">
+        <div class="upButton" @click="getTokenMessage()" :id="ID">
           <span class="plus">+</span>
         </div>
       </div>

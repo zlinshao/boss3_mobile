@@ -709,6 +709,7 @@
             this.form.is_corp = this.corp ? 1 : 0;
             this.form.is_agency = this.is_agencyOn ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
+            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
             this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
@@ -719,6 +720,8 @@
                 this.close_();
                 $('.imgItem').remove();
               } else if (res.data.code === '50120') {
+                this.form.day = this.form.day === '0' ? '' : this.form.day;
+                this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
                 this.form.id = res.data.data.id;
                 Toast.success(res.data.msg);
               } else {
@@ -841,7 +844,7 @@
             this.form.account = draft.account;
             this.form.relationship = draft.relationship;
             this.form.penalty = draft.penalty;
-            this.form.contract_number = draft.contract_number;
+            this.form.contract_number = draft.contract_number === '' ? 'LJZF' : draft.contract_number;
 
             this.form.photo = draft.photo;
             this.photos = data.photo;
@@ -884,8 +887,6 @@
         this.form.period_price_arr = [''];
         this.form.price_arr = [''];
 
-        this.form.period_price_arr = [''];
-        this.form.price_arr = [''];
         this.datePay = [];
         this.datePrice = [];
         this.amountPay = 1;

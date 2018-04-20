@@ -10,10 +10,10 @@
       <div class="topRight">
         <div class="personal">
           <p>{{personal.name}}</p>
-          <p>
-            <span v-for="(key) in personal.org">{{key.name}}</span>
-            <span v-for="(key) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>
-          </p>
+          <!--<p>-->
+          <!--<span v-for="(key) in personal.org">{{key.name}}</span>-->
+          <!--<span v-for="(key) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>-->
+          <!--</p>-->
         </div>
         <div style="height: 1.4rem;"
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected'}">
@@ -30,7 +30,7 @@
         </div>
         <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message !== ''">{{message}}</p>
         <div v-for="(key,index) in formList"
-             v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图' && index!== '房屋影像' && index!== '房屋照片' && index!== '退租交接单'">
+             v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图' && index !== '房屋影像' && index !== '房屋照片' && index !== '退租交接单'">
           <p>{{index}}</p>
           <h1>
             <span v-if="Array.isArray(key)" v-for="item in key">
@@ -49,8 +49,12 @@
         <div class="photo" v-else>
           <p>{{index}}</p>
           <h1>
-            <span v-for="(pic,index) in key">
-              <img @click="pics(key,index,1)" :src="pic">
+            <span v-for="(pic,num) in key" v-show="process.processable_type === 'bulletin_quality'">
+              <img v-if="pic.ext == 'video/mp4'" @click="checkTv(pic.uri)" src="../../../assets/video.jpg">
+              <img v-else @click="pics(key, num, 2)" :src="pic.uri">
+            </span>
+            <span v-for="(pic,num) in key" v-show="process.processable_type !== 'bulletin_quality'">
+              <img @click="pics(key, num, 1)" :src="pic">
             </span>
           </h1>
         </div>
@@ -104,8 +108,13 @@
 
     </div>
     <div class="footer">
-      <!--<div @click="newly()">重新提交</div>-->
+      <div @click="newly()" v-if="personalId.id === personal.id">重新提交</div>
       <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
+    </div>
+
+    <div id="videoId" v-if="videoSrc !== ''">
+      <video :src="videoSrc" controls autoplay width="300px"></video>
+      <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
     </div>
 
     <div class="bigPhotos" v-if="bigPicShow">
@@ -134,6 +143,7 @@
     data() {
       return {
         urls: globalConfig.server_user,
+        personalId: JSON.parse(sessionStorage.personal),
         vLoading: true,
         disabled1: false,
 
@@ -156,6 +166,8 @@
         bigPic: '',
         photo: [],
         bigPicShow: false,
+
+        videoSrc: '',
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -191,7 +203,11 @@
         }
         return flag;
       },
+      checkTv(val) {
+        this.videoSrc = val;
+      },
       close_() {
+        this.videoSrc = '';
         this.formList = {};
         this.operation = {};
         this.personal = {};
@@ -407,6 +423,36 @@
       }
       to {
         @include scale(1);
+      }
+    }
+
+    #videoId {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      @include flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, .7);
+      z-index: 10000;
+      .close {
+        position: absolute;
+        width: .8rem;
+        height: .8rem;
+        text-align: center;
+        line-height: .8rem;
+        @include border_radius(50%);
+        background-color: rgba(0, 0, 0, .8);
+        bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, .8);
+        left: 50%;
+        transform: translate(-50%);
+        i {
+          color: #FFFFFF;
+          font-size: .6rem;
+        }
       }
     }
 

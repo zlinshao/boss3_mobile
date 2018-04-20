@@ -690,7 +690,6 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-            this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.form.is_agency = this.is_agencyOn ? 1 : 0;
             this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
             this.form.gas = this.gasOn ? 1 : 0;                       //天然气

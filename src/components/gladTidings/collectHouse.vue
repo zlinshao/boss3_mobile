@@ -251,6 +251,7 @@
       },
       // 房屋地址
       houseAddress(data) {
+        this.close_();
         this.$router.replace({
           path: this.path,
           query: {house: JSON.stringify(data), type: this.types}
@@ -262,6 +263,7 @@
       },
       // select关闭
       onCancel() {
+        this.close_();
         this.$router.replace({path: this.path, query: {house: '', type: this.types}});
       },
     },
