@@ -104,7 +104,7 @@
 
     </div>
     <div class="footer">
-      <div @click="newly()">重新提交</div>
+      <!--<div @click="newly()">重新提交</div>-->
       <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
     </div>
 

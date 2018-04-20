@@ -103,10 +103,10 @@
                   this.lord(data[i], type);
                 }
                 if (type === 'lord1' && data[i].lords.length !== 0) {
-                  this.lord(data[i], type);
+                  this.lord1(data[i], type);
                 }
                 if (type === 'renter1' && data[i].renters.length !== 0) {
-                  this.renter(data[i], type);
+                  this.renter1(data[i], type);
                 }
                 if ((type === 'renter' || type === 'is_nrcy' || type === '') && data[i].renters.length !== 0) {
                   this.renter(data[i], type);
@@ -126,6 +126,66 @@
             this.close_();
           }
         })
+      },
+      // 中介费
+      lord1(val) {
+        for (let j = 0; j < val.lords.length; j++) {
+          if(val.lords[j].is_agency === 1){
+            let list = {};
+            list.house_id = val.id;
+            list.house_name = val.name;
+            list.created_at = val.created_at.substring(0, 10);
+            list.id = val.lords[j].id;
+            list.end_at = val.lords[j].end_at;
+            list.duration_days = val.lords[j].duration_days;
+            list.customers = val.lords[j].customers[0].name;
+            if (val.lords[j].sign_user !== null) {
+              list.staff_id = val.lords[j].sign_user.id;
+              list.staff_name = val.lords[j].sign_user.name;
+            } else {
+              list.staff_name = '---';
+              list.staff_id = '';
+            }
+            if (val.lords[j].sign_org !== null) {
+              list.department_id = val.lords[j].sign_org.id;
+              list.department_name = val.lords[j].sign_org.name;
+            } else {
+              list.department_name = '---';
+              list.department_id = '';
+            }
+            this.lists.push(list);
+          }
+        }
+      },
+      renter1(val) {
+        for (let j = 0; j < val.renters.length; j++) {
+          if(val.renters[j].is_agency === 1){
+            let list = {};
+            list.house_id = val.id;
+            list.house_name = val.name;
+            list.rooms = val.rooms;
+            list.created_at = val.created_at.substring(0, 10);
+            list.end_at = '';
+            list.id = val.renters[j].id;
+            list.duration_days = val.renters[j].duration_days;
+            list.customers = val.renters[j].customers[0].name;
+            if (val.renters[j].sign_user !== null) {
+              list.staff_id = val.renters[j].sign_user.id;
+              list.staff_name = val.renters[j].sign_user.name;
+            } else {
+              list.staff_id = '';
+              list.staff_name = '---';
+            }
+            if (val.renters[j].sign_org !== null) {
+              list.department_id = val.renters[j].sign_org.id;
+              list.department_name = val.renters[j].sign_org.name;
+            } else {
+              list.department_id = '';
+              list.department_name = '---';
+            }
+            this.lists.push(list);
+          }
+        }
       },
       // 收房合同
       lord(val, type) {
@@ -155,6 +215,7 @@
           this.lists.push(list);
         }
       },
+
       // 租房合同
       renter(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
