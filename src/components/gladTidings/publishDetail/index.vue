@@ -49,12 +49,9 @@
         <div class="photo" v-else>
           <p>{{index}}</p>
           <h1>
-            <span v-for="(pic,num) in key" v-show="process.processable_type === 'bulletin_quality'">
-              <img v-if="pic.ext == 'video/mp4'" @click="checkTv(pic.uri)" src="../../../assets/video.jpg">
+            <span v-for="(pic,num) in key">
+              <img v-if="pic.is_video" @click="checkTv(pic.uri)" src="../../../assets/video.jpg">
               <img v-else @click="pics(key, num, 2)" :src="pic.uri">
-            </span>
-            <span v-for="(pic,num) in key" v-show="process.processable_type !== 'bulletin_quality'">
-              <img @click="pics(key, num, 1)" :src="pic">
             </span>
           </h1>
         </div>
@@ -270,12 +267,8 @@
 
       pics(val, index, num) {
         let arr = [];
-        if (num === 1) {
-          arr = val;
-        } else {
-          for (let i = 0; i < val.length; i++) {
-            arr.push(val[i].uri)
-          }
+        for (let i = 0; i < val.length; i++) {
+          arr.push(val[i].uri)
         }
         if (this.IsPC()) {
           this.photo = arr;

@@ -4,7 +4,7 @@
       <van-cell-group>
         <van-field
           v-model="form.city_name"
-          label="城市"
+          label="城111市"
           @click="selectShow(2)"
           type="text"
           readonly
@@ -475,7 +475,7 @@
           }
 
           this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
-            if(res.data.code === '1000120'){
+            if (res.data.code === '1000120') {
               let address = res.data.data.data[2] + '市';
               this.form.city_name = address;
               this.beforeCity = address;
@@ -802,9 +802,10 @@
             this.form.other_remark = data.other_remark;                     //其他问题
             this.form.other_furniture = data.other_furniture;               //其他家具
             this.photos = data.photo;                                       //房屋影像
-            this.form.photo = [];                                           //房屋影像
-            for (let key in data.photo) {
-              this.form.photo.push(key);                                    //房屋影像
+            this.form.photo = [];
+            //房屋影像
+            for (let i = 0; i < data.photo.length; i++) {
+              this.form.photo.push(data.photo[i].id);                       //房屋影像
             }
 
             this.form.staff_id = data.staff_id;

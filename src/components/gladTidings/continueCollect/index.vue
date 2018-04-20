@@ -755,7 +755,7 @@
             this.form.period_price_arr = draft.period_price_arr;
             this.countDate(1, draft.period_price_arr);
             this.form.price_arr = draft.price_arr;
-
+            this.form.is_agency = 0;
             for (let i = 0; i < draft.pay_way_arr.length; i++) {
               this.amountPay = i + 1;
               this.form.pay_way_arr.push('');
@@ -855,6 +855,7 @@
         this.form.sign_date = '';
         this.form.name = '';
         this.form.phone = '';
+        this.form.is_agency = 0;
         this.form.bank = '';
         this.form.subbranch = '';
         this.form.account_name = '';

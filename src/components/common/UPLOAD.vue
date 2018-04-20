@@ -5,14 +5,15 @@
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="Object.keys(editImg).length>0">
           <div style=" position: relative;">
-            <img :src="val" style="width: 1.5rem; height: 1.5rem; ">
+            <img v-if="val.is_video" src="../../assets/video.jpg" style="width: 1.5rem; height: 1.5rem;">
+            <img :src="val.uri" style="width: 1.5rem; height: 1.5rem;" v-else>
             <div class="progress"><b style="color: #fff !important;"></b></div>
             <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
             </div>
           </div>
         </div>
 
-        <div class="upButton" @click="getTokenMessage()" :id="ID">
+        <div class="upButton" @click="getTokenMessage" :id="ID">
           <span class="plus">+</span>
         </div>
       </div>
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+  import fileImage from '../../assets/video.jpg'
 
   export default {
     name: 'hello',
@@ -35,10 +37,16 @@
         activeIndex: null,
         uploader: null,
         editImg: {},
+        token: '',
+        isStatus: true,
       }
     },
     mounted() {
       this.active();
+      this.isStatus = true;
+    },
+    activated() {
+      this.isStatus = true;
     },
     watch: {
       editImage: {
@@ -112,15 +120,19 @@
       },
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
-          this.uploaderReady(res.data.data);
+          this.token = res.data.data;
+          if (this.isStatus) {
+            this.uploaderReady();
+          }
         })
       },
       uploaderReady(token) {
+        this.isStatus = false;
         let _this = this;
         _this.uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
           browse_button: [_this.ID, 'dasd'],     //上传按钮的ID
-          uptoken: token,                     // uptoken是上传凭证，由其他程序生成
+          uptoken: _this.token,                  // uptoken是上传凭证，由其他程序生成
 
           get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
           unique_names: true,                 // 默认false，key为文件
@@ -147,8 +159,8 @@
                   $('#pickfiles' + _this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
                       <div style=" width: 1.5rem;  height: 1.5rem; position: relative;">
-                        <img src="" style="width: 1.5rem; height: 1.5rem; ">
-                        <div class="progress"><b></b></div>
+                        <img src="${fileImage}" style="width: 1.5rem; height: 1.5rem; ">
+                        <div class="progress"><b style="color: #aaa !important;"></b></div>
                         <div class="remove pic_delete van-icon van-icon-close"  data-val=${file.id}>
 
                         </div>
