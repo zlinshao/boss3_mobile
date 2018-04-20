@@ -112,7 +112,7 @@
           v-model="form.price"
           label="价格"
           required
-          type="number"
+          type="text"
           placeholder="请填写价格">
         </van-field>
 
