@@ -45,11 +45,12 @@
           <div v-for="(key,index) in form.price_arr" v-show="index !== 0">{{key}}</div>
         </div>
         <van-field
-          v-model="form.periods"
+          v-model="form.terms"
+          @click="selectShow(2,'')"
           label="房租期数"
           type="text"
-          placeholder="房租期数已禁用"
-          disabled>
+          placeholder="请选择房租期数"
+          readonly>
         </van-field>
         <van-field
           v-model="form.money_sum"
@@ -74,7 +75,7 @@
             required>
           </van-field>
           <van-field
-            @click="selectShow(index)"
+            @click="selectShow(1,index)"
             v-model="moneyNum[index]"
             label="支付方式"
             type="text"
@@ -211,6 +212,8 @@
         columns: [],              //select值
         selectHide: false,        //select选择
 
+        periods: [],
+
         payStatus: false,
         priceStatus: false,
 
@@ -223,7 +226,7 @@
           id: '',
           draft: 0,
           month: '',
-          periods: '',
+          terms: '',
           contract_id: '',            //房屋地址id
           house_id: '',               //房屋地址id
           payWay: [''],               //付款方式
@@ -325,19 +328,34 @@
       },
 
       // select 显示
-      selectShow(index) {
-        this.payIndex = index;
-        this.selectHide = true;
-        this.columns = this.value8;
+      selectShow(val, index) {
+        this.tabs = val;
+        switch (val) {
+          case 1:
+            this.payIndex = index;
 
+            this.columns = this.value8;
+            break;
+          case 2:
+            this.columns = this.periods;
+            break;
+        }
+        this.selectHide = true;
       },
       // select选择
       onConfirm(value, index) {
-        this.moneyNum[this.payIndex] = value;
-        for (let i = 0; i < this.dictValue8.length; i++) {
-          if (this.dictValue8[i].dictionary_name === value) {
-            this.form.money_way[this.payIndex] = this.dictValue8[i].id;
-          }
+        switch (this.tabs) {
+          case 1:
+            this.moneyNum[this.payIndex] = value;
+            for (let i = 0; i < this.dictValue8.length; i++) {
+              if (this.dictValue8[i].dictionary_name === value) {
+                this.form.money_way[this.payIndex] = this.dictValue8[i].id;
+              }
+            }
+            break;
+          case 2:
+            this.form.terms = value;
+            break;
         }
         this.selectHide = false;
       },
@@ -410,7 +428,10 @@
             if (res.data.code === '51110') {
               let pay = res.data.data;
               this.form.month = pay.month;
-              this.form.periods = pay.terms;
+              this.periods = [];
+              for (let i = 0; i < pay.terms; i++) {
+                this.periods.push(i + 1);
+              }
               this.form.payWay = [];
               this.form.price_arr = [];
               for (let i = 0; i < pay.pay_way.length; i++) {
@@ -442,7 +463,7 @@
             this.form.month = data.month;
             this.form.price_arr = draft.price_arr;
             this.form.payWay = draft.payWay;
-            this.form.periods = draft.periods;
+            this.form.terms = draft.terms;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.money_sum = draft.money_sum;
@@ -489,7 +510,8 @@
         this.form.month = '';
         this.form.price_arr = [''];
         this.form.payWay = [''];
-        this.form.periods = '';
+        this.form.terms = '';
+        this.periods = [];
         this.form.contract_id = '';
         this.form.house_id = '';
         this.form.money_sum = '';

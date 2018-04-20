@@ -198,6 +198,12 @@
         this.page = 1;
         this.disabled = false;
       },
+      loadMore() {
+        if (!this.disabled) {
+          this.lists(this.page, this.active, this.readActive);
+          this.page++;
+        }
+      },
       routerDetail(id) {
         this.disabled = true;
         this.$router.push({path: '/publishDetail', query: {ids: id}});
@@ -210,12 +216,6 @@
         }
         this.active = 0;
         this.disabled = false;
-      },
-      loadMore() {
-        if (!this.disabled) {
-          this.lists(this.page, this.active, this.readActive);
-          this.page++;
-        }
       },
       finish(read) {
         this.list = [];
@@ -254,48 +254,52 @@
         this.$http.get(this.urls + 'process', {
           params: val,
         }).then((res) => {
-          let data = res.data.data;
-          if (res.data.status === 'success' && data.length !== 0) {
+          if (res.data.status === 'success') {
             if ((val.published === 0 && val.type === 3) || (val.read_at === 0 && val.type === 4)) {
               this.paging = res.data.meta.total;
             }
-            for (let i = 0; i < data.length; i++) {
-              let user = {};
-              user.id = data[i].id;
-              user.title = data[i].title;
-              user.created_at = data[i].created_at;
-              if (data[i].user) {
-                user.avatar = data[i].user.avatar;
-                user.name = data[i].user.name;
-                user.depart = data[i].user.org[0].name;
-              } else {
-                user.avatar = '';
-                user.name = '';
-                user.staff = '';
-              }
-              if (val.type === 3) {
-                user.place = data[i].place.display_name;
-                user.status = data[i].place.status;
-                user.bulletin = data[i].content.bulletin_name;
-              } else if (val.type === 1 || val.type === 2 || val.type === 4) {
-                if (data[i].flow) {
-                  user.place = data[i].flow.place.display_name;
-                  user.status = data[i].flow.place.status;
-                  if (data[i].flow.content.type) {
-                    user.bulletin = data[i].flow.content.type.name;
+            let data = res.data.data;
+            if (res.data.status === 'success' && data.length !== 0) {
+              for (let i = 0; i < data.length; i++) {
+                let user = {};
+                user.id = data[i].id;
+                user.title = data[i].title;
+                user.created_at = data[i].created_at;
+                if (data[i].user) {
+                  user.avatar = data[i].user.avatar;
+                  user.name = data[i].user.name;
+                  user.depart = data[i].user.org[0].name;
+                } else {
+                  user.avatar = '';
+                  user.name = '';
+                  user.staff = '';
+                }
+                if (val.type === 3) {
+                  user.place = data[i].place.display_name;
+                  user.status = data[i].place.status;
+                  user.bulletin = data[i].content.bulletin_name;
+                } else if (val.type === 1 || val.type === 2 || val.type === 4) {
+                  if (data[i].flow) {
+                    user.place = data[i].flow.place.display_name;
+                    user.status = data[i].flow.place.status;
+                    if (data[i].flow.content.type) {
+                      user.bulletin = data[i].flow.content.type.name;
+                    } else {
+                      user.bulletin = '';
+                    }
                   } else {
+                    user.place = '';
+                    user.status = '';
                     user.bulletin = '';
                   }
-                } else {
-                  user.place = '';
-                  user.status = '';
-                  user.bulletin = '';
                 }
+                this.list.push(user);
               }
-              this.list.push(user);
+            } else {
+              this.disabled = true;
             }
           } else {
-            this.disabled = true;
+            this.paging = 0;
           }
         })
       },

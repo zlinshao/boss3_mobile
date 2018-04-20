@@ -147,6 +147,7 @@
       </div>
 
       <van-cell-group>
+        <van-switch-cell v-model="is_agencyOn" title="是否中介"/>
         <van-field
           v-model="form.deposit"
           label="押金"
@@ -403,6 +404,7 @@
         payIndex: '',               //付款方式index
 
         corp: true,                    //公司单
+        is_agencyOn: false,           //是否中介
 
         form: {
           id: '',
@@ -414,6 +416,7 @@
           },
           month: '',                    //收房月数
           day: '',                      //收房天数
+          is_agency: 0,                 //是否中介
           begin_date: '',               //合同开始日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -704,6 +707,7 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.is_corp = this.corp ? 1 : 0;
+            this.form.is_agency = this.is_agencyOn ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
             this.form.draft = val;
@@ -780,6 +784,9 @@
             this.datePrice[0] = draft.pay_first_date;
             this.datePay[0] = draft.pay_first_date;
             this.form.pay_second_date = draft.pay_second_date;
+
+            this.form.is_agency = data.is_agency;                           //是否中介
+            this.is_agencyOn = data.is_agency === 1 ? true : false;         //是否中介
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
@@ -869,6 +876,9 @@
         this.form.begin_date = '';
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
+
+        this.form.is_agency = 0;                 //是否中介
+        this.is_agencyOn = false;               //是否中介
 
         this.amountPrice = 1;
         this.form.period_price_arr = [''];

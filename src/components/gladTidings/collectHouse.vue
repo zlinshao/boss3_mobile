@@ -100,21 +100,13 @@
               this.showInfo = [];
               for (let i = 0; i < data.length; i++) {
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
-                  this.lord(data[i]);
+                  this.lord(data[i], type);
                 }
                 if (type === 'lord1' && data[i].lords.length !== 0) {
-                  for (let j = 0; j < data[i].lords.length; j++) {
-                    if(data[i].lords[j].is_agency === 1){
-                      this.lord(data[i]);
-                    }
-                  }
+                  this.lord(data[i], type);
                 }
                 if (type === 'renter1' && data[i].renters.length !== 0) {
-                  for (let j = 0; j < data[i].renters.length; j++) {
-                    if(data[i].renters[j].is_agency === 1){
-                      this.renter(data[i]);
-                    }
-                  }
+                  this.renter(data[i], type);
                 }
                 if ((type === 'renter' || type === 'is_nrcy' || type === '') && data[i].renters.length !== 0) {
                   this.renter(data[i], type);
@@ -136,7 +128,7 @@
         })
       },
       // 收房合同
-      lord(val) {
+      lord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
           let list = {};
           list.house_id = val.id;
