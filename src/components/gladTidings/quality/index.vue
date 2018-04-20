@@ -351,6 +351,8 @@
 
         allCity: [],                  //城市
         cities: [],                   //城市
+        beforeCity: '',               //当前城市
+        beforeCityId: '',             //当前城市ID
         house_type_name: '1室1厅1卫',
         refundSta: true,
 
@@ -471,6 +473,21 @@
           for (let i = 0; i < res.data.length; i++) {
             this.cities.push(res.data[i].dictionary_name);
           }
+
+          this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
+            if(res.data.code === '1000120'){
+              let address = res.data.data.data[2] + '市';
+              this.form.city_name = address;
+              this.beforeCity = address;
+              for (let i = 0; i < this.allCity.length; i++) {
+                if (this.allCity[i].dictionary_name === address) {
+                  this.form.city_id = this.allCity[i].variable.city_id;
+                  this.beforeCityId = this.allCity[i].variable.city_id;
+                }
+              }
+            }
+          });
+
           // 装修
           this.dictionary(404, 1).then((res) => {
             this.decorate_name = [];
@@ -836,8 +853,8 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
-        this.form.city_id = '';                   //城市
-        this.form.city_name = '';                 //城市
+        this.form.city_id = this.beforeCityId;                   //城市
+        this.form.city_name = this.beforeCity;    //城市
         this.form.community.id = '';               //小区id
         this.form.community.name = '';             //小区id
         this.community_name = '';                 //小区名称
