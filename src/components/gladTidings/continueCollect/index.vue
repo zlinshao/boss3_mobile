@@ -214,6 +214,8 @@
           v-model="form.account"
           label="卡号"
           type="number"
+          @keyup="accountBank(form.account)"
+          @blur="accountBank(form.account)"
           placeholder="请填写卡号"
           icon="clear"
           @click-icon="form.account = ''"
@@ -409,6 +411,7 @@
           pay_second_date: '',          //第二次付款时间
           sign_date: '',                //签约日期
           is_agency: 0,
+          purchase_way: 509,            //支付方式
           name: '',                     //房东姓名
           phone: '',                    //电话号码
           bank: '',                     //银行名称
@@ -457,6 +460,13 @@
         this.form.staff_name = this.personal.name;
         this.form.department_id = this.personal.department_id;
         this.form.department_name = this.personal.department_name;
+      },
+      accountBank(val) {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+          if (res.data.code === '51110') {
+            this.form.bank = res.data.data;
+          }
+        })
       },
       dicts() {
         //付款方式
@@ -731,7 +741,7 @@
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
-
+            this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
@@ -809,6 +819,7 @@
         })
       },
       close_() {
+        this.form.purchase_way = 509;
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;

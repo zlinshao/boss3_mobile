@@ -61,6 +61,8 @@
           v-model="form.account"
           label="卡号"
           type="number"
+          @keyup="accountBank(form.account)"
+          @blur="accountBank(form.account)"
           placeholder="请填写卡号"
           icon="clear"
           @click-icon="form.account = ''"
@@ -154,13 +156,14 @@
           address: '',
           id: '',
           draft: 0,
-          payWay: [''],                   //付款方式
-          price_arr: [''],                //月单价
+          payWay: [''],                 //付款方式
+          price_arr: [''],              //月单价
           money_sum: '',
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
           amount: '',                   //退款金额
           bank: '',                     //银行名称
+          purchase_way: 509,            //支付方式
           subbranch: '',                //支行名称
           account_name: '',             //帐户名称
           account: '',                  //帐号
@@ -196,8 +199,12 @@
           this.payStatus = false;
         }
       },
-      changeRadio() {
-
+      accountBank(val) {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+          if (res.data.code === '51110') {
+            this.form.bank = res.data.data;
+          }
+        })
       },
       screenshot(val) {
         this.picStatus = !val[2];
@@ -280,7 +287,7 @@
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
-
+            this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.address = data.address;
             this.form.contract_id = draft.contract_id;
@@ -304,6 +311,7 @@
       },
 
       close_() {
+        this.form.purchase_way = 509;
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;

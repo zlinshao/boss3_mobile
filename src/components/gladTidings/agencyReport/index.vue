@@ -69,6 +69,8 @@
           v-model="form.account"
           label="卡号"
           type="number"
+          @keyup="accountBank(form.account)"
+          @blur="accountBank(form.account)"
           placeholder="请填写卡号"
           icon="clear"
           @click-icon="form.account = ''"
@@ -176,6 +178,7 @@
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
           amount: '',                   //中介费
+          purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
           subbranch: '',                //支行名称
           account_name: '',             //帐户名称
@@ -217,7 +220,13 @@
           this.payStatus = false;
         }
       },
-
+      accountBank(val) {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+          if (res.data.code === '51110') {
+            this.form.bank = res.data.data;
+          }
+        })
+      },
       searchSelect(val) {
         if (val === '0') {
           this.$router.push({path: '/collectHouse', query: {type: 'lord1'}});
@@ -325,7 +334,7 @@
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
-
+            this.form.purchase_way = 509;
             this.form.address = data.address;
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
@@ -358,6 +367,7 @@
       },
 
       close_() {
+        this.form.purchase_way = 509;
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;

@@ -230,9 +230,12 @@
           @click-icon="form.phone = ''"
           required>
         </van-field>
+
         <van-field
           v-model="form.account"
           label="卡号"
+          @keyup="accountBank(form.account)"
+          @blur="accountBank(form.account)"
           type="number"
           placeholder="请填写卡号"
           icon="clear"
@@ -435,6 +438,7 @@
           sign_date: '',                //签约日期
           name: '',                     //房东姓名
           phone: '',                    //电话号码
+          purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
           subbranch: '',                //支行名称
           account_name: '',             //帐户名称
@@ -477,12 +481,20 @@
       this.routerIndex('');
       this.ddRent('');
     },
+
     methods: {
       userInfo() {
         this.form.staff_id = this.personal.id;
         this.form.staff_name = this.personal.name;
         this.form.department_id = this.personal.department_id;
         this.form.department_name = this.personal.department_name;
+      },
+      accountBank(val) {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+          if (res.data.code === '51110') {
+            this.form.bank = res.data.data;
+          }
+        })
       },
       dicts() {
         //付款方式
@@ -498,7 +510,7 @@
             this.value6 = [];
             this.dictValue6 = res.data;
             for (let i = 0; i < res.data.length; i++) {
-              if(res.data[i].dictionary_name !== '租客承担'){
+              if (res.data[i].dictionary_name !== '租客承担') {
                 this.value6.push(res.data[i].dictionary_name);
               }
             }
@@ -775,6 +787,7 @@
             this.isClear = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
+            this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.house = draft.house;
             this.form.month = draft.month;
@@ -863,6 +876,7 @@
       },
 
       close_() {
+        this.form.purchase_way = 509;
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;
