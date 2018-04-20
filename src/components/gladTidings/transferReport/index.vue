@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group style="margin-bottom: 12px;">
         <van-field
-          v-model="oldHouseName"
+          v-model="form.old_house_name"
           label="原房屋地址"
           type="text"
           readonly
@@ -12,37 +12,42 @@
           required>
         </van-field>
         <van-field
-          v-model="oldForm.staff_name"
+          v-model="form.old_staff_name"
           label="原开单人"
           type="text"
           disabled
           placeholder="原房屋原开单人已禁用">
         </van-field>
         <van-field
-          :class="{'payWay': payStatus}"
-          @click="payWayClick()"
-          v-model="oldForm.pay_way_arr"
+          :class="{'payWay': payStatus && form.old_pay_way_arr.length > 1}"
+          @click="payWayClick(1)"
+          v-model="form.old_pay_way_arr[0]"
           label="原付款方式"
           type="text"
           readonly
           icon="arrow"
           placeholder="原房屋付款方式已禁用">
         </van-field>
-        <div class="accordion" v-if="payStatus">
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
-          <div>凤凰大厦克里夫的撒开了都是发范德萨范德萨</div>
+        <div class="accordion" v-if="payStatus && form.old_pay_way_arr.length > 1">
+          <div class="accordion" v-if="priceStatus && form.old_pay_way_arr.length > 1">
+            <div v-for="(key,index) in form.old_pay_way_arr" v-show="index !== 0">{{key}}</div>
+          </div>
         </div>
         <van-field
-          v-model="oldForm.price"
-          label="价格"
+          :class="{'payWay': priceStatus && form.old_price.length > 1}"
+          v-model="form.old_price[0]"
+          @click="payWayClick(2)"
+          label="月单价"
           type="text"
-          disabled
-          placeholder="原房屋价格已禁用">
+          readonly
+          icon="arrow"
+          placeholder="月单价已禁用">
         </van-field>
+        <div class="accordion" v-if="priceStatus && form.old_price.length > 1">
+          <div v-for="(key,index) in form.old_price" v-show="index !== 0">{{key}}</div>
+        </div>
         <van-field
-          v-model="oldForm.money_sum"
+          v-model="form.old_money_sum"
           label="定金"
           type="text"
           disabled
@@ -395,15 +400,16 @@
         roomsName: '',
 
         payStatus: false,
+        priceStatus: false,
         other_fee_status: false,
-        oldForm: {
-          staff_name: '',
-          pay_way_arr: '',
-          price: '',
-          money_sum: '',
-        },
 
         form: {
+          old_staff_name: '',
+          old_pay_way_arr: [''],
+          old_price: [''],
+          old_money_sum: '',
+          old_house_name: '',
+
           address: '',
           id: '',
           draft: 0,
@@ -444,13 +450,12 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
+          staff_name: '',                  //开单人name
+          department_name: '',             //部门name
         },
-        oldHouseName: '',
         screenshots: {},
         photos: {},
         leaders: {},
-        staff_name: '',                  //开单人name
-        department_name: '',             //部门name
 
         dictValue8: [],         //支付方式
         value8: [],
@@ -489,8 +494,14 @@
           this.rentDetail('');
         });
       },
-      payWayClick() {
-        this.payStatus = !this.payStatus;
+      payWayClick(val) {
+        if (val === 1) {
+          this.payStatus = !this.payStatus;
+          this.priceStatus = false;
+        } else {
+          this.priceStatus = !this.priceStatus;
+          this.payStatus = false;
+        }
       },
       fee_status(val) {
         if (!val) {
@@ -721,10 +732,26 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           if (t.type === 'renter') {
-            this.oldHouseName = val.house_name;
-            this.oldForm.staff_name = val.staff_name;
+            this.form.old_house_name = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
+
+            this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
+              if (res.data.code === '51110') {
+                let pay = res.data.data;
+                this.form.old_staff_name = pay.staff.name;
+                this.form.old_money_sum = pay.money_sum;
+                this.form.old_pay_way_arr = [];
+                this.form.old_price = [];
+                for (let i = 0; i < pay.pay_way.length; i++) {
+                  this.form.old_pay_way_arr.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ' : ' + pay.pay_way[i].pay_way_str);
+                }
+                for (let i = 0; i < pay.price.length; i++) {
+                  this.form.old_price.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ' : ' + pay.price[i].price_str);
+                }
+              }
+            })
+
           } else {
             this.form.address = val.house_name;
             this.form.contract_id = val.id;
@@ -771,14 +798,14 @@
             this.form.address = data.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
-            this.oldHouseName = data.address_rent;
             this.form.contract_id_rent = draft.contract_id_rent;
             this.form.house_id_rent = draft.house_id_rent;
 
-            this.oldForm.staff_name = data.old_staff_name;
-            this.oldForm.pay_way_arr = data.old_pay_way;
-            this.oldForm.price = data.old_price;
-            this.oldForm.money_sum = data.old_money;
+            this.form.old_house_name = draft.old_house_name;
+            this.form.old_staff_name = draft.old_staff_name;
+            this.form.old_pay_way_arr = draft.old_pay_way_arr;
+            this.form.old_price = draft.old_price;
+            this.form.old_money_sum = draft.old_money_sum;
 
             this.form.begin_date = draft.begin_date;
             this.first_date = [];
@@ -853,12 +880,13 @@
         this.userInfo();
         $('.imgItem').remove();
         this.picStatus = true;
-        this.oldHouseName = '';
         this.form.address = '';
-        this.oldForm.staff_name = '';
-        this.oldForm.pay_way_arr = '';
-        this.oldForm.price = '';
-        this.oldForm.money_sum = '';
+
+        this.form.old_house_name = '';
+        this.form.old_staff_name = '';
+        this.form.old_pay_way_arr = [''];
+        this.form.old_price = [''];
+        this.form.old_money_sum = '';
 
         this.form.id = '';
         this.form.contract_id_rent = '';

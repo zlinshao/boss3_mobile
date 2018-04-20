@@ -418,14 +418,14 @@
           relationship: '',             //房东与收款人关系
           penalty: '',                  //违约金
           is_corp: 1,                   //是否公司单  0个人1公司
-          contract_number: 'LJSF',          //合同编号
+          contract_number: 'LJSF',      //合同编号
           screenshot_leader: '',        //领导截图 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
-          staff_name: '',                 //开单人name
-          department_name: '',            //部门name
+          staff_name: '',               //开单人name
+          department_name: '',          //部门name
         },
         property_name: '',              //物业费付款人
         photos: {},                     //照片
