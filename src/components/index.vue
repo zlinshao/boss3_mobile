@@ -5,7 +5,7 @@
         <p>
           <i class="iconfont icon-wancheng"></i>
         </p>
-        <h1>我报备的</h1>
+        <h1>我审批的</h1>
       </div>
       <div @click="tabTag(3,0)" :class="{'onDiv': active === 3}">
         <p>
