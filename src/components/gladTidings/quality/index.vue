@@ -4,7 +4,7 @@
       <van-cell-group>
         <van-field
           v-model="form.city_name"
-          label="城111市"
+          label="城市"
           @click="selectShow(2)"
           type="text"
           readonly
