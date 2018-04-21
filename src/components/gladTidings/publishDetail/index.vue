@@ -110,7 +110,7 @@
     </div>
 
     <div id="videoId" v-if="videoSrc !== ''">
-      <video :src="videoSrc" controls autoplay width="300px"></video>
+      <video muted :src="videoSrc" controls autoplay width="300px"></video>
       <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
     </div>
 
@@ -417,6 +417,13 @@
       to {
         @include scale(1);
       }
+    }
+
+    #videoId1 {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50% -50%);
     }
 
     #videoId {
