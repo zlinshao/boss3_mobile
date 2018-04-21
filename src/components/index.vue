@@ -262,7 +262,6 @@
             if (res.data.status === 'success' && data.length !== 0) {
               for (let i = 0; i < data.length; i++) {
                 let user = {};
-                user.id = data[i].id;
                 user.title = data[i].title;
                 user.created_at = data[i].created_at;
                 if (data[i].user) {
@@ -275,12 +274,14 @@
                   user.staff = '';
                 }
                 if (val.type === 3) {
+                  user.id = data[i].id;
                   user.place = data[i].place.display_name;
                   user.status = data[i].place.status;
                   user.bulletin = data[i].content.bulletin_name;
                 }
                 if (val.type === 1 || val.type === 2 || val.type === 4) {
                   if (data[i].flow) {
+                    user.id = data[i].flow.id;
                     user.place = data[i].flow.place.display_name;
                     user.status = data[i].flow.place.status;
                     if (data[i].flow.content.type) {
