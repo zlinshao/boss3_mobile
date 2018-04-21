@@ -18,7 +18,7 @@
           placeholder="户型已禁用"
           disabled>
         </van-field>
-        <div class="first_date">
+        <div class="first_date month">
           <van-field
             style="width: 110px;"
             class="title"
@@ -31,12 +31,13 @@
             placeholder="请填写月数">
           </van-field>
           <van-field
-            class="twoBorder"
+            class=""
             v-model="form.day"
             type="number"
             placeholder="请填写天数">
           </van-field>
         </div>
+        <div class="titleRed">不包含空置期</div>
         <van-field
           v-model="form.begin_date"
           type="text"

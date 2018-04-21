@@ -32,6 +32,16 @@
   color: #969696;
   border-bottom: 1px solid #F4F4F4; }
 
+.first_date.month .van-cell:not(:last-child):after {
+  border: none; }
+
+.titleRed {
+  padding-left: 110px;
+  padding-bottom: .1rem;
+  font-size: .24rem;
+  color: #e4393c;
+  border-bottom: 1px solid #f4f4f4; }
+
 .fourth, .first_date {
   display: flex;
   display: -webkit-flex; }
