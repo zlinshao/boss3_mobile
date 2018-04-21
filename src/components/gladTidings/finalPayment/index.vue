@@ -19,6 +19,7 @@
           disabled>
         </van-field>
         <van-field
+          class="disabling"
           :class="{'payWay': payStatus && form.payWay.length > 1}"
           @click="payWayClick(1)"
           v-model="form.payWay[0]"
@@ -32,6 +33,7 @@
           <div v-for="(key,index) in form.payWay" v-show="index !== 0">{{key}}</div>
         </div>
         <van-field
+          class="disabling"
           :class="{'payWay': priceStatus && form.price_arr.length > 1}"
           v-model="form.price_arr[0]"
           @click="payWayClick(2)"
@@ -435,10 +437,10 @@
               this.form.payWay = [];
               this.form.price_arr = [];
               for (let i = 0; i < pay.pay_way.length; i++) {
-                this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ' : ' + pay.pay_way[i].pay_way_str);
+                this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
               }
               for (let i = 0; i < pay.price.length; i++) {
-                this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ' : ' + pay.price[i].price_str);
+                this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
               }
             }
           })

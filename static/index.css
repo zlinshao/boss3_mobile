@@ -8,7 +8,12 @@
   .accordion div {
     color: #888888;
     min-height: 44px;
-    line-height: 44px; }
+    line-height: 44px;
+    text-align: right;
+    margin-right: .6rem; }
+
+.disabling .van-field__control {
+  font-size: 11px; }
 
 .fourth .van-cell.van-hairline.van-field {
   width: 25%; }
@@ -143,12 +148,6 @@ div .payWay.van-cell.van-hairline.van-field i {
     text-align: center; }
   .footer div + div {
     border-left: 1px solid #ebebeb; }
-
-.notData {
-  text-align: center;
-  padding: 24px 0;
-  font-size: .33rem;
-  color: #b3afaf; }
 
 .notData {
   text-align: center;

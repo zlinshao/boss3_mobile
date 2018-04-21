@@ -19,6 +19,7 @@
           placeholder="原房屋原开单人已禁用">
         </van-field>
         <van-field
+          class="disabling"
           :class="{'payWay': payStatus && form.old_pay_way_arr.length > 1}"
           @click="payWayClick(1)"
           v-model="form.old_pay_way_arr[0]"
@@ -34,6 +35,7 @@
           </div>
         </div>
         <van-field
+          class="disabling"
           :class="{'payWay': priceStatus && form.old_price.length > 1}"
           v-model="form.old_price[0]"
           @click="payWayClick(2)"
@@ -744,10 +746,10 @@
                 this.form.old_pay_way_arr = [];
                 this.form.old_price = [];
                 for (let i = 0; i < pay.pay_way.length; i++) {
-                  this.form.old_pay_way_arr.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ' : ' + pay.pay_way[i].pay_way_str);
+                  this.form.old_pay_way_arr.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
                 }
                 for (let i = 0; i < pay.price.length; i++) {
-                  this.form.old_price.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ' : ' + pay.price[i].price_str);
+                  this.form.old_price.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
                 }
               }
             })
