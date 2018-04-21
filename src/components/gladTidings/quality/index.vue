@@ -901,12 +901,12 @@
         this.form.is_fill = 1;                   //家电是否齐全
         this.is_fillOn = true;                    //家电是否齐全
         this.form.is_lord_fill = 0;               //房东是否补齐
-        this.is_lordOn = false;                   //房东是否补齐
+        this.is_lordOn = true;                   //房东是否补齐
         this.form.is_lord_fill_days = '';        //房东是否补齐天数
         this.form.dining_table = '';             //餐桌
         this.form.chair = '';                     //椅子
-        this.form.is_clean = true;               //是否干净
-        this.is_cleanOn = 1;                      //是否干净
+        this.form.is_clean = 1;                 //是否干净
+        this.is_cleanOn = true;                  //是否干净
         this.form.other_remark = '';             //其他问题
         this.form.other_furniture = '';          //其他家具
         this.form.photo = [];                    //房屋影像
