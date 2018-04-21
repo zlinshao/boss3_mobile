@@ -186,6 +186,11 @@
       this.scrollTops();
     },
     methods: {
+      // 详情页
+      routerDetail(id) {
+        this.disabled = true;
+        this.$router.push({path: '/publishDetail', query: {ids: id}});
+      },
       // 返回顶部
       scrollTops() {
         document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -204,11 +209,6 @@
           this.page++;
         }
       },
-      routerDetail(id) {
-        this.disabled = true;
-        this.$router.push({path: '/publishDetail', query: {ids: id}});
-      },
-
       routerLink(val) {
         this.scrollTops();
         if (val === '/index') {
