@@ -442,13 +442,13 @@
     },
     mounted() {
       this.getNowFormatDate();
-      this.dicts();
+      this.dicts('');
       this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
-        this.manuscript(newID.newID);
+        this.dicts(newID.newID);
       }
       this.houseInfo();
       this.routerIndex('');
@@ -468,7 +468,7 @@
           }
         })
       },
-      dicts() {
+      dicts(val) {
         //付款方式
         this.dictionary(443, 1).then((res) => {
           this.value4 = [];
@@ -486,7 +486,7 @@
                 this.value6.push(res.data[i].dictionary_name);
               }
             }
-            this.manuscript('');
+            this.manuscript(val);
           });
 
         });

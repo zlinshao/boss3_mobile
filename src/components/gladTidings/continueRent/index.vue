@@ -450,13 +450,13 @@
     },
     mounted() {
       this.getNowFormatDate();
-      this.dicts();
+      this.dicts('');
       this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
-        this.rentDetail(newID.newID);
+        this.dicts(newID.newID);
       }
       this.houseInfo();
       this.routerIndex('');

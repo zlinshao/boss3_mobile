@@ -428,13 +428,13 @@
     },
     mounted() {
       this.getNowFormatDate();
-      this.dicts();
+      this.dicts('');
       this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
-        this.rentDetail(newID.newID);
+        this.dicts(newID.newID);
       }
       this.houseInfo();
       this.routerIndex('');
@@ -447,7 +447,7 @@
         this.form.department_id = this.personal.department_id;
         this.form.department_name = this.personal.department_name;
       },
-      dicts() {
+      dicts(val) {
         //房东租客
         this.dictionary(449, 1).then((res) => {
           this.value6 = [];
@@ -464,7 +464,7 @@
             for (let i = 0; i < res.data.length; i++) {
               this.value8.push(res.data[i].dictionary_name);
             }
-            this.rentDetail('');
+            this.rentDetail(val);
           });
 
         });
@@ -795,9 +795,9 @@
             this.photos = data.photo;
             this.form.remark = draft.remark;
             this.form.staff_id = draft.staff_id;
-            this.form.staff_name = draft.staff_name;
+            this.staff_name = data.staff_name;
             this.form.department_id = draft.department_id;
-            this.form.department_name = draft.department_name;
+            this.department_name = data.department_name;
           } else {
             this.form.id = '';
           }

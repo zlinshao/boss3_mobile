@@ -390,7 +390,7 @@
           city_name: '',                //城市
           community: {},                //小区id
           door_address: ['', '', ''],
-          house_type: [0, 1, 1],
+          house_type: [1, 1, 1],
           area: '',                     //面积
           direction: {
             id: '',                     //朝向
@@ -446,13 +446,13 @@
       }
     },
     mounted() {
-      this.dicts();
+      this.dicts('');
       this.userInfo('');
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
-        this.qualityDetail(newID.newID);
+        this.dicts(newID.newID);
       }
       this.houseInfo();
       this.routerIndex('');
@@ -465,7 +465,7 @@
         this.form.department_id = this.personal.department_id;
         this.form.department_name = this.personal.department_name;
       },
-      dicts() {
+      dicts(val) {
         // 城市
         this.dictionary(306, 1).then((res) => {
           this.cities = [];
@@ -502,7 +502,7 @@
               for (let i = 0; i < res.data.length; i++) {
                 this.property_name.push(res.data[i].dictionary_name);
               }
-              this.qualityDetail('');
+              this.qualityDetail(val);
             });
 
           });
@@ -594,6 +594,7 @@
               value[2] = '0卫';
             }
             this.house_type_name = value.join('');
+            index[0] = index[0] + 1;
             this.form.house_type = index;
             break;
           case 2:
@@ -745,7 +746,7 @@
             let house = data.house_type;
             let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
             let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
-            this.house_type_name = dicts.value1[house[0]] + room + hall;
+            this.house_type_name = dicts.value1[house[0] - 1] + room + hall;
 
             this.form.decorate = data.decorate;
 
@@ -860,7 +861,7 @@
         this.community_name = '';                 //小区名称
         this.form.door_address = ['', '', ''];
 
-        this.house_type = [0, 1, 1];
+        this.house_type = [1, 1, 1];
         this.house_type_name = '1室1厅1卫';
 
         this.form.area = '';                      //面积

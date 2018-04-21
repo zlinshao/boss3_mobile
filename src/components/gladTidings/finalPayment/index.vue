@@ -258,19 +258,19 @@
     },
     mounted() {
       this.getNowFormatDate();
-      this.dicts();
+      this.dicts('');
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
-        this.finalDetail(newID.newID);
+        this.dicts(newID.newID);
       }
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
     },
     methods: {
-      dicts() {
+      dicts(val) {
         //支付方式
         this.dictionary(508, 1).then((res) => {
           this.value8 = [];
@@ -278,7 +278,7 @@
           for (let i = 0; i < res.data.length; i++) {
             this.value8.push(res.data[i].dictionary_name);
           }
-          this.finalDetail('');
+          this.finalDetail(val);
         });
       },
       payWayClick(val) {
