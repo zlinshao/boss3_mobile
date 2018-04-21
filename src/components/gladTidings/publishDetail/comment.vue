@@ -163,7 +163,6 @@
             for (let i = 0; i < res.data.length; i++) {
               this.property_name.push(res.data[i].dictionary_name);
             }
-            this.qualityDetail();
           });
 
         });
