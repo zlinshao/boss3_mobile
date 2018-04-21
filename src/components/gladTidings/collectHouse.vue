@@ -15,10 +15,6 @@
               <span>房屋地址：</span>
               <span>{{key.house_name}}</span>
             </div>
-            <div>
-              <span>合同状态：</span>
-              <span>{{contractStatus[key.status]}}</span>
-            </div>
           </div>
           <div class="contract" v-else>
             <div>
