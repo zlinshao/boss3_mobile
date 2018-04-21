@@ -71,6 +71,9 @@ div .van-switch.van-switch--on {
   background: #409EFF; }
 div .van-icon.van-icon-checked {
   color: #409EFF; }
+div .van-checkbox.van-checkbox--round .van-checkbox__control:checked + .van-icon-success {
+  background-color: #409EFF;
+  border-color: #409EFF; }
 div .van-cell.van-hairline.van-field .van-cell__title {
   width: 110px; }
 div .van-cell.van-hairline.van-field .van-cell__value {
@@ -82,16 +85,31 @@ div .payWay.van-cell.van-hairline.van-field i {
   transform: rotate(-90deg);
   transition: all .5s; }
 
+.checkCss {
+  background-color: #FFFFFF;
+  padding: .15rem .3rem; }
+  .checkCss .van-checkbox.van-checkbox--round {
+    margin: .2rem 0; }
+
 .checks {
   display: flex;
   display: -webkit-flex;
   align-items: center;
   height: 44px; }
+  .checks .checkTitle {
+    min-width: 110px; }
   .checks .van-radio-group {
     display: flex;
     display: -webkit-flex; }
     .checks .van-radio-group .van-radio {
       margin-right: .3rem; }
+
+.checks.radio {
+  margin-left: -6px;
+  border-bottom: 1px solid #f4f4f4;
+  height: 45px; }
+  .checks.radio .req {
+    color: #f44; }
 
 .paddingTitle {
   display: flex;

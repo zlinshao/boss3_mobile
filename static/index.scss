@@ -110,7 +110,12 @@ div {
   .van-icon.van-icon-checked {
     color: $color;
   }
-
+  .van-checkbox.van-checkbox--round {
+    .van-checkbox__control:checked + .van-icon-success {
+      background-color: $color;
+      border-color: $color;
+    }
+  }
   .van-cell.van-hairline.van-field {
     .van-cell__title {
       width: 110px;
@@ -132,15 +137,35 @@ div {
   }
 }
 
+.checkCss {
+  background-color: #FFFFFF;
+  padding: .15rem .3rem;
+  .van-checkbox.van-checkbox--round {
+    margin: .2rem 0;
+  }
+}
+
 .checks {
   @include flex;
   align-items: center;
   height: 44px;
+  .checkTitle {
+    min-width: 110px;
+  }
   .van-radio-group {
     @include flex;
     .van-radio {
       margin-right: .3rem;
     }
+  }
+}
+
+.checks.radio {
+  margin-left: -6px;
+  border-bottom: 1px solid #f4f4f4;
+  height: 45px;
+  .req {
+    color: #f44;
   }
 }
 

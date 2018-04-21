@@ -263,7 +263,7 @@
           this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
             if (res.data.code === '51110') {
               let pay = res.data.data;
-              this.money_sum = pay.money_sum;
+              this.form.money_sum = pay.money_sum;
               this.form.payWay = [];
               this.form.price_arr = [];
               for (let i = 0; i < pay.pay_way.length; i++) {
@@ -294,6 +294,7 @@
             this.form.address = draft.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
+            this.form.money_sum = draft.money_sum;
             this.form.amount = draft.amount;
             this.form.account = draft.account;
             this.form.bank = draft.bank;
