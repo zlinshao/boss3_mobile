@@ -10,14 +10,10 @@
       <div class="topRight">
         <div class="personal">
           <p>{{personal.name}}</p>
-          <!--<p>-->
-          <!--<span v-for="(key) in personal.org">{{key.name}}</span>-->
-          <!--<span v-for="(key) in personal.role">&nbsp;-&nbsp;{{key.display_name}}</span>-->
-          <!--</p>-->
+          <p><span v-for="(key,index) in personal.org" v-if="index === 0">{{key.name}}</span></p>
         </div>
         <div style="height: 1.4rem;"
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected'}">
-
         </div>
       </div>
     </div>
@@ -72,12 +68,9 @@
                     <img :src="key.user.avatar" v-if="key.user.avatar !== '' && key.user.avatar !== null">
                     <img src="../../../assets/head.png" v-else>
                   </p>
-                  <span>{{key.user.name}}</span>
-                  <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
-                  <!--<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-->
-                  <!--{{item.name}}-->
-                  <!--<span v-for="(i,index) in key.user.role" v-if="index === 0">&nbsp;-&nbsp;{{i.display_name}}</span>-->
-                  <!--</span>-->
+                  <div>
+                    {{key.user.name}}<span class="a" v-for="(key,index) in personal.org" v-if="index === 0">-{{key.name}}</span>
+                  </div>
                 </div>
                 <div class="times">
                   {{key.created_at}}
@@ -245,6 +238,8 @@
 
             this.vLoading = false;
           } else {
+            this.personal.avatar = '';
+            this.personal.name = 'XXXX';
             this.message = res.data.message;
             this.vLoading = false;
           }
@@ -677,7 +672,7 @@
                   @include border_radius(50%);
                 }
               }
-              .a {
+              div {
                 width: 4rem;
                 overflow: hidden;
                 line-height: .9rem;
