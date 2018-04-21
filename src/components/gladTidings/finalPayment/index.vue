@@ -461,8 +461,8 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
-            this.form.address = data.address;
-            this.form.month = data.month;
+            this.form.address = draft.address;
+            this.form.month = draft.month;
             this.form.price_arr = draft.price_arr;
             this.form.payWay = draft.payWay;
             this.form.terms = draft.terms;

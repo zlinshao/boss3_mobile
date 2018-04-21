@@ -291,7 +291,7 @@
             let draft = res.data.data.draft_content;
             this.form.purchase_way = 509;
             this.form.id = data.id;
-            this.form.address = data.address;
+            this.form.address = draft.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.amount = draft.amount;

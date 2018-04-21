@@ -797,7 +797,7 @@
             this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
 
-            this.form.address = data.address;
+            this.form.address = draft.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.contract_id_rent = draft.contract_id_rent;

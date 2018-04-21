@@ -366,7 +366,7 @@
             this.form.house_id = draft.house_id;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
-            this.form.address = data.address;
+            this.form.address = draft.address;
             this.form.photo = draft.photo;
             this.photos = data.photo;
             this.form.checkout_photo = draft.checkout_photo;

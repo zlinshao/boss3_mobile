@@ -223,7 +223,7 @@
             let data = res.data.data;
             let draft = res.data.data.draft_content;
             this.form.id = data.id;
-            this.form.address = data.address;
+            this.form.address = draft.address;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.type = draft.type;

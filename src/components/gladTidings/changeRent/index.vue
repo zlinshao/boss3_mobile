@@ -791,7 +791,7 @@
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
-            this.form.address = data.address;
+            this.form.address = draft.address;
             this.form.month = draft.month;
             this.form.discount = draft.discount;
             this.form.day = draft.day === '0' ? '' : draft.day;

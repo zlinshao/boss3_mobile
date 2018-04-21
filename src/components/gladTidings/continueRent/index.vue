@@ -779,7 +779,7 @@
             //     this.roomsName = draft.rooms_mate[i].name;
             //   }
             // }
-            this.form.address = data.address;
+            this.form.address = draft.address;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;

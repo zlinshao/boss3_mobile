@@ -158,7 +158,7 @@
                 this.form.id = res.data.data.id;
                 Toast.success(res.data.msg);
               } else {
-                Toast.fail(res.data.msg);
+                Toast(res.data.msg);
               }
             })
           } else {
@@ -197,7 +197,7 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
-            this.form.address = data.address;
+            this.form.address = draft.address;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
             this.form.house_id = draft.house_id;

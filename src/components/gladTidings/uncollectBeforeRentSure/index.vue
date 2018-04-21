@@ -649,7 +649,7 @@
             this.form.day = draft.day === '0' ? '' : draft.day;
 
             this.form.oldHouseName = draft.oldHouseName;
-            this.form.form.address = draft.form.address;
+            this.form.address = draft.address;
             this.form.contract_id_rent = draft.contract_id_rent;
             this.form.contract_id = draft.contract_id;
             this.form.house_id_rent = draft.house_id_rent;
