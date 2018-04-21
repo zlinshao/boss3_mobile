@@ -278,7 +278,8 @@
                   user.place = data[i].place.display_name;
                   user.status = data[i].place.status;
                   user.bulletin = data[i].content.bulletin_name;
-                } else if (val.type === 1 || val.type === 2 || val.type === 4) {
+                }
+                if (val.type === 1 || val.type === 2 || val.type === 4) {
                   if (data[i].flow) {
                     user.place = data[i].flow.place.display_name;
                     user.status = data[i].flow.place.status;

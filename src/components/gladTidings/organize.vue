@@ -5,7 +5,7 @@
         v-model="searchValue"
         show-action
         @cancel="onClose"/>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
       <div class="searchContent">
 

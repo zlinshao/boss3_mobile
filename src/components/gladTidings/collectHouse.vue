@@ -7,7 +7,7 @@
         @cancel="onCancel"/>
 
       <div class="searchContent">
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)</div>
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
         <div class="searchHouse" v-for="key in lists" @click="houseAddress(key)">
           <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
@@ -15,11 +15,19 @@
               <span>房屋地址：</span>
               <span>{{key.house_name}}</span>
             </div>
+            <div>
+              <span>合同状态：</span>
+              <span>{{contractStatus[key.status]}}</span>
+            </div>
           </div>
           <div class="contract" v-else>
             <div>
               <span>房屋地址：</span>
               <span>{{key.house_name}}</span>
+            </div>
+            <div>
+              <span>合同状态：</span>
+              <span>{{contractStatus[key.status]}}</span>
             </div>
             <div class="two">
               <p><span>报备时间：</span><span>{{key.created_at}}</span></p>
@@ -52,6 +60,7 @@
         types: '',
         path: '',
         showInfo: [],
+        contractStatus: {0: '未确定', 1: '未签约', 2: '已签约', 3: '快到期(60天内)', 4: '已结束', 5: '已过期'},
       }
     },
     activated() {
@@ -102,14 +111,14 @@
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i], type);
                 }
+                if ((type === 'renter' || type === 'is_nrcy') && data[i].renters.length !== 0) {
+                  this.renter(data[i], type);
+                }
                 if (type === 'lord1' && data[i].lords.length !== 0) {
                   this.lord1(data[i], type);
                 }
                 if (type === 'renter1' && data[i].renters.length !== 0) {
                   this.renter1(data[i], type);
-                }
-                if ((type === 'renter' || type === 'is_nrcy' || type === '') && data[i].renters.length !== 0) {
-                  this.renter(data[i], type);
                 }
                 if (type === '' && data[i].lords.length === 0 && data[i].renters.length === 0) {
                   let list = {};
@@ -174,6 +183,7 @@
           list.end_at = '';
         }
         list.id = value.id;
+        list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;
         list.customers = value.customers[0].name;
         if (value.sign_user !== null) {
@@ -242,7 +252,7 @@
         p {
           width: 50%;
         }
-        p:last-of-type {
+        p:not(:first-of-type) {
           padding-left: .2rem;
         }
       }

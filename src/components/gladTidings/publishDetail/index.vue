@@ -105,7 +105,10 @@
 
     </div>
     <div class="footer">
-      <div @click="newly()" v-if="personalId.id === personal.id">重新提交</div>
+      <div @click="newly()"
+           v-if="personalId.id === personal.id && (place.status === 'published' || place.status === 'rejected' || place.status === 'cancelled')">
+        重新提交
+      </div>
       <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
     </div>
 

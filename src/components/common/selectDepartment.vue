@@ -173,7 +173,8 @@
       }
     }
     .departList {
-      height: 100%;
+      height: 77%;
+      overflow: auto;
       li {
         height: .9rem;
         padding: 0 .3rem;
