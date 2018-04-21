@@ -262,7 +262,7 @@
 
         <van-switch-cell v-model="is_fillOn" title="家电是否齐全"/>
 
-        <van-switch-cell v-model="is_lordOn" title="房东是否予以配齐"/>
+        <van-switch-cell v-if="!is_fillOn" v-model="is_lordOn" title="房东是否予以配齐"/>
         <van-field
           v-if="!is_fillOn && is_lordOn"
           v-model="form.is_lord_fill_days"
@@ -364,7 +364,7 @@
         wardrobeOn: true,             //衣柜
         curtainOn: true,              //窗帘
         is_fillOn: true,              //家电是否齐全
-        is_lordOn: false,             //房东是否予以配齐
+        is_lordOn: true,             //房东是否予以配齐
 
         air_condition_name: '1台',           //空调
         fridge_name: '1台',                  //冰箱
