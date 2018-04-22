@@ -75,6 +75,7 @@ if (isIOS) {
 }
 
 router.beforeEach((to, from, next) => {
+  console.log(from.path);
   if (from.path !== '/') {
     axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
       let _config = res.data;
@@ -193,8 +194,8 @@ router.beforeEach((to, from, next) => {
         alert('dd error: ' + JSON.stringify(err));
       });
     });
-    next();
   }
+  next();
 });
 
 
