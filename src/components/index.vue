@@ -133,7 +133,7 @@
         <h2>
           <i class="iconfont icon-daiban"></i>
           <span class="titleNum" v-if="processType2 > 0 && processType2 < 100">{{processType2}}</span>
-          <span class="titleNum fontMini"  v-if="processType2 > 99">99+</span>
+          <span class="titleNum fontMini" v-if="processType2 > 99">99+</span>
         </h2>
         <h1>待办事项</h1>
       </div>
@@ -173,14 +173,13 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        vm.$http.get(vm.urls + 'process?type=2&count=1').then((res) => {
-          vm.processType2 = res.data.data;
-        })
+        vm.toDone();
       })
     },
     mounted() {
       this.paths = this.$router.options.routes;
       this.scrollTops();
+      this.toDone();
     },
     activated() {
       this.routerIndex('');
@@ -189,6 +188,13 @@
       this.scrollTops();
     },
     methods: {
+      // 待办事项
+      toDone() {
+        this.$http.get(this.urls + 'process?type=2&count=1').then((res) => {
+          alert(res.data.data);
+          this.processType2 = res.data.data;
+        })
+      },
       // 详情页
       routerDetail(id) {
         this.disabled = true;
@@ -698,11 +704,11 @@
       border-radius: 80%;
       width: .28rem;
       height: .28rem;
-      line-height: .3rem;
+      line-height: .28rem;
       font-size: .18rem;
       text-align: center;
     }
-    .titleNum.fontMini{
+    .titleNum.fontMini {
       font-size: .12rem;
     }
   }

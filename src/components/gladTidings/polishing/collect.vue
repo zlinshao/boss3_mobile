@@ -1,5 +1,5 @@
 <template>
-  <div id="rentReport">
+  <div id="collectPolishing ">
     <div class="main" id="main">
       <van-cell-group>
         <van-field
@@ -720,7 +720,7 @@
 </script>
 
 <style lang="scss">
-  #rentReport {
+  #collectPolishing {
     overflow: hidden;
   }
 </style>

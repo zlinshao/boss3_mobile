@@ -59,8 +59,8 @@
         </div>
         <van-switch-cell v-model="refundSta" title="定金是否退还"/>
       </van-cell-group>
-      <div class="aloneModel">
-        <div class="title">特殊情况截图</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>领导同意截图</div>
         <UpLoad :ID="'headman'" @getImg="headmanAgree" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
       <van-cell-group>
