@@ -316,7 +316,7 @@
     data() {
       return {
         haveInHand: true,
-        personal: JSON.parse(sessionStorage.personal),
+        personal: globalConfig.personal,
         urls: globalConfig.server,
         picStatus: true,
         isClear: false,           //删除图片

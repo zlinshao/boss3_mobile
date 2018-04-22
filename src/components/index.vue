@@ -132,6 +132,8 @@
       <div @click="tabTag(2,0)" :class="{'onDiv': active === 2}">
         <h2>
           <i class="iconfont icon-daiban"></i>
+          <span class="titleNum" v-if="0 < processType2 < 100">{{processType2}}</span>
+          <span class="titleNum" v-else>99+</span>
         </h2>
         <h1>待办事项</h1>
       </div>
@@ -165,6 +167,8 @@
         checks: '',
         params: {},
         paging: 0,
+
+        processType2: '',
       }
     },
     mounted() {
@@ -184,6 +188,9 @@
       this.ddRent('', 'close');
       this.disabled = false;
       this.scrollTops();
+      this.$http.get(this.urls + 'process?type=2&count=1').then((res) => {
+        this.processType2 = res.data.data;
+      })
     },
     methods: {
       // 详情页
@@ -264,16 +271,16 @@
                 let user = {};
                 user.title = data[i].title;
                 user.created_at = data[i].created_at;
-                if (data[i].user) {
-                  user.avatar = data[i].user.avatar;
-                  user.name = data[i].user.name;
-                  user.depart = data[i].user.org[0].name;
-                } else {
-                  user.avatar = '';
-                  user.name = '';
-                  user.staff = '';
-                }
                 if (val.type === 3) {
+                  if (data[i].user) {
+                    user.avatar = data[i].user.avatar;
+                    user.name = data[i].user.name;
+                    user.depart = data[i].user.org[0].name;
+                  } else {
+                    user.avatar = '';
+                    user.name = '';
+                    user.staff = '';
+                  }
                   user.id = data[i].id;
                   user.place = data[i].place.display_name;
                   user.status = data[i].place.status;
@@ -281,6 +288,15 @@
                 }
                 if (val.type === 1 || val.type === 2 || val.type === 4) {
                   if (data[i].flow) {
+                    if (data[i].user) {
+                      user.avatar = data[i].flow.user.avatar;
+                      user.name = data[i].flow.user.name;
+                      user.depart = data[i].flow.user.org[0].name;
+                    } else {
+                      user.avatar = '';
+                      user.name = '';
+                      user.staff = '';
+                    }
                     user.id = data[i].flow.id;
                     user.place = data[i].flow.place.display_name;
                     user.status = data[i].flow.place.status;
@@ -677,6 +693,18 @@
           }
         }
       }
+    }
+    .titleNum {
+      text-align: center;
+      line-height: .28rem;
+      position: absolute;
+      top: .08rem;
+      background-color: red;
+      color: #FFFFFF;
+      border-radius: 80%;
+      width: .28rem;
+      height: .28rem;
+      font-size: .12rem
     }
   }
 </style>

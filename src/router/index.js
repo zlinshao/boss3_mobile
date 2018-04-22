@@ -28,7 +28,7 @@ import FriedBill from '../components/gladTidings/friedBill/index.vue'         //
 import ClearRetreat from '../components/gladTidings/clearRetreat/index.vue'   //清退
 import Checkout from '../components/gladTidings/checkout/index.vue'           //清退
 import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //中介
-// import PolishingCollect from '../components/gladTidings/polishing/collect.vue'   //收房补齐
+import PolishingCollect from '../components/gladTidings/polishing/collect.vue'   //收房补齐
 // import PolishingRenter from '../components/gladTidings/polishing/renter.vue'    //租房补齐
 import Special from '../components/gladTidings/specialReport/index.vue'
 import Confiscate from '../components/gladTidings/confiscate/index.vue'
@@ -123,15 +123,15 @@ export default new Router({
       meta: {title: '收房报备'},
       component: CollectReport
     },
-    // {
-    //   path: '/polishingCollect',
-    //   hidden: 'glad',
-    //   back: '#F19851',
-    //   icon: 'iconfont icon-shoufang',
-    //   name: '收房补齐资料',
-    //   meta: {title: '收房补齐资料'},
-    //   component: PolishingCollect
-    // },
+    {
+      path: '/polishingCollect',
+      hidden: 'glad',
+      back: '#F19851',
+      icon: 'iconfont icon-shoufang',
+      name: '收房补齐资料',
+      meta: {title: '收房补齐资料'},
+      component: PolishingCollect
+    },
     {
       path: '/rentReport',                 //租房报备
       name: '租房报备',

@@ -341,7 +341,7 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        personal: JSON.parse(sessionStorage.personal),
+        personal: globalConfig.personal,
         selectHide: false,
         columns: [],                  //select值
         tabs: '',

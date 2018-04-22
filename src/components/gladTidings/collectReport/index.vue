@@ -377,7 +377,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
-        personal: JSON.parse(sessionStorage.personal),
+        personal: globalConfig.personal,
         haveInHand: true,
         urls: globalConfig.server,
         address: globalConfig.server_user,

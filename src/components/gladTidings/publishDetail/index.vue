@@ -136,7 +136,7 @@
     data() {
       return {
         urls: globalConfig.server_user,
-        personalId: JSON.parse(sessionStorage.personal),
+        personalId: globalConfig.personal,
         vLoading: true,
         disabled1: false,
 

@@ -139,72 +139,72 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>证件照片</div>
-        <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="photo1"></UpLoad>
+        <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="photos1"></UpLoad>
       </div>
       <div class="aloneModel required">
         <div class="title"><span>*</span>银行卡照片</div>
-        <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="photo2"></UpLoad>
+        <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="photos2"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">合同照片</div>
-        <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="photo3"></UpLoad>
+        <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="photos3"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">水表照片</div>
-        <UpLoad :ID="'photo4'" @getImg="getImgData" :isClear="isClear" :editImage="photo4"></UpLoad>
+        <UpLoad :ID="'photo4'" @getImg="getImgData" :isClear="isClear" :editImage="photos4"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">电表照片</div>
-        <UpLoad :ID="'photo5'" @getImg="getImgData" :isClear="isClear" :editImage="photo5"></UpLoad>
+        <UpLoad :ID="'photo5'" @getImg="getImgData" :isClear="isClear" :editImage="photos5"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">燃气表照片</div>
-        <UpLoad :ID="'photo6'" @getImg="getImgData" :isClear="isClear" :editImage="photo6"></UpLoad>
+        <UpLoad :ID="'photo6'" @getImg="getImgData" :isClear="isClear" :editImage="photos6"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">交接单照片</div>
-        <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="photo7"></UpLoad>
+        <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="photos7"></UpLoad>
       </div>
       <div class="aloneModel required">
         <div class="title"><span>*</span>委托书照片</div>
-        <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="photo8"></UpLoad>
+        <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="photos8"></UpLoad>
       </div>
       <div class="aloneModel required">
         <div class="title"><span>*</span>押金收条照片</div>
-        <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="photo9"></UpLoad>
+        <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="photos9"></UpLoad>
       </div>
       <div class="aloneModel required">
         <div class="title"><span>*</span>承诺书照片</div>
-        <UpLoad :ID="'photo10'" @getImg="getImgData" :isClear="isClear" :editImage="photo10"></UpLoad>
+        <UpLoad :ID="'photo10'" @getImg="getImgData" :isClear="isClear" :editImage="photos10"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">补充照片</div>
-        <UpLoad :ID="'photo11'" @getImg="getImgData" :isClear="isClear" :editImage="photo11"></UpLoad>
+        <UpLoad :ID="'photo11'" @getImg="getImgData" :isClear="isClear" :editImage="photos11"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">退租交接单照片</div>
-        <UpLoad :ID="'photo12'" @getImg="getImgData" :isClear="isClear" :editImage="photo12"></UpLoad>
+        <UpLoad :ID="'photo12'" @getImg="getImgData" :isClear="isClear" :editImage="photos12"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">退租结算照片</div>
-        <UpLoad :ID="'photo13'" @getImg="getImgData" :isClear="isClear" :editImage="photo13"></UpLoad>
+        <UpLoad :ID="'photo13'" @getImg="getImgData" :isClear="isClear" :editImage="photos13"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">房产证</div>
-        <UpLoad :ID="'photo14'" @getImg="getImgData" :isClear="isClear" :editImage="photo14"></UpLoad>
+        <UpLoad :ID="'photo14'" @getImg="getImgData" :isClear="isClear" :editImage="photos14"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">水卡照片</div>
-        <UpLoad :ID="'photo15'" @getImg="getImgData" :isClear="isClear" :editImage="photo15"></UpLoad>
+        <UpLoad :ID="'photo15'" @getImg="getImgData" :isClear="isClear" :editImage="photos15"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">电卡照片</div>
         <UpLoad :ID="'photo16'" @getImg="getImgData" :isClear="isClear"
-                :editImage="photo16"></UpLoad>
+                :editImage="photos16"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">燃气照片</div>
-        <UpLoad :ID="'photo17'" @getImg="getImgData" :isClear="isClear" :editImage="photo17"></UpLoad>
+        <UpLoad :ID="'photo17'" @getImg="getImgData" :isClear="isClear" :editImage="photos17"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -283,7 +283,7 @@
     data() {
       return {
         haveInHand: true,
-        personal: JSON.parse(sessionStorage.personal),
+        personal: globalConfig.personal,
         urls: globalConfig.server,
         selectHide: false,        //select选择
         isClear: false,           //删除图片
@@ -321,72 +321,71 @@
 
         prove_name: [],
         prove_all: [],
-        radio: '',
+
         cardName: [],
 
         form: {
           address: '',
-          contract_id: '',                //合同id
+          contract_id: '',                  //合同id
           customers: [{
-            id: '',                       //客户ID
-            name: '',                     //客户姓名
-            phone: '',                    //客户电话
-            sex: '',                      //性别
-            idtype: '',                   //证件类型
-            idcard: '',                   //证件号码
+            id: '',                         //客户ID
+            name: '',                       //客户姓名
+            phone: '',                      //客户电话
+            sex: '',                        //性别
+            idtype: '',                     //证件类型
+            idcard: '',                     //证件号码
           }],
-          mound_number: '',               //丘号
-          property_number: '',            //房产证号
-          water: '',                      //水表底数
-          electricity: '',                //电表底数
-          gas: '',                        //燃气表底数
-          public_fee: '',                 //公摊费用
-          data_date: '',                  //资料补齐时间
-          decorate_allow: [],             //房东是否同意对房屋进行装修
-          remark_terms: '',               //备注条款
-          remark: '',                     //备注
-          album: '',                      //照片
-
-          identity_photo: [],             //证件照片
-          bank_photo: [],                 //银行卡照片
-          photo: [],                      //合同照片
-          water_photo: [],                //水表照片
-          electricity_photo: [],          //电表照片
-          gas_photo: [],                  //气表照片
-          checkin_photo: [],              //交接单照片
-          auth_photo: [],                 //委托书照片
-          deposit_photo: [],              //押金照片
-          promise: [],                    //承诺书照片
-          other_photo: [],                //补充照片
-          checkout_photo: [],             //退租交接单照片
-          checkout_settle_photo: [],      //退租结算照片
-          property_photo: [],             //房产证
-          water_card_photo: [],           //水卡
-          electricity_card_photo: [],     //电卡
-          gas_card_photo: [],             //气卡
-
-          staff_id: '',                   //开单人id
-          department_id: '',              //部门id
-          staff_name: '',                 //开单人name
-          department_name: '',            //部门name
+          mound_number: '',                 //丘号
+          property_number: '',              //房产证号
+          water: '',                        //水表底数
+          electricity: '',                  //电表底数
+          gas: '',                          //燃气表底数
+          public_fee: '',                   //公摊费用
+          data_date: '',                    //资料补齐时间
+          decorate_allow: [],               //房东是否同意对房屋进行装修
+          remark_terms: '',                 //备注条款
+          remark: '',                       //备注
+          album: {
+            identity_photo: [],             //证件照片
+            bank_photo: [],                 //银行卡照片
+            photo: [],                      //合同照片
+            water_photo: [],                //水表照片
+            electricity_photo: [],          //电表照片
+            gas_photo: [],                  //气表照片
+            checkin_photo: [],              //交接单照片
+            auth_photo: [],                 //委托书照片
+            deposit_photo: [],              //押金照片
+            promise: [],                    //承诺书照片
+            other_photo: [],                //补充照片
+            checkout_photo: [],             //退租交接单照片
+            checkout_settle_photo: [],      //退租结算照片
+            property_photo: [],             //房产证
+            water_card_photo: [],           //水卡
+            electricity_card_photo: [],     //电卡
+            gas_card_photo: [],             //气卡
+          },
+          staff_id: '',                     //开单人id
+          department_id: '',                //部门id
+          staff_name: '',                   //开单人name
+          department_name: '',              //部门name
         },
-        photos1: {},                      //证件照片
-        photos2: {},                      //银行卡照片
-        photos3: {},                      //合同照片
-        photos4: {},                      //水表照片
-        photos5: {},                      //电表照片
-        photos6: {},                      //气表照片
-        photos7: {},                      //交接单照片
-        photos8: {},                      //委托书照片
-        photos9: {},                      //押金照片
-        photos10: {},                     //承诺书照片
-        photos11: {},                     //补充照片
-        photos12: {},                     //退租交接单照片
-        photos13: {},                     //退租结算照片
-        photos14: {},                     //房产证
-        photos15: {},                     //水卡
-        photos16: {},                     //电卡
-        photos17: {},                     //气卡
+        photos1: {},                        //证件照片
+        photos2: {},                        //银行卡照片
+        photos3: {},                        //合同照片
+        photos4: {},                        //水表照片
+        photos5: {},                        //电表照片
+        photos6: {},                        //气表照片
+        photos7: {},                        //交接单照片
+        photos8: {},                        //委托书照片
+        photos9: {},                        //押金照片
+        photos10: {},                       //承诺书照片
+        photos11: {},                       //补充照片
+        photos12: {},                       //退租交接单照片
+        photos13: {},                       //退租结算照片
+        photos14: {},                       //房产证
+        photos15: {},                       //水卡
+        photos16: {},                       //电卡
+        photos17: {},                       //气卡
       }
     },
     mounted() {
@@ -493,55 +492,55 @@
         this.picStatus = !val[2];
         switch (val[0]) {
           case 'photo1'://证件照片
-            this.form.photo1 = val[1];
+            this.form.album.identity_photo = val[1];
             break;
           case 'photo2'://银行卡照片
-            this.form.photo2 = val[1];
+            this.form.album.bank_photo = val[1];
             break;
           case 'photo3'://合同照片
-            this.form.photo3 = val[1];
+            this.form.album.photo = val[1];
             break;
           case 'photo4'://水表照片
-            this.form.photo4 = val[1];
+            this.form.album.water_photo = val[1];
             break;
           case 'photo5'://电表照片
-            this.form.photo5 = val[1];
+            this.form.album.electricity_photo = val[1];
             break;
           case 'photo6'://气表照片
-            this.form.photo6 = val[1];
+            this.form.album.gas_photo = val[1];
             break;
           case 'photo7'://交接单照片
-            this.form.photo7 = val[1];
+            this.form.album.checkin_photo = val[1];
             break;
           case 'photo8'://委托书照片
-            this.form.photo8 = val[1];
+            this.form.album.auth_photo = val[1];
             break;
           case 'photo9'://押金照片
-            this.form.photo9 = val[1];
+            this.form.album.deposit_photo = val[1];
             break;
           case 'photo10'://承诺书照片
-            this.form.photo10 = val[1];
+            this.form.album.promise = val[1];
             break;
           case 'photo11'://补充照片
-            this.form.photo11 = val[1];
+            this.form.album.other_photo = val[1];
             break;
           case 'photo12'://退租交接单照片
-            this.form.photo12 = val[1];
+            this.form.album.checkout_photo = val[1];
             break;
           case 'photo13'://退租结算照片
-            this.form.photo13 = val[1];
+            this.form.album.checkout_settle_photo = val[1];
             break;
           case 'photo14'://房产证
-            this.form.photo14 = val[1];
+            this.form.album.property_photo = val[1];
             break;
           case 'photo15'://水卡
-            this.form.photo15 = val[1];
+            this.form.album.water_card_photo = val[1];
             break;
           case 'photo16'://电卡
-            this.form.photo16 = val[1];
+            this.form.album.electricity_card_photo = val[1];
             break;
           case 'photo17'://气卡
-            this.form.photo17 = val[1];
+            this.form.album.gas_card_photo = val[1];
             break;
         }
       },
@@ -580,7 +579,6 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-            this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50210') {
@@ -589,7 +587,6 @@
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
               } else if (res.data.code === '50220') {
-                this.form.id = res.data.data.id;
                 Toast.success(res.data.msg)
               } else {
                 Toast(res.data.msg);
@@ -608,8 +605,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.contract_id = val.id;
-          this.form.house.name = val.house_name;
-          this.form.house.id = val.house_id;
+          this.form.address = val.house_name;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -636,17 +632,14 @@
             this.isClear = false;
             let data = res.data.data;
 
-            this.form.id = data.id;
             this.form.contract_id = data.contract_id;
-            this.form.house = data.house;
+            this.form.address = data.address;
 
             this.form.remark = data.remark;
             this.form.staff_id = data.staff_id;
             this.form.staff_name = data.staff_name;
             this.form.department_id = data.department_id;
             this.form.department_name = data.department_name;
-          } else {
-            this.form.id = '';
           }
         })
       },
@@ -659,15 +652,69 @@
         this.userInfo();
         $('.imgItem').remove();
         this.picStatus = true;
-        this.form.id = '';
-        this.form.contract_id = '';
-        this.form.house.id = '';
-        this.form.house.name = '';
-        this.form.prove.id = '';
-        this.form.prove.name = '';
-
+        this.amount = 1;
+        this.cardName = [];
+        this.result = [];
         this.form.address = '';
-        this.form.remark = '';
+        this.form.contract_id = '';
+        this.form.customers = [{
+          id: '',                         //客户ID
+          name: '',                       //客户姓名
+          phone: '',                      //客户电话
+          sex: '',                        //性别
+          idtype: '',                     //证件类型
+          idcard: '',                     //证件号码
+        }];
+        this.form.mound_number = '';        //丘号
+        this.form.property_number = '';     //房产证号
+        this.form.water = '';               //水表底数
+        this.form.electricity = '';         //电表底数
+        this.form.gas = '';                 //燃气表底数
+        this.form.public_fee = '';          //公摊费用
+        this.form.data_date = '';           //资料补齐时间
+        this.form.decorate_allow = [];      //房东是否同意对房屋进行装修
+        this.form.remark_terms = '';        //备注条款
+        this.form.remark = '';              //备注
+
+        this.form.album.identity_photo = [];                //证件照片
+        this.form.album.bank_photo = [];                    //银行卡照片
+        this.form.album.photo = [];                         //合同照片
+        this.form.album.water_photo = [];                   //水表照片
+        this.form.album.electricity_photo = [];             //电表照片
+        this.form.album.gas_photo = [];                     //气表照片
+        this.form.album.checkin_photo = [];                 //交接单照片
+        this.form.album.auth_photo = [];                    //委托书照片
+        this.form.album.deposit_photo = [];                 //押金照片
+        this.form.album.promise = [];                       //承诺书照片
+        this.form.album.other_photo = [];                   //补充照片
+        this.form.album.checkout_photo = [];                //退租交接单照片
+        this.form.album.checkout_settle_photo = [];         //退租结算照片
+        this.form.album.property_photo = [];                //房产证
+        this.form.album.water_card_photo = [];              //水卡
+        this.form.album.electricity_card_photo = [];        //电卡
+        this.form.album.gas_card_photo = [];                //气卡
+        this.form.staff_id = '';
+        this.form.department_id = '';
+        this.form.staff_name = '';
+        this.form.department_name = '';
+
+        this.photos1 = {};                                  //证件照片
+        this.photos2 = {};                                  //银行卡照片
+        this.photos3 = {};                                  //合同照片
+        this.photos4 = {};                                  //水表照片
+        this.photos5 = {};                                  //电表照片
+        this.photos6 = {};                                  //气表照片
+        this.photos7 = {};                                  //交接单照片
+        this.photos8 = {};                                  //委托书照片
+        this.photos9 = {};                                  //押金照片
+        this.photos10 = {};                                 //承诺书照片
+        this.photos11 = {};                                 //补充照片
+        this.photos12 = {};                                 //退租交接单照片
+        this.photos13 = {};                                 //退租结算照片
+        this.photos14 = {};                                 //房产证
+        this.photos15 = {};                                 //水卡
+        this.photos16 = {};                                 //电卡
+        this.photos17 = {};                                 //气卡
       }
     },
   }

@@ -144,6 +144,7 @@
       next(vm => {
         vm.path = from.path;
         vm.search();
+        vm.corpInfo();
       })
     },
     activated() {
