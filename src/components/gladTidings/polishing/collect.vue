@@ -609,9 +609,9 @@
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;
-          this.staff_name = val.staff_name;
+          this.form.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
-          this.department_name = val.depart_name;
+          this.form.department_name = val.depart_name;
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
@@ -692,10 +692,6 @@
         this.form.album.water_card_photo = [];              //水卡
         this.form.album.electricity_card_photo = [];        //电卡
         this.form.album.gas_card_photo = [];                //气卡
-        this.form.staff_id = '';
-        this.form.department_id = '';
-        this.form.staff_name = '';
-        this.form.department_name = '';
 
         this.photos1 = {};                                  //证件照片
         this.photos2 = {};                                  //银行卡照片

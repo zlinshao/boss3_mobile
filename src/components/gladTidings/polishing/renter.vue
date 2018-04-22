@@ -536,9 +536,9 @@
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;
-          this.staff_name = val.staff_name;
+          this.form.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
-          this.department_name = val.depart_name;
+          this.form.department_name = val.depart_name;
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
@@ -611,10 +611,6 @@
         this.form.album.certificate_photo = [];             //凭证截图
         this.form.album.deposit_photo = [];                 //押金照片
         this.form.album.other_photo = [];                   //其他照片
-        this.form.staff_id = '';
-        this.form.department_id = '';
-        this.form.staff_name = '';
-        this.form.department_name = '';
 
         this.photos1 = {};                                  //证件照片
         this.photos2 = {};                                  //银行卡照片
