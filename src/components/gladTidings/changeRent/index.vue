@@ -468,7 +468,6 @@
       this.getNowFormatDate();
       this.dicts('');
       this.userInfo();
-
     },
     activated() {
       let newID = this.$route.query;

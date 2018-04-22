@@ -75,7 +75,6 @@ if (isIOS) {
 }
 
 router.beforeEach((to, from, next) => {
-  console.log(from.path);
   if (from.path !== '/') {
     axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
       let _config = res.data;
@@ -134,7 +133,7 @@ router.beforeEach((to, from, next) => {
         dd.runtime.permission.requestAuthCode({
           corpId: _config.corpId,
           onSuccess: function (info) {
-            axget(globalConfig.server + 'special/special/userInfo', {
+            axios.get(globalConfig.server + 'special/special/userInfo', {
               params: {
                 'code': info.code,
               }
