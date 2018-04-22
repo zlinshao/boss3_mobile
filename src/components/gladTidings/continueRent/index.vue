@@ -360,7 +360,6 @@
     data() {
       return {
         haveInHand: true,
-        personal: globalConfig.personal,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -451,23 +450,23 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
-      this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
         this.dicts(newID.newID);
       }
+      this.userInfo();
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
     },
     methods: {
       userInfo() {
-        this.form.staff_id = this.personal.id;
-        this.form.staff_name = this.personal.name;
-        this.form.department_id = this.personal.department_id;
-        this.form.department_name = this.personal.department_name;
+        this.form.staff_id = globalConfig.personal.id;
+        this.form.staff_name = globalConfig.personal.name;
+        this.form.department_id = globalConfig.personal.department_id;
+        this.form.department_name = globalConfig.personal.department_name;
       },
       dicts() {
         //房东租客

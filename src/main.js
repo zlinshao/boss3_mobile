@@ -35,14 +35,127 @@ if (isIOS) {
 
 }
 
-// 钉钉头部右侧
-dd.biz.navigation.setRight({
-  show: false,
-  onSuccess: function (result) {
-  },
-  onFail: function (err) {
-  }
+router.beforeEach((to, from, next) => {
+  axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
+    let _config = res.data;
+    DingTalkPC.runtime.permission.requestAuthCode({
+      corpId: _config.corpId,
+      onSuccess: function (info) {
+        axios.get(globalConfig.server + 'special/special/userInfo', {
+          params: {
+            'code': info.code,
+          }
+        }).then((res) => {
+          if (res.data.status !== 'fail') {
+            if (res.data !== false) {
+              let data = {};
+              data.id = res.data.id;
+              data.name = res.data.name;
+              data.avatar = res.data.avatar;
+              data.phone = res.data.phone;
+              data.department_name = res.data.org[0].name;
+              data.department_id = res.data.org[0].id;
+              globalConfig.personal = data;
+            }
+          } else {
+            DingTalkPC.device.notification.alert({
+              message: "您不在系统内，请联系管理员添加！",
+              title: "提示信息",
+              buttonName: "关闭",
+              onSuccess: function () {
+              },
+              onFail: function (err) {
+              }
+            });
+            dd.biz.navigation.close({
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
+            });
+          }
+        })
+      },
+      onFail: function (err) {
+        DingTalkPC.device.notification.alert({
+          message: "您不在系统内，请联系管理员添加！",
+          title: "提示信息",
+          buttonName: "关闭",
+          onSuccess: function () {
+          },
+          onFail: function (err) {
+          }
+        });
+      }
+    });
+
+    dd.ready(function () {
+      dd.runtime.permission.requestAuthCode({
+        corpId: _config.corpId,
+        onSuccess: function (info) {
+          axios.get(globalConfig.server + 'special/special/userInfo', {
+            params: {
+              'code': info.code,
+            }
+          }).then((res) => {
+            if (res.data.status !== 'fail') {
+              if (res.data !== false) {
+                let data = {};
+                data.id = res.data.id;
+                data.name = res.data.name;
+                data.avatar = res.data.avatar;
+                data.phone = res.data.phone;
+                data.department_name = res.data.org[0].name;
+                data.department_id = res.data.org[0].id;
+                globalConfig.personal = data;
+              } else {
+                setTimeout(() => {
+                  alert('请求超时请稍后再试');
+                  dd.biz.navigation.close({
+                    onSuccess: function (result) {
+                    },
+                    onFail: function (err) {
+                    }
+                  });
+                }, 3000);
+              }
+            } else {
+              alert('您不在系统内，请联系管理员添加！');
+              dd.biz.navigation.close({
+                onSuccess: function (result) {
+                },
+                onFail: function (err) {
+                }
+              });
+            }
+          })
+        },
+        onFail: function (err) {
+          alert('您不在系统内，请联系管理员添加！');
+          dd.biz.navigation.close({
+            onSuccess: function (result) {
+            },
+            onFail: function (err) {
+            }
+          });
+        }
+      });
+      // 钉钉头部右侧
+      dd.biz.navigation.setRight({
+        show: false,
+        onSuccess: function (result) {
+        },
+        onFail: function (err) {
+        }
+      });
+    });
+    dd.error(function (err) {
+      alert('dd error: ' + JSON.stringify(err));
+    });
+  });
+  next();
 });
+
 
 new Vue({
   el: '#app',

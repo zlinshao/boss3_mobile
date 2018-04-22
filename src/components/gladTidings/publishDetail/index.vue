@@ -136,7 +136,7 @@
     data() {
       return {
         urls: globalConfig.server_user,
-        personalId: globalConfig.personal,
+        personalId: {},
         vLoading: true,
         disabled1: false,
 
@@ -165,6 +165,7 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
+        this.personalId = globalConfig.personal;
         vm.path = from.path;
         if (from.path === '/') {
           sessionStorage.setItem('path', vm.path);

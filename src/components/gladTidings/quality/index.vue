@@ -341,30 +341,29 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        personal: globalConfig.personal,
         selectHide: false,
-        columns: [],                  //select值
+        columns: [],                        //select值
         tabs: '',
 
-        isClear: false,               //删除图片
+        isClear: false,                     //删除图片
         picStatus: true,
 
-        allCity: [],                  //城市
-        cities: [],                   //城市
-        beforeCity: '',               //当前城市
-        beforeCityId: '',             //当前城市ID
+        allCity: [],                        //城市
+        cities: [],                         //城市
+        beforeCity: '',                     //当前城市
+        beforeCityId: '',                   //当前城市ID
         house_type_name: '1室1厅1卫',
         refundSta: true,
 
-        is_agencyOn: false,           //是否中介
-        heaterOn: true,               //暖气
-        gasOn: true,                  //天然气
-        is_cleanOn: true,             //房屋交接是否干净
-        bedOn: true,                  //床+床垫
-        wardrobeOn: true,             //衣柜
-        curtainOn: true,              //窗帘
-        is_fillOn: true,              //家电是否齐全
-        is_lordOn: true,             //房东是否予以配齐
+        is_agencyOn: false,                 //是否中介
+        heaterOn: true,                     //暖气
+        gasOn: true,                        //天然气
+        is_cleanOn: true,                   //房屋交接是否干净
+        bedOn: true,                        //床+床垫
+        wardrobeOn: true,                   //衣柜
+        curtainOn: true,                    //窗帘
+        is_fillOn: true,                    //家电是否齐全
+        is_lordOn: true,                    //房东是否予以配齐
 
         air_condition_name: '1台',           //空调
         fridge_name: '1台',                  //冰箱
@@ -447,23 +446,23 @@
     },
     mounted() {
       this.dicts('');
-      this.userInfo('');
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
         this.dicts(newID.newID);
       }
+      this.userInfo();
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
     },
     methods: {
       userInfo() {
-        this.form.staff_id = this.personal.id;
-        this.form.staff_name = this.personal.name;
-        this.form.department_id = this.personal.department_id;
-        this.form.department_name = this.personal.department_name;
+        this.form.staff_id = globalConfig.personal.id;
+        this.form.staff_name = globalConfig.personal.name;
+        this.form.department_id = globalConfig.personal.department_id;
+        this.form.department_name = globalConfig.personal.department_name;
       },
       dicts(val) {
         // 城市

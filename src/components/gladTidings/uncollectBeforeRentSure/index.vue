@@ -394,23 +394,24 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
-      this.userInfo();
+
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
         this.dicts(newID.newID);
       }
+      this.userInfo();
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
     },
     methods: {
       userInfo() {
-        this.form.staff_id = this.personal.id;
-        this.form.staff_name = this.personal.name;
-        this.form.department_id = this.personal.department_id;
-        this.form.department_name = this.personal.department_name;
+        this.form.staff_id = globalConfig.personal.id;
+        this.form.staff_name = globalConfig.personal.name;
+        this.form.department_id = globalConfig.personal.department_id;
+        this.form.department_name = globalConfig.personal.department_name;
       },
       dicts(val) {
         //支付方式
@@ -598,7 +599,7 @@
       // 截图
       getImgData(val) {
         this.picStatus = !val[2];
-       if (val[0] === 'leader') {
+        if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
         }
       },

@@ -283,7 +283,6 @@
     data() {
       return {
         haveInHand: true,
-        personal: globalConfig.personal,
         urls: globalConfig.server,
         selectHide: false,        //select选择
         isClear: false,           //删除图片
@@ -438,10 +437,10 @@
       },
 
       userInfo() {
-        this.form.staff_id = this.personal.id;
-        this.form.staff_name = this.personal.name;
-        this.form.department_id = this.personal.department_id;
-        this.form.department_name = this.personal.department_name;
+        this.form.staff_id = globalConfig.personal.id;
+        this.form.staff_name = globalConfig.personal.name;
+        this.form.department_id = globalConfig.personal.department_id;
+        this.form.department_name = globalConfig.personal.department_name;
       },
       dict() {
         // 证件类型

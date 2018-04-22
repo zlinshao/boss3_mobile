@@ -132,8 +132,8 @@
       <div @click="tabTag(2,0)" :class="{'onDiv': active === 2}">
         <h2>
           <i class="iconfont icon-daiban"></i>
-          <span class="titleNum" v-if="0 < processType2 < 100">{{processType2}}</span>
-          <span class="titleNum" v-else>99+</span>
+          <span class="titleNum" v-if="processType2 > 0 && processType2 < 100">{{processType2}}</span>
+          <span class="titleNum fontMini"  v-if="processType2 > 99">99+</span>
         </h2>
         <h1>待办事项</h1>
       </div>
@@ -171,15 +171,14 @@
         processType2: '',
       }
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.$http.get(vm.urls + 'process?type=2&count=1').then((res) => {
+          vm.processType2 = res.data.data;
+        })
+      })
+    },
     mounted() {
-      // 钉钉头部右侧
-      dd.biz.navigation.setRight({
-        show: false,
-        onSuccess: function (result) {
-        },
-        onFail: function (err) {
-        }
-      });
       this.paths = this.$router.options.routes;
       this.scrollTops();
     },
@@ -188,9 +187,6 @@
       this.ddRent('', 'close');
       this.disabled = false;
       this.scrollTops();
-      this.$http.get(this.urls + 'process?type=2&count=1').then((res) => {
-        this.processType2 = res.data.data;
-      })
     },
     methods: {
       // 详情页
@@ -695,8 +691,6 @@
       }
     }
     .titleNum {
-      text-align: center;
-      line-height: .28rem;
       position: absolute;
       top: .08rem;
       background-color: red;
@@ -704,7 +698,12 @@
       border-radius: 80%;
       width: .28rem;
       height: .28rem;
-      font-size: .12rem
+      line-height: .3rem;
+      font-size: .18rem;
+      text-align: center;
+    }
+    .titleNum.fontMini{
+      font-size: .12rem;
     }
   }
 </style>

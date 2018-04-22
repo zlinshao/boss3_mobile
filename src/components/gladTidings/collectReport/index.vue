@@ -377,7 +377,6 @@
     components: {UpLoad, Toast},
     data() {
       return {
-        personal: globalConfig.personal,
         haveInHand: true,
         urls: globalConfig.server,
         address: globalConfig.server_user,
@@ -473,7 +472,6 @@
     },
     mounted() {
       this.getNowFormatDate();
-      this.userInfo();
       this.dicts('');
     },
     activated() {
@@ -482,16 +480,17 @@
         this.dicts(newID.newID);
       }
       this.houseInfo();
+      this.userInfo();
       this.routerIndex('');
       this.ddRent('');
     },
 
     methods: {
       userInfo() {
-        this.form.staff_id = this.personal.id;
-        this.form.staff_name = this.personal.name;
-        this.form.department_id = this.personal.department_id;
-        this.form.department_name = this.personal.department_name;
+        this.form.staff_id = globalConfig.personal.id;
+        this.form.staff_name = globalConfig.personal.name;
+        this.form.department_id = globalConfig.personal.department_id;
+        this.form.department_name = globalConfig.personal.department_name;
       },
       accountBank(val) {
         this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
