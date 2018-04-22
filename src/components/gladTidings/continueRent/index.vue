@@ -420,6 +420,7 @@
           other_fee_name: '',
 
           deposit: '',                  //押金
+          is_corp: 1,
           contract_number: 'LJZF',       //合同编号
           discount: 0,                  //让价金额
           property_payer: '',           //物业费付款人
@@ -779,6 +780,7 @@
             //     this.roomsName = draft.rooms_mate[i].name;
             //   }
             // }
+            this.form.is_corp = 1;
             this.form.address = draft.address;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
@@ -865,6 +867,7 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
+        this.form.is_corp = 1;
         this.form.contract_id = '';
         this.form.house_id = '';
         this.form.rooms_mate = [];
