@@ -191,7 +191,6 @@
       // 待办事项
       toDone() {
         this.$http.get(this.urls + 'process?type=2&count=1').then((res) => {
-          alert(res.data.data);
           this.processType2 = res.data.data;
         })
       },
