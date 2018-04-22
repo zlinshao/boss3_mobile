@@ -87,10 +87,10 @@
         let urls;
         switch (type) {
           case 'is_nrcy':
-            urls = 'houses?is_nrcy=1&&q=';
+            urls = 'houses?is_nrcy=1&&per_page_number=50&&q=';
             break;
           default:
-            urls = 'houses?q=';
+            urls = 'houses?per_page_number=50&&q=';
         }
         if (val.length > 1) {
           this.myData(type, val, urls);
