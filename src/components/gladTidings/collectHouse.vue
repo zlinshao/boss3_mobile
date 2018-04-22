@@ -23,7 +23,7 @@
             </div>
             <div>
               <span>合同状态：</span>
-              <span style="color: #409EFF;">
+              <span :style="{'color': contractColor[key.status]}">
                 {{contractStatus[key.status]}}
               </span>
             </div>
@@ -59,7 +59,7 @@
         path: '',
         showInfo: [],
         contractStatus: {0: '未确定', 1: '未签约', 2: '已签约', 3: '快到期(60天内)', 4: '已结束', 5: '已过期'},
-        // contractColor: {0: '未确定', 1: '未签约', 2: '已签约', 3: '快到期(60天内)', 4: '已结束', 5: '已过期'},
+        contractColor: {0: '#87AA97', 1: '#F067E0', 2: '#30CF5C', 3: '#FF6700', 4: '#409EFF', 5: '#F00000'},
       }
     },
     activated() {
