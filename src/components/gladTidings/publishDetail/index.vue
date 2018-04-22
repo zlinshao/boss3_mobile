@@ -26,7 +26,7 @@
         </div>
         <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message !== ''">{{message}}</p>
         <div v-for="(key,index) in formList"
-             v-if="index !== '领导报备截图' && index !== '款项结清截图' && index !== '特殊情况领导截图' && index !== '合同照片' && index !== '截图' && index !== '组长同意截图' && index !== '房屋影像' && index !== '房屋照片' && index !== '退租交接单'">
+             v-if="printscreen.indexOf(index) === -1">
           <p>{{index}}</p>
           <h1>
             <span v-if="Array.isArray(key)" v-for="item in key">
@@ -139,7 +139,7 @@
         personalId: {},
         vLoading: true,
         disabled1: false,
-
+        printscreen: ['款项结清截图','特殊情况领导截图','特殊情况同意截图','领导报备截图','凭证截图','合同照片','截图','领导同意截图','房屋影像','房屋照片','退租交接单'],
         address: '',
         message: '',
         ids: '',

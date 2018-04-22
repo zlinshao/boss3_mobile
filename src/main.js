@@ -95,6 +95,7 @@ router.beforeEach((to, from, next) => {
                 data.phone = res.data.phone;
                 data.department_name = res.data.org[0].name;
                 data.department_id = res.data.org[0].id;
+                sessionStorage.setItem('personal', JSON.stringify(data));
                 globalConfig.personal = data;
               }
             } else {
@@ -147,6 +148,7 @@ router.beforeEach((to, from, next) => {
                   data.phone = res.data.phone;
                   data.department_name = res.data.org[0].name;
                   data.department_id = res.data.org[0].id;
+                  sessionStorage.setItem('personal', JSON.stringify(data));
                   globalConfig.personal = data;
                 } else {
                   setTimeout(() => {

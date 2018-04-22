@@ -175,7 +175,9 @@
                       data.department_name = res.data.org[0].name;
                       data.department_id = res.data.org[0].id;
                       // data.display_name = res.data.role[0].display_name;
+                      sessionStorage.setItem('personal', JSON.stringify(data));
                       globalConfig.personal = data;
+
                       that.$http.post(that.address + 'oauth/token', {
                         client_secret: globalConfig.client_secret,
                         client_id: globalConfig.client_id,

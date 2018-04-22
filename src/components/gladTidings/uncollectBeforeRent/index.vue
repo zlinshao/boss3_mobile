@@ -341,7 +341,6 @@
     data() {
       return {
         haveInHand: true,
-        personal: globalConfig.personal,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -442,10 +441,11 @@
     },
     methods: {
       userInfo() {
-        this.form.staff_id = globalConfig.personal.id;
-        this.form.staff_name = globalConfig.personal.name;
-        this.form.department_id = globalConfig.personal.department_id;
-        this.form.department_name = globalConfig.personal.department_name;
+        let per = JSON.parse(sessionStorage.personal);
+        this.form.staff_id = per.id;
+        this.form.staff_name = per.name;
+        this.form.department_id = per.department_id;
+        this.form.department_name = per.department_name;
       },
       dicts(val) {
         //房东租客
