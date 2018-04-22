@@ -7,7 +7,46 @@ import Fun from './fun.config.js'
 import '@/assets/js/api.js'
 import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 
-import {Cell, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard, Row, Col, Badge, Button, Loading, NavBar, Panel, Stepper, Step, Steps, Swipe, SwipeItem, Tab, Tabs, Tabbar, TabbarItem, Tag, Checkbox, CheckboxGroup, Field, RadioGroup, Radio, Search, Switch, Uploader, Actionsheet, Dialog, Picker, PullRefresh, CellSwipe, Popup, SwitchCell, AddressList
+import {
+  Cell,
+  CellGroup,
+  Icon,
+  DatetimePicker,
+  PasswordInput,
+  NumberKeyboard,
+  Row,
+  Col,
+  Badge,
+  Button,
+  Loading,
+  NavBar,
+  Panel,
+  Stepper,
+  Step,
+  Steps,
+  Swipe,
+  SwipeItem,
+  Tab,
+  Tabs,
+  Tabbar,
+  TabbarItem,
+  Tag,
+  Checkbox,
+  CheckboxGroup,
+  Field,
+  RadioGroup,
+  Radio,
+  Search,
+  Switch,
+  Uploader,
+  Actionsheet,
+  Dialog,
+  Picker,
+  PullRefresh,
+  CellSwipe,
+  Popup,
+  SwitchCell,
+  AddressList
 } from 'vant';
 
 Vue.use(Row).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(CellSwipe).use(SwitchCell).use(Picker).use(Popup).use(AddressList);
@@ -36,61 +75,10 @@ if (isIOS) {
 }
 
 router.beforeEach((to, from, next) => {
-  axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
-    let _config = res.data;
-    DingTalkPC.runtime.permission.requestAuthCode({
-      corpId: _config.corpId,
-      onSuccess: function (info) {
-        axios.get(globalConfig.server + 'special/special/userInfo', {
-          params: {
-            'code': info.code,
-          }
-        }).then((res) => {
-          if (res.data.status !== 'fail') {
-            if (res.data !== false) {
-              let data = {};
-              data.id = res.data.id;
-              data.name = res.data.name;
-              data.avatar = res.data.avatar;
-              data.phone = res.data.phone;
-              data.department_name = res.data.org[0].name;
-              data.department_id = res.data.org[0].id;
-              globalConfig.personal = data;
-            }
-          } else {
-            DingTalkPC.device.notification.alert({
-              message: "您不在系统内，请联系管理员添加！",
-              title: "提示信息",
-              buttonName: "关闭",
-              onSuccess: function () {
-              },
-              onFail: function (err) {
-              }
-            });
-            dd.biz.navigation.close({
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            });
-          }
-        })
-      },
-      onFail: function (err) {
-        DingTalkPC.device.notification.alert({
-          message: "您不在系统内，请联系管理员添加！",
-          title: "提示信息",
-          buttonName: "关闭",
-          onSuccess: function () {
-          },
-          onFail: function (err) {
-          }
-        });
-      }
-    });
-
-    dd.ready(function () {
-      dd.runtime.permission.requestAuthCode({
+  if (from.path !== '/') {
+    axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
+      let _config = res.data;
+      DingTalkPC.runtime.permission.requestAuthCode({
         corpId: _config.corpId,
         onSuccess: function (info) {
           axios.get(globalConfig.server + 'special/special/userInfo', {
@@ -108,19 +96,17 @@ router.beforeEach((to, from, next) => {
                 data.department_name = res.data.org[0].name;
                 data.department_id = res.data.org[0].id;
                 globalConfig.personal = data;
-              } else {
-                setTimeout(() => {
-                  alert('请求超时请稍后再试');
-                  dd.biz.navigation.close({
-                    onSuccess: function (result) {
-                    },
-                    onFail: function (err) {
-                    }
-                  });
-                }, 3000);
               }
             } else {
-              alert('您不在系统内，请联系管理员添加！');
+              DingTalkPC.device.notification.alert({
+                message: "您不在系统内，请联系管理员添加！",
+                title: "提示信息",
+                buttonName: "关闭",
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
+              });
               dd.biz.navigation.close({
                 onSuccess: function (result) {
                 },
@@ -131,29 +117,84 @@ router.beforeEach((to, from, next) => {
           })
         },
         onFail: function (err) {
-          alert('您不在系统内，请联系管理员添加！');
-          dd.biz.navigation.close({
-            onSuccess: function (result) {
+          DingTalkPC.device.notification.alert({
+            message: "您不在系统内，请联系管理员添加！",
+            title: "提示信息",
+            buttonName: "关闭",
+            onSuccess: function () {
             },
             onFail: function (err) {
             }
           });
         }
       });
-      // 钉钉头部右侧
-      dd.biz.navigation.setRight({
-        show: false,
-        onSuccess: function (result) {
-        },
-        onFail: function (err) {
-        }
+
+      dd.ready(function () {
+        dd.runtime.permission.requestAuthCode({
+          corpId: _config.corpId,
+          onSuccess: function (info) {
+            axget(globalConfig.server + 'special/special/userInfo', {
+              params: {
+                'code': info.code,
+              }
+            }).then((res) => {
+              if (res.data.status !== 'fail') {
+                if (res.data !== false) {
+                  let data = {};
+                  data.id = res.data.id;
+                  data.name = res.data.name;
+                  data.avatar = res.data.avatar;
+                  data.phone = res.data.phone;
+                  data.department_name = res.data.org[0].name;
+                  data.department_id = res.data.org[0].id;
+                  globalConfig.personal = data;
+                } else {
+                  setTimeout(() => {
+                    alert('请求超时请稍后再试');
+                    dd.biz.navigation.close({
+                      onSuccess: function (result) {
+                      },
+                      onFail: function (err) {
+                      }
+                    });
+                  }, 3000);
+                }
+              } else {
+                alert('您不在系统内，请联系管理员添加！');
+                dd.biz.navigation.close({
+                  onSuccess: function (result) {
+                  },
+                  onFail: function (err) {
+                  }
+                });
+              }
+            })
+          },
+          onFail: function (err) {
+            alert('您不在系统内，请联系管理员添加！');
+            dd.biz.navigation.close({
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
+            });
+          }
+        });
+        // 钉钉头部右侧
+        dd.biz.navigation.setRight({
+          show: false,
+          onSuccess: function (result) {
+          },
+          onFail: function (err) {
+          }
+        });
+      });
+      dd.error(function (err) {
+        alert('dd error: ' + JSON.stringify(err));
       });
     });
-    dd.error(function (err) {
-      alert('dd error: ' + JSON.stringify(err));
-    });
-  });
-  next();
+    next();
+  }
 });
 
 
