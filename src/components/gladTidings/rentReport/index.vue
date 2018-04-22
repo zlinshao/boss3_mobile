@@ -448,6 +448,7 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
+      this.userInfo();
 
     },
     activated() {
@@ -455,7 +456,6 @@
       if (newID.newID !== undefined) {
         this.dicts(newID.newID);
       }
-      this.userInfo();
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');

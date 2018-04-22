@@ -473,6 +473,7 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
+      this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
@@ -480,7 +481,6 @@
         this.dicts(newID.newID);
       }
       this.houseInfo();
-      this.userInfo();
       this.routerIndex('');
       this.ddRent('');
     },
@@ -761,7 +761,7 @@
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;
-          this.staff_name = val.staff_name;
+          this.form.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
           this.form.department_name = val.depart_name;
           this.stick();

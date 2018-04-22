@@ -429,14 +429,13 @@
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
-
+      this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
         this.dicts(newID.newID);
       }
-      this.userInfo();
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
