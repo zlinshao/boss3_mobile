@@ -165,7 +165,7 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        this.personalId = globalConfig.personal;
+        vm.personalId = globalConfig.personal;
         vm.path = from.path;
         if (from.path === '/') {
           sessionStorage.setItem('path', vm.path);

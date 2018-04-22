@@ -389,10 +389,10 @@
     },
     mounted() {
       this.getNowFormatDate();
-      this.userInfo();
       this.dict();
     },
     activated() {
+      this.userInfo();
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
