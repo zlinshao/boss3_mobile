@@ -14,7 +14,7 @@
         </div>
         <div style="height: 1.4rem;line-height: 1.4rem;color: #409EFF;"
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected', 'cancelled':place.status === 'cancelled'}">
-          <span v-if="place.status !== 'published' && place.status === 'rejected' && place.status === 'cancelled'">{{place.display_name}}</span>
+          <span v-if="place.status !== 'published' && place.status !== 'rejected' && place.status !== 'cancelled'">{{place.display_name}}</span>
         </div>
       </div>
     </div>
@@ -593,7 +593,7 @@
         .cancelled {
           background: url('../../../assets/chexiao.png') no-repeat;
         }
-        .statusSuccess, .statusFail {
+        .statusSuccess, .statusFail, .cancelled {
           width: 1.4rem;
           height: 1.4rem;
           background-size: 100% 100%;

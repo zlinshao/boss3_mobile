@@ -31,7 +31,7 @@ import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //
 // import PolishingCollect from '../components/gladTidings/polishing/collect.vue'   //收房补齐
 // import PolishingRenter from '../components/gladTidings/polishing/renter.vue'    //租房补齐
 import Special from '../components/gladTidings/specialReport/index.vue'
-import Confiscate from '../components/gladTidings/confiscate/index.vue'
+// import Confiscate from '../components/gladTidings/confiscate/index.vue'
 import FinalPayment from '../components/gladTidings/finalPayment/index.vue'
 import PublishDetail from '../components/gladTidings/publishDetail/index.vue'
 import Comment from '../components/gladTidings/publishDetail/comment.vue'

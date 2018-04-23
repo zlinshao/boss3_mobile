@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <van-field
-          v-model="form.address"
+          v-model="address"
           label="房屋地址"
           type="text"
           readonly
@@ -45,7 +45,7 @@
           </van-field>
           <van-field
             v-model="form.customers[index].phone"
-            type="text"
+            type="number"
             label="联系方式"
             placeholder="请填写联系方式"
             required>
@@ -116,7 +116,7 @@
           v-model="form.data_date"
           @click="timeChoose"
           label="资料补齐时间"
-          type="number"
+          type="text"
           readonly
           placeholder="请选择资料补齐时间"
           icon="clear"
@@ -313,6 +313,7 @@
         currentDate: '',
         timeShow: false,          //日期状态
         timeValue: '',            //日期value
+
         amount: 1,
         tabs: '',
         tabIndex: '',
@@ -323,9 +324,9 @@
 
         cardName: [],
 
+        address: '',
+        contract_id: '',                  //合同id
         form: {
-          address: '',
-          contract_id: '',                  //合同id
           customers: [{
             id: '',                         //客户ID
             name: '',                       //客户姓名
@@ -483,7 +484,7 @@
       },
       // 确认日期
       onDate() {
-        this.form.remark = this.timeValue;
+        this.form.data_date = this.timeValue;
         this.timeShow = false;
       },
       // 截图
@@ -578,7 +579,7 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-            this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+            this.$http.put(this.urls + 'bulletin/complete/collect/' + this.contract_id, this.form).then((res) => {
               this.haveInHand = true;
               if (res.data.code === '50210') {
                 Toast.success(res.data.msg);
@@ -603,8 +604,8 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.form.contract_id = val.id;
-          this.form.address = val.house_name;
+          this.contract_id = val.id;
+          this.address = val.house_name;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -631,8 +632,8 @@
             this.isClear = false;
             let data = res.data.data;
 
-            this.form.contract_id = data.contract_id;
-            this.form.address = data.address;
+            this.contract_id = data.contract_id;
+            this.address = data.address;
 
             this.form.remark = data.remark;
             this.form.staff_id = data.staff_id;
@@ -654,8 +655,8 @@
         this.amount = 1;
         this.cardName = [];
         this.result = [];
-        this.form.address = '';
-        this.form.contract_id = '';
+        this.address = '';
+        this.contract_id = '';
         this.form.customers = [{
           id: '',                         //客户ID
           name: '',                       //客户姓名
