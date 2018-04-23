@@ -108,9 +108,17 @@
           v-model="form.public_fee"
           label="公摊费用"
           type="number"
-          placeholder="请填写公摊费用"
+          placeholder="请填写金额"
           icon="clear"
           @click-icon="form.public_fee = ''">
+        </van-field>
+        <van-field
+          v-model="form.manage_fee"
+          label="管理费"
+          type="number"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.manage_fee = ''">
         </van-field>
         <van-field
           v-model="form.data_date"
@@ -123,19 +131,6 @@
           @click-icon="form.data_date = ''">
         </van-field>
       </van-cell-group>
-      <div class="paddingTitle">
-        <span>房东同意我司对该房屋进行装修</span>
-      </div>
-      <div class="checkCss">
-        <van-checkbox-group v-model="result" @change="decorate">
-          <van-checkbox
-            v-for="item in list"
-            :key="item.id"
-            :name="item.name">
-            {{item.name}}
-          </van-checkbox>
-        </van-checkbox-group>
-      </div>
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>证件照片</div>
@@ -255,26 +250,6 @@
         isClear: false,           //删除图片
         picStatus: true,
 
-        result: [],
-        list: [
-          {
-            id: 1,
-            name: '是，可以进行装修，但不得拆除承重墙体'
-          },
-          {
-            id: 2,
-            name: '可增加墙体'
-          },
-          {
-            id: 3,
-            name: '可增加墙体及卫生间'
-          },
-          {
-            id: 4,
-            name: '否，不可进行装修'
-          },
-        ],
-
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
@@ -307,8 +282,8 @@
           electricity: '',                  //电表底数
           gas: '',                          //燃气表底数
           public_fee: '',                   //公摊费用
+          manage_fee: '',                   //管理费
           data_date: '',                    //资料补齐时间
-          decorate_allow: [],               //房东是否同意对房屋进行装修
           remark_terms: '',                 //备注条款
           remark: '',                       //备注
           album: {
@@ -341,15 +316,32 @@
     mounted() {
       this.getNowFormatDate();
       this.dict();
+      this.userInfo();
     },
     activated() {
-      this.userInfo();
       this.houseInfo();
       this.routerIndex('');
       this.ddRent('');
     },
     methods: {
-      // 增加客户
+      userInfo() {
+        let per = JSON.parse(sessionStorage.personal);
+        this.form.staff_id = per.id;
+        this.form.staff_name = per.name;
+        this.form.department_id = per.department_id;
+        this.form.department_name = per.department_name;
+      },
+      dict() {
+        // 证件类型
+        this.dictionary(409, 1).then((res) => {
+          this.prove_name = [];
+          this.prove_all = res.data;
+          for (let i = 0; i < res.data.length; i++) {
+            this.prove_name.push(res.data[i].dictionary_name);
+          }
+        });
+      },
+      // 增加附属租客
       addAmount(val) {
         this.amount++;
         let data = {
@@ -385,24 +377,6 @@
           }
         }
         return data;
-      },
-
-      userInfo() {
-        let per = JSON.parse(sessionStorage.personal);
-        this.form.staff_id = per.id;
-        this.form.staff_name = per.name;
-        this.form.department_id = per.department_id;
-        this.form.department_name = per.department_name;
-      },
-      dict() {
-        // 证件类型
-        this.dictionary(409, 1).then((res) => {
-          this.prove_name = [];
-          this.prove_all = res.data;
-          for (let i = 0; i < res.data.length; i++) {
-            this.prove_name.push(res.data[i].dictionary_name);
-          }
-        });
       },
       searchSelect(val) {
         switch (val) {
@@ -514,7 +488,7 @@
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
               } else if (res.data.code === '50220') {
-                Toast.success(res.data.msg)
+                Toast.success(res.data.msg);
               } else {
                 Toast(res.data.msg);
               }
@@ -581,7 +555,6 @@
         this.picStatus = true;
         this.amount = 1;
         this.cardName = [];
-        this.result = [];
         this.form.address = '';
         this.form.contract_id = '';
         this.form.customers = [{
@@ -598,8 +571,8 @@
         this.form.electricity = '';         //电表底数
         this.form.gas = '';                 //燃气表底数
         this.form.public_fee = '';          //公摊费用
+        this.form.manage_fee = '';          //管理费
         this.form.data_date = '';           //资料补齐时间
-        this.form.decorate_allow = [];      //房东是否同意对房屋进行装修
         this.form.remark_terms = '';        //备注条款
         this.form.remark = '';              //备注
 

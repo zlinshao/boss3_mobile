@@ -398,6 +398,23 @@
       this.ddRent('');
     },
     methods: {
+      userInfo() {
+        let per = JSON.parse(sessionStorage.personal);
+        this.form.staff_id = per.id;
+        this.form.staff_name = per.name;
+        this.form.department_id = per.department_id;
+        this.form.department_name = per.department_name;
+      },
+      dict() {
+        // 证件类型
+        this.dictionary(409, 1).then((res) => {
+          this.prove_name = [];
+          this.prove_all = res.data;
+          for (let i = 0; i < res.data.length; i++) {
+            this.prove_name.push(res.data[i].dictionary_name);
+          }
+        });
+      },
       // 增加客户
       addAmount(val) {
         this.amount++;
@@ -434,24 +451,6 @@
           }
         }
         return data;
-      },
-
-      userInfo() {
-        let per = JSON.parse(sessionStorage.personal);
-        this.form.staff_id = per.id;
-        this.form.staff_name = per.name;
-        this.form.department_id = per.department_id;
-        this.form.department_name = per.department_name;
-      },
-      dict() {
-        // 证件类型
-        this.dictionary(409, 1).then((res) => {
-          this.prove_name = [];
-          this.prove_all = res.data;
-          for (let i = 0; i < res.data.length; i++) {
-            this.prove_name.push(res.data[i].dictionary_name);
-          }
-        });
       },
       searchSelect(val) {
         switch (val) {

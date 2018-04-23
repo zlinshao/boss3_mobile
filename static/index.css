@@ -37,7 +37,8 @@
 
 .titleRed {
   padding-left: 110px;
-  padding-bottom: .1rem;
+  padding-bottom: .08rem;
+  line-height: .3rem;
   font-size: .24rem;
   color: #e4393c;
   border-bottom: 1px solid #f4f4f4; }

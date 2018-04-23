@@ -12,8 +12,9 @@
           <p>{{personal.name}}</p>
           <p><span v-for="(key,index) in personal.org" v-if="index === 0">{{key.name}}</span></p>
         </div>
-        <div style="height: 1.4rem;"
-             :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected'}">
+        <div style="height: 1.4rem;line-height: 1.4rem;color: #409EFF;"
+             :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected', 'cancelled':place.status === 'cancelled'}">
+          <span v-if="place.status !== 'published' && place.status === 'rejected' && place.status === 'cancelled'">{{place.display_name}}</span>
         </div>
       </div>
     </div>
@@ -588,6 +589,9 @@
         }
         .statusFail {
           background: url('../../../assets/shibai.png') no-repeat;
+        }
+        .cancelled {
+          background: url('../../../assets/chexiao.png') no-repeat;
         }
         .statusSuccess, .statusFail {
           width: 1.4rem;
