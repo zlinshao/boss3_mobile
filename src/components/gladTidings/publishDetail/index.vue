@@ -12,9 +12,14 @@
           <p>{{personal.name}}</p>
           <p><span v-for="(key,index) in personal.org" v-if="index === 0">{{key.name}}</span></p>
         </div>
-        <div style="height: 1.4rem;line-height: 1.4rem;color: #409EFF;"
+
+        <div class="placeFinish"
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected', 'cancelled':place.status === 'cancelled'}">
-          <span v-if="place.status !== 'published' && place.status !== 'rejected' && place.status !== 'cancelled'">{{place.display_name}}</span>
+
+          <span class="placeSpan" v-if="placeFalse">
+            <i class="iconfont icon-yanqi--"></i>
+            <span>{{place.display_name}}</span>
+          </span>
         </div>
       </div>
     </div>
@@ -141,6 +146,7 @@
         vLoading: true,
         disabled1: false,
         printscreen: ['款项结清截图', '特殊情况领导截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '房屋影像', '房屋照片', '退租交接单'],
+        placeStatus: ['published', 'rejected', 'cancelled'],
         address: '',
         message: '',
         ids: '',
@@ -161,6 +167,7 @@
         photo: [],
         bigPicShow: false,
 
+        placeFalse: false,
         videoSrc: '',
       }
     },
@@ -238,6 +245,11 @@
             let pro = res.data.data.process;
             this.personal = pro.user;
             this.place = pro.place;
+            if (this.placeStatus.indexOf(pro.place.status) === -1) {
+              this.placeFalse = true;
+            } else {
+              this.placeFalse = false;
+            }
             this.process = pro;
 
             this.vLoading = false;
@@ -421,6 +433,20 @@
       }
     }
 
+    .placeFinish {
+      @include flex;
+      align-items: center;
+      height: 1.4rem;
+      color: #409EFF;
+      .placeSpan {
+        @include flex;
+        align-items: center;
+        i {
+          margin-right: .1rem
+        }
+      }
+    }
+
     #videoId1 {
       position: fixed;
       top: 50%;
@@ -571,9 +597,13 @@
         @include flex;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
         .personal {
+          min-width: 2.8rem;
+          max-width: 2.8rem;
           p {
-            width: 3.6rem;
+            min-width: 2.8rem;
+            max-width: 2.8rem;
             line-height: .5rem;
             overflow: hidden;
             text-overflow: ellipsis;
