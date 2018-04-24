@@ -116,6 +116,7 @@
         this.editImg = imgObject;
       },
       getTokenMessage() {
+        alert(1);
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.token = res.data.data;
           if (this.isStatus) {
@@ -124,6 +125,7 @@
         })
       },
       uploaderReady(token) {
+        alert(2);
         this.isStatus = false;
         let _this = this;
         _this.uploader = Qiniu.uploader({
@@ -199,7 +201,6 @@
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
                 }
               }
-              alert(file.id);
             },
             'FileUploaded': function (up, file, info) {
               let domain = up.getOption('domain');
