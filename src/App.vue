@@ -58,6 +58,7 @@
           return response;
         }, function (error) {
           if (error && error.response) {
+            alert(JSON.stringify(error.response));
             if (error.response.status === 500) {
               alert('服务器故障,请联系产品经理');
               DingTalkPC.device.notification.alert({
