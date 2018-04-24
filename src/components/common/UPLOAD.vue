@@ -117,11 +117,11 @@
       },
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
-          // this.token = res.data.data;
-          // if (this.isStatus) {
-          //   this.uploaderReady(res.data.data);
-          // }
-          this.uploaderReady(res.data.data);
+          this.token = res.data.data;
+          if (this.isStatus) {
+            this.uploaderReady(res.data.data);
+          }
+          // this.uploaderReady(res.data.data);
         })
       },
       uploaderReady(token) {
@@ -130,7 +130,7 @@
         _this.uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
           browse_button: [_this.ID, 'dasd'],     //上传按钮的ID
-          uptoken: token,                  // uptoken是上传凭证，由其他程序生成
+          uptoken: _this.token,                  // uptoken是上传凭证，由其他程序生成
 
           get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
           unique_names: true,                 // 默认false，key为文件
