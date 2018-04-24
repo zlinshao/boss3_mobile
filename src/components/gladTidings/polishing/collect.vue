@@ -265,7 +265,7 @@
     <div class="footer">
       <div class="" @click="close_()">重置</div>
       <div class="" @click="saveCollect(0)">保存</div>
-      <div class="" @click="saveCollect(1)">提交</div>
+      <div class="" @click="saveCollect(1)">提交审核</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
