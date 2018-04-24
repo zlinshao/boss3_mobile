@@ -483,23 +483,27 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            this.is_submit = val;
-            this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
-              this.haveInHand = true;
-              if (res.data.code === '51610') {
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            })
+        if (this.contract_id !== '') {
+          if (this.picStatus) {
+            if (this.haveInHand) {
+              this.haveInHand = false;
+              this.is_submit = val;
+              this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
+                this.haveInHand = true;
+                if (res.data.code === '51610') {
+                  Toast.success(res.data.msg);
+                } else {
+                  Toast(res.data.msg);
+                }
+              })
+            } else {
+              Toast('正在提交...');
+            }
           } else {
-            Toast('正在提交...');
+            Toast('图片上传中...');
           }
         } else {
-          Toast('图片上传中...');
+          Toast('请选择房屋...');
         }
       },
 

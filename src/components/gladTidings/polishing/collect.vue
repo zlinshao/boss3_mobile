@@ -161,8 +161,8 @@
         <div class="title"><span>*</span>银行卡照片</div>
         <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="pics.bank_photo"></UpLoad>
       </div>
-      <div class="aloneModel">
-        <div class="title">合同照片</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>合同照片</div>
         <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="pics.photo"></UpLoad>
       </div>
       <div class="aloneModel">
@@ -598,23 +598,27 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            this.form.is_submit = val;
-            this.$http.put(this.urls + 'bulletin/complete/collect/' + this.contract_id, this.form).then((res) => {
-              this.haveInHand = true;
-              if (res.data.code === '51510') {
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            })
+        if (this.contract_id !== '') {
+          if (this.picStatus) {
+            if (this.haveInHand) {
+              this.haveInHand = false;
+              this.form.is_submit = val;
+              this.$http.put(this.urls + 'bulletin/complete/collect/' + this.contract_id, this.form).then((res) => {
+                this.haveInHand = true;
+                if (res.data.code === '51510') {
+                  Toast.success(res.data.msg);
+                } else {
+                  Toast(res.data.msg);
+                }
+              })
+            } else {
+              Toast('正在提交...');
+            }
           } else {
-            Toast('正在提交...');
+            Toast('图片上传中...');
           }
         } else {
-          Toast('图片上传中...');
+          Toast('请选择房屋...');
         }
       },
 
