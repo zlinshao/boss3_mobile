@@ -11,7 +11,7 @@
             </div>
           </div>
         </div>
-        <div class="upButton" :id="ID">
+        <div class="upButton" @click="getTokenMessage" :id="ID">
           <span class="plus">+</span>
         </div>
       </div>
@@ -116,7 +116,10 @@
       },
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
+          this.token = res.data.data;
+          if (this.isStatus) {
             this.uploaderReady();
+          }
         })
       },
       uploaderReady(token) {
@@ -183,11 +186,9 @@
             },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
-              alert(1)
               _this.isUploading = true;
             },
             'UploadProgress': function (up, file) {
-              alert(2)
               // 每个文件上传时，处理相关的事情
               if (document.getElementById(file.id)) {
 
@@ -200,7 +201,7 @@
 
             },
             'FileUploaded': function (up, file, info) {
-              alert(3)
+
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;

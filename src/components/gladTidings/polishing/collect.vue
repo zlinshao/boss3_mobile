@@ -605,11 +605,6 @@
               this.haveInHand = true;
               if (res.data.code === '51510') {
                 Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                // this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '50220') {
-                Toast.success(res.data.msg)
               } else {
                 Toast(res.data.msg);
               }
@@ -685,10 +680,10 @@
                     for (let pic in data[item]) {
                       for (let pics in this.pics) {
                         if (pics === pic) {
-                            this.pics[pics] = data[item][pic];
-                            // for (let id in data[item][pic]) {
-                            //   this.form[key][pics].push(id);
-                            // }
+                          this.pics[pics] = data[item][pic];
+                          for (let i = 0; i < data[item][pic].length; i++) {
+                            this.form[key][pics].push(data[item][pic][i].id);
+                          }
                         }
                       }
                     }
@@ -696,6 +691,8 @@
                 }
               }
             }
+          } else {
+            Toast(res.data.msg);
           }
         })
       },
@@ -771,7 +768,6 @@
         this.pics.water_card_photo = {};              //水卡
         this.pics.electricity_card_photo = {};        //电卡
         this.pics.gas_card_photo = {};                //气卡
-
       },
     },
   }

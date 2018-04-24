@@ -147,42 +147,42 @@
         </van-field>
       </van-cell-group>
 
-      <!--<div class="aloneModel required">-->
-        <!--<div class="title"><span>*</span>证件照片</div>-->
-        <!--<UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="photos1"></UpLoad>-->
-      <!--</div>-->
-      <!--<div class="aloneModel required">-->
-        <!--<div class="title"><span>*</span>合同照片</div>-->
-        <!--<UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="photos2"></UpLoad>-->
-      <!--</div>-->
-      <!--<div class="aloneModel">-->
-        <!--<div class="title">水表照片</div>-->
-        <!--<UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="photos3"></UpLoad>-->
-      <!--</div>-->
-      <!--<div class="aloneModel">-->
-        <!--<div class="title">电表照片</div>-->
-        <!--<UpLoad :ID="'photo4'" @getImg="getImgData" :isClear="isClear" :editImage="photos4"></UpLoad>-->
-      <!--</div>-->
-      <!--<div class="aloneModel">-->
-        <!--<div class="title">燃气表照片</div>-->
-        <!--<UpLoad :ID="'photo5'" @getImg="getImgData" :isClear="isClear" :editImage="photos5"></UpLoad>-->
-      <!--</div>-->
-      <!--<div class="aloneModel">-->
-        <!--<div class="title">交接单照片</div>-->
-        <!--<UpLoad :ID="'photo6'" @getImg="getImgData" :isClear="isClear" :editImage="photos6"></UpLoad>-->
-      <!--</div>-->
-      <!--<div class="aloneModel">-->
-        <!--<div class="title">凭证截图</div>-->
-        <!--<UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="photos7"></UpLoad>-->
-      <!--</div>-->
-      <!--<div class="aloneModel required">-->
-        <!--<div class="title"><span>*</span>押金收条</div>-->
-        <!--<UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="photos8"></UpLoad>-->
-      <!--</div>-->
-      <!--<div class="aloneModel required">-->
-        <!--<div class="title"><span>*</span>其他照片</div>-->
-        <!--<UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="photos9"></UpLoad>-->
-      <!--</div>-->
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>证件照片</div>
+        <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="pics.identity_photo"></UpLoad>
+      </div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>合同照片</div>
+        <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="pics.photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">水表照片</div>
+        <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="pics.water_photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">电表照片</div>
+        <UpLoad :ID="'photo4'" @getImg="getImgData" :isClear="isClear" :editImage="pics.electricity_photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">燃气表照片</div>
+        <UpLoad :ID="'photo5'" @getImg="getImgData" :isClear="isClear" :editImage="pics.gas_photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">交接单照片</div>
+        <UpLoad :ID="'photo6'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkin_photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">凭证截图</div>
+        <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="pics.certificate_photo"></UpLoad>
+      </div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>押金收条</div>
+        <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="pics.deposit_photo"></UpLoad>
+      </div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>其他照片</div>
+        <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="pics.other_photo"></UpLoad>
+      </div>
 
       <van-cell-group>
         <van-field
@@ -385,7 +385,7 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
             break;
           case 2:
             this.$router.push({path: '/organize'});
@@ -487,12 +487,7 @@
             this.is_submit = val;
             this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50210') {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '50220') {
+              if (res.data.code === '51510') {
                 Toast.success(res.data.msg);
               } else {
                 Toast(res.data.msg);
@@ -535,34 +530,36 @@
       },
 
       rentDetail(id) {
-        this.$http.get(this.urls + 'bulletin/complete/collect/' + id).then((res) => {
+        this.$http.get(this.urls + 'bulletin/complete/rent/' + id).then((res) => {
           if (res.data.code === '51510') {
             let data = res.data.data;
             this.picClose();
-
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
-                  if (item !== 'album') {
+                  if (item !== 'album' && item !== 'customers') {
                     this.form[key] = data[item] !== null ? data[item] : '';
                   }
                   if (item === 'customers') {
+                    this.cardName = [];
+                    this.amount = data[item].length;
                     for (let i = 0; i < data[item].length; i++) {
+                      this.form[key] = data[item] !== null ? data[item] : '';
                       this.form[key][i].sex = String(data[item][i].sex);
+                      for (let j = 0; j < this.prove_all.length; j++) {
+                        if (this.prove_all[j].id === data[item][i].idtype) {
+                          this.cardName[i] = this.prove_all[i].dictionary_name;
+                        }
+                      }
                     }
                   }
-
                   if (item === 'album') {
                     for (let pic in data[item]) {
                       for (let pics in this.pics) {
                         if (pics === pic) {
-                          if (!Array.isArray(data[item][pic])) {
-                            this.pics[pics] = data[item][pic];
-                            for (let id in data[item][pic]) {
-                              this.form[key][pics].push(id);
-                            }
-                          } else {
-                            this.pics[pics] = {};
+                          this.pics[pics] = data[item][pic];
+                          for (let i = 0; i < data[item][pic].length; i++) {
+                            this.form[key][pics].push(data[item][pic][i].id);
                           }
                         }
                       }
@@ -571,6 +568,8 @@
                 }
               }
             }
+          } else {
+            Toast(res.data.msg);
           }
         })
       },
