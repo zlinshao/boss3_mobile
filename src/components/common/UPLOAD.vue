@@ -11,7 +11,7 @@
             </div>
           </div>
         </div>
-        <div class="upButton" @click="getTokenMessage" :id="ID">
+        <div class="upButton" :id="ID">
           <span class="plus">+</span>
         </div>
       </div>
@@ -116,22 +116,21 @@
         this.editImg = imgObject;
       },
       getTokenMessage() {
-        alert(1);
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
-          this.token = res.data.data;
-          if (this.isStatus) {
-            this.uploaderReady();
-          }
+          // this.token = res.data.data;
+          // if (this.isStatus) {
+          //   this.uploaderReady(res.data.data);
+          // }
+          this.uploaderReady(res.data.data);
         })
       },
       uploaderReady(token) {
-        alert(2);
         this.isStatus = false;
         let _this = this;
         _this.uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
           browse_button: [_this.ID, 'dasd'],     //上传按钮的ID
-          uptoken: _this.token,                  // uptoken是上传凭证，由其他程序生成
+          uptoken: token,                  // uptoken是上传凭证，由其他程序生成
 
           get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
           unique_names: true,                 // 默认false，key为文件
