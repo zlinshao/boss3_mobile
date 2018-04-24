@@ -180,8 +180,8 @@
         <div class="title"><span>*</span>押金收条</div>
         <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="pics.deposit_photo"></UpLoad>
       </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>其他照片</div>
+      <div class="aloneModel">
+        <div class="title">其他照片</div>
         <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="pics.other_photo"></UpLoad>
       </div>
 
@@ -536,6 +536,7 @@
         this.$http.get(this.urls + 'bulletin/complete/rent/' + id).then((res) => {
           if (res.data.code === '51610') {
             let data = res.data.data;
+            this.form.customers = [];
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
@@ -544,12 +545,19 @@
                   }
                   if (item === 'customers') {
                     this.cardName = [];
-                    this.amount = data[item].length;
-                    for (let i = 0; i < data[item].length; i++) {
-                      this.form[key] = data[item] !== null ? data[item] : '';
-                      this.form[key][i].sex = String(data[item][i].sex);
+                    this.amount = data.customers.length;
+                    for (let i = 0; i < data.customers.length; i++) {
+                      let obj = {};
+                      let cus = data.customers[i];
+                      this.form.customers.push(obj);
+                      this.form.customers[i].id = cus.id !== null ? cus.id : '';
+                      this.form.customers[i].name = cus.name !== null ? cus.name : '';
+                      this.form.customers[i].phone = cus.phone !== null ? cus.phone : '';
+                      this.form.customers[i].sex = cus.sex !== null ? String(cus.sex) : '';
+                      this.form.customers[i].idtype = cus.idtype !== null ? cus.idtype : '';
+                      this.form.customers[i].idcard = cus.idcard !== null ? cus.idcard : '';
                       for (let j = 0; j < this.prove_all.length; j++) {
-                        if (this.prove_all[j].id === data[item][i].idtype) {
+                        if (this.prove_all[j].id === cus.idtype) {
                           this.cardName[i] = this.prove_all[i].dictionary_name;
                         }
                       }

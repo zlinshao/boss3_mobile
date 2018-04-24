@@ -14,7 +14,7 @@
         <van-field
           v-model="form.mound_number"
           label="丘号"
-          type="number"
+          type="text"
           placeholder="请填写丘号"
           icon="clear"
           @click-icon="form.mound_number = ''">
@@ -22,7 +22,7 @@
         <van-field
           v-model="form.property_number"
           label="房产证号"
-          type="number"
+          type="text"
           placeholder="请填写房产证号"
           icon="clear"
           required
@@ -79,7 +79,7 @@
         </van-cell-group>
       </div>
       <div @click="addAmount(1)" class="addInput">
-        +增加附属租客
+        +增加附属房东
       </div>
       <van-cell-group>
         <van-field
@@ -135,7 +135,8 @@
           readonly
           placeholder="请选择资料补齐时间"
           icon="clear"
-          @click-icon="form.data_date = ''">
+          @click-icon="form.data_date = ''"
+          required>
         </van-field>
       </van-cell-group>
       <div class="paddingTitle">
@@ -219,7 +220,7 @@
                 :editImage="pics.electricity_card_photo"></UpLoad>
       </div>
       <div class="aloneModel">
-        <div class="title">燃气照片</div>
+        <div class="title">燃气卡照片</div>
         <UpLoad :ID="'photo17'" @getImg="getImgData" :isClear="isClear" :editImage="pics.gas_card_photo"></UpLoad>
       </div>
 
@@ -650,39 +651,48 @@
         this.$http.get(this.urls + 'bulletin/complete/collect/' + id).then((res) => {
           if (res.data.code === '51510') {
             let data = res.data.data;
+            this.form.customers = [];
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
                   if (item !== 'album' && item !== 'customers') {
                     this.form[key] = data[item] !== null ? data[item] : '';
                   }
+
                   if (item === 'customers') {
                     this.cardName = [];
-                    this.amount = data[item].length;
-                    for (let i = 0; i < data[item].length; i++) {
-                      this.form[key] = data[item] !== null ? data[item] : '';
-                      this.form[key][i].sex = String(data[item][i].sex);
+                    this.amount = data.customers.length;
+                    for (let i = 0; i < data.customers.length; i++) {
+                      let obj = {};
+                      let cus = data.customers[i];
+                      this.form.customers.push(obj);
+                      this.form.customers[i].id = cus.id !== null ? cus.id : '';
+                      this.form.customers[i].name = cus.name !== null ? cus.name : '';
+                      this.form.customers[i].phone = cus.phone !== null ? cus.phone : '';
+                      this.form.customers[i].sex = cus.sex !== null ? String(cus.sex) : '';
+                      this.form.customers[i].idtype = cus.idtype !== null ? cus.idtype : '';
+                      this.form.customers[i].idcard = cus.idcard !== null ? cus.idcard : '';
                       for (let j = 0; j < this.prove_all.length; j++) {
-                        if (this.prove_all[j].id === data[item][i].idtype) {
+                        if (this.prove_all[j].id === cus.idtype) {
                           this.cardName[i] = this.prove_all[i].dictionary_name;
                         }
                       }
                     }
                   }
                   if (item === 'decorate_allow') {
-                    if (data[item]) {
-                      this.result = this.getValue(this.list, data[item]);
+                    if (data.decorate_allow) {
+                      this.result = this.getValue(this.list, data.decorate_allow);
                     } else {
                       this.result = [];
                     }
                   }
                   if (item === 'album') {
-                    for (let pic in data[item]) {
+                    for (let pic in data.album) {
                       for (let pics in this.pics) {
                         if (pics === pic) {
-                          this.pics[pics] = data[item][pic];
-                          for (let i = 0; i < data[item][pic].length; i++) {
-                            this.form[key][pics].push(data[item][pic][i].id);
+                          this.pics[pics] = data.album[pic];
+                          for (let i = 0; i < data.album[pic].length; i++) {
+                            this.form[key][pics].push(data.album[pic][i].id);
                           }
                         }
                       }
