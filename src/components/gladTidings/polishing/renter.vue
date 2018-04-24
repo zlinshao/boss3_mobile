@@ -56,7 +56,7 @@
           <div class="checks radio">
             <span class="req">*</span>
             <div class="checkTitle">性别</div>
-            <van-radio-group v-model="form.customers[index].sex">
+            <van-radio-group v-model="sexs[index]">
               <van-radio name="0">男</van-radio>
               <van-radio name="1">女</van-radio>
             </van-radio-group>
@@ -283,7 +283,7 @@
 
         address: '',
         contract_id: '',                  //合同id
-
+        sexs: [''],
         form: {
           is_submit: 1,
           penalty: '',                      //违约金
@@ -374,6 +374,7 @@
           idtype: '',                   //证件类型
           idcard: '',                   //证件号码
         };
+        this.sexs.push('');
         this.form.customers.push(data);
       },
       // 删除客户
@@ -381,6 +382,7 @@
         if (this.amount > 1) {
           this.amount--;
           this.splice(this.form.customers, index);
+          this.splice(this.sexs, index);
         }
       },
 
@@ -487,7 +489,10 @@
           if (this.picStatus) {
             if (this.haveInHand) {
               this.haveInHand = false;
-              this.is_submit = val;
+              for (let i = 0; i < this.sexs.length; i++) {
+                this.form.customers[i].sex = Number(this.sexs[i]);
+              }
+              this.form.is_submit = val;
               this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
                 this.haveInHand = true;
                 if (res.data.code === '51610') {
@@ -549,15 +554,18 @@
                   }
                   if (item === 'customers') {
                     this.cardName = [];
+                    this.sexs = [];
                     this.amount = data.customers.length;
                     for (let i = 0; i < data.customers.length; i++) {
                       let obj = {};
                       let cus = data.customers[i];
                       this.form.customers.push(obj);
+                      this.sexs.push('');
                       this.form.customers[i].id = cus.id !== null ? cus.id : '';
                       this.form.customers[i].name = cus.name !== null ? cus.name : '';
                       this.form.customers[i].phone = cus.phone !== null ? cus.phone : '';
                       this.form.customers[i].sex = cus.sex !== null ? String(cus.sex) : '';
+                      this.sexs[i] = cus.sex !== null ? String(cus.sex) : '';
                       this.form.customers[i].idtype = cus.idtype !== null ? cus.idtype : '';
                       this.form.customers[i].idcard = cus.idcard !== null ? cus.idcard : '';
                       for (let j = 0; j < this.prove_all.length; j++) {
@@ -595,6 +603,7 @@
         this.cardName = [];
         this.address = '';
         this.contract_id = '';
+        this.sexs = [''];
         this.form.house_id = '';
         this.form.contract_number = '';
         this.form.penalty = '';
