@@ -45,6 +45,25 @@
         <div class="mainIndex">
           <div class="mainTop">
             <div>
+              <span>补齐资料</span>
+              <!--<span>3</span>-->
+            </div>
+            <!--<div>收起</div>-->
+          </div>
+          <div class="mainMain">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'polish'" :to="key.path" :key="index">
+              <p :style="{'background': key.back}">
+                <i :class="key.icon"></i>
+              </p>
+              <h1>{{key.name}}</h1>
+            </router-link>
+          </div>
+        </div>
+      </div>
+      <div class="inRough">
+        <div class="mainIndex">
+          <div class="mainTop">
+            <div>
               <span>审批</span>
               <!--<span>3</span>-->
             </div>

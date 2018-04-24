@@ -129,15 +129,6 @@ export default new Router({
       component: CollectReport
     },
     {
-      path: '/polishingCollect',
-      hidden: 'glad',
-      back: '#F19851',
-      icon: 'iconfont icon-shoufang',
-      name: '收房补齐资料',
-      meta: {title: '收房补齐资料'},
-      component: PolishingCollect
-    },
-    {
       path: '/rentReport',                 //租房报备
       name: '租房报备',
       hidden: 'glad',
@@ -145,15 +136,6 @@ export default new Router({
       icon: 'iconfont icon-zufang-',
       meta: {title: '租房报备'},
       component: RentReport
-    },
-    {
-      path: '/polishingRenter',
-      hidden: 'glad',
-      back: '#F19851',
-      icon: 'iconfont icon-zufang-',
-      name: '租房补齐资料',
-      meta: {title: '租房补齐资料'},
-      component: PolishingRenter
     },
     {
       path: '/changeRent',                 //转租报备
@@ -288,6 +270,24 @@ export default new Router({
     //   component: Expense
     // },
 
+    {
+      path: '/polishingCollect',
+      hidden: 'polish',
+      back: '#F19851',
+      icon: 'iconfont icon-shoufang',
+      name: '收房补齐资料',
+      meta: {title: '收房补齐资料'},
+      component: PolishingCollect
+    },
+    {
+      path: '/polishingRenter',
+      hidden: 'polish',
+      back: '#F19851',
+      icon: 'iconfont icon-zufang-',
+      name: '租房补齐资料',
+      meta: {title: '租房补齐资料'},
+      component: PolishingRenter
+    },
 
 
     {
