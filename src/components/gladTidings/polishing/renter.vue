@@ -28,6 +28,15 @@
           required
           @click-icon="form.property_number = ''">
         </van-field>
+        <van-field
+          v-model="form.contract_number"
+          label="合同编号"
+          type="text"
+          placeholder="请填写合同编号"
+          icon="clear"
+          required
+          @click-icon="form.contract_number = ''">
+        </van-field>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amount">
@@ -285,6 +294,7 @@
         form: {
           is_submit: 1,
           house_id: '',
+          contract_number: '',            //合同编号
           customers: [{
             id: '',                         //客户ID
             name: '',                       //客户姓名
@@ -487,7 +497,7 @@
             this.is_submit = val;
             this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '51510') {
+              if (res.data.code === '51610') {
                 Toast.success(res.data.msg);
               } else {
                 Toast(res.data.msg);
@@ -531,7 +541,7 @@
 
       rentDetail(id) {
         this.$http.get(this.urls + 'bulletin/complete/rent/' + id).then((res) => {
-          if (res.data.code === '51510') {
+          if (res.data.code === '51610') {
             let data = res.data.data;
             this.picClose();
             for (let key in this.form) {

@@ -459,10 +459,11 @@
     },
     methods: {
       userInfo() {
-        this.form.staff_id = sessionStorage.personal.id;
-        this.form.staff_name = sessionStorage.personal.name;
-        this.form.department_id = sessionStorage.personal.department_id;
-        this.form.department_name = sessionStorage.personal.department_name;
+        let per = JSON.parse(sessionStorage.personal);
+        this.form.staff_id = per.id;
+        this.form.staff_name = per.name;
+        this.form.department_id = per.department_id;
+        this.form.department_name = per.department_name;
       },
       dicts(val) {
         // 城市
