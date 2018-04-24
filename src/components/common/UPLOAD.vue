@@ -35,6 +35,7 @@
         editImg: [],
         token: '',
         isStatus: true,
+        hhh: {},
       }
     },
     mounted() {
@@ -198,10 +199,9 @@
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
                 }
               }
-
+              alert(file.id);
             },
             'FileUploaded': function (up, file, info) {
-
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
@@ -226,13 +226,14 @@
                 }
               })
             },
-//            Error(up, err, errTip) {
-//              console.log(errTip);
-//            },
             'UploadComplete': function () {
               //队列文件处理完毕后，处理相关的事情
               _this.isUploading = false;
             },
+            // 'Error': function (up, err, errTip) {// 每个文件上传失败后,处理相关的事情
+            //   alert(JSON.stringify(err))
+            // }
+
 //            'Key': function (up, file) {
 //              // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 //              // 该配置必须要在unique_names: false，save_key: false时才生效
