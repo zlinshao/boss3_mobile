@@ -43,6 +43,9 @@ import Organize from '../components/gladTidings/organize.vue'               //�
 import Depart from '../components/common/selectDepartment.vue'              //部门搜索
 
 import ProductControlCenter from '../components/gladTidings/productControlCenter/index.vue'
+import ProductDetail from '../components/gladTidings/productControlCenter/components/productDetail.vue'
+import ImgDetail from '../components/gladTidings/productControlCenter/components/imgDetail.vue'
+import ContractDetail from '../components/gladTidings/productControlCenter/components/contractDetail.vue'
 
 
 Vue.use(Router);
@@ -284,6 +287,30 @@ export default new Router({
     //   meta: {title: '研发部报销申请'},
     //   component: Expense
     // },
+
+
+
+    {
+      path: '/productDetail',
+      hidden: false,
+      name: '房屋详情',
+      meta: {title: '房屋详情'},
+      component: ProductDetail
+    },
+    {
+      path: '/imgDetail',
+      hidden: false,
+      name: '照片详情',
+      meta: {title: '照片详情'},
+      component: ImgDetail
+    },
+    {
+      path: '/contractDetail',
+      hidden: false,
+      name: '合同详情',
+      meta: {title: '合同详情'},
+      component: ContractDetail
+    },
     {
       path: '/writings',
       hidden: false,
