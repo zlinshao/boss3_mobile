@@ -56,8 +56,8 @@
             <span class="req">*</span>
             <div class="checkTitle">性别</div>
             <van-radio-group v-model="sexs[index]">
-              <van-radio name="0">男</van-radio>
-              <van-radio name="1">女</van-radio>
+              <van-radio name="1">男</van-radio>
+              <van-radio name="2">女</van-radio>
             </van-radio-group>
           </div>
           <van-field
@@ -606,7 +606,7 @@
             if (this.haveInHand) {
               this.haveInHand = false;
               for (let i = 0; i < this.sexs.length; i++) {
-                this.form.customers[i].sex = Number(this.sexs[i]);
+                this.form.customers[i].sex = this.sexs[i];
               }
               this.form.is_submit = val;
               this.$http.put(this.urls + 'bulletin/complete/collect/' + this.contract_id, this.form).then((res) => {
