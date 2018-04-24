@@ -51,8 +51,8 @@
         handler(val, old) {
           this.editImg = this.editImage;
           this.imgId = [];
-          for (let key in val) {
-            this.imgId.push(key)
+          for (let i = 0; i < val.length; i++) {
+            this.imgId.push(val[i].id)
           }
         }
       },
@@ -102,18 +102,21 @@
       },
 
       deleteImage(key) {
-        this.imgId = this.imgId.filter((x) => {
-          return x !== key
-        });
-        this.$emit('getImg', [this.ID, this.imgId, this.isUploading]);
-        let imgObject = {};
-        for (let img in this.editImg) {
-          if (img !== key) {
-            imgObject[img] = this.editImg[img];
-          }
-        }
-        this.editImg = {};
-        this.editImg = imgObject;
+        this.imgId.splice(key, 1);
+        this.editImg.splice(key, 1);
+
+        // this.imgId = this.imgId.filter((x) => {
+        //   return x !== key
+        // });
+        // this.$emit('getImg', [this.ID, this.imgId, this.isUploading]);
+        // let imgObject = {};
+        // for (let img in this.editImg) {
+        //   if (img !== key) {
+        //     imgObject[img] = this.editImg[img];
+        //   }
+        // }
+        // this.editImg = {};
+        // this.editImg = imgObject;
       },
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {

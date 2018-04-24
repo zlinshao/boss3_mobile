@@ -207,7 +207,7 @@
                 :editImage="pics.checkout_settle_photo"></UpLoad>
       </div>
       <div class="aloneModel">
-        <div class="title">房产证</div>
+        <div class="title">房产证照片</div>
         <UpLoad :ID="'photo14'" @getImg="getImgData" :isClear="isClear" :editImage="pics.property_photo"></UpLoad>
       </div>
       <div class="aloneModel">
@@ -308,19 +308,19 @@
         result: [],
         list: [
           {
-            id: 1,
+            id: '1',
             name: '是，可以进行装修，但不得拆除承重墙体'
           },
           {
-            id: 2,
+            id: '2',
             name: '可增加墙体'
           },
           {
-            id: 3,
+            id: '3',
             name: '可增加墙体及卫生间'
           },
           {
-            id: 4,
+            id: '4',
             name: '否，不可进行装修'
           },
         ],
