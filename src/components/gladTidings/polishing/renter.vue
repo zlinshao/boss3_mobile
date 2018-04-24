@@ -12,23 +12,6 @@
           required>
         </van-field>
         <van-field
-          v-model="form.mound_number"
-          label="丘号"
-          type="number"
-          placeholder="请填写丘号"
-          icon="clear"
-          @click-icon="form.mound_number = ''">
-        </van-field>
-        <van-field
-          v-model="form.property_number"
-          label="房产证号"
-          type="number"
-          placeholder="请填写房产证号"
-          icon="clear"
-          required
-          @click-icon="form.property_number = ''">
-        </van-field>
-        <van-field
           v-model="form.contract_number"
           label="合同编号"
           type="text"
@@ -36,6 +19,15 @@
           icon="clear"
           required
           @click-icon="form.contract_number = ''">
+        </van-field>
+        <van-field
+          v-model="form.penalty"
+          label="违约金"
+          type="text"
+          placeholder="请填写金额"
+          icon="clear"
+          required
+          @click-icon="form.penalty = ''">
         </van-field>
       </van-cell-group>
 
@@ -291,8 +283,10 @@
 
         address: '',
         contract_id: '',                  //合同id
+
         form: {
           is_submit: 1,
+          penalty: '',                      //违约金
           house_id: '',
           contract_number: '',            //合同编号
           customers: [{
@@ -303,8 +297,6 @@
             idtype: '',                     //证件类型
             idcard: '',                     //证件号码
           }],
-          mound_number: '',                 //丘号
-          property_number: '',              //房产证号
           water: '',                        //水表底数
           electricity_peak: '',                  //电表底数
           electricity_valley: '',                  //电表底数
@@ -540,10 +532,10 @@
       },
 
       rentDetail(id) {
+        this.picClose();
         this.$http.get(this.urls + 'bulletin/complete/rent/' + id).then((res) => {
           if (res.data.code === '51610') {
             let data = res.data.data;
-            this.picClose();
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
@@ -585,18 +577,15 @@
       },
 
       close_() {
-        this.isClear = true;
-        setTimeout(() => {
-          this.isClear = false;
-        });
         this.userInfo();
-        $('.imgItem').remove();
         this.picStatus = true;
         this.amount = 1;
         this.cardName = [];
         this.address = '';
         this.contract_id = '';
         this.form.house_id = '';
+        this.form.contract_number = '';
+        this.form.penalty = '';
         this.form.customers = [{
           id: '',                         //客户ID
           name: '',                       //客户姓名
@@ -605,8 +594,6 @@
           idtype: '',                     //证件类型
           idcard: '',                     //证件号码
         }];
-        this.form.mound_number = '';        //丘号
-        this.form.property_number = '';     //房产证号
         this.form.water = '';               //水表底数
         this.form.electricity_peak = '';    //电表峰
         this.form.electricity_valley = '';  //电表谷
@@ -619,6 +606,11 @@
         this.picClose();
       },
       picClose() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
+        $('.imgItem').remove();
         this.form.album.identity_photo = [];                //证件照片
         this.form.album.photo = [];                         //合同照片
         this.form.album.water_photo = [];                   //水表照片

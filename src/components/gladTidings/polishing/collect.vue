@@ -646,10 +646,10 @@
       },
 
       rentDetail(id) {
+        this.picClose();
         this.$http.get(this.urls + 'bulletin/complete/collect/' + id).then((res) => {
           if (res.data.code === '51510') {
             let data = res.data.data;
-            this.picClose();
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
@@ -698,12 +698,7 @@
       },
 
       close_() {
-        this.isClear = true;
-        setTimeout(() => {
-          this.isClear = false;
-        });
         this.userInfo();
-        $('.imgItem').remove();
         this.picStatus = true;
         this.amount = 1;
         this.cardName = [];
@@ -733,6 +728,11 @@
       },
 
       picClose() {
+        this.isClear = true;
+        setTimeout(() => {
+          this.isClear = false;
+        });
+        $('.imgItem').remove();
         this.form.album.identity_photo = [];                //证件照片
         this.form.album.bank_photo = [];                    //银行卡照片
         this.form.album.photo = [];                         //合同照片
