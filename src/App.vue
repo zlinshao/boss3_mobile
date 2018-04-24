@@ -126,7 +126,7 @@
                   }
                 } else {
                   DingTalkPC.device.notification.alert({
-                    message: "您不在系统内，请联系管理员添加！",
+                    message: "读取信息失败，稍后再试！",
                     title: "提示信息",
                     buttonName: "关闭",
                     onSuccess: function () {
@@ -145,7 +145,7 @@
             },
             onFail: function (err) {
               DingTalkPC.device.notification.alert({
-                message: "您不在系统内，请联系管理员添加！",
+                message: "您不在系统内，请联系管理员添加！！",
                 title: "提示信息",
                 buttonName: "关闭",
                 onSuccess: function () {
@@ -202,7 +202,7 @@
                       }, 3000);
                     }
                   } else {
-                    alert('您不在系统内，请联系管理员添加！');
+                    alert('读取信息失败，稍后再试！');
                     dd.biz.navigation.close({
                       onSuccess: function (result) {
                       },
@@ -213,7 +213,7 @@
                 })
               },
               onFail: function (err) {
-                alert('您不在系统内，请联系管理员添加！');
+                alert('您不在系统内，请联系管理员添加！！');
                 dd.biz.navigation.close({
                   onSuccess: function (result) {
                   },

@@ -1,9 +1,8 @@
 <template>
   <div>
     <div id="container">
-
       <div :id="'pickfiles'+ID" class="pickfiles">
-        <div class="imgItem" v-for="(val,key) in editImg" v-if="Object.keys(editImg).length>0">
+        <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style=" position: relative;">
             <img v-if="val.is_video" src="../../assets/video.jpg" style="width: 1.5rem; height: 1.5rem;">
             <img :src="val.uri" style="width: 1.5rem; height: 1.5rem;" v-else>
@@ -12,14 +11,11 @@
             </div>
           </div>
         </div>
-
-        <div class="upButton" @click="getTokenMessage" :id="ID">
+        <div class="upButton" :id="ID">
           <span class="plus">+</span>
         </div>
       </div>
-
     </div>
-
   </div>
 </template>
 
@@ -36,7 +32,7 @@
         isUploading: false,
         activeIndex: null,
         uploader: null,
-        editImg: {},
+        editImg: [],
         token: '',
         isStatus: true,
       }
@@ -120,10 +116,7 @@
       },
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
-          this.token = res.data.data;
-          if (this.isStatus) {
             this.uploaderReady();
-          }
         })
       },
       uploaderReady(token) {
@@ -190,9 +183,11 @@
             },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
+              alert(1)
               _this.isUploading = true;
             },
             'UploadProgress': function (up, file) {
+              alert(2)
               // 每个文件上传时，处理相关的事情
               if (document.getElementById(file.id)) {
 
@@ -205,7 +200,7 @@
 
             },
             'FileUploaded': function (up, file, info) {
-
+              alert(3)
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;

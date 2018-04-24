@@ -39,6 +39,7 @@
           <van-field
             v-model="form.customers[index].name"
             type="text"
+            :disabled="index === 0"
             label="客户姓名"
             placeholder="请填写客户姓名"
             required>
@@ -47,6 +48,7 @@
             v-model="form.customers[index].phone"
             type="text"
             label="联系方式"
+            :disabled="index === 0"
             placeholder="请填写联系方式"
             required>
           </van-field>
@@ -88,14 +90,27 @@
           icon="clear"
           @click-icon="form.water = ''">
         </van-field>
-        <van-field
-          v-model="form.electricity"
-          label="电表底数"
-          type="number"
-          placeholder="请填写电表底数"
-          icon="clear"
-          @click-icon="form.electricity = ''">
-        </van-field>
+        <div class="first_date">
+          <van-field
+            style="width: 110px;"
+            label="电表底数">
+          </van-field>
+          <van-field
+            v-model="form.electricity_peak"
+            type="number"
+            placeholder="峰值"
+            icon="clear"
+            @click-icon="form.electricity_peak = ''">
+          </van-field>
+          <van-field
+            class="twoBorder"
+            v-model="form.electricity_valley"
+            type="number"
+            placeholder="谷值"
+            icon="clear"
+            @click-icon="form.electricity_valley = ''">
+          </van-field>
+        </div>
         <van-field
           v-model="form.gas"
           label="燃气表底数"
@@ -132,42 +147,42 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>证件照片</div>
-        <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="photos1"></UpLoad>
-      </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>合同照片</div>
-        <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="photos2"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">水表照片</div>
-        <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="photos3"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">电表照片</div>
-        <UpLoad :ID="'photo4'" @getImg="getImgData" :isClear="isClear" :editImage="photos4"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">燃气表照片</div>
-        <UpLoad :ID="'photo5'" @getImg="getImgData" :isClear="isClear" :editImage="photos5"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">交接单照片</div>
-        <UpLoad :ID="'photo6'" @getImg="getImgData" :isClear="isClear" :editImage="photos6"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">凭证截图</div>
-        <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="photos7"></UpLoad>
-      </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>押金收条</div>
-        <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="photos8"></UpLoad>
-      </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>其他照片</div>
-        <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="photos9"></UpLoad>
-      </div>
+      <!--<div class="aloneModel required">-->
+        <!--<div class="title"><span>*</span>证件照片</div>-->
+        <!--<UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="photos1"></UpLoad>-->
+      <!--</div>-->
+      <!--<div class="aloneModel required">-->
+        <!--<div class="title"><span>*</span>合同照片</div>-->
+        <!--<UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="photos2"></UpLoad>-->
+      <!--</div>-->
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">水表照片</div>-->
+        <!--<UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="photos3"></UpLoad>-->
+      <!--</div>-->
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">电表照片</div>-->
+        <!--<UpLoad :ID="'photo4'" @getImg="getImgData" :isClear="isClear" :editImage="photos4"></UpLoad>-->
+      <!--</div>-->
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">燃气表照片</div>-->
+        <!--<UpLoad :ID="'photo5'" @getImg="getImgData" :isClear="isClear" :editImage="photos5"></UpLoad>-->
+      <!--</div>-->
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">交接单照片</div>-->
+        <!--<UpLoad :ID="'photo6'" @getImg="getImgData" :isClear="isClear" :editImage="photos6"></UpLoad>-->
+      <!--</div>-->
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">凭证截图</div>-->
+        <!--<UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="photos7"></UpLoad>-->
+      <!--</div>-->
+      <!--<div class="aloneModel required">-->
+        <!--<div class="title"><span>*</span>押金收条</div>-->
+        <!--<UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="photos8"></UpLoad>-->
+      <!--</div>-->
+      <!--<div class="aloneModel required">-->
+        <!--<div class="title"><span>*</span>其他照片</div>-->
+        <!--<UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="photos9"></UpLoad>-->
+      <!--</div>-->
 
       <van-cell-group>
         <van-field
@@ -269,6 +284,7 @@
         contract_id: '',                  //合同id
         form: {
           is_submit: 1,
+          house_id: '',
           customers: [{
             id: '',                         //客户ID
             name: '',                       //客户姓名
@@ -280,7 +296,8 @@
           mound_number: '',                 //丘号
           property_number: '',              //房产证号
           water: '',                        //水表底数
-          electricity: '',                  //电表底数
+          electricity_peak: '',                  //电表底数
+          electricity_valley: '',                  //电表底数
           gas: '',                          //燃气表底数
           public_fee: '',                   //公摊费用
           manage_fee: '',                   //管理费
@@ -303,15 +320,17 @@
           staff_name: '',                   //开单人name
           department_name: '',              //部门name
         },
-        photos1: {},                        //证件照片
-        photos2: {},                        //银行卡照片
-        photos3: {},                        //合同照片
-        photos4: {},                        //水表照片
-        photos5: {},                        //电表照片
-        photos6: {},                        //气表照片
-        photos7: {},                        //交接单照片
-        photos8: {},                        //委托书照片
-        photos9: {},                        //押金照片
+        pics: {
+          identity_photo: {},                        //证件照片
+          photo: {},                        //银行卡照片
+          water_photo: {},                        //合同照片
+          electricity_photo: {},                        //水表照片
+          gas_photo: {},                        //电表照片
+          checkin_photo: {},                        //气表照片
+          certificate_photo: {},                        //交接单照片
+          deposit_photo: {},                        //委托书照片
+          other_photo: {},                        //押金照片
+        },
       }
     },
     mounted() {
@@ -362,23 +381,7 @@
           this.splice(this.form.customers, index);
         }
       },
-      decorate(val) {
-        this.form.decorate_allow = this.getValue(this.list, val);
-      },
-      getValue(value, val) {
-        let data = [];
-        for (let i = 0; i < value.length; i++) {
-          for (let j = 0; j < val.length; j++) {
-            if (value[i].name === val[j]) {
-              data.push(value[i].id);
-            }
-            if (value[i].id === val[j]) {
-              data.push(value[i].name);
-            }
-          }
-        }
-        return data;
-      },
+
       searchSelect(val) {
         switch (val) {
           case 1:
@@ -509,6 +512,8 @@
           let val = JSON.parse(t.house);
           this.contract_id = val.id;
           this.address = val.house_name;
+          this.form.house_id = val.house_id;
+          this.rentDetail(val.id);
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -529,20 +534,43 @@
         }
       },
 
-      rentDetail() {
-        this.$http.get(this.urls + 'bulletin/rent?type=1').then((res) => {
-          if (res.data.code === '50210') {
-            this.isClear = false;
+      rentDetail(id) {
+        this.$http.get(this.urls + 'bulletin/complete/collect/' + id).then((res) => {
+          if (res.data.code === '51510') {
             let data = res.data.data;
+            this.picClose();
 
-            this.contract_id = data.contract_id;
-            this.address = data.address;
+            for (let key in this.form) {
+              for (let item in data) {
+                if (key === item) {
+                  if (item !== 'album') {
+                    this.form[key] = data[item] !== null ? data[item] : '';
+                  }
+                  if (item === 'customers') {
+                    for (let i = 0; i < data[item].length; i++) {
+                      this.form[key][i].sex = String(data[item][i].sex);
+                    }
+                  }
 
-            this.form.remark = data.remark;
-            this.form.staff_id = data.staff_id;
-            this.form.staff_name = data.staff_name;
-            this.form.department_id = data.department_id;
-            this.form.department_name = data.department_name;
+                  if (item === 'album') {
+                    for (let pic in data[item]) {
+                      for (let pics in this.pics) {
+                        if (pics === pic) {
+                          if (!Array.isArray(data[item][pic])) {
+                            this.pics[pics] = data[item][pic];
+                            for (let id in data[item][pic]) {
+                              this.form[key][pics].push(id);
+                            }
+                          } else {
+                            this.pics[pics] = {};
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         })
       },
@@ -559,6 +587,7 @@
         this.cardName = [];
         this.address = '';
         this.contract_id = '';
+        this.form.house_id = '';
         this.form.customers = [{
           id: '',                         //客户ID
           name: '',                       //客户姓名
@@ -570,14 +599,17 @@
         this.form.mound_number = '';        //丘号
         this.form.property_number = '';     //房产证号
         this.form.water = '';               //水表底数
-        this.form.electricity = '';         //电表底数
+        this.form.electricity_peak = '';    //电表峰
+        this.form.electricity_valley = '';  //电表谷
         this.form.gas = '';                 //燃气表底数
         this.form.public_fee = '';          //公摊费用
         this.form.manage_fee = '';          //管理费
         this.form.data_date = '';           //资料补齐时间
         this.form.remark_terms = '';        //备注条款
         this.form.remark = '';              //备注
-
+        this.picClose();
+      },
+      picClose() {
         this.form.album.identity_photo = [];                //证件照片
         this.form.album.photo = [];                         //合同照片
         this.form.album.water_photo = [];                   //水表照片
@@ -588,16 +620,16 @@
         this.form.album.deposit_photo = [];                 //押金照片
         this.form.album.other_photo = [];                   //其他照片
 
-        this.photos1 = {};                                  //证件照片
-        this.photos2 = {};                                  //银行卡照片
-        this.photos3 = {};                                  //合同照片
-        this.photos4 = {};                                  //水表照片
-        this.photos5 = {};                                  //电表照片
-        this.photos6 = {};                                  //气表照片
-        this.photos7 = {};                                  //交接单照片
-        this.photos8 = {};                                  //委托书照片
-        this.photos9 = {};                                  //押金照片
-      }
+        this.pics.identity_photo = {};                //证件照片
+        this.pics.photo = {};                         //合同照片
+        this.pics.water_photo = {};                   //水表照片
+        this.pics.electricity_photo = {};             //电表照片
+        this.pics.gas_photo = {};                     //气表照片
+        this.pics.checkin_photo = {};                 //交接单照片
+        this.pics.certificate_photo = {};             //凭证截图
+        this.pics.deposit_photo = {};                 //押金照片
+        this.pics.other_photo = {};                   //其他照片
+      },
     },
   }
 </script>
