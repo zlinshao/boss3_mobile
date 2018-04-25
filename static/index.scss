@@ -5,6 +5,10 @@
 
 $color: #409EFF;
 
+#agencyReport, #checkout, #rentReport, #clearRetreat, #collectReport, #confiscate, #collectReport, #continueRent, #drawbackReport, #finalReport, #friedBill, #collectPolishing, #rentPolishing, #cardDetail, #quality, #rentReport, #special, #transferReport, #uncollectBeforeRent, #uncollectBeforeRentSure, #searchCity, #searchClass, #organzie, #hello, #warning {
+
+}
+
 .showContainer {
   height: 100%;
   overflow: hidden;
@@ -113,7 +117,7 @@ div {
   .van-checkbox.van-checkbox--round {
     .van-checkbox__control:checked + .van-icon-success {
       background-color: $color;
-      border-color:$color
+      border-color: $color
     }
   }
   .van-cell.van-hairline.van-field {

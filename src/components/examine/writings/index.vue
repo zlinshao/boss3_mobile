@@ -300,6 +300,9 @@
 
 <style lang="scss">
   #writings {
+    b, strong {
+      font-weight: bold;
+    }
     @mixin flex {
       display: flex;
       display: -webkit-flex;

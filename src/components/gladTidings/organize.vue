@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="organzie">
     <div class="searchClass">
       <van-search
         v-model="searchValue"

@@ -1,5 +1,5 @@
 <template>
-  <div id="rentReport">
+  <div id="finalReport">
     <div class="main" id="main">
       <van-cell-group>
         <van-field
@@ -541,5 +541,7 @@
 </script>
 
 <style lang="scss">
-
+  #finalReport {
+    overflow: hidden;
+  }
 </style>
