@@ -211,6 +211,12 @@
         ]
       }
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex(from.path, 'house');
+        vm.ddBack(from.path, 'house');
+      })
+    },
     methods: {
       onChange(index){
         this.imgIndex = index + 1;
