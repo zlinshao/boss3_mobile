@@ -300,8 +300,26 @@
 
 <style lang="scss">
   #writings {
-    b, strong {
+    b, strong, h1, h2, h3, h4, h5, h6 {
       font-weight: bold;
+    }
+    h1 {
+      font-size: 32px;
+    }
+    h2 {
+      font-size: 24px;
+    }
+    h3 {
+      font-size: 18px;
+    }
+    h4 {
+      font-size: 16px;
+    }
+    h5 {
+      font-size: 13px;
+    }
+    h6 {
+      font-size: 12px;
     }
     @mixin flex {
       display: flex;
