@@ -255,7 +255,7 @@
     .mainContent{
       margin-top: 83px;
       .houseItem{
-        padding: .2rem .15rem .3rem .15rem;
+        padding: .3rem .15rem .3rem .15rem;
         border-bottom: 1px solid #eee;
         @extend .flex;
         img{
@@ -272,7 +272,7 @@
             }
           }
           .otherInfo{
-            margin: .2rem 0;
+            margin: .2rem 0 0 0;
             span{
               border: 1px solid #ccc;
               border-radius: 3px;
