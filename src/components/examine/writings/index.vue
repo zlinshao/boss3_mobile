@@ -16,7 +16,7 @@
         <div v-for="key in cover_pic">
           <img v-for="p in key" :src="p.uri">
         </div>
-        <div class="post_text ql-editor" v-html="myData.content">
+        <div class="post_text ql-editor" id="content" v-html="myData.content">
 
         </div>
         <h6></h6>
@@ -325,8 +325,7 @@
     }
     .writings, .disappear, .started {
       img {
-        width: 100%;
-        height: 100%;
+        max-width: 100%;
       }
     }
     p {
@@ -442,6 +441,47 @@
       margin-top: .3rem;
       padding: .3rem;
       background: #FFFFFF;
+      #content {
+        h1 {
+          font-size: 32px;
+          strong, em, s, u {
+            font-size: 32px;
+          }
+        }
+        h2 {
+          font-size: 24px;
+           strong, em, s, u {
+            font-size: 24px;
+          }
+        }
+        h3 {
+          font-size: 18px;
+           strong, em, s, u {
+            font-size: 18px;
+          }
+        }
+        h4 {
+          font-size: 16px;
+           strong, em, s, u {
+            font-size: 16px;
+          }
+        }
+        h5 {
+          font-size: 13px;
+           strong, em, s, u {
+            font-size: 13px;
+          }
+        }
+        h6 {
+          font-size: 12px;
+           strong, em, s, u {
+            font-size: 12px;
+          }
+        }
+      }
+      b, strong, h1, h2, h3, h4, h5, h6 {
+        font-weight: bold;
+      }
     }
 
     .titles {
