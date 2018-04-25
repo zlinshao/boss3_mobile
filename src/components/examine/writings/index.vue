@@ -6,7 +6,7 @@
       </div>
       <div class="a2">{{contents}}</div>
     </div>
-
+    "<h1 class="ql-align-center"><strong style="color: rgb(230, 0, 0);"><em><s><u>f发打折幅度萨芬萨</u></s></em></strong></h1>
     <div v-if="dercarriage">
       <div class="writings">
         <div class="titles">
@@ -444,21 +444,39 @@
       #content {
         h1 {
           font-size: 32px;
+          strong, em, s, u {
+            font-size: 32px;
+          }
         }
         h2 {
           font-size: 24px;
+           strong, em, s, u {
+            font-size: 24px;
+          }
         }
         h3 {
           font-size: 18px;
+           strong, em, s, u {
+            font-size: 18px;
+          }
         }
         h4 {
           font-size: 16px;
+           strong, em, s, u {
+            font-size: 16px;
+          }
         }
         h5 {
           font-size: 13px;
+           strong, em, s, u {
+            font-size: 13px;
+          }
         }
         h6 {
           font-size: 12px;
+           strong, em, s, u {
+            font-size: 12px;
+          }
         }
       }
       b, strong, h1, h2, h3, h4, h5, h6 {
