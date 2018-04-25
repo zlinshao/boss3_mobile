@@ -51,7 +51,7 @@
             <!--<div>收起</div>-->
           </div>
           <div class="mainMain">
-            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'polish'" :to="key.path" :key="index">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'loli'" :to="key.path" :key="index">
               <p :style="{'background': key.back}">
                 <i :class="key.icon"></i>
               </p>
