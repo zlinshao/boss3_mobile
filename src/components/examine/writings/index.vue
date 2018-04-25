@@ -323,7 +323,7 @@
       -moz-border-radius: $p;
       border-radius: $p;
     }
-    .writings, .disappear, .started {
+    .disappear, .started {
       img {
         width: 100%;
         height: 100%;
