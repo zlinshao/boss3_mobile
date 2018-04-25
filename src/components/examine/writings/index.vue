@@ -6,7 +6,7 @@
       </div>
       <div class="a2">{{contents}}</div>
     </div>
-    "<h1 class="ql-align-center"><strong style="color: rgb(230, 0, 0);"><em><s><u>f发打折幅度萨芬萨</u></s></em></strong></h1>
+
     <div v-if="dercarriage">
       <div class="writings">
         <div class="titles">
