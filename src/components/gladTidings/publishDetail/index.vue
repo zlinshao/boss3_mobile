@@ -20,7 +20,7 @@
             <i class="iconfont icon-yanqi--"></i>
             <span>{{place.display_name}}</span>
           </span>
-        </div><van-loading v-show="!disabled1" type="spinner" color="black"/>
+        </div>
       </div>
     </div>
 
