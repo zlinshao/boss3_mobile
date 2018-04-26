@@ -49,7 +49,7 @@
           let head = JSON.parse(sessionStorage.myData);
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
         } else {
-          this.loading = true;
+          this.loading = false;
           this.corp();
         }
 
@@ -110,7 +110,6 @@
                     // data.display_name = res.data.role[0].display_name;
                     sessionStorage.setItem('personal', JSON.stringify(data));
                     globalConfig.personal = data;
-
                     that.$http.post(that.address + 'oauth/token', {
                       client_secret: globalConfig.client_secret,
                       client_id: globalConfig.client_id,
@@ -213,6 +212,7 @@
                 })
               },
               onFail: function (err) {
+                  alert(JSON.stringify(err));
                 alert('您不在系统内，请联系管理员添加！！');
                 dd.biz.navigation.close({
                   onSuccess: function (result) {

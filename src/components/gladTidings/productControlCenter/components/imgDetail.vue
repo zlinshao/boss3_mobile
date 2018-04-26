@@ -19,7 +19,13 @@
       return {
         msg: 'Welcome to Your Vue.js App'
       }
-    }
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex(from.path, 'house');
+        vm.ddBack(from.path, 'house');
+      })
+    },
   }
 </script>
 
