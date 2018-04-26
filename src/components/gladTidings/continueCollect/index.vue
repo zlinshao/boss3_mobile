@@ -215,7 +215,6 @@
           v-model="form.account"
           label="卡号"
           type="number"
-          @keyup="accountBank(form.account)"
           @blur="accountBank(form.account)"
           placeholder="请填写卡号"
           icon="clear"

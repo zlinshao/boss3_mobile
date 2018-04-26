@@ -44,8 +44,8 @@
             </span>
             <span v-if="!Array.isArray(key) && index !== '房屋类型'">{{key}}</span>
             <span v-if="!Array.isArray(key) && index === '房屋类型'">
-                <span style="display: block;">{{key.name}}</span>
-              </span>
+              <span style="display: block;">{{key.name}}</span>
+            </span>
           </h1>
         </div>
         <div class="photo" v-else>

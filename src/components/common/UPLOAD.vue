@@ -1,6 +1,7 @@
 <template>
   <div>
     <div id="container">
+
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style=" position: relative;">
@@ -11,7 +12,7 @@
             </div>
           </div>
         </div>
-        <div class="upButton" :id="ID">
+        <div class="upButton" @click="getTokenMessage" :id="ID">
           <span class="plus">+</span>
         </div>
       </div>
@@ -27,6 +28,7 @@
     props: ['ID', 'editImage', 'isClear'],
     data() {
       return {
+
         imgArray: [],
         imgId: [],
         isUploading: false,
@@ -140,7 +142,7 @@
           domain: globalConfig.domain,  // bucket域名，下载资源时用到，必需
 
 //          container: 'container',             // 上传区域DOM ID，默认是browser_button的父元素
-          max_file_size: '100mb',             // 最大文件体积限制
+          max_file_size: '100mb',               // 最大文件体积限制
           flash_swf_url: 'path/of/plupload/Moxie.swf',  //引入flash，相对路径
           max_retries: 1,                     // 上传失败最大重试次数
           dragdrop: true,                     // 开启可拖曳上传
@@ -194,6 +196,7 @@
               _this.isUploading = true;
             },
             'UploadProgress': function (up, file) {
+
               // 每个文件上传时，处理相关的事情
               if (document.getElementById(file.id)) {
 
@@ -202,6 +205,7 @@
                 } else {
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
                 }
+
               }
             },
             'FileUploaded': function (up, file, info) {

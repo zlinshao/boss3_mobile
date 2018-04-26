@@ -235,7 +235,6 @@
         <van-field
           v-model="form.account"
           label="卡号"
-          @keyup="accountBank(form.account)"
           @blur="accountBank(form.account)"
           type="number"
           placeholder="请填写卡号"
