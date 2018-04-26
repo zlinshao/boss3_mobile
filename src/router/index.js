@@ -42,7 +42,7 @@ import CollectHouse from '../components/gladTidings/collectHouse.vue'       //�
 import Organize from '../components/gladTidings/organize.vue'               //开单人搜索
 import Depart from '../components/common/selectDepartment.vue'              //部门搜索
 
-import ProductControlCenter from '../components/gladTidings/productControlCenter/index.vue'
+// import ProductControlCenter from '../components/gladTidings/productControlCenter/index.vue'
 import ProductDetail from '../components/gladTidings/productControlCenter/components/productDetail.vue'
 import ImgDetail from '../components/gladTidings/productControlCenter/components/imgDetail.vue'
 import ContractDetail from '../components/gladTidings/productControlCenter/components/contractDetail.vue'
@@ -254,14 +254,14 @@ export default new Router({
       component: FinalPayment
     },
 
-    {
-      path: '/productControlCenter',
-      name: '产品管控中心',
-      hidden: 'glad',
-      icon: 'iconfont icon-chanpinguankong',
-      meta: {title: '产品管控中心'},
-      component: ProductControlCenter
-    },
+    // {
+    //   path: '/productControlCenter',
+    //   name: '产品管控中心',
+    //   hidden: 'glad',
+    //   icon: 'iconfont icon-chanpinguankong',
+    //   meta: {title: '产品管控中心'},
+    //   component: ProductControlCenter
+    // },
     // {
     //   path: '/expense',
     //   hidden: 'examine',
