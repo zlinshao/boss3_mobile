@@ -5,8 +5,10 @@
         <div>
           <i class="van-icon van-icon-search"></i>
           <input type="text" v-model="searchValue">
+          <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
         </div>
-        <p @click="onClose">取消</p>
+        <p v-if="searchValue.length < 2" @click="onClose">取消</p>
+        <p v-if="searchValue.length > 1" @click="search" style="color: #666666;">搜索</p>
       </div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
@@ -59,6 +61,9 @@
       }
     },
     methods: {
+      search() {
+        this.organize(this.searchValue);
+      },
       organize(val) {
         this.$http.get(this.address + 'users', {
           params: {

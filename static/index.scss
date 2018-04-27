@@ -254,6 +254,8 @@ div {
   padding: 24px 0;
   font-size: .33rem;
   color: #b3afaf;
+  @include flex;
+  justify-content: center;
 }
 
 .searchClass {
@@ -274,7 +276,7 @@ div {
       align-items: center;
       height: 34px;
       width: 100%;
-      padding: 9px 24px 7px 0;
+      padding: 9px 0 7px;
       border: 1px solid #dddddd;
       -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
@@ -288,7 +290,7 @@ div {
       i {
         color: #666666;
         font-size: .4rem;
-        padding: 0 .3rem;
+        padding: .1rem .24rem;
         margin-top: -.03rem;
       }
     }
@@ -301,7 +303,7 @@ div {
   .searchContent {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    height: 77%;
+    height: 80%;
     .searchList {
       @include flex;
       justify-content: space-between;

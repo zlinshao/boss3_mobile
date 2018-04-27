@@ -5,55 +5,85 @@
         <div>
           <i class="van-icon van-icon-search"></i>
           <input type="text" v-model="searchValue">
+          <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
         </div>
-        <p @click="onCancel">取消</p>
+        <p v-if="searchValue.length < 2" @click="onCancel">取消</p>
+        <p v-if="searchValue.length > 1" @click="search" style="color: #666666;">搜索</p>
       </div>
-
       <div class="searchContent">
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)</div>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
-        <div class="searchHouse" v-for="key in lists" @click="houseAddress(key)">
-          <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
-            <div>
-              <span>房屋地址：</span>
-              <span>{{key.house_name}}</span>
-            </div>
-          </div>
-          <div class="contract" v-else>
-            <div>
-              <span>房屋地址：</span>
-              <span>{{key.house_name}}</span>
-            </div>
-            <div>
-              <span>合同状态：</span>
-              <span :style="{'color': contractColor[key.status]}">
+        <ul
+          v-waterfall-lower="loadMore"
+          waterfall-disabled="disabled"
+          waterfall-offset="300">
+          <li>
+            <div class="searchHouse" v-for="key in lists" @click="houseAddress(key)">
+              <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
+                <div>
+                  <span>房屋地址：</span>
+                  <span>{{key.house_name}}</span>
+                </div>
+              </div>
+              <div class="contract" v-else>
+                <div>
+                  <span>房屋地址：</span>
+                  <span>{{key.house_name}}</span>
+                </div>
+                <div>
+                  <span>合同状态：</span>
+                  <span :style="{'color': contractColor[key.status]}">
                 {{contractStatus[key.status]}}
               </span>
+                </div>
+                <div class="two">
+                  <p><span>报备时间：</span><span>{{key.created_at}}</span></p>
+                  <p><span>签约时长：</span><span>{{key.duration_days}}</span></p>
+                </div>
+                <div class="two">
+                  <p><span>开单人：</span><span>{{key.staff_name}}</span></p>
+                  <p><span>客户姓名：</span><span>{{key.customers}}</span></p>
+                </div>
+                <div class="two" style="line-height: .4rem">
+                  <p><span>所属部门：</span><span>{{key.department_name}}</span></p>
+                  <p v-if="key.end_at !== ''"><span>结束时间：</span><span>{{key.end_at}}</span></p>
+                </div>
+              </div>
             </div>
-            <div class="two">
-              <p><span>报备时间：</span><span>{{key.created_at}}</span></p>
-              <p><span>签约时长：</span><span>{{key.duration_days}}</span></p>
-            </div>
-            <div class="two">
-              <p><span>开单人：</span><span>{{key.staff_name}}</span></p>
-              <p><span>客户姓名：</span><span>{{key.customers}}</span></p>
-            </div>
-            <div class="two" style="line-height: .4rem">
-              <p><span>所属部门：</span><span>{{key.department_name}}</span></p>
-              <p v-if="key.end_at !== ''"><span>结束时间：</span><span>{{key.end_at}}</span></p>
-            </div>
+          </li>
+        </ul>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)
+        </div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0 && showDetail">暂无相关信息</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0 && !showDetail">
+          <van-loading type="spinner" color="black"/>
+        </div>
+
+        <div class="bottom">
+          <div class="abc" v-if="disabled && this.lists.length > 5">没有更多了</div>
+
+          <div class="abc" v-if="!disabled && this.lists.length !== 0">
+            <van-loading type="spinner" color="black"/>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import {Waterfall} from 'vant';
+
   export default {
     name: "collect-house",
+    directives: {
+      WaterfallLower: Waterfall('lower'),
+      WaterfallUpper: Waterfall('upper'),
+    },
     data() {
       return {
+        showDetail: true,
+        disabled: true,
+        page: 1,
         address: globalConfig.server_user,
         searchValue: '',          //搜索
         lists: [],
@@ -81,33 +111,57 @@
         let value = val.replace(/\s+/g, '');
         this.searchValue = value;
         if (value.length !== 0) {
-          this.onSearch(this.types, value);
+          this.disabled = false;
+          this.page = 1;
+          this.lists = [];
+          // this.onSearch(this.types, value);
         } else {
           this.close_();
         }
       }
     },
     methods: {
+      search() {
+        this.disabled = false;
+        this.page = 1;
+        this.lists = [];
+      },
+      loadMore() {
+        if (!this.disabled) {
+          this.onSearch(this.types, this.searchValue, this.page);
+          this.page++;
+        }
+      },
       // 搜索
-      onSearch(type, val) {
+      onSearch(type, val, page) {
         let urls;
+        this.params = {};
         switch (type) {
           case 'is_nrcy':
-            urls = 'houses?is_nrcy=1&&per_page_number=50&&q=';
+            this.params.page = page;
+            this.params.per_page_number = 30;
+            this.params.is_nrcy = 1;
+            this.params.q = val;
+            urls = 'houses';
             break;
           default:
-            urls = 'houses?per_page_number=50&&q=';
+            this.params.page = page;
+            this.params.per_page_number = 30;
+            this.params.q = val;
+            urls = 'houses';
         }
         if (val.length > 1) {
+          this.showDetail = false;
           this.myData(type, val, urls);
         }
       },
       myData(type, val, urls) {
-        this.$http.get(this.address + urls + val).then((res) => {
+        this.$http.get(this.address + urls, {
+          params: this.params,
+        }).then((res) => {
           if (this.searchValue !== '') {
             let data = res.data.data;
             if (data.length !== 0 && res.data.status === 'success') {
-              this.lists = [];
               this.showInfo = [];
               for (let i = 0; i < data.length; i++) {
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
@@ -131,9 +185,16 @@
                 }
               }
             } else {
-              this.lists = [];
+              this.disabled = true;
+            }
+            if (data.length === 0 && this.params.page === 1 && res.data.status === 'success') {
+              this.showDetail = true;
+            }
+            if (res.data.status === 'fail') {
+              this.showDetail = true;
             }
           } else {
+            this.disabled = true;
             this.close_();
           }
         })
@@ -187,7 +248,11 @@
         list.id = value.id;
         list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;
-        list.customers = value.customers[0].name;
+        if (value.customers.length !== 0) {
+          list.customers = value.customers[0].name;
+        } else {
+          list.customers = '';
+        }
         if (value.sign_user !== null) {
           list.staff_id = value.sign_user.id;
           list.staff_name = value.sign_user.name;
@@ -203,6 +268,7 @@
           list.department_name = '---';
         }
         this.lists.push(list);
+        this.showDetail = true;
       },
 
       // 房屋地址
@@ -227,36 +293,57 @@
 </script>
 
 <style lang="scss">
-  @mixin flex {
-    display: flex;
-    display: -webkit-flex;
-  }
-
-  .searchHouse {
-    padding: .15rem .3rem;
-    border-bottom: .02rem solid #DDDDDD;
-    span {
-      color: #555555;
+  #searchClass {
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
     }
-    .contract {
-      width: 100%;
-      div {
-        margin: .12rem 0;
+    .iconfont.icon-cuowu-guanbi {
+
+    }
+    .searchHouse {
+      padding: .15rem .3rem;
+      border-bottom: .02rem solid #DDDDDD;
+      span {
+        color: #555555;
       }
-      div:first-of-type {
-        font-size: .33rem;
-        span {
-          color: #101010;
+      .contract {
+        width: 100%;
+        div {
+          margin: .12rem 0;
+        }
+        div:first-of-type {
+          font-size: .33rem;
+          span {
+            color: #101010;
+          }
+        }
+        .two {
+          @include flex;
+          p {
+            width: 50%;
+          }
+          p:not(:first-of-type) {
+            padding-left: .2rem;
+          }
         }
       }
-      .two {
+    }
+    .bottom {
+      @include flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      color: #DDDDDD;
+      .abc {
         @include flex;
-        p {
-          width: 50%;
-        }
-        p:not(:first-of-type) {
-          padding-left: .2rem;
-        }
+        justify-content: center;
+        line-height: .4rem;
+        color: #aaaaaa;
+        text-align: center;
+        background-color: #f4f4f4;
+        padding: .2rem 0;
+        width: 100%;
       }
     }
   }
