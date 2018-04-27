@@ -1,10 +1,13 @@
 <template>
   <div id="searchClass">
     <div class="searchClass">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @cancel="onCancel"/>
+      <div class="searchCustom">
+        <div>
+          <i class="van-icon van-icon-search"></i>
+          <input type="text" v-model="searchValue">
+        </div>
+        <p @click="onCancel">取消</p>
+      </div>
 
       <div class="searchContent">
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)</div>

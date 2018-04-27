@@ -1,10 +1,13 @@
 <template>
   <div id="organzie">
     <div class="searchClass">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @cancel="onClose"/>
+      <div class="searchCustom">
+        <div>
+          <i class="van-icon van-icon-search"></i>
+          <input type="text" v-model="searchValue">
+        </div>
+        <p @click="onClose">取消</p>
+      </div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
       <div class="searchContent">

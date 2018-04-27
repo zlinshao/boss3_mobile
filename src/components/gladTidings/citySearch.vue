@@ -1,19 +1,23 @@
 <template>
   <div id="searchCity">
     <div class="searchClass">
-      <van-search
-        v-model="searchValue"
-        show-action
-        @cancel="onCancel"/>
+      <div class="searchCustom">
+        <div>
+          <i class="van-icon van-icon-search"></i>
+          <input type="text" v-model="searchValue">
+        </div>
+        <p @click="onCancel">取消</p>
+      </div>
+
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
       <!--<ul-->
-        <!--v-waterfall-lower="loadMore"-->
-        <!--waterfall-disabled="disabled"-->
-        <!--waterfall-offset="300">-->
-        <!--<li>-->
+      <!--v-waterfall-lower="loadMore"-->
+      <!--waterfall-disabled="disabled"-->
+      <!--waterfall-offset="300">-->
+      <!--<li>-->
 
-        <!--</li>-->
+      <!--</li>-->
       <!--</ul>-->
 
       <div class="searchContent">
@@ -114,7 +118,7 @@
 </script>
 
 <style lang="scss">
-  #searchCity{
+  #searchCity {
 
   }
 </style>

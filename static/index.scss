@@ -264,6 +264,40 @@ div {
   right: 0;
   background: #ffffff;
   z-index: 999;
+  .searchCustom {
+    @include flex;
+    align-items: center;
+    padding: .1rem 0 .1rem .3rem;
+    background-color: rgb(242, 242, 242);
+    div {
+      @include flex;
+      align-items: center;
+      height: 34px;
+      width: 100%;
+      padding: 9px 24px 7px 0;
+      border: 1px solid #dddddd;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      background-color: #FFFFFF;
+      input {
+        width: 98%;
+        border: 0;
+        height: 22px;
+      }
+      i {
+        color: #666666;
+        font-size: .4rem;
+        padding: 0 .3rem;
+        margin-top: -.03rem;
+      }
+    }
+    p {
+      min-width: 50px;
+      text-align: center;
+      color: #06bf04;
+    }
+  }
   .searchContent {
     overflow: auto;
     -webkit-overflow-scrolling: touch;

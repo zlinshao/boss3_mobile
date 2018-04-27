@@ -188,6 +188,37 @@ div .payWay.van-cell.van-hairline.van-field i {
   right: 0;
   background: #ffffff;
   z-index: 999; }
+  .searchClass .searchCustom {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    padding: .1rem 0 .1rem .3rem;
+    background-color: #f2f2f2; }
+    .searchClass .searchCustom div {
+      display: flex;
+      display: -webkit-flex;
+      align-items: center;
+      height: 34px;
+      width: 100%;
+      padding: 9px 24px 7px 0;
+      border: 1px solid #dddddd;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      background-color: #FFFFFF; }
+      .searchClass .searchCustom div input {
+        width: 98%;
+        border: 0;
+        height: 22px; }
+      .searchClass .searchCustom div i {
+        color: #666666;
+        font-size: .4rem;
+        padding: 0 .3rem;
+        margin-top: -.03rem; }
+    .searchClass .searchCustom p {
+      min-width: 50px;
+      text-align: center;
+      color: #06bf04; }
   .searchClass .searchContent {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
