@@ -132,7 +132,7 @@
         let _this = this;
         _this.uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
-          browse_button: [_this.ID, 'dasd'],     //上传按钮的ID
+          browse_button: _this.ID,     //上传按钮的ID
           uptoken: _this.token,                  // uptoken是上传凭证，由其他程序生成
 
           get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
