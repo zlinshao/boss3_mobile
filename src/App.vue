@@ -269,8 +269,9 @@
     }
   }
 
-  body {
+  body ,html {
     background-color: #f8f8f8;
+    height: 100%;
   }
 
   .van-cell__title .van-icon {

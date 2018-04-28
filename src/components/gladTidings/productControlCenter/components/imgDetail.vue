@@ -1,9 +1,14 @@
 <template>
   <div id="image">
     <div class="imgContent">
-      <div class="imgItem" v-for="item in 6">
-        <img src="../../../../assets/doc.png" style="width: 1.2rem;height: 1.2rem" alt="">
-        <div style="font-size: .24rem;color: #777">17/10/23</div>
+      <div class="imgItem" v-for="(item,index) in albumData"
+           @click="showLargePic(item.album.album_file,0)">
+        <img :src="item.album.album_file[0].uri" style="width: 1.2rem;height: 1.2rem" alt="">
+        <div style="font-size: .24rem;color: #777">{{item.create_time.split(' ')[0]}}</div>
+      </div>
+      <div class="imgItem" v-if="detailData.house_goods&&detailData.house_goods.photo.length>0"
+           @click="showLargePic(detailData.house_goods.photo,0)">
+        <img :src="detailData.house_goods.photo[0].uri" style="width: 1.2rem;height: 1.2rem" alt="">
       </div>
     </div>
   </div>
@@ -17,8 +22,17 @@
     components: {ImagePreview, Toast},
     data () {
       return {
-        msg: 'Welcome to Your Vue.js App'
+        detailData : [],
+        albumData : [],
       }
+    },
+    mounted(){
+      Toast.clear();
+      this.getData();
+    },
+    activated(){
+      Toast.clear();
+      this.getData();
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -26,6 +40,31 @@
         vm.ddBack(from.path, 'house');
       })
     },
+    methods:{
+      getData(){
+        Toast.loading({
+          mask: true,
+          duration: 0,
+          message: '加载中...'
+        });
+        this.$http.get(globalConfig.server+'house/album/'+this.$route.query.id).then((res) => {
+          Toast.clear();
+          if(res.data.code === '30070'){
+            this.detailData = res.data.data.detail;
+            this.albumData = res.data.data.album;
+          }else {
+
+          }
+        })
+      },
+      showLargePic(images,index){
+        let imgArray = [];
+        images.forEach((item)=>{
+          imgArray.push(item.uri);
+        });
+        ImagePreview(imgArray,index)
+      }
+    }
   }
 </script>
 

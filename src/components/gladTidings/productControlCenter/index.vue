@@ -25,8 +25,8 @@
       </div>
     </div>
 
-    <div class="mainContent">
-      <div class="houseItem" @click="searchDetail" v-for="(item,index) in tableData">
+    <div class="mainContent" id="mainContent">
+      <div class="houseItem" v-for="(item,index) in tableData"  @click="searchDetail(item)">
         <div class="image">
           <img src="../../../assets/doc.png" alt="">
         </div>
@@ -35,8 +35,8 @@
           <div>
             <i class="iconfont icon-favoritesfilling" style="font-size: 0.2rem;color: #FFD000;"
                v-for="item in item.house_grade"></i><i class="iconfont icon-favoritesfilling"
-               style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
-            </i>
+                                                       style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
+          </i>
             <span style="font-size: 0.2rem;margin-left: .2rem">
               {{matchDictionary(item.decoration)}}/{{matchDictionary(item.house_identity)}}
             </span>
@@ -68,7 +68,7 @@
             <span v-if="item.current_ready_days">已空置{{item.current_ready_days}}天</span>
             <span v-if="item.is_again_rent>0">二次出租</span>
             <span v-else="">首次出租</span>
-            <span>西北</span>
+            <span v-if="item.house_res&&item.house_res.direction">{{item.house_res.direction.name}}</span>
             <span v-if="item.house_feature">{{matchDictionary(item.house_feature)}}</span>
           </div>
         </div>
@@ -174,8 +174,10 @@
 </template>
 
 <script>
+  import {Toast} from 'vant';
   export default {
     name: 'house',
+    components: {Toast},
     data () {
       return {
         selectHide: false,
@@ -209,6 +211,7 @@
       }
     },
     mounted(){
+      Toast.clear();
       this.getData();
       this.getDictionary();
       let _this = this;
@@ -217,9 +220,11 @@
       })
     },
     activated(){
+      Toast.clear();
       this.getDepart();
       this.routerIndex('');
       this.ddRent('');
+      let _this = this;
       $(document).scroll(function () {
         _this.scroll_bar_move();
       })
@@ -237,13 +242,14 @@
       //滚动条
       scroll_bar_move(){
         let body_height = $('body').height();
-        let body_scrollTop = $(document).scrollTop();
-        let scroll_height = $('#messageCent').height() + 84;
+        let body_scrollTop = $(document).scrollTop();;
+        let scroll_height = $('#mainContent').height() + 83;
         if (this.scrollHeight < scroll_height) {
           this.isGetMore = true;
         }
+
         this.scrollHeight = scroll_height;
-        if (scroll_height - body_scrollTop - body_height < 100) {
+        if (scroll_height - body_scrollTop - body_height < 150) {
           this.getMore();
           this.isGetMore = false;
         }
@@ -258,21 +264,21 @@
       //获取房屋列表
       getData(){
         this.isEmptyData = false,
-        this.$http.get(globalConfig.server_user + 'houses', {params: this.params}).then((res) => {
-          if (res.data.status === 'success') {
-            let arr = [];
-            arr = res.data.data;
-            this.isLastPage = this.params.page === res.data.meta.last_page;
-            arr.forEach((x)=>{
-              this.tableData.push(x)
-            });
-            if(res.data.data.length<1){
+          this.$http.get(globalConfig.server_user + 'houses', {params: this.params}).then((res) => {
+            if (res.data.status === 'success') {
+              let arr = [];
+              arr = res.data.data;
+              this.isLastPage = this.params.page === res.data.meta.last_page;
+              arr.forEach((x)=>{
+                this.tableData.push(x)
+              });
+              if(res.data.data.length<1){
+                this.isEmptyData = true;
+              }
+            }else {
               this.isEmptyData = true;
             }
-          }else {
-            this.isEmptyData = true;
-          }
-        })
+          })
       },
       //字典匹配
       getDictionary() {
@@ -336,8 +342,8 @@
         this.onSearch();
         this.selectHide = false;
       },
-      searchDetail(){
-        this.$router.push('/productDetail');
+      searchDetail(item){
+        this.$router.push({path:'/productDetail',query:{id:item.id}});
       },
     },
   }
@@ -394,9 +400,9 @@
       }
     }
     .mainContent {
-      margin-top: 83px;
+      padding-top: 83px;
       .houseItem {
-        padding: .3rem .15rem .3rem .15rem;
+        padding: .3rem;
         border-bottom: 1px solid #eee;
         @extend .flex;
         &:hover {
