@@ -77,6 +77,7 @@
           disabled>
         </van-field>
       </van-cell-group>
+      <Qiniu></Qiniu>
     </div>
 
     <div class="footer">
@@ -90,11 +91,12 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import Qiniu from '../../common/qiniu.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast,Qiniu},
     data() {
       return {
         haveInHand: true,
