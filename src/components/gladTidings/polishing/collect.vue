@@ -182,15 +182,15 @@
         <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkin_photo"></UpLoad>
       </div>
       <div class="aloneModel required">
-        <div class="title"><span>*</span>委托书照片</div>
+        <div class="title">委托书照片</div>
         <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="pics.auth_photo"></UpLoad>
       </div>
       <div class="aloneModel required">
-        <div class="title"><span>*</span>押金收条照片</div>
+        <div class="title">押金收条照片</div>
         <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="pics.deposit_photo"></UpLoad>
       </div>
       <div class="aloneModel required">
-        <div class="title"><span>*</span>承诺书照片</div>
+        <div class="title">承诺书照片</div>
         <UpLoad :ID="'photo10'" @getImg="getImgData" :isClear="isClear" :editImage="pics.promise"></UpLoad>
       </div>
       <div class="aloneModel">

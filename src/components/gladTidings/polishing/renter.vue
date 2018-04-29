@@ -177,7 +177,7 @@
         <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="pics.certificate_photo"></UpLoad>
       </div>
       <div class="aloneModel required">
-        <div class="title"><span>*</span>押金收条</div>
+        <div class="title">押金收条</div>
         <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="pics.deposit_photo"></UpLoad>
       </div>
       <div class="aloneModel">
