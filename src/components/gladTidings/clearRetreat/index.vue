@@ -22,7 +22,7 @@
           required>
         </van-field>
         <van-field
-            class="disabling"
+          class="disabling"
           :class="{'payWay': payStatus && form.payWay.length > 1}"
           @click="payWayClick(1)"
           v-model="form.payWay[0]"
@@ -36,7 +36,7 @@
           <div v-for="(key,index) in form.payWay" v-show="index !== 0">{{key}}</div>
         </div>
         <van-field
-            class="disabling"
+          class="disabling"
           :class="{'payWay': priceStatus && form.price_arr.length > 1}"
           v-model="form.price_arr[0]"
           @click="payWayClick(2)"
@@ -96,7 +96,7 @@
 
   export default {
     name: "index",
-    components: {UpLoad, Toast,Qiniu},
+    components: {UpLoad, Toast, Qiniu},
     data() {
       return {
         haveInHand: true,

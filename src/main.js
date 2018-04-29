@@ -6,7 +6,6 @@ import axios from 'axios'
 import Fun from './fun.config.js'
 import '@/assets/js/api.js'
 import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
-// import qiniu from 'qiniu-js'
 
 import {Cell, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard, Row, Col, Badge, Button, Loading, NavBar, Panel, Stepper, Step, Steps, Swipe, SwipeItem, Tab, Tabs, Tabbar, TabbarItem, Tag, Checkbox, CheckboxGroup, Field, RadioGroup, Radio, Search, Switch, Uploader, Actionsheet, Dialog, Picker, PullRefresh, CellSwipe, Popup, SwitchCell, AddressList
 } from 'vant';
