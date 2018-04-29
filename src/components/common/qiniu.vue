@@ -10,7 +10,9 @@
   export default {
     name: "qiniu",
     data() {
-      return {}
+      return {
+        uploader: null,
+      }
     },
     mounted() {
       this.getTokenMessage();
@@ -19,14 +21,19 @@
     methods: {
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
-          alert(0);
-          this.initQiniu(res.data.data);
+          let qiniuSetInter = setInterval(() => {
+            if (res.data.data) {
+              this.initQiniu(res.data.data);
+              // 清除定时器
+              clearInterval(qiniuSetInter);
+            }
+          }, 1000);
+          // this.initQiniu(res.data.data);
         })
       },
       initQiniu(token) { // 初始化七牛
-        alert(10);
         let self = this;
-        let uploader = Qiniu.uploader({
+        this.uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4', // 上传模式,依次退化
           browse_button: 'pickfiles', // 上传选择的点选按钮，**必需**
           // 其中 uptoken 是直接提供上传凭证，uptoken_url 是提供了获取上传凭证的地址，如果需要定制获取 uptoken 的过程则可以设置 uptoken_func
@@ -90,12 +97,13 @@
               // self.$emit('get-path', linkObject);
             },
             'Error': function (up, err, errTip) {
-              alert(JSON.stringify(err))
+              alert(JSON.stringify(err));
+              alert(5);
               //上传出错时,处理相关的事情
               // console.log('失败----------');
             },
             'UploadComplete': function () {
-              alert(5);
+              alert(6);
               //队列文件处理完毕后,处理相关的事情
             },
             'Key': function (up, file) {
