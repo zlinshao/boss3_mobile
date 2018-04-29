@@ -19,10 +19,12 @@
     methods: {
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
+          alert(0);
           this.initQiniu(res.data.data);
         })
       },
       initQiniu(token) { // 初始化七牛
+        alert(10);
         let self = this;
         let uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4', // 上传模式,依次退化
@@ -53,16 +55,19 @@
             'FilesAdded': function (up, files) {
               plupload.each(files, function (file) {
                 // 文件添加进队列后,处理相关的事情
-
+                alert(1);
               });
             },
             'BeforeUpload': function (up, file) {
+              alert(2);
               // 每个文件上传前,处理相关的事情
             },
             'UploadProgress': function (up, file) {
+              alert(3);
               // 每个文件上传时,处理相关的事情
             },
             'FileUploaded': function (up, file, info) {
+              alert(4);
               // 每个文件上传成功后,处理相关的事情
               // console.log('info+++++++++++++++');
               // console.log(info);
@@ -85,10 +90,12 @@
               // self.$emit('get-path', linkObject);
             },
             'Error': function (up, err, errTip) {
+              alert(JSON.stringify(err))
               //上传出错时,处理相关的事情
               // console.log('失败----------');
             },
             'UploadComplete': function () {
+              alert(5);
               //队列文件处理完毕后,处理相关的事情
             },
             'Key': function (up, file) {
