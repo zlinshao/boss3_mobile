@@ -21,7 +21,6 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
-Vue.use(require('qiniu-js'));
 
 let u = navigator.userAgent, app = navigator.appVersion;
 let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g

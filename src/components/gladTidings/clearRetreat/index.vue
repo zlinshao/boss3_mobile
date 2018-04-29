@@ -1,6 +1,5 @@
 <template>
   <div id="clearRetreat">
-
     <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
@@ -77,7 +76,6 @@
           disabled>
         </van-field>
       </van-cell-group>
-      <Qiniu></Qiniu>
     </div>
 
     <div class="footer">
@@ -91,12 +89,11 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import Qiniu from '../../common/qiniu.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, Qiniu},
+    components: {UpLoad, Toast},
     data() {
       return {
         haveInHand: true,

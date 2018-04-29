@@ -12,7 +12,7 @@
             </div>
           </div>
         </div>
-        <div class="upButton" @click="getTokenMessage" :id="ID">
+        <div class="upButton" @click="getToken" :id="ID">
           <span class="plus">+</span>
         </div>
       </div>
@@ -28,7 +28,6 @@
     props: ['ID', 'editImage', 'isClear'],
     data() {
       return {
-
         imgArray: [],
         imgId: [],
         isUploading: false,
@@ -36,16 +35,10 @@
         uploader: null,
         editImg: [],
         token: '',
-        isStatus: true,
-        hhh: {},
       }
     },
     mounted() {
       this.active();
-      this.isStatus = true;
-    },
-    activated() {
-      this.isStatus = true;
     },
     watch: {
       editImage: {
@@ -102,35 +95,24 @@
           }
         }, 1000)
       },
-
+      getToken() {
+        this.$http.get(globalConfig.server_user + 'files').then((res) => {
+          this.token = res.data.data;
+        })
+      },
       deleteImage(key) {
         this.imgId.splice(key, 1);
         this.editImg.splice(key, 1);
-
-        // this.imgId = this.imgId.filter((x) => {
-        //   return x !== key
-        // });
-        // this.$emit('getImg', [this.ID, this.imgId, this.isUploading]);
-        // let imgObject = {};
-        // for (let img in this.editImg) {
-        //   if (img !== key) {
-        //     imgObject[img] = this.editImg[img];
-        //   }
-        // }
-        // this.editImg = {};
-        // this.editImg = imgObject;
       },
+
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.token = res.data.data;
-          if (this.isStatus) {
-            this.uploaderReady(res.data.data);
-          }
-          // this.uploaderReady(res.data.data);
+          this.uploaderReady(res.data.data);
         })
       },
       uploaderReady(token) {
-        this.isStatus = false;
+        this.token = token;
         let _this = this;
         _this.uploader = Qiniu.uploader({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
