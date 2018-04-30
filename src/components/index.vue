@@ -115,6 +115,10 @@
                 <span v-if="active === 3">我的{{item.bulletin}}</span>
               </h3>
               <h3>
+                房屋地址：
+                <span>{{item.house_name}}</span>
+              </h3>
+              <h3>
                 <!--结束时间：0000-00-00 00:00:00-->
               </h3>
               <div class="progress"
@@ -292,6 +296,11 @@
                 user.title = data[i].title;
                 user.created_at = data[i].created_at;
                 if (val.type === 3) {
+                  if (data[i].content.house) {
+                    user.house_name = data[i].content.house.name;
+                  } else {
+                    user.house_name = '/';
+                  }
                   if (data[i].user) {
                     user.avatar = data[i].user.avatar;
                     user.name = data[i].user.name;
@@ -308,6 +317,11 @@
                 }
                 if (val.type === 1 || val.type === 2 || val.type === 4) {
                   if (data[i].flow) {
+                    if (user.house_name = data[i].flow.content.house) {
+                      user.house_name = data[i].flow.content.house.name;
+                    } else {
+                      user.house_name = '/';
+                    }
                     if (data[i].user) {
                       user.avatar = data[i].flow.user.avatar;
                       user.name = data[i].flow.user.name;
