@@ -25,7 +25,6 @@
           type="text"
           placeholder="请填写房产证号"
           icon="clear"
-          required
           @click-icon="form.property_number = ''">
         </van-field>
       </van-cell-group>

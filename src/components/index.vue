@@ -84,11 +84,17 @@
     <!--我发起的-->
     <div v-if="active !== 0 " class="waterfall"
          :class="{'marTop': active === 1 || active === 2}">
+      <div class="sendTop" v-if="active !== 3 && active !== 4">
+        <div @click="searchRouter"><i class="iconfont icon-sousuo" style="vertical-align: middle;"></i><span>搜索</span>
+        </div>
+      </div>
       <div class="sendTop" v-if="active !== 1 && active === 3">
+        <div @click="searchRouter"><i class="iconfont icon-sousuo" style="vertical-align: middle;"></i>搜索</div>
         <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未完成({{paging}})</span></div>
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已完成</span></div>
       </div>
       <div class="sendTop" v-if="active !== 1 && active === 4">
+        <div @click="searchRouter"><i class="iconfont icon-sousuo" style="vertical-align: middle;"></i>搜索</div>
         <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未读({{paging}})</span></div>
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已读</span></div>
       </div>
@@ -178,7 +184,6 @@
     data() {
       return {
         urls: globalConfig.server_user,
-        header: globalConfig.header.Authorization,
         list: [],
         page: 1,
         disabled: false,
@@ -211,6 +216,10 @@
       this.scrollTops();
     },
     methods: {
+      // 搜索
+      searchRouter() {
+        this.$router.push({path: '/searchList', query: {term: JSON.stringify(this.params)}})
+      },
       // 待办事项
       toDone() {
         this.$http.get(this.urls + 'process?type=2&count=1').then((res) => {
@@ -413,7 +422,7 @@
     }
 
     .waterfall.marTop {
-      margin-top: 2.3rem;
+      margin-top: 2.9rem;
     }
 
     .top {
