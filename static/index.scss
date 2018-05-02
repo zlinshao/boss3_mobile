@@ -220,13 +220,13 @@ div {
   -webkit-overflow-scrolling: touch;
 }
 
-.top {
-  top: 0;
-  box-shadow: 0 3px 10px 0 #dddddd;
-  .van-hairline--top-bottom::after {
-    border-bottom: 0;
-  }
-}
+//.top {
+//  top: 0;
+//  box-shadow: 0 3px 10px 0 #dddddd;
+//  .van-hairline--top-bottom::after {
+//    border-bottom: 0;
+//  }
+//}
 
 .footer {
   border-top: 1px solid #ebebeb;

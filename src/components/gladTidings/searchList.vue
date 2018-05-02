@@ -99,6 +99,7 @@
       }
     },
     activated() {
+      this.close_();
       this.params = JSON.parse(this.$route.query.term);
     },
     beforeRouteEnter(to, from, next) {

@@ -1,6 +1,6 @@
 <template>
   <div id="hello" class="hello">
-    <div class="top" :class="{'shadow': active !== 3 && active !== 4}">
+    <div class="top" :class="{'shadow': footActive === 1}">
       <div @click="tabTag(1,0)" :class="{'onDiv': active === 1}">
         <p>
           <i class="iconfont icon-wancheng"></i>
@@ -410,7 +410,7 @@
     }
 
     .waterfall {
-      margin-top: 2.9rem;
+      margin-top: 3.1rem;
       margin-bottom: 1.2rem;
       .bottom {
         @include flex;
@@ -422,7 +422,7 @@
     }
 
     .waterfall.marTop {
-      margin-top: 2.9rem;
+      margin-top: 3.1rem;
     }
 
     .top {
@@ -663,13 +663,14 @@
     .sendTo, .waterfall {
       .sendTop {
         position: fixed;
-        background: #F8F8F8;
+        background: #FFFFFF;
         top: 2.1rem;
         left: 0;
         right: 0;
         @include flex;
         justify-content: space-around;
-        border-bottom: .02px solid #ebebeb;
+        border-top: .2rem solid #f4f4f4;
+        border-bottom: .02rem solid #ebebeb;
         div {
           height: .8rem;
           width: 40%;
