@@ -124,9 +124,9 @@
                 房屋地址：
                 <span>{{item.house_name}}</span>
               </h3>
-              <h3>
+              <!--<h3>-->
                 <!--结束时间：0000-00-00 00:00:00-->
-              </h3>
+              <!--</h3>-->
               <div class="progress"
                    :class="{'published':item.status === 'published','rejected':item.status === 'rejected','cancelled':item.status === 'cancelled'}">
                 <div>

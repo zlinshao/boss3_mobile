@@ -11,9 +11,9 @@
         <p v-if="searchValue.length > 1" @click="search" style="color: #666666;">搜索</p>
       </div>
 
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0 && showDetail">请输入搜索内容(至少2位)</div>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0 && showDetail">暂无相关信息</div>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0 &&!showDetail">
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length < 2">请输入搜索内容(至少2位)</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail">暂无相关信息</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 &&!showDetail">
         <van-loading type="spinner" color="black"/>
       </div>
       <div class="searchContent">

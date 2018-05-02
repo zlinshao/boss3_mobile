@@ -10,8 +10,11 @@
         <p v-if="searchValue.length < 2" @click="onClose">取消</p>
         <p v-if="searchValue.length > 1" @click="search" style="color: #666666;">搜索</p>
       </div>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length === 0">请输入搜索内容(至少2位)</div>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length !== 0">暂无相关信息</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length < 2">请输入搜索内容(至少2位)</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail">暂无相关信息</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && !showDetail">
+        <van-loading type="spinner" color="black"/>
+      </div>
       <div class="searchContent">
 
         <div class="searchList" v-for="key in lists" @click="organizeSure(key)">
@@ -35,6 +38,7 @@
         searchValue: '',
         lists: [],
         path: '',
+        showDetail: true,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -65,6 +69,7 @@
         this.organize(this.searchValue);
       },
       organize(val) {
+        this.showDetail = false;
         this.$http.get(this.address + 'users', {
           params: {
             q: val,
@@ -92,6 +97,7 @@
                 this.lists.push(list);
               }
             }
+            this.showDetail = true;
           } else {
             this.close_();
           }
