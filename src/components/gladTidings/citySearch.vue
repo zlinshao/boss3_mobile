@@ -105,7 +105,7 @@
           this.showDetail = 1;
           this.$http.get(this.urls + 'setting/community/', {
             params: {
-              num: 30,
+              num: 20,
               city: this.city_id,
               keywords: val,
               pages: page,

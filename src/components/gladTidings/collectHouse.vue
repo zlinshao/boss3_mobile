@@ -139,14 +139,14 @@
         switch (type) {
           case 'is_nrcy':
             this.params.page = page;
-            this.params.per_page_number = 30;
+            this.params.per_page_number = 20;
             this.params.is_nrcy = 1;
             this.params.q = val;
             urls = 'houses';
             break;
           default:
             this.params.page = page;
-            this.params.per_page_number = 30;
+            this.params.per_page_number = 20;
             this.params.q = val;
             urls = 'houses';
         }
