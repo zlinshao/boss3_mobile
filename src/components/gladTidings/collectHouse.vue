@@ -124,6 +124,7 @@
         this.disabled = false;
         this.page = 1;
         this.lists = [];
+        this.showInfo = [];
       },
       loadMore() {
         if (!this.disabled) {
@@ -161,7 +162,6 @@
           if (this.searchValue !== '') {
             let data = res.data.data;
             if (data.length !== 0 && res.data.status === 'success') {
-              this.showInfo = [];
               for (let i = 0; i < data.length; i++) {
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i], type);
