@@ -25,7 +25,6 @@
           type="text"
           placeholder="请填写房产证号"
           icon="clear"
-          required
           @click-icon="form.property_number = ''">
         </van-field>
       </van-cell-group>
@@ -118,6 +117,30 @@
           placeholder="请填写燃气表底数"
           icon="clear"
           @click-icon="form.gas = ''">
+        </van-field>
+        <van-field
+          v-model="form.water_card_number"
+          label="水卡卡号"
+          type="text"
+          placeholder="请填写水卡卡号"
+          icon="clear"
+          @click-icon="form.water_card_number = ''">
+        </van-field>
+        <van-field
+          v-model="form.electricity_card_number"
+          label="电卡卡号"
+          type="text"
+          placeholder="请填写电卡卡号"
+          icon="clear"
+          @click-icon="form.electricity_card_number = ''">
+        </van-field>
+        <van-field
+          v-model="form.gas_card_number"
+          label="气卡卡号"
+          type="text"
+          placeholder="请填写气卡卡号"
+          icon="clear"
+          @click-icon="form.gas_card_number = ''">
         </van-field>
         <van-field
           v-model="form.public_fee"
@@ -360,6 +383,9 @@
           water: '',                        //水表底数
           electricity_peak: '',             //电表底数
           electricity_valley: '',           //电表底数
+          water_card_number: '',            //水卡卡号
+          electricity_card_number: '',      //电卡卡号
+          gas_card_number: '',              //气卡卡号
           gas: '',                          //燃气表底数
           public_fee: '',                   //公摊费用
           data_date: '',                    //资料补齐时间
@@ -741,6 +767,9 @@
         this.form.water = '';               //水表底数
         this.form.electricity_peak = '';    //电表底数
         this.form.electricity_valley = '';  //电表底数
+        this.form.water_card_number = '';         //水卡卡号
+        this.form.electricity_card_number = '';   //电卡卡号
+        this.form.gas_card_number = '';           //气卡卡号
         this.form.gas = '';                 //燃气表底数
         this.form.public_fee = '';          //公摊费用
         this.form.data_date = '';           //资料补齐时间

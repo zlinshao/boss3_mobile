@@ -1,6 +1,6 @@
 <template>
   <div id="hello" class="hello">
-    <div class="top" :class="{'shadow': active !== 3 && active !== 4}">
+    <div class="top" :class="{'shadow': footActive === 1}">
       <div @click="tabTag(1,0)" :class="{'onDiv': active === 1}">
         <p>
           <i class="iconfont icon-wancheng"></i>
@@ -84,11 +84,17 @@
     <!--我发起的-->
     <div v-if="active !== 0 " class="waterfall"
          :class="{'marTop': active === 1 || active === 2}">
+      <div class="sendTop" v-if="active !== 3 && active !== 4">
+        <div @click="searchRouter"><i class="iconfont icon-sousuo" style="vertical-align: middle;"></i><span>搜索</span>
+        </div>
+      </div>
       <div class="sendTop" v-if="active !== 1 && active === 3">
+        <div @click="searchRouter"><i class="iconfont icon-sousuo" style="vertical-align: middle;"></i>搜索</div>
         <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未完成({{paging}})</span></div>
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已完成</span></div>
       </div>
       <div class="sendTop" v-if="active !== 1 && active === 4">
+        <div @click="searchRouter"><i class="iconfont icon-sousuo" style="vertical-align: middle;"></i>搜索</div>
         <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未读({{paging}})</span></div>
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已读</span></div>
       </div>
@@ -118,9 +124,9 @@
                 房屋地址：
                 <span>{{item.house_name}}</span>
               </h3>
-              <h3>
+              <!--<h3>-->
                 <!--结束时间：0000-00-00 00:00:00-->
-              </h3>
+              <!--</h3>-->
               <div class="progress"
                    :class="{'published':item.status === 'published','rejected':item.status === 'rejected','cancelled':item.status === 'cancelled'}">
                 <div>
@@ -178,7 +184,6 @@
     data() {
       return {
         urls: globalConfig.server_user,
-        header: globalConfig.header.Authorization,
         list: [],
         page: 1,
         disabled: false,
@@ -211,6 +216,10 @@
       this.scrollTops();
     },
     methods: {
+      // 搜索
+      searchRouter() {
+        this.$router.push({path: '/searchList', query: {term: JSON.stringify(this.params)}})
+      },
       // 待办事项
       toDone() {
         this.$http.get(this.urls + 'process?type=2&count=1').then((res) => {
@@ -401,7 +410,7 @@
     }
 
     .waterfall {
-      margin-top: 2.9rem;
+      margin-top: 3.1rem;
       margin-bottom: 1.2rem;
       .bottom {
         @include flex;
@@ -413,7 +422,7 @@
     }
 
     .waterfall.marTop {
-      margin-top: 2.3rem;
+      margin-top: 3.1rem;
     }
 
     .top {
@@ -654,13 +663,14 @@
     .sendTo, .waterfall {
       .sendTop {
         position: fixed;
-        background: #F8F8F8;
+        background: #FFFFFF;
         top: 2.1rem;
         left: 0;
         right: 0;
         @include flex;
         justify-content: space-around;
-        border-bottom: .02px solid #ebebeb;
+        border-top: .2rem solid #f4f4f4;
+        border-bottom: .02rem solid #ebebeb;
         div {
           height: .8rem;
           width: 40%;
