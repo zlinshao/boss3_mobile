@@ -12,7 +12,7 @@
       </div>
 
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length < 2 && showDetail === 0">请输入搜索内容(至少2位)</div>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 0">请点击搜索</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 0">请确认搜索</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 2">暂无相关信息</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 1">
         <van-loading type="spinner" color="black"/>
