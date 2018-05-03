@@ -671,7 +671,6 @@
 
       .commentArea {
         margin-top: .3rem;
-        margin-bottom: 1rem;
         padding-bottom: .36rem;
         background: #ffffff;
         color: #101010;
@@ -746,10 +745,9 @@
     }
     .bottom {
       @include flex;
-      margin-bottom: 1.3rem;
       justify-content: center;
       align-items: center;
-      padding: .4rem 0 0;
+      padding: .4rem 0 1.3rem;
       color: #DDDDDD;
     }
 
