@@ -671,6 +671,7 @@
 
       .commentArea {
         margin-top: .3rem;
+        margin-bottom: 1rem;
         padding-bottom: .36rem;
         background: #ffffff;
         color: #101010;
