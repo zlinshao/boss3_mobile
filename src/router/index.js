@@ -42,10 +42,11 @@ import CollectHouse from '../components/gladTidings/collectHouse.vue'       //�
 import Organize from '../components/gladTidings/organize.vue'               //开单人搜索
 import Depart from '../components/common/selectDepartment.vue'              //部门搜索
 
-// import ProductControlCenter from '../components/gladTidings/productControlCenter/index.vue'
+import ProductControlCenter from '../components/gladTidings/productControlCenter/index.vue'
 import ProductDetail from '../components/gladTidings/productControlCenter/components/productDetail.vue'
 import ImgDetail from '../components/gladTidings/productControlCenter/components/imgDetail.vue'
 import ContractDetail from '../components/gladTidings/productControlCenter/components/contractDetail.vue'
+import CollectDetail from '../components/gladTidings/productControlCenter/components/collectDetail'
 
 
 Vue.use(Router);
@@ -311,6 +312,16 @@ export default new Router({
       meta: {title: '合同详情'},
       component: ContractDetail
     },
+    {
+      path: '/collectDetail',
+      hidden: false,
+      name: '收房合同详情',
+      meta: {title: '收房合同详情'},
+      component: CollectDetail
+    },
+
+
+
     {
       path: '/writings',
       hidden: false,

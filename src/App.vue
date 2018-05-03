@@ -45,12 +45,21 @@
     },
     methods: {
       responses() {
-        if (sessionStorage.myData !== undefined) {
-          let head = JSON.parse(sessionStorage.myData);
-          globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-        } else {
+        if(navigator.userAgent == 'app/ApartMent'){
           this.loading = true;
-          this.corp();
+          globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
+          this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
+            this.loading = false;
+            sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+          })
+        }else {
+          if (sessionStorage.myData !== undefined) {
+            let head = JSON.parse(sessionStorage.myData);
+            globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+          } else {
+            this.loading = true;
+            this.corp();
+          }
         }
 
         let that = this;
@@ -85,6 +94,7 @@
         });
 
       },
+
       // 认证
       corp() {
         let that = this;
@@ -240,6 +250,7 @@
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
       },
+
       onDelete() {
         this.value = this.value.slice(0, this.value.length - 1);
       }
