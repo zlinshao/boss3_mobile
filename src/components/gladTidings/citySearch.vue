@@ -11,9 +11,10 @@
         <p v-if="searchValue.length > 1" @click="search" style="color: #666666;">搜索</p>
       </div>
 
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length < 2">请输入搜索内容(至少2位)</div>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail">暂无相关信息</div>
-      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 &&!showDetail">
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length < 2 && showDetail === 0">请输入搜索内容(至少2位)</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 0">请点击搜索</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 2">暂无相关信息</div>
+      <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 1">
         <van-loading type="spinner" color="black"/>
       </div>
       <div class="searchContent">
@@ -59,7 +60,7 @@
         path: '',
         page: 1,
         disabled: true,
-        showDetail: true,
+        showDetail: 0,
       }
     },
 
@@ -77,12 +78,16 @@
     },
     watch: {
       searchValue(val) {
-        this.lists = [];
         let value = val.replace(/\s+/g, '');
         this.searchValue = value;
         if (value !== '') {
-          this.disabled = false;
-          this.page = 1;
+          let len = value.length;
+          if (len < 2) {
+            this.showDetail = 0;
+            this.lists = [];
+          }
+          // this.disabled = false;
+          // this.page = 1;
           // this.onSearch(value, this.page);
         } else {
           this.close_();
@@ -103,7 +108,7 @@
       },
       onSearch(val, page) {
         if (val.length > 1) {
-          this.showDetail = false;
+          this.showDetail = 1;
           this.$http.get(this.urls + 'setting/community/', {
             params: {
               num: 30,
@@ -117,12 +122,11 @@
                 let data = res.data.data.list;
                 data.forEach((data) => {
                   this.lists.push(data);
-                  this.show();
+                  this.showDetail = 2;
                 });
-                // this.lists = res.data.data.list;
               } else {
                 this.disabled = true;
-                this.show();
+                this.showDetail = 2;
               }
             } else {
               this.disabled = true;
@@ -131,9 +135,7 @@
           });
         }
       },
-      show() {
-        this.showDetail = true;
-      },
+
       village(data) {
         this.$router.replace({path: this.path, query: {city: JSON.stringify(data)}});
       },
@@ -141,6 +143,7 @@
         this.$router.replace({path: this.path});
       },
       close_() {
+        this.showDetail = 0;
         this.searchValue = '';
         this.lists = [];
       },

@@ -50,10 +50,10 @@
             </div>
           </li>
         </ul>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length < 2">请输入搜索内容(至少2位)
-        </div>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail">暂无相关信息</div>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && !showDetail">
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length < 2 && showDetail === 0">请输入搜索内容(至少2位)</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 0">请点击搜索</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 2">暂无相关信息</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail === 1">
           <van-loading type="spinner" color="black"/>
         </div>
 
@@ -81,7 +81,7 @@
     },
     data() {
       return {
-        showDetail: true,
+        showDetail: 0,
         disabled: true,
         page: 1,
         address: globalConfig.server_user,
@@ -110,10 +110,15 @@
       searchValue(val) {
         let value = val.replace(/\s+/g, '');
         this.searchValue = value;
-        if (value.length !== 0) {
-          this.disabled = false;
-          this.page = 1;
-          this.lists = [];
+        if (value !== '') {
+          let len = value.length;
+          if (len < 2) {
+            this.showDetail = 0;
+            this.lists = [];
+          }
+          // this.disabled = false;
+          // this.page = 1;
+          // this.lists = [];
           // this.onSearch(this.types, value);
         } else {
           this.close_();
@@ -151,7 +156,7 @@
             urls = 'houses';
         }
         if (val.length > 1) {
-          this.showDetail = false;
+          this.showDetail = 1;
           this.myData(type, val, urls);
         }
       },
@@ -188,10 +193,10 @@
               this.disabled = true;
             }
             if (data.length === 0 && this.params.page === 1 && res.data.status === 'success') {
-              this.showDetail = true;
+              this.showDetail = 2;
             }
             if (res.data.status === 'fail') {
-              this.showDetail = true;
+              this.showDetail = 2;
             }
           } else {
             this.disabled = true;
@@ -268,7 +273,7 @@
           list.department_name = '---';
         }
         this.lists.push(list);
-        this.showDetail = true;
+        this.showDetail = 2;
       },
 
       // 房屋地址
@@ -280,6 +285,7 @@
         });
       },
       close_() {
+        this.showDetail = 0;
         this.lists = [];
         this.searchValue = '';
       },
