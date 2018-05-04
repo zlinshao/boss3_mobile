@@ -242,6 +242,7 @@
         this.readActive = red;
         this.page = 1;
         this.disabled = false;
+        this.scrollTops();
       },
       loadMore() {
         if (!this.disabled) {
@@ -262,6 +263,7 @@
         this.page = 1;
         this.readActive = read;
         this.disabled = false;
+        this.scrollTops();
       },
       lists(val, active, read) {
         this.params = {};

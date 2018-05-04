@@ -112,7 +112,7 @@
     </div>
 
     <div id="videoId" v-if="videoSrc !== ''">
-      <video muted :src="videoSrc" controls autoplay width="300px"></video>
+      <video muted :src="videoSrc" controls autoplay width="300px" onresize="OnFullScreen(this)"></video>
       <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
     </div>
 
@@ -234,6 +234,9 @@
           this.role_name = this.place.auditors;
           this.showContent = true;
         }
+      },
+      OnFullScreen(ev) {
+        alert(1)
       },
       IsPC() {
         let userAgentInfo = navigator.userAgent;
