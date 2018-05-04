@@ -45,14 +45,14 @@
     },
     methods: {
       responses() {
-        if(navigator.userAgent == 'app/ApartMent'){
+        if (navigator.userAgent == 'app/ApartMent') {
           this.loading = true;
           globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
             sessionStorage.setItem('myData', JSON.stringify(res.data.data));
           })
-        }else {
+        } else {
           if (sessionStorage.myData !== undefined) {
             let head = JSON.parse(sessionStorage.myData);
             globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
@@ -222,7 +222,7 @@
                 })
               },
               onFail: function (err) {
-                  alert(JSON.stringify(err));
+                alert(JSON.stringify(err));
                 alert('您不在系统内，请联系管理员添加！！');
                 dd.biz.navigation.close({
                   onSuccess: function (result) {
@@ -280,7 +280,7 @@
     }
   }
 
-  body ,html {
+  body, html {
     background-color: #f8f8f8;
     height: 100%;
   }
