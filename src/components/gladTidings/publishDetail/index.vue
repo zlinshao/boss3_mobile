@@ -16,7 +16,7 @@
         <div class="placeFinish"
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected', 'cancelled':place.status === 'cancelled'}">
 
-          <span class="placeSpan" v-if="placeFalse">
+          <span class="placeSpan" v-if="placeFalse" @click="approvePersonal">
             <i class="iconfont icon-yanqi--"></i>
             <span>{{place.display_name}}</span>
           </span>
@@ -124,6 +124,26 @@
       </div>
       <img :src="bigPic">
     </div>
+
+    <van-popup v-model="showContent" style="border-radius: 3px;">
+      <div class="showContentTitle">审核人</div>
+      <div class="showContent">
+        <div v-for="key in role_name" class="showRoleName">
+          <div class="showImg">
+            <img :src="key.avatar" v-if="key.avatar !== '' && key.avatar !== null">
+            <img src="../../../assets/head.png" v-else>
+          </div>
+          <div>
+            <p>姓名：{{key.name}}</p>
+            <p>手机号：<a :href="'tel:' + key.phone">{{key.phone}}</a></p>
+            <!--<p>岗位：<span v-for="item in key.role">{{item.display_name}}</span></p>-->
+          </div>
+        </div>
+      </div>
+      <div class="showContentFooter" @click="showContent = false">
+        关闭
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -157,6 +177,7 @@
         operation: {},
         process: {},
         commentList: [],
+        role_name: [],
 
         page: 1,
         paging: 0,
@@ -169,6 +190,8 @@
 
         placeFalse: false,
         videoSrc: '',
+
+        showContent: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -195,7 +218,23 @@
       this.close_();
       this.disabled1 = false;
     },
+    watch: {
+      showContent(val) {
+        if (val) {
+          document.getElementsByTagName('body')[0].className = 'showContainer';
+        } else {
+          document.getElementsByTagName('body')[0].className = '';
+        }
+      }
+    },
     methods: {
+      // 审批人信息
+      approvePersonal() {
+        if (this.place.auditors) {
+          this.role_name = this.place.auditors;
+          this.showContent = true;
+        }
+      },
       IsPC() {
         let userAgentInfo = navigator.userAgent;
         let Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPod"];
@@ -431,6 +470,51 @@
       }
       to {
         @include scale(1);
+      }
+    }
+
+    .showContentTitle, .showContentFooter {
+      text-align: center;
+      padding: .3rem 0;
+      font-size: .36rem
+    }
+    .showContentTitle {
+      border-bottom: 1px solid #f4f4f4;
+    }
+    .showContentFooter {
+      border-top: 1px solid #f4f4f4;
+      color: #409EFF;
+    }
+    .showContent {
+      width: 6.6rem;
+      max-height: 8rem;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      p {
+        color: #6a6a6a;
+        margin: .12rem 0;
+        a {
+          color: $onColor;
+        }
+      }
+      .showRoleName + .showRoleName {
+        border-top: 1px solid #f4f4f4;
+      }
+      .showRoleName {
+        @include flex;
+        align-items: center;
+        padding: .2rem;
+        .showImg {
+          min-width: .9rem;
+          max-width: .9rem;
+          height: .9rem;
+          margin-right: .2rem;
+          img {
+            width: 100%;
+            height: 100%;
+            @include border_radius(50%);
+          }
+        }
       }
     }
 
