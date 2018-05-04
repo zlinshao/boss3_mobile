@@ -32,7 +32,7 @@
       <div class="changes" v-for="(key,index) in amount">
         <div class="paddingTitle">
           <span>客户信息<span v-if="amount > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amount > 1" @click="deleteAmount(index,1)">删除</span>
+          <span class="colors" v-if="amount > 1 && index !== 0" @click="deleteAmount(index,1)">删除</span>
         </div>
         <van-cell-group>
           <van-field
