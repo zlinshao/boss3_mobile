@@ -483,8 +483,8 @@
       deleteAmount(index, val) {
         if (this.amount > 1) {
           this.amount--;
-          this.splice(this.form.customers, index);
-          this.splice(this.sexs, index);
+          this.form.customers.splice(index, 1);
+          this.sexs.splice(index, 1);
         }
       },
       decorate(val) {
