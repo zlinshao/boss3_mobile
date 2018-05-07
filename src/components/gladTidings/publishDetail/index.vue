@@ -112,7 +112,8 @@
     </div>
 
     <div id="videoId" v-if="videoSrc !== ''">
-      <video :src="videoSrc" autoplay width="300px"></video>
+      <video style="position: absolute; top: 10%;left: 0;" :src="videoSrc" controls autoplay width="96%"
+             height="100%"></video>
       <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
     </div>
 
@@ -120,7 +121,7 @@
       <div>
         <p v-if="photo.length > 1" class="nextPic" @click="next(photo)"><i class="iconfont icon-xiayibu"></i></p>
         <p v-if="photo.length > 1" class="prePic" @click="pre(photo)"><i class="iconfont icon-xiayibu"></i></p>
-        <p class="close" @click="closePic"><i class="iconfont icon-cuowutishi"></i></p>
+        <p class="close" @click="closePic"><i class="iconfont icon-guanbi"></i></p>
       </div>
       <img :src="bigPic">
     </div>
@@ -238,7 +239,7 @@
 
       IsPC() {
         let userAgentInfo = navigator.userAgent;
-        let Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPod","app/ApartMent"];
+        let Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPod", "app/ApartMent"];
         let flag = true;
         for (let v = 0; v < Agents.length; v++) {
           if (userAgentInfo.indexOf(Agents[v]) > 0) {
@@ -533,13 +534,6 @@
       }
     }
 
-    #videoId1 {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50% -50%);
-    }
-
     #videoId {
       position: fixed;
       top: 0;
@@ -549,7 +543,7 @@
       @include flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba(0, 0, 0, .7);
+      background-color: rgba(0, 0, 0, 1);
       z-index: 10000;
       .close {
         position: absolute;
@@ -558,10 +552,11 @@
         text-align: center;
         line-height: .8rem;
         @include border_radius(50%);
-        background-color: rgba(0, 0, 0, .8);
+        /*background-color: rgba(0, 0, 0, .8);*/
         bottom: 1rem;
-        border: 1px solid rgba(255, 255, 255, .8);
-        left: 50%;
+        /*border: 1px solid rgba(255, 255, 255, .8);*/
+        right: 2%;
+        top: 2%;
         transform: translate(-50%);
         i {
           color: #FFFFFF;
