@@ -4,11 +4,11 @@
       <div class="searchCustom">
         <div>
           <i class="van-icon van-icon-search"></i>
-          <input type="text" v-model="searchValue">
+          <input type="text" v-model="searchValue" @keyup.enter="search">
           <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
         </div>
-        <p v-if="searchValue.length < 2" @click="onCancel">取消</p>
-        <p v-if="searchValue.length > 1" @click="search" style="color: #666666;">搜索</p>
+        <p v-if="searchValue.length > 0" @click="search" style="color: #666666;">搜索</p>
+        <p v-else @click="onCancel">取消</p>
       </div>
       <div class="searchContent">
         <ul
@@ -55,10 +55,9 @@
             </div>
           </li>
         </ul>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length < 2">请输入搜索内容(至少2位)
-        </div>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && showDetail">暂无相关信息</div>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 1 && !showDetail">
+        <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 2">暂无相关信息</div>
+        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 1">
           <van-loading type="spinner" color="black"/>
         </div>
 
@@ -87,7 +86,7 @@
     data() {
       return {
         address: globalConfig.server_user,
-        showDetail: true,
+        showDetail: 0,
         disabled: true,
         page: 1,
 
@@ -113,12 +112,12 @@
       searchValue(val) {
         let value = val.replace(/\s+/g, '');
         this.searchValue = value;
-        if (value.length !== 0) {
-          if (value.length > 1) {
-            this.disabled = false;
-            this.page = 1;
-            this.lists = [];
-          }
+        if (value !== '') {
+          // if (value.length > 1) {
+          //   this.disabled = false;
+          //   this.page = 1;
+          //   this.lists = [];
+          // }
         } else {
           this.close_();
         }
@@ -138,8 +137,8 @@
       },
       // 搜索
       onSearch(params, val) {
-        if (val.length > 1) {
-          this.showDetail = false;
+        if (val !== '') {
+          this.showDetail = 1;
           this.params.page = this.page;
           this.params.q = val;
           this.myData(params);
@@ -211,11 +210,11 @@
             } else {
               this.disabled = true;
             }
-            if (res.data.data.length === 0 && this.params.page === 1 && res.data.status === 'success') {
-              this.showDetail = true;
+            if (res.data.data.length === 0 && res.data.status === 'success') {
+              this.showDetail = 2;
             }
             if (res.data.status === 'fail') {
-              this.showDetail = true;
+              this.showDetail = 2;
             }
           } else {
             this.disabled = true;
@@ -236,6 +235,7 @@
         this.$router.replace({path: this.path});
       },
       close_() {
+        this.showDetail = 0;
         this.lists = [];
         this.searchValue = '';
       },

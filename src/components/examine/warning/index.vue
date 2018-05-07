@@ -32,12 +32,12 @@
       <div class="mainTitle">
         <p v-html="myData.content"></p>
       </div>
-      <div class="mainFooter">
-        <div>
-          <p>南京乐伽商业管理有限公司</p>
-          <p>{{myData.date}}</p>
-        </div>
-      </div>
+      <!--<div class="mainFooter">-->
+        <!--<div>-->
+          <!--<p>南京乐伽商业管理有限公司</p>-->
+          <!--<p>{{myData.date}}</p>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
     <div class="appendix" v-if="recall1 && attachment.length !== 0">
       <div class="appendixMain">

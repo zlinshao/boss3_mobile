@@ -757,6 +757,8 @@
           let val = JSON.parse(t.house);
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
+          this.form.is_agency = val.is_agency;                           //是否中介
+          this.is_agencyOn = val.is_agency === 1 ? true : false;         //是否中介
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);

@@ -4,7 +4,7 @@
       <div class="searchCustom">
         <div>
           <i class="van-icon van-icon-search"></i>
-          <input type="text" v-model="searchValue">
+          <input type="text" v-model="searchValue" @keyup.enter="search">
           <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
         </div>
         <p v-if="searchValue.length < 2" @click="onClose">取消</p>
