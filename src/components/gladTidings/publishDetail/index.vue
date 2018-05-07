@@ -112,7 +112,7 @@
     </div>
 
     <div id="videoId" v-if="videoSrc !== ''">
-      <video muted :src="videoSrc" controls autoplay width="300px" onresize="OnFullScreen(this)"></video>
+      <video :src="videoSrc" autoplay width="300px"></video>
       <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
     </div>
 
@@ -235,9 +235,7 @@
           this.showContent = true;
         }
       },
-      OnFullScreen(ev) {
-        alert(1)
-      },
+
       IsPC() {
         let userAgentInfo = navigator.userAgent;
         let Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPod","app/ApartMent"];
