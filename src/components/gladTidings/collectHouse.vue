@@ -180,6 +180,7 @@
                   this.showInfo.push(data[i].id);
                   list.house_id = data[i].id;
                   list.house_name = data[i].name;
+                  list.is_agency = data[i].house_res.is_agency;
                   this.lists.push(list);
                 }
               }
@@ -245,6 +246,7 @@
           list.end_at = '';
         }
         list.id = value.id;
+        list.is_agency = value.is_agency;
         list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;
         if (value.customers.length !== 0) {
