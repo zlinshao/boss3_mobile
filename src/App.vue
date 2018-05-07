@@ -46,13 +46,23 @@
     methods: {
       responses() {
         if(navigator.userAgent == 'app/ApartMent'){
+          sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
           globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-            sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+            // sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+            let data = {};
+            data.id = res.data.data.id;
+            data.name = res.data.data.name;
+            data.avatar = res.data.data.avatar;
+            data.phone = res.data.data.phone;
+            data.department_name = res.data.data.org[0].name;
+            data.department_id = res.data.data.org[0].id;
+            sessionStorage.setItem('personal', JSON.stringify(data));
           })
         }else {
+          sessionStorage.setItem('queryType', 'ding');
           if (sessionStorage.myData !== undefined) {
             let head = JSON.parse(sessionStorage.myData);
             globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;

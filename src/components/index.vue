@@ -22,7 +22,7 @@
     </div>
 
     <div class="okFinish" v-if="footActive === 1">
-      <div class="inRough">
+      <div class="inRough" v-if="queryType == 0 || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
             <div>
@@ -41,7 +41,8 @@
           </div>
         </div>
       </div>
-      <div class="inRough">
+
+      <div class="inRough" v-if="queryType == 1 || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
             <div>
@@ -60,11 +61,12 @@
           </div>
         </div>
       </div>
-      <div class="inRough">
+
+      <div class="inRough" v-if="queryType == 2 || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
             <div>
-              <span>审批</span>
+              <span>房产管控中心</span>
               <!--<span>3</span>-->
             </div>
             <!--<div>收起</div>-->
@@ -197,6 +199,8 @@
         paging: 0,
 
         processType2: '',
+
+        queryType: '',
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -206,6 +210,7 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
+      this.queryType = sessionStorage.getItem('queryType');
       this.scrollTops();
       this.toDone();
     },
