@@ -242,6 +242,7 @@
         this.readActive = red;
         this.page = 1;
         this.disabled = false;
+        this.scrollTops();
       },
       loadMore() {
         if (!this.disabled) {
@@ -262,6 +263,7 @@
         this.page = 1;
         this.readActive = read;
         this.disabled = false;
+        this.scrollTops();
       },
       lists(val, active, read) {
         this.params = {};
@@ -411,7 +413,7 @@
 
     .waterfall {
       margin-top: 3.1rem;
-      margin-bottom: 1.2rem;
+      padding-bottom: 1.2rem;
       .bottom {
         @include flex;
         justify-content: center;
@@ -458,8 +460,8 @@
       }
     }
 
-    .okFinish, .sendTo {
-      margin-bottom: 1.5rem;
+    .okFinish {
+      padding-bottom: 1.5rem;
     }
 
     .okFinish {
@@ -641,26 +643,7 @@
       }
     }
 
-    /*抄送我的*/
-    .sendTo {
-      .sendMain {
-        flex-wrap: wrap;
-        background: #ffffff;
-        .startedMain {
-          border-bottom: .02rem solid #ebebeb;
-          padding: .3rem;
-          .rightTitle {
-            border: 0;
-            padding: 0;
-            h4 {
-              color: $onColor;
-            }
-          }
-        }
-      }
-    }
-
-    .sendTo, .waterfall {
+    .waterfall {
       .sendTop {
         position: fixed;
         background: #FFFFFF;
