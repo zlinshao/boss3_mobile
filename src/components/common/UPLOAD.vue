@@ -216,6 +216,7 @@
             'UploadComplete': function () {
               //队列文件处理完毕后，处理相关的事情
               _this.isUploading = false;
+              _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
             },
             'Error': function (up, err, errTip) {// 每个文件上传失败后,处理相关的事情
               if (err.file && err.file.size !== undefined && err.file.size > 104857600) {

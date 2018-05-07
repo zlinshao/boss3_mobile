@@ -717,6 +717,8 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
+          this.form.is_agency = val.is_agency;                            //是否中介
+          this.cusFrom = val.is_agency === 1 ? true : false;              //是否中介
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
