@@ -177,7 +177,6 @@
         operation: {},
         process: {},
         commentList: [],
-        role_name: [],
 
         page: 1,
         paging: 0,
@@ -191,6 +190,7 @@
         placeFalse: false,
         videoSrc: '',
 
+        role_name: [],
         showContent: false,
       }
     },
