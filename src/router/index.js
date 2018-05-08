@@ -175,10 +175,10 @@ export default new Router({
     },
     {
       path: '/unCollectBeforeRent',
-      name: '未收先租未知',
+      name: '未收先租',
       hidden: 'glad',
       icon: 'iconfont icon-weishouxianzubaobei',
-      meta: {title: '未收先租未知'},
+      meta: {title: '未收先租'},
       component: UncollectBeforeRent
     },
     {

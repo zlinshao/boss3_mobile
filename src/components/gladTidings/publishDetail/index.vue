@@ -111,9 +111,12 @@
       <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
     </div>
 
-    <div id="videoId" v-if="videoSrc !== ''">
-      <video style="position: absolute; top: 6%;left: 5%;" :src="videoSrc" muted controls autoplay width="90%"
-             height="100%"></video>
+    <div id="videoId" v-show="videoSrc !== ''">
+      <video id="video" :src="videoSrc" controls autoplay playsinline x5-video-player-type="h5"
+             x5-video-player-fullscreen="true">
+      </video>
+      <!--<video style="position: absolute; top: 6%;left: 5%;" :src="videoSrc" muted controls autoplay width="90%"-->
+      <!--height="100%"></video>-->
       <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
     </div>
 
@@ -251,6 +254,19 @@
       },
       checkTv(val) {
         this.videoSrc = val;
+        let player = document.getElementById('video');
+        player.addEventListener('x5videoenterfullscreen', function () {
+          let width = window.screen.width;
+          let height = window.screen.height;
+          if (width > height) {
+            width = [height, height = width][0];
+          }
+          player.style.width = width + 'px';
+          player.style.height = height + 'px';
+        });
+        player.addEventListener('x5videoexitfullscreen', function () {
+          player.style.width = player.style.height = '';
+        }, false);
       },
       close_() {
         this.videoSrc = '';
@@ -543,8 +559,13 @@
       @include flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba(0, 0, 0, 1);
+      background-color: rgba(0, 0, 0, .6);
       z-index: 10000;
+      #video {
+        max-width: 100%;
+        max-height: 100%;
+        object-position: center top;
+      }
       .close {
         position: absolute;
         width: .8rem;
