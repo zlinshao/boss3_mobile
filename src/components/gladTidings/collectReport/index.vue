@@ -806,8 +806,8 @@
             this.datePay[0] = draft.pay_first_date;
             this.form.pay_second_date = draft.pay_second_date;
 
-            this.form.is_agency = data.is_agency;                           //是否中介
-            this.is_agencyOn = data.is_agency === 1 ? true : false;         //是否中介
+            this.form.is_agency = draft.is_agency;                           //是否中介
+            this.is_agencyOn = draft.is_agency === 1 ? true : false;         //是否中介
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
