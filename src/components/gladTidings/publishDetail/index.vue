@@ -112,7 +112,7 @@
     </div>
 
     <div id="videoId" v-show="videoSrc !== ''">
-      <video id="video" :src="videoSrc" muted controls autoplay width="90%" height="100%"></video>
+      <video id="video" :src="videoSrc" muted controls autoplay width="90%" height="80%"></video>
       <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
     </div>
 
