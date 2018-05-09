@@ -112,8 +112,8 @@
     </div>
 
     <div id="videoId" v-show="videoSrc !== ''">
-      <video id="video" :src="videoSrc" controls autoplay playsinline x5-video-player-type="h5"
-             x5-video-player-fullscreen="true">
+      <video id="my-video" class="video-js" controls preload="auto" width="100%" data-setup="{}">
+        <source :src="videoSrc">
       </video>
       <!--<video style="position: absolute; top: 6%;left: 5%;" :src="videoSrc" muted controls autoplay width="90%"-->
       <!--height="100%"></video>-->
@@ -254,19 +254,19 @@
       },
       checkTv(val) {
         this.videoSrc = val;
-        let player = document.getElementById('video');
-        player.addEventListener('x5videoenterfullscreen', function () {
-          let width = window.screen.width;
-          let height = window.screen.height;
-          if (width > height) {
-            width = [height, height = width][0];
-          }
-          player.style.width = width + 'px';
-          player.style.height = height + 'px';
-        });
-        player.addEventListener('x5videoexitfullscreen', function () {
-          player.style.width = player.style.height = '';
-        }, false);
+        // let player = document.getElementById('video');
+        // player.addEventListener('x5videoenterfullscreen', function () {
+        //   let width = window.screen.width;
+        //   let height = window.screen.height;
+        //   if (width > height) {
+        //     width = [height, height = width][0];
+        //   }
+        //   player.style.width = width + 'px';
+        //   player.style.height = height + 'px';
+        // });
+        // player.addEventListener('x5videoexitfullscreen', function () {
+        //   player.style.width = player.style.height = '';
+        // }, false);
       },
       close_() {
         this.videoSrc = '';
