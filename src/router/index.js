@@ -42,7 +42,6 @@ import SearchList from '../components/gladTidings/searchList.vue'           //�
 import CollectHouse from '../components/gladTidings/collectHouse.vue'       //房屋搜索
 import Organize from '../components/gladTidings/organize.vue'               //开单人搜索
 import Depart from '../components/common/selectDepartment.vue'              //部门搜索
-import Video from '../components/gladTidings/publishDetail/video1.vue'              //部门搜索
 
 import ProductControlCenter from '../components/gladTidings/productControlCenter/index.vue'
 import ProductDetail from '../components/gladTidings/productControlCenter/components/productDetail.vue'
@@ -106,15 +105,6 @@ export default new Router({
       meta: {title: '搜索'},
       component: SearchList
     },
-    {
-      path: '/video',
-      name: '11111',
-      hidden: 'glad',
-      back: '#E3705B',
-      meta: {title: '111111'},
-      component: Video
-    },
-
     {
       path: '/publishDetail',
       name: 'publishDetail',

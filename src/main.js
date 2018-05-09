@@ -7,8 +7,8 @@ import Fun from './fun.config.js'
 import '@/assets/js/api.js'
 import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 
-import './assets/video.js/js/video.min.js';
-import './assets/video.js/css/video-js.css';
+// import './assets/video.js/js/video.min.js';
+// import './assets/video.js/css/video-js.css';
 
 import {Cell, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard, Row, Col, Badge, Button, Loading, NavBar, Panel, Stepper, Step, Steps, Swipe, SwipeItem, Tab, Tabs, Tabbar, TabbarItem, Tag, Checkbox, CheckboxGroup, Field, RadioGroup, Radio, Search, Switch, Uploader, Actionsheet, Dialog, Picker, PullRefresh, CellSwipe, Popup, SwitchCell, AddressList
 } from 'vant';

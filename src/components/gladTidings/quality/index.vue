@@ -742,7 +742,7 @@
             this.community_name = data.community.village_name;    //小区id
             this.form.door_address = data.door_address;
 
-            this.house_type = data.house_type;
+            this.form.house_type = data.house_type;
             let house = data.house_type;
             let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
             let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
@@ -861,7 +861,7 @@
         this.community_name = '';                 //小区名称
         this.form.door_address = ['', '', ''];
 
-        this.house_type = [1, 1, 1];
+        this.form.house_type = [1, 1, 1];
         this.house_type_name = '1室1厅1卫';
 
         this.form.area = '';                      //面积
