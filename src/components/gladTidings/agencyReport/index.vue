@@ -22,7 +22,7 @@
           required>
         </van-field>
         <van-field
-          style="font-size: .2rem"
+          style="font-size: .18rem"
           :class="{'payWay': payStatus && form.payWay.length > 1}"
           @click="payWayClick(1)"
           v-model="form.payWay[0]"
@@ -64,6 +64,24 @@
           placeholder="请填写中介名称"
           icon="clear"
           @click-icon="form.name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.user_name"
+          type="text"
+          label="中介人"
+          placeholder="请填写中介人"
+          icon="clear"
+          @click-icon="form.user_name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.phone"
+          type="number"
+          label="中介联系方式"
+          placeholder="请填写中介联系方式"
+          icon="clear"
+          @click-icon="form.phone = ''"
           required>
         </van-field>
         <van-field
@@ -172,12 +190,14 @@
           address: '',
           id: '',
           draft: 0,
-          payWay: [''],                   //付款方式
-          price_arr: [''],                //月单价
+          payWay: [''],                 //付款方式
+          price_arr: [''],              //月单价
           collect_or_rent: '',
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
           amount: '',                   //中介费
+          user_name: '',                //中介人
+          phone: '',                    //中介电话
           purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
           subbranch: '',                //支行名称
@@ -342,6 +362,8 @@
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
             this.form.amount = draft.amount;
+            this.form.user_name = draft.user_name;
+            this.form.phone = draft.phone;
             this.form.bank = draft.bank;
             this.form.subbranch = draft.subbranch;
             this.form.account_name = draft.account_name;
@@ -382,6 +404,8 @@
         this.form.house_id = '';
         this.form.collect_or_rent = '';
         this.form.amount = '';
+        this.form.user_name = '';
+        this.form.phone = '';
         this.form.bank = '';
         this.form.subbranch = '';
         this.form.account_name = '';
