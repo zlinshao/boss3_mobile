@@ -52,7 +52,7 @@
           v-model="form.amount"
           type="number"
           label="中介费"
-          placeholder="请填写金额"
+          placeholder="请填写金额已禁用"
           icon="clear"
           @click-icon="form.amount = ''"
           required>
@@ -61,7 +61,7 @@
           v-model="form.name"
           type="text"
           label="中介名称"
-          placeholder="请填写中介名称"
+          placeholder="请填写中介名称已禁用"
           icon="clear"
           @click-icon="form.name = ''"
           required>
@@ -70,7 +70,7 @@
           v-model="form.user_name"
           type="text"
           label="中介人"
-          placeholder="请填写中介人"
+          placeholder="请填写中介人已禁用"
           icon="clear"
           @click-icon="form.user_name = ''"
           required>
@@ -79,7 +79,7 @@
           v-model="form.phone"
           type="number"
           label="中介联系方式"
-          placeholder="请填写中介联系方式"
+          placeholder="请填写中介联系方式已禁用"
           icon="clear"
           @click-icon="form.phone = ''"
           required>
