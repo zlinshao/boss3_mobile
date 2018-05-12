@@ -1,14 +1,19 @@
 <template>
   <div id="image">
     <div class="imgContent">
-      <div class="imgItem" v-for="(item,index) in albumData"
+      <div class="imgItem" v-for="(item,index) in albumData" v-if="index<4"
            @click="showLargePic(item.album.album_file,0)">
-        <img :src="item.album.album_file[0].uri" style="width: 1.2rem;height: 1.2rem" alt="">
-        <div style="font-size: .24rem;color: #777">{{item.create_time.split(' ')[0]}}</div>
+        <div v-if="item.album.album_file[0].info.mime&&item.album.album_file[0].info.mime.indexOf('image')>-1">
+          <img :src="item.album.album_file[0].uri" style="width: 1.2rem;height: 1.2rem" alt="">
+          <div style="font-size: .24rem;color: #777">{{item.create_time.split(' ')[0]}}</div>
+        </div>
       </div>
-      <div class="imgItem" v-if="detailData.house_goods&&detailData.house_goods.photo.length>0"
+      <div class="imgItem" v-if="albumData.length<4 && detailData.house_goods"
            @click="showLargePic(detailData.house_goods.photo,0)">
-        <img :src="detailData.house_goods.photo[0].uri" style="width: 1.2rem;height: 1.2rem" alt="">
+        <div v-if="detailData.house_goods.photo[0].info.mime&&detailData.house_goods.photo[0].info.mime.indexOf('image')>-1">
+          <img :src="detailData.house_goods.photo[0].uri" style="width: 1.2rem;height: 1.2rem" alt="">
+          <div style="font-size: .24rem;color: #777">{{detailData.create_time.split(' ')[0]}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -27,19 +32,21 @@
       }
     },
     mounted(){
-      Toast.clear();
       this.getData();
     },
     activated(){
-      Toast.clear();
       this.getData();
     },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        vm.routerIndex(from.path, 'house');
-        vm.ddBack(from.path, 'house');
-      })
+    beforeRouteLeave(to, from, next) {
+      Toast.clear();
+      if(to.path !== '/index'){
+        next();
+      }else {
+        next('/productDetail');
+        return false;
+      }
     },
+
     methods:{
       getData(){
         Toast.loading({

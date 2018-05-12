@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import App from './App'
 import Boss from './boss.config.js'
-import router from './router'
+import routes from './router/index.js'
 import axios from 'axios'
+import VueRouter from 'vue-router'
 import Fun from './fun.config.js'
 import '@/assets/js/api.js'
 import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
@@ -13,6 +14,7 @@ import {Cell, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard, Ro
 Vue.use(Row).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(CellSwipe).use(SwitchCell).use(Picker).use(Popup).use(AddressList);
 Vue.use(require('vue-wechat-title'));
 
+Vue.use(VueRouter);
 Vue.use(Boss);
 Vue.use(Fun);
 Vue.config.productionTip = false;
@@ -21,6 +23,20 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
+
+
+const router = new VueRouter({
+  mode: 'history',
+  routes:routes.options.routes,
+
+  scrollBehavior (to, from, savedPosition) {
+    if(to.path === '/productControlCenter'){
+      return savedPosition
+    }else {
+      return { x: 0, y: 0 }
+    }
+  }
+});
 
 let u = navigator.userAgent, app = navigator.appVersion;
 let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g

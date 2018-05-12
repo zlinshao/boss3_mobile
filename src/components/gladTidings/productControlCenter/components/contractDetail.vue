@@ -2,14 +2,14 @@
   <div id="contract">
     <van-tabs>
       <van-tab title="收房合同">
-        <div class="contractInfo" v-if="lords.length>0" v-for="item in lords">
+        <div class="contractInfo" v-if="lords.length>0" v-for="item in lords" @click="searchCollectDetail(item.id)">
           <van-row class="contractItem">
-            <van-col class="itemWord" span="6">合同编号 : </van-col>
-            <van-col class="itemWord" span="18">{{item.contract_number}}</van-col>
+            <van-col class="itemWord" span="5">合同编号 : </van-col>
+            <van-col class="itemWord" span="19">{{item.contract_number}}</van-col>
           </van-row>
           <van-row class="contractItem">
-            <van-col class="itemWord" span="6">合同状态 : </van-col>
-            <van-col class="itemWord" span="18">
+            <van-col class="itemWord" span="5">合同状态 : </van-col>
+            <van-col class="itemWord" span="19">
               <span v-if="item.status == 1">未签约</span>
               <span v-else-if="item.status == 2">已签约</span>
               <span v-else-if="item.status == 3">快到期(60天内)</span>
@@ -66,14 +66,14 @@
         </div>
       </van-tab>
       <van-tab title="租房合同">
-        <div class="contractInfo" v-if="renters.length>0" v-for="item in renters">
+        <div class="contractInfo" v-if="renters.length>0" v-for="item in renters" @click="searchRentDetail(item.id)">
           <van-row class="contractItem">
-            <van-col class="itemWord" span="6">合同编号 : </van-col>
-            <van-col class="itemWord" span="18">{{item.contract_number}}</van-col>
+            <van-col class="itemWord" span="5">合同编号 : </van-col>
+            <van-col class="itemWord" span="19">{{item.contract_number}}</van-col>
           </van-row>
           <van-row class="contractItem">
-            <van-col class="itemWord" span="6">合同状态 : </van-col>
-            <van-col class="itemWord" span="18">
+            <van-col class="itemWord" span="5">合同状态 : </van-col>
+            <van-col class="itemWord" span="19">
               <span v-if="item.status == 1">未签约</span>
               <span v-else-if="item.status == 2">已签约</span>
               <span v-else-if="item.status == 3">快到期(60天内)</span>
@@ -145,18 +145,22 @@
       }
     },
     mounted(){
-      Toast.clear();
       this.getData();
     },
-    activated(){
+    beforeRouteLeave(to, from, next) {
       Toast.clear();
-      this.getData();
+      if(to.path !== '/index'){
+        next();
+      }else {
+        next('/productDetail');
+        return false;
+      }
     },
     beforeRouteEnter(to, from, next) {
-      next(vm => {
-        vm.routerIndex(from.path, 'house');
-        vm.ddBack(from.path, 'house');
-      })
+      next();
+      if(from.path !=='collectDetail'){
+        this.getData();
+      }
     },
     methods:{
       getData(){
@@ -175,6 +179,12 @@
           }
         })
       },
+      searchCollectDetail(id){
+        this.$router.push({path: '/collectDetail', query: {id: id}});
+      },
+      searchRentDetail(id){
+        this.$router.push({path: '/rentDetail', query: {id: id}});
+      }
     }
   }
 </script>

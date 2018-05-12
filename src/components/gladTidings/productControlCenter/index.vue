@@ -16,17 +16,17 @@
         <div class="filter_item" @click="selectDepart()">
           {{department_name}}
         </div>
-        <div class="filter_item" @click="openSelectModal('second')">
-          房型<i class="iconfont icon-xiayibu rotate"/>
-        </div>
-        <div class="filter_item" @click="openSelectModal('third')">
-          筛选<i class="iconfont icon-xiayibu rotate"/>
-        </div>
+        <!--<div class="filter_item" @click="openSelectModal('second')">-->
+          <!--房型<i class="iconfont icon-xiayibu rotate"/>-->
+        <!--</div>-->
+        <!--<div class="filter_item" @click="openSelectModal('third')">-->
+          <!--筛选<i class="iconfont icon-xiayibu rotate"/>-->
+        <!--</div>-->
       </div>
     </div>
 
     <div class="mainContent" id="mainContent">
-      <div class="houseItem" v-for="(item,index) in tableData"  @click="searchDetail(item)">
+      <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
         <div class="image">
           <img src="../../../assets/doc.png" alt="">
         </div>
@@ -34,9 +34,11 @@
           <div style="font-weight: bold">{{item.name}}</div>
           <div>
             <i class="iconfont icon-favoritesfilling" style="font-size: 0.2rem;color: #FFD000;"
-               v-for="item in item.house_grade"></i><i class="iconfont icon-favoritesfilling"
-                                                       style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
-          </i>
+               v-for="item in item.house_grade">
+            </i>
+            <i class="iconfont icon-favoritesfilling"
+               style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
+            </i>
             <span style="font-size: 0.2rem;margin-left: .2rem">
               {{matchDictionary(item.decoration)}}/{{matchDictionary(item.house_identity)}}
             </span>
@@ -73,6 +75,10 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div v-if="Loading" style="padding: 15px;background: #f3f3f3;position: fixed;bottom: 0;width: 100%;text-align: center">
+      <span>拼命加载中...</span>
     </div>
 
     <div v-if="isLastPage && !isEmptyData" class="bottom">
@@ -175,10 +181,11 @@
 
 <script>
   import {Toast} from 'vant';
+
   export default {
     name: 'house',
     components: {Toast},
-    data () {
+    data() {
       return {
         selectHide: false,
         columns: ['房屋状态', '未出租', '已出租', '待收房'],
@@ -206,12 +213,13 @@
         isLastPage: false,
         isGetMore: true,
         scrollHeight: '',
-        isEmptyData : false,
-        department_name:'所属部门'
+
+        isEmptyData: false,
+        department_name: '所属部门',
+        Loading : false,
       }
     },
-    mounted(){
-      Toast.clear();
+    mounted() {
       this.getData();
       this.getDictionary();
       let _this = this;
@@ -219,18 +227,20 @@
         _this.scroll_bar_move();
       })
     },
-    activated(){
-      Toast.clear();
-      this.getDepart();
-      this.routerIndex('');
-      this.ddRent('');
+    activated() {
       let _this = this;
       $(document).scroll(function () {
         _this.scroll_bar_move();
       })
     },
+    //详情页不做缓存
+    beforeRouteLeave(to, from, next) {
+      to.meta.keepAlive = true;
+      next();
+    },
+
     watch: {
-      selectHide(val){
+      selectHide(val) {
         if (val) {
           document.getElementsByTagName('body')[0].className = 'showContainer';
         } else {
@@ -240,42 +250,44 @@
     },
     methods: {
       //滚动条
-      scroll_bar_move(){
+      scroll_bar_move() {
         let body_height = $('body').height();
-        let body_scrollTop = $(document).scrollTop();;
+        let body_scrollTop = $(document).scrollTop();
         let scroll_height = $('#mainContent').height() + 83;
         if (this.scrollHeight < scroll_height) {
           this.isGetMore = true;
         }
 
         this.scrollHeight = scroll_height;
-        if (scroll_height - body_scrollTop - body_height < 150) {
+        if (scroll_height - body_scrollTop - body_height < 200) {
           this.getMore();
           this.isGetMore = false;
         }
       },
       //加载更多
-      getMore(){
-        if(this.isGetMore && !this.isLastPage){
+      getMore() {
+        if (this.isGetMore && !this.isLastPage) {
           this.params.page++;
           this.getData();
         }
       },
       //获取房屋列表
-      getData(){
-        this.isEmptyData = false,
+      getData() {
+        this.Loading = true;
+        this.isEmptyData = false;
           this.$http.get(globalConfig.server_user + 'houses', {params: this.params}).then((res) => {
+            this.Loading = false;
             if (res.data.status === 'success') {
               let arr = [];
               arr = res.data.data;
               this.isLastPage = this.params.page === res.data.meta.last_page;
-              arr.forEach((x)=>{
+              arr.forEach((x) => {
                 this.tableData.push(x)
               });
-              if(res.data.data.length<1){
+              if (res.data.data.length < 1) {
                 this.isEmptyData = true;
               }
-            }else {
+            } else {
               this.isEmptyData = true;
             }
           })
@@ -298,13 +310,13 @@
       },
 
       //搜索项搜索
-      onSearch(){
+      onSearch() {
         this.isLastPage = false;
         this.params.page = 1;
         this.getData();
         this.tableData = [];
       },
-      openSelectModal(val){
+      openSelectModal(val) {
         if (!this.filterType) {
           this.filterType = val;
           this.selectHide = true
@@ -319,10 +331,10 @@
       },
 
       //选取部门
-      selectDepart(){
+      selectDepart() {
         this.$router.push({path: '/depart'});
       },
-      getDepart(){
+      getDepart() {
         let t = this.$route.query;
         if (t.depart !== undefined && t.depart !== '') {
           let val = JSON.parse(t.depart);
@@ -331,19 +343,19 @@
           this.onSearch();
         }
       },
-      selectHouseStatus(item, index){
+      selectHouseStatus(item, index) {
         this.activeIndex = index;
         this.houseStatusName = item;
-        if(index>0){
-          this.params.status = index-1;
-        }else {
+        if (index > 0) {
+          this.params.status = index - 1;
+        } else {
           this.params.status = '';
         }
         this.onSearch();
         this.selectHide = false;
       },
-      searchDetail(item){
-        this.$router.push({path:'/productDetail',query:{id:item.id}});
+      searchDetail(item) {
+        this.$router.push({path: '/productDetail', query: {id: item.id}});
       },
     },
   }
@@ -389,7 +401,7 @@
         @extend .flex;
         .filter_item {
           font-size: .25rem;
-          width: 25%;
+          width: 50%;
           overflow: hidden;
           height: 30px;
           border-right: 1px solid #eee;

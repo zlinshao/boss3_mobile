@@ -71,12 +71,12 @@
             </div>
             <!--<div>收起</div>-->
           </div>
-          <div class="mainMain default">
-            <router-link to="">
-              <p>
-                <i class="iconfont icon-qita1"></i>
+          <div class="mainMain">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'product'" :to="key.path" :key="index">
+              <p :style="{'background': key.back}">
+                <i :class="key.icon"></i>
               </p>
-              <h1>敬请期待...</h1>
+              <h1>{{key.name}}</h1>
             </router-link>
           </div>
         </div>

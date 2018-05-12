@@ -151,6 +151,7 @@
       display: flex;
       display: -webkit-flex;
     }
+
     .bottom {
       @include flex;
       flex-wrap: wrap;
