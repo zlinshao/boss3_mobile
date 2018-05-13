@@ -348,7 +348,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           console.log(1111);
-          if (val.agency_info !== null && val.agency_info.agency_name !== null) {
+          if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
             this.agencyStatus = true;
             this.form.amount = val.agency_info.agency_price;
             this.form.user_name = val.agency_info.agency_user_name;
