@@ -49,63 +49,62 @@
           <div v-for="(key,index) in form.price_arr" v-show="index !== 0">{{key}}</div>
         </div>
 
-        <div class="first_date" v-if="agencyStatus">
-          <van-field
-            style="width: 110px;"
-            class="title"
-            label="中介费"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.amount"
-            type="number"
-            disabled
-            placeholder="请填写金额">
-          </van-field>
-          <van-field
-            v-model="form.agency_price_now"
-            type="number"
-            class="twoBorder"
-            placeholder="修改写金额"
-            icon="clear"
-            @click-icon="form.agency_price_now = ''">
-          </van-field>
-        </div>
-        <van-field v-if="!agencyStatus"
-                   v-model="form.amount"
-                   type="text"
-                   label="中介费"
-                   placeholder="请填写金额"
-                   @click-icon="form.amount = ''"
-                   required>
+        <!--<div class="first_date" v-if="agencyStatus">-->
+          <!--<van-field-->
+            <!--style="width: 110px;"-->
+            <!--class="title"-->
+            <!--label="中介费"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.amount"-->
+            <!--type="number"-->
+            <!--disabled-->
+            <!--placeholder="请填写金额">-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_price_now"-->
+            <!--type="number"-->
+            <!--class="twoBorder"-->
+            <!--placeholder="修改写金额"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_price_now = ''">-->
+          <!--</van-field>-->
+        <!--</div>-->
+        <van-field
+          v-model="form.amount"
+          type="text"
+          label="中介费"
+          placeholder="请填写金额"
+          @click-icon="form.amount = ''"
+          required>
         </van-field>
         <van-field
           v-model="form.name"
           type="text"
-          :disabled="agencyStatus"
           label="中介名称"
           placeholder="请填写中介名"
           @click-icon="form.name = ''"
           required>
         </van-field>
-        <van-field
-          v-model="form.user_name"
-          type="text"
-          :disabled="agencyStatus"
-          label="中介人"
-          placeholder="请填写中介人"
-          @click-icon="form.user_name = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.phone"
-          type="number"
-          :disabled="agencyStatus"
-          label="中介联系方式"
-          placeholder="请填写中介联系方式"
-          @click-icon="form.phone = ''"
-          required>
-        </van-field>
+        <!--<van-field-->
+          <!--v-model="form.user_name"-->
+          <!--type="text"-->
+          <!--:disabled="agencyStatus"-->
+          <!--label="中介人"-->
+          <!--placeholder="请填写中介人"-->
+          <!--@click-icon="form.user_name = ''"-->
+          <!--required>-->
+        <!--</van-field>-->
+        <!--<van-field-->
+          <!--v-model="form.phone"-->
+          <!--type="number"-->
+          <!--:disabled="agencyStatus"-->
+          <!--label="中介联系方式"-->
+          <!--placeholder="请填写中介联系方式"-->
+          <!--@click-icon="form.phone = ''"-->
+          <!--required>-->
+        <!--</van-field>-->
         <van-field
           v-model="form.account"
           label="卡号"
@@ -243,7 +242,7 @@
         screenshots_leader: {},
         numbers: '',
 
-        agencyStatus: false,
+        // agencyStatus: false,
       }
     },
     mounted() {
@@ -347,16 +346,15 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          console.log(1111);
-          if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
-            this.agencyStatus = true;
-            this.form.amount = val.agency_info.agency_price;
-            this.form.user_name = val.agency_info.agency_user_name;
-            this.form.name = val.agency_info.agency_name;
-            this.form.phone = val.agency_info.agency_phone;
-          } else {
-            this.agencyStatus = false;
-          }
+          // if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
+          //   this.agencyStatus = true;
+          //   this.form.amount = val.agency_info.agency_price;
+          //   this.form.user_name = val.agency_info.agency_user_name;
+          //   this.form.name = val.agency_info.agency_name;
+          //   this.form.phone = val.agency_info.agency_phone;
+          // } else {
+          //   this.agencyStatus = false;
+          // }
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -400,9 +398,9 @@
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
             this.form.amount = draft.amount;
-            this.form.user_name = draft.user_name;
-            this.form.phone = draft.phone;
             this.form.name = draft.name;
+            // this.form.user_name = draft.user_name;
+            // this.form.phone = draft.phone;
             this.form.bank = draft.bank;
             this.form.subbranch = draft.subbranch;
             this.form.account_name = draft.account_name;
@@ -442,13 +440,13 @@
         this.form.house_id = '';
         this.form.collect_or_rent = '';
         this.form.amount = '';
-        this.form.user_name = '';
-        this.form.phone = '';
+        this.form.name = '';
+        // this.form.user_name = '';
+        // this.form.phone = '';
         this.form.bank = '';
         this.form.subbranch = '';
         this.form.account_name = '';
         this.form.account = '';
-        this.form.name = '';
         this.form.settle = 0;
         this.settleStatus = true;
         this.form.screenshot = [];

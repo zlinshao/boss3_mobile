@@ -149,44 +149,44 @@
 
       <van-cell-group>
         <van-switch-cell v-model="is_agencyOn" title="是否中介"/>
-        <div style="border-bottom: 1px solid #f4f4f4;" v-if="is_agencyOn">
-          <van-field
-            v-model="form.agency_name"
-            label="中介名称"
-            type="text"
-            placeholder="请填写中介名称"
-            icon="clear"
-            @click-icon="form.agency_name = ''"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.agency_price"
-            label="中介费"
-            type="number"
-            placeholder="请填写中介费"
-            icon="clear"
-            @click-icon="form.agency_price = ''"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.agency_user_name"
-            label="中介人"
-            type="text"
-            placeholder="请填写中介人"
-            icon="clear"
-            @click-icon="form.agency_user_name = ''"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.agency_phone"
-            label="中介联系方式"
-            type="number"
-            placeholder="请填写中介联系方式"
-            icon="clear"
-            @click-icon="form.agency_phone = ''"
-            required>
-          </van-field>
-        </div>
+        <!--<div style="border-bottom: 1px solid #f4f4f4;" v-if="is_agencyOn">-->
+          <!--<van-field-->
+            <!--v-model="form.agency_name"-->
+            <!--label="中介名称"-->
+            <!--type="text"-->
+            <!--placeholder="请填写中介名称"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_name = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_price"-->
+            <!--label="中介费"-->
+            <!--type="number"-->
+            <!--placeholder="请填写中介费"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_price = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_user_name"-->
+            <!--label="中介人"-->
+            <!--type="text"-->
+            <!--placeholder="请填写中介人"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_user_name = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_phone"-->
+            <!--label="中介联系方式"-->
+            <!--type="number"-->
+            <!--placeholder="请填写中介联系方式"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_phone = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+        <!--</div>-->
 
         <van-field
           v-model="form.deposit"
@@ -458,10 +458,10 @@
           month: '',                    //收房月数
           day: '',                      //收房天数
           is_agency: 0,                 //是否中介
-          agency_name: '',              //中介名
-          agency_price: '',             //中介费
-          agency_user_name: '',         //中介人
-          agency_phone: '',             //中介手机号
+          // agency_name: '',              //中介名
+          // agency_price: '',             //中介费
+          // agency_user_name: '',         //中介人
+          // agency_phone: '',             //中介手机号
           begin_date: '',               //合同开始日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -513,14 +513,14 @@
       }
     },
     watch: {
-      is_agencyOn(val) {
-        if (!val) {
-          this.form.agency_name = '';
-          this.form.agency_price = '';
-          this.form.agency_user_name = '';
-          this.form.agency_phone = '';
-        }
-      }
+      // is_agencyOn(val) {
+      //   if (!val) {
+      //     this.form.agency_name = '';
+      //     this.form.agency_price = '';
+      //     this.form.agency_user_name = '';
+      //     this.form.agency_phone = '';
+      //   }
+      // }
     },
     mounted() {
       this.getNowFormatDate();
@@ -866,10 +866,10 @@
 
             this.form.is_agency = draft.is_agency;                           //是否中介
             this.is_agencyOn = draft.is_agency === 1 ? true : false;         //是否中介
-            this.form.agency_name = draft.agency_name;
-            this.form.agency_price = draft.agency_price;
-            this.form.agency_user_name = draft.agency_user_name;
-            this.form.agency_phone = draft.agency_phone;
+            // this.form.agency_name = draft.agency_name;
+            // this.form.agency_price = draft.agency_price;
+            // this.form.agency_user_name = draft.agency_user_name;
+            // this.form.agency_phone = draft.agency_phone;
 
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
@@ -963,12 +963,12 @@
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 
-        this.form.is_agency = 0;                 //是否中介
-        this.is_agencyOn = false;               //是否中介
-        this.form.agency_name = '';
-        this.form.agency_price = '';
-        this.form.agency_user_name = '';
-        this.form.agency_phone = '';
+        this.form.is_agency = 0;                  //是否中介
+        this.is_agencyOn = false;                 //是否中介
+        // this.form.agency_name = '';
+        // this.form.agency_price = '';
+        // this.form.agency_user_name = '';
+        // this.form.agency_phone = '';
 
         this.amountPrice = 1;
         this.form.period_price_arr = [''];
