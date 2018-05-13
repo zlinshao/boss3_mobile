@@ -249,7 +249,7 @@
           list.end_at = '';
         }
         list.id = value.id;
-        list.agency_info = value.agency_info;
+        // list.agency_info = value.agency_info;
         list.is_agency = value.is_agency;
         list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;
