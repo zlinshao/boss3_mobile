@@ -10,7 +10,46 @@ import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 // import './assets/video.js/js/video.min.js';
 // import './assets/video.js/css/video-js.css';
 
-import {Cell, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard, Row, Col, Badge, Button, Loading, NavBar, Panel, Stepper, Step, Steps, Swipe, SwipeItem, Tab, Tabs, Tabbar, TabbarItem, Tag, Checkbox, CheckboxGroup, Field, RadioGroup, Radio, Search, Switch, Uploader, Actionsheet, Dialog, Picker, PullRefresh, CellSwipe, Popup, SwitchCell, AddressList
+import {
+  Cell,
+  CellGroup,
+  Icon,
+  DatetimePicker,
+  PasswordInput,
+  NumberKeyboard,
+  Row,
+  Col,
+  Badge,
+  Button,
+  Loading,
+  NavBar,
+  Panel,
+  Stepper,
+  Step,
+  Steps,
+  Swipe,
+  SwipeItem,
+  Tab,
+  Tabs,
+  Tabbar,
+  TabbarItem,
+  Tag,
+  Checkbox,
+  CheckboxGroup,
+  Field,
+  RadioGroup,
+  Radio,
+  Search,
+  Switch,
+  Uploader,
+  Actionsheet,
+  Dialog,
+  Picker,
+  PullRefresh,
+  CellSwipe,
+  Popup,
+  SwitchCell,
+  AddressList
 } from 'vant';
 
 Vue.use(Row).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(CellSwipe).use(SwitchCell).use(Picker).use(Popup).use(AddressList);
@@ -30,13 +69,13 @@ axios.defaults.retryDelay = 1000;
 axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
   let config = err.config;
   // If config does not exist or the retry option is not set, reject
-  if(!config || !config.retry) return Promise.reject(err);
+  if (!config || !config.retry) return Promise.reject(err);
 
   // Set the variable for keeping track of the retry count
   config.__retryCount = config.__retryCount || 0;
 
   // Check if we've maxed out the total number of retries
-  if(config.__retryCount >= config.retry) {
+  if (config.__retryCount >= config.retry) {
     // Reject with the error
     return Promise.reject(err);
   }
@@ -45,19 +84,21 @@ axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
   config.__retryCount += 1;
 
   // Create new promise to handle exponential backoff
-  let backoff = new Promise(function(resolve) {
-    setTimeout(function() {
+  let backoff = new Promise(function (resolve) {
+    setTimeout(function () {
       resolve();
     }, config.retryDelay || 1);
   });
 
   // Return the promise in which recalls axios to retry the request
-  return backoff.then(function() {
+  return backoff.then(function () {
     return axios(config);
   });
 });
 
 router.beforeEach((to, from, next) => {
+  alert(to.path);
+  alert(from.path);
   if (from.path !== '/' && to.path === '/index') {
     axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
       let _config = res.data;
@@ -85,12 +126,16 @@ router.beforeEach((to, from, next) => {
                 message: "读取信息失败，稍后再试！",
                 title: "提示信息",
                 buttonName: "关闭",
-                onSuccess: function () {},
-                onFail: function (err) {}
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
               });
               dd.biz.navigation.close({
-                onSuccess: function (result) {},
-                onFail: function (err) {  }
+                onSuccess: function (result) {
+                },
+                onFail: function (err) {
+                }
               });
             }
           })
@@ -100,8 +145,10 @@ router.beforeEach((to, from, next) => {
             message: "您不在系统内，请联系管理员添加！！",
             title: "提示信息",
             buttonName: "关闭",
-            onSuccess: function () {},
-            onFail: function (err) {}
+            onSuccess: function () {
+            },
+            onFail: function (err) {
+            }
           });
         }
       });
@@ -129,16 +176,20 @@ router.beforeEach((to, from, next) => {
                   setTimeout(() => {
                     alert('请求超时请稍后再试');
                     dd.biz.navigation.close({
-                      onSuccess: function (result) {},
-                      onFail: function (err) {}
+                      onSuccess: function (result) {
+                      },
+                      onFail: function (err) {
+                      }
                     });
                   }, 3000);
                 }
               } else {
                 alert('读取信息失败，稍后再试！');
                 dd.biz.navigation.close({
-                  onSuccess: function (result) {},
-                  onFail: function (err) {}
+                  onSuccess: function (result) {
+                  },
+                  onFail: function (err) {
+                  }
                 });
               }
             })
@@ -146,16 +197,20 @@ router.beforeEach((to, from, next) => {
           onFail: function (err) {
             alert('您不在系统内，请联系管理员添加！！');
             dd.biz.navigation.close({
-              onSuccess: function (result) {},
-              onFail: function (err) {}
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
             });
           }
         });
         // 钉钉头部右侧
         dd.biz.navigation.setRight({
           show: false,
-          onSuccess: function (result) {},
-          onFail: function (err) {}
+          onSuccess: function (result) {
+          },
+          onFail: function (err) {
+          }
         });
       });
       dd.error(function (err) {
