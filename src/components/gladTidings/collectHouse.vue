@@ -183,6 +183,9 @@
                   list.is_agency = data[i].house_res.is_agency;
                   this.lists.push(list);
                 }
+                if ((type === 'renter' || type === 'lord') && data[i].lords.length === 0 && data[i].renters.length === 0) {
+                  this.showDetail = 2;
+                }
               }
             } else {
               this.disabled = true;

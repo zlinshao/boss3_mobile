@@ -70,18 +70,6 @@ const router = new VueRouter({
   }
 });
 
-let u = navigator.userAgent, app = navigator.appVersion;
-let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
-let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-if (isAndroid) {
-  router.beforeEach((to, from, next) => {
-    document.title = to.meta.title;
-    next();
-  });
-}
-if (isIOS) {
-
-}
 
 router.beforeEach((to, from, next) => {
   if (from.path !== '/' && to.path === '/index') {
@@ -191,6 +179,19 @@ router.beforeEach((to, from, next) => {
   }
   next();
 });
+
+let u = navigator.userAgent, app = navigator.appVersion;
+let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+if (isAndroid) {
+  router.beforeEach((to, from, next) => {
+    document.title = to.meta.title;
+    next();
+  });
+}
+if (isIOS) {
+
+}
 
 new Vue({
   el: '#app',
