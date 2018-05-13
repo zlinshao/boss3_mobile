@@ -62,7 +62,7 @@ axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
 //   routes:routes.options.routes,
 //
 //   scrollBehavior (to, from, savedPosition) {
-//     if(to.path === '/productControlCenter'){
+//     if(to.path === '/productControlCenter') {
 //       return savedPosition
 //     }else {
 //       return { x: 0, y: 0 }
@@ -72,8 +72,6 @@ axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
 
 
 router.beforeEach((to, from, next) => {
-  alert(to.path);
-  alert(from.path);
   if (from.path !== '/' && to.path === '/index') {
     axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
       let _config = res.data;

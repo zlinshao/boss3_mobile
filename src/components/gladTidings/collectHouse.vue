@@ -183,7 +183,7 @@
                   list.is_agency = data[i].house_res.is_agency;
                   this.lists.push(list);
                 }
-                if ((type === 'renter' || type === 'lord') && data[i].lords.length === 0 && data[i].renters.length === 0) {
+                if ((type === 'renter' || type === 'lord' || type === 'renter1' || type === 'lord1') && data[i].lords.length === 0 && data[i].renters.length === 0) {
                   this.showDetail = 2;
                 }
               }
@@ -249,6 +249,7 @@
           list.end_at = '';
         }
         list.id = value.id;
+        list.agency_info = value.agency_info;
         list.is_agency = value.is_agency;
         list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;

@@ -195,7 +195,6 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      alert(1);
       next(vm => {
         let per = JSON.parse(sessionStorage.personal);
         vm.personalId = per;
