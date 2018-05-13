@@ -109,6 +109,7 @@
       },
       // 开单人
       organizeSure(name) {
+        name.activeRevise = false;
         this.$router.replace({path: this.path, query: {staff: JSON.stringify(name)}});
       },
       // select关闭

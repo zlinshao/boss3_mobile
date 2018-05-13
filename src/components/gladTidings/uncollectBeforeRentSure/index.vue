@@ -183,6 +183,45 @@
       </div>
 
       <van-cell-group>
+        <van-switch-cell v-model="cusFrom" title="是否中介"/>
+        <!--<div style="border-bottom: 1px solid #f4f4f4;" v-if="cusFrom">-->
+          <!--<van-field-->
+            <!--v-model="form.agency_name"-->
+            <!--label="中介名称"-->
+            <!--type="text"-->
+            <!--placeholder="请填写中介名称"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_name = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_price"-->
+            <!--label="中介费"-->
+            <!--type="number"-->
+            <!--placeholder="请填写中介费"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_price = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_user_name"-->
+            <!--label="中介人"-->
+            <!--type="text"-->
+            <!--placeholder="请填写中介人"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_user_name = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_phone"-->
+            <!--label="中介联系方式"-->
+            <!--type="number"-->
+            <!--placeholder="请填写中介联系方式"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_phone = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+        <!--</div>-->
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -341,7 +380,7 @@
 
         amountMoney: 1,
         moneyNum: [''],             //分金额 付款方式
-
+        cusFrom: false,                //客户来源
         other_fee_status: false,
         form: {
           id: '',
@@ -369,6 +408,12 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
+          is_agency: 0,                 //客户来源    0个人1中介
+          // agency_name: '',              //中介名
+          // agency_price: '',             //中介费
+          // agency_user_name: '',         //中介人
+          // agency_phone: '',             //中介手机号
+
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
@@ -388,12 +433,14 @@
         leaders: {},
         dictValue8: [],                  //支付方式
         value8: [],
+
+        isValue1: true,
+        isValue2: false,
       }
     },
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
-      this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
@@ -405,12 +452,14 @@
       this.ddRent('');
     },
     methods: {
-      userInfo() {
-        let per = JSON.parse(sessionStorage.personal);
-        this.form.staff_id = per.id;
-        this.form.staff_name = per.name;
-        this.form.department_id = per.department_id;
-        this.form.department_name = per.department_name;
+      userInfo(val1, val2) {
+        if (val1 && val2) {
+          let per = JSON.parse(sessionStorage.personal);
+          this.form.staff_id = per.id;
+          this.form.staff_name = per.name;
+          this.form.department_id = per.department_id;
+          this.form.department_name = per.department_name;
+        }
       },
       dicts(val) {
         //支付方式
@@ -607,6 +656,7 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
+            this.form.is_agency = this.cusFrom ? 1 : 0;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
@@ -631,86 +681,6 @@
 
         }
       },
-
-      rentDetail(val) {
-        let type;
-        if (val !== '') {
-          type = 'bulletin/rent_without_collect/' + val;
-        } else {
-          type = 'bulletin/rent_without_collect';
-        }
-        this.$http.get(this.urls + type).then((res) => {
-          if (res.data.code === "51320") {
-            let data = res.data.data;
-            let draft = res.data.data.draft_content;
-
-            this.form.id = data.id;
-            this.form.month = draft.month;
-            this.form.day = draft.day === '0' ? '' : draft.day;
-
-            this.form.oldHouseName = draft.oldHouseName;
-            this.form.address = draft.address;
-            this.form.contract_id_rent = draft.contract_id_rent;
-            this.form.contract_id = draft.contract_id;
-            this.form.house_id_rent = draft.house_id_rent;
-            this.form.house_id = draft.house_id;
-
-            this.form.sign_date = draft.sign_date;
-            this.form.begin_date = draft.begin_date;
-            this.first_date = [];
-            this.first_date.push(draft.begin_date);
-            this.datePrice[0] = draft.begin_date;
-            this.datePay[0] = draft.begin_date;
-            for (let i = 0; i < draft.price_arr.length; i++) {
-              this.amountPrice = i + 1;
-              this.form.period_price_arr.push('');
-              this.form.price_arr.push('');
-            }
-            this.form.period_price_arr = draft.period_price_arr;
-            this.countDate(1, draft.period_price_arr);
-            this.form.price_arr = draft.price_arr;
-
-            this.form.pay_way_bet = draft.pay_way_bet;
-            for (let i = 0; i < draft.pay_way_arr.length; i++) {
-              this.amountPay = i + 1;
-              this.form.period_pay_arr.push('');
-              this.form.pay_way_arr.push('');
-            }
-            this.form.period_pay_arr = draft.period_pay_arr;
-            this.countDate(2, draft.period_pay_arr);
-            this.form.pay_way_arr = draft.pay_way_arr;
-
-            this.form.money_sum = draft.money_sum;
-            for (let i = 0; i < draft.money_sep.length; i++) {
-              this.amountMoney = i + 1;
-              this.form.money_way.push('');
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].id === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
-                }
-              }
-            }
-            this.form.money_sep = draft.money_sep;
-            this.form.money_way = draft.money_way;
-            this.form.discount = draft.discount;
-            this.form.retainage_date = draft.retainage_date;
-
-            this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.leaders;
-
-            this.form.name = draft.name;
-            this.form.phone = draft.phone;
-            this.form.remark = draft.remark;
-            this.form.staff_id = draft.staff_id;
-            this.form.staff_name = draft.staff_name;
-            this.form.department_id = draft.department_id;
-            this.form.department_name = draft.department_name;
-          } else {
-            this.form.id = '';
-          }
-        })
-      },
-
 
       houseInfo() {
         let t = this.$route.query;
@@ -785,17 +755,109 @@
           this.form.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
           this.form.department_name = val.depart_name;
+          this.isValue1 = val.activeRevise;
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
           let val = JSON.parse(t.depart);
           this.form.department_name = val.name;
           this.form.department_id = val.id;
+          this.isValue1 = val.activeRevise;
           this.stick();
         }
         if (t.tops === '') {
           this.stick();
         }
+        this.userInfo(this.isValue1, this.isValue2);
+      },
+
+      rentDetail(val) {
+        let type;
+        if (val !== '') {
+          type = 'bulletin/rent_without_collect/' + val;
+        } else {
+          type = 'bulletin/rent_without_collect';
+        }
+        this.$http.get(this.urls + type).then((res) => {
+          if (res.data.code === "51320") {
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+
+            this.form.id = data.id;
+            this.form.month = draft.month;
+            this.form.day = draft.day === '0' ? '' : draft.day;
+
+            this.form.oldHouseName = draft.oldHouseName;
+            this.form.address = draft.address;
+            this.form.contract_id_rent = draft.contract_id_rent;
+            this.form.contract_id = draft.contract_id;
+            this.form.house_id_rent = draft.house_id_rent;
+            this.form.house_id = draft.house_id;
+
+            this.form.sign_date = draft.sign_date;
+            this.form.begin_date = draft.begin_date;
+            this.first_date = [];
+            this.first_date.push(draft.begin_date);
+            this.datePrice[0] = draft.begin_date;
+            this.datePay[0] = draft.begin_date;
+            for (let i = 0; i < draft.price_arr.length; i++) {
+              this.amountPrice = i + 1;
+              this.form.period_price_arr.push('');
+              this.form.price_arr.push('');
+            }
+            this.form.period_price_arr = draft.period_price_arr;
+            this.countDate(1, draft.period_price_arr);
+            this.form.price_arr = draft.price_arr;
+
+            this.form.pay_way_bet = draft.pay_way_bet;
+            for (let i = 0; i < draft.pay_way_arr.length; i++) {
+              this.amountPay = i + 1;
+              this.form.period_pay_arr.push('');
+              this.form.pay_way_arr.push('');
+            }
+            this.form.period_pay_arr = draft.period_pay_arr;
+            this.countDate(2, draft.period_pay_arr);
+            this.form.pay_way_arr = draft.pay_way_arr;
+
+            this.form.money_sum = draft.money_sum;
+            for (let i = 0; i < draft.money_sep.length; i++) {
+              this.amountMoney = i + 1;
+              this.form.money_way.push('');
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].id === draft.money_way[i]) {
+                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
+                }
+              }
+            }
+
+            this.is_agency = draft.is_agency;
+            this.cusFrom = draft.is_agency === 1 ? true : false;
+            // this.form.agency_name = draft.agency_name;
+            // this.form.agency_price = draft.agency_price;
+            // this.form.agency_user_name = draft.agency_user_name;
+            // this.form.agency_phone = draft.agency_phone;
+
+            this.form.money_sep = draft.money_sep;
+            this.form.money_way = draft.money_way;
+            this.form.discount = draft.discount;
+            this.form.retainage_date = draft.retainage_date;
+
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.leaders = data.screenshot_leader;
+
+            this.form.name = draft.name;
+            this.form.phone = draft.phone;
+            this.form.remark = draft.remark;
+            this.form.staff_id = draft.staff_id;
+            this.form.staff_name = draft.staff_name;
+            this.form.department_id = draft.department_id;
+            this.form.department_name = draft.department_name;
+          } else {
+            this.isValue2 = true;
+            this.userInfo(true, true);
+            this.form.id = '';
+          }
+        })
       },
 
       close_() {
@@ -803,7 +865,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo();
+        this.userInfo(true, true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
@@ -834,6 +896,13 @@
         this.moneyNum = [''];
         this.form.sign_date = '';
         this.form.begin_date = '';
+
+        this.is_agency = 0;
+        this.cusFrom = false;
+        // this.form.agency_name = '';
+        // this.form.agency_price = '';
+        // this.form.agency_user_name = '';
+        // this.form.agency_phone = '';
 
         this.form.money_sep = [''];
         this.form.money_way = [''];

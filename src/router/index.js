@@ -43,12 +43,17 @@ import CollectHouse from '../components/gladTidings/collectHouse.vue'       //�
 import Organize from '../components/gladTidings/organize.vue'               //开单人搜索
 import Depart from '../components/common/selectDepartment.vue'              //部门搜索
 
+//管控中心
 import ProductControlCenter from '../components/gladTidings/productControlCenter/index.vue'
 import ProductDetail from '../components/gladTidings/productControlCenter/components/productDetail.vue'
 import ImgDetail from '../components/gladTidings/productControlCenter/components/imgDetail.vue'
 import ContractDetail from '../components/gladTidings/productControlCenter/components/contractDetail.vue'
 import CollectDetail from '../components/gladTidings/productControlCenter/components/collectDetail'
+import RentDetail from '../components/gladTidings/productControlCenter/components/rentDetail'
 
+import VillageCenter from '../components/gladTidings/villageManage/index.vue'
+import AddVillage from '../components/gladTidings/villageManage/components/addVillage.vue'
+import MapSearch from '../components/gladTidings/villageManage/components/mapSearch.vue'
 
 Vue.use(Router);
 
@@ -105,6 +110,7 @@ export default new Router({
       meta: {title: '搜索'},
       component: SearchList
     },
+
     {
       path: '/publishDetail',
       name: 'publishDetail',
@@ -174,10 +180,10 @@ export default new Router({
     },
     {
       path: '/unCollectBeforeRent',
-      name: '未收先租',
+      name: '未收先租未知',
       hidden: 'glad',
       icon: 'iconfont icon-weishouxianzubaobei',
-      meta: {title: '未收先租'},
+      meta: {title: '未收先租未知'},
       component: UncollectBeforeRent
     },
     {
@@ -266,11 +272,19 @@ export default new Router({
     // {
     //   path: '/productControlCenter',
     //   name: '产品管控中心',
-    //   hidden: 'glad',
+    //   hidden: 'product',
     //   icon: 'iconfont icon-chanpinguankong',
     //   meta: {title: '产品管控中心'},
     //   component: ProductControlCenter
     // },
+    {
+      path: '/villageCenter',
+      name: '小区管理中心',
+      hidden: 'product',
+      icon: 'iconfont icon-chanpinguankong',
+      meta: {title: '小区管理中心'},
+      component: VillageCenter
+    },
     // {
     //   path: '/expense',
     //   hidden: 'examine',
@@ -327,7 +341,27 @@ export default new Router({
       meta: {title: '收房合同详情'},
       component: CollectDetail
     },
-
+    {
+      path: '/rentDetail',
+      hidden: false,
+      name: '租房合同详情',
+      meta: {title: '租房合同详情'},
+      component: RentDetail
+    },
+    {
+      path: '/addVillage',
+      hidden: false,
+      name: '新增小区',
+      meta: {title: '新增小区'},
+      component: AddVillage
+    },
+    {
+      path: '/mapSearch',
+      hidden: false,
+      name: '搜索地址',
+      meta: {title: '搜索地址'},
+      component: MapSearch
+    },
 
     {
       path: '/writings',

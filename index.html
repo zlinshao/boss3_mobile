@@ -8,10 +8,10 @@
     <title>验证中</title>
     <script>
       (function (doc, win) {
-        let docEl = doc.documentElement,
+          var docEl = doc.documentElement,
           resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
           recalc = function () {
-            let clientWidth = docEl.clientWidth;
+            var clientWidth = docEl.clientWidth;
             if (!clientWidth) return;
             if (clientWidth >= 750) {
               docEl.style.fontSize = '100px';
@@ -33,7 +33,7 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
 
-
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.4&key=35ba5c7d8e90a5c95fefa592fdea8d7a"></script>
     <script src="https://cdn.staticfile.org/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/plupload/2.1.9/moxie.js"></script>
     <script src="https://cdn.staticfile.org/plupload/2.1.9/plupload.dev.js"></script>

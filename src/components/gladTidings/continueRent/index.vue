@@ -446,12 +446,14 @@
         value6: [],
         dictValue8: [],         //支付方式
         value8: [],
+
+        isValue1: true,
+        isValue2: false,
       }
     },
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
-      this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
@@ -463,12 +465,14 @@
       this.ddRent('');
     },
     methods: {
-      userInfo() {
-        let per = JSON.parse(sessionStorage.personal);
-        this.form.staff_id = per.id;
-        this.form.staff_name = per.name;
-        this.form.department_id = per.department_id;
-        this.form.department_name = per.department_name;
+      userInfo(val1, val2) {
+        if (val1 && val2) {
+          let per = JSON.parse(sessionStorage.personal);
+          this.form.staff_id = per.id;
+          this.form.staff_name = per.name;
+          this.form.department_id = per.department_id;
+          this.form.department_name = per.department_name;
+        }
       },
       dicts() {
         //房东租客
@@ -742,17 +746,20 @@
           this.form.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
           this.form.department_name = val.depart_name;
+          this.isValue1 = val.activeRevise;
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
           let val = JSON.parse(t.depart);
           this.form.department_name = val.name;
           this.form.department_id = val.id;
+          this.isValue1 = val.activeRevise;
           this.stick();
         }
         if (t.tops === '') {
           this.stick();
         }
+        this.userInfo(this.isValue1, this.isValue2);
       },
 
       rentDetail(val) {
@@ -853,6 +860,8 @@
             this.form.department_id = draft.department_id;
             this.form.department_name = draft.department_name;
           } else {
+            this.isValue2 = true;
+            this.userInfo(true, true);
             this.form.id = '';
           }
         })
@@ -863,7 +872,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo();
+        this.userInfo(true, true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';

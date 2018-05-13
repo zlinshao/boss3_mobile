@@ -202,44 +202,44 @@
           required>
         </van-field>
         <van-switch-cell v-model="cusFrom" title="是否中介"/>
-        <div style="border-bottom: 1px solid #f4f4f4;" v-if="cusFrom">
-          <van-field
-            v-model="form.agency_name"
-            label="中介名称"
-            type="text"
-            placeholder="请填写中介名称"
-            icon="clear"
-            @click-icon="form.agency_name = ''"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.agency_price"
-            label="中介费"
-            type="number"
-            placeholder="请填写中介费"
-            icon="clear"
-            @click-icon="form.agency_price = ''"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.agency_user_name"
-            label="中介人"
-            type="text"
-            placeholder="请填写中介人"
-            icon="clear"
-            @click-icon="form.agency_user_name = ''"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.agency_phone"
-            label="中介联系方式"
-            type="number"
-            placeholder="请填写中介联系方式"
-            icon="clear"
-            @click-icon="form.agency_phone = ''"
-            required>
-          </van-field>
-        </div>
+        <!--<div style="border-bottom: 1px solid #f4f4f4;" v-if="cusFrom">-->
+          <!--<van-field-->
+            <!--v-model="form.agency_name"-->
+            <!--label="中介名称"-->
+            <!--type="text"-->
+            <!--placeholder="请填写中介名称"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_name = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_price"-->
+            <!--label="中介费"-->
+            <!--type="number"-->
+            <!--placeholder="请填写中介费"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_price = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_user_name"-->
+            <!--label="中介人"-->
+            <!--type="text"-->
+            <!--placeholder="请填写中介人"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_user_name = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+          <!--<van-field-->
+            <!--v-model="form.agency_phone"-->
+            <!--label="中介联系方式"-->
+            <!--type="number"-->
+            <!--placeholder="请填写中介联系方式"-->
+            <!--icon="clear"-->
+            <!--@click-icon="form.agency_phone = ''"-->
+            <!--required>-->
+          <!--</van-field>-->
+        <!--</div>-->
         <van-field
           v-model="property_name"
           label="物业费付款人"
@@ -436,10 +436,10 @@
           other_fee_name: '',
 
           is_agency: 0,                 //客户来源    0个人1中介
-          agency_name: '',              //中介名
-          agency_price: '',             //中介费
-          agency_user_name: '',         //中介人
-          agency_phone: '',             //中介手机号
+          // agency_name: '',              //中介名
+          // agency_price: '',             //中介费
+          // agency_user_name: '',         //中介人
+          // agency_phone: '',             //中介手机号
 
           is_corp: 1,                   //是否公司单  0个人1公司
           discount: 0,                  //让价金额
@@ -466,12 +466,14 @@
         value6: [],
         dictValue8: [],         //支付方式
         value8: [],
+
+        isValue1: true,
+        isValue2: false,
       }
     },
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
-      this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
@@ -483,12 +485,14 @@
       this.ddRent('');
     },
     methods: {
-      userInfo() {
-        let per = JSON.parse(sessionStorage.personal);
-        this.form.staff_id = per.id;
-        this.form.staff_name = per.name;
-        this.form.department_id = per.department_id;
-        this.form.department_name = per.department_name;
+      userInfo(val1, val2) {
+        if (val1 && val2) {
+          let per = JSON.parse(sessionStorage.personal);
+          this.form.staff_id = per.id;
+          this.form.staff_name = per.name;
+          this.form.department_id = per.department_id;
+          this.form.department_name = per.department_name;
+        }
       },
       dicts(val) {
         //房东租客
@@ -739,17 +743,20 @@
           this.form.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
           this.form.department_name = val.depart_name;
+          this.isValue1 = val.activeRevise;
           this.stick();
         }
         if (t.depart !== undefined && t.depart !== '') {
           let val = JSON.parse(t.depart);
           this.form.department_name = val.name;
           this.form.department_id = val.id;
+          this.isValue1 = val.activeRevise;
           this.stick();
         }
         if (t.tops === '') {
           this.stick();
         }
+        this.userInfo(this.isValue1, this.isValue2);
       },
 
       rentDetail(val) {
@@ -824,10 +831,10 @@
 
             this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
-            this.form.agency_name = draft.agency_name;
-            this.form.agency_price = draft.agency_price;
-            this.form.agency_user_name = draft.agency_user_name;
-            this.form.agency_phone = draft.agency_phone;
+            // this.form.agency_name = draft.agency_name;
+            // this.form.agency_price = draft.agency_price;
+            // this.form.agency_user_name = draft.agency_user_name;
+            // this.form.agency_phone = draft.agency_phone;
 
             this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
@@ -847,6 +854,8 @@
             this.form.department_id = draft.department_id;
             this.department_name = data.department_name;
           } else {
+            this.isValue2 = true;
+            this.userInfo(true, true);
             this.form.id = '';
           }
         })
@@ -857,7 +866,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo();
+        this.userInfo(true, true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
@@ -889,10 +898,10 @@
         this.corp = true;
         this.is_agency = 0;
         this.cusFrom = false;
-        this.form.agency_name = '';
-        this.form.agency_price = '';
-        this.form.agency_user_name = '';
-        this.form.agency_phone = '';
+        // this.form.agency_name = '';
+        // this.form.agency_price = '';
+        // this.form.agency_user_name = '';
+        // this.form.agency_phone = '';
         this.form.receipt = '';
         this.form.property_payer = '';
         this.property_name = '';
