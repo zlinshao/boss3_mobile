@@ -303,7 +303,7 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots = data.screenshot_leader;
             this.form.staff_name = draft.staff_name;
-            this.form.department_name = draft.depart_name;
+            this.form.department_name = draft.department_name;
             this.form.staff_id = draft.staff_id;
             this.form.department_id = draft.department_id;
           } else {
