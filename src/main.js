@@ -72,7 +72,7 @@ axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
 
 
 router.beforeEach((to, from, next) => {
-  if (from.path !== '/' && to.path === '/index') {
+  if (from.path !== '/' && from.path === '/index') {
     axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
       let _config = res.data;
       DingTalkPC.runtime.permission.requestAuthCode({
