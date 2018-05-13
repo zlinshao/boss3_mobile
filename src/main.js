@@ -72,6 +72,8 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
+  alert(to.path);
+  alert(from.path);
   if (from.path !== '/' && to.path === '/index') {
     axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
       let _config = res.data;
