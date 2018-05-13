@@ -433,12 +433,14 @@
         leaders: {},
         dictValue8: [],                  //支付方式
         value8: [],
+
+        isValue1: true,
+        isValue2: false,
       }
     },
     mounted() {
       this.getNowFormatDate();
       this.dicts('');
-      this.userInfo();
     },
     activated() {
       let newID = this.$route.query;
@@ -450,12 +452,14 @@
       this.ddRent('');
     },
     methods: {
-      userInfo() {
-        let per = JSON.parse(sessionStorage.personal);
-        this.form.staff_id = per.id;
-        this.form.staff_name = per.name;
-        this.form.department_id = per.department_id;
-        this.form.department_name = per.department_name;
+      userInfo(val1, val2) {
+        if (val1 && val2) {
+          let per = JSON.parse(sessionStorage.personal);
+          this.form.staff_id = per.id;
+          this.form.staff_name = per.name;
+          this.form.department_id = per.department_id;
+          this.form.department_name = per.department_name;
+        }
       },
       dicts(val) {
         //支付方式
@@ -678,6 +682,95 @@
         }
       },
 
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = JSON.parse(t.house);
+          console.log(t.type);
+          if (t.type === 'is_nrcy') {
+            this.form.oldHouseName = val.house_name;
+            this.form.contract_id_rent = val.id;
+            this.form.house_id_rent = val.house_id;
+
+            let rent = val.renters;
+            let rentDate = rent.start_at.substring(0, 10);
+            this.form.begin_date = rentDate;
+            this.first_date = [];
+            this.first_date.push(rentDate);
+            this.form.sign_date = rent.sign_at.substring(0, 10);
+            this.form.period_price_arr = [];
+            this.form.price_arr = [];
+            for (let i = 0; i < rent.month_price.length; i++) {
+              this.amountPrice = i + 1;
+              this.form.period_price_arr.push(rent.month_price[i].period);
+              this.form.price_arr.push(rent.month_price[i].price);
+            }
+            this.countDate(1, this.form.period_price_arr);
+
+            this.form.pay_way_bet = rent.pay_way[0].pay_way_bet;
+            this.form.period_pay_arr = [];
+            this.form.pay_way_arr = [];
+            for (let i = 0; i < rent.pay_way.length; i++) {
+              this.amountPay = i + 1;
+              this.form.period_pay_arr.push(rent.pay_way[i].period);
+              this.form.pay_way_arr.push(rent.pay_way[i].pay_way);
+            }
+            this.countDate(2, this.form.period_pay_arr);
+
+            this.form.money_sum = rent.mortgage_price;
+            this.form.money_sep = [];
+            this.form.money_way = [];
+            for (let i = 0; i < rent.month_price.length; i++) {
+              this.amountMoney = i + 1;
+              this.form.money_sep.push(rent.month_price[i].price);
+              this.form.money_way.push(rent.month_price[i].period);
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].id === rent.month_price[i].period) {
+                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
+                }
+              }
+            }
+            this.other_fee_status = draft.is_other_fee === 1 ? true : false;
+            this.form.other_fee_name = draft.other_fee_name;
+            this.form.other_fee = draft.other_fee;
+
+            this.form.retainage_date = rent.end_at.substring(0, 10);
+            this.form.name = rent.customers[0].name;
+            this.form.phone = rent.customers[0].phone;
+            this.form.remark = rent.remark;
+
+            this.form.staff_id = rent.sign_user.id;
+            this.form.staff_name = rent.sign_user.name;
+            this.form.department_id = rent.sign_org.id;
+            this.form.department_name = rent.sign_org.name;
+          } else {
+            this.form.address = val.house_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
+          }
+        }
+        if (t.staff !== undefined && t.staff !== '') {
+          let val = JSON.parse(t.staff);
+          this.form.staff_id = val.staff_id;
+          this.form.staff_name = val.staff_name;
+          this.form.department_id = val.depart_id;
+          this.form.department_name = val.depart_name;
+          this.isValue1 = val.activeRevise;
+          this.stick();
+        }
+        if (t.depart !== undefined && t.depart !== '') {
+          let val = JSON.parse(t.depart);
+          this.form.department_name = val.name;
+          this.form.department_id = val.id;
+          this.isValue1 = val.activeRevise;
+          this.stick();
+        }
+        if (t.tops === '') {
+          this.stick();
+        }
+        this.userInfo(this.isValue1, this.isValue2);
+      },
+
       rentDetail(val) {
         let type;
         if (val !== '') {
@@ -760,96 +853,11 @@
             this.form.department_id = draft.department_id;
             this.form.department_name = draft.department_name;
           } else {
+            this.isValue2 = true;
+            this.userInfo(true, true);
             this.form.id = '';
           }
         })
-      },
-
-
-      houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
-          console.log(t.type);
-          if (t.type === 'is_nrcy') {
-            this.form.oldHouseName = val.house_name;
-            this.form.contract_id_rent = val.id;
-            this.form.house_id_rent = val.house_id;
-
-            let rent = val.renters;
-            let rentDate = rent.start_at.substring(0, 10);
-            this.form.begin_date = rentDate;
-            this.first_date = [];
-            this.first_date.push(rentDate);
-            this.form.sign_date = rent.sign_at.substring(0, 10);
-            this.form.period_price_arr = [];
-            this.form.price_arr = [];
-            for (let i = 0; i < rent.month_price.length; i++) {
-              this.amountPrice = i + 1;
-              this.form.period_price_arr.push(rent.month_price[i].period);
-              this.form.price_arr.push(rent.month_price[i].price);
-            }
-            this.countDate(1, this.form.period_price_arr);
-
-            this.form.pay_way_bet = rent.pay_way[0].pay_way_bet;
-            this.form.period_pay_arr = [];
-            this.form.pay_way_arr = [];
-            for (let i = 0; i < rent.pay_way.length; i++) {
-              this.amountPay = i + 1;
-              this.form.period_pay_arr.push(rent.pay_way[i].period);
-              this.form.pay_way_arr.push(rent.pay_way[i].pay_way);
-            }
-            this.countDate(2, this.form.period_pay_arr);
-
-            this.form.money_sum = rent.mortgage_price;
-            this.form.money_sep = [];
-            this.form.money_way = [];
-            for (let i = 0; i < rent.month_price.length; i++) {
-              this.amountMoney = i + 1;
-              this.form.money_sep.push(rent.month_price[i].price);
-              this.form.money_way.push(rent.month_price[i].period);
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].id === rent.month_price[i].period) {
-                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
-                }
-              }
-            }
-            this.other_fee_status = draft.is_other_fee === 1 ? true : false;
-            this.form.other_fee_name = draft.other_fee_name;
-            this.form.other_fee = draft.other_fee;
-
-            this.form.retainage_date = rent.end_at.substring(0, 10);
-            this.form.name = rent.customers[0].name;
-            this.form.phone = rent.customers[0].phone;
-            this.form.remark = rent.remark;
-
-            this.form.staff_id = rent.sign_user.id;
-            this.form.staff_name = rent.sign_user.name;
-            this.form.department_id = rent.sign_org.id;
-            this.form.department_name = rent.sign_org.name;
-          } else {
-            this.form.address = val.house_name;
-            this.form.contract_id = val.id;
-            this.form.house_id = val.house_id;
-          }
-        }
-        if (t.staff !== undefined && t.staff !== '') {
-          let val = JSON.parse(t.staff);
-          this.form.staff_id = val.staff_id;
-          this.form.staff_name = val.staff_name;
-          this.form.department_id = val.depart_id;
-          this.form.department_name = val.depart_name;
-          this.stick();
-        }
-        if (t.depart !== undefined && t.depart !== '') {
-          let val = JSON.parse(t.depart);
-          this.form.department_name = val.name;
-          this.form.department_id = val.id;
-          this.stick();
-        }
-        if (t.tops === '') {
-          this.stick();
-        }
       },
 
       close_() {
@@ -857,7 +865,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo();
+        this.userInfo(true, true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';

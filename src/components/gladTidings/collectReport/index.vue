@@ -539,7 +539,6 @@
     methods: {
       userInfo(val1, val2) {
         if (val1 && val2) {
-          alert(1);
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
