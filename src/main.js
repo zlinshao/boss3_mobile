@@ -57,18 +57,18 @@ axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
 });
 
 
-const router = new VueRouter({
-  mode: 'history',
-  routes:routes.options.routes,
-
-  scrollBehavior (to, from, savedPosition) {
-    if(to.path === '/productControlCenter'){
-      return savedPosition
-    }else {
-      return { x: 0, y: 0 }
-    }
-  }
-});
+// const router = new VueRouter({
+//   mode: 'history',
+//   routes:routes.options.routes,
+//
+//   scrollBehavior (to, from, savedPosition) {
+//     if(to.path === '/productControlCenter'){
+//       return savedPosition
+//     }else {
+//       return { x: 0, y: 0 }
+//     }
+//   }
+// });
 
 
 router.beforeEach((to, from, next) => {
