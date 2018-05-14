@@ -28,7 +28,7 @@
     <div class="mainContent" id="mainContent">
       <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
         <div class="image">
-          <img v-if="item.album.length>0&&imgArray[item.album[0]]" :src="imgArray[item.album[0]]" alt="">
+          <img v-if="item.album&&item.album.length>0&&imgArray[item.album[0]]" :src="imgArray[item.album[0]]" alt="">
           <img  src="../../../assets/zanwutupian.jpg" alt="" v-else>
         </div>
         <div class="houseItemDescribe">
@@ -313,7 +313,6 @@
             let imgArray = {};
             res.data.data.forEach((item) => {
               if(item.status === 'success'){
-                console.log(item)
                 if(item.data.info.mime.indexOf('image')>-1){
                   imgArray[item.data.id] = item.data.uri;
                 }else {
@@ -321,7 +320,7 @@
                 }
               }
             });
-            console.log(imgArray)
+            // console.log(imgArray)
             this.imgArray = imgArray;
           }
         })
