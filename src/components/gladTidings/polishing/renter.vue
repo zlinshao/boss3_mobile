@@ -36,7 +36,7 @@
             @click-icon="form.receipt = ''">
           </van-field>
         </div>
-        <div class="titleRed">城市首字母缩写+年份+7位数字</div>
+        <div class="titleRed">城市首字母缩写+年份(4位)+7位数字</div>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amount">

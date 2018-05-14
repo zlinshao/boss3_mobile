@@ -274,7 +274,7 @@
             @click-icon="form.receipt = ''">
           </van-field>
         </div>
-        <div class="titleRed">城市首字母缩写+年份+7位数字</div>
+        <div class="titleRed">城市首字母缩写+年份(4位)+7位数字</div>
         <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
