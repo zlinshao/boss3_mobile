@@ -28,7 +28,8 @@
     <div class="mainContent" id="mainContent">
       <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
         <div class="image">
-          <img src="../../../assets/doc.png" alt="">
+          <img v-if="item.album.length>0&&imgArray[item.album[0]]" :src="imgArray[item.album[0]]" alt="">
+          <img  src="../../../assets/zanwutupian.jpg" alt="" v-else>
         </div>
         <div class="houseItemDescribe">
           <div style="font-weight: bold">{{item.name}}</div>
@@ -217,6 +218,9 @@
         isEmptyData: false,
         department_name: '所属部门',
         Loading : false,
+
+        albumArray : [],
+        imgArray : {},
       }
     },
     mounted() {
@@ -282,8 +286,15 @@
               arr = res.data.data;
               this.isLastPage = this.params.page === res.data.meta.last_page;
               arr.forEach((x) => {
-                this.tableData.push(x)
+                this.tableData.push(x);
+                if(x.album.length>0){
+                  if(this.albumArray.indexOf(x.album[0])<0){
+                    this.albumArray.push(x.album[0]);
+                  }
+                }
               });
+              console.log(this.albumArray);
+              this.getPic();
               if (res.data.data.length < 1) {
                 this.isEmptyData = true;
               }
@@ -291,6 +302,29 @@
               this.isEmptyData = true;
             }
           })
+      },
+      getPic(){
+        console.log(this.albumArray);
+
+        let update = {show:[]};
+        update.show = this.albumArray;
+        this.$http.post(globalConfig.server_user + 'files/batch',{'batch': JSON.stringify(update)}).then((res) => {
+          if(res.data.status === 'success'){
+            let imgArray = {};
+            res.data.data.forEach((item) => {
+              if(item.status === 'success'){
+                console.log(item)
+                if(item.data.info.mime.indexOf('image')>-1){
+                  imgArray[item.data.id] = item.data.uri;
+                }else {
+                  imgArray[item.data.id] = '';
+                }
+              }
+            });
+            console.log(imgArray)
+            this.imgArray = imgArray;
+          }
+        })
       },
       //字典匹配
       getDictionary() {

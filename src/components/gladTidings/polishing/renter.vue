@@ -26,6 +26,15 @@
           icon="clear"
           @click-icon="form.penalty = ''">
         </van-field>
+        <van-field
+          v-model="form.receipt"
+          label="收据编号"
+          type="text"
+          required
+          placeholder="请填写收据编号"
+          icon="clear"
+          @click-icon="form.receipt = ''">
+        </van-field>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amount">
@@ -278,6 +287,7 @@
           penalty: '',                      //违约金
           house_id: '',
           contract_number: '',            //合同编号
+          receipt: '',                    //收据编号
           customers: [{
             id: '',                         //客户ID
             name: '',                       //客户姓名
@@ -601,6 +611,7 @@
         this.contract_id = '';
         this.sexs = [''];
         this.form.house_id = '';
+        this.form.receipt = '';
         this.form.contract_number = '';
         this.form.penalty = '';
         this.form.customers = [{
