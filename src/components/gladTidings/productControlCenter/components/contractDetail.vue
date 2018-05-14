@@ -156,12 +156,7 @@
         return false;
       }
     },
-    beforeRouteEnter(to, from, next) {
-      next();
-      if(from.path !=='collectDetail'){
-        this.getData();
-      }
-    },
+
     methods:{
       getData(){
         Toast.loading({

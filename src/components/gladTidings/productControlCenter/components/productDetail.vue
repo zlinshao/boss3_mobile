@@ -7,21 +7,23 @@
                           v-for="(image, index) in detailData.house_goods.photo" :key="index">
             <div class="img" @click="showLargePic(detailData.house_goods.photo,index)">
               <img v-if="image.info.mime&&image.info.mime.indexOf('image')>-1" :src="image.uri"/>
-              <img v-else src="../../../../assets/file.png" alt="">
+              <img  src="../../../../assets/zanwutupian.jpg" alt="" v-else>
             </div>
           </van-swipe-item>
         </van-swipe>
         <div class="indicators">{{imgIndex}}/{{detailData.house_goods.photo.length}}</div>
       </div>
       <div class="img" v-if="!detailData.house_goods && albumData.length<1">
-        <img src="../../../../assets/file.png" alt="">
+        <img  src="../../../../assets/zanwutupian.jpg" alt="">
+
       </div>
       <div v-if="albumData.length>0">
         <van-swipe :autoplay="0" :show-indicators="false" @change="onChange">
           <van-swipe-item v-for="(image, index) in albumData[albumData.length-1].album.album_file" :key="index">
             <div class="img" @click="showLargePic(albumData[albumData.length-1].album.album_file,index)">
               <img v-if="image.info.mime&&image.info.mime.indexOf('image')>-1" :src="image.uri"/>
-              <img v-else src="../../../../assets/file.png" alt="">
+              <img  src="../../../../assets/zanwutupian.jpg" alt="" v-else>
+
             </div>
           </van-swipe-item>
         </van-swipe>
@@ -90,7 +92,7 @@
           <van-col span="10">
             <van-row>
               <van-col span="8" class="key">装修 :</van-col>
-              <van-col span="16" class="value">{{matchDictionary(detailData.decorate)}}</van-col>
+              <van-col span="16" class="value" v-if="detailData.decorate">{{matchDictionary(detailData.decorate)}}</van-col>
             </van-row>
           </van-col>
           <van-col span="14">
@@ -118,7 +120,7 @@
           <van-col span="10">
             <van-row>
               <van-col span="8" class="key">特色 :</van-col>
-              <van-col span="16" class="value">{{matchDictionary(detailData.house_feature)}}</van-col>
+              <van-col span="16" class="value" v-if="detailData.house_feature">{{matchDictionary(detailData.house_feature)}}</van-col>
             </van-row>
           </van-col>
           <van-col span="14">
@@ -210,7 +212,7 @@
       <div class="house_contract">
         <div class="contract_title">
          <div class="title">相关合同</div>
-         <div class="more" @click="router('contract',detailData.id)" v-if="lords.length>1 || renters.length>1">查看更多>
+         <div class="more" @click="router('contract',detailData.id)" v-if="lords.length>0||renters.length>0">查看更多详情>
          </div>
         </div>
         <div class="contractInfo" v-if="lords.length>0">
@@ -397,7 +399,6 @@
         return dictionary_name;
       },
       checkTv(val) {
-        alert(val)
         this.videoSrc = val;
       },
       getData() {

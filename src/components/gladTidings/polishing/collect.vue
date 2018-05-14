@@ -8,8 +8,7 @@
           type="text"
           readonly
           @click="searchSelect(1)"
-          placeholder="请选择房屋地址"
-          required>
+          placeholder="请选择房屋地址">
         </van-field>
         <van-field
           v-model="form.mound_number"
@@ -40,19 +39,17 @@
             type="text"
             :disabled="index === 0"
             label="客户姓名"
-            placeholder="请填写客户姓名"
-            required>
+            placeholder="请填写客户姓名">
           </van-field>
           <van-field
             v-model="form.customers[index].phone"
             type="number"
             :disabled="index === 0"
             label="联系方式"
-            placeholder="请填写联系方式"
-            required>
+            placeholder="请填写联系方式">
           </van-field>
           <div class="checks radio">
-            <span class="req">*</span>
+            <span class="req">&nbsp;</span>
             <div class="checkTitle">性别</div>
             <van-radio-group v-model="sexs[index]">
               <van-radio name="1">男</van-radio>
@@ -65,15 +62,13 @@
             @click="selectShow(1, index)"
             readonly
             label="证件类型"
-            placeholder="请选择证件类型"
-            required>
+            placeholder="请选择证件类型">
           </van-field>
           <van-field
             v-model="form.customers[index].idcard"
             type="text"
             label="证件号码"
-            placeholder="请填写证件号码"
-            required>
+            placeholder="请填写证件号码">
           </van-field>
         </van-cell-group>
       </div>
@@ -158,8 +153,7 @@
           readonly
           placeholder="请选择资料补齐时间"
           icon="clear"
-          @click-icon="form.data_date = ''"
-          required>
+          @click-icon="form.data_date = ''">
         </van-field>
       </van-cell-group>
       <div class="paddingTitle">
@@ -176,16 +170,16 @@
         </van-checkbox-group>
       </div>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>证件照片</div>
+      <div class="aloneModel">
+        <div class="title">证件照片</div>
         <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="pics.identity_photo"></UpLoad>
       </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>银行卡照片</div>
+      <div class="aloneModel">
+        <div class="title">银行卡照片</div>
         <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="pics.bank_photo"></UpLoad>
       </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>合同照片</div>
+      <div class="aloneModel">
+        <div class="title">合同照片</div>
         <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="pics.photo"></UpLoad>
       </div>
       <div class="aloneModel">
@@ -204,30 +198,17 @@
         <div class="title">交接单照片</div>
         <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkin_photo"></UpLoad>
       </div>
-      <div class="aloneModel required">
+      <div class="aloneModel">
         <div class="title">委托书照片</div>
         <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="pics.auth_photo"></UpLoad>
       </div>
-      <div class="aloneModel required">
+      <div class="aloneModel">
         <div class="title">押金收条照片</div>
         <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="pics.deposit_photo"></UpLoad>
       </div>
-      <div class="aloneModel required">
+      <div class="aloneModel">
         <div class="title">承诺书照片</div>
         <UpLoad :ID="'photo10'" @getImg="getImgData" :isClear="isClear" :editImage="pics.promise"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">补充照片</div>
-        <UpLoad :ID="'photo11'" @getImg="getImgData" :isClear="isClear" :editImage="pics.other_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">退租交接单照片</div>
-        <UpLoad :ID="'photo12'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkout_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">退租结算照片</div>
-        <UpLoad :ID="'photo13'" @getImg="getImgData" :isClear="isClear"
-                :editImage="pics.checkout_settle_photo"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">房产证照片</div>
@@ -246,7 +227,19 @@
         <div class="title">燃气卡照片</div>
         <UpLoad :ID="'photo17'" @getImg="getImgData" :isClear="isClear" :editImage="pics.gas_card_photo"></UpLoad>
       </div>
-
+      <div class="aloneModel">
+        <div class="title">退租交接单照片</div>
+        <UpLoad :ID="'photo12'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkout_photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">退租结算照片</div>
+        <UpLoad :ID="'photo13'" @getImg="getImgData" :isClear="isClear"
+                :editImage="pics.checkout_settle_photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">补充照片</div>
+        <UpLoad :ID="'photo11'" @getImg="getImgData" :isClear="isClear" :editImage="pics.other_photo"></UpLoad>
+      </div>
       <van-cell-group>
         <van-field
           v-model="form.remark_terms"

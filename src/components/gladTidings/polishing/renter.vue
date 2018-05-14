@@ -8,8 +8,7 @@
           type="text"
           readonly
           @click="searchSelect(1)"
-          placeholder="请选择房屋地址"
-          required>
+          placeholder="请选择房屋地址">
         </van-field>
         <van-field
           v-model="form.contract_number"
@@ -17,7 +16,6 @@
           type="text"
           placeholder="请填写合同编号"
           icon="clear"
-          required
           @click-icon="form.contract_number = ''">
         </van-field>
         <van-field
@@ -26,9 +24,19 @@
           type="text"
           placeholder="请填写金额"
           icon="clear"
-          required
           @click-icon="form.penalty = ''">
         </van-field>
+        <div class="month">
+          <van-field
+            v-model="form.receipt"
+            label="收据编号"
+            type="text"
+            placeholder="请填写收据编号"
+            icon="clear"
+            @click-icon="form.receipt = ''">
+          </van-field>
+        </div>
+        <div class="titleRed">城市首字母缩写+年份(4位)+7位数字</div>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amount">
@@ -42,16 +50,14 @@
             type="text"
             :disabled="index === 0"
             label="客户姓名"
-            placeholder="请填写客户姓名"
-            required>
+            placeholder="请填写客户姓名">
           </van-field>
           <van-field
             v-model="form.customers[index].phone"
             type="text"
             label="联系方式"
             :disabled="index === 0"
-            placeholder="请填写联系方式"
-            required>
+            placeholder="请填写联系方式">
           </van-field>
           <div class="checks radio">
             <span class="req">*</span>
@@ -67,15 +73,13 @@
             @click="selectShow(1, index)"
             readonly
             label="证件类型"
-            placeholder="请选择证件类型"
-            required>
+            placeholder="请选择证件类型">
           </van-field>
           <van-field
             v-model="form.customers[index].idcard"
             type="text"
             label="证件号码"
-            placeholder="请填写证件号码"
-            required>
+            placeholder="请填写证件号码">
           </van-field>
         </van-cell-group>
       </div>
@@ -148,12 +152,12 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>证件照片</div>
+      <div class="aloneModel">
+        <div class="title">证件照片</div>
         <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="pics.identity_photo"></UpLoad>
       </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>合同照片</div>
+      <div class="aloneModel">
+        <div class="title">合同照片</div>
         <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="pics.photo"></UpLoad>
       </div>
       <div class="aloneModel">
@@ -176,7 +180,7 @@
         <div class="title">凭证截图</div>
         <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="pics.certificate_photo"></UpLoad>
       </div>
-      <div class="aloneModel required">
+      <div class="aloneModel">
         <div class="title">押金收条</div>
         <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="pics.deposit_photo"></UpLoad>
       </div>
@@ -285,6 +289,7 @@
           penalty: '',                      //违约金
           house_id: '',
           contract_number: '',            //合同编号
+          receipt: '',                    //收据编号
           customers: [{
             id: '',                         //客户ID
             name: '',                       //客户姓名
@@ -608,6 +613,7 @@
         this.contract_id = '';
         this.sexs = [''];
         this.form.house_id = '';
+        this.form.receipt = '';
         this.form.contract_number = '';
         this.form.penalty = '';
         this.form.customers = [{
