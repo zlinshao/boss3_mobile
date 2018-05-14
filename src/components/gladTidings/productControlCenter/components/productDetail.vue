@@ -90,7 +90,7 @@
           <van-col span="10">
             <van-row>
               <van-col span="8" class="key">装修 :</van-col>
-              <van-col span="16" class="value">{{matchDictionary(detailData.decorate)}}</van-col>
+              <van-col span="16" class="value" v-if="detailData.decorate">{{matchDictionary(detailData.decorate)}}</van-col>
             </van-row>
           </van-col>
           <van-col span="14">
@@ -118,7 +118,7 @@
           <van-col span="10">
             <van-row>
               <van-col span="8" class="key">特色 :</van-col>
-              <van-col span="16" class="value">{{matchDictionary(detailData.house_feature)}}</van-col>
+              <van-col span="16" class="value" v-if="detailData.house_feature">{{matchDictionary(detailData.house_feature)}}</van-col>
             </van-row>
           </van-col>
           <van-col span="14">

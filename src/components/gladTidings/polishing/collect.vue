@@ -211,19 +211,6 @@
         <UpLoad :ID="'photo10'" @getImg="getImgData" :isClear="isClear" :editImage="pics.promise"></UpLoad>
       </div>
       <div class="aloneModel">
-        <div class="title">补充照片</div>
-        <UpLoad :ID="'photo11'" @getImg="getImgData" :isClear="isClear" :editImage="pics.other_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">退租交接单照片</div>
-        <UpLoad :ID="'photo12'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkout_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">退租结算照片</div>
-        <UpLoad :ID="'photo13'" @getImg="getImgData" :isClear="isClear"
-                :editImage="pics.checkout_settle_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
         <div class="title">房产证照片</div>
         <UpLoad :ID="'photo14'" @getImg="getImgData" :isClear="isClear" :editImage="pics.property_photo"></UpLoad>
       </div>
@@ -240,7 +227,19 @@
         <div class="title">燃气卡照片</div>
         <UpLoad :ID="'photo17'" @getImg="getImgData" :isClear="isClear" :editImage="pics.gas_card_photo"></UpLoad>
       </div>
-
+      <div class="aloneModel">
+        <div class="title">退租交接单照片</div>
+        <UpLoad :ID="'photo12'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkout_photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">退租结算照片</div>
+        <UpLoad :ID="'photo13'" @getImg="getImgData" :isClear="isClear"
+                :editImage="pics.checkout_settle_photo"></UpLoad>
+      </div>
+      <div class="aloneModel">
+        <div class="title">补充照片</div>
+        <UpLoad :ID="'photo11'" @getImg="getImgData" :isClear="isClear" :editImage="pics.other_photo"></UpLoad>
+      </div>
       <van-cell-group>
         <van-field
           v-model="form.remark_terms"

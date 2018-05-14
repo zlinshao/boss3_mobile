@@ -40,7 +40,7 @@
             <i class="iconfont icon-favoritesfilling"
                style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
             </i>
-            <span style="font-size: 0.2rem;margin-left: .2rem">
+            <span style="font-size: 0.2rem;margin-left: .2rem" v-if="item.decoration && item.house_identity">
               {{matchDictionary(item.decoration)}}/{{matchDictionary(item.house_identity)}}
             </span>
             <span style="color: #ff3f77;font-weight: bold;float: right">
