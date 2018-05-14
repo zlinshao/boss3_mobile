@@ -58,7 +58,6 @@ axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
 
 
 const router = new VueRouter({
-  mode: 'history',
   routes:routes.options.routes,
 
   scrollBehavior (to, from, savedPosition) {
