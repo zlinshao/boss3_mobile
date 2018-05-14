@@ -264,14 +264,17 @@
           required>
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
-        <van-field
-          v-model="form.receipt"
-          label="收据编号"
-          type="text"
-          placeholder="请填写收据编号"
-          icon="clear"
-          @click-icon="form.receipt = ''">
-        </van-field>
+        <div class="month">
+          <van-field
+            v-model="form.receipt"
+            label="收据编号"
+            type="text"
+            placeholder="请填写收据编号"
+            icon="clear"
+            @click-icon="form.receipt = ''">
+          </van-field>
+        </div>
+        <div class="titleRed">城市首字母缩写+年份+7位数字</div>
         <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"

@@ -26,15 +26,17 @@
           icon="clear"
           @click-icon="form.penalty = ''">
         </van-field>
-        <van-field
-          v-model="form.receipt"
-          label="收据编号"
-          type="text"
-          required
-          placeholder="请填写收据编号"
-          icon="clear"
-          @click-icon="form.receipt = ''">
-        </van-field>
+        <div class="month">
+          <van-field
+            v-model="form.receipt"
+            label="收据编号"
+            type="text"
+            placeholder="请填写收据编号"
+            icon="clear"
+            @click-icon="form.receipt = ''">
+          </van-field>
+        </div>
+        <div class="titleRed">城市首字母缩写+年份+7位数字</div>
       </van-cell-group>
 
       <div class="changes" v-for="(key,index) in amount">
