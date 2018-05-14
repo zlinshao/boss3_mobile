@@ -252,6 +252,7 @@ export default new Router({
       meta: {title: '特殊事项报备'},
       component: Special
     },
+
     // {
     //   path: '/confiscate',
     //   name: '充公报备',
@@ -260,6 +261,7 @@ export default new Router({
     //   meta: {title: '充公报备'},
     //   component: Confiscate
     // },
+
     {
       path: '/finalPayment',
       name: '尾款房租报备',
@@ -277,6 +279,7 @@ export default new Router({
     //   meta: {title: '产品管控中心'},
     //   component: ProductControlCenter
     // },
+
     {
       path: '/villageCenter',
       name: '小区管理中心',
@@ -285,6 +288,7 @@ export default new Router({
       meta: {title: '小区管理中心'},
       component: VillageCenter
     },
+
     // {
     //   path: '/expense',
     //   hidden: 'examine',
