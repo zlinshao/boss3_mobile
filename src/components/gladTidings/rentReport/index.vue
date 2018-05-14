@@ -270,8 +270,7 @@
           type="text"
           placeholder="请填写收据编号"
           icon="clear"
-          @click-icon="form.receipt = ''"
-          required>
+          @click-icon="form.receipt = ''">
         </van-field>
         <van-field
           v-model="form.retainage_date"
