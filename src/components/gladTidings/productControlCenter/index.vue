@@ -28,7 +28,7 @@
     <div class="mainContent" id="mainContent">
       <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
         <div class="image">
-          <img v-if="item.album&&item.album.length>0&&imgArray[item.album[0]]" :src="imgArray[item.album[0]]" alt="">
+          <img v-if="item.album&&item.album.length>0&&imgArray[item.id]" :src="imgArray[item.id]" alt="">
           <img  src="../../../assets/zanwutupian.jpg" alt="" v-else>
         </div>
         <div class="houseItemDescribe">
@@ -287,13 +287,14 @@
               this.isLastPage = this.params.page === res.data.meta.last_page;
               arr.forEach((x) => {
                 this.tableData.push(x);
-                if(x.album.length>0){
-                  if(this.albumArray.indexOf(x.album[0])<0){
-                    this.albumArray.push(x.album[0]);
-                  }
+                if(x.album&&x.album.length>0){
+                  x.album.forEach((item)=>{
+                    if(this.albumArray.indexOf(item)<0){
+                      this.albumArray.push(item);
+                    }
+                  })
                 }
               });
-              console.log(this.albumArray);
               this.getPic();
               if (res.data.data.length < 1) {
                 this.isEmptyData = true;
@@ -304,8 +305,6 @@
           })
       },
       getPic(){
-        console.log(this.albumArray);
-
         let update = {show:[]};
         update.show = this.albumArray;
         this.$http.post(globalConfig.server_user + 'files/batch',{'batch': JSON.stringify(update)}).then((res) => {
@@ -314,13 +313,16 @@
             res.data.data.forEach((item) => {
               if(item.status === 'success'){
                 if(item.data.info.mime.indexOf('image')>-1){
-                  imgArray[item.data.id] = item.data.uri;
-                }else {
-                  imgArray[item.data.id] = '';
+                  this.tableData.forEach((list)=>{
+                    if(!imgArray[list.id]){
+                      if(list.album && list.album.indexOf(item.data.id)>-1){
+                        imgArray[list.id] = item.data.uri;
+                      }
+                    }
+                  })
                 }
               }
             });
-            // console.log(imgArray)
             this.imgArray = imgArray;
           }
         })
