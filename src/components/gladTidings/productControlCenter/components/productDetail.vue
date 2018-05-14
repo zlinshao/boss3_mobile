@@ -210,7 +210,7 @@
       <div class="house_contract">
         <div class="contract_title">
          <div class="title">相关合同</div>
-         <div class="more" @click="router('contract',detailData.id)" v-if="lords.length>1 || renters.length>1">查看更多>
+         <div class="more" @click="router('contract',detailData.id)" v-if="lords.length>0||renters.length>0">查看更多详情>
          </div>
         </div>
         <div class="contractInfo" v-if="lords.length>0">
@@ -397,7 +397,6 @@
         return dictionary_name;
       },
       checkTv(val) {
-        alert(val)
         this.videoSrc = val;
       },
       getData() {

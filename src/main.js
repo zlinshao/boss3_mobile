@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import Boss from './boss.config.js'
-import router from './router/index.js'
+import routes from './router/index.js'
 import axios from 'axios'
 import VueRouter from 'vue-router'
 import Fun from './fun.config.js'
@@ -57,21 +57,22 @@ axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
 });
 
 
-// const router = new VueRouter({
-//   mode: 'history',
-//   routes:routes.options.routes,
-//
-//   scrollBehavior (to, from, savedPosition) {
-//     if(to.path === '/productControlCenter') {
-//       return savedPosition
-//     }else {
-//       return { x: 0, y: 0 }
-//     }
-//   }
-// });
+const router = new VueRouter({
+  mode: 'history',
+  routes:routes.options.routes,
+
+  scrollBehavior (to, from, savedPosition) {
+    if(to.path === '/productControlCenter') {
+
+      return savedPosition
+    }else {
+      return { x: 0, y: 0 }
+    }
+  }
+});
 
 
-router.beforeEach((to, from, next) => {
+routes.beforeEach((to, from, next) => {
   if (from.path !== '/' && to.path === '/index') {
     axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
       let _config = res.data;
@@ -184,7 +185,7 @@ let u = navigator.userAgent, app = navigator.appVersion;
 let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
 let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
 if (isAndroid) {
-  router.beforeEach((to, from, next) => {
+  routes.beforeEach((to, from, next) => {
     document.title = to.meta.title;
     next();
   });
