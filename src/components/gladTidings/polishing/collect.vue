@@ -266,21 +266,17 @@
         </van-field>
         <van-field
           v-model="form.staff_name"
-          @click="searchSelect(2)"
-          readonly
+          disabled
           label="开单人"
           type="text"
-          placeholder="请选择开单人"
-          required>
+          placeholder="开单人已禁用">
         </van-field>
         <van-field
           v-model="form.department_name"
-          @click="searchSelect(4)"
-          readonly
+          disabled
           label="部门"
           type="text"
-          placeholder="请选择部门"
-          required>
+          placeholder="部门已禁用">
         </van-field>
       </van-cell-group>
     </div>
@@ -440,7 +436,6 @@
     mounted() {
       this.getNowFormatDate();
       this.dict();
-      this.userInfo();
     },
     activated() {
       this.houseInfo();
@@ -449,11 +444,15 @@
     },
     methods: {
       userInfo() {
-        let per = JSON.parse(sessionStorage.personal);
-        this.form.staff_id = per.id;
-        this.form.staff_name = per.name;
-        this.form.department_id = per.department_id;
-        this.form.department_name = per.department_name;
+        // let per = JSON.parse(sessionStorage.personal);
+        // this.form.staff_id = per.id;
+        // this.form.staff_name = per.name;
+        // this.form.department_id = per.department_id;
+        // this.form.department_name = per.department_name;
+        this.form.staff_id = '';
+        this.form.staff_name = '';
+        this.form.department_id = '';
+        this.form.department_name = '';
       },
       dict() {
         // 证件类型
@@ -661,25 +660,29 @@
           this.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.address = val.house_name;
+          this.form.staff_name = val.staff_name;
+          this.form.department_name = val.department_name;
+          this.form.staff_id = val.staff_id;
+          this.form.department_id = val.department_id;
           this.rentDetail(val.id);
         }
-        if (t.staff !== undefined && t.staff !== '') {
-          let val = JSON.parse(t.staff);
-          this.form.staff_id = val.staff_id;
-          this.form.staff_name = val.staff_name;
-          this.form.department_id = val.depart_id;
-          this.form.department_name = val.depart_name;
-          this.stick();
-        }
-        if (t.depart !== undefined && t.depart !== '') {
-          let val = JSON.parse(t.depart);
-          this.department_name = val.name;
-          this.form.department_id = val.id;
-          this.stick();
-        }
-        if (t.tops === '') {
-          this.stick();
-        }
+        // if (t.staff !== undefined && t.staff !== '') {
+        //   let val = JSON.parse(t.staff);
+        //   this.form.staff_id = val.staff_id;
+        //   this.form.staff_name = val.staff_name;
+        //   this.form.department_id = val.depart_id;
+        //   this.form.department_name = val.depart_name;
+        //   this.stick();
+        // }
+        // if (t.depart !== undefined && t.depart !== '') {
+        //   let val = JSON.parse(t.depart);
+        //   this.department_name = val.name;
+        //   this.form.department_id = val.id;
+        //   this.stick();
+        // }
+        // if (t.tops === '') {
+        //   this.stick();
+        // }
       },
 
       rentDetail(id) {
