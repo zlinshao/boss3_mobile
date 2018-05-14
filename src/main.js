@@ -58,6 +58,7 @@ axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
 
 
 const router = new VueRouter({
+  mode: 'history',
   routes:routes.options.routes,
 
   scrollBehavior (to, from, savedPosition) {
@@ -71,7 +72,8 @@ const router = new VueRouter({
 });
 
 
-routes.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
+  alert(window.location.href);
   if (from.path !== '/' && to.path === '/index') {
     axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
       let _config = res.data;
@@ -184,7 +186,7 @@ let u = navigator.userAgent, app = navigator.appVersion;
 let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
 let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
 if (isAndroid) {
-  routes.beforeEach((to, from, next) => {
+  router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
     next();
   });
