@@ -574,7 +574,9 @@
     },
     beforeRouteLeave(to, from, next){
       Toast.clear();
-      this.largePic.close();
+      if(this.largePic){
+        this.largePic.close();
+      }
       next();
     },
     methods:{

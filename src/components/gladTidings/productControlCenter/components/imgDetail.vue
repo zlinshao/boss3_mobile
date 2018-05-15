@@ -45,7 +45,9 @@
       })
     },
     beforeRouteLeave(to, from, next){
-      this.largePic.close();
+      if(this.largePic){
+        this.largePic.close();
+      }
       Toast.clear();
       next();
     },
