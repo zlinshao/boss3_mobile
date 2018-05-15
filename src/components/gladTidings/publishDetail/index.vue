@@ -53,7 +53,7 @@
           <h1>
             <span v-for="(pic,num) in key">
               <img v-if="pic.is_video" @click="checkTv(pic.uri)" src="../../../assets/video.jpg">
-              <img v-else @click="pics(key, num, 2)" :src="pic.uri">
+              <img v-else @click="pics(key, num, pic.is_video)" :src="pic.uri">
             </span>
           </h1>
         </div>
@@ -86,8 +86,9 @@
                 {{key.body}}
               </div>
               <div class="pics">
-                <div v-for="(p,index) in key.album">
-                  <img :src="p.uri" @click="pics(key.album, index, 2)">
+                <div v-for="(pic,num) in key.album">
+                  <img v-if="pic.info.ext.indexOf('video') > -1" @click="checkTv(pic.uri)" src="../../../assets/video.jpg">
+                  <img v-else @click="pics(key.album, num, pic.info.ext)" :src="pic.uri">
                 </div>
               </div>
             </div>
@@ -196,8 +197,6 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        let per = JSON.parse(sessionStorage.personal);
-        vm.personalId = per;
         vm.path = from.path;
         if (from.path === '/') {
           sessionStorage.setItem('path', vm.path);
@@ -213,6 +212,7 @@
       })
     },
     activated() {
+      this.personalId = JSON.parse(sessionStorage.personal);
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
@@ -320,10 +320,10 @@
         })
       },
 
-      pics(val, index, num) {
+      pics(val, index, video) {
         let arr = [];
         for (let i = 0; i < val.length; i++) {
-          arr.push(val[i].uri)
+          arr.push(val[i].uri);
         }
         if (this.IsPC()) {
           this.photo = arr;
