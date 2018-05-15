@@ -26,7 +26,8 @@
       </div>
 
 
-      <div class="footer">
+      <div class="footerIndex">
+        <div @click="clearData">清空</div>
         <div @click="confirmAdd" :class="{'isGray':!selectId}">确定</div>
       </div>
     </div>
@@ -120,6 +121,11 @@
           Toast.fail('请选择部门');
         }
       },
+      clearData(){
+        this.selectId = '';
+        this.selectDepart = {};
+        this.$router.replace({path: this.path, query: {depart: ''}});
+      },
       ddRent(urls, val) {
         let that = this;
         dd.biz.navigation.setLeft({
@@ -199,22 +205,24 @@
         }
       }
     }
-    .footer {
+    .footerIndex {
       position: fixed;
+      bottom: 0;
       left: 0;
       right: 0;
-      bottom: 0;
       height: 1rem;
-      text-align: center;
-      z-index: 666;
-      background: #ffffff;
-      border-top: 1px solid #efefef;
+      border-top: 1px solid #ebebeb;
+      @include flex;
+      background: #FFFFFF;
+      justify-content: space-around;
+      z-index: 999999;
+      div + div {
+        border-left: 1px solid #EEEEEE;
+      }
       div {
-        height: 1rem;
-        line-height: 1rem;
-        width: 100% !important;
+        width: 50%;
         text-align: center;
-        color: #409EFF;
+        line-height: 1rem;
       }
     }
   }

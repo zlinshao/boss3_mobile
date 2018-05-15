@@ -147,16 +147,21 @@
     mounted(){
       this.getData();
     },
-    beforeRouteLeave(to, from, next) {
-      Toast.clear();
-      if(to.path !== '/index'){
-        next();
-      }else {
-        next('/productDetail');
-        return false;
+    activated(){
+      if(this.$route.query.id){
+        this.getData();
       }
     },
-
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex('productDetail', 'house');
+        vm.ddRent('productDetail', 'house');
+      })
+    },
+    beforeRouteLeave(to, from, next){
+      Toast.clear();
+      next();
+    },
     methods:{
       getData(){
         Toast.loading({
