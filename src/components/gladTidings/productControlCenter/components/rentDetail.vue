@@ -406,6 +406,7 @@
       return {
         all_dic: [],
         contractInfo: {},
+        largePic : null,
       }
     },
     mounted() {
@@ -422,6 +423,7 @@
       })
     },
     beforeRouteLeave(to, from, next){
+      this.largePic.close();
       Toast.clear();
       next();
     },
@@ -463,7 +465,7 @@
         for (let key in images) {
           imgArray.unshift(images[key]);
         }
-        ImagePreview(imgArray, index);
+        this.largePic = ImagePreview(imgArray,index);
       }
     }
   }

@@ -29,6 +29,7 @@
       return {
         detailData : [],
         albumData : [],
+        largePic : null,
       }
     },
     mounted(){
@@ -44,6 +45,7 @@
       })
     },
     beforeRouteLeave(to, from, next){
+      this.largePic.close();
       Toast.clear();
       next();
     },
@@ -69,7 +71,7 @@
         images.forEach((item)=>{
           imgArray.push(item.uri);
         });
-        ImagePreview(imgArray,index)
+        this.largePic = ImagePreview(imgArray,index)
       }
     }
   }

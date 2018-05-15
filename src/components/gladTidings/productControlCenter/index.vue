@@ -30,7 +30,7 @@
         <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
           <div class="image">
             <img v-if="item.album&&item.album.length>0&&imgArray[item.id]" :src="imgArray[item.id]" alt="">
-            <img  src="../../../assets/zanwutupian.jpg" alt="" v-else>
+            <img  src="../../../assets/noPic.png" alt="" v-else>
           </div>
           <div class="houseItemDescribe">
             <div style="font-weight: bold">{{item.name}}</div>
