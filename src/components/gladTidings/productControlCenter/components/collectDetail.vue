@@ -556,6 +556,7 @@
       return {
         all_dic : [],
         contractInfo:{},
+        largePic : null,
       }
     },
     mounted(){
@@ -570,6 +571,13 @@
         vm.routerIndex('contractDetail', 'house');
         vm.ddRent('contractDetail', 'house');
       })
+    },
+    beforeRouteLeave(to, from, next){
+      Toast.clear();
+      if(this.largePic){
+        this.largePic.close();
+      }
+      next();
     },
     methods:{
       //字典匹配
@@ -609,7 +617,7 @@
         for(let key in images){
           imgArray.unshift(images[key]);
         }
-        ImagePreview(imgArray,index);
+        this.largePic = ImagePreview(imgArray,index);
       }
     }
   }

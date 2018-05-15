@@ -29,6 +29,7 @@
       return {
         detailData : [],
         albumData : [],
+        largePic : null,
       }
     },
     mounted(){
@@ -43,7 +44,13 @@
         vm.ddRent('productDetail', 'house');
       })
     },
-
+    beforeRouteLeave(to, from, next){
+      if(this.largePic){
+        this.largePic.close();
+      }
+      Toast.clear();
+      next();
+    },
     methods:{
       getData(){
         Toast.loading({
@@ -66,7 +73,7 @@
         images.forEach((item)=>{
           imgArray.push(item.uri);
         });
-        ImagePreview(imgArray,index)
+        this.largePic = ImagePreview(imgArray,index)
       }
     }
   }
