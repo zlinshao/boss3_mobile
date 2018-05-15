@@ -279,7 +279,6 @@ export default new Router({
       meta: {title: '产品管控中心'},
       component: ProductControlCenter
     },
-
     {
       path: '/villageCenter',
       name: '小区管理中心',
