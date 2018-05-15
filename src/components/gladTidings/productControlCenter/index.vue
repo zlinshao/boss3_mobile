@@ -398,7 +398,6 @@
         }else {
           this.department_name = '所属部门';
           this.params.org_id = '';
-          this.onSearch();
         }
       },
       selectHouseStatus(item, index) {
