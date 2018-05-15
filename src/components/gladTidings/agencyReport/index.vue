@@ -87,24 +87,24 @@
           @click-icon="form.name = ''"
           required>
         </van-field>
-        <!--<van-field-->
-          <!--v-model="form.user_name"-->
-          <!--type="text"-->
-          <!--:disabled="agencyStatus"-->
-          <!--label="中介人"-->
-          <!--placeholder="请填写中介人"-->
-          <!--@click-icon="form.user_name = ''"-->
-          <!--required>-->
-        <!--</van-field>-->
-        <!--<van-field-->
-          <!--v-model="form.phone"-->
-          <!--type="number"-->
-          <!--:disabled="agencyStatus"-->
-          <!--label="中介联系方式"-->
-          <!--placeholder="请填写中介联系方式"-->
-          <!--@click-icon="form.phone = ''"-->
-          <!--required>-->
-        <!--</van-field>-->
+        <van-field
+          v-model="form.user_name"
+          type="text"
+          :disabled="agencyStatus"
+          label="中介人"
+          placeholder="请填写中介人"
+          @click-icon="form.user_name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.phone"
+          type="number"
+          :disabled="agencyStatus"
+          label="中介联系方式"
+          placeholder="请填写中介联系方式"
+          @click-icon="form.phone = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.account"
           label="卡号"
@@ -346,15 +346,15 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          // if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
-          //   this.agencyStatus = true;
-          //   this.form.amount = val.agency_info.agency_price;
-          //   this.form.user_name = val.agency_info.agency_user_name;
-          //   this.form.name = val.agency_info.agency_name;
-          //   this.form.phone = val.agency_info.agency_phone;
-          // } else {
-          //   this.agencyStatus = false;
-          // }
+          if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
+            this.agencyStatus = true;
+            this.form.amount = val.agency_info.agency_price;
+            this.form.user_name = val.agency_info.agency_user_name;
+            this.form.name = val.agency_info.agency_name;
+            this.form.phone = val.agency_info.agency_phone;
+          } else {
+            this.agencyStatus = false;
+          }
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -399,8 +399,8 @@
             this.numbers = draft.collect_or_rent;
             this.form.amount = draft.amount;
             this.form.name = draft.name;
-            // this.form.user_name = draft.user_name;
-            // this.form.phone = draft.phone;
+            this.form.user_name = draft.user_name;
+            this.form.phone = draft.phone;
             this.form.bank = draft.bank;
             this.form.subbranch = draft.subbranch;
             this.form.account_name = draft.account_name;
@@ -441,8 +441,8 @@
         this.form.collect_or_rent = '';
         this.form.amount = '';
         this.form.name = '';
-        // this.form.user_name = '';
-        // this.form.phone = '';
+        this.form.user_name = '';
+        this.form.phone = '';
         this.form.bank = '';
         this.form.subbranch = '';
         this.form.account_name = '';
@@ -454,7 +454,7 @@
         this.form.screenshot_leader = [];
         this.screenshots_leader = {};
         this.form.remark = '';
-        this.staff_name = '';
+        this.form.staff_name = '';
         this.form.staff_id = '';
         this.form.department_id = '';
         this.department_name = '';

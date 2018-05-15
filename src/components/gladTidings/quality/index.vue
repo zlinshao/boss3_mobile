@@ -758,6 +758,8 @@
       },
 
       qualityDetail(val) {
+        this.isValue2 = true;
+        this.userInfo(true, true);
         let type;
         if (val !== '') {
           type = 'bulletin/quality/' + val;
@@ -841,14 +843,11 @@
             for (let i = 0; i < data.photo.length; i++) {
               this.form.photo.push(data.photo[i].id);                       //房屋影像
             }
-
-            this.form.staff_id = data.staff_id;
-            this.form.staff_name = data.staff_name;
-            this.form.department_id = data.department_id;
-            this.form.department_name = data.department_name;
+            // this.form.staff_id = data.staff_id;
+            // this.form.staff_name = data.staff_name;
+            // this.form.department_id = data.department_id;
+            // this.form.department_name = data.department_name;
           } else {
-            this.isValue2 = true;
-            this.userInfo(true, true);
             this.form.id = '';
           }
         })
