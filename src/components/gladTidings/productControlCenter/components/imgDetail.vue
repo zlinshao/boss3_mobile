@@ -37,14 +37,11 @@
     activated(){
       this.getData();
     },
-    beforeRouteLeave(to, from, next) {
-      Toast.clear();
-      if(to.path !== '/index'){
-        next();
-      }else {
-        next('/productDetail');
-        return false;
-      }
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex('productDetail', 'house');
+        vm.ddRent('productDetail', 'house');
+      })
     },
 
     methods:{

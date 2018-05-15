@@ -366,21 +366,21 @@
         videoSrc: '',
       }
     },
-    beforeRouteLeave(to, from, next) {
-      from.meta.keepAlive = false;
-      Toast.clear();
-      if (to.path === '/imgDetail' || to.path === '/contractDetail' || to.path === '/productControlCenter') {
-        next();
-      } else {
-        next({ path: '/productControlCenter'});
-      }
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex('productControlCenter', 'house');
+        vm.ddRent('productControlCenter', 'house');
+      })
     },
-
     mounted() {
       this.getData();
       this.getDictionary();
     },
-
+    activated(){
+      if(this.$route.query.id){
+        this.getData();
+      }
+    },
     methods: {
       //字典匹配
       getDictionary() {
