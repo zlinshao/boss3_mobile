@@ -331,22 +331,24 @@
           this.form.department_name = val.department_name;
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
-          this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
-            if (res.data.code === '51110') {
-              let pay = res.data.data;
-              this.form.payWay = [];
-              this.form.price_arr = [];
-              for (let i = 0; i < pay.pay_way.length; i++) {
-                this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ' : ' + pay.pay_way[i].pay_way_str);
-              }
-              for (let i = 0; i < pay.price.length; i++) {
-                this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ' : ' + pay.price[i].price_str);
-              }
-            }
-          })
+          this.helperBulletin(val.id);
         }
       },
-
+      helperBulletin(id) {
+        this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
+          if (res.data.code === '51110') {
+            let pay = res.data.data;
+            this.form.payWay = [];
+            this.form.price_arr = [];
+            for (let i = 0; i < pay.pay_way.length; i++) {
+              this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ' : ' + pay.pay_way[i].pay_way_str);
+            }
+            for (let i = 0; i < pay.price.length; i++) {
+              this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ' : ' + pay.price[i].price_str);
+            }
+          }
+        })
+      },
       checkDetail(val) {
         let type;
         if (val !== '') {
@@ -362,6 +364,7 @@
 
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
+            this.helperBulletin(draft.contract_id);
             this.form.check_type = draft.check_type;
             this.form.house_id = draft.house_id;
             this.form.collect_or_rent = draft.collect_or_rent;
