@@ -233,12 +233,12 @@
             required>
           </van-field>
           <van-field
-            v-model="form.agency_price"
+            v-model="form.price"
             label="中介费"
             type="number"
             placeholder="请填写中介费"
             icon="clear"
-            @click-icon="form.agency_price = ''"
+            @click-icon="form.price = ''"
             required>
           </van-field>
           <van-field
@@ -473,7 +473,7 @@
 
           is_agency: 0,                 //客户来源    0个人1中介
           agency_name: '',              //中介名
-          agency_price: '',             //中介费
+          price: '',             //中介费
           agency_user_name: '',         //中介人
           agency_phone: '',             //中介手机号
 
@@ -513,7 +513,7 @@
       cusFrom(val) {
         if (!val) {
           this.form.agency_name = '';
-          this.form.agency_price = '';
+          this.form.price = '';
           this.form.agency_user_name = '';
           this.form.agency_phone = '';
         }
@@ -902,7 +902,7 @@
             this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
             this.form.agency_name = draft.agency_name;
-            this.form.agency_price = draft.agency_price;
+            this.form.price = draft.price;
             this.form.agency_user_name = draft.agency_user_name;
             this.form.agency_phone = draft.agency_phone;
 
@@ -980,7 +980,7 @@
         this.is_agency = 0;
         this.cusFrom = false;
         this.form.agency_name = '';
-        this.form.agency_price = '';
+        this.form.price = '';
         this.form.agency_user_name = '';
         this.form.agency_phone = '';
 
