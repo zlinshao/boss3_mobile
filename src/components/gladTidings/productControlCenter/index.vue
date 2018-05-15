@@ -1,19 +1,19 @@
 <template>
   <div id="house">
     <div class="header">
-      <div>
+      <div @touchstart="changeShow">
         <van-search
           show-action
           v-model="params.q"
           @search="onSearch">
-          <div slot="action" @click="onSearch" style="padding: 0 .2rem">搜索</div>
+          <div slot="action"  @click="onSearch" style="padding: 0 .2rem">搜索</div>
         </van-search>
       </div>
       <div class="filter">
         <div class="filter_item" @click.stop="openSelectModal()">
           {{houseStatusName}}<i class="iconfont icon-xiayibu rotate"/>
         </div>
-        <div class="filter_item" @click="selectDepart()">
+        <div class="filter_item" @click="selectDepart()" @touchstart="changeShow">
           {{department_name}}
         </div>
         <div class="houseStatus" :class="isShow?'isShow':'isHide'">
