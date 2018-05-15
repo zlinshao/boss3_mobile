@@ -403,6 +403,7 @@
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === '50320') {
             this.isClear = false;
+            this.agencyStatus = true;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
             this.form.purchase_way = 509;
