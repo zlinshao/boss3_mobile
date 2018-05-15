@@ -370,6 +370,10 @@
         vm.ddRent('productControlCenter', 'house');
       })
     },
+    beforeRouteLeave(to, from, next){
+      Toast.clear();
+      next();
+    },
     mounted() {
       this.getData();
       this.getDictionary();

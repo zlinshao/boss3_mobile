@@ -26,55 +26,63 @@
     </div>
 
     <div class="mainContent" id="mainContent">
-      <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
-        <div class="image">
-          <img v-if="item.album&&item.album.length>0&&imgArray[item.id]" :src="imgArray[item.id]" alt="">
-          <img  src="../../../assets/zanwutupian.jpg" alt="" v-else>
-        </div>
-        <div class="houseItemDescribe">
-          <div style="font-weight: bold">{{item.name}}</div>
-          <div>
-            <i class="iconfont icon-favoritesfilling" style="font-size: 0.2rem;color: #FFD000;"
-               v-for="item in item.house_grade">
-            </i>
-            <i class="iconfont icon-favoritesfilling"
-               style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
-            </i>
-            <span style="font-size: 0.2rem;margin-left: .2rem" v-if="item.decoration && item.house_identity">
+      <div  id="houseItem">
+        <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
+          <div class="image">
+            <img v-if="item.album&&item.album.length>0&&imgArray[item.id]" :src="imgArray[item.id]" alt="">
+            <img  src="../../../assets/zanwutupian.jpg" alt="" v-else>
+          </div>
+          <div class="houseItemDescribe">
+            <div style="font-weight: bold">{{item.name}}</div>
+            <div>
+              <i class="iconfont icon-favoritesfilling" style="font-size: 0.2rem;color: #FFD000;"
+                 v-for="item in item.house_grade">
+              </i>
+              <i class="iconfont icon-favoritesfilling"
+                 style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
+              </i>
+              <span style="font-size: 0.2rem;margin-left: .2rem" v-if="item.decoration && item.house_identity">
               {{matchDictionary(item.decoration)}}/{{matchDictionary(item.house_identity)}}
             </span>
-            <span style="color: #ff3f77;font-weight: bold;float: right">
+              <span style="color: #ff3f77;font-weight: bold;float: right">
               <span style="color: #1ecb4e" v-if="item.status==1">已出租</span>
               <span v-else-if="item.status == 2">待收房</span>
               <span style="color: #ef4292" v-else="">未出租</span>
             </span>
-          </div>
-          <div class="houseParams">
+            </div>
+            <div class="houseParams">
             <span>
               <span v-if="item.area">{{item.area}}m²</span>
               <span v-else="">/</span>
             </span>
-            <span style="font-size: 0.2rem;margin: 0 .1rem">丨</span>
-            <span>
+              <span style="font-size: 0.2rem;margin: 0 .1rem">丨</span>
+              <span>
               <span v-if="item.area">{{item.floor}}/{{item.floors}}8层</span>
               <span v-else="">/</span>
             </span>
-            <span style="font-size: 0.2rem;margin: 0 .1rem">丨</span>
-            <span>
+              <span style="font-size: 0.2rem;margin: 0 .1rem">丨</span>
+              <span>
               <span>{{dicts.room[item.room]}}</span>
               <span>{{dicts.hall[item.hall]}}</span>
               <span>{{dicts.toilet[item.toilet]}}</span>
             </span>
-          </div>
-          <div class="otherInfo">
-            <span v-if="item.total_ready_days">余{{item.total_ready_days}}天</span>
-            <span v-if="item.current_ready_days">已空置{{item.current_ready_days}}天</span>
-            <span v-if="item.is_again_rent>0">二次出租</span>
-            <span v-else="">首次出租</span>
-            <span v-if="item.house_res&&item.house_res.direction">{{item.house_res.direction.name}}</span>
-            <span v-if="item.house_feature">{{matchDictionary(item.house_feature)}}</span>
+            </div>
+            <div class="otherInfo">
+              <span v-if="item.total_ready_days">余{{item.total_ready_days}}天</span>
+              <span v-if="item.current_ready_days">已空置{{item.current_ready_days}}天</span>
+              <span v-if="item.is_again_rent>0">二次出租</span>
+              <span v-else="">首次出租</span>
+              <span v-if="item.house_res&&item.house_res.direction">{{item.house_res.direction.name}}</span>
+              <span v-if="item.house_feature">{{matchDictionary(item.house_feature)}}</span>
+            </div>
           </div>
         </div>
+      </div>
+      <div v-if="isLastPage && !isEmptyData" class="bottom">
+        <span>我是有底线的</span>
+      </div>
+      <div v-if="isEmptyData" style="background: #fff;padding:10px 0;text-align: center">
+        搜索暂无结果，查看下其他内容吧~
       </div>
     </div>
 
@@ -82,12 +90,7 @@
       <span>拼命加载中...</span>
     </div>
 
-    <div v-if="isLastPage && !isEmptyData" class="bottom">
-      <span>我是有底线的</span>
-    </div>
-    <div v-if="isEmptyData" style="background: #fff;padding:10px 0;text-align: center">
-      搜索暂无结果，查看下其他内容吧~
-    </div>
+
 
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="top" :overlay="true">
@@ -221,19 +224,24 @@
 
         albumArray : [],
         imgArray : {},
+        scrollTop : 0,
       }
     },
     mounted() {
+      let mainHeight = $('body').height()-83;
+      $('.mainContent').css('height',mainHeight+'px');
       this.getData();
       this.getDictionary();
       let _this = this;
-      $(document).scroll(function () {
+      $('#mainContent').scroll(function () {
         _this.scroll_bar_move();
       })
     },
     activated() {
+      let mainContent = $('#mainContent');
+      mainContent.scrollTop(this.scrollTop);
       let _this = this;
-      $(document).scroll(function () {
+      mainContent.scroll(function () {
         _this.scroll_bar_move();
       })
     },
@@ -244,7 +252,10 @@
         vm.ddRent('');
       })
     },
-
+    beforeRouteLeave(to, from, next){
+      Toast.clear();
+      next();
+    },
     watch: {
       selectHide(val) {
         if (val) {
@@ -257,9 +268,12 @@
     methods: {
       //滚动条
       scroll_bar_move() {
-        let body_height = $('body').height();
-        let body_scrollTop = $(document).scrollTop();
-        let scroll_height = $('#mainContent').height() + 83;
+        let mainContent = $('#mainContent');
+        let body_height = mainContent.height();
+        let body_scrollTop = mainContent.scrollTop();
+        this.scrollTop = mainContent.scrollTop();
+        let scroll_height = $('#houseItem').height();
+
         if (this.scrollHeight < scroll_height) {
           this.isGetMore = true;
         }
@@ -424,12 +438,11 @@
 
   #house {
     background: #FFFFFF;
+    height: 100%;
+    .header,.mainContent{
+      display: block;
+    }
     .header {
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      z-index: 99999;
       background: #FFFFFF;
       .filter {
         width: 100%;
@@ -449,7 +462,9 @@
       }
     }
     .mainContent {
-      padding-top: 83px;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+      overflow-scrolling: touch;
       .houseItem {
         padding: .3rem;
         border-bottom: 1px solid #eee;

@@ -158,6 +158,10 @@
         vm.ddRent('productDetail', 'house');
       })
     },
+    beforeRouteLeave(to, from, next){
+      Toast.clear();
+      next();
+    },
     methods:{
       getData(){
         Toast.loading({

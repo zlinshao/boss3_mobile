@@ -571,6 +571,10 @@
         vm.ddRent('contractDetail', 'house');
       })
     },
+    beforeRouteLeave(to, from, next){
+      Toast.clear();
+      next();
+    },
     methods:{
       //字典匹配
       getDictionary() {
