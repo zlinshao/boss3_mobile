@@ -28,7 +28,8 @@
     <div class="mainContent" id="mainContent">
       <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
         <div class="image">
-          <img src="../../../assets/doc.png" alt="">
+          <img v-if="item.album&&item.album.length>0&&imgArray[item.id]" :src="imgArray[item.id]" alt="">
+          <img  src="../../../assets/zanwutupian.jpg" alt="" v-else>
         </div>
         <div class="houseItemDescribe">
           <div style="font-weight: bold">{{item.name}}</div>
@@ -39,7 +40,7 @@
             <i class="iconfont icon-favoritesfilling"
                style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
             </i>
-            <span style="font-size: 0.2rem;margin-left: .2rem">
+            <span style="font-size: 0.2rem;margin-left: .2rem" v-if="item.decoration && item.house_identity">
               {{matchDictionary(item.decoration)}}/{{matchDictionary(item.house_identity)}}
             </span>
             <span style="color: #ff3f77;font-weight: bold;float: right">
@@ -217,6 +218,9 @@
         isEmptyData: false,
         department_name: '所属部门',
         Loading : false,
+
+        albumArray : [],
+        imgArray : {},
       }
     },
     mounted() {
@@ -284,8 +288,16 @@
               arr = res.data.data;
               this.isLastPage = this.params.page === res.data.meta.last_page;
               arr.forEach((x) => {
-                this.tableData.push(x)
+                this.tableData.push(x);
+                if(x.album&&x.album.length>0){
+                  x.album.forEach((item)=>{
+                    if(this.albumArray.indexOf(item)<0){
+                      this.albumArray.push(item);
+                    }
+                  })
+                }
               });
+              this.getPic();
               if (res.data.data.length < 1) {
                 this.isEmptyData = true;
               }
@@ -293,6 +305,29 @@
               this.isEmptyData = true;
             }
           })
+      },
+      getPic(){
+        let update = {show:[]};
+        update.show = this.albumArray;
+        this.$http.post(globalConfig.server_user + 'files/batch',{'batch': JSON.stringify(update)}).then((res) => {
+          if(res.data.status === 'success'){
+            let imgArray = {};
+            res.data.data.forEach((item) => {
+              if(item.status === 'success'){
+                if(item.data.info.mime.indexOf('image')>-1){
+                  this.tableData.forEach((list)=>{
+                    if(!imgArray[list.id]){
+                      if(list.album && list.album.indexOf(item.data.id)>-1){
+                        imgArray[list.id] = item.data.uri;
+                      }
+                    }
+                  })
+                }
+              }
+            });
+            this.imgArray = imgArray;
+          }
+        })
       },
       //字典匹配
       getDictionary() {
