@@ -446,9 +446,9 @@
     background: #409EFF;
   }
   .houseStatus{
-    background: #f3f3f3;
+    background: #fff;
     position: fixed;
-    top: 80px;
+    top: 83px;
     width: 100%;;
     z-index: 2999;
     overflow: hidden;
