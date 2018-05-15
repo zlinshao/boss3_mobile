@@ -10,27 +10,39 @@
         </van-search>
       </div>
       <div class="filter">
-        <div class="filter_item" @click="openSelectModal('first')">
+        <div class="filter_item" @click.stop="openSelectModal()">
           {{houseStatusName}}<i class="iconfont icon-xiayibu rotate"/>
         </div>
         <div class="filter_item" @click="selectDepart()">
           {{department_name}}
         </div>
+        <div class="houseStatus" :class="isShow?'isShow':'isHide'">
+          <ul style="line-height: 50px;padding: 0 15px">
+            <li :class="activeIndex==index?'active':''" v-for="(item,index) in columns"
+                @click="selectHouseStatus(item,index)">{{item}}
+            </li>
+          </ul>
+        </div>
+
         <!--<div class="filter_item" @click="openSelectModal('second')">-->
-          <!--房型<i class="iconfont icon-xiayibu rotate"/>-->
+        <!--房型<i class="iconfont icon-xiayibu rotate"/>-->
         <!--</div>-->
         <!--<div class="filter_item" @click="openSelectModal('third')">-->
-          <!--筛选<i class="iconfont icon-xiayibu rotate"/>-->
+        <!--筛选<i class="iconfont icon-xiayibu rotate"/>-->
         <!--</div>-->
       </div>
     </div>
 
+    <div v-if="isShow" @click.stop="changeShow"  @touchstart.stop="changeShow"
+         style="background: rgba(0,0,0,.3);width: 100%;height: 100%;
+             position: fixed;z-index: 1022;overflow: hidden"></div>
+
     <div class="mainContent" id="mainContent">
-      <div  id="houseItem">
+      <div id="houseItem">
         <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
           <div class="image">
             <img v-if="item.album&&item.album.length>0&&imgArray[item.id]" :src="imgArray[item.id]" alt="">
-            <img  src="../../../assets/noPic.png" alt="" v-else>
+            <img src="../../../assets/noPic.png" alt="" v-else>
           </div>
           <div class="houseItemDescribe">
             <div style="font-weight: bold">{{item.name}}</div>
@@ -86,99 +98,98 @@
       </div>
     </div>
 
-    <div v-if="Loading" style="padding: 15px;background: #f3f3f3;position: fixed;bottom: 0;width: 100%;text-align: center">
+    <div v-if="Loading"
+         style="padding: 15px;background: #f3f3f3;position: fixed;bottom: 0;width: 100%;text-align: center">
       <span>拼命加载中...</span>
     </div>
 
 
+    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,0)'}" v-model="selectHide" position="top" :overlay="true">-->
+    <!--<div v-if="filterType == 'first'">-->
+    <!--<ul style="line-height: 40px;padding: 0 10px">-->
+    <!--<li :class="activeIndex==index?'active':''" v-for="(item,index) in columns"-->
+    <!--@click="selectHouseStatus(item,index)">{{item}}-->
+    <!--</li>-->
+    <!--</ul>-->
+    <!--</div>-->
+    <!--<div class="filterModal" v-if="filterType == 'second'">-->
+    <!--<div class="title">房型</div>-->
+    <!--<div class="label_box">-->
+    <!--<span class="label">不限</span>-->
+    <!--<span class="label">1室</span>-->
+    <!--<span class="label">2室</span>-->
+    <!--<span class="label">2室+</span>-->
+    <!--</div>-->
+    <!--<div class="title">装修</div>-->
+    <!--<div class="label_box">-->
+    <!--<span class="label">不限</span>-->
+    <!--<span class="label">毛坯</span>-->
+    <!--<span class="label">简装</span>-->
+    <!--<span class="label">精装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--</div>-->
 
+    <!--<div class="title">房屋评分</div>-->
+    <!--<div class="label_box">-->
+    <!--<span class="label">不限</span>-->
+    <!--<span class="label">毛坯</span>-->
+    <!--<span class="label">简装</span>-->
+    <!--<span class="label">精装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--</div>-->
+    <!--<div class="title">朝向</div>-->
+    <!--<div class="label_box">-->
+    <!--<span class="label">不限</span>-->
+    <!--<span class="label">毛坯</span>-->
+    <!--<span class="label">简装</span>-->
+    <!--<span class="label">精装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--</div>-->
 
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="top" :overlay="true">
-      <div v-if="filterType == 'first'">
-        <ul style="line-height: 40px;padding: 0 10px">
-          <li :class="activeIndex==index?'active':''" v-for="(item,index) in columns"
-              @click="selectHouseStatus(item,index)">{{item}}
-          </li>
-        </ul>
-      </div>
-      <div class="filterModal" v-if="filterType == 'second'">
-        <div class="title">房型</div>
-        <div class="label_box">
-          <span class="label">不限</span>
-          <span class="label">1室</span>
-          <span class="label">2室</span>
-          <span class="label">2室+</span>
-        </div>
-        <div class="title">装修</div>
-        <div class="label_box">
-          <span class="label">不限</span>
-          <span class="label">毛坯</span>
-          <span class="label">简装</span>
-          <span class="label">精装</span>
-          <span class="label">豪装</span>
-        </div>
+    <!--<div class="footer">-->
+    <!--<div class="">重置</div>-->
+    <!--<div class="">确定</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="filterModal" v-if="filterType == 'third'">-->
+    <!--<div class="title">房屋剩余时长</div>-->
+    <!--<div class="label_box">-->
+    <!--<span class="label">不限</span>-->
+    <!--<span class="label">1室</span>-->
+    <!--<span class="label">2室</span>-->
+    <!--<span class="label">2室+</span>-->
+    <!--</div>-->
+    <!--<div class="title">预警状态</div>-->
+    <!--<div class="label_box">-->
+    <!--<span class="label">不限</span>-->
+    <!--<span class="label">毛坯</span>-->
+    <!--<span class="label">简装</span>-->
+    <!--<span class="label">精装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--</div>-->
 
-        <div class="title">房屋评分</div>
-        <div class="label_box">
-          <span class="label">不限</span>
-          <span class="label">毛坯</span>
-          <span class="label">简装</span>
-          <span class="label">精装</span>
-          <span class="label">豪装</span>
-        </div>
-        <div class="title">朝向</div>
-        <div class="label_box">
-          <span class="label">不限</span>
-          <span class="label">毛坯</span>
-          <span class="label">简装</span>
-          <span class="label">精装</span>
-          <span class="label">豪装</span>
-          <span class="label">豪装</span>
-          <span class="label">豪装</span>
-          <span class="label">豪装</span>
-          <span class="label">豪装</span>
-        </div>
+    <!--<div class="title">当前空置时长</div>-->
+    <!--<div class="label_box">-->
+    <!--<span class="label">不限</span>-->
+    <!--<span class="label">毛坯</span>-->
+    <!--<span class="label">简装</span>-->
+    <!--<span class="label">精装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--<span class="label">豪装</span>-->
+    <!--</div>-->
 
-        <div class="footer">
-          <div class="">重置</div>
-          <div class="">确定</div>
-        </div>
-      </div>
-      <div class="filterModal" v-if="filterType == 'third'">
-        <div class="title">房屋剩余时长</div>
-        <div class="label_box">
-          <span class="label">不限</span>
-          <span class="label">1室</span>
-          <span class="label">2室</span>
-          <span class="label">2室+</span>
-        </div>
-        <div class="title">预警状态</div>
-        <div class="label_box">
-          <span class="label">不限</span>
-          <span class="label">毛坯</span>
-          <span class="label">简装</span>
-          <span class="label">精装</span>
-          <span class="label">豪装</span>
-        </div>
-
-        <div class="title">当前空置时长</div>
-        <div class="label_box">
-          <span class="label">不限</span>
-          <span class="label">毛坯</span>
-          <span class="label">简装</span>
-          <span class="label">精装</span>
-          <span class="label">豪装</span>
-          <span class="label">豪装</span>
-          <span class="label">豪装</span>
-          <span class="label">豪装</span>
-        </div>
-
-        <div class="footer">
-          <div class="">重置</div>
-          <div class="">确定</div>
-        </div>
-      </div>
-    </van-popup>
+    <!--<div class="footer">-->
+    <!--<div class="">重置</div>-->
+    <!--<div class="">确定</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</van-popup>-->
 
   </div>
 </template>
@@ -220,16 +231,17 @@
 
         isEmptyData: false,
         department_name: '所属部门',
-        Loading : false,
+        Loading: false,
 
-        albumArray : [],
-        imgArray : {},
-        scrollTop : 0,
+        albumArray: [],
+        imgArray: {},
+        scrollTop: 0,
+        isShow: false,
       }
     },
     mounted() {
-      let mainHeight = $('body').height()-83;
-      $('.mainContent').css('height',mainHeight+'px');
+      let mainHeight = $('body').height() - 83;
+      $('.mainContent').css('height', mainHeight + 'px');
       this.getData();
       this.getDictionary();
       let _this = this;
@@ -238,9 +250,10 @@
       })
     },
     activated() {
+      let _this = this;
+      _this.getDepart();
       let mainContent = $('#mainContent');
       mainContent.scrollTop(this.scrollTop);
-      let _this = this;
       mainContent.scroll(function () {
         _this.scroll_bar_move();
       })
@@ -252,7 +265,7 @@
         vm.ddRent('');
       })
     },
-    beforeRouteLeave(to, from, next){
+    beforeRouteLeave(to, from, next) {
       Toast.clear();
       next();
     },
@@ -295,43 +308,43 @@
       getData() {
         this.Loading = true;
         this.isEmptyData = false;
-          this.$http.get(globalConfig.server_user + 'houses', {params: this.params}).then((res) => {
-            this.Loading = false;
-            if (res.data.status === 'success') {
-              let arr = [];
-              arr = res.data.data;
-              this.isLastPage = this.params.page === res.data.meta.last_page;
-              arr.forEach((x) => {
-                this.tableData.push(x);
-                if(x.album&&x.album.length>0){
-                  x.album.forEach((item)=>{
-                    if(this.albumArray.indexOf(item)<0){
-                      this.albumArray.push(item);
-                    }
-                  })
-                }
-              });
-              this.getPic();
-              if (res.data.data.length < 1) {
-                this.isEmptyData = true;
+        this.$http.get(globalConfig.server_user + 'houses', {params: this.params}).then((res) => {
+          this.Loading = false;
+          if (res.data.status === 'success') {
+            let arr = [];
+            arr = res.data.data;
+            this.isLastPage = this.params.page === res.data.meta.last_page;
+            arr.forEach((x) => {
+              this.tableData.push(x);
+              if (x.album && x.album.length > 0) {
+                x.album.forEach((item) => {
+                  if (this.albumArray.indexOf(item) < 0) {
+                    this.albumArray.push(item);
+                  }
+                })
               }
-            } else {
+            });
+            this.getPic();
+            if (res.data.data.length < 1) {
               this.isEmptyData = true;
             }
-          })
+          } else {
+            this.isEmptyData = true;
+          }
+        })
       },
-      getPic(){
-        let update = {show:[]};
+      getPic() {
+        let update = {show: []};
         update.show = this.albumArray;
-        this.$http.post(globalConfig.server_user + 'files/batch',{'batch': JSON.stringify(update)}).then((res) => {
-          if(res.data.status === 'success'){
+        this.$http.post(globalConfig.server_user + 'files/batch', {'batch': JSON.stringify(update)}).then((res) => {
+          if (res.data.status === 'success') {
             let imgArray = {};
             res.data.data.forEach((item) => {
-              if(item.status === 'success'){
-                if(item.data.info.mime.indexOf('image')>-1){
-                  this.tableData.forEach((list)=>{
-                    if(!imgArray[list.id]){
-                      if(list.album && list.album.indexOf(item.data.id)>-1){
+              if (item.status === 'success') {
+                if (item.data.info.mime.indexOf('image') > -1) {
+                  this.tableData.forEach((list) => {
+                    if (!imgArray[list.id]) {
+                      if (list.album && list.album.indexOf(item.data.id) > -1) {
                         imgArray[list.id] = item.data.uri;
                       }
                     }
@@ -367,18 +380,8 @@
         this.getData();
         this.tableData = [];
       },
-      openSelectModal(val) {
-        if (!this.filterType) {
-          this.filterType = val;
-          this.selectHide = true
-        } else {
-          if (this.filterType == val) {
-            this.selectHide = !this.selectHide;
-          } else {
-            this.filterType = val;
-            this.selectHide = true;
-          }
-        }
+      openSelectModal() {
+        this.isShow = !this.isShow;
       },
 
       //选取部门
@@ -392,6 +395,10 @@
           this.department_name = val.name;
           this.params.org_id = val.id;
           this.onSearch();
+        }else {
+          this.department_name = '所属部门';
+          this.params.org_id = '';
+          this.onSearch();
         }
       },
       selectHouseStatus(item, index) {
@@ -403,7 +410,11 @@
           this.params.status = '';
         }
         this.onSearch();
-        this.selectHide = false;
+        this.isShow = false;
+      },
+      changeShow(){
+        this.isShow = false;
+        return false;
       },
       searchDetail(item) {
         this.$router.push({path: '/productDetail', query: {id: item.id}});
@@ -435,11 +446,26 @@
   .selected_tr {
     background: #409EFF;
   }
-
+  .houseStatus{
+    background: #f3f3f3;
+    position: fixed;
+    top: 80px;
+    width: 100%;;
+    z-index: 2999;
+    overflow: hidden;
+  }
+  .isShow {
+    height: 200px;
+    transition: .3s all;
+  }
+  .isHide{
+    height: 0;
+    transition: .3s all;
+  }
   #house {
     background: #FFFFFF;
     height: 100%;
-    .header,.mainContent{
+    .header, .mainContent {
       display: block;
     }
     .header {
