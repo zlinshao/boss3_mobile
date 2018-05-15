@@ -160,12 +160,12 @@
             required>
           </van-field>
           <van-field
-            v-model="form.agency_price"
+            v-model="form.price"
             label="中介费"
             type="number"
             placeholder="请填写中介费"
             icon="clear"
-            @click-icon="form.agency_price = ''"
+            @click-icon="form.price = ''"
             required>
           </van-field>
           <van-field
@@ -459,7 +459,7 @@
           day: '',                      //收房天数
           is_agency: 0,                 //是否中介
           agency_name: '',              //中介名
-          agency_price: '',             //中介费
+          price: '',             //中介费
           agency_user_name: '',         //中介人
           agency_phone: '',             //中介手机号
           begin_date: '',               //合同开始日期
@@ -516,7 +516,7 @@
       is_agencyOn(val) {
         if (!val) {
           this.form.agency_name = '';
-          this.form.agency_price = '';
+          this.form.price = '';
           this.form.agency_user_name = '';
           this.form.agency_phone = '';
         }
@@ -869,7 +869,7 @@
             this.form.is_agency = draft.is_agency;                           //是否中介
             this.is_agencyOn = draft.is_agency === 1 ? true : false;         //是否中介
             this.form.agency_name = draft.agency_name;
-            this.form.agency_price = draft.agency_price;
+            this.form.price = draft.price;
             this.form.agency_user_name = draft.agency_user_name;
             this.form.agency_phone = draft.agency_phone;
 
@@ -966,7 +966,7 @@
         this.form.is_agency = 0;                  //是否中介
         this.is_agencyOn = false;                 //是否中介
         this.form.agency_name = '';
-        this.form.agency_price = '';
+        this.form.price = '';
         this.form.agency_user_name = '';
         this.form.agency_phone = '';
 

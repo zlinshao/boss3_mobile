@@ -63,12 +63,12 @@
             placeholder="请填写金额">
           </van-field>
           <van-field
-            v-model="form.agency_price_now"
+            v-model="form.price_now"
             type="number"
             class="twoBorder"
             placeholder="修改写金额"
             icon="clear"
-            @click-icon="form.agency_price_now = ''">
+            @click-icon="form.price_now = ''">
           </van-field>
         </div>
         <van-field
@@ -221,7 +221,7 @@
           user_name: '',                //中介人
           name: '',                     //中介名称
           phone: '',                    //中介电话
-          agency_price_now: '',         //修改中介费
+          price_now: '',         //修改中介费
 
           purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
@@ -348,7 +348,7 @@
           let val = JSON.parse(t.house);
           if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
             this.agencyStatus = true;
-            this.form.amount = val.agency_info.agency_price;
+            this.form.amount = val.agency_info.price;
             this.form.user_name = val.agency_info.agency_user_name;
             this.form.name = val.agency_info.agency_name;
             this.form.phone = val.agency_info.agency_phone;
