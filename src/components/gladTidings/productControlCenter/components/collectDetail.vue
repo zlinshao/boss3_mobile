@@ -562,13 +562,14 @@
       this.getDictionary();
       this.getData();
     },
-    beforeRouteLeave(to, from, next) {
-      Toast.clear();
-      next();
+    activated(){
+      this.getData();
     },
     beforeRouteEnter(to, from, next) {
-      to.meta.keepAlive = true;
-      next();
+      next(vm => {
+        vm.routerIndex('contractDetail', 'house');
+        vm.ddRent('contractDetail', 'house');
+      })
     },
     methods:{
       //字典匹配

@@ -84,7 +84,7 @@
     <div v-if="isLastPage && !isEmptyData" class="bottom">
       <span>我是有底线的</span>
     </div>
-    <div v-if="isEmptyData" style="background: #f8f8f8;margin-top: 4rem;text-align: center">
+    <div v-if="isEmptyData" style="background: #fff;padding:10px 0;text-align: center">
       搜索暂无结果，查看下其他内容吧~
     </div>
 
@@ -234,9 +234,11 @@
       })
     },
     //详情页不做缓存
-    beforeRouteLeave(to, from, next) {
-      to.meta.keepAlive = true;
-      next();
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex('');
+        vm.ddRent('');
+      })
     },
 
     watch: {
