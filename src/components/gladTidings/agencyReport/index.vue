@@ -63,19 +63,19 @@
             placeholder="中介费已禁用">
           </van-field>
           <van-field
-            v-model="form.agency_price_now"
+            v-model="form.amount_now"
             type="number"
             class="twoBorder"
             placeholder="请填写修改写金额"
             icon="clear"
-            @click-icon="form.agency_price_now = ''">
+            @click-icon="form.amount_now = ''">
           </van-field>
         </div>
 
         <van-field
+          v-if="!agencyStatus"
           v-model="form.amount"
           type="text"
-          :disabled="agencyStatus"
           label="中介费"
           placeholder="请填写金额"
           @click-icon="form.amount = ''"
@@ -84,9 +84,18 @@
         <van-field
           v-model="form.name"
           type="text"
-          :disabled="agencyStatus"
+          v-if="agencyStatus"
+          disabled
           label="中介名称"
-          placeholder="请填写中介名"
+          placeholder="中介名称已禁用"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.name"
+          type="text"
+          v-if="!agencyStatus"
+          label="中介名称"
+          placeholder="请填写中介名称"
           @click-icon="form.name = ''"
           required>
         </van-field>
@@ -225,7 +234,7 @@
           user_name: '',                //中介人
           name: '',                     //中介名称
           phone: '',                    //中介电话
-          agency_price_now: '',         //修改中介费
+          amount_now: '',         //修改中介费
 
           purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
@@ -408,7 +417,7 @@
             this.form.name = draft.name;
             this.form.user_name = draft.user_name;
             this.form.phone = draft.phone;
-            this.form.agency_price_now = draft.agency_price_now;
+            this.form.amount_now = draft.amount_now;
             this.form.bank = draft.bank;
             this.form.subbranch = draft.subbranch;
             this.form.account_name = draft.account_name;
@@ -451,7 +460,7 @@
         this.form.name = '';
         this.form.user_name = '';
         this.form.phone = '';
-        this.form.agency_price_now = '';
+        this.form.amount_now = '';
         this.form.bank = '';
         this.form.subbranch = '';
         this.form.account_name = '';
