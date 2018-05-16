@@ -288,7 +288,6 @@
         this.showDetail = 0;
         this.lists = [];
         this.page = 1;
-        this.showInfo = [];
         this.searchValue = '';
       },
       // select关闭
