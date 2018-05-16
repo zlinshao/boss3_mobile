@@ -49,72 +49,74 @@
           <div v-for="(key,index) in form.price_arr" v-show="index !== 0">{{key}}</div>
         </div>
 
-        <!--<div class="first_date" v-if="agencyStatus">-->
-          <!--<van-field-->
-            <!--style="width: 110px;"-->
-            <!--class="title"-->
-            <!--label="中介费"-->
-            <!--required>-->
-          <!--</van-field>-->
-          <!--<van-field-->
-            <!--v-model="form.amount"-->
-            <!--type="number"-->
-            <!--disabled-->
-            <!--placeholder="中介费已禁用">-->
-          <!--</van-field>-->
-          <!--<van-field-->
-            <!--v-model="form.amount_now"-->
-            <!--type="number"-->
-            <!--class="twoBorder"-->
-            <!--placeholder="请填写修改写金额"-->
-            <!--icon="clear"-->
-            <!--@click-icon="form.amount_now = ''">-->
-          <!--</van-field>-->
-        <!--</div>-->
+        <div class="first_date" v-if="agencyStatus">
+          <van-field
+            style="width: 110px;"
+            class="title"
+            label="中介费"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.agency_before_price"
+            type="number"
+            disabled
+            placeholder="中介费已禁用">
+          </van-field>
+          <van-field
+            v-model="form.agency_price"
+            type="number"
+            class="twoBorder"
+            placeholder="请填写修改写金额"
+            icon="clear"
+            @click-icon="form.agency_price = ''">
+          </van-field>
+        </div>
 
         <van-field
-          v-model="form.amount"
-          type="text"
+          v-if="!agencyStatus"
+          v-model="form.agency_price"
+          type="number"
           label="中介费"
           placeholder="请填写金额"
-          @click-icon="form.amount = ''"
+          @click-icon="form.agency_price = ''"
           required>
         </van-field>
-        <!--<van-field-->
-          <!--v-model="form.name"-->
-          <!--type="text"-->
-          <!--v-if="agencyStatus"-->
-          <!--disabled-->
-          <!--label="中介名称"-->
-          <!--placeholder="中介名称已禁用"-->
-          <!--required>-->
-        <!--</van-field>-->
         <van-field
-          v-model="form.name"
+          v-model="form.agency_name"
           type="text"
+          v-if="agencyStatus"
+          disabled
+          label="中介名称"
+          placeholder="中介名称已禁用"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.agency_name"
+          type="text"
+          v-if="!agencyStatus"
           label="中介名称"
           placeholder="请填写中介名称"
-          @click-icon="form.name = ''"
+          @click-icon="form.agency_name = ''"
           required>
         </van-field>
-        <!--<van-field-->
-          <!--v-model="form.user_name"-->
-          <!--type="text"-->
-          <!--:disabled="agencyStatus"-->
-          <!--label="中介人"-->
-          <!--placeholder="请填写中介人"-->
-          <!--@click-icon="form.user_name = ''"-->
-          <!--required>-->
-        <!--</van-field>-->
-        <!--<van-field-->
-          <!--v-model="form.phone"-->
-          <!--type="number"-->
-          <!--:disabled="agencyStatus"-->
-          <!--label="中介联系方式"-->
-          <!--placeholder="请填写中介联系方式"-->
-          <!--@click-icon="form.phone = ''"-->
-          <!--required>-->
-        <!--</van-field>-->
+        <van-field
+          v-model="form.agency_user_name"
+          type="text"
+          :disabled="agencyStatus"
+          label="中介人"
+          placeholder="请填写中介人"
+          @click-icon="form.agency_user_name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.agency_phone"
+          type="number"
+          :disabled="agencyStatus"
+          label="中介联系方式"
+          placeholder="请填写中介联系方式"
+          @click-icon="form.agency_phone = ''"
+          required>
+        </van-field>
 
         <van-field
           v-model="form.account"
@@ -228,11 +230,12 @@
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
 
-          amount: '',                   //中介费
-          // user_name: '',                //中介人
-          name: '',                     //中介名称
-          // phone: '',                    //中介电话
-          // amount_now: '',         //修改中介费
+          agency_price: '',             //修改中介费
+
+          agency_user_name: '',          //中介人
+          agency_name: '',              //中介名称
+          agency_phone: '',             //中介电话
+          agency_before_price: '',      //报备中介费
 
           purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
@@ -357,15 +360,16 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          // if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
-          //   this.agencyStatus = true;
-          //   this.form.amount = val.agency_info.price;
-          //   this.form.user_name = val.agency_info.agency_user_name;
-          //   this.form.name = val.agency_info.agency_name;
-          //   this.form.phone = val.agency_info.agency_phone;
-          // } else {
-          //   this.agencyStatus = false;
-          // }
+          if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
+            this.agencyStatus = true;
+            this.form.agency_before_price = val.agency_info.agency_price;
+            this.form.agency_user_name = val.agency_info.agency_user_name;
+            this.form.agency_name = val.agency_info.agency_name;
+            this.form.agency_phone = val.agency_info.agency_phone;
+          } else {
+            this.form.agency_before_price = 0;
+            this.agencyStatus = false;
+          }
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -412,11 +416,13 @@
             this.form.house_id = draft.house_id;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
-            this.form.amount = draft.amount;
-            this.form.name = draft.name;
-            // this.form.user_name = draft.user_name;
-            // this.form.phone = draft.phone;
-            // this.form.amount_now = draft.amount_now;
+
+            this.form.agency_price = draft.agency_price;
+            this.form.agency_user_name = draft.agency_user_name;
+            this.form.agency_name = draft.agency_name;
+            this.form.agency_phone = draft.agency_phone;
+            this.form.agency_before_price = draft.agency_before_price;
+
             this.form.bank = draft.bank;
             this.form.subbranch = draft.subbranch;
             this.form.account_name = draft.account_name;
@@ -455,11 +461,13 @@
         this.form.contract_id = '';
         this.form.house_id = '';
         this.form.collect_or_rent = '';
-        this.form.amount = '';
-        this.form.name = '';
-        // this.form.user_name = '';
-        // this.form.phone = '';
-        // this.form.amount_now = '';
+
+        this.form.agency_price = '';
+        this.form.agency_user_name = '';
+        this.form.agency_name = '';
+        this.form.agency_phone = '';
+        this.form.agency_before_price = '';
+
         this.form.bank = '';
         this.form.subbranch = '';
         this.form.account_name = '';
