@@ -11,6 +11,9 @@ import Comments from '@/components/examine/writings/comments.vue'
 // import CardDetail from '@/components/examine/cardDetail/index.vue'
 // import CreditCard from '@/components/examine/creditCard/index.vue'
 
+// 问卷调查
+// import Questionnaire from '@/components/examine/questionnaire/index.vue'
+
 import CollectReport from '../components/gladTidings/collectReport/index.vue'
 import Quality from '../components/gladTidings/quality/index.vue'
 import RentReport from '../components/gladTidings/rentReport/index.vue'
@@ -180,7 +183,7 @@ export default new Router({
     },
     {
       path: '/unCollectBeforeRent',
-      name: '未收先租未知',
+      name: '未收先租',
       hidden: 'glad',
       icon: 'iconfont icon-weishouxianzubaobei',
       meta: {title: '未收先租未知'},
@@ -387,6 +390,13 @@ export default new Router({
       hidden: false,
       component: Warning
     },
+    // {
+    //   path: '/questionnaire',
+    //   name: '问卷调查',
+    //   meta: {title: '问卷调查'},
+    //   hidden: 'glad',
+    //   component: Questionnaire
+    // },
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',
