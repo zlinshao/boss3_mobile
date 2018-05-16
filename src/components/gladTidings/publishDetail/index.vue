@@ -17,8 +17,12 @@
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected', 'cancelled':place.status === 'cancelled'}">
 
           <span class="placeSpan" v-if="placeFalse" @click="approvePersonal">
-            <i class="iconfont icon-yanqi--"></i>
+            <i class="iconfont icon-shenpi1"></i>
             <span>{{place.display_name}}</span>
+          </span>
+          <span class="placeSpan deal" v-if="placeFalse">
+            <i class="iconfont icon-yanqi--"></i>
+            <span>{{deal}}</span>
           </span>
         </div>
       </div>
@@ -183,6 +187,8 @@
         paging: 0,
         path: '',
 
+        deal: '',
+
         onIndex: '',
         bigPic: '',
         photo: [],
@@ -282,6 +288,7 @@
               this.address = houseName.house.name;
             }
             this.operation = res.data.data.operation;
+            this.deal = res.data.data.deal;
 
             let pro = res.data.data.process;
             this.personal = pro.user;
@@ -521,15 +528,21 @@
 
     .placeFinish {
       @include flex;
-      align-items: center;
+      justify-content: center;
+      flex-direction: column;
       height: 1.4rem;
-      color: #409EFF;
+
       .placeSpan {
+        color: #409EFF;
         @include flex;
         align-items: center;
         i {
           margin-right: .1rem
         }
+      }
+      .deal {
+        margin-top: .18rem;
+        color: $borColor;
       }
     }
 
