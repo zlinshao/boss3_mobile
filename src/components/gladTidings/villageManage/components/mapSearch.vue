@@ -1,6 +1,7 @@
 <template>
   <div id="searchCity">
-    <div class="searchClass">
+    <!--//高德搜索-->
+    <div class="searchClass" v-if="!isManual">
       <div class="searchCustom">
         <div>
           <i class="van-icon van-icon-search"></i>
@@ -10,7 +11,6 @@
         <p v-if="searchValue.length > 0" @click="onSearch">搜索</p>
         <p v-else @click="onCancel" style="color: #666666;">取消</p>
       </div>
-
       <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 2">暂无相关信息</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 1">
@@ -32,15 +32,59 @@
         </ul>
       </div>
     </div>
+    <!--手动添加-->
+
+    <div v-if="isManual">
+      <van-cell-group>
+        <van-field
+          v-model="manualData.name"
+          label="小区名称"
+          type="text"
+          placeholder="请输入小区名称"
+          required>
+        </van-field>
+        <van-field
+          v-model="manualData.district"
+          label="小区地址"
+          type="text"
+          placeholder="请输入小区地址"
+          required>
+        </van-field>
+        <van-field
+          v-model="manualData.location"
+          label="小区坐标"
+          type="text"
+          readonly
+          @click="selectCoord"
+          placeholder="请选择小区坐标"
+          required>
+        </van-field>
+      </van-cell-group>
+    </div>
+
+    <!--底部-->
+
+    <div class="footer" v-if="!isManual">
+      <div class="" @click="addNewAddress">选择手动添加</div>
+    </div>
+
+
+    <div class="footer" v-if="isManual">
+      <div class="" @click="addNewAddress">返回高德搜索</div>
+      <div class="" @click="manualAdd">确定添加</div>
+    </div>
+
   </div>
 </template>
 
 <script>
   import {Waterfall} from 'vant';
+  import {Toast} from 'vant';
   let addr = "//restapi.amap.com/v3/assistant/inputtips?key=2cafb0027aa13d1c6b13542462b3c94f&datatype=poi&types=120300";
 
   export default {
     name: "city-search",
+    components: {Toast},
     directives: {
       WaterfallLower: Waterfall('lower'),
       WaterfallUpper: Waterfall('upper'),
@@ -54,18 +98,27 @@
         path: '',
         page: 1,
         showDetail: 0,
+        isManual : false,   //手动添加
+
+        manualData:{
+          name:'',
+          district:'',
+          location: '',
+        }
       }
     },
 
     activated() {
       this.city_name = this.$route.query.city;
       this.close_();
+      if(this.$route.query.coordinate){
+        this.getCoordinate();
+      }
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        vm.path = from.path;
-        vm.routerIndex(from.path, 'house');
-        vm.ddRent(from.path, 'house');
+        vm.routerIndex('/addVillage', 'house');
+        vm.ddRent('/addVillage', 'house');
       })
     },
     watch: {
@@ -97,15 +150,40 @@
       },
 
       selectVillage(data) {
-        this.$router.replace({path: '/addVillage', query: {village: JSON.stringify(data)}});
+        this.$router.push({path: '/addVillage', query: {village: JSON.stringify(data)}});
       },
       onCancel() {
-        this.$router.replace({path: '/addVillage'});
+        this.$router.push({path: '/addVillage'});
       },
       close_() {
         this.showDetail = 0;
         this.searchValue = '';
         this.lists = [];
+      },
+      addNewAddress(){
+        this.isManual = !this.isManual;
+      },
+      selectCoord(){
+        this.$router.push({path: '/addNewAddress'});
+      },
+      getCoordinate(){
+        this.manualData.location = this.$route.query.coordinate;
+      },
+      manualAdd(){
+        if(!this.manualData.name){
+          Toast.fail('请输入小区名称！')
+        }else if(!this.manualData.district){
+          Toast.fail('请输入小区地址！')
+        }else if(!this.manualData.location){
+          Toast.fail('请选择小区坐标！')
+        }else {
+          this.$router.push({path: '/addVillage', query: {village: JSON.stringify(this.manualData)}});
+          this.manualData = {
+            name:'',
+            district:'',
+            location: '',
+          }
+        }
       },
     },
   }
@@ -138,6 +216,34 @@
         background-color: #f4f4f4;
         padding: .2rem 0;
         width: 100%;
+      }
+    }
+
+    .footerIndex {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid #ebebeb;
+      @include flex;
+      background: #FFFFFF;
+      justify-content: space-around;
+      z-index: 999999;
+      div + div {
+        border-left: 1px solid #EEEEEE;
+      }
+      div {
+        width: 100%;
+        text-align: center;
+        font-size: .28rem;
+        color: #409EFF;
+        padding: .3rem 0;
+      }
+    }
+
+    .isManual{
+      div {
+        width: 50%;
       }
     }
   }

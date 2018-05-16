@@ -54,6 +54,7 @@ import RentDetail from '../components/gladTidings/productControlCenter/component
 import VillageCenter from '../components/gladTidings/villageManage/index.vue'
 import AddVillage from '../components/gladTidings/villageManage/components/addVillage.vue'
 import MapSearch from '../components/gladTidings/villageManage/components/mapSearch.vue'
+import AddNewAddress from '../components/gladTidings/villageManage/components/addNewAddress.vue'
 
 Vue.use(Router);
 
@@ -358,6 +359,15 @@ export default new Router({
       meta: {title: '新增小区'},
       component: AddVillage
     },
+
+    {
+      path: '/addNewAddress',
+      hidden: false,
+      name: '选取坐标',
+      meta: {title: '选取坐标'},
+      component: AddNewAddress
+    },
+
     {
       path: '/mapSearch',
       hidden: false,

@@ -110,6 +110,8 @@
           village_name : '',
           built_year : '',
           house_type : '',
+          latitude: '',
+          longitude:'',
         },
         house_type:'',
         province_name : '',
@@ -133,7 +135,9 @@
       this.getDictionary();
     },
     activated(){
-      this.getVillage(this.$route.query.village)
+      if(this.$route.query.village){
+        this.getVillage(this.$route.query.village)
+      }
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -222,8 +226,12 @@
       },
       getVillage(data){
         let village = JSON.parse(data);
-        this.params.address = village.district;
-        this.params.village_name = village.name;
+        if(village){
+          this.params.latitude = village.location.split(',')[0];
+          this.params.longitude = village.location.split(',')[1];
+          this.params.address = village.district;
+          this.params.village_name = village.name;
+        }
       },
       // select关闭
       onCancel() {
@@ -329,6 +337,8 @@
           village_name : '',
           built_year : '',
           house_type : '',
+          latitude: '',
+          longitude:'',
         };
         this.house_type = '';
         this.province_name = '';
