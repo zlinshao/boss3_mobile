@@ -1,12 +1,19 @@
 <template>
   <div id="house">
+    <div class="houseStatus" :class="isShow?'isShow':'isHide'">
+      <ul style="line-height: 50px;padding: 0 15px">
+        <li :class="activeIndex==index?'active':''" v-for="(item,index) in columns"
+            @click="selectHouseStatus(item,index)">{{item}}
+        </li>
+      </ul>
+    </div>
     <div class="header">
       <div @touchstart="changeShow">
         <van-search
           show-action
           v-model="params.q"
           @search="onSearch">
-          <div slot="action"  @click="onSearch" style="padding: 0 .2rem">搜索</div>
+          <div slot="action" @click="onSearch" style="padding: 0 .2rem">搜索</div>
         </van-search>
       </div>
       <div class="filter">
@@ -16,13 +23,7 @@
         <div class="filter_item" @click="selectDepart()" @touchstart="changeShow">
           {{department_name}}
         </div>
-        <div class="houseStatus" :class="isShow?'isShow':'isHide'">
-          <ul style="line-height: 50px;padding: 0 15px">
-            <li :class="activeIndex==index?'active':''" v-for="(item,index) in columns"
-                @click="selectHouseStatus(item,index)">{{item}}
-            </li>
-          </ul>
-        </div>
+
 
         <!--<div class="filter_item" @click="openSelectModal('second')">-->
         <!--房型<i class="iconfont icon-xiayibu rotate"/>-->
@@ -33,7 +34,7 @@
       </div>
     </div>
 
-    <div v-if="isShow" @click.stop="changeShow"  @touchstart.stop="changeShow"
+    <div v-if="isShow" @click.stop="changeShow" @touchstart.stop="changeShow"
          style="background: rgba(0,0,0,.3);width: 100%;height: 100%;
              position: fixed;z-index: 1022;overflow: hidden"></div>
 
@@ -395,7 +396,7 @@
           this.department_name = val.name;
           this.params.org_id = val.id;
           this.onSearch();
-        }else {
+        } else {
           this.department_name = '所属部门';
           this.params.org_id = '';
         }
@@ -411,7 +412,7 @@
         this.onSearch();
         this.isShow = false;
       },
-      changeShow(){
+      changeShow() {
         this.isShow = false;
         return false;
       },
@@ -445,7 +446,8 @@
   .selected_tr {
     background: #409EFF;
   }
-  .houseStatus{
+
+  .houseStatus {
     background: #fff;
     position: fixed;
     top: 83px;
@@ -453,14 +455,26 @@
     z-index: 2999;
     overflow: hidden;
   }
+
   .isShow {
+    float: left;
     height: 200px;
-    transition: .3s all;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -ms-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
   }
-  .isHide{
+
+  .isHide {
     height: 0;
-    transition: .3s all;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -ms-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
   }
+
   #house {
     background: #FFFFFF;
     height: 100%;
