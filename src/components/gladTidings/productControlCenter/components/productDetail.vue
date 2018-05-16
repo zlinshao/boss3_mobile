@@ -60,9 +60,9 @@
             </div>
 
             <span style="font-size: .2rem;color: #777"
-                  v-if="item.current_ready_days&&!isNaN(item.current_ready_days)">已空置{{item.current_ready_days}}天</span>
+                  v-if="detailData.current_ready_days&&!isNaN(detailData.current_ready_days)">已空置{{detailData.current_ready_days}}天</span>
             <span style="font-size: .2rem;color: #777"
-                  v-if="item.current_ready_days&&isNaN(item.current_ready_days)">{{item.current_ready_days}}</span>
+                  v-if="detailData.current_ready_days&&isNaN(detailData.current_ready_days)">{{detailData.current_ready_days}}</span>
 
           </div>
         </div>
