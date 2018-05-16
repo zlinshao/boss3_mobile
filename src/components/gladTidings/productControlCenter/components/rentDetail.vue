@@ -407,19 +407,22 @@
         all_dic: [],
         contractInfo: {},
         largePic : null,
+        fromPath : 'contractDetail',
       }
     },
     mounted() {
       this.getDictionary();
       this.getData();
+      this.fromPath = this.$route.query.from;
     },
     activated(){
       this.getData();
+      this.fromPath = this.$route.query.from;
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        vm.routerIndex('contractDetail', 'house');
-        vm.ddRent('contractDetail', 'house');
+        vm.routerIndex(vm.fromPath, 'house');
+        vm.ddRent(vm.fromPath, 'house');
       })
     },
     beforeRouteLeave(to, from, next){

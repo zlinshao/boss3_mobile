@@ -33,10 +33,9 @@
         <!--</div>-->
       </div>
     </div>
-
     <div v-if="isShow" @click.stop="changeShow" @touchstart.stop="changeShow"
-         style="background: rgba(0,0,0,.3);width: 100%;height: 100%;
-             position: fixed;z-index: 1022;overflow: hidden"></div>
+         style="background: rgba(0,0,0,.3);width: 100%;height: 1000px;
+                position: fixed;z-index: 1022;overflow: hidden"></div>
 
     <div class="mainContent" id="mainContent">
       <div id="houseItem">
@@ -81,11 +80,17 @@
             </span>
             </div>
             <div class="otherInfo">
-              <span v-if="item.total_ready_days">余{{item.total_ready_days}}天</span>
-              <span v-if="item.current_ready_days">已空置{{item.current_ready_days}}天</span>
+              <span v-if="item.total_ready_days&&!isNaN(item.total_ready_days)">余{{item.total_ready_days}}天</span>
+              <span v-if="item.total_ready_days&&isNaN(item.total_ready_days)">{{item.total_ready_days}}</span>
+
+              <span v-if="item.current_ready_days&&!isNaN(item.current_ready_days)">余{{item.current_ready_days}}天</span>
+              <span v-if="item.current_ready_days&&isNaN(item.current_ready_days)">{{item.current_ready_days}}</span>
+
               <span v-if="item.is_again_rent>0">二次出租</span>
               <span v-else="">首次出租</span>
+
               <span v-if="item.house_res&&item.house_res.direction">{{item.house_res.direction.name}}</span>
+
               <span v-if="item.house_feature">{{matchDictionary(item.house_feature)}}</span>
             </div>
           </div>
@@ -238,6 +243,7 @@
         imgArray: {},
         scrollTop: 0,
         isShow: false,
+        isDetail : true,
       }
     },
     mounted() {
@@ -413,11 +419,18 @@
         this.isShow = false;
       },
       changeShow() {
-        this.isShow = false;
-        return false;
+        this.isDetail = false;
+        setTimeout( ()=> {
+          this.isShow = false;
+        },100);
+        setTimeout( ()=> {
+          this.isDetail = true;
+        },500);
       },
       searchDetail(item) {
-        this.$router.push({path: '/productDetail', query: {id: item.id}});
+        if(this.isDetail){
+          this.$router.push({path: '/productDetail', query: {id: item.id}});
+        }
       },
     },
   }
