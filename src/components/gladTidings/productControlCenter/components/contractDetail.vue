@@ -180,10 +180,10 @@
         })
       },
       searchCollectDetail(id){
-        this.$router.push({path: '/collectDetail', query: {id: id}});
+        this.$router.push({path: '/collectDetail', query: {id: id,from:'contractDetail'}});
       },
       searchRentDetail(id){
-        this.$router.push({path: '/rentDetail', query: {id: id}});
+        this.$router.push({path: '/rentDetail', query: {id: id,from:'contractDetail'}});
       }
     }
   }

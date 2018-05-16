@@ -58,9 +58,12 @@
               <span style="color: #777" v-else-if="detailData.status == 2">待收房</span>
               <span style="color: #ef4292" v-else="">未出租</span>
             </div>
-            <div style="font-size: .2rem;color: #777" v-if="detailData.current_ready_days">
-              已空置 {{detailData.current_ready_days}}天
-            </div>
+
+            <span style="font-size: .2rem;color: #777"
+                  v-if="item.current_ready_days&&!isNaN(item.current_ready_days)">已空置{{item.current_ready_days}}天</span>
+            <span style="font-size: .2rem;color: #777"
+                  v-if="item.current_ready_days&&isNaN(item.current_ready_days)">{{item.current_ready_days}}</span>
+
           </div>
         </div>
 
@@ -135,7 +138,7 @@
         </div>
 
         <div class="house_set" v-if="detailData.house_goods">
-          <div class="title">房屋配套</div>
+          <div class="title" style='margin-bottom: .2rem'>房屋配套</div>
           <div>
             <van-row class="house_set_item">
               <van-col span="4" class="key">装修 :</van-col>
@@ -210,10 +213,10 @@
         <div class="house_contract">
           <div class="contract_title">
             <div class="title">相关合同</div>
-            <div class="more" @click="router('contract',detailData.id)" v-if="lords.length>0||renters.length>0">查看更多详情>
+            <div class="more" @click="router('contract',detailData.id)" v-if="lords.length>0||renters.length>0">查看更多>
             </div>
           </div>
-          <div class="contractInfo" v-if="lords.length>0">
+          <div class="contractInfo" v-if="lords.length>0" @click="searchCollectDetail(lords[0].id)">
             <van-row class="contractItem">
               <van-col class="itemWord" span="5">合同编号 :</van-col>
               <van-col class="itemWord" span="19">{{lords[0].contract_number}}</van-col>
@@ -277,7 +280,7 @@
             暂无生效收房合同
           </div>
 
-          <div class="contractInfo" v-if="renters.length>0">
+          <div class="contractInfo" v-if="renters.length>0" @click="searchRentDetail(renters[0].id)">
             <van-row class="contractItem">
               <van-col class="itemWord" span="5">合同编号 :</van-col>
               <van-col class="itemWord" span="19">{{renters[0].contract_number}}</van-col>
@@ -474,6 +477,13 @@
           this.$router.push({path: '/contractDetail', query: {id: id}});
         }
       },
+
+      searchCollectDetail(id){
+        this.$router.push({path: '/collectDetail', query: {id: id,from:'productDetail'}});
+      },
+      searchRentDetail(id){
+        this.$router.push({path: '/rentDetail', query: {id: id,from:'productDetail'}});
+      },
       showLargePic(images, index) {
         let imgArray = [];
         images.forEach((item) => {
@@ -639,6 +649,7 @@
       padding: .3rem 0;
       border-bottom: 1px solid #DDDDDD;
       .img_title {
+        margin-bottom: .2rem;
         @extend .flex;
         justify-content: space-between;
         .title {
@@ -664,6 +675,7 @@
     .house_contract {
       padding: .3rem 0;
       .contract_title {
+        margin-bottom: .2rem;
         @extend .flex;
         justify-content: space-between;
         .title {

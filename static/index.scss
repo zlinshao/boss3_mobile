@@ -144,7 +144,10 @@ div {
 .checkCss {
   background-color: #FFFFFF;
   padding: .15rem .3rem;
-  .van-checkbox.van-checkbox--round {
+}
+
+.checkCss, .subjectB {
+  .van-checkbox.van-checkbox--round, .van-radio {
     margin: .2rem 0;
   }
 }

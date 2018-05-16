@@ -11,6 +11,9 @@ import Comments from '@/components/examine/writings/comments.vue'
 // import CardDetail from '@/components/examine/cardDetail/index.vue'
 // import CreditCard from '@/components/examine/creditCard/index.vue'
 
+// 问卷调查
+// import Questionnaire from '@/components/examine/questionnaire/index.vue'
+
 import CollectReport from '../components/gladTidings/collectReport/index.vue'
 import Quality from '../components/gladTidings/quality/index.vue'
 import RentReport from '../components/gladTidings/rentReport/index.vue'
@@ -54,6 +57,7 @@ import RentDetail from '../components/gladTidings/productControlCenter/component
 import VillageCenter from '../components/gladTidings/villageManage/index.vue'
 import AddVillage from '../components/gladTidings/villageManage/components/addVillage.vue'
 import MapSearch from '../components/gladTidings/villageManage/components/mapSearch.vue'
+import AddNewAddress from '../components/gladTidings/villageManage/components/addNewAddress.vue'
 
 Vue.use(Router);
 
@@ -180,7 +184,7 @@ export default new Router({
     },
     {
       path: '/unCollectBeforeRent',
-      name: '未收先租未知',
+      name: '未收先租',
       hidden: 'glad',
       icon: 'iconfont icon-weishouxianzubaobei',
       meta: {title: '未收先租未知'},
@@ -358,6 +362,15 @@ export default new Router({
       meta: {title: '新增小区'},
       component: AddVillage
     },
+
+    {
+      path: '/addNewAddress',
+      hidden: false,
+      name: '选取坐标',
+      meta: {title: '选取坐标'},
+      component: AddNewAddress
+    },
+
     {
       path: '/mapSearch',
       hidden: false,
@@ -387,6 +400,13 @@ export default new Router({
       hidden: false,
       component: Warning
     },
+    // {
+    //   path: '/questionnaire',
+    //   name: '问卷调查',
+    //   meta: {title: '问卷调查'},
+    //   hidden: 'glad',
+    //   component: Questionnaire
+    // },
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',
