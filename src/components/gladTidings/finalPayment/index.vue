@@ -95,6 +95,12 @@
       <van-cell-group>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
+          v-model="form.receipt"
+          label="收据编号"
+          type="text"
+          placeholder="请填写收据编号">
+        </van-field>
+        <van-field
           v-if="other_fee_status"
           v-model="form.other_fee_name"
           label="费用名称"
@@ -236,7 +242,7 @@
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
-
+          receipt: '',                  //收据编号
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -469,6 +475,7 @@
             this.form.price_arr = draft.price_arr;
             this.form.payWay = draft.payWay;
             this.form.terms = draft.terms;
+            this.form.receipt = draft.receipt;
             this.form.contract_id = draft.contract_id;
             this.helperBulletin(draft.contract_id);
             this.form.house_id = draft.house_id;
@@ -529,6 +536,7 @@
         this.screenshots = {};
         this.form.screenshot_leader = [];
         this.leaders = {};
+        this.form.receipt = '';
         this.form.other_fee_name = '';
         this.form.other_fee = '';
         this.form.is_other_fee = 0;
