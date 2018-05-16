@@ -60,17 +60,18 @@
             <!--v-model="form.amount"-->
             <!--type="number"-->
             <!--disabled-->
-            <!--placeholder="请填写金额">-->
+            <!--placeholder="中介费已禁用">-->
           <!--</van-field>-->
           <!--<van-field-->
-            <!--v-model="form.agency_price_now"-->
+            <!--v-model="form.amount_now"-->
             <!--type="number"-->
             <!--class="twoBorder"-->
-            <!--placeholder="修改写金额"-->
+            <!--placeholder="请填写修改写金额"-->
             <!--icon="clear"-->
-            <!--@click-icon="form.agency_price_now = ''">-->
+            <!--@click-icon="form.amount_now = ''">-->
           <!--</van-field>-->
         <!--</div>-->
+
         <van-field
           v-model="form.amount"
           type="text"
@@ -79,11 +80,20 @@
           @click-icon="form.amount = ''"
           required>
         </van-field>
+        <!--<van-field-->
+          <!--v-model="form.name"-->
+          <!--type="text"-->
+          <!--v-if="agencyStatus"-->
+          <!--disabled-->
+          <!--label="中介名称"-->
+          <!--placeholder="中介名称已禁用"-->
+          <!--required>-->
+        <!--</van-field>-->
         <van-field
           v-model="form.name"
           type="text"
           label="中介名称"
-          placeholder="请填写中介名"
+          placeholder="请填写中介名称"
           @click-icon="form.name = ''"
           required>
         </van-field>
@@ -105,6 +115,7 @@
           <!--@click-icon="form.phone = ''"-->
           <!--required>-->
         <!--</van-field>-->
+
         <van-field
           v-model="form.account"
           label="卡号"
@@ -218,10 +229,10 @@
           house_id: '',                 //房屋地址id
 
           amount: '',                   //中介费
-          user_name: '',                //中介人
+          // user_name: '',                //中介人
           name: '',                     //中介名称
-          phone: '',                    //中介电话
-          agency_price_now: '',         //修改中介费
+          // phone: '',                    //中介电话
+          // amount_now: '',         //修改中介费
 
           purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
@@ -242,7 +253,7 @@
         screenshots_leader: {},
         numbers: '',
 
-        // agencyStatus: false,
+        agencyStatus: false,
       }
     },
     mounted() {
@@ -348,7 +359,7 @@
           let val = JSON.parse(t.house);
           // if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
           //   this.agencyStatus = true;
-          //   this.form.amount = val.agency_info.agency_price;
+          //   this.form.amount = val.agency_info.price;
           //   this.form.user_name = val.agency_info.agency_user_name;
           //   this.form.name = val.agency_info.agency_name;
           //   this.form.phone = val.agency_info.agency_phone;
@@ -362,22 +373,24 @@
           this.form.department_name = val.department_name;
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
-          this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
-            if (res.data.code === '51110') {
-              let pay = res.data.data;
-              this.form.payWay = [];
-              this.form.price_arr = [];
-              for (let i = 0; i < pay.pay_way.length; i++) {
-                this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
-              }
-              for (let i = 0; i < pay.price.length; i++) {
-                this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
-              }
-            }
-          })
+          this.helperBulletin(val.id);
         }
       },
-
+      helperBulletin(id) {
+        this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
+          if (res.data.code === '51110') {
+            let pay = res.data.data;
+            this.form.payWay = [];
+            this.form.price_arr = [];
+            for (let i = 0; i < pay.pay_way.length; i++) {
+              this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
+            }
+            for (let i = 0; i < pay.price.length; i++) {
+              this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
+            }
+          }
+        })
+      },
       agencyDetail(val) {
         let type;
         if (val !== '') {
@@ -388,12 +401,14 @@
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === '50320') {
             this.isClear = false;
+            this.agencyStatus = true;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
             this.form.purchase_way = 509;
             this.form.address = draft.address;
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
+            this.helperBulletin(draft.contract_id);
             this.form.house_id = draft.house_id;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
@@ -401,6 +416,7 @@
             this.form.name = draft.name;
             // this.form.user_name = draft.user_name;
             // this.form.phone = draft.phone;
+            // this.form.amount_now = draft.amount_now;
             this.form.bank = draft.bank;
             this.form.subbranch = draft.subbranch;
             this.form.account_name = draft.account_name;
@@ -443,6 +459,7 @@
         this.form.name = '';
         // this.form.user_name = '';
         // this.form.phone = '';
+        // this.form.amount_now = '';
         this.form.bank = '';
         this.form.subbranch = '';
         this.form.account_name = '';
@@ -454,7 +471,7 @@
         this.form.screenshot_leader = [];
         this.screenshots_leader = {};
         this.form.remark = '';
-        this.staff_name = '';
+        this.form.staff_name = '';
         this.form.staff_id = '';
         this.form.department_id = '';
         this.department_name = '';

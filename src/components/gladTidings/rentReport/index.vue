@@ -801,6 +801,8 @@
       },
 
       rentDetail(val) {
+        this.isValue2 = true;
+        this.userInfo(true, true);
         let type;
         if (val !== '') {
           type = 'bulletin/rent/' + val;
@@ -895,13 +897,12 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.leaders;
             this.form.remark = draft.remark;
-            this.form.staff_id = draft.staff_id;
-            this.form.staff_name = data.staff_name;
-            this.form.department_id = draft.department_id;
-            this.form.department_name = data.department_name;
+
+            // this.form.staff_id = draft.staff_id;
+            // this.form.staff_name = data.staff_name;
+            // this.form.department_id = draft.department_id;
+            // this.form.department_name = data.department_name;
           } else {
-            this.isValue2 = true;
-            this.userInfo(true, true);
             this.form.id = '';
           }
         })

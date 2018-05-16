@@ -556,18 +556,27 @@
       return {
         all_dic : [],
         contractInfo:{},
+        largePic : null,
       }
     },
     mounted(){
       this.getDictionary();
       this.getData();
     },
-    beforeRouteLeave(to, from, next) {
-      Toast.clear();
-      next();
+    activated(){
+      this.getData();
     },
     beforeRouteEnter(to, from, next) {
-      to.meta.keepAlive = true;
+      next(vm => {
+        vm.routerIndex('contractDetail', 'house');
+        vm.ddRent('contractDetail', 'house');
+      })
+    },
+    beforeRouteLeave(to, from, next){
+      Toast.clear();
+      if(this.largePic){
+        this.largePic.close();
+      }
       next();
     },
     methods:{
@@ -608,7 +617,7 @@
         for(let key in images){
           imgArray.unshift(images[key]);
         }
-        ImagePreview(imgArray,index);
+        this.largePic = ImagePreview(imgArray,index);
       }
     }
   }

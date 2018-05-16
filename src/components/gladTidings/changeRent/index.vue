@@ -274,8 +274,7 @@
           v-model="form.receipt"
           label="收据编号"
           type="text"
-          placeholder="请填写收据编号"
-          required>
+          placeholder="请填写收据编号">
         </van-field>
         <van-field
           v-model="form.sign_date"
@@ -838,6 +837,8 @@
       },
 
       rentDetail(val) {
+        this.isValue2 = true;
+        this.userInfo(true, true);
         let type;
         if (val !== '') {
           type = 'bulletin/rent/' + val;
@@ -929,13 +930,12 @@
             this.form.photo = draft.photo;
             this.photos = data.photo;
             this.form.remark = draft.remark;
-            this.form.staff_id = draft.staff_id;
-            this.form.staff_name = draft.staff_name;
-            this.form.department_id = draft.department_id;
-            this.form.department_name = draft.department_name;
+
+            // this.form.staff_id = draft.staff_id;
+            // this.form.staff_name = draft.staff_name;
+            // this.form.department_id = draft.department_id;
+            // this.form.department_name = draft.department_name;
           } else {
-            this.isValue2 = true;
-            this.userInfo(true, true);
             this.form.id = '';
           }
         })

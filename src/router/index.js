@@ -271,15 +271,14 @@ export default new Router({
       component: FinalPayment
     },
 
-    // {
-    //   path: '/productControlCenter',
-    //   name: '产品管控中心',
-    //   hidden: 'product',
-    //   icon: 'iconfont icon-chanpinguankong',
-    //   meta: {title: '产品管控中心'},
-    //   component: ProductControlCenter
-    // },
-
+    {
+      path: '/productControlCenter',
+      name: '产品管控中心',
+      hidden: 'product',
+      icon: 'iconfont icon-chanpinguankong',
+      meta: {title: '产品管控中心'},
+      component: ProductControlCenter
+    },
     {
       path: '/villageCenter',
       name: '小区管理中心',
