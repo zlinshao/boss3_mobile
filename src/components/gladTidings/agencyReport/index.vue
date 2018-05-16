@@ -100,12 +100,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form.agency_user_name"
+          v-model="form.agency_username"
           type="text"
           :disabled="agencyStatus"
           label="中介人"
           placeholder="请填写中介人"
-          @click-icon="form.agency_user_name = ''"
+          @click-icon="form.agency_username = ''"
           required>
         </van-field>
         <van-field
@@ -232,7 +232,7 @@
 
           agency_price: '',             //修改中介费
 
-          agency_user_name: '',          //中介人
+          agency_username: '',          //中介人
           agency_name: '',              //中介名称
           agency_phone: '',             //中介电话
           agency_before_price: '',      //报备中介费
@@ -363,11 +363,16 @@
           if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
             this.agencyStatus = true;
             this.form.agency_before_price = val.agency_info.agency_price;
-            this.form.agency_user_name = val.agency_info.agency_user_name;
+            this.form.agency_username = val.agency_info.agency_user_name;
             this.form.agency_name = val.agency_info.agency_name;
             this.form.agency_phone = val.agency_info.agency_phone;
           } else {
-            this.form.agency_before_price = 0;
+            if (val.agency_info.price !== null) {
+              this.form.agency_before_price = val.agency_info.price;
+            } else {
+              this.form.agency_before_price = 0;
+            }
+
             this.agencyStatus = false;
           }
           this.form.address = val.house_name;
@@ -418,7 +423,7 @@
             this.numbers = draft.collect_or_rent;
 
             this.form.agency_price = draft.agency_price;
-            this.form.agency_user_name = draft.agency_user_name;
+            this.form.agency_username = draft.agency_username;
             this.form.agency_name = draft.agency_name;
             this.form.agency_phone = draft.agency_phone;
             this.form.agency_before_price = draft.agency_before_price;
@@ -463,7 +468,7 @@
         this.form.collect_or_rent = '';
 
         this.form.agency_price = '';
-        this.form.agency_user_name = '';
+        this.form.agency_username = '';
         this.form.agency_name = '';
         this.form.agency_phone = '';
         this.form.agency_before_price = '';
