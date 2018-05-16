@@ -83,7 +83,7 @@
               <span v-if="item.total_ready_days&&!isNaN(item.total_ready_days)">余{{item.total_ready_days}}天</span>
               <span v-if="item.total_ready_days&&isNaN(item.total_ready_days)">{{item.total_ready_days}}</span>
 
-              <span v-if="item.current_ready_days&&!isNaN(item.current_ready_days)">余{{item.current_ready_days}}天</span>
+              <span v-if="item.current_ready_days&&!isNaN(item.current_ready_days)">已空置{{item.current_ready_days}}天</span>
               <span v-if="item.current_ready_days&&isNaN(item.current_ready_days)">{{item.current_ready_days}}</span>
 
               <span v-if="item.is_again_rent>0">二次出租</span>

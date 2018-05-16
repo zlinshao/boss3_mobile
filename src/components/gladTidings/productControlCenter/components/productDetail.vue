@@ -58,9 +58,12 @@
               <span style="color: #777" v-else-if="detailData.status == 2">待收房</span>
               <span style="color: #ef4292" v-else="">未出租</span>
             </div>
-            <div style="font-size: .2rem;color: #777" v-if="detailData.current_ready_days">
-              已空置 {{detailData.current_ready_days}}天
-            </div>
+
+            <span style="font-size: .2rem;color: #777"
+                  v-if="item.current_ready_days&&!isNaN(item.current_ready_days)">已空置{{item.current_ready_days}}天</span>
+            <span style="font-size: .2rem;color: #777"
+                  v-if="item.current_ready_days&&isNaN(item.current_ready_days)">{{item.current_ready_days}}</span>
+
           </div>
         </div>
 
