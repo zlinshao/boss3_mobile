@@ -50,26 +50,26 @@
         </div>
 
         <!--<div class="first_date" v-if="agencyStatus">-->
-          <!--<van-field-->
-            <!--style="width: 110px;"-->
-            <!--class="title"-->
-            <!--label="中介费"-->
-            <!--required>-->
-          <!--</van-field>-->
-          <!--<van-field-->
-            <!--v-model="form.agency_before_price"-->
-            <!--type="number"-->
-            <!--disabled-->
-            <!--placeholder="中介费已禁用">-->
-          <!--</van-field>-->
-          <!--<van-field-->
-            <!--v-model="form.agency_price"-->
-            <!--type="number"-->
-            <!--class="twoBorder"-->
-            <!--placeholder="请填写修改写金额"-->
-            <!--icon="clear"-->
-            <!--@click-icon="form.agency_price = ''">-->
-          <!--</van-field>-->
+        <!--<van-field-->
+        <!--style="width: 110px;"-->
+        <!--class="title"-->
+        <!--label="中介费"-->
+        <!--required>-->
+        <!--</van-field>-->
+        <!--<van-field-->
+        <!--v-model="form.agency_before_price"-->
+        <!--type="number"-->
+        <!--disabled-->
+        <!--placeholder="中介费已禁用">-->
+        <!--</van-field>-->
+        <!--<van-field-->
+        <!--v-model="form.agency_price"-->
+        <!--type="number"-->
+        <!--class="twoBorder"-->
+        <!--placeholder="请填写修改写金额"-->
+        <!--icon="clear"-->
+        <!--@click-icon="form.agency_price = ''">-->
+        <!--</van-field>-->
         <!--</div>-->
 
         <van-field
@@ -82,36 +82,26 @@
           required>
         </van-field>
         <van-field
-          v-model="form.agency_name"
-          type="text"
-          v-if="agencyStatus"
-          disabled
-          label="中介名称"
-          placeholder="中介名称已禁用"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.agency_name"
-          type="text"
-          v-if="!agencyStatus"
-          label="中介名称"
-          placeholder="请填写中介名称"
-          @click-icon="form.agency_name = ''"
-          required>
-        </van-field>
-        <van-field
           v-model="form.agency_username"
           type="text"
-          :disabled="agencyStatus"
+          :disabled="agency2"
           label="中介人"
           placeholder="请填写中介人"
           @click-icon="form.agency_username = ''"
           required>
         </van-field>
         <van-field
+          v-model="form.agency_name"
+          type="text"
+          :disabled="agency3"
+          label="中介名称"
+          placeholder="请填写中介名称"
+          required>
+        </van-field>
+        <van-field
           v-model="form.agency_phone"
           type="number"
-          :disabled="agencyStatus"
+          :disabled="agency4"
           label="中介联系方式"
           placeholder="请填写中介联系方式"
           @click-icon="form.agency_phone = ''"
@@ -254,7 +244,10 @@
         screenshots_leader: {},
         numbers: '',
 
-        agencyStatus: false,
+        agency1: false,
+        agency2: false,
+        agency3: false,
+        agency4: false,
       }
     },
     mounted() {
@@ -359,19 +352,41 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
-            this.agencyStatus = true;
-            this.form.agency_price = val.agency_info.agency_price;
-            this.form.agency_username = val.agency_info.agency_user_name;
-            this.form.agency_name = val.agency_info.agency_name;
-            this.form.agency_phone = val.agency_info.agency_phone;
+            if (val.agency_info.agency_price) {
+              this.form.agency_price = val.agency_info.agency_price;
+            } else {
+              this.form.agency_price = '';
+            }
+            if (val.agency_info.agency_user_name) {
+              this.agency2 = true;
+              this.form.agency_username = val.agency_info.agency_user_name;
+            } else {
+              this.agency2 = false;
+              this.form.agency_username = '';
+            }
+            if (val.agency_info.agency_name) {
+              this.agency3 = true;
+              this.form.agency_name = val.agency_info.agency_name;
+            } else {
+              this.agency3 = false;
+              this.form.agency_name = '';
+            }
+            if (val.agency_info.agency_phone) {
+              this.agency4 = true;
+              this.form.agency_phone = val.agency_info.agency_phone;
+            } else {
+              this.agency4 = false;
+              this.form.agency_phone = '';
+            }
           } else {
-            if (val.agency_info.price !== null) {
+            if (val.agency_info !== null && val.agency_info.price !== null) {
               this.form.agency_price = val.agency_info.price;
             } else {
-              this.form.agency_price = 0;
+              this.form.agency_price = '';
             }
-
-            this.agencyStatus = false;
+            this.agency2 = false;
+            this.agency3 = false;
+            this.agency4 = false;
           }
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
@@ -408,7 +423,9 @@
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === '50320') {
             this.isClear = false;
-            this.agencyStatus = true;
+            this.agency2 = false;
+            this.agency3 = false;
+            this.agency4 = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
             this.form.purchase_way = 509;
