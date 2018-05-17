@@ -29,11 +29,9 @@
       </div>
 
       <!--底部-->
-      <div class="footerIndex">
-        <div @click="addVillage">
-          <h2><van-icon name="add-o" /></h2>
-          <h1>新增小区</h1>
-        </div>
+
+      <div class="footer">
+        <div class="" @click="addVillage"> + 新增小区</div>
       </div>
     </div>
   </div>
@@ -126,6 +124,7 @@
 
       onSearch() {
         this.showLoading = true;
+        this.noData = false;
         this.$http.get(this.urls + 'setting/community/', {
           params: {
             num: 20,
@@ -189,45 +188,13 @@
         line-height: .4rem;
         color: #aaaaaa;
         text-align: center;
-        background-color: #f4f4f4;
+        background-color: #FFFFFF !important;
         padding: .2rem 0;
         width: 100%;
       }
     }
     .searchList{
       border-bottom: 1px solid #eee;
-    }
-    .footerIndex {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1rem;
-      border-top: 1px solid #ebebeb;
-      @include flex;
-      background: #FFFFFF;
-      justify-content: space-around;
-      z-index: 999999;
-      div + div {
-        border-left: 1px solid #EEEEEE;
-      }
-      div {
-        width: 33.33%;
-        margin: .2rem 0;
-        text-align: center;
-        h2 {
-          color: #409EFF;
-          i {
-            color: #409EFF;
-            font-size: .34rem;
-          }
-        }
-        h1 {
-          padding-top: .06rem;
-          font-size: .2rem;
-          color: #409EFF;
-        }
-      }
     }
   }
 </style>
