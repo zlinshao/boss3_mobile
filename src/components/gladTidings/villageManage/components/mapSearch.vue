@@ -65,13 +65,13 @@
     <!--底部-->
 
     <div class="footer" v-if="!isManual">
-      <div class="" @click="addNewAddress">选择手动添加</div>
+      <div class="" @click="addNewAddress">切换到手动添加</div>
     </div>
 
 
     <div class="footer" v-if="isManual">
-      <div class="" @click="addNewAddress">返回高德搜索</div>
-      <div class="" @click="manualAdd">确定添加</div>
+      <div class="" @click="addNewAddress">切换到高德搜索</div>
+      <div class="" @click="manualAdd"> + 确定添加</div>
     </div>
 
   </div>
