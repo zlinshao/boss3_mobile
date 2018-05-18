@@ -95,12 +95,6 @@
       <van-cell-group>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
-          v-model="form.receipt"
-          label="收据编号"
-          type="text"
-          placeholder="请填写收据编号">
-        </van-field>
-        <van-field
           v-if="other_fee_status"
           v-model="form.other_fee_name"
           label="费用名称"
@@ -119,6 +113,12 @@
           icon="clear"
           @click-icon="form.other_fee = ''"
           required>
+        </van-field>
+        <van-field
+          v-model="form.receipt"
+          label="收据编号"
+          type="text"
+          placeholder="请填写收据编号">
         </van-field>
         <van-field
           v-model="form.retainage_date"
@@ -323,7 +323,9 @@
 
       // 日期选择
       timeChoose() {
-        this.timeShow = true;
+        setTimeout(() => {
+          this.timeShow = true;
+        }, 200);
       },
       // 日期拼接
       monthDate(peaker) {
@@ -338,17 +340,18 @@
       // select 显示
       selectShow(val, index) {
         this.tabs = val;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 1:
             this.payIndex = index;
-
             this.columns = this.value8;
             break;
           case 2:
             this.columns = this.periods;
             break;
         }
-        this.selectHide = true;
       },
       // select选择
       onConfirm(value, index) {

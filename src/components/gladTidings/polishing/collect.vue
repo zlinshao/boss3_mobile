@@ -519,7 +519,9 @@
       },
       // 日期选择
       timeChoose(val) {
-        this.timeShow = true;
+        setTimeout(() => {
+          this.timeShow = true;
+        }, 200);
       },
       // 日期拼接
       monthDate(peaker) {
@@ -591,7 +593,9 @@
       selectShow(val, index) {
         this.tabs = val;
         this.tabIndex = index;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 1:
             this.columns = this.prove_name;

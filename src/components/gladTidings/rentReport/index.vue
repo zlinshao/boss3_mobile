@@ -11,7 +11,15 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
-
+        <van-field
+          v-model="form.sign_date"
+          label="签约开始"
+          readonly
+          type="text"
+          @click="timeChoose(1)"
+          placeholder="请选择签约开始日期"
+          required>
+        </van-field>
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -22,22 +30,24 @@
           <van-field
             v-model="form.month"
             type="number"
+            @keyup="endDate(form.sign_date, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class="twoBorder"
             v-model="form.day"
             type="number"
+            @keyup="endDate(form.sign_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
         </div>
         <van-field
-          v-model="form.sign_date"
-          label="签约日期"
+          v-model="form.end_date"
+          label="签约结束"
           readonly
           type="text"
-          @click="timeChoose(1)"
-          placeholder="请选择签约日期"
+          @click="timeChoose(4)"
+          placeholder="请选择签约结束日期"
           required>
         </van-field>
         <van-field
@@ -437,7 +447,8 @@
 
           month: '',                    //租房月数
           day: '',                      //租房天数
-          sign_date: '',                //签约日期
+          sign_date: '',                //签约开始日期
+          end_date: '',                 //签约结束日期
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -589,7 +600,9 @@
 
       // 日期选择
       timeChoose(val) {
-        this.timeShow = true;
+        setTimeout(() => {
+          this.timeShow = true;
+        }, 200);
         this.timeIndex = val;
       },
       // 日期拼接
@@ -602,6 +615,7 @@
         switch (this.timeIndex) {
           case 1:
             this.form.sign_date = this.timeValue;
+            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
             break;
           case 2:
             this.form.retainage_date = this.timeValue;
@@ -619,13 +633,18 @@
             this.countDate(1, this.form.period_price_arr);
             this.countDate(2, this.form.period_pay_arr);
             break;
+          case 4:
+            this.form.end_date = this.timeValue;
+            break;
         }
       },
       // select 显示
       selectShow(val, index) {
         this.tabs = val;
         this.payIndex = index;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 1:
             this.columns = this.value6;
@@ -734,6 +753,23 @@
         })
       },
 
+      // 结束日期
+      endDate(time, month, day, val) {
+        let params = {};
+        params.begin_date = time;
+        params.month = month;
+        params.day = day;
+        params.type = val;
+        if (time && (month || day)) {
+          this.computedDate(params).then((date) => {
+            this.form.end_date = date;
+          })
+        } else {
+          this.form.end_date = '';
+        }
+
+      },
+
       saveCollect(val) {
         if (this.picStatus) {
           if (this.haveInHand) {
@@ -824,6 +860,7 @@
             this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.contract_number = draft.contract_number === '' ? 'LJZF' : draft.contract_number;
             this.form.sign_date = draft.sign_date;
+            this.form.end_date = draft.end_date;
             this.form.begin_date = draft.begin_date;
             this.first_date = [];
             this.first_date.push(draft.begin_date);
@@ -925,6 +962,7 @@
         this.form.day = '';
         this.form.discount = 0;
         this.form.sign_date = '';
+        this.form.end_date = '';
         this.form.begin_date = '';
         this.datePrice = [];
         this.datePay = [];
