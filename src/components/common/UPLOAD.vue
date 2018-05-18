@@ -1,7 +1,6 @@
 <template>
   <div>
     <div id="container">
-
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style=" position: relative;">
@@ -210,7 +209,7 @@
 
                   let object = {};
                   object.id = res.data.data.id;
-                  object.name = res.data.data.name;
+                  object.name = file.id;
                   _this.imgArray.push(object);
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
