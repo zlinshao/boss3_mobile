@@ -1,60 +1,48 @@
 <template>
   <div id="questionnaire">
     <div class="questionnaireTitle">
-      <div>发货的客服都十来得舒服咯得舒服咯发货的客服都十分看好德萨克来得舒服咯</div>
+      <div>{{paper_name}}</div>
       <img src="../../../assets/backgroundPic.png" alt="">
     </div>
-    <div class="exercise">
-      <div class="subject">
-        <p>1. <span class="onClass">多选{{result}}不定项选择</span></p>
-        <div class="subjectTitle">
-          <div class="subjectA">符合当时咖啡的撒很快发到空间十分好看的萨芬和可是大后方开始反馈收到啦</div>
-          <div class="subjectB">
-            <van-checkbox-group v-model="result">
-              <van-checkbox
-                v-for="(item, index) in list"
-                :key="item.id"
-                :name="item.id">
-                <span :class="{'onClass': result.indexOf(item.id) > -1}">{{item.id}}{{item.A}}</span>
-              </van-checkbox>
-            </van-checkbox-group>
+    <div class="exercise" v-if="!message">
+      <div v-for="(key,index) in question_set">
+        <div class="subject" v-for="(key1,index1) in key">
+          <p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>
+          <div class="subjectTitle">
+            <div class="subjectA" v-html="key1.stem"></div>
+            <div class="subjectB" v-if="index === '153' || index === '156'">
+              <van-radio-group v-model="answer[key1.id]">
+                <van-radio v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
+                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                </van-radio>
+              </van-radio-group>
+            </div>
+            <div class="subjectB" v-if="index === '154' || index === '155'">
+              <van-checkbox-group v-model="result" @change="onResult(key1.id)">
+                <van-checkbox
+                  v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
+                  <span :class="{'onClass': result === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                </van-checkbox>
+              </van-checkbox-group>
+            </div>
+            <div class="contents" v-if="index === '158'">
+              <van-cell-group>
+                <van-field
+                  v-model="answer[key1.id]"
+                  type="textarea"
+                  placeholder="请简答"
+                  icon="clear"
+                  @click-icon="answer[key1.id]"
+                  required>
+                </van-field>
+              </van-cell-group>
+            </div>
           </div>
         </div>
       </div>
-      <div class="subject">
-        <p>1. <span class="onClass">单选{{radio}}判断</span></p>
-        <div class="subjectTitle">
-          <div class="subjectA">符合当时咖啡的撒很快发到空间十分好看的萨芬和可是大后方开始反馈收到啦</div>
-          <div class="subjectB">
-            <van-radio-group
-              v-model="radio"
-              :key="item.id"
-              v-for="(item, index) in list">
-              <van-radio :name="item.id">
-                <span :class="{'onClass': result.indexOf(item.id) > -1}">{{item.id}}{{item.A}}</span>
-              </van-radio>
-            </van-radio-group>
-          </div>
-        </div>
-      </div>
-      <div class="subject">
-        <p>1. <span class="onClass">简答</span></p>
-        <div class="subjectTitle">
-          <div class="subjectA">符合当时咖啡的撒很快发到空间十分好看的萨芬和可是大后方开始反馈收到啦</div>
-          <div class="contents">
-            <van-cell-group>
-              <van-field
-                v-model="form.contents"
-                type="textarea"
-                placeholder="请简答"
-                icon="clear"
-                @click-icon="form.contents = ''"
-                required>
-              </van-field>
-            </van-cell-group>
-          </div>
-        </div>
-      </div>
+    </div>
+    <div class="exercise msg" v-if="message">
+      {{message}}
     </div>
   </div>
 </template>
@@ -83,20 +71,40 @@
             id: 'D',
           }
         ],
-        result: ['A'],
-        radio: 'A',
+
+        radio: '',
+        result: [],
+        paper_name: '',         //问卷标题
+        questionType: {},       //题型
+        question_set: {},       //试题
+        answer: {},             //答案
+
+        message: '',
       }
     },
     mounted() {
       this.dictionary(152, 1).then((res) => {
-        console.log(res.data);
+        let sub = {};
+        for (let i = 0; i < res.data.length; i++) {
+          sub[res.data[i].id] = res.data[i].dictionary_name;
+        }
+        this.questionType = sub;
       });
-      this.$http.get(this.urls + 'questionnaire/3').then((res) => {
-
+      this.$http.get(this.urls + 'questionnaire/14').then((res) => {
+        if (res.data.code === '30000') {
+          this.question_set = res.data.data.question_set;
+          this.paper_name = res.data.data.paper_name;
+        } else {
+          this.message = res.data.msg;
+        }
       })
     },
     watch: {},
-    methods: {},
+    methods: {
+      onResult(id) {
+        this.answer[id] = this.result;
+      },
+    },
   }
 </script>
 
@@ -105,6 +113,14 @@
     img {
       width: 100%;
     }
+    .van-radio, .van-checkbox.van-checkbox--round {
+      display: flex;
+      display: -webkit-flex;
+      .van-checkbox__input, .van-radio__input {
+        min-width: 20px;
+      }
+    }
+
     $onColor: #409EFF;
     .onClass {
       color: #409EFF;
@@ -126,9 +142,13 @@
         left: 0;
       }
     }
+    .msg {
+      text-align: center;
+      color: #949494;
+    }
     .exercise {
-      background-color: #FFFFFF;
       margin-top: 3.2rem;
+      background-color: #FFFFFF;
       padding: .2rem;
       .subject {
         .subjectTitle {

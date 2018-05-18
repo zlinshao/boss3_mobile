@@ -18,16 +18,15 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
-        <!--<van-field-->
-        <!--v-if="rooms.length !== 0"-->
-        <!--v-model="roomsName"-->
-        <!--type="text"-->
-        <!--label="合租房"-->
-        <!--readonly-->
-        <!--@click="selectShow(4,'')"-->
-        <!--placeholder="请选择合租房"-->
-        <!--required>-->
-        <!--</van-field>-->
+        <van-field
+          v-model="form.sign_date"
+          label="签约开始"
+          readonly
+          type="text"
+          @click="timeChoose(1)"
+          placeholder="请选择签约开始日期"
+          required>
+        </van-field>
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -47,6 +46,15 @@
             placeholder="请填写天数">
           </van-field>
         </div>
+        <van-field
+          v-model="form.end_date"
+          label="签约结束"
+          readonly
+          type="text"
+          @click="timeChoose(4)"
+          placeholder="请选择签约结束日期"
+          required>
+        </van-field>
         <van-field
           v-model="form.begin_date"
           label="合同开始日期"
@@ -277,15 +285,6 @@
           placeholder="请填写收据编号">
         </van-field>
         <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(1)"
-          placeholder="请选择签约日期"
-          required>
-        </van-field>
-        <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
           readonly
@@ -454,7 +453,8 @@
           month: '',                    //租房月数
           day: '',                      //租房天数
           begin_date: '',               //合同开始日期
-          sign_date: '',                //签约日期
+          sign_date: '',                //签约开始日期
+          end_date: '',                 //签约结束日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -613,7 +613,9 @@
 
       // 日期选择
       timeChoose(val) {
-        this.timeShow = true;
+        setTimeout(() => {
+          this.timeShow = true;
+        }, 200);
         this.timeIndex = val;
       },
       // 日期拼接
@@ -643,13 +645,18 @@
             this.countDate(1, this.form.period_price_arr);
             this.countDate(2, this.form.period_pay_arr);
             break;
+          case 4:
+            this.form.end_date = this.timeValue;
+            break;
         }
       },
       // select 显示
       selectShow(val, index) {
         this.tabs = val;
         this.payIndex = index;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 1:
             this.columns = this.value6;
@@ -860,6 +867,7 @@
             this.form.discount = draft.discount;
             this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.sign_date = draft.sign_date;
+            this.form.end_date = draft.end_date;
             this.form.begin_date = draft.begin_date;
             this.first_date = [];
             this.first_date.push(draft.begin_date);
@@ -958,6 +966,7 @@
         this.form.day = '';
         this.form.begin_date = '';
         this.form.sign_date = '';
+        this.form.end_date = '';
         this.datePrice = [];
         this.datePay = [];
         this.amountPrice = 1;

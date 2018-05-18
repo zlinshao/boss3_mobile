@@ -10,8 +10,10 @@ export default {
           that.$router.push({path: url, query: {tops: ''}});
         } else if (house === 'close') {
           dd.biz.navigation.close({
-            onSuccess: function (result) {},
-            onFail: function (err) {}
+            onSuccess: function (result) {
+            },
+            onFail: function (err) {
+            }
           });
         } else {
           that.$router.push({path: '/index'});
@@ -30,8 +32,10 @@ export default {
             that.$router.push({path: url, query: {tops: ''}});
           } else if (house === 'close') {
             dd.biz.navigation.close({
-              onSuccess: function (result) {},
-              onFail: function (err) {}
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
             });
           } else {
             that.$router.push({path: '/index'});
@@ -62,6 +66,18 @@ export default {
         })
       })
     };
+    Vue.prototype.computedDate = function (params) {
+      return new Promise((resolve, reject) => {
+        this.$http.get(globalConfig.server + 'bulletin/helper/calcdate', {
+          params: params
+        }).then((res) => {
+          if (res.data.code === '51110') {
+            resolve(res.data.data);
+          }
+        })
+      })
+    };
+
     // Vue.prototype.personalGet = function () {
     //   let that = this;
     //   that.$http.get(globalConfig.server + 'special/special/dingConfig').then((res) => {

@@ -538,7 +538,9 @@
 
       selectShow(val) {
         this.tabs = val;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 1:
             this.columns = [

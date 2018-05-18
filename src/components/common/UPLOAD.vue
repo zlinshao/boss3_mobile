@@ -174,7 +174,9 @@
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
               _this.isUploading = true;
-
+              up.setOption('multipart_params', {
+                token: _this.token,               // 上传凭证
+              });
             },
             'UploadProgress': function (up, file) {
 
