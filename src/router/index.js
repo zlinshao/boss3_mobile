@@ -187,7 +187,7 @@ export default new Router({
       name: '未收先租',
       hidden: 'glad',
       icon: 'iconfont icon-weishouxianzubaobei',
-      meta: {title: '未收先租未知'},
+      meta: {title: '未收先租'},
       component: UncollectBeforeRent
     },
     {

@@ -66,7 +66,7 @@
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
           <span>已收金额支付方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index)">删除</span>
+          <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,1)">删除</span>
         </div>
         <van-cell-group>
           <van-field
@@ -87,7 +87,7 @@
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount" class="addInput">
+      <div @click="priceAmount(1)" class="addInput">
         +支付方式变化
       </div>
 
@@ -115,12 +115,6 @@
           required>
         </van-field>
         <van-field
-          v-model="form.receipt"
-          label="收据编号"
-          type="text"
-          placeholder="请填写收据编号">
-        </van-field>
-        <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
           readonly
@@ -130,6 +124,41 @@
           required>
         </van-field>
       </van-cell-group>
+
+      <div class="changes" v-for="(key,index) in amountReceipt">
+        <div class="paddingTitle">
+          <span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>
+          <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,2)">删除</span>
+        </div>
+        <van-cell-group>
+          <van-field
+            @click="selectShow(3,index)"
+            v-model="form.receipt[index].city"
+            label="城市"
+            type="text"
+            readonly
+            placeholder="请选择城市"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.receipt[index].date"
+            type="number"
+            label="年份"
+            placeholder="请填写年份"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.receipt[index].num"
+            type="text"
+            label="编号"
+            placeholder="请填写编号"
+            required>
+          </van-field>
+        </van-cell-group>
+      </div>
+      <div @click="priceAmount(2)" class="addInput">
+        +增加收据编号
+      </div>
 
       <div class="aloneModel">
         <div class="title">领导同意截图</div>
@@ -228,6 +257,12 @@
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
         payIndex: '',                 //分金额方式index
+
+        amountReceipt: 1,                  //收据编号
+        receiptDate: '',                   //收据编号年份
+        receiptCity: '',                   //收据编号城市
+        cities: [],                        //城市
+
         other_fee_status: false,
         form: {
           address: '',
@@ -242,7 +277,7 @@
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
-          receipt: '',                  //收据编号
+          receipt: [{city: '', date: '', num: ''}], //收据编号
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -277,6 +312,14 @@
     },
     methods: {
       dicts(val) {
+        // 城市
+        this.dictionary(306, 1).then((res) => {
+          this.cities = [];
+          for (let i = 0; i < res.data.length; i++) {
+            this.cities.push(res.data[i].dictionary_name);
+          }
+          this.receiptNum();
+        });
         //支付方式
         this.dictionary(508, 1).then((res) => {
           this.value8 = [];
@@ -287,6 +330,23 @@
           this.finalDetail(val);
         });
       },
+      // 收据编号
+      receiptNum() {
+        this.amountReceipt = 1;
+        this.form.receipt = [{city: '', date: '', num: ''}];
+        // 收据编号默认日期
+        let date = new Date();
+        this.form.receipt[0].date = date.getFullYear();
+        this.receiptDate = date.getFullYear();
+        // 收据编号默认城市
+        this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
+          if (res.data.code === '1000120') {
+            this.form.receipt[0].city = res.data.data.data[2] + '市';
+            this.receiptCity = res.data.data.data[2] + '市';
+          }
+        });
+      },
+
       payWayClick(val) {
         if (val === 1) {
           this.payStatus = !this.payStatus;
@@ -340,16 +400,19 @@
       // select 显示
       selectShow(val, index) {
         this.tabs = val;
+        this.payIndex = index;
         setTimeout(() => {
           this.selectHide = true;
         }, 200);
         switch (val) {
           case 1:
-            this.payIndex = index;
             this.columns = this.value8;
             break;
           case 2:
             this.columns = this.periods;
+            break;
+          case 3:
+            this.columns = this.cities;
             break;
         }
       },
@@ -367,6 +430,9 @@
           case 2:
             this.form.terms = value;
             break;
+          case 3:
+            this.form.receipt[this.payIndex].city = value;
+            break;
         }
         this.selectHide = false;
       },
@@ -380,19 +446,29 @@
         this.timeShow = false;
       },
       // 增加 定金
-      priceAmount() {
-        this.amountMoney++;
-        this.form.money_sep.push('');
-        this.form.money_way.push('');
-        this.moneyNum.push('');
+      priceAmount(val) {
+        if (val === 1) {
+          this.amountMoney++;
+          this.form.money_sep.push('');
+          this.form.money_way.push('');
+          this.moneyNum.push('');
+        } else {
+          this.amountReceipt++;
+          this.form.receipt.push({city: this.receiptCity, date: this.receiptDate, num: ''});
+        }
 
       },
       // 删除 定金
-      deleteAmount(val) {
-        this.amountMoney--;
-        this.form.money_sep.splice(val, 1);
-        this.form.money_way.splice(val, 1);
-        this.moneyNum.splice(val, 1);
+      deleteAmount(index, val) {
+        if (val === 1) {
+          this.amountMoney--;
+          this.form.money_sep.splice(index, 1);
+          this.form.money_way.splice(index, 1);
+          this.moneyNum.splice(index, 1);
+        } else {
+          this.amountReceipt--;
+          this.form.receipt.splice(index, 1);
+        }
       },
 
       saveCollect(val) {
@@ -478,7 +554,10 @@
             this.form.price_arr = draft.price_arr;
             this.form.payWay = draft.payWay;
             this.form.terms = draft.terms;
+
+            this.amountReceipt = draft.receipt.length;
             this.form.receipt = draft.receipt;
+
             this.form.contract_id = draft.contract_id;
             this.helperBulletin(draft.contract_id);
             this.form.house_id = draft.house_id;
@@ -502,7 +581,7 @@
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.leaders;
+            this.leaders = data.screenshot_leader;
             this.form.remark = draft.remark;
             this.form.staff_name = draft.staff_name;
             this.form.department_name = draft.department_name;
@@ -539,7 +618,9 @@
         this.screenshots = {};
         this.form.screenshot_leader = [];
         this.leaders = {};
-        this.form.receipt = '';
+
+        this.receiptNum();
+
         this.form.other_fee_name = '';
         this.form.other_fee = '';
         this.form.is_other_fee = 0;

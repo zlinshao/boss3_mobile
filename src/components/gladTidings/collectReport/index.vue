@@ -13,11 +13,11 @@
         </van-field>
         <van-field
           v-model="form.sign_date"
-          label="签约开始"
+          label="签约日期"
           readonly
           type="text"
           @click="timeChoose(4)"
-          placeholder="请选择签约开始日期"
+          placeholder="请选择签约日期日期"
           required>
         </van-field>
         <div class="first_date month">
@@ -30,27 +30,16 @@
           <van-field
             v-model="form.month"
             type="number"
-            @keyup="endDate(form.sign_date, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class=""
             v-model="form.day"
             type="number"
-            @keyup="endDate(form.sign_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
         </div>
         <div class="titleRed">不包含空置期</div>
-        <van-field
-          v-model="form.end_date"
-          label="签约结束"
-          readonly
-          type="text"
-          @click="timeChoose(5)"
-          placeholder="请选择签约结束日期"
-          required>
-        </van-field>
         <van-field
           v-model="form.begin_date"
           type="text"
@@ -64,7 +53,7 @@
           v-model="form.vacancy"
           label="空置期(天)"
           type="number"
-          @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
+          @keyup="endDate(form.begin_date, form.vacancy, 1)"
           placeholder="请填写空置期"
           icon="clear"
           @click-icon="form.vacancy = ''"
@@ -477,7 +466,6 @@
             name: '',
           },
           sign_date: '',                //签约日期
-          end_date: '',                //签约日期
           month: '',                    //收房月数
           day: '',                      //收房天数
           is_agency: 0,                 //是否中介
@@ -533,7 +521,6 @@
         value7: [],
 
         isValue1: true,
-        isValue2: false,
       }
     },
     watch: {
@@ -561,8 +548,8 @@
     },
 
     methods: {
-      userInfo(val1, val2) {
-        if (val1 && val2) {
+      userInfo(val1) {
+        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
@@ -667,6 +654,7 @@
         switch (this.timeIndex) {
           case 1:
             this.form.begin_date = this.timeValue;
+            this.endDate(this.timeValue, this.form.vacancy, 1);
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
@@ -686,10 +674,6 @@
             break;
           case 4:
             this.form.sign_date = this.timeValue;
-            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
-            break;
-          case 5:
-            this.form.end_date = this.timeValue;
             break;
           case 6:
             this.form.end_date_vacant = this.timeValue;
@@ -809,31 +793,17 @@
       },
 
       // 结束日期
-      endDate(time, month, day, val) {
+      endDate(time, day, val) {
         let params = {};
-        if (val === 1) {
-          params.begin_date = time;
-          params.vacancy = day;
-          params.type = val;
-          if (time && day) {
-            this.computedDate(params).then((date) => {
-              this.form.end_date_vacant = date;
-            })
-          } else {
-            this.form.end_date_vacant = '';
-          }
+        params.begin_date = time;
+        params.vacancy = day;
+        params.type = val;
+        if (time && day) {
+          this.computedDate(params).then((date) => {
+            this.form.end_date_vacant = date;
+          })
         } else {
-          params.begin_date = time;
-          params.month = month;
-          params.day = day;
-          params.type = val;
-          if (time && (month || day)) {
-            this.computedDate(params).then((date) => {
-              this.form.end_date = date;
-            })
-          } else {
-            this.form.end_date = '';
-          }
+          this.form.end_date_vacant = '';
         }
       },
 
@@ -899,13 +869,12 @@
         if (t.tops === '') {
           this.stick();
         }
-        this.userInfo(this.isValue1, this.isValue2);
+        this.userInfo(this.isValue1);
       },
 
       // 草稿
       manuscript(val) {
-        this.isValue2 = true;
-        this.userInfo(true, true);
+        this.userInfo(true);
         let type;
         if (val !== '') {
           type = 'bulletin/collect/' + val;
@@ -924,7 +893,6 @@
             this.form.sign_date = draft.sign_date;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
-            this.form.end_date = draft.end_date;
 
             this.form.begin_date = draft.begin_date;
             this.form.vacancy = draft.vacancy;
@@ -1021,7 +989,7 @@
           this.isClear = false;
         });
         $('.imgItem').remove();
-        this.userInfo(true, true);
+        this.userInfo(true);
         this.joint = false;
         this.form.id = '';
         this.form.house.id = '';
@@ -1065,7 +1033,6 @@
         this.form.property_payer = '';
         this.property_name = '';
         this.form.sign_date = '';
-        this.form.end_date = '';
         this.form.name = '';
         this.is_corp = 1;
         this.corp = true;

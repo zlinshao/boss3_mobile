@@ -868,7 +868,7 @@
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.leaders;
+            this.leaders = data.screenshot_leader;
             this.form.photo = draft.photo;
             this.photos = data.photo;
 

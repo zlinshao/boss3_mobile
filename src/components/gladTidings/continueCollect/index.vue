@@ -18,6 +18,24 @@
           placeholder="户型已禁用"
           disabled>
         </van-field>
+        <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(4)"
+          placeholder="请选择签约日期"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.begin_date"
+          type="text"
+          label="合同开始时间"
+          placeholder="请选择合同开始时间"
+          readonly
+          @click="timeChoose(1)"
+          required>
+        </van-field>
         <div class="first_date month">
           <van-field
             style="width: 110px;"
@@ -28,23 +46,25 @@
           <van-field
             v-model="form.month"
             type="number"
+            @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class=""
             v-model="form.day"
             type="number"
+            @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
         </div>
         <div class="titleRed">不包含空置期</div>
         <van-field
-          v-model="form.begin_date"
-          type="text"
-          label="合同开始时间"
-          placeholder="请选择合同开始时间"
+          v-model="form.end_date"
+          label="合同结束日期"
           readonly
-          @click="timeChoose(1)"
+          type="text"
+          @click="timeChoose(5)"
+          placeholder="请选择合同结束日期"
           required>
         </van-field>
         <div class="first_date">
@@ -182,15 +202,6 @@
           placeholder="请选择物业费付款人"
           @click="selectShow(6,'')"
           readonly
-          required>
-        </van-field>
-        <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(4)"
-          placeholder="请选择签约日期"
           required>
         </van-field>
         <van-field
@@ -396,6 +407,7 @@
           month: '',                    //收房月数
           day: '',                      //收房天数
           begin_date: '',               //合同开始日期
+          end_date: '',                 //合同结束日期
           period_price_arr: [''],       //月单价周期
           price_arr: [''],              //月单价
 
@@ -522,7 +534,21 @@
           this.form.photo = val[1];
         }
       },
-
+      // 结束日期
+      endDate(time, month, day, val) {
+        let params = {};
+        params.begin_date = time;
+        params.month = month;
+        params.day = day;
+        params.type = val;
+        if (time && (month || day)) {
+          this.computedDate(params).then((date) => {
+            this.form.end_date = date;
+          })
+        } else {
+          this.form.end_date = '';
+        }
+      },
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -550,6 +576,7 @@
         switch (this.timeIndex) {
           case 1:
             this.form.begin_date = this.timeValue;
+            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
@@ -569,6 +596,9 @@
             break;
           case 4:
             this.form.sign_date = this.timeValue;
+            break;
+          case 5:
+            this.form.end_date = this.timeValue;
             break;
         }
       },
@@ -761,6 +791,7 @@
             this.form.contract_id = draft.contract_id;
             this.form.house = draft.house;
             this.form.begin_date = draft.begin_date;
+            this.form.end_date = draft.end_date;
             this.form.pay_first_date = draft.pay_first_date;
             this.first_date = [];
             this.first_date.push(draft.pay_first_date);
@@ -847,6 +878,7 @@
         this.form.month = '';
         this.form.day = '';
         this.form.begin_date = '';
+        this.form.end_date = '';
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 
@@ -855,10 +887,6 @@
         this.amountPrice = 1;
         this.form.period_price_arr = [''];
         this.form.price_arr = [''];
-
-        this.form.period_price_arr = [''];
-        this.form.price_arr = [''];
-
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];

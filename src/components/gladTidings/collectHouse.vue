@@ -190,7 +190,7 @@
             } else {
               this.disabled = true;
             }
-            if (data.length === 0 && this.params.page === 1 && res.data.status === 'success') {
+            if (data.length === 0 && (this.params.page === 1 && this.params.page === 2) && res.data.status === 'success') {
               this.showDetail = 2;
             }
             if (res.data.status === 'fail') {
