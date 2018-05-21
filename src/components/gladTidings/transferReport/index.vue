@@ -66,15 +66,6 @@
           placeholder="请选择房现房屋地址"
           required>
         </van-field>
-        <van-field
-          v-model="form.begin_date"
-          type="text"
-          label="合同开始日期"
-          placeholder="获取开始日期"
-          @click="timeChoose(2)"
-          readonly
-          required>
-        </van-field>
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -96,6 +87,15 @@
             placeholder="请填写天数">
           </van-field>
         </div>
+        <van-field
+          v-model="form.begin_date"
+          type="text"
+          label="合同开始日期"
+          placeholder="获取开始日期"
+          @click="timeChoose(2)"
+          readonly
+          required>
+        </van-field>
         <van-field
           v-model="form.end_date"
           type="text"

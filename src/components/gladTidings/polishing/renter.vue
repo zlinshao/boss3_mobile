@@ -552,7 +552,7 @@
             }
             break;
           case 2:
-            this.form.receipt[this.payIndex].city = value;
+            this.form.receipt[this.tabIndex].city = value;
             break;
         }
         this.onCancel();
