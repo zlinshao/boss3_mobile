@@ -260,7 +260,6 @@
             type="number"
             placeholder="请填写中介联系方式"
             icon="clear"
-            @keyup="form.agency_phone = valueLength(form.agency_phone, 11)"
             @click-icon="form.agency_phone = ''"
             required>
           </van-field>
@@ -293,7 +292,7 @@
           <van-field
             v-model="form.receipt[index].date"
             type="number"
-            @keyup="form.receipt[index].date = valueLength(form.receipt[index].num, 4)"
+            @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
             label="年份"
             placeholder="请填写年份">
           </van-field>
@@ -334,7 +333,6 @@
           type="number"
           placeholder="请填写联系方式"
           icon="clear"
-          @keyup="form.phone = valueLength(form.phone, 11)"
           @click-icon="form.phone = ''"
           required>
         </van-field>
@@ -975,7 +973,7 @@
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
 
-            if (typeof draft.receipt !== "string") {
+            if (!draft.receipt && typeof draft.receipt !== "string") {
               this.amountReceipt = draft.receipt_raw.length;
               this.form.receipt = draft.receipt_raw;
             } else {

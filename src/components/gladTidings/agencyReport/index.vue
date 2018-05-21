@@ -105,7 +105,6 @@
           label="中介联系方式"
           placeholder="请填写中介联系方式"
           @click-icon="form.agency_phone = ''"
-          @keyup="form.agency_phone = valueLength(form.agency_phone, 11)"
           required>
         </van-field>
 

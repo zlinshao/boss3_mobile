@@ -557,7 +557,7 @@
             this.form.payWay = draft.payWay;
             this.form.terms = draft.terms;
 
-            if (typeof draft.receipt !== "string") {
+            if (draft.receipt && typeof draft.receipt !== "string") {
               this.amountReceipt = draft.receipt_raw.length;
               this.form.receipt = draft.receipt_raw;
             } else {

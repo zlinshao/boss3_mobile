@@ -230,7 +230,6 @@
             type="number"
             placeholder="请填写中介联系方式"
             icon="clear"
-            @keyup="form.agency_phone = valueLength(form.agency_phone, 11)"
             @click-icon="form.agency_phone = ''"
             required>
           </van-field>
@@ -288,7 +287,6 @@
           label="联系方式"
           type="number"
           placeholder="请填写联系方式"
-          @keyup="form.phone = valueLength(form.phone, 11)"
           icon="clear"
           @click-icon="form.phone = ''"
           required>

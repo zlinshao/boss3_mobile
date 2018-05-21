@@ -294,7 +294,6 @@
           type="number"
           placeholder="请填写联系方式"
           icon="clear"
-          @keyup="form.phone = valueLength(form.phone, 11)"
           @click-icon="form.phone = ''"
           required>
         </van-field>
