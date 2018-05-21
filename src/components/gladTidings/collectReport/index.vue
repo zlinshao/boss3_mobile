@@ -651,9 +651,9 @@
 
       // 日期选择
       timeChoose(val) {
-        setTimeout(() => {
+
           this.timeShow = true;
-        }, 200);
+
         this.timeIndex = val;
       },
       // 日期拼接
@@ -700,9 +700,9 @@
       selectShow(val, index) {
         this.tabs = val;
         this.payIndex = index;
-        setTimeout(() => {
+
           this.selectHide = true;
-        }, 200);
+
         switch (val) {
           case 4:
             this.columns = this.value4;
