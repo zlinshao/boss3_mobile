@@ -44,14 +44,14 @@
           </van-field>
           <van-field
             v-model="form.receipt[index].date"
-             @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
+            @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
             type="number"
             label="年份"
             placeholder="请填写年份">
           </van-field>
           <van-field
             v-model="form.receipt[index].num"
-             @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
+            @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
             type="text"
             label="编号"
             placeholder="请填写编号">
@@ -632,8 +632,15 @@
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
-                  if (item !== 'album' && item !== 'customers') {
+                  if (item !== 'album' && item !== 'customers' && item !== 'receipt') {
                     this.form[key] = data[item] !== null ? data[item] : '';
+                  }
+                  if (item === 'receipt') {
+                    if (data[item] && typeof data[item] !== "string") {
+                      this.form.receipt = data[item];
+                    } else {
+                      this.receiptNum(data[item], 'receipt');
+                    }
                   }
                   if (item === 'customers') {
                     this.cardName = [];
