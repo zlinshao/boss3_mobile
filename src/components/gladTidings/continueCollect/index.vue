@@ -27,15 +27,6 @@
           placeholder="请选择签约日期"
           required>
         </van-field>
-        <van-field
-          v-model="form.begin_date"
-          type="text"
-          label="合同开始时间"
-          placeholder="请选择合同开始时间"
-          readonly
-          @click="timeChoose(1)"
-          required>
-        </van-field>
         <div class="first_date month">
           <van-field
             style="width: 110px;"
@@ -58,6 +49,15 @@
           </van-field>
         </div>
         <div class="titleRed">不包含空置期</div>
+        <van-field
+          v-model="form.begin_date"
+          type="text"
+          label="合同开始时间"
+          placeholder="请选择合同开始时间"
+          readonly
+          @click="timeChoose(1)"
+          required>
+        </van-field>
         <van-field
           v-model="form.end_date"
           label="合同结束日期"

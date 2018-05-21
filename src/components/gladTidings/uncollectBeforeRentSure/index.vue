@@ -29,15 +29,6 @@
           placeholder="请选择签约日期"
           required>
         </van-field>
-        <van-field
-          v-model="form.begin_date"
-          label="合同开始日期"
-          readonly
-          type="text"
-          @click="timeChoose(3)"
-          placeholder="请选择合同开始日期"
-          required>
-        </van-field>
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -59,6 +50,15 @@
             placeholder="请填写天数">
           </van-field>
         </div>
+        <van-field
+          v-model="form.begin_date"
+          label="合同开始日期"
+          readonly
+          type="text"
+          @click="timeChoose(3)"
+          placeholder="请选择合同开始日期"
+          required>
+        </van-field>
         <van-field
           v-model="form.end_date"
           label="合同结束日期"
