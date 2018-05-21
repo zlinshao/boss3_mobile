@@ -973,7 +973,7 @@
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
 
-            if (!draft.receipt && typeof draft.receipt !== "string") {
+            if (typeof draft.receipt !== "string") {
               this.amountReceipt = draft.receipt_raw.length;
               this.form.receipt = draft.receipt_raw;
             } else {
