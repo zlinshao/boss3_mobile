@@ -400,13 +400,13 @@ export default new Router({
       hidden: false,
       component: Warning
     },
-    {
-      path: '/questionnaire',
-      name: '问卷调查',
-      meta: {title: '问卷调查'},
-      hidden: 'glad',
-      component: Questionnaire
-    },
+    // {
+    //   path: '/questionnaire',
+    //   name: '问卷调查',
+    //   meta: {title: '问卷调查'},
+    //   hidden: 'glad',
+    //   component: Questionnaire
+    // },
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',
