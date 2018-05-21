@@ -543,9 +543,13 @@
       },
 
       // 收据编号
-      receiptNum() {
+      receiptNum(val1, val2) {
         this.amountReceipt = 1;
-        this.form.receipt = [{city: '', date: '', num: ''}];
+        if (val2 === 'receipt') {
+          this.form.receipt = [{city: '', date: '', num: val1}];
+        } else {
+          this.form.receipt = [{city: '', date: '', num: ''}];
+        }
         // 收据编号默认日期
         let date = new Date();
         this.form.receipt[0].date = date.getFullYear();
@@ -921,8 +925,12 @@
             this.form.deposit = draft.deposit;
             this.form.discount = draft.discount;
 
-            this.amountReceipt = draft.receipt.length;
-            this.form.receipt = draft.receipt;
+            if (draft.receipt_raw && typeof draft.receipt_raw !== "string") {
+              this.amountReceipt = draft.receipt_raw.length;
+              this.form.receipt = draft.receipt_raw;
+            } else {
+              this.receiptNum(draft.receipt, 'receipt');
+            }
 
             this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {

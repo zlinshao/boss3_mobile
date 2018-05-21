@@ -555,8 +555,12 @@
             this.form.payWay = draft.payWay;
             this.form.terms = draft.terms;
 
-            this.amountReceipt = draft.receipt.length;
-            this.form.receipt = draft.receipt;
+            if (draft.receipt_raw && typeof draft.receipt_raw !== "string") {
+              this.amountReceipt = draft.receipt_raw.length;
+              this.form.receipt = draft.receipt_raw;
+            } else {
+              this.receiptNum(draft.receipt, 'receipt');
+            }
 
             this.form.contract_id = draft.contract_id;
             this.helperBulletin(draft.contract_id);
@@ -588,6 +592,7 @@
             this.form.staff_id = draft.staff_id;
             this.form.department_id = draft.department_id;
           } else {
+            this.receiptNum();
             this.form.id = ''
           }
         })

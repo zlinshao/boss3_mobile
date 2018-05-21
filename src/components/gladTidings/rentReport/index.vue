@@ -574,7 +574,6 @@
           for (let i = 0; i < res.data.length; i++) {
             this.cities.push(res.data[i].dictionary_name);
           }
-          this.receiptNum();
         });
         //房东租客
         this.dictionary(449, 1).then((res) => {
@@ -598,9 +597,13 @@
       },
 
       // 收据编号
-      receiptNum() {
+      receiptNum(val1, val2) {
         this.amountReceipt = 1;
-        this.form.receipt = [{city: '', date: '', num: ''}];
+        if (val2 === 'receipt') {
+          this.form.receipt = [{city: '', date: '', num: val1}];
+        } else {
+          this.form.receipt = [{city: '', date: '', num: ''}];
+        }
         // 收据编号默认日期
         let date = new Date();
         this.form.receipt[0].date = date.getFullYear();
@@ -971,9 +974,12 @@
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
 
-            this.amountReceipt = draft.receipt.length;
-            this.form.receipt = draft.receipt;
-
+            if (draft.receipt_raw && typeof draft.receipt_raw !== "string") {
+              this.amountReceipt = draft.receipt_raw.length;
+              this.form.receipt = draft.receipt_raw;
+            } else {
+              this.receiptNum(draft.receipt, 'receipt');
+            }
             this.is_agency = draft.is_agency;
             this.cusFrom = draft.is_agency === 1 ? true : false;
             this.form.agency_name = draft.agency_name;
