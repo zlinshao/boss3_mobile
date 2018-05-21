@@ -292,11 +292,13 @@
           <van-field
             v-model="form.receipt[index].date"
             type="number"
+            @keyup="valueLength(index, 1)"
             label="年份"
             placeholder="请填写年份">
           </van-field>
           <van-field
             v-model="form.receipt[index].num"
+            @keyup="valueLength(index, 2)"
             type="text"
             label="编号"
             placeholder="请填写编号">
@@ -612,6 +614,17 @@
             this.receiptCity = res.data.data.data[2] + '市';
           }
         });
+      },
+
+      valueLength(index, val) {
+        switch (val) {
+          case 1:
+            this.form.receipt[index].date = this.form.receipt[index].date.slice(0, 4);
+            break;
+          case 2:
+            this.form.receipt[index].num = this.form.receipt[index].num.slice(0, 7);
+            break;
+        }
       },
 
       searchSelect(val) {

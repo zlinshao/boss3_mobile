@@ -492,7 +492,7 @@
     activated() {
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
-        this.dicts(newID.newID);
+        this.rentDetail(newID.newID);
       }
       this.houseInfo();
       this.routerIndex('');

@@ -630,7 +630,7 @@
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
-                  if (item !== 'album' && item !== 'customers') {`                  ```
+                  if (item !== 'album' && item !== 'customers') {
                     this.form[key] = data[item] !== null ? data[item] : '';
                   }
                   if (item === 'customers') {
@@ -649,7 +649,7 @@
                       this.sexs[i] = cus.sex !== null ? String(cus.sex) : '';
                       this.form.customers[i].idtype = cus.idtype !== null ? cus.idtype : '';
                       this.form.customers[i].idcard = cus.idcard !== null ? cus.idcard : '';
-                      for (let j = 0; j < this.pro54ve_all.length; j++) {
+                      for (let j = 0; j < this.prove_all.length; j++) {
                         if (this.prove_all[j].id === cus.idtype) {
                           this.cardName[i] = this.prove_all[i].dictionary_name;
                         }
