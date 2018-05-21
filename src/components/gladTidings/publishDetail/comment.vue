@@ -131,7 +131,7 @@
       this.dict();
     },
     activated() {
-
+      this.haveInHand = true;
       this.pitch = this.$route.query.data;
       this.detail = this.$route.query.detail;
       this.address = this.$route.query.address;

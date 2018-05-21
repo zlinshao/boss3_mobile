@@ -998,7 +998,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo(true, true);
+        this.userInfo(true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';

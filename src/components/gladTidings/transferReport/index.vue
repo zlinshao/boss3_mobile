@@ -498,7 +498,6 @@
         value8: [],
 
         isValue1: true,
-        isValue2: false,
       }
     },
     mounted() {
@@ -515,8 +514,8 @@
       this.ddRent('');
     },
     methods: {
-      userInfo(val1, val2) {
-        if (val1 && val2) {
+      userInfo(val1) {
+        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
