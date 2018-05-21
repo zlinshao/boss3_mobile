@@ -7,9 +7,20 @@
     <div class="exercise" v-if="!message">
       <div v-for="(key,index) in question_set">
         <div class="subject" v-for="(key1,index1) in key">
-          <p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>
+          <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
+          <van-row>
+            <val-col span="2" style="float: left">
+              <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
+            </val-col>
+            <van-col span="18" style="float: initial;display: inline-block;">
+              <p v-html="key1.stem"></p>
+            </van-col>
+            <van-col span="3" style="float: right;">
+              <p style="width: 45px;font-size: 12px;color: #aaaaaa;line-height: 20px;">{{questionType[index]}}</p>
+            </van-col>
+          </van-row>
           <div class="subjectTitle">
-            <div class="subjectA" v-html="key1.stem"></div>
+            <!--<div class="subjectA" v-html="key1.stem"></div>-->
             <div class="subjectB" v-if="index === '153' || index === '156'">
               <van-radio-group v-model="answer[key1.id]">
                 <van-radio v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
@@ -32,13 +43,16 @@
                   type="textarea"
                   placeholder="请简答"
                   icon="clear"
-                  @click-icon="answer[key1.id]"
+                  @click-icon="answer[key1.id]='' "
                   required>
                 </van-field>
               </van-cell-group>
             </div>
           </div>
         </div>
+      </div>
+      <div style="text-align: center;margin-top: 15px;">
+        <van-button type="primary" size="normal" style="padding: 0px 20px;" @click="onSubmit">提交</van-button>
       </div>
     </div>
     <div class="exercise msg" v-if="message">
@@ -48,38 +62,21 @@
 </template>
 
 <script>
+  import {Dialog} from 'vant';
+
   export default {
     name: "index",
     data() {
       return {
         urls: globalConfig.server,
-        form: {
-          contents: '',
-        },
-        list: [
-          {
-            A: '发的很快就',
-            id: 'A',
-          }, {
-            A: '范德萨发生',
-            id: 'B',
-          }, {
-            A: '广泛大概的',
-            id: 'C',
-          }, {
-            A: '和换个话题',
-            id: 'D',
-          }
-        ],
-
         radio: '',
         result: [],
         paper_name: '',         //问卷标题
         questionType: {},       //题型
         question_set: {},       //试题
         answer: {},             //答案
-
         message: '',
+        questionnaire_id: '14',
       }
     },
     mounted() {
@@ -90,7 +87,7 @@
         }
         this.questionType = sub;
       });
-      this.$http.get(this.urls + 'questionnaire/14').then((res) => {
+      this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
         if (res.data.code === '30000') {
           this.question_set = res.data.data.question_set;
           this.paper_name = res.data.data.paper_name;
@@ -103,6 +100,27 @@
     methods: {
       onResult(id) {
         this.answer[id] = this.result;
+      },
+      onSubmit() {
+        Dialog.confirm({
+          title: '提交问卷',
+          message: '确认提交问卷吗'
+        }).then(() => {
+          this.$http.post(globalConfig.server + 'exam/result', {
+            exam_id: this.questionnaire_id,
+            answer: this.answer,
+            is_questionnaire: true
+          }).then((res) => {
+            if (res.data.code === '36010') {
+              alert("提交成功===" + res.data.msg);
+            } else {
+              alert("提交失败===" + res.data.msg);
+            }
+          });
+        }).catch(() => {
+
+        });
+
       },
     },
   }
@@ -151,8 +169,12 @@
       background-color: #FFFFFF;
       padding: .2rem;
       .subject {
+        border-top: 1px solid #dfe6fb;
+        padding-top: 15px;
+        padding-bottom: 5px;
         .subjectTitle {
-          margin-left: .33rem;
+          margin-left: .5rem;
+
           .subjectA {
             line-height: .4rem;
             margin: .2rem 0;
