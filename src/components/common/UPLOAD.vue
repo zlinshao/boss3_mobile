@@ -1,7 +1,6 @@
 <template>
   <div>
     <div id="container">
-
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style=" position: relative;">
@@ -174,7 +173,9 @@
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
               _this.isUploading = true;
-
+              up.setOption('multipart_params', {
+                token: _this.token,               // 上传凭证
+              });
             },
             'UploadProgress': function (up, file) {
 
@@ -208,7 +209,7 @@
 
                   let object = {};
                   object.id = res.data.data.id;
-                  object.name = res.data.data.name;
+                  object.name = file.id;
                   _this.imgArray.push(object);
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }

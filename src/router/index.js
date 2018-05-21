@@ -12,7 +12,7 @@ import Comments from '@/components/examine/writings/comments.vue'
 // import CreditCard from '@/components/examine/creditCard/index.vue'
 
 // 问卷调查
-// import Questionnaire from '@/components/examine/questionnaire/index.vue'
+import Questionnaire from '@/components/examine/questionnaire/index.vue'
 
 import CollectReport from '../components/gladTidings/collectReport/index.vue'
 import Quality from '../components/gladTidings/quality/index.vue'
@@ -187,7 +187,7 @@ export default new Router({
       name: '未收先租',
       hidden: 'glad',
       icon: 'iconfont icon-weishouxianzubaobei',
-      meta: {title: '未收先租未知'},
+      meta: {title: '未收先租'},
       component: UncollectBeforeRent
     },
     {

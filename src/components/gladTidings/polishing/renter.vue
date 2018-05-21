@@ -26,18 +26,41 @@
           icon="clear"
           @click-icon="form.penalty = ''">
         </van-field>
-        <div class="month">
-          <van-field
-            v-model="form.receipt"
-            label="收据编号"
-            type="text"
-            placeholder="请填写收据编号"
-            icon="clear"
-            @click-icon="form.receipt = ''">
-          </van-field>
-        </div>
-        <div class="titleRed">城市首字母缩写+年份(4位)+7位数字</div>
       </van-cell-group>
+
+      <div class="changes" v-for="(key,index) in amountReceipt">
+        <div class="paddingTitle">
+          <span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>
+          <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,2)">删除</span>
+        </div>
+        <van-cell-group>
+          <van-field
+            @click="selectShow(2,index)"
+            v-model="form.receipt[index].city"
+            label="城市"
+            type="text"
+            readonly
+            placeholder="请选择城市">
+          </van-field>
+          <van-field
+            v-model="form.receipt[index].date"
+            @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
+            type="number"
+            label="年份"
+            placeholder="请填写年份">
+          </van-field>
+          <van-field
+            v-model="form.receipt[index].num"
+            @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
+            type="text"
+            label="编号"
+            placeholder="请填写编号">
+          </van-field>
+        </van-cell-group>
+      </div>
+      <div @click="addAmount(2)" class="addInput">
+        +增加收据编号
+      </div>
 
       <div class="changes" v-for="(key,index) in amount">
         <div class="paddingTitle">
@@ -281,15 +304,20 @@
 
         cardName: [],
 
+        amountReceipt: 1,                   //收据编号
+        receiptDate: '',                    //收据编号年份
+        receiptCity: '',                    //收据编号城市
+        cities: [],                         //城市
+
         address: '',
-        contract_id: '',                  //合同id
+        contract_id: '',                    //合同id
         sexs: [''],
         form: {
           is_submit: 1,
           penalty: '',                      //违约金
           house_id: '',
-          contract_number: '',            //合同编号
-          receipt: '',                    //收据编号
+          contract_number: '',              //合同编号
+          receipt: [{city: '', date: '', num: ''}], //收据编号
           customers: [{
             id: '',                         //客户ID
             name: '',                       //客户姓名
@@ -299,8 +327,8 @@
             idcard: '',                     //证件号码
           }],
           water: '',                        //水表底数
-          electricity_peak: '',                  //电表底数
-          electricity_valley: '',                  //电表底数
+          electricity_peak: '',             //电表底数
+          electricity_valley: '',           //电表底数
           gas: '',                          //燃气表底数
           public_fee: '',                   //公摊费用
           manage_fee: '',                   //管理费
@@ -324,15 +352,15 @@
           department_name: '',              //部门name
         },
         pics: {
-          identity_photo: {},                        //证件照片
+          identity_photo: {},               //证件照片
           photo: {},                        //银行卡照片
-          water_photo: {},                        //合同照片
-          electricity_photo: {},                        //水表照片
-          gas_photo: {},                        //电表照片
-          checkin_photo: {},                        //气表照片
-          certificate_photo: {},                        //交接单照片
-          deposit_photo: {},                        //委托书照片
-          other_photo: {},                        //押金照片
+          water_photo: {},                  //合同照片
+          electricity_photo: {},            //水表照片
+          gas_photo: {},                    //电表照片
+          checkin_photo: {},                //气表照片
+          certificate_photo: {},            //交接单照片
+          deposit_photo: {},                //委托书照片
+          other_photo: {},                  //押金照片
         },
       }
     },
@@ -358,6 +386,14 @@
         this.form.department_name = '';
       },
       dict() {
+        // 城市
+        this.dictionary(306, 1).then((res) => {
+          this.cities = [];
+          for (let i = 0; i < res.data.length; i++) {
+            this.cities.push(res.data[i].dictionary_name);
+          }
+          this.receiptNum();
+        });
         // 证件类型
         this.dictionary(409, 1).then((res) => {
           this.prove_name = [];
@@ -367,26 +403,55 @@
           }
         });
       },
+      receiptNum(val1, val2) {
+        this.amountReceipt = 1;
+        if (val2 === 'receipt') {
+          this.form.receipt = [{city: '', date: '', num: val1}];
+        } else {
+          this.form.receipt = [{city: '', date: '', num: ''}];
+        }
+        // 收据编号默认日期
+        let date = new Date();
+        this.form.receipt[0].date = date.getFullYear();
+        this.receiptDate = date.getFullYear();
+        // 收据编号默认城市
+        this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
+          if (res.data.code === '1000120') {
+            this.form.receipt[0].city = res.data.data.data[2] + '市';
+            this.receiptCity = res.data.data.data[2] + '市';
+          }
+        });
+      },
       // 增加附属租客
       addAmount(val) {
-        this.amount++;
-        let data = {
-          id: '',                       //客户ID
-          name: '',                     //客户姓名
-          phone: '',                    //客户电话
-          sex: '',                      //性别
-          idtype: '',                   //证件类型
-          idcard: '',                   //证件号码
-        };
-        this.sexs.push('');
-        this.form.customers.push(data);
+        if (val === 1) {
+          this.amount++;
+          let data = {
+            id: '',                       //客户ID
+            name: '',                     //客户姓名
+            phone: '',                    //客户电话
+            sex: '',                      //性别
+            idtype: '',                   //证件类型
+            idcard: '',                   //证件号码
+          };
+          this.sexs.push('');
+          this.form.customers.push(data);
+        } else {
+          this.amountReceipt++;
+          this.form.receipt.push({city: this.receiptCity, date: this.receiptDate, num: ''});
+        }
       },
       // 删除客户
       deleteAmount(index, val) {
-        if (this.amount > 1) {
-          this.amount--;
-          this.form.customers.splice(index, 1);
-          this.sexs.splice(index, 1);
+        if (val === 1) {
+          if (this.amount > 1) {
+            this.amount--;
+            this.form.customers.splice(index, 1);
+            this.sexs.splice(index, 1);
+          }
+        } else {
+          this.amountReceipt--;
+          this.form.receipt.splice(index, 1);
         }
       },
 
@@ -413,7 +478,9 @@
       },
       // 日期选择
       timeChoose(val) {
-        this.timeShow = true;
+        setTimeout(() => {
+          this.timeShow = true;
+        }, 200);
       },
       // 日期拼接
       monthDate(peaker) {
@@ -461,10 +528,15 @@
       selectShow(val, index) {
         this.tabs = val;
         this.tabIndex = index;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 1:
             this.columns = this.prove_name;
+            break;
+          case 2:
+            this.columns = this.cities;
             break;
         }
       },
@@ -478,6 +550,9 @@
                 this.form.customers[this.tabIndex].idtype = this.prove_all[i].id;
               }
             }
+            break;
+          case 2:
+            this.form.receipt[this.tabIndex].city = value;
             break;
         }
         this.onCancel();
@@ -557,8 +632,17 @@
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
-                  if (item !== 'album' && item !== 'customers') {
+                  if (item !== 'album' && item !== 'customers' && item !== 'receipt') {
                     this.form[key] = data[item] !== null ? data[item] : '';
+                  }
+                  if (item === 'receipt') {
+                    this.amountReceipt = 1;
+                    if (data[item] && typeof data[item] !== "string") {
+                      this.form.receipt = data[item].receipt_raw;
+                      this.amountReceipt = data[item].receipt_raw.length;
+                    } else {
+                      this.receiptNum(data[item], 'receipt');
+                    }
                   }
                   if (item === 'customers') {
                     this.cardName = [];
@@ -613,7 +697,9 @@
         this.contract_id = '';
         this.sexs = [''];
         this.form.house_id = '';
-        this.form.receipt = '';
+
+        this.receiptNum();
+
         this.form.contract_number = '';
         this.form.penalty = '';
         this.form.customers = [{

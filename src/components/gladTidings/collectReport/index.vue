@@ -11,6 +11,15 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
+        <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(4)"
+          placeholder="请选择签约日期日期"
+          required>
+        </van-field>
         <div class="first_date month">
           <van-field
             style="width: 110px;"
@@ -21,32 +30,44 @@
           <van-field
             v-model="form.month"
             type="number"
+            @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class=""
             v-model="form.day"
             type="number"
+            @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
         </div>
         <div class="titleRed">不包含空置期</div>
         <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
+          v-model="form.begin_date"
           type="text"
-          @click="timeChoose(4)"
-          placeholder="请选择签约日期"
+          label="空置期开始"
+          placeholder="请选择空置期开始日期"
+          readonly
+          @click="timeChoose(1)"
           required>
         </van-field>
         <van-field
           v-model="form.vacancy"
           label="空置期(天)"
           type="number"
+          @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
           placeholder="请填写空置期"
           icon="clear"
           @click-icon="form.vacancy = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.end_date_vacant"
+          type="text"
+          label="空置期结束"
+          placeholder="请选择空置期结束日期"
+          readonly
+          @click="timeChoose(6)"
           required>
         </van-field>
         <van-field
@@ -67,12 +88,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form.begin_date"
-          type="text"
-          label="空置期开始"
-          placeholder="请选择空置期开始日期"
+          v-model="form.end_date"
+          label="合同结束日期"
           readonly
-          @click="timeChoose(1)"
+          type="text"
+          @click="timeChoose(7)"
+          placeholder="请选择合同结束日期"
           required>
         </van-field>
         <div class="first_date">
@@ -455,6 +476,7 @@
             id: '',
             name: '',
           },
+          sign_date: '',                //签约日期
           month: '',                    //收房月数
           day: '',                      //收房天数
           is_agency: 0,                 //是否中介
@@ -462,14 +484,17 @@
           agency_price: '',             //中介费
           agency_user_name: '',         //中介人
           agency_phone: '',             //中介手机号
-          begin_date: '',               //合同开始日期
+          begin_date: '',               //空置期开始日期
+          end_date: '',                 //合同结束日期
+          vacancy: '',                  //空置期
+          end_date_vacant: '',          //空置期结束日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
           pay_way_arr: [''],            //付款方式
           period_pay_arr: [''],         //付款方式周期
-          vacancy: '',                  //空置期
+
           vacancy_way: '',              //空置期安排方式
           vacancy_other: '',            //空置期安排方式 随便填
           warranty: '',                 //保修期月
@@ -477,7 +502,6 @@
           is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
           property_payer: '',           //物业费付款人
-          sign_date: '',                //签约日期
           name: '',                     //房东姓名
           phone: '',                    //电话号码
           purchase_way: 509,            //支付方式
@@ -509,7 +533,6 @@
         value7: [],
 
         isValue1: true,
-        isValue2: false,
       }
     },
     watch: {
@@ -537,8 +560,8 @@
     },
 
     methods: {
-      userInfo(val1, val2) {
-        if (val1 && val2) {
+      userInfo(val1) {
+        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
@@ -628,7 +651,9 @@
 
       // 日期选择
       timeChoose(val) {
-        this.timeShow = true;
+        setTimeout(() => {
+          this.timeShow = true;
+        },200);
         this.timeIndex = val;
       },
       // 日期拼接
@@ -641,6 +666,7 @@
         switch (this.timeIndex) {
           case 1:
             this.form.begin_date = this.timeValue;
+            this.endDate(this.timeValue, '', this.form.vacancy, 1);
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
@@ -661,13 +687,22 @@
           case 4:
             this.form.sign_date = this.timeValue;
             break;
+          case 6:
+            this.form.end_date_vacant = this.timeValue;
+            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
+            break;
+          case 7:
+            this.form.end_date = this.timeValue;
+            break;
         }
       },
       // select 显示
       selectShow(val, index) {
         this.tabs = val;
         this.payIndex = index;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        },200);
         switch (val) {
           case 4:
             this.columns = this.value4;
@@ -754,6 +789,7 @@
         }
         this.countDate(val, per);
       },
+
       // 日期计算
       countDate(val, per) {
         this.$http.get(this.urls + '/bulletin/helper/date', {
@@ -770,6 +806,37 @@
             }
           }
         })
+      },
+
+      // 结束日期
+      endDate(time, month, day, val) {
+        let params = {};
+        if (val === 1) {
+          params.begin_date = time;
+          params.vacancy = day;
+          params.type = val;
+          if (time && day) {
+            this.computedDate(params).then((date) => {
+              this.form.end_date_vacant = date;
+              this.endDate(date, this.form.month, this.form.day, 2);
+            })
+          } else {
+            this.form.end_date_vacant = '';
+            this.endDate('', this.form.month, this.form.day, 2);
+          }
+        } else {
+          params.begin_date = time;
+          params.month = month;
+          params.day = day;
+          params.type = val;
+          if (time && (month || day)) {
+            this.computedDate(params).then((date) => {
+              this.form.end_date = date;
+            })
+          } else {
+            this.form.end_date = '';
+          }
+        }
       },
 
       saveCollect(val) {
@@ -834,13 +901,12 @@
         if (t.tops === '') {
           this.stick();
         }
-        this.userInfo(this.isValue1, this.isValue2);
+        this.userInfo(this.isValue1);
       },
 
       // 草稿
       manuscript(val) {
-        this.isValue2 = true;
-        this.userInfo(true, true);
+        this.userInfo(true);
         let type;
         if (val !== '') {
           type = 'bulletin/collect/' + val;
@@ -855,10 +921,16 @@
             this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.house = draft.house;
+
+            this.form.sign_date = draft.sign_date;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
 
             this.form.begin_date = draft.begin_date;
+            this.form.end_date = draft.end_date;
+            this.form.vacancy = draft.vacancy;
+            this.form.end_date_vacant = draft.end_date_vacant;
+
             this.form.pay_first_date = draft.pay_first_date;
             this.first_date = [];
             this.first_date.push(draft.pay_first_date);
@@ -896,7 +968,6 @@
             this.form.pay_way_arr = draft.pay_way_arr;
 
             this.form.deposit = draft.deposit;
-            this.form.vacancy = draft.vacancy;
             this.form.vacancy_way = draft.vacancy_way;
 
             for (let j = 0; j < this.dictValue7.length; j++) {
@@ -917,7 +988,7 @@
             }
             this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
-            this.form.sign_date = draft.sign_date;
+
             this.form.name = draft.name;
             this.form.phone = draft.phone;
             this.form.bank = draft.bank;
@@ -951,7 +1022,7 @@
           this.isClear = false;
         });
         $('.imgItem').remove();
-        this.userInfo(true, true);
+        this.userInfo(true);
         this.joint = false;
         this.form.id = '';
         this.form.house.id = '';
@@ -960,6 +1031,8 @@
         this.form.day = '';
 
         this.form.begin_date = '';
+        this.form.end_date = '';
+        this.form.end_date_vacant = '';
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 

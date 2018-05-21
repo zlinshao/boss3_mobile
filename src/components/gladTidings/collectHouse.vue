@@ -50,7 +50,8 @@
             </div>
           </li>
         </ul>
-        <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
+        <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮
+        </div>
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 2">暂无相关信息</div>
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 1">
           <van-loading type="spinner" color="black"/>
@@ -180,7 +181,11 @@
                   this.showInfo.push(data[i].id);
                   list.house_id = data[i].id;
                   list.house_name = data[i].name;
-                  list.is_agency = data[i].house_res.is_agency;
+                  if (data[i].house_res) {
+                    list.is_agency = data[i].house_res.is_agency;
+                  } else {
+                    list.is_agency = 0;
+                  }
                   this.lists.push(list);
                 }
                 if ((type === 'renter' || type === 'lord' || type === 'renter1' || type === 'lord1') && data[i].lords.length === 0 && data[i].renters.length === 0) {
@@ -190,7 +195,7 @@
             } else {
               this.disabled = true;
             }
-            if (data.length === 0 && this.params.page === 1 && res.data.status === 'success') {
+            if (data.length === 0 && this.lists.length === 0 && res.data.status === 'success') {
               this.showDetail = 2;
             }
             if (res.data.status === 'fail') {

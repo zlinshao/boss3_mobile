@@ -9,6 +9,15 @@
           placeholder="请填写房屋地址"
           required>
         </van-field>
+        <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(1)"
+          placeholder="请选择签约日期"
+          required>
+        </van-field>
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -19,12 +28,14 @@
           <van-field
             v-model="form.month"
             type="number"
+            @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class="twoBorder"
             v-model="form.day"
             type="number"
+            @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
         </div>
@@ -35,6 +46,15 @@
           type="text"
           @click="timeChoose(3)"
           placeholder="请选择合同开始日期"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.end_date"
+          label="合同结束日期"
+          readonly
+          type="text"
+          @click="timeChoose(4)"
+          placeholder="请选择合同结束日期"
           required>
         </van-field>
       </van-cell-group>
@@ -240,6 +260,7 @@
             required>
           </van-field>
         </div>
+
         <van-field
           v-model="property_name"
           label="物业费付款人"
@@ -250,21 +271,42 @@
           required>
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
-        <van-field
-          v-model="form.receipt"
-          label="收据编号"
-          type="text"
-          placeholder="请填写收据编号">
-        </van-field>
-        <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(1)"
-          placeholder="请选择签约日期"
-          required>
-        </van-field>
+
+      </van-cell-group>
+      <div class="changes" v-for="(key,index) in amountReceipt">
+        <div class="paddingTitle">
+          <span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>
+          <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,4)">删除</span>
+        </div>
+        <van-cell-group>
+          <van-field
+            @click="selectShow(4,index)"
+            v-model="form.receipt[index].city"
+            label="城市"
+            type="text"
+            readonly
+            placeholder="请选择城市">
+          </van-field>
+          <van-field
+            v-model="form.receipt[index].date"
+             @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
+            type="number"
+            label="年份"
+            placeholder="请填写年份">
+          </van-field>
+          <van-field
+            v-model="form.receipt[index].num"
+             @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
+            type="text"
+            label="编号"
+            placeholder="请填写编号">
+          </van-field>
+        </van-cell-group>
+      </div>
+      <div @click="priceAmount(4)" class="addInput">
+        +增加收据编号
+      </div>
+      <van-cell-group>
         <van-field
           v-model="form.retainage_date"
           label="尾款补齐日期"
@@ -405,6 +447,11 @@
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
 
+        amountReceipt: 1,                  //收据编号
+        receiptDate: '',                   //收据编号年份
+        receiptCity: '',                   //收据编号城市
+        cities: [],                        //城市
+
         cusFrom: false,                //客户来源
         corp: true,                    //公司单
         other_fee_status: false,
@@ -418,6 +465,7 @@
           day: '',                      //租房天数
           sign_date: '',                //签约日期
           begin_date: '',               //合同开始日期
+          end_date: '',                 //签约结束日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
 
@@ -443,7 +491,7 @@
           is_corp: 1,                   //是否公司单  0个人1公司
           discount: 0,                  //让价金额
           deposit: '',                  //押金
-          receipt: '',                  //收据编号
+          receipt: [{city: '', date: '', num: ''}], //收据编号
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
@@ -467,7 +515,6 @@
         value8: [],
 
         isValue1: true,
-        isValue2: false,
       }
     },
     watch: {
@@ -494,8 +541,8 @@
       this.ddRent('');
     },
     methods: {
-      userInfo(val1, val2) {
-        if (val1 && val2) {
+      userInfo(val1) {
+        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
@@ -504,6 +551,14 @@
         }
       },
       dicts(val) {
+        // 城市
+        this.dictionary(306, 1).then((res) => {
+          this.cities = [];
+          for (let i = 0; i < res.data.length; i++) {
+            this.cities.push(res.data[i].dictionary_name);
+          }
+          this.receiptNum();
+        });
         //房东租客
         this.dictionary(449, 1).then((res) => {
           this.value6 = [];
@@ -525,6 +580,28 @@
 
         });
       },
+
+      // 收据编号
+      receiptNum(val1, val2) {
+        this.amountReceipt = 1;
+        if (val2 === 'receipt') {
+          this.form.receipt = [{city: '', date: '', num: val1}];
+        } else {
+          this.form.receipt = [{city: '', date: '', num: ''}];
+        }
+        // 收据编号默认日期
+        let date = new Date();
+        this.form.receipt[0].date = date.getFullYear();
+        this.receiptDate = date.getFullYear();
+        // 收据编号默认城市
+        this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
+          if (res.data.code === '1000120') {
+            this.form.receipt[0].city = res.data.data.data[2] + '市';
+            this.receiptCity = res.data.data.data[2] + '市';
+          }
+        });
+      },
+
       fee_status(val) {
         if (!val) {
           this.form.other_fee_name = '';
@@ -569,7 +646,9 @@
 
       // 日期选择
       timeChoose(val) {
-        this.timeShow = true;
+        setTimeout(() => {
+          this.timeShow = true;
+        }, 200);
         this.timeIndex = val;
       },
       // 日期拼接
@@ -588,6 +667,7 @@
             break;
           case 3:
             this.form.begin_date = this.timeValue;
+            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
             this.form.period_price_arr[0] = this.form.month;
             this.form.period_pay_arr[0] = this.form.month;
             this.first_date = [];
@@ -605,7 +685,9 @@
       selectShow(val, index) {
         this.tabs = val;
         this.payIndex = index;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 1:
             this.columns = this.value6;
@@ -615,6 +697,9 @@
             break;
           case 3:
             this.columns = dicts.value9;
+            break;
+          case 4:
+            this.columns = this.cities;
             break;
         }
       },
@@ -640,6 +725,9 @@
           case 3:
             this.form.pay_way_bet = value;
             break;
+          case 4:
+            this.form.receipt[this.payIndex].city = value;
+            break;
         }
         this.selectHide = false;
       },
@@ -654,11 +742,14 @@
           this.amountPay++;
           this.form.period_pay_arr.push('');
           this.form.pay_way_arr.push('');
-        } else {
+        } else if (val === 3) {
           this.amountMoney++;
           this.form.money_sep.push('');
           this.form.money_way.push('');
           this.moneyNum.push('');
+        } else {
+          this.amountReceipt++;
+          this.form.receipt.push({city: this.receiptCity, date: this.receiptDate, num: ''});
         }
       },
       // 删除月单价
@@ -675,11 +766,14 @@
           this.form.pay_way_arr.splice(index, 1);
           this.datePay.splice(index, 1);
           this.periodDate(val);
-        } else {
+        } else if (val === 3) {
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
           this.form.money_way.splice(index, 1);
           this.moneyNum.splice(index, 1);
+        } else {
+          this.amountReceipt--;
+          this.form.receipt.splice(index, 1);
         }
       },
       // 日期计算
@@ -711,7 +805,21 @@
           }
         })
       },
-
+      // 结束日期
+      endDate(time, month, day, val) {
+        let params = {};
+        params.begin_date = time;
+        params.month = month;
+        params.day = day;
+        params.type = val;
+        if (time && (month || day)) {
+          this.computedDate(params).then((date) => {
+            this.form.end_date = date;
+          })
+        } else {
+          this.form.end_date = '';
+        }
+      },
       saveCollect(val) {
         if (this.picStatus) {
           if (this.haveInHand) {
@@ -765,12 +873,11 @@
         if (t.tops === '') {
           this.stick();
         }
-        this.userInfo(this.isValue1, this.isValue2);
+        this.userInfo(this.isValue1);
       },
 
       rentDetail(val) {
-        this.isValue2 = true;
-        this.userInfo(true, true);
+        this.userInfo(true);
         let type;
         if (val !== '') {
           type = 'bulletin/rent/' + val;
@@ -849,14 +956,21 @@
 
             this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
-            this.form.receipt = draft.receipt;
+
+            if (typeof draft.receipt !== "string") {
+              this.amountReceipt = draft.receipt_raw.length;
+              this.form.receipt = draft.receipt_raw;
+            } else {
+              this.receiptNum(draft.receipt, 'receipt');
+            }
+
             this.form.retainage_date = draft.retainage_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.leaders;
+            this.leaders = data.screenshot_leader;
             this.form.photo = draft.photo;
             this.photos = data.photo;
             this.form.remark = draft.remark;
@@ -865,6 +979,7 @@
             // this.form.department_id = draft.department_id;
             // this.department_name = data.department_name;
           } else {
+            this.receiptNum();
             this.form.id = '';
           }
         })
@@ -875,7 +990,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo(true, true);
+        this.userInfo(true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
@@ -887,6 +1002,7 @@
         this.form.day = '';
         this.form.sign_date = '';
         this.form.begin_date = '';
+        this.form.end_date = '';
         this.datePrice = [];
         this.datePay = [];
         this.amountPrice = 1;
@@ -911,7 +1027,9 @@
         this.form.agency_price = '';
         this.form.agency_user_name = '';
         this.form.agency_phone = '';
-        this.form.receipt = '';
+
+        this.receiptNum();
+
         this.form.property_payer = '';
         this.property_name = '';
         this.form.retainage_date = '';

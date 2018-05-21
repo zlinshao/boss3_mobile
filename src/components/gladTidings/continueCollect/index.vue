@@ -18,6 +18,15 @@
           placeholder="户型已禁用"
           disabled>
         </van-field>
+        <van-field
+          v-model="form.sign_date"
+          label="签约日期"
+          readonly
+          type="text"
+          @click="timeChoose(4)"
+          placeholder="请选择签约日期"
+          required>
+        </van-field>
         <div class="first_date month">
           <van-field
             style="width: 110px;"
@@ -28,12 +37,14 @@
           <van-field
             v-model="form.month"
             type="number"
+            @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class=""
             v-model="form.day"
             type="number"
+            @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
         </div>
@@ -45,6 +56,15 @@
           placeholder="请选择合同开始时间"
           readonly
           @click="timeChoose(1)"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.end_date"
+          label="合同结束日期"
+          readonly
+          type="text"
+          @click="timeChoose(5)"
+          placeholder="请选择合同结束日期"
           required>
         </van-field>
         <div class="first_date">
@@ -182,15 +202,6 @@
           placeholder="请选择物业费付款人"
           @click="selectShow(6,'')"
           readonly
-          required>
-        </van-field>
-        <van-field
-          v-model="form.sign_date"
-          label="签约日期"
-          readonly
-          type="text"
-          @click="timeChoose(4)"
-          placeholder="请选择签约日期"
           required>
         </van-field>
         <van-field
@@ -396,6 +407,7 @@
           month: '',                    //收房月数
           day: '',                      //收房天数
           begin_date: '',               //合同开始日期
+          end_date: '',                 //合同结束日期
           period_price_arr: [''],       //月单价周期
           price_arr: [''],              //月单价
 
@@ -439,7 +451,6 @@
         value6: [],
 
         isValue1: true,
-        isValue2: false,
       }
     },
     mounted() {
@@ -456,8 +467,8 @@
       this.ddRent('');
     },
     methods: {
-      userInfo(val1, val2) {
-        if (val1 && val2) {
+      userInfo(val1) {
+        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
@@ -522,7 +533,21 @@
           this.form.photo = val[1];
         }
       },
-
+      // 结束日期
+      endDate(time, month, day, val) {
+        let params = {};
+        params.begin_date = time;
+        params.month = month;
+        params.day = day;
+        params.type = val;
+        if (time && (month || day)) {
+          this.computedDate(params).then((date) => {
+            this.form.end_date = date;
+          })
+        } else {
+          this.form.end_date = '';
+        }
+      },
       // 获取当前时间
       getNowFormatDate() {
         let date = new Date();
@@ -534,7 +559,9 @@
 
       // 日期选择
       timeChoose(val) {
-        this.timeShow = true;
+        setTimeout(() => {
+          this.timeShow = true;
+        }, 200);
         this.timeIndex = val;
       },
       // 日期拼接
@@ -548,6 +575,7 @@
         switch (this.timeIndex) {
           case 1:
             this.form.begin_date = this.timeValue;
+            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
@@ -568,13 +596,18 @@
           case 4:
             this.form.sign_date = this.timeValue;
             break;
+          case 5:
+            this.form.end_date = this.timeValue;
+            break;
         }
       },
       // select 显示
       selectShow(val, index) {
         this.tabs = val;
         this.payIndex = index;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 4:
             this.columns = this.value4;
@@ -733,12 +766,11 @@
         if (t.tops === '') {
           this.stick();
         }
-        this.userInfo(this.isValue1, this.isValue2);
+        this.userInfo(this.isValue1);
       },
 
       manuscript(val) {
-        this.isValue2 = true;
-        this.userInfo(true, true);
+        this.userInfo(true);
         let type;
         if (val !== '') {
           type = 'bulletin/collect/' + val;
@@ -757,6 +789,7 @@
             this.form.contract_id = draft.contract_id;
             this.form.house = draft.house;
             this.form.begin_date = draft.begin_date;
+            this.form.end_date = draft.end_date;
             this.form.pay_first_date = draft.pay_first_date;
             this.first_date = [];
             this.first_date.push(draft.pay_first_date);
@@ -833,7 +866,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo(true, true);
+        this.userInfo(true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
@@ -843,6 +876,7 @@
         this.form.month = '';
         this.form.day = '';
         this.form.begin_date = '';
+        this.form.end_date = '';
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 
@@ -851,10 +885,6 @@
         this.amountPrice = 1;
         this.form.period_price_arr = [''];
         this.form.price_arr = [''];
-
-        this.form.period_price_arr = [''];
-        this.form.price_arr = [''];
-
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];

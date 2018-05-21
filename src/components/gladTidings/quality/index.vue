@@ -444,13 +444,13 @@
         photos: {},                     //房屋影像
 
         isValue1: true,
-        isValue2: false,
       }
     },
     mounted() {
       this.dicts('');
     },
     activated() {
+      this.haveInHand = true;
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
         this.dicts(newID.newID);
@@ -460,8 +460,8 @@
       this.ddRent('');
     },
     methods: {
-      userInfo(val1, val2) {
-        if (val1 && val2) {
+      userInfo(val1) {
+        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
@@ -538,7 +538,9 @@
 
       selectShow(val) {
         this.tabs = val;
-        this.selectHide = true;
+        setTimeout(() => {
+          this.selectHide = true;
+        }, 200);
         switch (val) {
           case 1:
             this.columns = [
@@ -754,12 +756,11 @@
         if (t.tops === '') {
           this.stick();
         }
-        this.userInfo(this.isValue1, this.isValue2);
+        this.userInfo(this.isValue1);
       },
 
       qualityDetail(val) {
-        this.isValue2 = true;
-        this.userInfo(true, true);
+        this.userInfo(true);
         let type;
         if (val !== '') {
           type = 'bulletin/quality/' + val;
@@ -858,7 +859,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo(true, true);
+        this.userInfo(true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
