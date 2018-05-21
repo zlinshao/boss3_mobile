@@ -330,10 +330,13 @@
           this.finalDetail(val);
         });
       },
-      // 收据编号
-      receiptNum() {
+      receiptNum(val1, val2) {
         this.amountReceipt = 1;
-        this.form.receipt = [{city: '', date: '', num: ''}];
+        if (val2 === 'receipt') {
+          this.form.receipt = [{city: '', date: '', num: val1}];
+        } else {
+          this.form.receipt = [{city: '', date: '', num: ''}];
+        }
         // 收据编号默认日期
         let date = new Date();
         this.form.receipt[0].date = date.getFullYear();
