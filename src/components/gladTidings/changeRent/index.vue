@@ -293,22 +293,19 @@
             label="城市"
             type="text"
             readonly
-            placeholder="请选择城市"
-            required>
+            placeholder="请选择城市">
           </van-field>
           <van-field
             v-model="form.receipt[index].date"
             type="number"
             label="年份"
-            placeholder="请填写年份"
-            required>
+            placeholder="请填写年份">
           </van-field>
           <van-field
             v-model="form.receipt[index].num"
             type="text"
             label="编号"
-            placeholder="请填写编号"
-            required>
+            placeholder="请填写编号">
           </van-field>
         </van-cell-group>
       </div>
@@ -1017,7 +1014,7 @@
               }
             }
 
-            if (draft.receipt_raw && typeof draft.receipt_raw !== "string") {
+            if (typeof draft.receipt !== "string") {
               this.amountReceipt = draft.receipt_raw.length;
               this.form.receipt = draft.receipt_raw;
             } else {

@@ -30,12 +30,14 @@
           <van-field
             v-model="form.month"
             type="number"
+            @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class=""
             v-model="form.day"
             type="number"
+            @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
         </div>
@@ -53,7 +55,7 @@
           v-model="form.vacancy"
           label="空置期(天)"
           type="number"
-          @keyup="endDate(form.begin_date, form.vacancy, 1)"
+          @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
           placeholder="请填写空置期"
           icon="clear"
           @click-icon="form.vacancy = ''"
@@ -83,6 +85,15 @@
           type="text"
           v-if="vacancy_way_name === '其他'"
           placeholder="空置期规则"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.end_date"
+          label="合同结束日期"
+          readonly
+          type="text"
+          @click="timeChoose(7)"
+          placeholder="请选择合同结束日期"
           required>
         </van-field>
         <div class="first_date">
@@ -474,6 +485,7 @@
           agency_user_name: '',         //中介人
           agency_phone: '',             //中介手机号
           begin_date: '',               //空置期开始日期
+          end_date: '',                 //合同结束日期
           vacancy: '',                  //空置期
           end_date_vacant: '',          //空置期结束日期
           pay_first_date: '',           //第一次付款时间
@@ -654,7 +666,7 @@
         switch (this.timeIndex) {
           case 1:
             this.form.begin_date = this.timeValue;
-            this.endDate(this.timeValue, this.form.vacancy, 1);
+            this.endDate(this.timeValue, '', this.form.vacancy, 1);
             break;
           case 2:
             this.form.pay_first_date = this.timeValue;
@@ -677,6 +689,10 @@
             break;
           case 6:
             this.form.end_date_vacant = this.timeValue;
+            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
+            break;
+          case 7:
+            this.form.end_date = this.timeValue;
             break;
         }
       },
@@ -793,17 +809,33 @@
       },
 
       // 结束日期
-      endDate(time, day, val) {
+      endDate(time, month, day, val) {
         let params = {};
-        params.begin_date = time;
-        params.vacancy = day;
-        params.type = val;
-        if (time && day) {
-          this.computedDate(params).then((date) => {
-            this.form.end_date_vacant = date;
-          })
+        if (val === 1) {
+          params.begin_date = time;
+          params.vacancy = day;
+          params.type = val;
+          if (time && day) {
+            this.computedDate(params).then((date) => {
+              this.form.end_date_vacant = date;
+              this.endDate(date, this.form.month, this.form.day, 2);
+            })
+          } else {
+            this.form.end_date_vacant = '';
+            this.endDate('', this.form.month, this.form.day, 2);
+          }
         } else {
-          this.form.end_date_vacant = '';
+          params.begin_date = time;
+          params.month = month;
+          params.day = day;
+          params.type = val;
+          if (time && (month || day)) {
+            this.computedDate(params).then((date) => {
+              this.form.end_date = date;
+            })
+          } else {
+            this.form.end_date = '';
+          }
         }
       },
 
@@ -895,6 +927,7 @@
             this.form.day = draft.day === '0' ? '' : draft.day;
 
             this.form.begin_date = draft.begin_date;
+            this.form.end_date = draft.end_date;
             this.form.vacancy = draft.vacancy;
             this.form.end_date_vacant = draft.end_date_vacant;
 
@@ -998,6 +1031,7 @@
         this.form.day = '';
 
         this.form.begin_date = '';
+        this.form.end_date = '';
         this.form.end_date_vacant = '';
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';

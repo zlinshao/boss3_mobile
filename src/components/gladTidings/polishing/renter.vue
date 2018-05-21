@@ -40,22 +40,19 @@
             label="城市"
             type="text"
             readonly
-            placeholder="请选择城市"
-            required>
+            placeholder="请选择城市">
           </van-field>
           <van-field
             v-model="form.receipt[index].date"
             type="number"
             label="年份"
-            placeholder="请填写年份"
-            required>
+            placeholder="请填写年份">
           </van-field>
           <van-field
             v-model="form.receipt[index].num"
             type="text"
             label="编号"
-            placeholder="请填写编号"
-            required>
+            placeholder="请填写编号">
           </van-field>
         </van-cell-group>
       </div>
@@ -305,19 +302,19 @@
 
         cardName: [],
 
-        amountReceipt: 1,                  //收据编号
-        receiptDate: '',                   //收据编号年份
-        receiptCity: '',                   //收据编号城市
-        cities: [],                        //城市
+        amountReceipt: 1,                   //收据编号
+        receiptDate: '',                    //收据编号年份
+        receiptCity: '',                    //收据编号城市
+        cities: [],                         //城市
 
         address: '',
-        contract_id: '',                  //合同id
+        contract_id: '',                    //合同id
         sexs: [''],
         form: {
           is_submit: 1,
           penalty: '',                      //违约金
           house_id: '',
-          contract_number: '',            //合同编号
+          contract_number: '',              //合同编号
           receipt: [{city: '', date: '', num: ''}], //收据编号
           customers: [{
             id: '',                         //客户ID
@@ -328,8 +325,8 @@
             idcard: '',                     //证件号码
           }],
           water: '',                        //水表底数
-          electricity_peak: '',                  //电表底数
-          electricity_valley: '',                  //电表底数
+          electricity_peak: '',             //电表底数
+          electricity_valley: '',           //电表底数
           gas: '',                          //燃气表底数
           public_fee: '',                   //公摊费用
           manage_fee: '',                   //管理费
@@ -353,15 +350,15 @@
           department_name: '',              //部门name
         },
         pics: {
-          identity_photo: {},                        //证件照片
+          identity_photo: {},               //证件照片
           photo: {},                        //银行卡照片
-          water_photo: {},                        //合同照片
-          electricity_photo: {},                        //水表照片
-          gas_photo: {},                        //电表照片
-          checkin_photo: {},                        //气表照片
-          certificate_photo: {},                        //交接单照片
-          deposit_photo: {},                        //委托书照片
-          other_photo: {},                        //押金照片
+          water_photo: {},                  //合同照片
+          electricity_photo: {},            //水表照片
+          gas_photo: {},                    //电表照片
+          checkin_photo: {},                //气表照片
+          certificate_photo: {},            //交接单照片
+          deposit_photo: {},                //委托书照片
+          other_photo: {},                  //押金照片
         },
       }
     },
@@ -633,7 +630,7 @@
             for (let key in this.form) {
               for (let item in data) {
                 if (key === item) {
-                  if (item !== 'album' && item !== 'customers') {
+                  if (item !== 'album' && item !== 'customers') {`                  ```
                     this.form[key] = data[item] !== null ? data[item] : '';
                   }
                   if (item === 'customers') {
@@ -652,7 +649,7 @@
                       this.sexs[i] = cus.sex !== null ? String(cus.sex) : '';
                       this.form.customers[i].idtype = cus.idtype !== null ? cus.idtype : '';
                       this.form.customers[i].idcard = cus.idcard !== null ? cus.idcard : '';
-                      for (let j = 0; j < this.prove_all.length; j++) {
+                      for (let j = 0; j < this.pro54ve_all.length; j++) {
                         if (this.prove_all[j].id === cus.idtype) {
                           this.cardName[i] = this.prove_all[i].dictionary_name;
                         }
