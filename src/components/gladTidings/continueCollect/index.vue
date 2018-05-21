@@ -219,6 +219,7 @@
           type="number"
           placeholder="请填写客户手机号"
           icon="clear"
+          @keyup="form.phone = valueLength(form.phone, 11)"
           @click-icon="form.phone = ''"
           required>
         </van-field>

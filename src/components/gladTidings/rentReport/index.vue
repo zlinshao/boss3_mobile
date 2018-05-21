@@ -260,6 +260,7 @@
             type="number"
             placeholder="请填写中介联系方式"
             icon="clear"
+            @keyup="form.agency_phone = valueLength(form.agency_phone, 11)"
             @click-icon="form.agency_phone = ''"
             required>
           </van-field>
@@ -292,13 +293,13 @@
           <van-field
             v-model="form.receipt[index].date"
             type="number"
-            @keyup="valueLength(index, 1)"
+            @keyup="form.receipt[index].date = valueLength(form.receipt[index].num, 4)"
             label="年份"
             placeholder="请填写年份">
           </van-field>
           <van-field
             v-model="form.receipt[index].num"
-            @keyup="valueLength(index, 2)"
+            @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
             type="text"
             label="编号"
             placeholder="请填写编号">
@@ -333,6 +334,7 @@
           type="number"
           placeholder="请填写联系方式"
           icon="clear"
+          @keyup="form.phone = valueLength(form.phone, 11)"
           @click-icon="form.phone = ''"
           required>
         </van-field>
@@ -614,17 +616,6 @@
             this.receiptCity = res.data.data.data[2] + '市';
           }
         });
-      },
-
-      valueLength(index, val) {
-        switch (val) {
-          case 1:
-            this.form.receipt[index].date = this.form.receipt[index].date.slice(0, 4);
-            break;
-          case 2:
-            this.form.receipt[index].num = this.form.receipt[index].num.slice(0, 7);
-            break;
-        }
       },
 
       searchSelect(val) {

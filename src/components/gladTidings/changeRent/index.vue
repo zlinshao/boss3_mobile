@@ -266,6 +266,7 @@
             type="number"
             placeholder="请填写中介联系方式"
             icon="clear"
+            @keyup="form.agency_phone = valueLength(form.agency_phone, 11)"
             @click-icon="form.agency_phone = ''"
             required>
           </van-field>
@@ -297,12 +298,14 @@
           </van-field>
           <van-field
             v-model="form.receipt[index].date"
+             @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
             type="number"
             label="年份"
             placeholder="请填写年份">
           </van-field>
           <van-field
             v-model="form.receipt[index].num"
+             @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
             type="text"
             label="编号"
             placeholder="请填写编号">
@@ -338,6 +341,7 @@
           placeholder="请填写客户联系方式"
           icon="clear"
           @click-icon="form.phone = ''"
+          @keyup="form.phone = valueLength(form.phone, 11)"
           required>
         </van-field>
         <van-field

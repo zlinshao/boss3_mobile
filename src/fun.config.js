@@ -54,6 +54,9 @@ export default {
       document.getElementById('main').scrollTop = document.getElementById('main').scrollHeight;
       // console.log(document.getElementsByTagName('.main')[0].scrollHeight);
     };
+    Vue.prototype.valueLength = function (item, val) {
+      return item.slice(0, val);
+    };
 
     Vue.prototype.dictionary = function (data, flag) {
       return new Promise((resolve, reject) => {
