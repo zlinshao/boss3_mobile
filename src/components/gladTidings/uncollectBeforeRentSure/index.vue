@@ -417,9 +417,7 @@
         moneyNum: [''],             //分金额 付款方式
 
         amountReceipt: 1,                  //收据编号
-        receiptDate: '',                   //收据编号年份
-        receiptCity: '',                   //收据编号城市
-        cities: [],                        //城市
+        receiptDate: '',
 
         cusFrom: '',                //客户来源
         other_fee_status: false,
@@ -445,7 +443,7 @@
 
           pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
-          receipt: [{city: '', date: '', num: ''}], //收据编号
+          receipt: [],                    //收据编号
 
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
