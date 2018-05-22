@@ -653,6 +653,9 @@
             this.countDate(1, this.form.period_price_arr);
             this.countDate(2, this.form.period_pay_arr);
             break;
+          case 4:
+            this.form.end_date = this.timeValue;
+            break;
         }
       },
       // select 显示
@@ -876,6 +879,7 @@
             this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.sign_date = draft.sign_date;
             this.form.begin_date = draft.begin_date;
+            this.form.end_date = draft.end_date;
 
             this.first_date = [];
             this.first_date.push(draft.begin_date);
