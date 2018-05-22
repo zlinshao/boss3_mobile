@@ -196,7 +196,7 @@
 
       <van-cell-group>
         <van-field
-          v-model="is_agencyOn"
+          v-model="cusFrom"
           @click="selectShow(1,'')"
           label="是否中介"
           type="text"
@@ -474,7 +474,7 @@
         payIndex: '',               //付款方式index
 
         corp: true,                    //公司单
-        is_agencyOn: '',           //是否中介
+        cusFrom: '',           //是否中介
 
         form: {
           id: '',
@@ -544,7 +544,7 @@
       }
     },
     watch: {
-      is_agencyOn(val) {
+      cusFrom(val) {
         if (this.form.is_agency === 0) {
           this.form.agency_name = '';
           this.form.agency_price = '';
@@ -731,7 +731,7 @@
         switch (this.tabs) {
           case 1:
             this.form.is_agency = index;
-            this.is_agencyOn = value;
+            this.cusFrom = value;
             break;
           case 4:
             this.payTypeNum[this.payIndex] = value;
@@ -894,7 +894,7 @@
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
           this.form.is_agency = val.is_agency;                           //是否中介
-          this.is_agencyOn = dicts.value8[val.is_agency];                //是否中介
+          this.cusFrom = dicts.value8[val.is_agency];                //是否中介
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -953,7 +953,7 @@
             this.form.pay_second_date = draft.pay_second_date;
 
             this.form.is_agency = draft.is_agency;                           //是否中介
-            this.is_agencyOn = dicts.value8[draft.is_agency];                //是否中介
+            this.cusFrom = dicts.value8[draft.is_agency];                //是否中介
             this.form.agency_name = draft.agency_name;
             this.form.agency_price = draft.agency_price;
             this.form.agency_user_name = draft.agency_user_name;
@@ -1051,7 +1051,7 @@
         this.form.pay_second_date = '';
 
         this.form.is_agency = '';                  //是否中介
-        this.is_agencyOn = '';                      //是否中介
+        this.cusFrom = '';                      //是否中介
         this.form.agency_name = '';
         this.form.agency_price = '';
         this.form.agency_user_name = '';

@@ -119,12 +119,12 @@
         <!--<div class="titleSwitch">-->
         <!--<div class="cellGroup">-->
         <!--<span class="requiredIcon">*</span>-->
-        <!--<van-switch-cell v-model="is_agencyOn" title="是否中介"/>-->
+        <!--<van-switch-cell v-model="cusFrom" title="是否中介"/>-->
         <!--</div>-->
         <!--</div>-->
 
         <van-field
-          v-model="is_agencyOn"
+          v-model="cusFrom"
           @click="selectShow(16)"
           label="是否中介"
           type="text"
@@ -363,7 +363,7 @@
         house_type_name: '1室1厅1卫',
         refundSta: true,
 
-        is_agencyOn: '',                 //是否中介
+        cusFrom: '',                 //是否中介
         heaterOn: true,                     //暖气
         gasOn: true,                        //天然气
         is_cleanOn: true,                   //房屋交接是否干净
@@ -686,7 +686,7 @@
             break;
           case 16:
             this.form.is_agency = index;
-            this.is_agencyOn = value;
+            this.cusFrom = value;
             break;
         }
         this.selectHide = false;
@@ -807,7 +807,7 @@
             this.form.floors = data.floors;                                 //总楼层
             this.form.price = data.price;                                   //价格
             this.form.is_agency = data.is_agency;                           //是否中介
-            this.is_agencyOn = dicts.value8[data.is_agency];                //是否中介
+            this.cusFrom = dicts.value8[data.is_agency];                //是否中介
             this.form.air_condition = data.air_condition;                   //空调
             this.air_condition_name = dicts.value5[data.air_condition];     //空调
             this.form.fridge = data.fridge;                                 //冰箱
@@ -898,7 +898,7 @@
         this.form.floors = '';                   //总楼层
         this.form.price = '';                    //价格
         this.form.is_agency = '';                 //是否中介
-        this.is_agencyOn = '';                  //是否中介
+        this.cusFrom = '';                  //是否中介
         this.form.air_condition = 1;           //空调
         this.form.fridge = 1;                       //冰箱
         this.form.television = 1;              //电视

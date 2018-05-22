@@ -741,7 +741,7 @@
             break;
           case 5:
             this.form.is_agency = index;
-            this.is_agencyOn = value;
+            this.cusFrom = value;
             break;
         }
         this.selectHide = false;
@@ -962,7 +962,7 @@
             }
 
             this.form.is_agency = data.is_agency;                           //是否中介
-            this.is_agencyOn = dicts.value8[data.is_agency];                //是否中介
+            this.cusFrom = dicts.value8[data.is_agency];                //是否中介
             this.form.agency_name = draft.agency_name;
             this.form.agency_price = draft.agency_price;
             this.form.agency_user_name = draft.agency_user_name;
@@ -1039,7 +1039,7 @@
         this.is_corp = 1;
         this.corp = true;
         this.form.is_agency = '';                 //是否中介
-        this.is_agencyOn = '';                  //是否中介
+        this.cusFrom = '';                  //是否中介
         this.form.agency_name = '';
         this.form.agency_price = '';
         this.form.agency_user_name = '';
