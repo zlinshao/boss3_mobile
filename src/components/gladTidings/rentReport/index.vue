@@ -496,7 +496,7 @@
           is_corp: 1,                   //是否公司单  0个人1公司
           contract_number: 'LJZF',      //合同编号
 
-          receipt: [],                    //收据编号
+          receipt: [''],                //收据编号
           property_payer: '',           //物业费付款人
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
@@ -579,14 +579,15 @@
         });
       },
 
-      // 收据编号
       receiptNum() {
         // 收据编号默认城市
+        this.form.receipt = [];
         this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
           if (res.data.code === '1000120') {
             // 收据编号默认日期
             this.receiptDate = res.data.data.py + res.data.data.year;
-            this.form.receipt[0] = res.data.data.py + res.data.data.year;
+            let receipt =  res.data.data.py + res.data.data.year;
+            this.form.receipt.push(receipt);
           }
         });
       },
