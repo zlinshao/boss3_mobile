@@ -564,14 +564,15 @@
         });
       },
 
-      // 收据编号
       receiptNum() {
         // 收据编号默认城市
+        this.form.receipt = [];
         this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
           if (res.data.code === '1000120') {
             // 收据编号默认日期
             this.receiptDate = res.data.data.py + res.data.data.year;
-            this.form.receipt[0] = res.data.data.py + res.data.data.year;
+            let receipt =  res.data.data.py + res.data.data.year;
+            this.form.receipt.push(receipt);
           }
         });
       },
