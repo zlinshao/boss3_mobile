@@ -242,26 +242,10 @@
         </div>
         <van-cell-group>
           <van-field
-            @click="selectShow(5,index)"
-            v-model="form.receipt[index].city"
-            label="城市"
+            v-model="form.receipt[index]"
             type="text"
-            readonly
-            placeholder="请选择城市">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].date"
-            @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
-            type="number"
-            label="年份"
-            placeholder="请填写年份">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].num"
-            @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
-            type="text"
-            label="编号"
-            placeholder="请填写编号">
+            label="收据编号"
+            placeholder="请填写收据编号">
           </van-field>
         </van-cell-group>
       </div>
@@ -418,9 +402,7 @@
         moneyNum: [''],               //分金额 付款方式
 
         amountReceipt: 1,                  //收据编号
-        receiptDate: '',                   //收据编号年份
-        receiptCity: '',                   //收据编号城市
-        cities: [],                         //城市
+        receiptDate: '',
 
         rooms: [],
         roomsName: '',
@@ -461,7 +443,7 @@
           contract_number: 'LJZF',       //合同编号
           discount: 0,                  //让价金额
           property_payer: '',           //物业费付款人
-          receipt: [{city: '', date: '', num: ''}], //收据编号
+          receipt: [],                  //收据编号
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
@@ -511,14 +493,7 @@
         }
       },
       dicts() {
-        // 城市
-        this.dictionary(306, 1).then((res) => {
-          this.cities = [];
-          for (let i = 0; i < res.data.length; i++) {
-            this.cities.push(res.data[i].dictionary_name);
-          }
-          this.receiptNum();
-        });
+        this.receiptNum();
         //房东租客
         this.dictionary(449, 1).then((res) => {
           this.value6 = [];
@@ -542,22 +517,13 @@
       },
 
       // 收据编号
-      receiptNum(val1, val2) {
-        this.amountReceipt = 1;
-        if (val2 === 'receipt') {
-          this.form.receipt = [{city: '', date: '', num: val1}];
-        } else {
-          this.form.receipt = [{city: '', date: '', num: ''}];
-        }
-        // 收据编号默认日期
-        let date = new Date();
-        this.form.receipt[0].date = date.getFullYear();
-        this.receiptDate = date.getFullYear();
+      receiptNum() {
         // 收据编号默认城市
         this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
           if (res.data.code === '1000120') {
-            this.form.receipt[0].city = res.data.data.data[2] + '市';
-            this.receiptCity = res.data.data.data[2] + '市';
+            // 收据编号默认日期
+            this.receiptDate = res.data.data.py + res.data.data.year;
+            this.form.receipt[0] = res.data.data.py + res.data.data.year;
           }
         });
       },
@@ -741,7 +707,7 @@
           this.moneyNum.push('');
         } else {
           this.amountReceipt++;
-          this.form.receipt.push({city: this.receiptCity, date: this.receiptDate, num: ''});
+          this.form.receipt.push(this.receiptDate);
         }
       },
       // 删除月单价
@@ -924,19 +890,12 @@
             this.form.deposit = draft.deposit;
             this.form.discount = draft.discount;
 
-            if (typeof draft.receipt !== "string") {
-              if (draft.receipt.length > 0) {
-                this.form.receipt = [];
-                this.amountReceipt = draft.receipt.length;
-                for (let i = 0; i < draft.receipt.length; i++) {
-                  this.form.receipt.push(draft.receipt[i].raw);
-                }
-              } else {
-                this.receiptNum();
-              }
-            } else {
-              this.receiptNum(draft.receipt, 'receipt');
+            this.amountReceipt = draft.receipt.length;
+            this.form.receipt = [];
+            for (let i = 0; i < draft.receipt.length; i++) {
+              this.form.receipt.push(draft.receipt[i]);
             }
+
 
             this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
@@ -1009,7 +968,9 @@
         this.form.deposit = '';
         this.form.from = 1;
 
-        this.receiptNum();
+        this.amountReceipt = 1;
+        this.form.receipt = [];
+        this.form.receipt[0] = this.receiptDate;
 
         this.form.other_fee_name = '';
         this.form.other_fee = '';
