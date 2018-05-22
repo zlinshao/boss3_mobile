@@ -573,6 +573,7 @@
           for (let i = 0; i < res.data.length; i++) {
             this.cities.push(res.data[i].dictionary_name);
           }
+          this.receiptNum();
         });
         //房东租客
         this.dictionary(449, 1).then((res) => {
@@ -974,8 +975,11 @@
             this.form.other_fee = draft.other_fee;
 
             if (typeof draft.receipt !== "string") {
-              this.amountReceipt = draft.receipt_raw.length;
-              this.form.receipt = draft.receipt_raw;
+              this.form.receipt = [];
+              this.amountReceipt = draft.receipt.length;
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i].raw);
+              }
             } else {
               this.receiptNum(draft.receipt, 'receipt');
             }

@@ -219,6 +219,15 @@
       this.ddRent('', 'close');
       this.disabled = false;
       this.scrollTops();
+      // $(window).scroll(function () {
+      //   //下面这句主要是获取网页的总高度，主要是考虑兼容性所以把Ie支持的documentElement也写了，这个方法至少支持IE8
+      //   let htmlHeight = document.body.scrollHeight || document.documentElement.scrollHeight;
+      //   //clientHeight是网页在浏览器中的可视高度，
+      //   let clientHeight = document.body.clientHeight || document.documentElement.clientHeight;
+      //   //scrollTop是浏览器滚动条的top位置，
+      //   let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+      //   console.log(scrollTop)
+      // })
     },
     methods: {
       // 搜索

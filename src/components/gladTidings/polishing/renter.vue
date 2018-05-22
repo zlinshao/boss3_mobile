@@ -638,8 +638,11 @@
                   if (item === 'receipt') {
                     this.amountReceipt = 1;
                     if (data[item] && typeof data[item] !== "string") {
-                      this.form.receipt = data[item].receipt_raw;
-                      this.amountReceipt = data[item].receipt_raw.length;
+                      this.form.receipt = [];
+                      this.amountReceipt = data[item].length;
+                      for (let i = 0; i < data[item].length; i++) {
+                        this.form.receipt.push(data[item][i].raw);
+                      }
                     } else {
                       this.receiptNum(data[item], 'receipt');
                     }
