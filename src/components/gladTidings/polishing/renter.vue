@@ -605,18 +605,23 @@
                     this.form[key] = data[item] !== null ? data[item] : '';
                   }
                   if (item === 'receipt') {
-                    if (data[item].length !== 0) {
-                      this.amountReceipt = data[item].length;
-                      this.form.receipt = [];
-                      for (let i = 0; i < data[item].length; i++) {
-                        this.form.receipt.push(data[item][i]);
+                    if (typeof data[item] !== "string") {
+                      if (data[item].length !== 0) {
+                        this.amountReceipt = data[item].length;
+                        this.form.receipt = [];
+                        for (let i = 0; i < data[item].length; i++) {
+                          this.form.receipt.push(data[item][i]);
+                        }
+                      } else {
+                        this.amountReceipt = 1;
+                        this.form.receipt = [];
+                        this.form.receipt[0] = this.receiptDate;
                       }
                     } else {
                       this.amountReceipt = 1;
                       this.form.receipt = [];
-                      this.form.receipt[0] = this.receiptDate;
+                      this.form.receipt[0] = data[item];
                     }
-
                   }
                   if (item === 'customers') {
                     this.cardName = [];
