@@ -837,10 +837,16 @@
               }
             }
 
-            this.amountReceipt = draft.receipt.length;
-            this.form.receipt = [];
-            for (let i = 0; i < draft.receipt.length; i++) {
-              this.form.receipt.push(draft.receipt[i]);
+            if (draft.receipt.length !== 0) {
+              this.amountReceipt = draft.receipt.length;
+              this.form.receipt = [];
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i]);
+              }
+            } else {
+              this.amountReceipt = 1;
+              this.form.receipt = [];
+              this.form.receipt[0] = this.receiptDate;
             }
 
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
@@ -944,10 +950,16 @@
               }
             }
 
-            this.amountReceipt = draft.receipt.length;
-            this.form.receipt = [];
-            for (let i = 0; i < draft.receipt.length; i++) {
-              this.form.receipt.push(draft.receipt[i]);
+            if (draft.receipt.length !== 0) {
+              this.amountReceipt = draft.receipt.length;
+              this.form.receipt = [];
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i]);
+              }
+            } else {
+              this.amountReceipt = 1;
+              this.form.receipt = [];
+              this.form.receipt[0] = this.receiptDate;
             }
 
             this.form.is_agency = data.is_agency;                           //是否中介

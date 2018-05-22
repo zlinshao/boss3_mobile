@@ -952,10 +952,16 @@
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
 
-            this.amountReceipt = draft.receipt.length;
-            this.form.receipt = [];
-            for (let i = 0; i < draft.receipt.length; i++) {
-              this.form.receipt.push(draft.receipt[i]);
+            if (draft.receipt.length !== 0) {
+              this.amountReceipt = draft.receipt.length;
+              this.form.receipt = [];
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i]);
+              }
+            } else {
+              this.amountReceipt = 1;
+              this.form.receipt = [];
+              this.form.receipt[0] = this.receiptDate;
             }
 
             this.form.is_agency = draft.is_agency;                     //是否中介
