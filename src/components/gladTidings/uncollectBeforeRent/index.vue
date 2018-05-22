@@ -958,8 +958,11 @@
             this.corp = draft.is_corp === 1 ? true : false;
 
             if (typeof draft.receipt !== "string") {
-              this.amountReceipt = draft.receipt_raw.length;
-              this.form.receipt = draft.receipt_raw;
+              this.form.receipt = [];
+              this.amountReceipt = draft.receipt.length;
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i].raw);
+              }
             } else {
               this.receiptNum(draft.receipt, 'receipt');
             }
