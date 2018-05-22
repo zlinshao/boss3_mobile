@@ -890,16 +890,22 @@
             this.form.deposit = draft.deposit;
             this.form.discount = draft.discount;
 
-            if (draft.receipt.length !== 0) {
-              this.amountReceipt = draft.receipt.length;
-              this.form.receipt = [];
-              for (let i = 0; i < draft.receipt.length; i++) {
-                this.form.receipt.push(draft.receipt[i]);
+            if (typeof draft.receipt !== "string") {
+              if (draft.receipt.length !== 0) {
+                this.amountReceipt = draft.receipt.length;
+                this.form.receipt = [];
+                for (let i = 0; i < draft.receipt.length; i++) {
+                  this.form.receipt.push(draft.receipt[i]);
+                }
+              } else {
+                this.amountReceipt = 1;
+                this.form.receipt = [];
+                this.form.receipt[0] = this.receiptDate;
               }
             } else {
               this.amountReceipt = 1;
               this.form.receipt = [];
-              this.form.receipt[0] = this.receiptDate;
+              this.form.receipt[0] = draft.receipt;
             }
 
 
