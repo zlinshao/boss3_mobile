@@ -221,8 +221,16 @@
           @click-icon="form.deposit = ''"
           required>
         </van-field>
-        <van-switch-cell v-model="cusFrom" title="是否中介"/>
-        <div style="border-bottom: 1px solid #f4f4f4;" v-if="cusFrom">
+        <van-field
+          v-model="cusFrom"
+          @click="selectShow(5,'')"
+          label="是否中介"
+          type="text"
+          readonly
+          placeholder="是否中介"
+          required>
+        </van-field>
+        <div style="border-bottom: 1px solid #f4f4f4;" v-if="form.is_agency === 1">
           <van-field
             v-model="form.agency_name"
             label="中介名称"
@@ -452,7 +460,7 @@
         receiptCity: '',                   //收据编号城市
         cities: [],                        //城市
 
-        cusFrom: false,                //客户来源
+        cusFrom: '',                  //是否中介
         corp: true,                    //公司单
         other_fee_status: false,
         form: {
@@ -482,7 +490,7 @@
           other_fee: '',
           other_fee_name: '',
 
-          is_agency: 0,                 //客户来源    0个人1中介
+          is_agency: '',                //客户来源    0个人1中介
           agency_name: '',              //中介名
           agency_price: '',             //中介费
           agency_user_name: '',         //中介人
@@ -519,7 +527,7 @@
     },
     watch: {
       cusFrom(val) {
-        if (!val) {
+        if (this.form.is_agency === 0) {
           this.form.agency_name = '';
           this.form.agency_price = '';
           this.form.agency_user_name = '';
@@ -701,6 +709,9 @@
           case 4:
             this.columns = this.cities;
             break;
+          case 5:
+            this.columns = dicts.value8;
+            break;
         }
       },
       // select选择
@@ -727,6 +738,10 @@
             break;
           case 4:
             this.form.receipt[this.payIndex].city = value;
+            break;
+          case 5:
+            this.form.is_agency = index;
+            this.cusFrom = value;
             break;
         }
         this.selectHide = false;
@@ -825,7 +840,6 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
-            this.form.is_agency = this.cusFrom ? 1 : 0;
             this.form.is_corp = this.corp ? 1 : 0;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
@@ -947,8 +961,8 @@
               }
             }
 
-            this.is_agency = draft.is_agency;
-            this.cusFrom = draft.is_agency === 1 ? true : false;
+            this.form.is_agency = data.is_agency;                           //是否中介
+            this.cusFrom = dicts.value8[data.is_agency];                //是否中介
             this.form.agency_name = draft.agency_name;
             this.form.agency_price = draft.agency_price;
             this.form.agency_user_name = draft.agency_user_name;
@@ -958,8 +972,11 @@
             this.corp = draft.is_corp === 1 ? true : false;
 
             if (typeof draft.receipt !== "string") {
-              this.amountReceipt = draft.receipt_raw.length;
-              this.form.receipt = draft.receipt_raw;
+              this.form.receipt = [];
+              this.amountReceipt = draft.receipt.length;
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i].raw);
+              }
             } else {
               this.receiptNum(draft.receipt, 'receipt');
             }
@@ -1021,8 +1038,8 @@
         this.form.deposit = '';
         this.is_corp = 1;
         this.corp = true;
-        this.is_agency = 0;
-        this.cusFrom = false;
+        this.form.is_agency = '';                 //是否中介
+        this.cusFrom = '';                  //是否中介
         this.form.agency_name = '';
         this.form.agency_price = '';
         this.form.agency_user_name = '';

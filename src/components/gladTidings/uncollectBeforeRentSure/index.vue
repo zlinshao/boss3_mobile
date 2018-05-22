@@ -194,8 +194,16 @@
       </div>
 
       <van-cell-group>
-        <van-switch-cell v-model="cusFrom" title="是否中介"/>
-        <div style="border-bottom: 1px solid #f4f4f4;" v-if="cusFrom">
+        <van-field
+          v-model="cusFrom"
+          @click="selectShow(5,'')"
+          label="是否中介"
+          type="text"
+          readonly
+          placeholder="是否中介"
+          required>
+        </van-field>
+        <div style="border-bottom: 1px solid #f4f4f4;" v-if="form.is_agency === 1">
           <van-field
             v-model="form.agency_name"
             label="中介名称"
@@ -429,7 +437,7 @@
         receiptCity: '',                   //收据编号城市
         cities: [],                        //城市
 
-        cusFrom: false,                //客户来源
+        cusFrom: '',                //客户来源
         other_fee_status: false,
         form: {
           id: '',
@@ -459,7 +467,7 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
-          is_agency: 0,                 //客户来源    0个人1中介
+          is_agency: '',                 //客户来源    0个人1中介
           agency_name: '',              //中介名
           agency_price: '',             //中介费
           agency_user_name: '',         //中介人
@@ -490,7 +498,7 @@
     },
     watch: {
       cusFrom(val) {
-        if (!val) {
+        if (this.form.is_agency === 0) {
           this.form.agency_name = '';
           this.form.agency_price = '';
           this.form.agency_user_name = '';
@@ -667,6 +675,9 @@
           case 4:
             this.columns = this.cities;
             break;
+          case 5:
+            this.columns = dicts.value8;
+            break;
         }
       },
       // select选择
@@ -685,6 +696,10 @@
             break;
           case 4:
             this.form.receipt[this.payIndex].city = value;
+            break;
+          case 5:
+            this.form.is_agency = index;
+            this.cusFrom = value;
             break;
         }
         this.selectHide = false;
@@ -782,7 +797,6 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
-            this.form.is_agency = this.cusFrom ? 1 : 0;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
@@ -856,6 +870,17 @@
                 }
               }
             }
+
+            if (typeof rent.receipt !== "string") {
+              this.form.receipt = [];
+              this.amountReceipt = rent.receipt.length;
+              for (let i = 0; i < rent.receipt.length; i++) {
+                this.form.receipt.push(rent.receipt[i].raw);
+              }
+            } else {
+              this.receiptNum(rent.receipt, 'receipt');
+            }
+
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
@@ -958,14 +983,17 @@
             }
 
             if (typeof draft.receipt !== "string") {
-              this.amountReceipt = draft.receipt_raw.length;
-              this.form.receipt = draft.receipt_raw;
+              this.form.receipt = [];
+              this.amountReceipt = draft.receipt.length;
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i].raw);
+              }
             } else {
               this.receiptNum(draft.receipt, 'receipt');
             }
 
-            this.is_agency = draft.is_agency;
-            this.cusFrom = draft.is_agency === 1 ? true : false;
+            this.form.is_agency = data.is_agency;                           //是否中介
+            this.cusFrom = dicts.value8[data.is_agency];                //是否中介
             this.form.agency_name = draft.agency_name;
             this.form.agency_price = draft.agency_price;
             this.form.agency_user_name = draft.agency_user_name;
@@ -1033,8 +1061,8 @@
 
         this.receiptNum();
 
-        this.is_agency = 0;
-        this.cusFrom = false;
+        this.is_agency = '';
+        this.cusFrom = '';
         this.form.agency_name = '';
         this.form.agency_price = '';
         this.form.agency_user_name = '';
