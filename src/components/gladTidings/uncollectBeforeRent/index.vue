@@ -931,8 +931,8 @@
               }
             }
 
-            this.form.is_agency = data.is_agency;                           //是否中介
-            this.cusFrom = dicts.value8[data.is_agency];                //是否中介
+            this.form.is_agency = draft.is_agency;                           //是否中介
+            this.cusFrom = dicts.value8[draft.is_agency];                //是否中介
             this.form.agency_name = draft.agency_name;
             this.form.agency_price = draft.agency_price;
             this.form.agency_user_name = draft.agency_user_name;
