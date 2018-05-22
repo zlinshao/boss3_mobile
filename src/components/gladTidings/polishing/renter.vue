@@ -35,26 +35,10 @@
         </div>
         <van-cell-group>
           <van-field
-            @click="selectShow(2,index)"
-            v-model="form.receipt[index].city"
-            label="城市"
+            v-model="form.receipt[index]"
             type="text"
-            readonly
-            placeholder="请选择城市">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].date"
-            @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
-            type="number"
-            label="年份"
-            placeholder="请填写年份">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].num"
-            @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
-            type="text"
-            label="编号"
-            placeholder="请填写编号">
+            label="收据编号"
+            placeholder="请填写收据编号">
           </van-field>
         </van-cell-group>
       </div>
@@ -304,10 +288,8 @@
 
         cardName: [],
 
-        amountReceipt: 1,                   //收据编号
-        receiptDate: '',                    //收据编号年份
-        receiptCity: '',                    //收据编号城市
-        cities: [],                         //城市
+        amountReceipt: 1,                  //收据编号
+        receiptDate: '',
 
         address: '',
         contract_id: '',                    //合同id
@@ -317,7 +299,7 @@
           penalty: '',                      //违约金
           house_id: '',
           contract_number: '',              //合同编号
-          receipt: [{city: '', date: '', num: ''}], //收据编号
+          receipt: [],                    //收据编号
           customers: [{
             id: '',                         //客户ID
             name: '',                       //客户姓名
@@ -366,7 +348,7 @@
     },
     mounted() {
       this.getNowFormatDate();
-      this.dict();
+      this.dicts();
     },
     activated() {
       this.houseInfo();
@@ -385,15 +367,8 @@
         this.form.department_id = '';
         this.form.department_name = '';
       },
-      dict() {
-        // 城市
-        this.dictionary(306, 1).then((res) => {
-          this.cities = [];
-          for (let i = 0; i < res.data.length; i++) {
-            this.cities.push(res.data[i].dictionary_name);
-          }
-          this.receiptNum();
-        });
+      dicts() {
+        this.receiptNum();
         // 证件类型
         this.dictionary(409, 1).then((res) => {
           this.prove_name = [];
@@ -403,25 +378,19 @@
           }
         });
       },
-      receiptNum(val1, val2) {
-        this.amountReceipt = 1;
-        if (val2 === 'receipt') {
-          this.form.receipt = [{city: '', date: '', num: val1}];
-        } else {
-          this.form.receipt = [{city: '', date: '', num: ''}];
-        }
-        // 收据编号默认日期
-        let date = new Date();
-        this.form.receipt[0].date = date.getFullYear();
-        this.receiptDate = date.getFullYear();
+
+      // 收据编号
+      receiptNum() {
         // 收据编号默认城市
         this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
           if (res.data.code === '1000120') {
-            this.form.receipt[0].city = res.data.data.data[2] + '市';
-            this.receiptCity = res.data.data.data[2] + '市';
+            // 收据编号默认日期
+            this.receiptDate = res.data.data.py + res.data.data.year;
+            this.form.receipt[0] = res.data.data.py + res.data.data.year;
           }
         });
       },
+
       // 增加附属租客
       addAmount(val) {
         if (val === 1) {
@@ -438,7 +407,7 @@
           this.form.customers.push(data);
         } else {
           this.amountReceipt++;
-          this.form.receipt.push({city: this.receiptCity, date: this.receiptDate, num: ''});
+          this.form.receipt.push(this.receiptDate);
         }
       },
       // 删除客户
@@ -636,16 +605,18 @@
                     this.form[key] = data[item] !== null ? data[item] : '';
                   }
                   if (item === 'receipt') {
-                    this.amountReceipt = 1;
-                    if (data[item] && typeof data[item] !== "string") {
-                      this.form.receipt = [];
+                    if (data[item].length !== 0) {
                       this.amountReceipt = data[item].length;
+                      this.form.receipt = [];
                       for (let i = 0; i < data[item].length; i++) {
-                        this.form.receipt.push(data[item][i].raw);
+                        this.form.receipt.push(data[item][i]);
                       }
                     } else {
-                      this.receiptNum(data[item], 'receipt');
+                      this.amountReceipt = 1;
+                      this.form.receipt = [];
+                      this.form.receipt[0] = this.receiptDate;
                     }
+
                   }
                   if (item === 'customers') {
                     this.cardName = [];
@@ -701,7 +672,9 @@
         this.sexs = [''];
         this.form.house_id = '';
 
-        this.receiptNum();
+        this.amountReceipt = 1;
+        this.form.receipt = [];
+        this.form.receipt[0] = this.receiptDate;
 
         this.form.contract_number = '';
         this.form.penalty = '';

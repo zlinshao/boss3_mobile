@@ -132,26 +132,10 @@
         </div>
         <van-cell-group>
           <van-field
-            @click="selectShow(3,index)"
-            v-model="form.receipt[index].city"
-            label="城市"
+            v-model="form.receipt[index]"
             type="text"
-            readonly
-            placeholder="请选择城市">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].date"
-             @keyup="form.receipt[index].date = valueLength(form.receipt[index].date, 4)"
-            type="number"
-            label="年份"
-            placeholder="请填写年份">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].num"
-             @keyup="form.receipt[index].num = valueLength(form.receipt[index].num, 7)"
-            type="text"
-            label="编号"
-            placeholder="请填写编号">
+            label="收据编号"
+            placeholder="请填写收据编号">
           </van-field>
         </van-cell-group>
       </div>
@@ -258,9 +242,7 @@
         payIndex: '',                 //分金额方式index
 
         amountReceipt: 1,                  //收据编号
-        receiptDate: '',                   //收据编号年份
-        receiptCity: '',                   //收据编号城市
-        cities: [],                        //城市
+        receiptDate: '',
 
         other_fee_status: false,
         form: {
@@ -276,7 +258,7 @@
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
-          receipt: [{city: '', date: '', num: ''}], //收据编号
+          receipt: [],                    //收据编号
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -311,14 +293,7 @@
     },
     methods: {
       dicts(val) {
-        // 城市
-        this.dictionary(306, 1).then((res) => {
-          this.cities = [];
-          for (let i = 0; i < res.data.length; i++) {
-            this.cities.push(res.data[i].dictionary_name);
-          }
-          this.receiptNum();
-        });
+        this.receiptNum();
         //支付方式
         this.dictionary(508, 1).then((res) => {
           this.value8 = [];
@@ -329,22 +304,15 @@
           this.finalDetail(val);
         });
       },
-      receiptNum(val1, val2) {
-        this.amountReceipt = 1;
-        if (val2 === 'receipt') {
-          this.form.receipt = [{city: '', date: '', num: val1}];
-        } else {
-          this.form.receipt = [{city: '', date: '', num: ''}];
-        }
-        // 收据编号默认日期
-        let date = new Date();
-        this.form.receipt[0].date = date.getFullYear();
-        this.receiptDate = date.getFullYear();
+
+      // 收据编号
+      receiptNum() {
         // 收据编号默认城市
         this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
           if (res.data.code === '1000120') {
-            this.form.receipt[0].city = res.data.data.data[2] + '市';
-            this.receiptCity = res.data.data.data[2] + '市';
+            // 收据编号默认日期
+            this.receiptDate = res.data.data.py + res.data.data.year;
+            this.form.receipt[0] = res.data.data.py + res.data.data.year;
           }
         });
       },
@@ -456,7 +424,7 @@
           this.moneyNum.push('');
         } else {
           this.amountReceipt++;
-          this.form.receipt.push({city: this.receiptCity, date: this.receiptDate, num: ''});
+          this.form.receipt.push(this.receiptDate);
         }
 
       },
@@ -557,14 +525,16 @@
             this.form.payWay = draft.payWay;
             this.form.terms = draft.terms;
 
-            if (typeof draft.receipt !== "string") {
-              this.form.receipt = [];
+            if (draft.receipt.length !== 0) {
               this.amountReceipt = draft.receipt.length;
+              this.form.receipt = [];
               for (let i = 0; i < draft.receipt.length; i++) {
-                this.form.receipt.push(draft.receipt[i].raw);
+                this.form.receipt.push(draft.receipt[i]);
               }
             } else {
-              this.receiptNum(draft.receipt, 'receipt');
+              this.amountReceipt = 1;
+              this.form.receipt = [];
+              this.form.receipt[0] = this.receiptDate;
             }
 
             this.form.contract_id = draft.contract_id;
@@ -629,7 +599,9 @@
         this.form.screenshot_leader = [];
         this.leaders = {};
 
-        this.receiptNum();
+        this.amountReceipt = 1;
+        this.form.receipt = [];
+        this.form.receipt[0] = this.receiptDate;
 
         this.form.other_fee_name = '';
         this.form.other_fee = '';
