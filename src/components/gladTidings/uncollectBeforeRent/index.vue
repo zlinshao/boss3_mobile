@@ -972,10 +972,14 @@
             this.corp = draft.is_corp === 1 ? true : false;
 
             if (typeof draft.receipt !== "string") {
-              this.form.receipt = [];
-              this.amountReceipt = draft.receipt.length;
-              for (let i = 0; i < draft.receipt.length; i++) {
-                this.form.receipt.push(draft.receipt[i].raw);
+              if (draft.receipt.length > 0) {
+                this.form.receipt = [];
+                this.amountReceipt = draft.receipt.length;
+                for (let i = 0; i < draft.receipt.length; i++) {
+                  this.form.receipt.push(draft.receipt[i].raw);
+                }
+              } else {
+                this.receiptNum();
               }
             } else {
               this.receiptNum(draft.receipt, 'receipt');
