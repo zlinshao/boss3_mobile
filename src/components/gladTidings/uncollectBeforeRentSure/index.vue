@@ -699,7 +699,7 @@
             break;
           case 5:
             this.form.is_agency = index;
-            this.is_agencyOn = value;
+            this.cusFrom = value;
             break;
         }
         this.selectHide = false;
@@ -870,6 +870,17 @@
                 }
               }
             }
+
+            if (typeof rent.receipt !== "string") {
+              this.form.receipt = [];
+              this.amountReceipt = rent.receipt.length;
+              for (let i = 0; i < rent.receipt.length; i++) {
+                this.form.receipt.push(rent.receipt[i].raw);
+              }
+            } else {
+              this.receiptNum(rent.receipt, 'receipt');
+            }
+
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
@@ -982,7 +993,7 @@
             }
 
             this.form.is_agency = data.is_agency;                           //是否中介
-            this.is_agencyOn = dicts.value8[data.is_agency];                //是否中介
+            this.cusFrom = dicts.value8[data.is_agency];                //是否中介
             this.form.agency_name = draft.agency_name;
             this.form.agency_price = draft.agency_price;
             this.form.agency_user_name = draft.agency_user_name;
