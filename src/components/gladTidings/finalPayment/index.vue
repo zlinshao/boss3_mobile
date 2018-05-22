@@ -525,10 +525,16 @@
             this.form.payWay = draft.payWay;
             this.form.terms = draft.terms;
 
-            this.amountReceipt = draft.receipt.length;
-            this.form.receipt = [];
-            for (let i = 0; i < draft.receipt.length; i++) {
-              this.form.receipt.push(draft.receipt[i]);
+            if (draft.receipt.length !== 0) {
+              this.amountReceipt = draft.receipt.length;
+              this.form.receipt = [];
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i]);
+              }
+            } else {
+              this.amountReceipt = 1;
+              this.form.receipt = [];
+              this.form.receipt[0] = this.receiptDate;
             }
 
             this.form.contract_id = draft.contract_id;
