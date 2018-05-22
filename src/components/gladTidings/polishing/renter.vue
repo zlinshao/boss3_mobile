@@ -638,10 +638,14 @@
                   if (item === 'receipt') {
                     this.amountReceipt = 1;
                     if (data[item] && typeof data[item] !== "string") {
-                      this.form.receipt = [];
-                      this.amountReceipt = data[item].length;
-                      for (let i = 0; i < data[item].length; i++) {
-                        this.form.receipt.push(data[item][i].raw);
+                      if (draft.receipt.length > 0) {
+                        this.form.receipt = [];
+                        this.amountReceipt = draft.receipt.length;
+                        for (let i = 0; i < draft.receipt.length; i++) {
+                          this.form.receipt.push(draft.receipt[i].raw);
+                        }
+                      } else {
+                        this.receiptNum();
                       }
                     } else {
                       this.receiptNum(data[item], 'receipt');
