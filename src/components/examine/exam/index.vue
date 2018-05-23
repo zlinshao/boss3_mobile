@@ -72,6 +72,26 @@
     <div class="exercise msg" v-if="message">
       {{message}}
     </div>
+    <div class="mask" v-show="confirmType==='success'">
+      <div class="box">
+        <img src="../../../assets/confirm_success.png" alt="">
+        <div class="words">您已成功提交考试</div>
+      </div>
+    </div>
+    <div class="mask" v-show="confirmType==='failed'">
+      <div class="box">
+        <img src="../../../assets/confirm_fail.png" alt="">
+        <div class="words">提交考试失败 请<span style="color: #ff259a;font-size: 18px;" @click="onSubmit">重试</span></div>
+      </div>
+    </div>
+    <div class="mask" v-show="confirmType==='repeat'">
+      <div class="box" style="text-align: center;height: 200px;">
+        <div style="margin-top: 80px;">
+          <p >您已完成本次考试</p>
+          <p style="color: #ff259a;">请勿重复提交</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -91,6 +111,7 @@
         answer: {},             //答案
         message: '',
         exam_id: '29',
+        confirmType: '',
       }
     },
     mounted() {
@@ -118,7 +139,7 @@
     },
     watch: {},
     methods: {
-      clearBlankAnswer(id, k){
+      clearBlankAnswer(id, k) {
         this.answer[id][k] = '';
         this.$set(this.answer[id], k, '');
       },
@@ -135,9 +156,11 @@
             answer: this.answer,
           }).then((res) => {
             if (res.data.code === '36010') {
-              alert("提交成功===" + res.data.msg);
+              this.confirmType = 'success';
+            } else if (res.data.code === '36012') {
+              this.confirmType = 'repeat';
             } else {
-              alert("提交失败===" + res.data.msg);
+              this.confirmType = 'failed';
             }
           });
         }).catch(() => {
@@ -154,6 +177,35 @@
     img {
       width: 100%;
     }
+    .mask {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 99;
+      .box {
+        position: fixed;
+        width: 70%;
+        background: #fff;
+        top: 25%;
+        margin-left: 15%;
+        border-radius: 8px;
+        p{
+          font-size: 18px;
+          line-height: 30px;
+        }
+        .words {
+          position: absolute;
+          text-align: center;
+          font-size: 18px;
+          color: #101010;
+          top: 70%;
+          left: 23%;
+        }
+      }
+    }
+
     .van-radio, .van-checkbox.van-checkbox--round {
       display: flex;
       display: -webkit-flex;
@@ -215,7 +267,7 @@
         }
         .van-cell-group {
           padding-left: 0;
-          .van-cell__value input{
+          .van-cell__value input {
             background: #F3F9FF;
             padding: 10px;
           }
