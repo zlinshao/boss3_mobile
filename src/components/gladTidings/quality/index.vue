@@ -411,8 +411,10 @@
         propertyAll: [],
         property_name: [],
 
+        house_name: '',
         form: {
           id: '',
+          house_id: '',
           type: 0,
           is_draft: 0,
           city_id: '',                  //城市
@@ -779,6 +781,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.house_name = val.house_name;
+          this.form.house_id = val.house_id;
           this.prefill(val.house_res, '')
         }
         if (t.city !== undefined && t.city !== '') {
@@ -836,6 +839,7 @@
       prefill(data, id) {
         this.isClear = false;
         this.form.id = id;
+        this.form.house_id = data.house_id;
         this.form.type = data.type;
         this.form.city_id = data.city_id;                     //城市
         this.form.city_name = data.city_name;                 //城市
@@ -924,6 +928,7 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
+        this.form.house_id = '';
         this.house_name = '';
         this.form.city_id = this.beforeCityId;    //城市
         this.form.city_name = this.beforeCity;    //城市
