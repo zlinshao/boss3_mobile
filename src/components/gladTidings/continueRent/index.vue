@@ -767,6 +767,14 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
+            let receipt = [];
+            for (let i = 0; i < this.form.receipt.length; i++) {
+              if (this.form.receipt[i] !== this.receiptDate) {
+                receipt.push(this.form.receipt[i]);
+              }
+            }
+            this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
+            this.form.receipt = receipt;
             this.form.draft = val;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
@@ -779,6 +787,10 @@
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
               } else if (res.data.code === '50220') {
+                if (receipt.length === 0) {
+                  this.form.receipt = [];
+                  this.form.receipt.push(this.receiptDate);
+                }
                 this.form.day = this.form.day === '0' ? '' : this.form.day;
                 this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
                 this.form.id = res.data.data.id;

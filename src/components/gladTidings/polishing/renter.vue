@@ -538,6 +538,14 @@
           if (this.picStatus) {
             if (this.haveInHand) {
               this.haveInHand = false;
+              let receipt = [];
+              for (let i = 0; i < this.form.receipt.length; i++) {
+                if (this.form.receipt[i] !== this.receiptDate) {
+                  receipt.push(this.form.receipt[i]);
+                }
+              }
+              this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
+              this.form.receipt = receipt;
               for (let i = 0; i < this.sexs.length; i++) {
                 this.form.customers[i].sex = this.sexs[i];
               }
@@ -545,6 +553,10 @@
               this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
                 this.haveInHand = true;
                 if (res.data.code === '51610') {
+                  if (receipt.length === 0) {
+                    this.form.receipt = [];
+                    this.form.receipt.push(this.receiptDate);
+                  }
                   Toast.success(res.data.msg);
                 } else {
                   Toast(res.data.msg);
