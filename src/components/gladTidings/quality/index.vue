@@ -2,15 +2,15 @@
   <div id="quality">
     <div class="main" id="main">
       <van-cell-group>
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <div class="cellA">
-              <span class="requiredIcon">*</span>
-              <div>是否后续质量报备</div>
-            </div>
-            <van-switch-cell @click.native="followOn" v-model="followUp"/>
-          </div>
+        <div class="checks">
+          <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>质量报备</div>
+          <van-radio-group v-model="form.type" @change="qualityChange">
+            <van-radio name="0">新增</van-radio>
+            <van-radio name="1">跟进</van-radio>
+          </van-radio-group>
         </div>
+      </van-cell-group>
+      <van-cell-group>
         <van-field
           v-if="followUp"
           v-model="house_name"
@@ -26,7 +26,8 @@
           label="城市"
           @click="selectShow(2)"
           type="text"
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           placeholder="请选择城市"
           required>
         </van-field>
@@ -35,7 +36,8 @@
           label="小区"
           @click="searchSelect(1)"
           type="text"
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           placeholder="请选择小区地址"
           required>
         </van-field>
@@ -48,6 +50,7 @@
             style="width: 22%"
             v-model="form.door_address[0]"
             type="text"
+            :disabled="followUp"
             placeholder="栋">
           </van-field>
           <span class="cut">-</span>
@@ -55,6 +58,7 @@
             style="width: 22%"
             v-model="form.door_address[1]"
             type="text"
+            :disabled="followUp"
             placeholder="单元">
           </van-field>
           <span class="cut">-</span>
@@ -62,14 +66,16 @@
             class="twoBorder"
             v-model="form.door_address[2]"
             type="text"
+            :disabled="followUp"
             placeholder="门牌">
           </van-field>
         </div>
         <van-field
           @click="selectShow(1)"
           v-model="house_type_name"
-          readonly
+          :readonly="!followUp"
           type="text"
+          :disabled="followUp"
           label="户型"
           placeholder="请选择户型"
           required>
@@ -79,14 +85,16 @@
           label="面积"
           required
           type="number"
+          :disabled="followUp"
           placeholder="请填写面积">
         </van-field>
         <van-field
           @click="selectShow(14)"
           v-model="form.decorate.name"
           label="装修"
+          :disabled="followUp"
           required
-          readonly
+          :readonly="!followUp"
           type="text"
           placeholder="请选择装修">
         </van-field>
@@ -95,7 +103,8 @@
           v-model="form.property_type.name"
           label="房屋类型"
           required
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           type="text"
           placeholder="请选择房屋类型">
         </van-field>
@@ -104,9 +113,10 @@
           v-model="form.direction.name"
           label="朝向"
           required
+          :disabled="followUp"
+          :readonly="!followUp"
           type="text"
-          placeholder="请选择朝向"
-          readonly>
+          placeholder="请选择朝向">
         </van-field>
         <div class="first_date">
           <van-field
@@ -118,12 +128,14 @@
           <van-field
             v-model="form.floor"
             type="number"
+            :disabled="followUp"
             placeholder="请填写房屋楼层">
           </van-field>
           <van-field
             class="twoBorder"
             v-model="form.floors"
             type="number"
+            :disabled="followUp"
             placeholder="请填写总楼层">
           </van-field>
         </div>
@@ -132,6 +144,7 @@
           label="价格"
           required
           type="text"
+          :disabled="followUp"
           placeholder="请填写价格">
         </van-field>
 
@@ -148,6 +161,7 @@
           label="是否中介"
           type="text"
           readonly
+          :disabled="followUp"
           placeholder="是否中介"
           required>
         </van-field>
@@ -315,7 +329,7 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
-        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
+        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos" :dis="noRemove"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -415,7 +429,7 @@
         form: {
           id: '',
           house_id: '',
-          type: 0,
+          type: '0',
           is_draft: 0,
           city_id: '',                  //城市
           city_name: '',                //城市
@@ -473,9 +487,12 @@
           department_name: '',          //部门name
         },
         community_name: '',
-        photos: {},                     //房屋影像
+        photos: [],                     //房屋影像
 
+        noRemove: true,
         isValue1: true,
+
+        numbers: '',
       }
     },
     mounted() {
@@ -493,8 +510,12 @@
     },
 
     methods: {
-      followOn() {
-        this.close_();
+      qualityChange(val) {
+        if (this.numbers !== val) {
+          this.close_();
+          this.numbers = val;
+          this.followUp = val === '0' ? false : true;
+        }
       },
       userInfo(val1) {
         if (val1) {
@@ -743,7 +764,6 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-            this.form.type = this.followUp ? 1 : 0;                   //是否后续
             this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
             this.form.gas = this.gasOn ? 1 : 0;                       //天然气
             this.form.is_clean = this.is_cleanOn ? 1 : 0;             //房屋交接是否干净
@@ -824,12 +844,18 @@
             let data = res.data.data;
             this.form.id = res.data.id;
             this.form.house_id = data.house_id;
-            if (data.type === 1) {
-              this.followUp = true;
-              this.house_name = data.address;
+            if (data.type) {
+              this.form.type = String(data.type);
+              this.numbers = String(data.type);
+              if (String(data.type) === '1') {
+                this.followUp = true;
+                this.house_name = data.address;
+              } else {
+                this.followUp = false;
+                this.house_name = '';
+              }
             } else {
-              this.followUp = false;
-              this.house_name = '';
+              data.type = '0';
             }
             this.prefill(res.data.data, 'draught');
           } else {
@@ -840,7 +866,6 @@
 
       prefill(data, val) {
         this.isClear = false;
-        this.form.type = data.type;
         this.form.city_id = data.city_id;                     //城市
         this.form.city_name = data.city_name;                 //城市
         this.form.community = data.community;                 //小区id
@@ -920,12 +945,14 @@
               id: data.photo
             }
           }).then((res) => {
+            this.noRemove = false;
             if (res.data.code === '51110') {
               this.photos = res.data.data;
               this.form.photo = [];
               //房屋影像
               for (let i = 0; i < res.data.data.length; i++) {
                 this.form.photo.push(res.data.data[i].id);                       //房屋影像
+
               }
             }
           })
@@ -943,6 +970,7 @@
         });
         this.userInfo(true);
         $('.imgItem').remove();
+        this.noRemove = true;
         this.picStatus = true;
         this.form.id = '';
         this.form.house_id = '';
@@ -1003,7 +1031,7 @@
         this.form.other_remark = '';             //其他问题
         this.form.other_furniture = '';          //其他家具
         this.form.photo = [];                    //房屋影像
-        this.photos = {};                    //房屋影像
+        this.photos = [];                    //房屋影像
       },
     },
   }
