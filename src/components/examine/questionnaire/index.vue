@@ -1,12 +1,12 @@
 <template>
   <div id="questionnaire">
     <div class="questionnaireTitle">
-      <div>{{paper_name}}</div>
+      <div style="position: absolute;top: 50px;">{{paper_name}}</div>
       <img src="../../../assets/backgroundPic.png" alt="">
     </div>
     <div class="exercise" v-if="!message">
       <div v-for="(key,index) in question_set">
-        <div class="subject" v-for="(key1,index1) in key">
+        <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
           <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
           <van-row>
             <val-col span="2" style="float: left">
@@ -36,7 +36,7 @@
                 </van-checkbox>
               </van-checkbox-group>
             </div>
-            <div class="contents" v-if="index === '158'">
+            <div class="contents" v-if="index === '158'" style="margin-top: 10px;border-radius: 8px;width: 96%;border: none;">
               <van-cell-group>
                 <van-field
                   v-model="answer[key1.id]"
@@ -52,7 +52,7 @@
         </div>
       </div>
       <div style="text-align: center;margin-top: 15px;">
-        <van-button type="primary" size="normal" style="padding: 0px 20px;" @click="onSubmit">提交</van-button>
+        <van-button type="primary" size="normal" style="padding: 0px 50px;" @click="onSubmit">提交问卷</van-button>
       </div>
     </div>
     <div class="exercise msg" v-if="message">
@@ -154,6 +154,9 @@
     img {
       width: 100%;
     }
+    .borderTop {
+      border-top: none !important;
+    }
     .mask {
       position: fixed;
       top: 0;
@@ -195,11 +198,6 @@
       color: #409EFF;
     }
     .questionnaireTitle {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 66;
       height: 3rem;
       overflow: hidden;
       div {
@@ -216,7 +214,6 @@
       color: #949494;
     }
     .exercise {
-      margin-top: 3.2rem;
       background-color: #FFFFFF;
       padding: .2rem;
       .subject {
