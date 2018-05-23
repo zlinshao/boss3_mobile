@@ -6,7 +6,7 @@
           <div class="cellGroup">
             <div class="cellA">
               <span class="requiredIcon">*</span>
-              <div>是否后续质量报备</div>
+              <div>是否后续房屋报备</div>
             </div>
             <van-switch-cell @click.native="followOn" v-model="followUp"/>
           </div>
@@ -16,6 +16,7 @@
           v-model="house_name"
           label="房屋地址"
           type="text"
+          :disabled="followUp"
           @click="searchSelect(3)"
           readonly
           placeholder="选择房屋地址"
@@ -26,7 +27,8 @@
           label="城市"
           @click="selectShow(2)"
           type="text"
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           placeholder="请选择城市"
           required>
         </van-field>
@@ -35,7 +37,8 @@
           label="小区"
           @click="searchSelect(1)"
           type="text"
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           placeholder="请选择小区地址"
           required>
         </van-field>
@@ -48,6 +51,7 @@
             style="width: 22%"
             v-model="form.door_address[0]"
             type="text"
+            :disabled="followUp"
             placeholder="栋">
           </van-field>
           <span class="cut">-</span>
@@ -55,6 +59,7 @@
             style="width: 22%"
             v-model="form.door_address[1]"
             type="text"
+            :disabled="followUp"
             placeholder="单元">
           </van-field>
           <span class="cut">-</span>
@@ -62,14 +67,16 @@
             class="twoBorder"
             v-model="form.door_address[2]"
             type="text"
+            :disabled="followUp"
             placeholder="门牌">
           </van-field>
         </div>
         <van-field
           @click="selectShow(1)"
           v-model="house_type_name"
-          readonly
+          :readonly="!followUp"
           type="text"
+          :disabled="followUp"
           label="户型"
           placeholder="请选择户型"
           required>
@@ -79,14 +86,16 @@
           label="面积"
           required
           type="number"
+          :disabled="followUp"
           placeholder="请填写面积">
         </van-field>
         <van-field
           @click="selectShow(14)"
           v-model="form.decorate.name"
           label="装修"
+          :disabled="followUp"
           required
-          readonly
+          :readonly="!followUp"
           type="text"
           placeholder="请选择装修">
         </van-field>
@@ -95,7 +104,8 @@
           v-model="form.property_type.name"
           label="房屋类型"
           required
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           type="text"
           placeholder="请选择房屋类型">
         </van-field>
@@ -104,9 +114,10 @@
           v-model="form.direction.name"
           label="朝向"
           required
+          :disabled="followUp"
+          :readonly="!followUp"
           type="text"
-          placeholder="请选择朝向"
-          readonly>
+          placeholder="请选择朝向">
         </van-field>
         <div class="first_date">
           <van-field
@@ -118,12 +129,14 @@
           <van-field
             v-model="form.floor"
             type="number"
+            :disabled="followUp"
             placeholder="请填写房屋楼层">
           </van-field>
           <van-field
             class="twoBorder"
             v-model="form.floors"
             type="number"
+            :disabled="followUp"
             placeholder="请填写总楼层">
           </van-field>
         </div>
@@ -132,6 +145,7 @@
           label="价格"
           required
           type="text"
+          :disabled="followUp"
           placeholder="请填写价格">
         </van-field>
 
@@ -148,6 +162,7 @@
           label="是否中介"
           type="text"
           readonly
+          :disabled="followUp"
           placeholder="是否中介"
           required>
         </van-field>
@@ -473,7 +488,7 @@
           department_name: '',          //部门name
         },
         community_name: '',
-        photos: {},                     //房屋影像
+        photos: [],                     //房屋影像
 
         isValue1: true,
       }
@@ -824,12 +839,16 @@
             let data = res.data.data;
             this.form.id = res.data.id;
             this.form.house_id = data.house_id;
-            if (data.type === 1) {
-              this.followUp = true;
-              this.house_name = data.address;
+            if (data.type) {
+              if (data.type === 1) {
+                this.followUp = true;
+                this.house_name = data.address;
+              } else {
+                this.followUp = false;
+                this.house_name = '';
+              }
             } else {
-              this.followUp = false;
-              this.house_name = '';
+              data.type = 0;
             }
             this.prefill(res.data.data, 'draught');
           } else {
@@ -926,6 +945,7 @@
               //房屋影像
               for (let i = 0; i < res.data.data.length; i++) {
                 this.form.photo.push(res.data.data[i].id);                       //房屋影像
+
               }
             }
           })
@@ -1003,7 +1023,7 @@
         this.form.other_remark = '';             //其他问题
         this.form.other_furniture = '';          //其他家具
         this.form.photo = [];                    //房屋影像
-        this.photos = {};                    //房屋影像
+        this.photos = [];                    //房屋影像
       },
     },
   }
