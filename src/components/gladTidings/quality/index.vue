@@ -782,7 +782,7 @@
           let val = JSON.parse(t.house);
           this.house_name = val.house_name;
           this.form.house_id = val.house_id;
-          this.prefill(val.house_res, '')
+          this.prefill(val.house_res)
         }
         if (t.city !== undefined && t.city !== '') {
           let val = JSON.parse(t.city);
@@ -822,6 +822,8 @@
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === "51420") {
             let data = res.data.data;
+            this.form.id = res.data.id;
+            this.form.house_id = data.house_id;
             if (data.type === 1) {
               this.followUp = true;
               this.house_name = data.address;
@@ -829,17 +831,15 @@
               this.followUp = false;
               this.house_name = '';
             }
-            this.prefill(res.data.data, res.data.id);
+            this.prefill(res.data.data);
           } else {
             this.form.id = '';
           }
         })
       },
 
-      prefill(data, id) {
+      prefill(data) {
         this.isClear = false;
-        this.form.id = id;
-        this.form.house_id = data.house_id;
         this.form.type = data.type;
         this.form.city_id = data.city_id;                     //城市
         this.form.city_name = data.city_name;                 //城市
