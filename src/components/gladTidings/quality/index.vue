@@ -16,7 +16,6 @@
           v-model="house_name"
           label="房屋地址"
           type="text"
-          :disabled="followUp"
           @click="searchSelect(3)"
           readonly
           placeholder="选择房屋地址"
@@ -330,7 +329,7 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
-        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
+        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos" :dis="followUp"></UpLoad>
       </div>
 
       <van-cell-group>
