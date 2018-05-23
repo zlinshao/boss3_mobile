@@ -4,8 +4,11 @@
       <van-cell-group>
         <div class="titleSwitch">
           <div class="cellGroup">
-            <span class="requiredIcon">*</span>
-            <van-switch-cell v-model="followUp " title="是否后续报备"/>
+            <div class="cellA">
+              <span class="requiredIcon">*</span>
+              <div>是否后续质量报备</div>
+            </div>
+            <van-switch-cell @click.native="followOn" v-model="followUp"/>
           </div>
         </div>
         <van-field
@@ -372,7 +375,7 @@
         isClear: false,                     //删除图片
         picStatus: true,
 
-        followUp: false,                  //后续报备
+        followUp: false,                    //后续报备
 
         allCity: [],                        //城市
         cities: [],                         //城市
@@ -486,7 +489,11 @@
       this.routerIndex('');
       this.ddRent('');
     },
+
     methods: {
+      followOn() {
+        this.close_();
+      },
       userInfo(val1) {
         if (val1) {
           let per = JSON.parse(sessionStorage.personal);
@@ -812,8 +819,13 @@
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === "51420") {
             let data = res.data.data;
-            this.followUp = data.type === 1 ? true : false;     //是否后续报备
-            this.form.type = data.type;                         //是否后续报备
+            if (data.type === 1) {
+              this.followUp = true;
+              this.house_name = data.address;
+            } else {
+              this.followUp = false;
+              this.house_name = '';
+            }
             this.prefill(res.data.data, res.data.id);
           } else {
             this.form.id = '';
@@ -824,6 +836,7 @@
       prefill(data, id) {
         this.isClear = false;
         this.form.id = id;
+        this.form.type = data.type;
         this.form.city_id = data.city_id;                     //城市
         this.form.city_name = data.city_name;                 //城市
         this.form.community = data.community;                 //小区id
@@ -912,7 +925,7 @@
         this.picStatus = true;
         this.form.id = '';
         this.house_name = '';
-        this.form.city_id = this.beforeCityId;                   //城市
+        this.form.city_id = this.beforeCityId;    //城市
         this.form.city_name = this.beforeCity;    //城市
         this.form.community = {};                 //小区id
         this.community_name = '';                 //小区名称
@@ -996,10 +1009,18 @@
       border-bottom: 1px solid #F4F4F4;
       .cellGroup {
         @include flex;
-        margin-left: -7px;
         align-items: center;
-        .requiredIcon {
-          color: #f44;
+        justify-content: space-between;
+        .van-cell {
+          width: 66px;
+        }
+        .cellA {
+          @include flex;
+          align-items: center;
+          margin-left: -7px;
+          .requiredIcon {
+            color: #f44;
+          }
         }
       }
     }
