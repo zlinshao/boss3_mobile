@@ -13,6 +13,8 @@ import Comments from '@/components/examine/writings/comments.vue'
 
 // 问卷调查
 import Questionnaire from '@/components/examine/questionnaire/index.vue'
+//我的考试
+import Exam from '@/components/examine/exam/index.vue'
 
 import CollectReport from '../components/gladTidings/collectReport/index.vue'
 import Quality from '../components/gladTidings/quality/index.vue'
@@ -400,13 +402,20 @@ export default new Router({
       hidden: false,
       component: Warning
     },
-    // {
-    //   path: '/questionnaire',
-    //   name: '问卷调查',
-    //   meta: {title: '问卷调查'},
-    //   hidden: 'glad',
-    //   component: Questionnaire
-    // },
+    {
+      path: '/questionnaire',
+      name: '问卷调查',
+      meta: {title: '问卷调查'},
+      hidden: 'glad',
+      component: Questionnaire
+    },
+    {
+      path: '/exam',
+      name: '我的考试',
+      meta: {title: '我的考试'},
+      hidden: 'glad',
+      component: Exam
+    },
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',
