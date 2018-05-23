@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
-          <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>质量报备</div>
+          <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>报备类型</div>
           <van-radio-group v-model="form.type" @change="qualityChange">
             <van-radio name="0">新增</van-radio>
             <van-radio name="1">跟进</van-radio>
