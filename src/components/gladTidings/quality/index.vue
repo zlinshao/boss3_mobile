@@ -845,6 +845,8 @@
             this.form.id = res.data.id;
             this.form.house_id = data.house_id;
             if (data.type) {
+              this.form.type = String(data.type);
+              this.numbers = String(data.type);
               if (String(data.type) === '1') {
                 this.followUp = true;
                 this.house_name = data.address;
@@ -864,8 +866,6 @@
 
       prefill(data, val) {
         this.isClear = false;
-        this.form.type = String(data.type);
-        this.numbers = String(data.type);
         this.form.city_id = data.city_id;                     //城市
         this.form.city_name = data.city_name;                 //城市
         this.form.community = data.community;                 //小区id
