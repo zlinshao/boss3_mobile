@@ -2,15 +2,15 @@
   <div id="quality">
     <div class="main" id="main">
       <van-cell-group>
-        <div class="titleSwitch">
-          <div class="cellGroup">
-            <div class="cellA">
-              <span class="requiredIcon">*</span>
-              <div>是否后续房屋报备</div>
-            </div>
-            <van-switch-cell @click.native="followOn" v-model="followUp"/>
-          </div>
+        <div class="checks">
+          <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>质量报备</div>
+          <van-radio-group v-model="form.type" @change="qualityChange">
+            <van-radio name="0">新增</van-radio>
+            <van-radio name="1">跟进</van-radio>
+          </van-radio-group>
         </div>
+      </van-cell-group>
+      <van-cell-group>
         <van-field
           v-if="followUp"
           v-model="house_name"
@@ -329,7 +329,7 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
-        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos" :dis="followUp"></UpLoad>
+        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos" :dis="noRemove"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -429,7 +429,7 @@
         form: {
           id: '',
           house_id: '',
-          type: 0,
+          type: '0',
           is_draft: 0,
           city_id: '',                  //城市
           city_name: '',                //城市
@@ -489,7 +489,10 @@
         community_name: '',
         photos: [],                     //房屋影像
 
+        noRemove: true,
         isValue1: true,
+
+        numbers: '',
       }
     },
     mounted() {
@@ -507,8 +510,12 @@
     },
 
     methods: {
-      followOn() {
-        this.close_();
+      qualityChange(val) {
+        if (this.numbers !== val) {
+          this.close_();
+          this.numbers = val;
+          this.followUp = val === '0' ? false : true;
+        }
       },
       userInfo(val1) {
         if (val1) {
@@ -757,7 +764,6 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-            this.form.type = this.followUp ? 1 : 0;                   //是否后续
             this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
             this.form.gas = this.gasOn ? 1 : 0;                       //天然气
             this.form.is_clean = this.is_cleanOn ? 1 : 0;             //房屋交接是否干净
@@ -839,7 +845,7 @@
             this.form.id = res.data.id;
             this.form.house_id = data.house_id;
             if (data.type) {
-              if (data.type === 1) {
+              if (data.type === '1') {
                 this.followUp = true;
                 this.house_name = data.address;
               } else {
@@ -847,7 +853,7 @@
                 this.house_name = '';
               }
             } else {
-              data.type = 0;
+              data.type = '0';
             }
             this.prefill(res.data.data, 'draught');
           } else {
@@ -859,6 +865,7 @@
       prefill(data, val) {
         this.isClear = false;
         this.form.type = data.type;
+        this.numbers = data.type;
         this.form.city_id = data.city_id;                     //城市
         this.form.city_name = data.city_name;                 //城市
         this.form.community = data.community;                 //小区id
@@ -938,6 +945,7 @@
               id: data.photo
             }
           }).then((res) => {
+            this.noRemove = false;
             if (res.data.code === '51110') {
               this.photos = res.data.data;
               this.form.photo = [];
@@ -962,6 +970,7 @@
         });
         this.userInfo(true);
         $('.imgItem').remove();
+        this.noRemove = true;
         this.picStatus = true;
         this.form.id = '';
         this.form.house_id = '';
