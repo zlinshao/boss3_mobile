@@ -1,8 +1,8 @@
 <template>
   <div id="questionnaire">
     <div class="questionnaireTitle">
-      <div>{{paper_name}}</div>
-      <img src="../../../assets/backgroundPic.png" alt="">
+      <div style="color: #393939;position: absolute;top: 60px;font-size: 18px;">{{paper_name}}</div>
+      <img src="../../../assets/shenp2.jpg" alt="">
     </div>
     <div class="exercise" v-if="!message">
       <div v-for="(key,index) in question_set">
@@ -36,6 +36,20 @@
                 </van-checkbox>
               </van-checkbox-group>
             </div>
+            <div class="contents" v-if="index ==='157'">
+              <van-cell-group>
+                <div v-for="(item,kk) in key1.answer_count" style="">
+                  <van-field
+                    v-model="answer[key1.id][kk]"
+                    :placeholder="`请填写第 ${kk+1} 处答案`"
+                    icon="clear"
+                    @click-icon="clearBlankAnswer(key1.id, kk)"
+                    autosize
+                    required>
+                  </van-field>
+                </div>
+              </van-cell-group>
+            </div>
             <div class="contents" v-if="index === '158'">
               <van-cell-group>
                 <van-field
@@ -61,19 +75,19 @@
     <div class="mask" v-show="confirmType==='success'">
       <div class="box">
         <img src="../../../assets/confirm_success.png" alt="">
-        <div class="words">您已成功提交问卷</div>
+        <div class="words">您已成功提交考试</div>
       </div>
     </div>
     <div class="mask" v-show="confirmType==='failed'">
       <div class="box">
         <img src="../../../assets/confirm_fail.png" alt="">
-        <div class="words">提交问卷失败 请<span style="color: #ff259a;" @click="onSubmit">重试</span></div>
+        <div class="words">提交考试失败 请<span style="color: #ff259a;font-size: 18px;" @click="onSubmit">重试</span></div>
       </div>
     </div>
     <div class="mask" v-show="confirmType==='repeat'">
       <div class="box" style="text-align: center;height: 200px;">
         <div style="margin-top: 80px;">
-          <p >您已完成本次问卷</p>
+          <p >您已完成本次考试</p>
           <p style="color: #ff259a;">请勿重复提交</p>
         </div>
       </div>
@@ -96,7 +110,7 @@
         question_set: {},       //试题
         answer: {},             //答案
         message: '',
-        questionnaire_id: '14',
+        exam_id: '29',
         confirmType: '',
       }
     },
@@ -108,29 +122,38 @@
         }
         this.questionType = sub;
       });
-      this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
+      this.$http.get(this.urls + 'exam/' + this.exam_id).then((res) => {
         if (res.data.code === '30000') {
           this.question_set = res.data.data.question_set;
-          this.paper_name = res.data.data.paper_name;
+          this.paper_name = res.data.data.name;
+          if (this.question_set[157] && this.question_set[157].length > 0) {
+            this.question_set[157].forEach((item) => {
+              this.$set(this.answer, item.id, []);
+            });
+          }
         } else {
           this.message = res.data.msg;
         }
-      })
+      });
+
     },
     watch: {},
     methods: {
+      clearBlankAnswer(id, k) {
+        this.answer[id][k] = '';
+        this.$set(this.answer[id], k, '');
+      },
       onResult(id) {
         this.answer[id] = this.result;
       },
       onSubmit() {
         Dialog.confirm({
-          title: '提交问卷',
-          message: '确认提交问卷吗'
+          title: '提交考试',
+          message: '确认提交考试吗'
         }).then(() => {
           this.$http.post(globalConfig.server + 'exam/result', {
-            exam_id: this.questionnaire_id,
+            exam_id: this.exam_id,
             answer: this.answer,
-            is_questionnaire: true
           }).then((res) => {
             if (res.data.code === '36010') {
               this.confirmType = 'success';
@@ -182,6 +205,7 @@
         }
       }
     }
+
     .van-radio, .van-checkbox.van-checkbox--round {
       display: flex;
       display: -webkit-flex;
@@ -243,6 +267,10 @@
         }
         .van-cell-group {
           padding-left: 0;
+          .van-cell__value input {
+            background: #F3F9FF;
+            padding: 10px;
+          }
           .van-field--has-textarea {
             background: #F3F9FF;
             .van-field__control {
