@@ -36,7 +36,10 @@
               <p :style="{'background': key.back}">
                 <i :class="key.icon"></i>
               </p>
-              <h1>{{key.name}}</h1>
+              <h1>{{key.name}}
+                <span v-if="key.name==='我的考试' && examData && examData.available" class="circle_red"></span>
+                <span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available" class="circle_red"></span>
+              </h1>
             </router-link>
           </div>
         </div>
@@ -127,7 +130,7 @@
                 <span>{{item.house_name}}</span>
               </h3>
               <!--<h3>-->
-                <!--结束时间：0000-00-00 00:00:00-->
+              <!--结束时间：0000-00-00 00:00:00-->
               <!--</h3>-->
               <div class="progress"
                    :class="{'published':item.status === 'published','rejected':item.status === 'rejected','cancelled':item.status === 'cancelled'}">
@@ -197,10 +200,10 @@
         checks: '',
         params: {},
         paging: 0,
-
         processType2: '',
-
         queryType: '',
+        examData: {},
+        questionnaireData: {},
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -212,12 +215,29 @@
       this.paths = this.$router.options.routes;
       this.queryType = sessionStorage.getItem('queryType');
       this.toDone();
+      //个人门户下的考试和调查1分钟轮询一次
+      this.getExamNaireRedCircle();
+      setTimeout(() => {
+        this.getExamNaireRedCircle();
+      }, 60 * 1000);
     },
     activated() {
       this.routerIndex('');
       this.ddRent('', 'close');
     },
     methods: {
+      getExamNaireRedCircle() {
+        this.$http.get(globalConfig.server + 'exam/active').then((res) => {
+          if (res.data.code === '30000') {
+            this.examData = res.data.data;
+          }
+        });
+        this.$http.get(globalConfig.server + 'questionnaire/active').then((res) => {
+          if (res.data.code === '30000') {
+            this.questionnaireData = res.data.data;
+          }
+        });
+      },
       // 搜索
       searchRouter() {
         this.$router.push({path: '/searchList', query: {term: JSON.stringify(this.params)}});
@@ -374,6 +394,14 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
+  .circle_red {
+    width: 5px;
+    height: 5px;
+    background: red;
+    display: inline-block;
+    border-radius: 50%;
+  }
+
   #hello {
     @mixin flex {
       display: flex;

@@ -1,11 +1,11 @@
 <template>
   <div id="questionnaire">
     <div class="questionnaireTitle">
-      <div style="position: absolute;top: 25px;border-bottom: 1px solid #ccccccb3;">场次名称：<span>{{paperData.name}}</span>
+      <div style="position: absolute;top: 25px;height: 33px;border-bottom: 1px solid #ccccccb3;">场次名称：<span>{{paperData.name}}</span>
       </div>
       <div style="position: absolute;top: 60px;">总题数： <span>{{paperData.question_count}}</span>题</div>
       <div style="position: absolute;top: 85px;">总时长： <span>{{ paperData.duration }}</span>分钟</div>
-      <div style="position: absolute;top: 110px;border-bottom: 1px solid #ccccccb3;">总分值：
+      <div style="position: absolute;top: 110px;height: 33px;border-bottom: 1px solid #ccccccb3;">总分值：
         <span>{{paperData.score}}分</span></div>
       <div class="count_down">倒计时： <span style="color: #fb4699;">09：59：59</span></div>
     </div>
@@ -36,10 +36,10 @@
               </van-radio-group>
             </div>
             <div class="subjectB" v-if="index === '154' || index === '155'">
-              <van-checkbox-group v-model="result" @change="onResult(key1.id)">
+              <van-checkbox-group v-model="answer[key1.id]">
                 <van-checkbox
                   v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
-                  <span :class="{'onClass': result === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
                 </van-checkbox>
               </van-checkbox-group>
             </div>
@@ -83,6 +83,7 @@
       <div class="box">
         <img src="../../../assets/confirm_success.png" alt="">
         <div class="words">您已成功提交考试</div>
+        <van-button size="small" class="words" style="margin-top: 26px;left: 40%;line-height: 25px;" @click="goIndex">确定</van-button>
         <div class="force" v-show="showForceWords">考试时间已到，系统已为您自动提交考试</div>
       </div>
     </div>
@@ -90,16 +91,19 @@
       <div class="box">
         <img src="../../../assets/confirm_fail.png" alt="">
         <div class="words">提交考试失败 请<span style="color: #ff259a;font-size: 18px;" @click="onSubmit">重试</span></div>
+        <van-button size="small" class="words" style="background: #ff259a;color: #fff;margin-top: 26px;left: 40%;line-height: 25px;" @click="goIndex">确定</van-button>
       </div>
     </div>
     <div class="mask" v-show="confirmType==='repeat'">
       <div class="box" style="text-align: center;height: 200px;">
-        <div style="margin-top: 80px;">
+        <div style="margin-top: 65px;">
           <p>您已完成本次考试</p>
           <p style="color: #ff259a;">请勿重复提交</p>
+          <van-button size="small" style="background: #ff259a;color: #fff;margin-top: 10px;" @click="goIndex">确定</van-button>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -112,7 +116,6 @@
       return {
         urls: globalConfig.server,
         radio: '',
-        result: [],
         paperData: {},
         questionType: {},       //题型
         question_set: {},       //试题
@@ -148,6 +151,17 @@
         if (res.data.code === '30000') {
           this.question_set = res.data.data.question_set;
           this.paperData = res.data.data;
+
+          if (this.question_set[154] && this.question_set[154].length > 0) {
+            this.question_set[154].forEach((item) => {
+              this.$set(this.answer, item.id, []);
+            });
+          }
+          if (this.question_set[155] && this.question_set[155].length > 0) {
+            this.question_set[155].forEach((item) => {
+              this.$set(this.answer, item.id, []);
+            });
+          }
           if (this.question_set[157] && this.question_set[157].length > 0) {
             this.question_set[157].forEach((item) => {
               this.$set(this.answer, item.id, []);
@@ -167,6 +181,9 @@
       }
     },
     methods: {
+      goIndex(){
+        this.$router.push({path: '/index'});
+      },
       clock(n) {
         let val = Number(n);
         let h = Number(Math.floor(val / 3600));
@@ -195,9 +212,6 @@
       clearBlankAnswer(id, k) {
         this.answer[id][k] = '';
         this.$set(this.answer[id], k, '');
-      },
-      onResult(id) {
-        this.answer[id] = this.result;
       },
       onSubmit() {
         Dialog.confirm({
