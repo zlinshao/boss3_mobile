@@ -9,9 +9,9 @@
         <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
           <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
           <van-row>
-            <val-col span="2" style="float: left">
+            <van-col span="2" style="float: left">
               <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
-            </val-col>
+            </van-col>
             <van-col span="18" style="float: initial;display: inline-block;">
               <p v-html="key1.stem"></p>
             </van-col>
@@ -43,8 +43,7 @@
                   type="textarea"
                   placeholder="请简答"
                   icon="clear"
-                  @click-icon="answer[key1.id]='' "
-                  required>
+                  @click-icon="answer[key1.id]='' ">
                 </van-field>
               </van-cell-group>
             </div>
@@ -73,7 +72,7 @@
     <div class="mask" v-show="confirmType==='repeat'">
       <div class="box" style="text-align: center;height: 200px;">
         <div style="margin-top: 80px;">
-          <p >您已完成本次问卷</p>
+          <p>您已完成本次问卷</p>
           <p style="color: #ff259a;">请勿重复提交</p>
         </div>
       </div>
@@ -126,6 +125,10 @@
           this.message = res.data.msg;
         }
       })
+    },
+    activated() {
+      this.examId = this.$route.query.id;
+      this.confirmType = this.$route.query.type;
     },
     watch: {},
     methods: {
