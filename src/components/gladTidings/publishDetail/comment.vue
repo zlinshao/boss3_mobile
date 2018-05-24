@@ -243,7 +243,7 @@
         this.form.is_electric_appliance = this.is_electric_status ? 1 : 0;
         this.form.is_clean = this.is_clean_status ? 1 : 0;
         this.$http.put(this.addr + 'bulletin/helper/score/' + this.pitch, this.forms).then((res) => {
-          if (res.data.code === '51100') {
+          if (res.data.code === '51110') {
             this.$router.replace({path: this.path, query: {ids: this.pitch}});
             this.close_();
             $('.imgItem').remove();
