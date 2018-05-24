@@ -29,10 +29,10 @@
               </van-radio-group>
             </div>
             <div class="subjectB" v-if="index === '154' || index === '155'">
-              <van-checkbox-group v-model="result" @change="onResult(key1.id)">
+              <van-checkbox-group v-model="answer[key1.id]">
                 <van-checkbox
                   v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
-                  <span :class="{'onClass': result === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
                 </van-checkbox>
               </van-checkbox-group>
             </div>
@@ -90,7 +90,6 @@
       return {
         urls: globalConfig.server,
         radio: '',
-        result: [],
         paper_name: '',         //问卷标题
         questionType: {},       //题型
         question_set: {},       //试题
@@ -112,6 +111,17 @@
         if (res.data.code === '30000') {
           this.question_set = res.data.data.question_set;
           this.paper_name = res.data.data.paper_name;
+
+          if (this.question_set[154] && this.question_set[154].length > 0) {
+            this.question_set[154].forEach((item) => {
+              this.$set(this.answer, item.id, []);
+            });
+          }
+          if (this.question_set[155] && this.question_set[155].length > 0) {
+            this.question_set[155].forEach((item) => {
+              this.$set(this.answer, item.id, []);
+            });
+          }
         } else {
           this.message = res.data.msg;
         }
@@ -119,9 +129,6 @@
     },
     watch: {},
     methods: {
-      onResult(id) {
-        this.answer[id] = this.result;
-      },
       onSubmit() {
         Dialog.confirm({
           title: '提交问卷',
@@ -132,6 +139,7 @@
             answer: this.answer,
             is_questionnaire: true
           }).then((res) => {
+            alert(this.answer)
             if (res.data.code === '36010') {
               this.confirmType = 'success';
             } else if (res.data.code === '36012') {
@@ -214,6 +222,10 @@
       color: #949494;
     }
     .exercise {
+      width: 96%;
+      margin: 10px auto;
+      box-shadow: 0 0 5px 0 #aaaaaa;
+      border-radius: 8px;
       background-color: #FFFFFF;
       padding: .2rem;
       .subject {

@@ -406,12 +406,14 @@ export default new Router({
       path: '/exam',
       name: '我的考试',
       meta: {title: '我的考试'},
+      icon: 'iconfont icon-xinjianshijuan',
       hidden: 'glad',
       component: Exam
     },
     {
       path: '/questionnaire',
       name: '问卷调查',
+      icon: 'iconfont icon-jinrukaoshi',
       meta: {title: '问卷调查'},
       hidden: 'glad',
       component: Questionnaire
