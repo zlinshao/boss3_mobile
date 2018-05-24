@@ -163,6 +163,11 @@
       this.detail = this.$route.query.detail;
       this.address = this.$route.query.address;
       this.marking = this.$route.query.marking;
+
+      this.forms.is_electric_appliance = 1;
+      this.forms.is_clean = 1;
+      this.is_electric_status = true;
+      this.is_clean_status = true;
     },
     methods: {
       // onClick(key) {
@@ -240,8 +245,8 @@
       },
       // 评分
       mark() {
-        this.form.is_electric_appliance = this.is_electric_status ? 1 : 0;
-        this.form.is_clean = this.is_clean_status ? 1 : 0;
+        this.forms.is_electric_appliance = this.is_electric_status ? 1 : 0;
+        this.forms.is_clean = this.is_clean_status ? 1 : 0;
         this.$http.put(this.addr + 'bulletin/helper/score/' + this.pitch, this.forms).then((res) => {
           if (res.data.code === '51110') {
             this.$router.replace({path: this.path, query: {ids: this.pitch}});
