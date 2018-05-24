@@ -76,7 +76,7 @@
         </div>
 
         <div class="footer">
-          <div @click="manager()">确认</div>
+          <div @click="manager(marking)">确认</div>
         </div>
       </div>
 
