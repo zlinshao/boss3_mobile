@@ -1,17 +1,17 @@
 <template>
   <div id="questionnaire">
     <div class="questionnaireTitle">
-      <div>{{paper_name}}</div>
+      <div style="position: absolute;top: 50px;">{{paper_name}}</div>
       <img src="../../../assets/backgroundPic.png" alt="">
     </div>
     <div class="exercise" v-if="!message">
       <div v-for="(key,index) in question_set">
-        <div class="subject" v-for="(key1,index1) in key">
+        <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
           <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
           <van-row>
-            <val-col span="2" style="float: left">
+            <van-col span="2" style="float: left">
               <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
-            </val-col>
+            </van-col>
             <van-col span="18" style="float: initial;display: inline-block;">
               <p v-html="key1.stem"></p>
             </van-col>
@@ -29,22 +29,21 @@
               </van-radio-group>
             </div>
             <div class="subjectB" v-if="index === '154' || index === '155'">
-              <van-checkbox-group v-model="result" @change="onResult(key1.id)">
+              <van-checkbox-group v-model="answer[key1.id]">
                 <van-checkbox
                   v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
-                  <span :class="{'onClass': result === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
                 </van-checkbox>
               </van-checkbox-group>
             </div>
-            <div class="contents" v-if="index === '158'">
+            <div class="contents" v-if="index === '158'" style="margin-top: 10px;border-radius: 8px;width: 96%;border: none;">
               <van-cell-group>
                 <van-field
                   v-model="answer[key1.id]"
                   type="textarea"
                   placeholder="请简答"
                   icon="clear"
-                  @click-icon="answer[key1.id]='' "
-                  required>
+                  @click-icon="answer[key1.id]='' ">
                 </van-field>
               </van-cell-group>
             </div>
@@ -52,7 +51,7 @@
         </div>
       </div>
       <div style="text-align: center;margin-top: 15px;">
-        <van-button type="primary" size="normal" style="padding: 0px 20px;" @click="onSubmit">提交</van-button>
+        <van-button type="primary" size="normal" style="padding: 0px 50px;" @click="onSubmit">提交问卷</van-button>
       </div>
     </div>
     <div class="exercise msg" v-if="message">
@@ -73,7 +72,7 @@
     <div class="mask" v-show="confirmType==='repeat'">
       <div class="box" style="text-align: center;height: 200px;">
         <div style="margin-top: 80px;">
-          <p >您已完成本次问卷</p>
+          <p>您已完成本次问卷</p>
           <p style="color: #ff259a;">请勿重复提交</p>
         </div>
       </div>
@@ -90,7 +89,6 @@
       return {
         urls: globalConfig.server,
         radio: '',
-        result: [],
         paper_name: '',         //问卷标题
         questionType: {},       //题型
         question_set: {},       //试题
@@ -112,16 +110,28 @@
         if (res.data.code === '30000') {
           this.question_set = res.data.data.question_set;
           this.paper_name = res.data.data.paper_name;
+
+          if (this.question_set[154] && this.question_set[154].length > 0) {
+            this.question_set[154].forEach((item) => {
+              this.$set(this.answer, item.id, []);
+            });
+          }
+          if (this.question_set[155] && this.question_set[155].length > 0) {
+            this.question_set[155].forEach((item) => {
+              this.$set(this.answer, item.id, []);
+            });
+          }
         } else {
           this.message = res.data.msg;
         }
       })
     },
+    activated() {
+      this.examId = this.$route.query.id;
+      this.confirmType = this.$route.query.type;
+    },
     watch: {},
     methods: {
-      onResult(id) {
-        this.answer[id] = this.result;
-      },
       onSubmit() {
         Dialog.confirm({
           title: '提交问卷',
@@ -132,6 +142,7 @@
             answer: this.answer,
             is_questionnaire: true
           }).then((res) => {
+            alert(this.answer)
             if (res.data.code === '36010') {
               this.confirmType = 'success';
             } else if (res.data.code === '36012') {
@@ -153,6 +164,9 @@
   #questionnaire {
     img {
       width: 100%;
+    }
+    .borderTop {
+      border-top: none !important;
     }
     .mask {
       position: fixed;
@@ -195,11 +209,6 @@
       color: #409EFF;
     }
     .questionnaireTitle {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 66;
       height: 3rem;
       overflow: hidden;
       div {
@@ -216,7 +225,10 @@
       color: #949494;
     }
     .exercise {
-      margin-top: 3.2rem;
+      width: 96%;
+      margin: 10px auto;
+      box-shadow: 0 0 5px 0 #aaaaaa;
+      border-radius: 8px;
       background-color: #FFFFFF;
       padding: .2rem;
       .subject {
