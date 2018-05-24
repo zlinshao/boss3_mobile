@@ -91,7 +91,8 @@
               </div>
               <div class="pics">
                 <div v-for="(pic,num) in key.album">
-                  <img v-if="pic.info.ext.indexOf('video') > -1" @click="checkTv(pic.uri)" src="../../../assets/video.jpg">
+                  <img v-if="pic.info.ext.indexOf('video') > -1" @click="checkTv(pic.uri)"
+                       src="../../../assets/video.jpg">
                   <img v-else @click="pics(key.album, num, pic.info.ext)" :src="pic.uri">
                 </div>
               </div>
@@ -113,7 +114,7 @@
            v-if="personalId.id === personal.id && (place.status === 'published' || place.status === 'rejected' || place.status === 'cancelled')">
         重新提交
       </div>
-      <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
+      <div v-for="(key,index) in operation" @click="commentOn(index, marking)">{{key}}</div>
     </div>
 
     <div id="videoId" v-show="videoSrc !== ''">
@@ -199,6 +200,8 @@
 
         role_name: [],
         showContent: false,
+
+        marking: '',
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -280,6 +283,7 @@
           if (res.data.status === 'success' && res.data.data.length !== 0) {
             this.formList = JSON.parse(res.data.data.process.content.show_content_compress);
             let houseName = res.data.data.process.content;
+            this.house_id = houseName.house_id;
             if (houseName.address) {
               this.address = houseName.address;
             } else if (houseName.rent_without_collect_address) {
@@ -293,6 +297,13 @@
             let pro = res.data.data.process;
             this.personal = pro.user;
             this.place = pro.place;
+
+            if (houseName.quality_up && String(houseName.quality_up) === '1' && pro.place.name === 'appraiser-officer_review') {
+              this.marking = 1;
+            } else {
+              this.marking = 2;
+            }
+
             if (this.placeStatus.indexOf(pro.place.status) === -1) {
               this.placeFalse = true;
             } else {
@@ -361,8 +372,8 @@
         document.getElementsByTagName('body')[0].className = '';
       },
       // 评论
-      commentOn(val) {
-        this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2}});
+      commentOn(val, index) {
+        this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: index, house_id: this.house_id}});
       },
       // 重新提交
       newly() {

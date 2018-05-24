@@ -1,50 +1,66 @@
 <template>
   <div>
     <div id="commentOn">
-      <header v-if="marking === 1">
-        <div class="address">
-          {{this.address}}
-        </div>
-        <div class="marking">
-          <div>
-            <p>{{status[active-1]}}</p>
-          </div>
-          <div>
-            <p v-for="key in 5" @click="onClick(key)">
-              <i v-if="key > active" class="iconfont icon-favorite"></i>
-              <i v-if="key <= active" class="iconfont icon-favoritesfilling"></i>
-            </p>
-          </div>
-        </div>
-        <van-cell-group>
-          <van-field
-            @click="selectShow(1)"
-            v-model="decorationOn"
-            label="装修"
-            type="text"
-            readonly
-            placeholder="请选择装修">
-          </van-field>
-          <van-field
-            @click="selectShow(2)"
-            v-model="propertyOn"
-            type="text"
-            readonly
-            label="房屋特色"
-            placeholder="请选择房屋特色">
-          </van-field>
-          <van-field
-            v-model="forms.suggest_price"
-            label="价格"
-            type="number"
-            placeholder="请填写金额">
-          </van-field>
-        </van-cell-group>
-        <div class="footer">
-          <div @click="mark()">确认</div>
-        </div>
-      </header>
-      <div v-if="marking !== 1">
+      <!--<header v-if="marking === 1">-->
+      <!--<div class="address">-->
+      <!--{{this.address}}-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--<p>{{status[forms.house_grade - 1]}}</p>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--<p>卫生状况：</p>-->
+      <!--<p v-for="key in 5" @click="forms.house_grade1 = onClick(key)">-->
+      <!--<i v-if="key > forms.house_grade1" class="iconfont icon-favorite"></i>-->
+      <!--<i v-if="key <= forms.house_grade1" class="iconfont icon-favoritesfilling"></i>-->
+      <!--</p>-->
+      <!--</div>-->
+      <!--<van-cell-group>-->
+      <!--<van-switch-cell v-model="houseStatus1" title="家电是否齐全"/>-->
+      <!--<van-switch-cell v-model="houseStatus2" title="卫生是否干净"/>-->
+      <!--</van-cell-group>-->
+      <!--<div class="marking">-->
+      <!--<div>-->
+      <!--<p>{{status[forms.house_grade - 1]}}</p>-->
+      <!--</div>-->
+      <!--<div>-->
+      <!--<p>卫生状况：</p>-->
+      <!--<p v-for="key in 5" @click="forms.house_grade1 = onClick(key)">-->
+      <!--<i v-if="key > forms.house_grade1" class="iconfont icon-favorite"></i>-->
+      <!--<i v-if="key <= forms.house_grade1" class="iconfont icon-favoritesfilling"></i>-->
+      <!--</p>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--<van-cell-group>-->
+      <!--<van-field-->
+      <!--@click="selectShow(1)"-->
+      <!--v-model="decorationOn"-->
+      <!--label="装修"-->
+      <!--type="text"-->
+      <!--readonly-->
+      <!--placeholder="请选择装修">-->
+      <!--</van-field>-->
+      <!--<van-field-->
+      <!--@click="selectShow(2)"-->
+      <!--v-model="propertyOn"-->
+      <!--type="text"-->
+      <!--readonly-->
+      <!--label="房屋特色"-->
+      <!--placeholder="请选择房屋特色">-->
+      <!--</van-field>-->
+      <!--<van-field-->
+      <!--v-model="forms.suggest_price"-->
+      <!--label="价格"-->
+      <!--type="number"-->
+      <!--placeholder="请填写金额">-->
+      <!--</van-field>-->
+      <!--</van-cell-group>-->
+      <!--<div class="footer">-->
+      <!--<div @click="mark()">确认</div>-->
+      <!--</div>-->
+      <!--</header>-->
+
+      <div>
         <div class="contents">
           <van-cell-group>
             <van-field
@@ -58,19 +74,31 @@
           <div class="title">图片</div>
           <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
         </div>
+
         <div class="footer">
           <div @click="manager()">确认</div>
         </div>
       </div>
+
+      <van-popup v-model="showContent" :close-on-click-overlay="false" style="border-radius: 3px;">
+        <div class="showPopupTitle">评分</div>
+        <div class="showPopup">
+          <van-switch-cell v-model="is_electric_status" title="家电是否齐全"/>
+          <van-switch-cell v-model="is_clean_status" title="卫生是否干净"/>
+        </div>
+        <div class="showPopupFooter" @click="mark">
+          确定
+        </div>
+      </van-popup>
     </div>
 
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
-      <van-picker
-        show-toolbar
-        :columns="columns"
-        @cancel="onCancel"
-        @confirm="onConfirm"/>
-    </van-popup>
+    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">-->
+    <!--<van-picker-->
+    <!--show-toolbar-->
+    <!--:columns="columns"-->
+    <!--@cancel="onCancel"-->
+    <!--@confirm="onConfirm"/>-->
+    <!--</van-popup>-->
   </div>
 </template>
 
@@ -85,7 +113,6 @@
       return {
         urls: globalConfig.server_user,
         addr: globalConfig.server,
-        active: 1,
         haveInHand: true,
         isClear: false,
         picStatus: true,
@@ -102,22 +129,30 @@
         property_name: [],
         propertyOn: '',
 
+        is_electric_status: true,         //家电是否齐全
+        is_clean_status: true,            //卫生是否干净
+
         form: {
           remark: '',
           photo: [],
         },
         forms: {
-          suggest_price: '',      //价格
-          house_grade: 1,         //评分
-          decoration: '',         //装修
-          house_feature: '',      //特色
+          is_electric_appliance: 1,   //家电是否齐全
+          is_clean: 1,                //是否干净
+          house_id: '',
+          // house_grade: 1,            //评分
+          // suggest_price: '',         //价格
+          // decoration: '',            //装修
+          // house_feature: '',         //特色
         },
-        status: ['很差', '一般', '满意', '很满意', '非常满意'],
+        // status: ['很差', '一般', '满意', '很满意', '非常满意'],
         path: '',
         pitch: '',
         detail: '',
         address: '',
         marking: '',
+
+        showContent: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -128,7 +163,7 @@
       })
     },
     mounted() {
-      this.dict();
+      // this.dict();
     },
     activated() {
       this.haveInHand = true;
@@ -136,90 +171,96 @@
       this.detail = this.$route.query.detail;
       this.address = this.$route.query.address;
       this.marking = this.$route.query.marking;
+      this.forms.house_id = this.$route.query.house_id;
     },
     methods: {
-      onClick(key) {
-        this.active = key;
-        this.forms.house_grade = key;
-      },
-      // 评分
-      mark() {
-        this.$http.put(this.addr + 'house/house/info/' + this.pitch, this.forms).then((res) => {
-
-        })
-      },
-      dict() {
-        // 装修
-        this.dictionary(404, 1).then((res) => {
-          this.decorate_name = [];
-          this.decorateAll = res.data;
-          for (let i = 0; i < res.data.length; i++) {
-            this.decorate_name.push(res.data[i].dictionary_name);
-          }
-          // 房屋特色
-          this.dictionary(425, 1).then((res) => {
-            this.property_name = [];
-            this.propertyAll = res.data;
-            for (let i = 0; i < res.data.length; i++) {
-              this.property_name.push(res.data[i].dictionary_name);
-            }
-          });
-
-        });
-      },
-      selectShow(val) {
-        this.tabs = val;
-        this.selectHide = true;
-        switch (val) {
-          case 1:
-            this.columns = this.decorate_name;
-            break;
-          case 2:
-            this.columns = this.property_name;
-            break;
-        }
-      },
-
-      onConfirm(value, index) {
-        switch (this.tabs) {
-          case 1: // 装修
-            this.decorationOn = value;
-            for (let i = 0; i < this.decorateAll.length; i++) {
-              if (this.decorateAll[i].dictionary_name === value) {
-                this.forms.decoration = this.decorateAll[i].id;
-              }
-            }
-            break;
-          case 2: // 特色
-            this.propertyOn = value;
-            for (let i = 0; i < this.propertyAll.length; i++) {
-              if (this.propertyAll[i].dictionary_name === value) {
-                this.forms.house_feature = this.propertyAll[i].id;
-              }
-            }
-            break;
-        }
-        this.selectHide = false;
-      },
-      // select关闭
-      onCancel() {
-        this.selectHide = false;
-      },
+      // onClick(key) {
+      //   return key;
+      // },
+      // dict() {
+      //   // 装修
+      //   this.dictionary(404, 1).then((res) => {
+      //     this.decorate_name = [];
+      //     this.decorateAll = res.data;
+      //     for (let i = 0; i < res.data.length; i++) {
+      //       this.decorate_name.push(res.data[i].dictionary_name);
+      //     }
+      //     // 房屋特色
+      //     this.dictionary(425, 1).then((res) => {
+      //       this.property_name = [];
+      //       this.propertyAll = res.data;
+      //       for (let i = 0; i < res.data.length; i++) {
+      //         this.property_name.push(res.data[i].dictionary_name);
+      //       }
+      //     });
+      //
+      //   });
+      // },
+      // selectShow(val) {
+      //   this.tabs = val;
+      //   this.selectHide = true;
+      //   switch (val) {
+      //     case 1:
+      //       this.columns = this.decorate_name;
+      //       break;
+      //     case 2:
+      //       this.columns = this.property_name;
+      //       break;
+      //   }
+      // },
+      //
+      // onConfirm(value, index) {
+      //   switch (this.tabs) {
+      //     case 1: // 装修
+      //       this.decorationOn = value;
+      //       for (let i = 0; i < this.decorateAll.length; i++) {
+      //         if (this.decorateAll[i].dictionary_name === value) {
+      //           this.forms.decoration = this.decorateAll[i].id;
+      //         }
+      //       }
+      //       break;
+      //     case 2: // 特色
+      //       this.propertyOn = value;
+      //       for (let i = 0; i < this.propertyAll.length; i++) {
+      //         if (this.propertyAll[i].dictionary_name === value) {
+      //           this.forms.house_feature = this.propertyAll[i].id;
+      //         }
+      //       }
+      //       break;
+      //   }
+      //   this.selectHide = false;
+      // },
+      // // select关闭
+      // onCancel() {
+      //   this.selectHide = false;
+      // },
 
       // 确认评论
-      manager() {
+      manager(val) {
         if (this.detail !== 'to_comment') {
-          this.sure();
+          this.sure(val);
         } else {
           if (this.form.remark !== '' || this.form.photo.length !== 0) {
-            this.sure();
+            this.sure(val);
           } else {
             Toast('请填写评论内容');
           }
         }
       },
-
-      sure() {
+      // 评分
+      mark() {
+        this.form.is_electric_appliance = this.is_electric_status ? 1 : 0;
+        this.form.is_clean = this.is_clean_status ? 1 : 0;
+        this.$http.put(this.addr + 'bulletin/helper/score/' + this.pitch, this.forms).then((res) => {
+          if (res.data.code === '51100') {
+            Toast.success(res.data.message);
+            this.$router.replace({path: this.path, query: {ids: this.pitch}});
+            this.close_();
+            $('.imgItem').remove();
+          }
+        });
+      },
+      sure(val) {
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
@@ -230,10 +271,15 @@
             }).then((res) => {
               this.haveInHand = true;
               if (res.data.status === 'success') {
-                Toast.success(res.data.message);
-                this.$router.replace({path: this.path, query: {ids: this.pitch}});
-                this.close_();
-                $('.imgItem').remove();
+                if (val === 1 && this.detail !== 'to_comment') {
+                  this.showContent = true;
+                  this.mark();
+                } else {
+                  Toast.success(res.data.message);
+                  this.$router.replace({path: this.path, query: {ids: this.pitch}});
+                  this.close_();
+                  $('.imgItem').remove();
+                }
               } else {
                 Toast(res.data.message);
               }
@@ -298,20 +344,39 @@
     $onColor: #39b1ff;
     $borColor: #9c9c9c;
 
+    .showPopupTitle, .showPopupFooter {
+      text-align: center;
+      padding: .3rem 0;
+      font-size: .36rem
+    }
+    .showPopupTitle {
+      border-bottom: 1px solid #f4f4f4;
+    }
+    .showPopupFooter {
+      border-top: 1px solid #f4f4f4;
+      color: #409EFF;
+    }
+    .showPopup {
+      width: 6.6rem;
+      padding-left: .3rem;
+      max-height: 8rem;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
     header {
       padding: .3rem;
       background: #FFFFFF;
       .address {
         font-size: .4rem;
-        border-bottom: .02rem solid #F4F4F4;
         text-align: center;
-        padding: .3rem;
       }
       .marking {
         margin: .3rem 0;
         div {
           @include flex;
           justify-content: center;
+          align-items: center;
           p {
             margin: 0 .1rem;
             i {

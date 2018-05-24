@@ -4,7 +4,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>报备类型</div>
-          <van-radio-group v-model="form.type" @change="qualityChange">
+          <van-radio-group v-model="form.quality_up" @change="qualityChange">
             <van-radio name="0">新增</van-radio>
             <van-radio name="1">跟进</van-radio>
           </van-radio-group>
@@ -429,7 +429,7 @@
         form: {
           id: '',
           house_id: '',
-          type: '0',
+          quality_up: '0',
           is_draft: 0,
           city_id: '',                  //城市
           city_name: '',                //城市
@@ -833,6 +833,7 @@
 
       qualityDetail(val) {
         this.userInfo(true);
+        this.close_();
         let type;
         if (val !== '') {
           type = 'bulletin/quality/' + val;
@@ -844,10 +845,10 @@
             let data = res.data.data;
             this.form.id = res.data.id;
             this.form.house_id = data.house_id;
-            if (data.type) {
-              this.form.type = String(data.type);
-              this.numbers = String(data.type);
-              if (String(data.type) === '1') {
+            if (data.quality_up) {
+              this.form.quality_up = String(data.quality_up);
+              this.numbers = String(data.quality_up);
+              if (String(data.quality_up) === '1') {
                 this.followUp = true;
                 this.house_name = data.address;
               } else {
@@ -855,7 +856,7 @@
                 this.house_name = '';
               }
             } else {
-              data.type = '0';
+              data.quality_up = '0';
             }
             this.prefill(res.data.data, 'draught');
           } else {
