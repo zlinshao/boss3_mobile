@@ -132,7 +132,6 @@
         forms: {
           is_electric_appliance: 1,   //家电是否齐全
           is_clean: 1,                //是否干净
-          house_id: '',
           // house_grade: 1,            //评分
           // suggest_price: '',         //价格
           // decoration: '',            //装修
@@ -164,7 +163,6 @@
       this.detail = this.$route.query.detail;
       this.address = this.$route.query.address;
       this.marking = this.$route.query.marking;
-      this.forms.house_id = this.$route.query.house_id;
     },
     methods: {
       // onClick(key) {

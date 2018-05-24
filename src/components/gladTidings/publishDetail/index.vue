@@ -283,7 +283,6 @@
           if (res.data.status === 'success' && res.data.data.length !== 0) {
             this.formList = JSON.parse(res.data.data.process.content.show_content_compress);
             let houseName = res.data.data.process.content;
-            this.house_id = houseName.house_id;
             if (houseName.address) {
               this.address = houseName.address;
             } else if (houseName.rent_without_collect_address) {
@@ -374,9 +373,9 @@
       // 评论
       commentOn(val, index, key) {
         if(key === '同意') {
-          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: index, house_id: this.house_id}});
+          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: index}});
         }else{
-          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2, house_id: this.house_id}});
+          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2}});
         }
       },
       // 重新提交
