@@ -36,11 +36,18 @@
               <p :style="{'background': key.back}">
                 <i :class="key.icon"></i>
               </p>
+              <h1>{{key.name}}</h1>
+            </router-link>
+            <a v-for="(key,index) in paths" v-if="key.hidden === 'exam'">
+              <p :style="{'background': key.back}" @click="goBefore(key.path)">
+                <i :class="key.icon"></i>
+              </p>
               <h1>{{key.name}}
                 <span v-if="key.name==='我的考试' && examData && examData.available" class="circle_red"></span>
-                <span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available" class="circle_red"></span>
+                <span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available"
+                      class="circle_red"></span>
               </h1>
-            </router-link>
+            </a>
           </div>
         </div>
       </div>
@@ -227,8 +234,34 @@
       this.ddRent('', 'close');
       this.disabled = false;
       this.scrollTops();
+      this.confirmArrival = localStorage.getItem('confirmArrival');
     },
     methods: {
+      goBefore(val) {
+        this.getExamNaireRedCircle();
+        if (val === '/exam') {
+          if (this.examData.available) {
+            if (this.confirmArrival && this.confirmArrival.length > 0 && this.confirmArrival.indexOf(this.examData.id) > -1) {
+              this.$router.push({path: val, query: {id: this.examData.id, type: ''}});
+            } else {
+              this.$http.post(globalConfig.server + 'exam/check_in/' + this.examData.id).then((res) => {
+                if (res.data.code === '30000') {
+                  let arr = [];
+                  arr.push(this.examData.id);
+                  localStorage.setItem('confirmArrival', arr);  //保存已到场的考试id
+                  this.$router.push({path: val, query: {id: this.examData.id, type: ''}});
+                }
+              });
+            }
+          } else {
+            this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
+          }
+        }else if(val === '/questionnaire') {
+          // if (this.questionnaireData.available) {
+            this.$router.push({path: val, query: {id: this.examData.id}});
+          // }
+        }
+      },
       getExamNaireRedCircle() {
         this.$http.get(globalConfig.server + 'exam/active').then((res) => {
           if (res.data.code === '30000') {

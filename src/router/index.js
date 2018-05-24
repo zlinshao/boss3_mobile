@@ -407,7 +407,7 @@ export default new Router({
       name: '我的考试',
       meta: {title: '我的考试'},
       icon: 'iconfont icon-xinjianshijuan',
-      hidden: 'glad',
+      hidden: 'exam',
       component: Exam
     },
     {
@@ -415,7 +415,7 @@ export default new Router({
       name: '问卷调查',
       icon: 'iconfont icon-jinrukaoshi',
       meta: {title: '问卷调查'},
-      hidden: 'glad',
+      hidden: 'exam',
       component: Questionnaire
     },
 
