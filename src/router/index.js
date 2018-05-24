@@ -403,19 +403,22 @@ export default new Router({
       component: Warning
     },
     // {
-    //   path: '/questionnaire',
-    //   name: '问卷调查',
-    //   meta: {title: '问卷调查'},
-    //   hidden: 'glad',
-    //   component: Questionnaire
-    // },
-    // {
     //   path: '/exam',
     //   name: '我的考试',
     //   meta: {title: '我的考试'},
-    //   hidden: 'glad',
+    //   icon: 'iconfont icon-xinjianshijuan',
+    //   hidden: 'exam',
     //   component: Exam
     // },
+    // {
+    //   path: '/questionnaire',
+    //   name: '问卷调查',
+    //   icon: 'iconfont icon-jinrukaoshi',
+    //   meta: {title: '问卷调查'},
+    //   hidden: 'exam',
+    //   component: Questionnaire
+    // },
+
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',

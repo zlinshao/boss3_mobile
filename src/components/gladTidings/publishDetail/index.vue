@@ -91,7 +91,8 @@
               </div>
               <div class="pics">
                 <div v-for="(pic,num) in key.album">
-                  <img v-if="pic.info.ext.indexOf('video') > -1" @click="checkTv(pic.uri)" src="../../../assets/video.jpg">
+                  <img v-if="pic.info.ext.indexOf('video') > -1" @click="checkTv(pic.uri)"
+                       src="../../../assets/video.jpg">
                   <img v-else @click="pics(key.album, num, pic.info.ext)" :src="pic.uri">
                 </div>
               </div>
@@ -113,7 +114,7 @@
            v-if="personalId.id === personal.id && (place.status === 'published' || place.status === 'rejected' || place.status === 'cancelled')">
         重新提交
       </div>
-      <div v-for="(key,index) in operation" @click="commentOn(index)">{{key}}</div>
+      <div v-for="(key,index) in operation" @click="commentOn(index, marking, key)">{{key}}</div>
     </div>
 
     <div id="videoId" v-show="videoSrc !== ''">
@@ -199,6 +200,8 @@
 
         role_name: [],
         showContent: false,
+
+        marking: '',
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -293,6 +296,13 @@
             let pro = res.data.data.process;
             this.personal = pro.user;
             this.place = pro.place;
+
+            if (houseName.quality_up && pro.place.name === 'appraiser-officer_review') {
+              this.marking = 1;
+            } else {
+              this.marking = 2;
+            }
+
             if (this.placeStatus.indexOf(pro.place.status) === -1) {
               this.placeFalse = true;
             } else {
@@ -361,8 +371,12 @@
         document.getElementsByTagName('body')[0].className = '';
       },
       // 评论
-      commentOn(val) {
-        this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2}});
+      commentOn(val, index, key) {
+        if(key === '同意') {
+          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: index}});
+        }else{
+          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2}});
+        }
       },
       // 重新提交
       newly() {
