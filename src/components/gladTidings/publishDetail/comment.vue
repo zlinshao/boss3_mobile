@@ -253,10 +253,12 @@
         this.form.is_clean = this.is_clean_status ? 1 : 0;
         this.$http.put(this.addr + 'bulletin/helper/score/' + this.pitch, this.forms).then((res) => {
           if (res.data.code === '51100') {
-            Toast.success(res.data.message);
+            Toast.success(res.data.msg);
             this.$router.replace({path: this.path, query: {ids: this.pitch}});
             this.close_();
             $('.imgItem').remove();
+          }else{
+            Toast(res.data.msg);
           }
         });
       },
@@ -271,9 +273,8 @@
             }).then((res) => {
               this.haveInHand = true;
               if (res.data.status === 'success') {
-                if (val === 1 && this.detail !== 'to_comment') {
+                if (this.marking === 1 && this.detail !== 'to_comment') {
                   this.showContent = true;
-                  this.mark();
                 } else {
                   Toast.success(res.data.message);
                   this.$router.replace({path: this.path, query: {ids: this.pitch}});

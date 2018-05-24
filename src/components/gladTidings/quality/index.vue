@@ -489,7 +489,7 @@
         community_name: '',
         photos: [],                     //房屋影像
 
-        noRemove: true,
+        noRemove: false,
         isValue1: true,
 
         numbers: '',
@@ -946,7 +946,7 @@
               id: data.photo
             }
           }).then((res) => {
-            this.noRemove = false;
+            this.noRemove = true;
             if (res.data.code === '51110') {
               this.photos = res.data.data;
               this.form.photo = [];
@@ -971,7 +971,7 @@
         });
         this.userInfo(true);
         $('.imgItem').remove();
-        this.noRemove = true;
+        this.noRemove = false;
         this.picStatus = true;
         this.form.id = '';
         this.form.house_id = '';

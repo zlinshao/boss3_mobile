@@ -298,7 +298,7 @@
             this.personal = pro.user;
             this.place = pro.place;
 
-            if (houseName.quality_up && String(houseName.quality_up) === '1' && pro.place.name === 'appraiser-officer_review') {
+            if (houseName.quality_up && pro.place.name === 'appraiser-officer_review') {
               this.marking = 1;
             } else {
               this.marking = 2;
