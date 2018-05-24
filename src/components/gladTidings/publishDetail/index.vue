@@ -114,7 +114,7 @@
            v-if="personalId.id === personal.id && (place.status === 'published' || place.status === 'rejected' || place.status === 'cancelled')">
         重新提交
       </div>
-      <div v-for="(key,index) in operation" @click="commentOn(index, marking)">{{key}}</div>
+      <div v-for="(key,index) in operation" @click="commentOn(index, marking, key)">{{key}}</div>
     </div>
 
     <div id="videoId" v-show="videoSrc !== ''">
@@ -372,8 +372,12 @@
         document.getElementsByTagName('body')[0].className = '';
       },
       // 评论
-      commentOn(val, index) {
-        this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: index, house_id: this.house_id}});
+      commentOn(val, index, key) {
+        if(key === '同意') {
+          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: index, house_id: this.house_id}});
+        }else{
+          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2, house_id: this.house_id}});
+        }
       },
       // 重新提交
       newly() {

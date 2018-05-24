@@ -74,24 +74,17 @@
           <div class="title">图片</div>
           <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
         </div>
-
+        <div v-if="marking === 1">
+          <van-cell-group>
+            <van-switch-cell v-model="is_electric_status" title="家电是否齐全"/>
+            <van-switch-cell v-model="is_clean_status" title="卫生是否干净"/>
+          </van-cell-group>
+        </div>
         <div class="footer">
           <div @click="manager(marking)">确认</div>
         </div>
       </div>
-
-      <van-popup v-model="showContent" :close-on-click-overlay="false" style="border-radius: 3px;">
-        <div class="showPopupTitle">评分</div>
-        <div class="showPopup">
-          <van-switch-cell v-model="is_electric_status" title="家电是否齐全"/>
-          <van-switch-cell v-model="is_clean_status" title="卫生是否干净"/>
-        </div>
-        <div class="showPopupFooter" @click="mark">
-          确定
-        </div>
-      </van-popup>
     </div>
-
     <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">-->
     <!--<van-picker-->
     <!--show-toolbar-->
@@ -253,11 +246,10 @@
         this.form.is_clean = this.is_clean_status ? 1 : 0;
         this.$http.put(this.addr + 'bulletin/helper/score/' + this.pitch, this.forms).then((res) => {
           if (res.data.code === '51100') {
-            Toast.success(res.data.msg);
             this.$router.replace({path: this.path, query: {ids: this.pitch}});
             this.close_();
             $('.imgItem').remove();
-          }else{
+          } else {
             Toast(res.data.msg);
           }
         });
@@ -273,8 +265,8 @@
             }).then((res) => {
               this.haveInHand = true;
               if (res.data.status === 'success') {
-                if (this.marking === 1 && this.detail !== 'to_comment') {
-                  this.showContent = true;
+                if (val === 1) {
+                  this.mark();
                 } else {
                   Toast.success(res.data.message);
                   this.$router.replace({path: this.path, query: {ids: this.pitch}});
