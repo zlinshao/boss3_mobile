@@ -402,22 +402,22 @@ export default new Router({
       hidden: false,
       component: Warning
     },
-    {
-      path: '/exam',
-      name: '我的考试',
-      meta: {title: '我的考试'},
-      icon: 'iconfont icon-xinjianshijuan',
-      hidden: 'exam',
-      component: Exam
-    },
-    {
-      path: '/questionnaire',
-      name: '问卷调查',
-      icon: 'iconfont icon-jinrukaoshi',
-      meta: {title: '问卷调查'},
-      hidden: 'exam',
-      component: Questionnaire
-    },
+    // {
+    //   path: '/exam',
+    //   name: '我的考试',
+    //   meta: {title: '我的考试'},
+    //   icon: 'iconfont icon-xinjianshijuan',
+    //   hidden: 'exam',
+    //   component: Exam
+    // },
+    // {
+    //   path: '/questionnaire',
+    //   name: '问卷调查',
+    //   icon: 'iconfont icon-jinrukaoshi',
+    //   meta: {title: '问卷调查'},
+    //   hidden: 'exam',
+    //   component: Questionnaire
+    // },
 
     // {
     //   path: '/cardDetail',
