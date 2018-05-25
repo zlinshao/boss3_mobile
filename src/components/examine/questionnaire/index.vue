@@ -81,7 +81,7 @@
         <div style="margin-top: 80px;">
           <p>您已完成本次问卷</p>
           <p style="color: #ff259a;">请勿重复提交</p>
-          <div style="position: relative;margin: 26px auto;text-align: center;">
+          <div style="position: relative;margin: 0px auto;text-align: center;">
             <div @click="goIndex" class="btn">确定</div>
           </div>
         </div>
@@ -105,7 +105,7 @@
         answer: {},             //答案
         message: '',
         questionnaire_id: '',
-        confirmType: '',
+        confirmType: 'success',
       }
     },
     mounted() {
@@ -207,18 +207,16 @@
         }
         .words {
           position: relative;
-          top: 10px;
+          top: 0px;
           text-align: center;
           font-size: 18px;
           color: #101010;
-          margin-top: -100px;
         }
         .btn{
           border: 1px solid #dddddd;
           display: inline-block;
           padding: 10px 20px;
           border-radius: 8px;
-
         }
       }
     }
