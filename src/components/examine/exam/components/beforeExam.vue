@@ -4,7 +4,7 @@
       <div class="content">
         <div class="content_img"><img src="../../../../assets/development.png" style="width: 60%;"></div>
         <div class="last_title" style="font-size: 18px;">披星戴月开发中...</div>
-        <div class="last_title" style="font-size: 18px;color: #58D788;">敬请期待</div>
+        <!--<div class="last_title" style="font-size: 18px;color: #58D788;">敬请期待</div>-->
         <!--<div class="title">您目前没有考试</div>-->
         <!--<div class="last_title">最近一场</div>-->
         <!--<div style="margin-top: 10px;color: #333;line-height: 28px;">-->
@@ -70,7 +70,7 @@
       }
       .last_title{
         position: relative;
-        margin-top: 25px;
+        margin-top: 30px;
         font-size: 14px;
       }
       .view_history {
