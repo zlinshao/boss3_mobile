@@ -1,7 +1,7 @@
 <template>
   <div id="questionnaire">
     <div class="questionnaireTitle">
-      <div style="position: absolute;top: 50px;">{{paper_name}}</div>
+      <div style="position: absolute;top: 80px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题</div>
       <img src="../../../assets/backgroundPic.png" alt="">
     </div>
     <div class="exercise" v-if="!message">
@@ -101,13 +101,13 @@
       return {
         urls: globalConfig.server,
         radio: '',
-        paper_name: '',         //问卷标题
+        paperData: {},
         questionType: {},       //题型
         question_set: {},       //试题
         answer: {},             //答案
         message: '',
-        questionnaire_id: this.$route.query.id,
-        confirmType: 'repeat',
+        questionnaire_id: '',
+        confirmType: '',
       }
     },
     mounted() {
@@ -118,22 +118,25 @@
         }
         this.questionType = sub;
       });
-      this.getPaperData();
+
     },
     activated() {
-      // this.confirmType = this.$route.query.type;
+      this.answer = {};
+      this.questionnaire_id = this.$route.query.id;
+      this.getPaperData();
     },
     watch: {},
     methods: {
       goIndex() {
         this.confirmType = '';
-        this.$router.push({path: '/index'});
+        this.questionnaire_id = '';
+        this.$router.push({path: '/index', query:{refresh: 'refresh'}});
       },
       getPaperData(){
         this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
           if (res.data.code === '30000') {
             this.question_set = res.data.data.question_set;
-            this.paper_name = res.data.data.paper_name;
+            this.paperData = res.data.data;
 
             if (this.question_set[154] && this.question_set[154].length > 0) {
               this.question_set[154].forEach((item) => {
@@ -204,7 +207,6 @@
           line-height: 30px;
         }
         .words {
-          position: relative;
           text-align: center;
           font-size: 18px;
           color: #101010;

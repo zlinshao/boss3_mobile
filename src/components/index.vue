@@ -223,11 +223,6 @@
       this.queryType = sessionStorage.getItem('queryType');
       this.scrollTops();
       this.toDone();
-      //个人门户下的考试和调查1分钟轮询一次
-      this.getExamNaireRedCircle();
-      setTimeout(() => {
-        this.getExamNaireRedCircle();
-      }, 60 * 1000);
     },
     activated() {
       this.routerIndex('');
@@ -236,6 +231,10 @@
       this.scrollTops();
       this.confirmArrival = localStorage.getItem('confirmArrival');
       localStorage.setItem('process', JSON.stringify({status: 'add'}));
+      this.getExamNaireRedCircle();
+      if(this.$route.query.refresh === 'refresh'){
+        this.getExamNaireRedCircle();
+      }
     },
     methods: {
       goBefore(val) {
@@ -267,11 +266,16 @@
         this.$http.get(globalConfig.server + 'exam/active').then((res) => {
           if (res.data.code === '30000') {
             this.examData = res.data.data;
+          }else{
+            this.examData = [];
           }
         });
         this.$http.get(globalConfig.server + 'questionnaire/active').then((res) => {
           if (res.data.code === '30000') {
             this.questionnaireData = res.data.data;
+            // alert(JSON.stringify(res.data.data))
+          }else{
+            this.questionnaireData = [];
           }
         });
       },
