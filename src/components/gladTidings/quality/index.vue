@@ -517,6 +517,8 @@
             vm.processStatus = 'revise';
             vm.routerTo('/publishDetail', newID.ids, 1);
             vm.routerTo('/publishDetail', newID.ids, 2);
+          } else {
+            vm.processStatus = 'add';
           }
           vm.close_();
           vm.dicts(newID);
