@@ -494,15 +494,6 @@
 
         followUp: false,                    //后续报备
         processStatus: '',                  //后续报备
-        newID: {},                          //后续报备
-      }
-    },
-    mounted() {
-      let newID = this.$route.query;
-      if (newID.newID === undefined) {
-        this.close_();
-        this.processStatus = 'add';
-        this.dicts('');
       }
     },
     activated() {
@@ -511,28 +502,26 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        let newID = vm.$route.query;
-        if (newID.newID !== undefined) {
+        let newID = JSON.parse(localStorage.process);
+        if (newID.status === 'revise') {
           if (newID.type === 2) {
-            vm.newID = newID;
             vm.processStatus = 'revise';
             vm.routerTo('/publishDetail', newID.ids, 1);
             vm.routerTo('/publishDetail', newID.ids, 2);
+          } else {
+              vm.processStatus = 'add';
+            vm.routerIndex('');
+            vm.ddRent('');
           }
           vm.close_();
           vm.dicts(newID);
-        } else {
-          if (from.path === '/index' && vm.processStatus === 'revise') {
-            vm.routerIndex('');
-            vm.ddRent('');
+        } else if (newID.status === 'add') {
             vm.processStatus = 'add';
-            vm.close_();
-            vm.dicts('');
-          } else {
-            vm.dicts(vm.newID);
-            vm.routerTo('/publishDetail', vm.newID.ids, 1);
-            vm.routerTo('/publishDetail', vm.newID.ids, 2);
-          }
+          vm.routerIndex('');
+          vm.ddRent('');
+          vm.close_();
+          vm.dicts('');
+          localStorage.setItem('process', JSON.stringify({status: 'other'}));
         }
       })
     },

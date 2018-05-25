@@ -235,6 +235,7 @@
       this.disabled = false;
       this.scrollTops();
       this.confirmArrival = localStorage.getItem('confirmArrival');
+      localStorage.setItem('process', JSON.stringify({status: 'add'}));
     },
     methods: {
       goBefore(val) {
