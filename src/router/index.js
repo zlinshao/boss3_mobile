@@ -445,20 +445,20 @@ export default new Router({
       hidden: false,
       component: MyNaire
     },
-    {
-      path: '/naireStatistic',
-      name: '问卷详情',
-      meta: {title: '问卷详情'},
-      hidden: false,
-      component: NaireStatistic
-    },
-    {
-      path: '/answerAll',
-      name: '所有回答',
-      meta: {title: '所有回答'},
-      hidden: false,
-      component: AnswerAll
-    },
+    // {
+    //   path: '/naireStatistic',
+    //   name: '问卷详情',
+    //   meta: {title: '问卷详情'},
+    //   hidden: false,
+    //   component: NaireStatistic
+    // },
+    // {
+    //   path: '/answerAll',
+    //   name: '所有回答',
+    //   meta: {title: '所有回答'},
+    //   hidden: false,
+    //   component: AnswerAll
+    // },
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',
