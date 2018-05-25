@@ -215,7 +215,6 @@
         if (from.path === '/') {
           sessionStorage.setItem('path', vm.path);
         }
-        vm.path = sessionStorage.path;
         if (sessionStorage.path !== '/') {
           vm.routerIndex('');
           vm.ddRent('');
