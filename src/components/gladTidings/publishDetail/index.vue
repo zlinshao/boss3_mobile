@@ -402,6 +402,11 @@
       // 重新提交
       newly() {
         let proID = this.process.processable_id;
+        let list = {};
+        list.newID = proID;
+        list.type = 1;
+        list.status = 'revise';
+        localStorage.setItem('process', JSON.stringify(list));
         switch (this.process.processable_type) {
           case 'bulletin_quality'://质量
             this.$router.push({path: '/quality', query: {newID: proID, type: 1}});

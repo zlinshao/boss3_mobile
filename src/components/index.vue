@@ -235,6 +235,7 @@
       this.disabled = false;
       this.scrollTops();
       this.confirmArrival = localStorage.getItem('confirmArrival');
+      localStorage.setItem('process', JSON.stringify({status: 'add'}));
     },
     methods: {
       goBefore(val) {
@@ -256,9 +257,9 @@
           } else {
             this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
           }
-        }else if(val === '/questionnaire') {
+        } else if (val === '/questionnaire') {
           // if (this.questionnaireData.available) {
-            this.$router.push({path: '/beforeNaire'});
+          this.$router.push({path: '/beforeNaire'});
           // }
           // else{
           //   this.$router.push({path: '/beforeNaire', query: {id: this.examData.id}});
