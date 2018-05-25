@@ -529,7 +529,7 @@
             vm.close_();
             vm.dicts('');
           } else {
-            vm.dicts(newID);
+            vm.dicts(vm.newID);
             vm.routerTo('/publishDetail', vm.newID.ids, 1);
             vm.routerTo('/publishDetail', vm.newID.ids, 2);
           }
