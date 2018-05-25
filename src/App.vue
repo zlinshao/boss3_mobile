@@ -48,7 +48,12 @@
         if (navigator.userAgent == 'app/ApartMent') {
           sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
-          alert(android.queryType())
+          // add by cj 2018-05-25
+          if(android.queryType() === 'exam'){
+            this.$router.push({path: '/beforeExam'});
+          }else if(android.queryType() === 'questionnaire'){
+            this.$router.push({path: '/beforeNaire'});
+          }
           globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
