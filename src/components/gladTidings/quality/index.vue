@@ -355,9 +355,10 @@
     </div>
 
     <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
+      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -390,6 +391,7 @@
         picStatus: true,
 
         followUp: false,                    //后续报备
+        processStatus: '',               //后续报备
 
         allCity: [],                        //城市
         cities: [],                         //城市
@@ -495,26 +497,22 @@
         numbers: '',
       }
     },
-    mounted() {
-      this.dicts('');
-    },
     activated() {
       this.haveInHand = true;
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.newID = newID;
-        this.dicts(newID);
-      }
       this.houseInfo();
-
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
+        vm.processStatus = '';
         let newID = vm.$route.query;
-        if (newID.newID !== undefined && newID.type === 2) {
-          vm.routerTo('/publishDetail', newID.ids, 1);
-          vm.routerTo('/publishDetail', newID.ids, 2);
+        if (newID.newID !== undefined) {
+          if (newID.type === 2) {
+            vm.routerTo('/publishDetail', newID.ids, 1);
+            vm.routerTo('/publishDetail', newID.ids, 2);
+          }
+          vm.dicts(newID);
         } else {
+          vm.dicts('');
           vm.routerIndex('');
           vm.ddRent('');
         }
@@ -848,11 +846,14 @@
         if (val !== '') {
           type = 'bulletin/quality/' + val.newID;
           if (val.type === 2) {
+            this.processStatus = 'revise';
             this.form.processable_id = val.ids;
           } else {
+            this.processStatus = 'add';
             this.userInfo(true);
           }
         } else {
+          this.processStatus = 'add';
           this.userInfo(true);
           type = 'bulletin/quality';
         }
