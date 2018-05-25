@@ -521,12 +521,14 @@
           vm.close_();
           vm.dicts(newID);
         } else {
-          vm.routerIndex('');
-          vm.ddRent('');
-          if (vm.processStatus === 'revise') {
-            vm.processStatus = 'add';
-            vm.close_();
-            vm.dicts('');
+          if (from.path === '/index') {
+            vm.routerIndex('');
+            vm.ddRent('');
+            if (vm.processStatus === 'revise') {
+              vm.processStatus = 'add';
+              vm.close_();
+              vm.dicts('');
+            }
           }
         }
       })
