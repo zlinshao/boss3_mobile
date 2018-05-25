@@ -391,7 +391,7 @@
         picStatus: true,
 
         followUp: false,                    //后续报备
-        processStatus: '',               //后续报备
+        processStatus: 'add',               //后续报备
 
         allCity: [],                        //城市
         cities: [],                         //城市
@@ -498,21 +498,30 @@
       }
     },
     mounted() {
-      this.dicts('');
+      let newID = this.$route.query;
+      if (newID.newID === undefined) {
+        this.close_();
+        this.dicts('');
+      }
     },
     activated() {
+      if (this.processStatus === 'revise') {
+        this.close_();
+        this.dicts('');
+        this.processStatus = 'add';
+      }
       this.haveInHand = true;
       this.houseInfo();
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        vm.processStatus = '';
         let newID = vm.$route.query;
         if (newID.newID !== undefined) {
           if (newID.type === 2) {
             vm.routerTo('/publishDetail', newID.ids, 1);
             vm.routerTo('/publishDetail', newID.ids, 2);
           }
+          vm.close_();
           vm.dicts(newID);
         } else {
           vm.routerIndex('');
@@ -537,7 +546,7 @@
           this.form.department_name = per.department_name;
         }
       },
-      dicts(val, id) {
+      dicts(val) {
         // 城市
         this.dictionary(306, 1).then((res) => {
           this.cities = [];
@@ -574,7 +583,7 @@
               for (let i = 0; i < res.data.length; i++) {
                 this.property_name.push(res.data[i].dictionary_name);
               }
-              this.qualityDetail(val, id);
+              this.qualityDetail(val);
             });
 
           });
@@ -842,7 +851,6 @@
       },
 
       qualityDetail(val) {
-        this.close_();
         let type;
         this.form.processable_id = '';
         if (val !== '') {
@@ -851,15 +859,12 @@
             this.processStatus = 'revise';
             this.form.processable_id = val.ids;
           } else {
-            this.processStatus = 'add';
             this.userInfo(true);
           }
         } else {
-          this.processStatus = 'add';
           this.userInfo(true);
           type = 'bulletin/quality';
         }
-
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === "51420") {
             let data = res.data.data;
