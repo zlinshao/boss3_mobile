@@ -258,7 +258,10 @@
           }
         }else if(val === '/questionnaire') {
           // if (this.questionnaireData.available) {
-            this.$router.push({path: val, query: {id: this.examData.id}});
+            this.$router.push({path: '/beforeNaire'});
+          // }
+          // else{
+          //   this.$router.push({path: '/beforeNaire', query: {id: this.examData.id}});
           // }
         }
       },

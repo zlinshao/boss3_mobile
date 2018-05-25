@@ -205,6 +205,7 @@
       }, 1000 * 60);
     },
     mounted() {
+      alert(window.location.href)
       this.dictionary(152, 1).then((res) => {
         let sub = {};
         for (let i = 0; i < res.data.length; i++) {
