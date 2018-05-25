@@ -88,10 +88,9 @@
     </div>
 
     <div class="footer">
-      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
-      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
-      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
-      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
+      <div @click="close_()">重置</div>
+      <div @click="saveCollect(1)">草稿</div>
+      <div @click="saveCollect(0)">发布</div>
     </div>
 
   </div>
@@ -119,7 +118,6 @@
         form: {
           address: '',
           id: '',
-          processable_id: '',
           type: '0',
           draft: 0,
           payWay: [''],                   //付款方式
@@ -137,7 +135,6 @@
         },
         screenshots: {},                //截图
         numbers: '',
-        processStatus: '',
       }
     },
     mounted() {
@@ -150,29 +147,15 @@
     },
     activated() {
       this.houseInfo();
+      this.routerIndex('');
+      this.ddRent('');
+
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.friedDetail(newID.newID);
+      }
     },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        let newID = vm.$route.query;
-        if (newID.newID !== undefined) {
-          if (newID.type === 2) {
-            vm.processStatus = 'revise';
-            vm.routerTo('/publishDetail', newID.ids, 1);
-            vm.routerTo('/publishDetail', newID.ids, 2);
-          }
-          vm.close_();
-          vm.friedDetail(newID);
-        } else {
-          vm.routerIndex('');
-          vm.ddRent('');
-          if (vm.processStatus === 'revise') {
-            vm.processStatus = 'add';
-            vm.close_();
-            vm.friedDetail('');
-          }
-        }
-      })
-    },
+
     methods: {
       payWayClick(val) {
         if (val === 1) {
@@ -267,13 +250,9 @@
         })
       },
       friedDetail(val) {
-        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/lose/' + val.newID;
-          if (val.type === 2) {
-            this.form.processable_id = val.ids;
-          }
+          type = 'bulletin/lose/' + val;
         } else {
           type = 'bulletin/lose';
         }
@@ -317,7 +296,6 @@
         this.form.payWay = [''];
         this.form.price_arr = [''];
         this.form.id = '';
-        this.form.processable_id = '';
         this.form.collect_or_rent = '';
         this.form.refund = 0;
         this.form.type = '0';

@@ -355,10 +355,9 @@
     </div>
 
     <div class="footer">
-      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
-      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
-      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
-      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
+      <div @click="close_()">重置</div>
+      <div @click="saveCollect(1)">草稿</div>
+      <div @click="saveCollect(0)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -427,7 +426,6 @@
         house_name: '',
         form: {
           id: '',
-          processable_id: '',
           house_id: '',
           quality_up: '0',
           is_draft: 0,
@@ -493,38 +491,27 @@
         numbers: '',
 
         followUp: false,                    //后续报备
-        processStatus: '',                  //后续报备
+      }
+    },
+    mounted() {
+      let newID = this.$route.query;
+      if (newID.newID === undefined) {
+        this.close_();
+        this.dicts('');
       }
     },
     activated() {
       this.haveInHand = true;
       this.houseInfo();
+      this.routerIndex('');
+      this.ddRent('');
+
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.dicts(newID.newID);
+      }
     },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        let newID = JSON.parse(localStorage.process);
-        if (newID.status === 'revise') {
-          if (newID.type === 2) {
-            vm.processStatus = 'revise';
-            vm.routerTo('/publishDetail', newID.ids, 1);
-            vm.routerTo('/publishDetail', newID.ids, 2);
-          } else {
-              vm.processStatus = 'add';
-            vm.routerIndex('');
-            vm.ddRent('');
-          }
-          vm.close_();
-          vm.dicts(newID);
-        } else if (newID.status === 'add') {
-            vm.processStatus = 'add';
-          vm.routerIndex('');
-          vm.ddRent('');
-          vm.close_();
-          vm.dicts('');
-          localStorage.setItem('process', JSON.stringify({status: 'other'}));
-        }
-      })
-    },
+
     methods: {
       qualityChange(val) {
         if (this.numbers !== val) {
@@ -847,17 +834,11 @@
       },
 
       qualityDetail(val) {
+        this.userInfo(true);
         let type;
-        this.form.processable_id = '';
         if (val !== '') {
-          type = 'bulletin/quality/' + val.newID;
-          if (val.type === 2) {
-            this.form.processable_id = val.ids;
-          } else {
-            this.userInfo(true);
-          }
+          type = 'bulletin/quality/' + val;
         } else {
-          this.userInfo(true);
           type = 'bulletin/quality';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -879,12 +860,6 @@
               this.followUp = false;
               data.quality_up = '0';
               this.form.quality_up = '0';
-            }
-            if (val !== '' && val.type === 2) {
-              this.form.staff_id = data.staff_id;
-              this.form.staff_name = data.staff_name;
-              this.form.department_id = data.department_id;
-              this.form.department_name = data.department_name;
             }
             this.prefill(res.data.data, 'draught');
           } else {
@@ -980,7 +955,6 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
-        this.form.processable_id = '';
         this.form.house_id = '';
         this.house_name = '';
         this.form.city_id = this.beforeCityId;    //城市

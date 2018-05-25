@@ -235,7 +235,6 @@
       this.disabled = false;
       this.scrollTops();
       this.confirmArrival = localStorage.getItem('confirmArrival');
-      localStorage.setItem('process', JSON.stringify({status: 'add'}));
     },
     methods: {
       goBefore(val) {
@@ -258,9 +257,9 @@
           //   this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
           // }
           this.$router.push({path: '/beforeExam'});
-        }else if(val === '/questionnaire') {
-           this.$router.push({path: '/beforeNaire'});
-           // this.$router.push({path: '/questionnaire'});
+        } else if (val === '/questionnaire') {
+          this.$router.push({path: '/beforeNaire'});
+          // this.$router.push({path: '/questionnaire'});
         }
       },
       getExamNaireRedCircle() {

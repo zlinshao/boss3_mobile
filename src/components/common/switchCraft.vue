@@ -36,14 +36,8 @@
       },
       // 重新提交
       newly() {
-        let proID = this.process.processable_id;
-        let id = this.process.id;
-        let list = {};
-        list.newID = proID;
-        list.ids = id;
-        list.type = 2;
-        list.status = 'revise';
-        localStorage.setItem('process', JSON.stringify(list));
+        let proID = this.process.processable_id;    //预填ID
+        let id = this.process.id;                   //报备ID
         switch (this.process.processable_type) {
           case 'bulletin_quality'://质量
             this.$router.push({path: '/quality', query: {newID: proID, ids: id, type: 2}});

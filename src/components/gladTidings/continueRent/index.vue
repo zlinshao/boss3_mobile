@@ -410,7 +410,6 @@
         form: {
           address: '',
           id: '',
-          processable_id: '',
           type: 3,
           draft: 0,
           contract_id: '',              //房屋地址id
@@ -465,7 +464,6 @@
         value8: [],
 
         isValue1: true,
-        processStatus: '',
       }
     },
     mounted() {
@@ -473,35 +471,20 @@
       let newID = this.$route.query;
       if (newID.newID === undefined) {
         this.close_();
-        this.processStatus = 'add';
         this.dicts('');
       }
     },
     activated() {
       this.houseInfo();
+      this.routerIndex('');
+      this.ddRent('');
+
+      let newID = this.$route.query;
+      if (newID.newID !== undefined) {
+        this.dicts(newID.newID);
+      }
     },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        let newID = vm.$route.query;
-        if (newID.newID !== undefined) {
-          if (newID.type === 2) {
-            vm.processStatus = 'revise';
-            vm.routerTo('/publishDetail', newID.ids, 1);
-            vm.routerTo('/publishDetail', newID.ids, 2);
-          }
-          vm.close_();
-          vm.dicts(newID);
-        } else {
-          vm.routerIndex('');
-          vm.ddRent('');
-          if (vm.processStatus === 'revise') {
-            vm.processStatus = 'add';
-            vm.close_();
-            vm.dicts('');
-          }
-        }
-      })
-    },
+
     methods: {
       userInfo(val1) {
         if (val1) {
@@ -847,17 +830,11 @@
       },
 
       rentDetail(val) {
-        this.form.processable_id = '';
+        this.userInfo(true);
         let type;
         if (val !== '') {
-          type = 'bulletin/rent/' + val.newID;
-          if (val.type === 2) {
-            this.form.processable_id = val.ids;
-          } else {
-            this.userInfo(true);
-          }
+          type = 'bulletin/rent/' + val;
         } else {
-          this.userInfo(true);
           type = 'bulletin/rent?type=3';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -958,12 +935,6 @@
             this.photos = data.photo;
             this.form.remark = draft.remark;
 
-            if (val !== '' && val.type === 2) {
-              this.form.staff_id = draft.staff_id;
-              this.form.staff_name = draft.staff_name;
-              this.form.department_id = draft.department_id;
-              this.form.department_name = draft.department_name;
-            }
           } else {
             this.receiptNum();
             this.form.id = '';
@@ -980,7 +951,6 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
-        this.form.processable_id = '';
         this.form.is_corp = 1;
         this.form.contract_id = '';
         this.form.house_id = '';
