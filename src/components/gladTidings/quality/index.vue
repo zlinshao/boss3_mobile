@@ -390,9 +390,6 @@
         isClear: false,                     //删除图片
         picStatus: true,
 
-        followUp: false,                    //后续报备
-        processStatus: '',                  //后续报备
-
         allCity: [],                        //城市
         cities: [],                         //城市
         beforeCity: '',                     //当前城市
@@ -493,8 +490,10 @@
         photos: [],                     //房屋影像
 
         isValue1: true,
-
         numbers: '',
+
+        followUp: false,                    //后续报备
+        processStatus: '',                  //后续报备
       }
     },
     mounted() {
@@ -515,11 +514,11 @@
         if (newID.newID !== undefined) {
           if (newID.type === 2) {
             vm.processStatus = 'revise';
-            vm.routerTo('/publishDetail', newID.ids, 1);
-            vm.routerTo('/publishDetail', newID.ids, 2);
           } else {
             vm.processStatus = 'add';
           }
+          vm.routerTo('/publishDetail', newID.ids, 1);
+          vm.routerTo('/publishDetail', newID.ids, 2);
           vm.close_();
           vm.dicts(newID);
         } else {
