@@ -150,7 +150,7 @@
       </div>
     </van-popup>
 
-    <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(path) === -1" :process="process"></SwitchCraft>
+    <!--<SwitchCraft v-if="approvedStatus && routerLinks.indexOf(path) === -1" :process="process"></SwitchCraft>-->
   </div>
 </template>
 
@@ -176,7 +176,7 @@
         printscreen: ['款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '房屋影像', '房屋照片', '退租交接单'],
         placeStatus: ['published', 'rejected', 'cancelled'],
 
-        routerLinks: ['/drawback', '/friedBill', '/clearRetreat', '/checkout', '/agencyRent', '/special', '/finalPayment'],
+        // routerLinks: ['/drawback', '/friedBill', '/clearRetreat', '/checkout', '/agencyRent', '/special', '/finalPayment'],
         // address: '',
         message: '',
         ids: '',
@@ -324,12 +324,12 @@
             this.message = res.data.message;
           }
           this.vLoading = false;
-          for (let key in this.operation) {
-            if (key.indexOf('approved') > -1) {
-              this.approvedStatus = true;
-              return;
-            }
-          }
+          // for (let key in this.operation) {
+          //   if (key.indexOf('approved') > -1) {
+          //     this.approvedStatus = true;
+          //     return;
+          //   }
+          // }
         });
       },
 
@@ -402,11 +402,6 @@
       // 重新提交
       newly() {
         let proID = this.process.processable_id;
-        let list = {};
-        list.newID = proID;
-        list.type = 1;
-        list.status = 'revise';
-        localStorage.setItem('process', JSON.stringify(list));
         switch (this.process.processable_type) {
           case 'bulletin_quality'://质量
             this.$router.push({path: '/quality', query: {newID: proID, type: 1}});
@@ -445,16 +440,16 @@
             this.$router.push({path: '/friedBill', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_refund'://退款
-            this.$router.push({path: '/drawback', query: {newID: proID, ids: ''}});
+            this.$router.push({path: '/drawback', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_retainage'://尾款
-            this.$router.push({path: '/finalPayment', query: {newID: proID, ids: ''}});
+            this.$router.push({path: '/finalPayment', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_special'://特殊
-            this.$router.push({path: '/special', query: {newID: proID, ids: ''}});
+            this.$router.push({path: '/special', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_checkout'://退租
-            this.$router.push({path: '/checkout', query: {newID: proID, ids: ''}});
+            this.$router.push({path: '/checkout', query: {newID: proID, type: 1}});
             break;
         }
       },

@@ -230,11 +230,10 @@
       this.disabled = false;
       this.scrollTops();
       this.confirmArrival = localStorage.getItem('confirmArrival');
-      localStorage.setItem('process', JSON.stringify({status: 'add'}));
-      this.getExamNaireRedCircle();
-      if(this.$route.query.refresh === 'refresh'){
-        this.getExamNaireRedCircle();
-      }
+      // this.getExamNaireRedCircle();
+      // if(this.$route.query.refresh === 'refresh'){
+      //   this.getExamNaireRedCircle();
+      // }
     },
     methods: {
       goBefore(val) {
