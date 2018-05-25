@@ -46,6 +46,24 @@ export default {
       });
     };
 
+    Vue.prototype.routerTo = function (url, id, val) {
+      let that = this;
+      if (val === 1) {
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          that.$router.push({path: url, query: {ids: id}});
+        });
+      } else {
+        dd.biz.navigation.setLeft({
+          control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+          onSuccess: function () {
+            that.$router.push({path: url, query: {ids: id}});
+          },
+          onFail: function (err) {}
+        });
+      }
+    };
+
     Vue.prototype.routerDetail = function (val) {
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
@@ -53,6 +71,9 @@ export default {
     Vue.prototype.stick = function () {
       document.getElementById('main').scrollTop = document.getElementById('main').scrollHeight;
       // console.log(document.getElementsByTagName('.main')[0].scrollHeight);
+    };
+    Vue.prototype.valueLength = function (item, val) {
+      return item.slice(0, val);
     };
 
     Vue.prototype.dictionary = function (data, flag) {

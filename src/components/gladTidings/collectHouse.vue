@@ -164,6 +164,14 @@
             let data = res.data.data;
             if (data.length !== 0 && res.data.status === 'success') {
               for (let i = 0; i < data.length; i++) {
+                if (type === 'quality' && data[i].house_res) {
+                  let list = {};
+                  this.showInfo.push(data[i].id);
+                  list.house_id = data[i].id;
+                  list.house_name = data[i].name;
+                  list.house_res = data[i].house_res;
+                  this.lists.push(list);
+                }
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i], type);
                 }
@@ -195,7 +203,7 @@
             } else {
               this.disabled = true;
             }
-            if (data.length === 0 && this.lists.length === 0 && res.data.status === 'success') {
+            if (data.length === 0 && this.params.page === 1 && res.data.status === 'success') {
               this.showDetail = 2;
             }
             if (res.data.status === 'fail') {

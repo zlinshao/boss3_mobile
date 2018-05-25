@@ -66,15 +66,6 @@
           placeholder="请选择房现房屋地址"
           required>
         </van-field>
-        <van-field
-          v-model="form.begin_date"
-          type="text"
-          label="合同开始日期"
-          placeholder="获取开始日期"
-          @click="timeChoose(2)"
-          readonly
-          required>
-        </van-field>
         <div class="first_date">
           <van-field
             style="width: 110px;"
@@ -96,6 +87,15 @@
             placeholder="请填写天数">
           </van-field>
         </div>
+        <van-field
+          v-model="form.begin_date"
+          type="text"
+          label="合同开始日期"
+          placeholder="获取开始日期"
+          @click="timeChoose(2)"
+          readonly
+          required>
+        </van-field>
         <van-field
           v-model="form.end_date"
           type="text"
@@ -270,24 +270,10 @@
         </div>
         <van-cell-group>
           <van-field
-            @click="selectShow(5,index)"
-            v-model="form.receipt[index].city"
-            label="城市"
+            v-model="form.receipt[index]"
             type="text"
-            readonly
-            placeholder="请选择城市">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].date"
-            type="number"
-            label="年份"
-            placeholder="请填写年份">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].num"
-            type="text"
-            label="编号"
-            placeholder="请填写编号">
+            label="收据编号"
+            placeholder="请填写收据编号">
           </van-field>
         </van-cell-group>
       </div>
@@ -360,9 +346,10 @@
     </div>
 
     <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
+      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -425,9 +412,7 @@
         moneyNum: [''],             //分金额 付款方式
 
         amountReceipt: 1,                  //收据编号
-        receiptDate: '',                   //收据编号年份
-        receiptCity: '',                   //收据编号城市
-        cities: [],                        //城市
+        receiptDate: '',
 
         corp: true,                    //公司单
         rooms: [],
@@ -445,6 +430,7 @@
           old_house_name: '',
 
           address: '',
+          processable_id: '',
           id: '',
           draft: 0,
           contract_id_rent: '',         //原租房合同id
@@ -472,7 +458,7 @@
           discount: 0,                   //让价金额
           contract_number: 'LJZF',           //合同编号
           is_corp: 1,                   //是否公司单  0个人1公司
-          receipt: [{city: '', date: '', num: ''}], //收据编号
+          receipt: [''],                    //收据编号
           retainage_date: '',           //尾款补齐时间
 
           is_other_fee: 0,
@@ -496,25 +482,46 @@
         value8: [],
 
         isValue1: true,
-        isValue2: false,
+        processStatus: '',
       }
     },
     mounted() {
       this.getNowFormatDate();
-      this.dicts('');
+      let newID = this.$route.query;
+      if (newID.newID === undefined) {
+        this.close_();
+        this.processStatus = 'add';
+        this.dicts('');
+      }
     },
     activated() {
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.dicts(newID.newID);
+      if (this.processStatus === 'revise') {
+        this.processStatus = 'add';
+        this.close_();
+        this.dicts('');
       }
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        let newID = vm.$route.query;
+        if (newID.newID !== undefined) {
+          if (newID.type === 2) {
+            vm.processStatus = 'revise';
+            vm.routerTo('/publishDetail', newID.ids, 1);
+            vm.routerTo('/publishDetail', newID.ids, 2);
+          }
+          vm.close_();
+          vm.dicts(newID);
+        } else {
+          vm.routerIndex('');
+          vm.ddRent('');
+        }
+      })
     },
     methods: {
-      userInfo(val1, val2) {
-        if (val1 && val2) {
+      userInfo(val1) {
+        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
@@ -524,14 +531,7 @@
       },
 
       dicts(val) {
-        // 城市
-        this.dictionary(306, 1).then((res) => {
-          this.cities = [];
-          for (let i = 0; i < res.data.length; i++) {
-            this.cities.push(res.data[i].dictionary_name);
-          }
-          this.receiptNum();
-        });
+        this.receiptNum();
         //支付方式
         this.dictionary(508, 1).then((res) => {
           this.value8 = [];
@@ -542,22 +542,16 @@
           this.rentDetail(val);
         });
       },
-      receiptNum(val1, val2) {
-        this.amountReceipt = 1;
-        if (val2 === 'receipt') {
-          this.form.receipt = [{city: '', date: '', num: val1}];
-        } else {
-          this.form.receipt = [{city: '', date: '', num: ''}];
-        }
-        // 收据编号默认日期
-        let date = new Date();
-        this.form.receipt[0].date = date.getFullYear();
-        this.receiptDate = date.getFullYear();
+
+      receiptNum() {
         // 收据编号默认城市
+        this.form.receipt = [];
         this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
           if (res.data.code === '1000120') {
-            this.form.receipt[0].city = res.data.data.data[2] + '市';
-            this.receiptCity = res.data.data.data[2] + '市';
+            // 收据编号默认日期
+            this.receiptDate = res.data.data.py + res.data.data.year;
+            let receipt =  res.data.data.py + res.data.data.year;
+            this.form.receipt.push(receipt);
           }
         });
       },
@@ -739,7 +733,7 @@
           this.moneyNum.push('');
         } else {
           this.amountReceipt++;
-          this.form.receipt.push({city: this.receiptCity, date: this.receiptDate, num: ''});
+          this.form.receipt.push(this.receiptDate);
         }
       },
 
@@ -801,6 +795,14 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
+            let receipt = [];
+            for (let i = 0; i < this.form.receipt.length; i++) {
+              if (this.form.receipt[i] !== this.receiptDate) {
+                receipt.push(this.form.receipt[i]);
+              }
+            }
+            this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
+            this.form.receipt = receipt;
             this.form.draft = val;
             this.form.is_corp = this.corp ? 1 : 0;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
@@ -808,12 +810,16 @@
             this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
             this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50510') {
+              if (res.data.code === '50510' || res.data.code === '50530') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
               } else if (res.data.code === '50520') {
+                if (receipt.length === 0) {
+                  this.form.receipt = [];
+                  this.form.receipt.push(this.receiptDate);
+                }
                 this.form.day = this.form.day === '0' ? '' : this.form.day;
                 this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
                 this.form.id = res.data.data.id;
@@ -884,11 +890,17 @@
       },
 
       rentDetail(val) {
-        this.userInfo(true);
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/change/' + val;
+          type = 'bulletin/change/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          } else {
+            this.userInfo(true);
+          }
         } else {
+          this.userInfo(true);
           type = 'bulletin/change';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -955,12 +967,22 @@
             this.form.money_way = draft.money_way;
 
             if (typeof draft.receipt !== "string") {
-              this.amountReceipt = draft.receipt_raw.length;
-              this.form.receipt = draft.receipt_raw;
+              if (draft.receipt.length !== 0) {
+                this.amountReceipt = draft.receipt.length;
+                this.form.receipt = [];
+                for (let i = 0; i < draft.receipt.length; i++) {
+                  this.form.receipt.push(draft.receipt[i]);
+                }
+              } else {
+                this.amountReceipt = 1;
+                this.form.receipt = [];
+                this.form.receipt[0] = this.receiptDate;
+              }
             } else {
-              this.receiptNum(draft.receipt, 'receipt');
+              this.amountReceipt = 1;
+              this.form.receipt = [];
+              this.form.receipt[0] = draft.receipt;
             }
-
             this.form.discount = draft.discount;
             this.form.retainage_date = draft.retainage_date;
 
@@ -976,10 +998,13 @@
             this.photos = data.photo;
 
             this.form.remark = draft.remark;
-            // this.form.staff_id = draft.staff_id;
-            // this.form.staff_name = draft.staff_name;
-            // this.form.department_id = draft.department_id;
-            // this.form.department_name = draft.department_name;
+
+            if (val !== '' && val.type === 2) {
+              this.form.staff_id = draft.staff_id;
+              this.form.staff_name = draft.staff_name;
+              this.form.department_id = draft.department_id;
+              this.form.department_name = draft.department_name;
+            }
           } else {
             this.receiptNum();
             this.form.id = '';
@@ -1004,6 +1029,7 @@
         this.form.old_money_sum = '';
 
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.contract_id_rent = '';
         this.form.contract_id = '';
         this.form.house_id_rent = '';
@@ -1040,7 +1066,9 @@
         this.is_corp = 1;
         this.corp = true;
 
-        this.receiptNum();
+        this.amountReceipt = 1;
+        this.form.receipt = [];
+        this.form.receipt[0] = this.receiptDate;
 
         this.form.discount = 0;
         this.form.retainage_date = '';

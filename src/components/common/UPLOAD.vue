@@ -24,7 +24,7 @@
   import {Dialog} from 'vant';
   export default {
     name: 'hello',
-    props: ['ID', 'editImage', 'isClear'],
+    props: ['ID', 'editImage', 'isClear','dis'],
     data() {
       return {
         imgArray: [],

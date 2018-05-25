@@ -132,24 +132,10 @@
         </div>
         <van-cell-group>
           <van-field
-            @click="selectShow(3,index)"
-            v-model="form.receipt[index].city"
-            label="城市"
+            v-model="form.receipt[index]"
             type="text"
-            readonly
-            placeholder="请选择城市">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].date"
-            type="number"
-            label="年份"
-            placeholder="请填写年份">
-          </van-field>
-          <van-field
-            v-model="form.receipt[index].num"
-            type="text"
-            label="编号"
-            placeholder="请填写编号">
+            label="收据编号"
+            placeholder="请填写收据编号">
           </van-field>
         </van-cell-group>
       </div>
@@ -256,9 +242,7 @@
         payIndex: '',                 //分金额方式index
 
         amountReceipt: 1,                  //收据编号
-        receiptDate: '',                   //收据编号年份
-        receiptCity: '',                   //收据编号城市
-        cities: [],                        //城市
+        receiptDate: '',
 
         other_fee_status: false,
         form: {
@@ -274,7 +258,7 @@
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
-          receipt: [{city: '', date: '', num: ''}], //收据编号
+          receipt: [],                    //收据编号
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -309,14 +293,7 @@
     },
     methods: {
       dicts(val) {
-        // 城市
-        this.dictionary(306, 1).then((res) => {
-          this.cities = [];
-          for (let i = 0; i < res.data.length; i++) {
-            this.cities.push(res.data[i].dictionary_name);
-          }
-          this.receiptNum();
-        });
+        this.receiptNum();
         //支付方式
         this.dictionary(508, 1).then((res) => {
           this.value8 = [];
@@ -327,22 +304,16 @@
           this.finalDetail(val);
         });
       },
-      receiptNum(val1, val2) {
-        this.amountReceipt = 1;
-        if (val2 === 'receipt') {
-          this.form.receipt = [{city: '', date: '', num: val1}];
-        } else {
-          this.form.receipt = [{city: '', date: '', num: ''}];
-        }
-        // 收据编号默认日期
-        let date = new Date();
-        this.form.receipt[0].date = date.getFullYear();
-        this.receiptDate = date.getFullYear();
+
+      receiptNum() {
         // 收据编号默认城市
+        this.form.receipt = [];
         this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
           if (res.data.code === '1000120') {
-            this.form.receipt[0].city = res.data.data.data[2] + '市';
-            this.receiptCity = res.data.data.data[2] + '市';
+            // 收据编号默认日期
+            this.receiptDate = res.data.data.py + res.data.data.year;
+            let receipt =  res.data.data.py + res.data.data.year;
+            this.form.receipt.push(receipt);
           }
         });
       },
@@ -454,7 +425,7 @@
           this.moneyNum.push('');
         } else {
           this.amountReceipt++;
-          this.form.receipt.push({city: this.receiptCity, date: this.receiptDate, num: ''});
+          this.form.receipt.push(this.receiptDate);
         }
 
       },
@@ -475,6 +446,14 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
+            let receipt = [];
+            for (let i = 0; i < this.form.receipt.length; i++) {
+              if (this.form.receipt[i] !== this.receiptDate) {
+                receipt.push(this.form.receipt[i]);
+              }
+            }
+            this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
+            this.form.receipt = receipt;
             this.form.draft = val;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
@@ -485,6 +464,10 @@
                 $('.imgItem').remove();
                 this.routerDetail(res.data.data.data.id);
               } else if (res.data.code === '50920') {
+                if (receipt.length === 0) {
+                  this.form.receipt = [];
+                  this.form.receipt.push(this.receiptDate);
+                }
                 this.form.id = res.data.data.id;
                 Toast.success(res.data.msg);
               } else {
@@ -556,10 +539,21 @@
             this.form.terms = draft.terms;
 
             if (typeof draft.receipt !== "string") {
-              this.amountReceipt = draft.receipt_raw.length;
-              this.form.receipt = draft.receipt_raw;
+              if (draft.receipt.length !== 0) {
+                this.amountReceipt = draft.receipt.length;
+                this.form.receipt = [];
+                for (let i = 0; i < draft.receipt.length; i++) {
+                  this.form.receipt.push(draft.receipt[i]);
+                }
+              } else {
+                this.amountReceipt = 1;
+                this.form.receipt = [];
+                this.form.receipt[0] = this.receiptDate;
+              }
             } else {
-              this.receiptNum(draft.receipt, 'receipt');
+              this.amountReceipt = 1;
+              this.form.receipt = [];
+              this.form.receipt[0] = draft.receipt;
             }
 
             this.form.contract_id = draft.contract_id;
@@ -624,7 +618,9 @@
         this.form.screenshot_leader = [];
         this.leaders = {};
 
-        this.receiptNum();
+        this.amountReceipt = 1;
+        this.form.receipt = [];
+        this.form.receipt[0] = this.receiptDate;
 
         this.form.other_fee_name = '';
         this.form.other_fee = '';

@@ -279,7 +279,7 @@
       },
       // 搜索
       searchRouter() {
-        this.$router.push({path: '/searchList', query: {term: JSON.stringify(this.params)}})
+        this.$router.push({path: '/searchList', query: {term: JSON.stringify(this.params)}});
       },
       // 待办事项
       toDone() {

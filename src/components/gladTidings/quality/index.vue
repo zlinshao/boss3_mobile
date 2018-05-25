@@ -2,12 +2,32 @@
   <div id="quality">
     <div class="main" id="main">
       <van-cell-group>
+        <div class="checks">
+          <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>报备类型</div>
+          <van-radio-group v-model="form.quality_up" @change="qualityChange">
+            <van-radio name="0">新增</van-radio>
+            <van-radio name="1">跟进</van-radio>
+          </van-radio-group>
+        </div>
+      </van-cell-group>
+      <van-cell-group>
+        <van-field
+          v-if="followUp"
+          v-model="house_name"
+          label="房屋地址"
+          type="text"
+          @click="searchSelect(3)"
+          readonly
+          placeholder="选择房屋地址"
+          required>
+        </van-field>
         <van-field
           v-model="form.city_name"
           label="城市"
           @click="selectShow(2)"
           type="text"
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           placeholder="请选择城市"
           required>
         </van-field>
@@ -16,7 +36,8 @@
           label="小区"
           @click="searchSelect(1)"
           type="text"
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           placeholder="请选择小区地址"
           required>
         </van-field>
@@ -29,6 +50,7 @@
             style="width: 22%"
             v-model="form.door_address[0]"
             type="text"
+            :disabled="followUp"
             placeholder="栋">
           </van-field>
           <span class="cut">-</span>
@@ -36,6 +58,7 @@
             style="width: 22%"
             v-model="form.door_address[1]"
             type="text"
+            :disabled="followUp"
             placeholder="单元">
           </van-field>
           <span class="cut">-</span>
@@ -43,14 +66,16 @@
             class="twoBorder"
             v-model="form.door_address[2]"
             type="text"
+            :disabled="followUp"
             placeholder="门牌">
           </van-field>
         </div>
         <van-field
           @click="selectShow(1)"
           v-model="house_type_name"
-          readonly
+          :readonly="!followUp"
           type="text"
+          :disabled="followUp"
           label="户型"
           placeholder="请选择户型"
           required>
@@ -60,14 +85,16 @@
           label="面积"
           required
           type="number"
+          :disabled="followUp"
           placeholder="请填写面积">
         </van-field>
         <van-field
           @click="selectShow(14)"
           v-model="form.decorate.name"
           label="装修"
+          :disabled="followUp"
           required
-          readonly
+          :readonly="!followUp"
           type="text"
           placeholder="请选择装修">
         </van-field>
@@ -76,7 +103,8 @@
           v-model="form.property_type.name"
           label="房屋类型"
           required
-          readonly
+          :disabled="followUp"
+          :readonly="!followUp"
           type="text"
           placeholder="请选择房屋类型">
         </van-field>
@@ -85,9 +113,10 @@
           v-model="form.direction.name"
           label="朝向"
           required
+          :disabled="followUp"
+          :readonly="!followUp"
           type="text"
-          placeholder="请选择朝向"
-          readonly>
+          placeholder="请选择朝向">
         </van-field>
         <div class="first_date">
           <van-field
@@ -99,12 +128,14 @@
           <van-field
             v-model="form.floor"
             type="number"
+            :disabled="followUp"
             placeholder="请填写房屋楼层">
           </van-field>
           <van-field
             class="twoBorder"
             v-model="form.floors"
             type="number"
+            :disabled="followUp"
             placeholder="请填写总楼层">
           </van-field>
         </div>
@@ -113,17 +144,27 @@
           label="价格"
           required
           type="text"
+          :disabled="followUp"
           placeholder="请填写价格">
         </van-field>
 
         <!--<div class="titleSwitch">-->
         <!--<div class="cellGroup">-->
         <!--<span class="requiredIcon">*</span>-->
-        <!--<van-switch-cell v-model="is_agencyOn" title="是否中介"/>-->
+        <!--<van-switch-cell v-model="cusFrom" title="是否中介"/>-->
         <!--</div>-->
         <!--</div>-->
 
-        <van-switch-cell v-model="is_agencyOn" title="是否中介"/>
+        <van-field
+          v-model="cusFrom"
+          @click="selectShow(16)"
+          label="是否中介"
+          type="text"
+          readonly
+          :disabled="followUp"
+          placeholder="是否中介"
+          required>
+        </van-field>
 
         <van-field
           @click="selectShow(4)"
@@ -314,9 +355,10 @@
     </div>
 
     <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
+      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -348,6 +390,9 @@
         isClear: false,                     //删除图片
         picStatus: true,
 
+        followUp: false,                    //后续报备
+        processStatus: '',                  //后续报备
+
         allCity: [],                        //城市
         cities: [],                         //城市
         beforeCity: '',                     //当前城市
@@ -355,7 +400,7 @@
         house_type_name: '1室1厅1卫',
         refundSta: true,
 
-        is_agencyOn: false,                 //是否中介
+        cusFrom: '',                        //是否中介
         heaterOn: true,                     //暖气
         gasOn: true,                        //天然气
         is_cleanOn: true,                   //房屋交接是否干净
@@ -382,8 +427,12 @@
         propertyAll: [],
         property_name: [],
 
+        house_name: '',
         form: {
           id: '',
+          processable_id: '',
+          house_id: '',
+          quality_up: '0',
           is_draft: 0,
           city_id: '',                  //城市
           city_name: '',                //城市
@@ -406,7 +455,7 @@
           floor: '',                    //楼层
           floors: '',                   //总楼层
           price: '',                    //价格
-          is_agency: 0,                 //是否中介
+          is_agency: '',                 //是否中介
           air_condition: 1,             //空调
           fridge: 1,                    //冰箱
           television: 1,                //电视
@@ -441,27 +490,57 @@
           department_name: '',          //部门name
         },
         community_name: '',
-        photos: {},                     //房屋影像
+        photos: [],                     //房屋影像
 
         isValue1: true,
-        isValue2: false,
+
+        numbers: '',
       }
     },
     mounted() {
-      this.dicts('');
+      let newID = this.$route.query;
+      if (newID.newID === undefined) {
+        this.close_();
+        this.processStatus = 'add';
+        this.dicts('');
+      }
     },
     activated() {
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.dicts(newID.newID);
+      if (this.processStatus === 'revise') {
+        this.processStatus = 'add';
+        this.close_();
+        this.dicts('');
       }
+      this.haveInHand = true;
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        let newID = vm.$route.query;
+        if (newID.newID !== undefined) {
+          if (newID.type === 2) {
+            vm.processStatus = 'revise';
+            vm.routerTo('/publishDetail', newID.ids, 1);
+            vm.routerTo('/publishDetail', newID.ids, 2);
+          }
+          vm.close_();
+          vm.dicts(newID);
+        } else {
+          vm.routerIndex('');
+          vm.ddRent('');
+        }
+      })
     },
     methods: {
-      userInfo(val1, val2) {
-        if (val1 && val2) {
+      qualityChange(val) {
+        if (this.numbers !== val) {
+          this.close_();
+          this.numbers = val;
+          this.followUp = val === '0' ? false : true;
+        }
+      },
+      userInfo(val1) {
+        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
@@ -530,6 +609,9 @@
           case 2:
             this.$router.push({path: '/organize'});
             break;
+          case 3:
+            this.$router.push({path: '/collectHouse', query: {type: 'quality'}});
+            break;
           case 4:
             this.$router.push({path: '/depart'});
             break;
@@ -585,6 +667,9 @@
           case 15:
             this.columns = this.property_name;
             break;
+          case 16:
+            this.columns = dicts.value8;
+            break;
           default:
             this.columns = dicts.value5;
         }
@@ -610,7 +695,7 @@
               }
             }
             this.form.city_name = value;
-            this.form.community = '';
+            this.form.community = {};
             this.community_name = '';
             break;
           case 3:
@@ -673,6 +758,10 @@
               }
             }
             break;
+          case 16:
+            this.form.is_agency = index;
+            this.cusFrom = value;
+            break;
         }
         this.selectHide = false;
       },
@@ -697,7 +786,6 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-            this.form.is_agency = this.is_agencyOn ? 1 : 0;
             this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
             this.form.gas = this.gasOn ? 1 : 0;                       //天然气
             this.form.is_clean = this.is_cleanOn ? 1 : 0;             //房屋交接是否干净
@@ -709,7 +797,7 @@
             this.form.is_draft = val;
             this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === "51410") {
+              if (res.data.code === "51410" || res.data.code === "51430") {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -726,12 +814,17 @@
           }
         } else {
           Toast('图片上传中...');
-
         }
       },
 
       houseInfo() {
         let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = JSON.parse(t.house);
+          this.house_name = val.house_name;
+          this.form.house_id = val.house_id;
+          this.prefill(val.house_res, 'house');
+        }
         if (t.city !== undefined && t.city !== '') {
           let val = JSON.parse(t.city);
           this.form.community = val;
@@ -756,103 +849,132 @@
         if (t.tops === '') {
           this.stick();
         }
-        this.userInfo(this.isValue1, this.isValue2);
+        this.userInfo(this.isValue1);
       },
 
       qualityDetail(val) {
-        this.isValue2 = true;
-        this.userInfo(true, true);
         let type;
+        this.form.processable_id = '';
         if (val !== '') {
-          type = 'bulletin/quality/' + val;
+          type = 'bulletin/quality/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          } else {
+            this.userInfo(true);
+          }
         } else {
+          this.userInfo(true);
           type = 'bulletin/quality';
         }
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === "51420") {
-            this.isClear = false;
             let data = res.data.data;
             this.form.id = res.data.id;
-            this.form.city_id = data.city_id;                     //城市
-            this.form.city_name = data.city_name;                 //城市
-            this.form.community = data.community;                 //小区id
-            this.community_name = data.community.village_name;    //小区id
-            this.form.door_address = data.door_address;
-
-            this.form.house_type = data.house_type;
-            let house = data.house_type;
-            let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
-            let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
-            this.house_type_name = dicts.value1[house[0] - 1] + room + hall;
-
-            this.form.decorate = data.decorate;
-
-            this.form.area = data.area;                                     //面积
-            this.form.direction = data.direction;                           //朝向
-            this.form.property_type = data.property_type;                   //类型
-            this.form.floor = data.floor;                                   //楼层
-            this.form.floors = data.floors;                                 //总楼层
-            this.form.price = data.price;                                   //价格
-            this.form.is_agency = data.is_agency;                           //是否中介
-            this.is_agencyOn = data.is_agency === 1 ? true : false;         //是否中介
-            this.form.air_condition = data.air_condition;                   //空调
-            this.air_condition_name = dicts.value5[data.air_condition];     //空调
-            this.form.fridge = data.fridge;                                 //冰箱
-            this.fridge_name = dicts.value5[data.fridge];                   //冰箱
-            this.form.television = data.television;                         //电视
-            this.television_name = dicts.value5[data.television];           //电视
-            this.form.gas_stove = data.gas_stove;                           //燃气灶
-            this.gas_stove_name = dicts.value4[data.gas_stove];             //燃气灶
-            this.form.hood = data.hood;                                     //油烟机
-            this.hood_name = dicts.value4[data.hood];                       //油烟机
-            this.form.microwave = data.microwave;                           //微波炉
-            this.microwave_name = dicts.value5[data.microwave];             //微波炉
-            this.form.wash_machine = data.wash_machine;                     //洗衣机
-            this.wash_machine_name = dicts.value5[data.wash_machine];       //洗衣机
-            this.form.water_heater = data.water_heater;                     //热水器
-            this.water_heater_name = dicts.value5[data.water_heater];       //热水器
-            this.form.sofa = data.sofa;                                     //沙发
-            this.sofa_name = dicts.value4[data.sofa];                       //沙发
-            this.form.clothe_rack = data.clothe_rack;                       //晾衣架
-            this.clothe_rack_name = dicts.value4[data.clothe_rack];         //晾衣架
-            this.form.heater = data.heater;                                 //暖气
-            this.heaterOn = data.heater === 1 ? true : false;               //是否暖气
-            this.form.gas = data.gas;                                       //天然气
-            this.gasOn = data.gas === 1 ? true : false;                     //是否天然气
-            this.form.bed = data.bed;                                       //床
-            this.bedOn = data.bed === 1 ? true : false;                     //床
-            this.form.bed_remark = data.bed_remark;                         //床备注
-            this.form.wardrobe = data.wardrobe;                             //衣柜
-            this.wardrobeOn = data.wardrobe === 1 ? true : false;           //衣柜
-            this.form.wardrobe_remark = data.wardrobe_remark;               //衣柜备注
-            this.form.curtain = data.curtain;                               //窗帘
-            this.curtainOn = data.curtain === 1 ? true : false;             //窗帘
-            this.form.curtain_remark = data.curtain_remark;                 //窗帘备注
-            this.form.is_fill = data.is_fill;                               //家电是否齐全
-            this.is_fillOn = data.is_fill === 1 ? true : false;             //家电是否齐全
-            this.form.is_lord_fill = data.is_lord_fill;                     //房东是否补齐
-            this.is_lordOn = data.is_lord_fill === 1 ? true : false;        //房东是否补齐
-            this.form.is_lord_fill_days = data.is_lord_fill_days;           //房东是否补齐天数
-            this.form.dining_table = data.dining_table;                     //餐桌
-            this.form.chair = data.chair;                                   //椅子
-            this.form.is_clean = data.is_clean;                             //是否干净
-            this.is_cleanOn = data.is_clean === 1 ? true : false;           //是否干净
-            this.form.other_remark = data.other_remark;                     //其他问题
-            this.form.other_furniture = data.other_furniture;               //其他家具
-            this.photos = data.photo;                                       //房屋影像
-            this.form.photo = [];
-            //房屋影像
-            for (let i = 0; i < data.photo.length; i++) {
-              this.form.photo.push(data.photo[i].id);                       //房屋影像
+            this.form.house_id = data.house_id;
+            if (data.quality_up && data.quality_up !== undefined) {
+              this.form.quality_up = String(data.quality_up);
+              this.numbers = String(data.quality_up);
+              if (String(data.quality_up) === '1') {
+                this.followUp = true;
+                this.house_name = data.address;
+              } else {
+                this.followUp = false;
+                this.house_name = '';
+              }
+            } else {
+              this.followUp = false;
+              data.quality_up = '0';
+              this.form.quality_up = '0';
             }
-            // this.form.staff_id = data.staff_id;
-            // this.form.staff_name = data.staff_name;
-            // this.form.department_id = data.department_id;
-            // this.form.department_name = data.department_name;
+            if (val !== '' && val.type === 2) {
+              this.form.staff_id = data.staff_id;
+              this.form.staff_name = data.staff_name;
+              this.form.department_id = data.department_id;
+              this.form.department_name = data.department_name;
+            }
+            this.prefill(res.data.data, 'draught');
           } else {
             this.form.id = '';
           }
         })
+      },
+
+      prefill(data, val) {
+        this.isClear = false;
+        this.form.city_id = data.city_id;                     //城市
+        this.form.city_name = data.city_name;                 //城市
+        this.form.community = data.community;                 //小区id
+        this.community_name = data.community.village_name;    //小区id
+        this.form.door_address = data.door_address;
+
+        this.form.house_type = data.house_type;
+        let house = data.house_type;
+        let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
+        let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
+        this.house_type_name = dicts.value1[house[0] - 1] + room + hall;
+
+        this.form.decorate = data.decorate;
+
+        this.form.area = data.area;                                     //面积
+        this.form.direction = data.direction;                           //朝向
+        this.form.property_type = data.property_type;                   //类型
+        this.form.floor = data.floor;                                   //楼层
+        this.form.floors = data.floors;                                 //总楼层
+        this.form.price = data.price;                                   //价格
+        this.form.is_agency = data.is_agency;                           //是否中介
+        this.cusFrom = dicts.value8[data.is_agency];                    //是否中介
+        this.form.air_condition = data.air_condition;                   //空调
+        this.air_condition_name = dicts.value5[data.air_condition];     //空调
+        this.form.fridge = data.fridge;                                 //冰箱
+        this.fridge_name = dicts.value5[data.fridge];                   //冰箱
+        this.form.television = data.television;                         //电视
+        this.television_name = dicts.value5[data.television];           //电视
+        this.form.gas_stove = data.gas_stove;                           //燃气灶
+        this.gas_stove_name = dicts.value4[data.gas_stove];             //燃气灶
+        this.form.hood = data.hood;                                     //油烟机
+        this.hood_name = dicts.value4[data.hood];                       //油烟机
+        this.form.microwave = data.microwave;                           //微波炉
+        this.microwave_name = dicts.value5[data.microwave];             //微波炉
+        this.form.wash_machine = data.wash_machine;                     //洗衣机
+        this.wash_machine_name = dicts.value5[data.wash_machine];       //洗衣机
+        this.form.water_heater = data.water_heater;                     //热水器
+        this.water_heater_name = dicts.value5[data.water_heater];       //热水器
+        this.form.sofa = data.sofa;                                     //沙发
+        this.sofa_name = dicts.value4[data.sofa];                       //沙发
+        this.form.clothe_rack = data.clothe_rack;                       //晾衣架
+        this.clothe_rack_name = dicts.value4[data.clothe_rack];         //晾衣架
+        this.form.heater = data.heater;                                 //暖气
+        this.heaterOn = data.heater === 1 ? true : false;               //是否暖气
+        this.form.gas = data.gas;                                       //天然气
+        this.gasOn = data.gas === 1 ? true : false;                     //是否天然气
+        this.form.bed = data.bed;                                       //床
+        this.bedOn = data.bed === 1 ? true : false;                     //床
+        this.form.bed_remark = data.bed_remark;                         //床备注
+        this.form.wardrobe = data.wardrobe;                             //衣柜
+        this.wardrobeOn = data.wardrobe === 1 ? true : false;           //衣柜
+        this.form.wardrobe_remark = data.wardrobe_remark;               //衣柜备注
+        this.form.curtain = data.curtain;                               //窗帘
+        this.curtainOn = data.curtain === 1 ? true : false;             //窗帘
+        this.form.curtain_remark = data.curtain_remark;                 //窗帘备注
+        this.form.is_fill = data.is_fill;                               //家电是否齐全
+        this.is_fillOn = data.is_fill === 1 ? true : false;             //家电是否齐全
+        this.form.is_lord_fill = data.is_lord_fill;                     //房东是否补齐
+        this.is_lordOn = data.is_lord_fill === 1 ? true : false;        //房东是否补齐
+        this.form.is_lord_fill_days = data.is_lord_fill_days;           //房东是否补齐天数
+        this.form.dining_table = data.dining_table;                     //餐桌
+        this.form.chair = data.chair;                                   //椅子
+        this.form.is_clean = data.is_clean;                             //是否干净
+        this.is_cleanOn = data.is_clean === 1 ? true : false;           //是否干净
+        this.form.other_remark = data.other_remark;                     //其他问题
+        this.form.other_furniture = data.other_furniture;               //其他家具
+        if (val === 'draught') {
+          this.photos = data.photo;                                       //房屋影像
+          this.form.photo = [];
+          //房屋影像
+          for (let i = 0; i < data.photo.length; i++) {
+            this.form.photo.push(data.photo[i].id);                       //房屋影像
+          }
+        }
       },
 
       close_() {
@@ -860,14 +982,16 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.userInfo(true, true);
+        this.userInfo(true);
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
-        this.form.city_id = this.beforeCityId;                   //城市
+        this.form.processable_id = '';
+        this.form.house_id = '';
+        this.house_name = '';
+        this.form.city_id = this.beforeCityId;    //城市
         this.form.city_name = this.beforeCity;    //城市
-        this.form.community.id = '';               //小区id
-        this.form.community.name = '';             //小区id
+        this.form.community = {};                 //小区id
         this.community_name = '';                 //小区名称
         this.form.door_address = ['', '', ''];
 
@@ -884,8 +1008,8 @@
         this.form.floor = '';                    //楼层
         this.form.floors = '';                   //总楼层
         this.form.price = '';                    //价格
-        this.form.is_agency = 0;                 //是否中介
-        this.is_agencyOn = false;               //是否中介
+        this.form.is_agency = '';                 //是否中介
+        this.cusFrom = '';                  //是否中介
         this.form.air_condition = 1;           //空调
         this.form.fridge = 1;                       //冰箱
         this.form.television = 1;              //电视
@@ -921,7 +1045,7 @@
         this.form.other_remark = '';             //其他问题
         this.form.other_furniture = '';          //其他家具
         this.form.photo = [];                    //房屋影像
-        this.photos = {};                    //房屋影像
+        this.photos = [];                    //房屋影像
       },
     },
   }
@@ -949,10 +1073,18 @@
       border-bottom: 1px solid #F4F4F4;
       .cellGroup {
         @include flex;
-        margin-left: -7px;
         align-items: center;
-        .requiredIcon {
-          color: #f44;
+        justify-content: space-between;
+        .van-cell {
+          width: 66px;
+        }
+        .cellA {
+          @include flex;
+          align-items: center;
+          margin-left: -7px;
+          .requiredIcon {
+            color: #f44;
+          }
         }
       }
     }
