@@ -67,7 +67,7 @@
         question_set: {},       //试题
         answer: {},             //答案
         message: '',
-        questionnaire_id: '25',
+        questionnaire_id: this.$route.query.id,
         confirmType: '',
         statisticData: {},
       }
@@ -101,15 +101,13 @@
       })
     },
     activated() {
-      this.examId = this.$route.query.id;
-      this.confirmType = this.$route.query.type;
+      // this.confirmType = this.$route.query.type;
       this.getStatisticData();
     },
     watch: {},
     methods: {
       openAll(id){
-        alert(id)
-        this.$router.push({path: '/answerAll', query: {id: id}});
+        this.$router.push({path: '/answerAll', query: {id: this.questionnaire_id, ques_id: id}});
       },
       getStatisticData() {
         this.$http.get(globalConfig.server + 'questionnaire/statistic/' + this.questionnaire_id).then((res) => {

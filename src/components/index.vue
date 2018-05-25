@@ -256,10 +256,10 @@
           // } else {
           //   this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
           // }
-          // this.$router.push({path: '/beforeExam'});
-          this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
+          this.$router.push({path: '/beforeExam'});
         }else if(val === '/questionnaire') {
            this.$router.push({path: '/beforeNaire'});
+           // this.$router.push({path: '/questionnaire'});
         }
       },
       getExamNaireRedCircle() {
