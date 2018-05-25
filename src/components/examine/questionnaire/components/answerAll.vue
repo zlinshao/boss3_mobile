@@ -6,8 +6,8 @@
       <img src="../../../../assets/backgroundPic.png" alt="">
     </div>
     <div class="exercise" v-if="!message">
-      <div v-for="(key,index) in question_set" v-if="index == 158">
-        <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
+      <div v-for="(key,index) in question_set" v-if="index == 158 ">
+        <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}" v-if="ques_id && key1.id ==ques_id" >
           <van-row>
             <van-col span="2" style="float: left">
               <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
@@ -22,13 +22,10 @@
           <div class="subjectTitle">
             <div class="subjectB" v-if="index == 158">
               <p style="margin-left: 7px;">
-                <el-row :key="kk" v-for="(vv,kk) in statisticData[key1.id] && statisticData[key1.id].answer">
-                  <span>{{kk}}</span><br/>
-                  <div style="text-align: center;color: #9c9c9c;">回复量：<span style="color: #6c6c6c;">{{vv}}</span></div>
-                  <Progress style="width: 90%;margin:10px 0;" color="#39b1ff" :percentage="Math.round(vv*100/statisticData[key1.id].count)" :pivot-text="`${Math.round(vv*100/statisticData[key1.id].count)}%`"/>
-
+                <el-row :key="kk" v-for="(vv,kk) in statisticData[key1.id]">
+                  <div style="margin-top: 20px;line-height: 28px;color: #666666;">{{kk+1}}. {{vv}}</div>
                 </el-row>
-                <el-row style="color: #fb4699;padding: 8px 0;font-size: 14px;" v-if="!(statisticData[key1.id] && statisticData[key1.id].answer)">暂无统计数据......</el-row>
+                <el-row style="color: #fb4699;padding: 8px 0;font-size: 14px;" v-if="!(statisticData[key1.id] && statisticData[key1.id].length>0)">暂无统计数据......</el-row>
               </p>
             </div>
           </div>
@@ -56,9 +53,10 @@
         question_set: {},       //试题
         answer: {},             //答案
         message: '',
-        questionnaire_id: '25',
+        questionnaire_id: this.$route.query.id,
         confirmType: '',
         statisticData: {},
+        ques_id: this.$route.query.ques_id,
       }
     },
     mounted() {
@@ -96,9 +94,7 @@
     },
     watch: {},
     methods: {
-      openAll(id){
 
-      },
       getStatisticData() {
         this.$http.get(globalConfig.server + 'questionnaire/statistic/' + this.questionnaire_id).then((res) => {
           if (res.data.code === '30000') {
@@ -187,8 +183,8 @@
       padding-bottom: 50px;
       .subject {
         border-top: 1px solid #dfe6fb;
-        padding-top: 15px;
-        padding-bottom: 5px;
+        padding-top: 25px;
+        padding-bottom: 15px;
         .subjectTitle {
           margin-left: .5rem;
           .subjectA {

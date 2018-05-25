@@ -1,5 +1,5 @@
 <template>
-  <div id="questionnaire">
+  <div id="exam">
     <div class="questionnaireTitle">
       <div style="position: absolute;top: 25px;height: 33px;border-bottom: 1px solid #ccccccb3;">场次名称：<span>{{examData.name}}</span>
       </div>
@@ -352,7 +352,7 @@
 </script>
 
 <style lang="scss">
-  #questionnaire {
+  #exam {
     img {
       width: 100%;
     }

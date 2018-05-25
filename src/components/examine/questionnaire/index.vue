@@ -74,9 +74,7 @@
         <img src="../../../assets/confirm_fail.png" alt="">
         <div class="words">提交问卷失败 请<span style="color: #ff259a;" @click="onSubmit"> 重试</span></div>
         <div style="position: relative;margin: 26px auto;text-align: center;">
-          <van-button size="small" class="words" @click="goIndex">
-            确定
-          </van-button>
+          <van-button size="small" class="words" @click="goIndex">确定</van-button>
         </div>
       </div>
     </div>
@@ -86,9 +84,7 @@
           <p>您已完成本次问卷</p>
           <p style="color: #ff259a;">请勿重复提交</p>
           <div style="position: relative;margin: 26px auto;text-align: center;">
-            <van-button size="small" class="words" @click="goIndex">
-              确定
-            </van-button>
+            <van-button size="small" class="words" @click="goIndex">确定</van-button>
           </div>
         </div>
       </div>
@@ -111,7 +107,7 @@
         answer: {},             //答案
         message: '',
         questionnaire_id: this.$route.query.id,
-        confirmType: '',
+        confirmType: 'repeat',
       }
     },
     mounted() {
@@ -125,7 +121,7 @@
       this.getPaperData();
     },
     activated() {
-      this.confirmType = this.$route.query.type;
+      // this.confirmType = this.$route.query.type;
     },
     watch: {},
     methods: {
