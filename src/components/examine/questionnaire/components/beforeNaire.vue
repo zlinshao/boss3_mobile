@@ -26,7 +26,7 @@
       this.goAnswerNaire();
     },
     methods: {
-      goAnswerNaire(){
+      goAnswerNaire() {
         this.$http.get(globalConfig.server + 'questionnaire/active').then((res) => {
           if (res.data.code === '30000') {
             this.questionnaireData = res.data.data;
