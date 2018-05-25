@@ -38,16 +38,16 @@
               </p>
               <h1>{{key.name}}</h1>
             </router-link>
-            <a v-for="(key,index) in paths" v-if="key.hidden === 'exam'">
-              <p :style="{'background': key.back}" @click="goBefore(key.path)">
-                <i :class="key.icon"></i>
-              </p>
-              <h1>{{key.name}}
+            <!--<a v-for="(key,index) in paths" v-if="key.hidden === 'exam'">-->
+              <!--<p :style="{'background': key.back}" @click="goBefore(key.path)">-->
+                <!--<i :class="key.icon"></i>-->
+              <!--</p>-->
+              <!--<h1>{{key.name}}-->
                 <!--<span v-if="key.name==='我的考试' && examData && examData.available" class="circle_red"></span>-->
                 <!--<span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available"-->
                       <!--class="circle_red"></span>-->
-              </h1>
-            </a>
+              <!--</h1>-->
+            <!--</a>-->
           </div>
         </div>
       </div>
