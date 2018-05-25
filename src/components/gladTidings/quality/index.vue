@@ -497,6 +497,9 @@
         numbers: '',
       }
     },
+    mounted() {
+      this.dicts('');
+    },
     activated() {
       this.haveInHand = true;
       this.houseInfo();
@@ -512,7 +515,6 @@
           }
           vm.dicts(newID);
         } else {
-          vm.dicts('');
           vm.routerIndex('');
           vm.ddRent('');
         }
