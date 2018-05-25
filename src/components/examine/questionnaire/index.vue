@@ -63,9 +63,7 @@
         <img src="../../../assets/confirm_success.png" alt="">
         <div class="words">您已成功提交问卷</div>
         <div style="position: relative;margin: 26px auto;text-align: center;">
-          <van-button size="small" class="words" @click="goIndex">
-            确定
-          </van-button>
+          <div @click="goIndex" class="btn">确定</div>
         </div>
       </div>
     </div>
@@ -74,7 +72,7 @@
         <img src="../../../assets/confirm_fail.png" alt="">
         <div class="words">提交问卷失败 请<span style="color: #ff259a;" @click="onSubmit"> 重试</span></div>
         <div style="position: relative;margin: 26px auto;text-align: center;">
-          <van-button size="small" class="words" @click="goIndex">确定</van-button>
+          <div @click="goIndex" class="btn">确定</div>
         </div>
       </div>
     </div>
@@ -84,7 +82,7 @@
           <p>您已完成本次问卷</p>
           <p style="color: #ff259a;">请勿重复提交</p>
           <div style="position: relative;margin: 26px auto;text-align: center;">
-            <van-button size="small" class="words" @click="goIndex">确定</van-button>
+            <div @click="goIndex" class="btn">确定</div>
           </div>
         </div>
       </div>
@@ -200,6 +198,7 @@
         width: 70%;
         background: #fff;
         top: 20%;
+        height: 55%;
         margin-left: 15%;
         border-radius: 8px;
         p {
@@ -207,10 +206,19 @@
           line-height: 30px;
         }
         .words {
+          position: relative;
+          top: 10px;
           text-align: center;
           font-size: 18px;
           color: #101010;
           margin-top: -100px;
+        }
+        .btn{
+          border: 1px solid #dddddd;
+          display: inline-block;
+          padding: 10px 20px;
+          border-radius: 8px;
+
         }
       }
     }
