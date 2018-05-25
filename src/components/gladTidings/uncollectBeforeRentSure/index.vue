@@ -352,9 +352,10 @@
     </div>
 
     <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
+      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -421,8 +422,10 @@
 
         cusFrom: '',                //客户来源
         other_fee_status: false,
+
         form: {
           id: '',
+          processable_id: '',
           type: 0,
           draft: 0,
           oldHouseName: '',
@@ -476,6 +479,7 @@
         value8: [],
 
         isValue1: true,
+        processStatus: '',
       }
     },
     watch: {
@@ -490,16 +494,37 @@
     },
     mounted() {
       this.getNowFormatDate();
-      this.dicts('');
+      let newID = this.$route.query;
+      if (newID.newID === undefined) {
+        this.close_();
+        this.processStatus = 'add';
+        this.dicts('');
+      }
     },
     activated() {
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.dicts(newID.newID);
+      if (this.processStatus === 'revise') {
+        this.processStatus = 'add';
+        this.close_();
+        this.dicts('');
       }
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        let newID = vm.$route.query;
+        if (newID.newID !== undefined) {
+          if (newID.type === 2) {
+            vm.processStatus = 'revise';
+            vm.routerTo('/publishDetail', newID.ids, 1);
+            vm.routerTo('/publishDetail', newID.ids, 2);
+          }
+          vm.close_();
+          vm.dicts(newID);
+        } else {
+          vm.routerIndex('');
+          vm.ddRent('');
+        }
+      })
     },
     methods: {
       userInfo(val1) {
@@ -776,7 +801,7 @@
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === "51310") {
+              if (res.data.code === "51310" || res.data.code === "51330") {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -910,11 +935,17 @@
       },
 
       rentDetail(val) {
-        this.userInfo(true);
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/rent_without_collect/' + val;
+          type = 'bulletin/rent_without_collect/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          } else {
+            this.userInfo(true);
+          }
         } else {
+          this.userInfo(true);
           type = 'bulletin/rent_without_collect';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -1005,10 +1036,13 @@
             this.form.name = draft.name;
             this.form.phone = draft.phone;
             this.form.remark = draft.remark;
-            // this.form.staff_id = draft.staff_id;
-            // this.form.staff_name = draft.staff_name;
-            // this.form.department_id = draft.department_id;
-            // this.form.department_name = draft.department_name;
+
+            if (val !== '' && val.type === 2) {
+              this.form.staff_id = draft.staff_id;
+              this.form.staff_name = draft.staff_name;
+              this.form.department_id = draft.department_id;
+              this.form.department_name = draft.department_name;
+            }
           } else {
             this.receiptNum();
             this.form.id = '';
@@ -1025,6 +1059,7 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.month = '';
         this.form.day = '';
 

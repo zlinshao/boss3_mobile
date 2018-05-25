@@ -391,7 +391,7 @@
         picStatus: true,
 
         followUp: false,                    //后续报备
-        processStatus: 'add',               //后续报备
+        processStatus: '',                  //后续报备
 
         allCity: [],                        //城市
         cities: [],                         //城市
@@ -501,14 +501,15 @@
       let newID = this.$route.query;
       if (newID.newID === undefined) {
         this.close_();
+        this.processStatus = 'add';
         this.dicts('');
       }
     },
     activated() {
       if (this.processStatus === 'revise') {
+        this.processStatus = 'add';
         this.close_();
         this.dicts('');
-        this.processStatus = 'add';
       }
       this.haveInHand = true;
       this.houseInfo();
@@ -518,6 +519,7 @@
         let newID = vm.$route.query;
         if (newID.newID !== undefined) {
           if (newID.type === 2) {
+            vm.processStatus = 'revise';
             vm.routerTo('/publishDetail', newID.ids, 1);
             vm.routerTo('/publishDetail', newID.ids, 2);
           }
@@ -856,7 +858,6 @@
         if (val !== '') {
           type = 'bulletin/quality/' + val.newID;
           if (val.type === 2) {
-            this.processStatus = 'revise';
             this.form.processable_id = val.ids;
           } else {
             this.userInfo(true);

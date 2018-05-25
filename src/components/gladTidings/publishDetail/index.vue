@@ -266,8 +266,10 @@
       },
 
       close_() {
+        this.placeFalse = false;
         this.approvedStatus = false;
         this.vLoading = true;
+        this.deal = '';
         this.videoSrc = '';
         this.formList = {};
         this.operation = {};

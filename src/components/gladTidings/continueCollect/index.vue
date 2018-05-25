@@ -328,9 +328,10 @@
       </van-cell-group>
     </div>
     <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
+      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
     </div>
 
     <!--select 选择-->
@@ -396,6 +397,7 @@
 
         form: {
           id: '',
+          processable_id: '',
           type: 2,
           draft: 0,
           contract_id: '',    //合同
@@ -451,20 +453,42 @@
         value6: [],
 
         isValue1: true,
+        processStatus: '',
       }
     },
     mounted() {
       this.getNowFormatDate();
-      this.dicts('');
+      let newID = this.$route.query;
+      if (newID.newID === undefined) {
+        this.close_();
+        this.processStatus = 'add';
+        this.dicts('');
+      }
     },
     activated() {
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.dicts(newID.newID);
+      if (this.processStatus === 'revise') {
+        this.processStatus = 'add';
+        this.close_();
+        this.dicts('');
       }
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        let newID = vm.$route.query;
+        if (newID.newID !== undefined) {
+          if (newID.type === 2) {
+            vm.processStatus = 'revise';
+            vm.routerTo('/publishDetail', newID.ids, 1);
+            vm.routerTo('/publishDetail', newID.ids, 2);
+          }
+          vm.close_();
+          vm.dicts(newID);
+        } else {
+          vm.routerIndex('');
+          vm.ddRent('');
+        }
+      })
     },
     methods: {
       userInfo(val1) {
@@ -716,7 +740,7 @@
             this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
             this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50110') {
+              if (res.data.code === '50110' || res.data.code === '50130') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -770,11 +794,17 @@
       },
 
       manuscript(val) {
-        this.userInfo(true);
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/collect/' + val;
+          type = 'bulletin/collect/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          } else {
+            this.userInfo(true);
+          }
         } else {
+          this.userInfo(true);
           type = 'bulletin/collect?type=2';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -851,10 +881,13 @@
             this.screenshots = data.screenshot_leader;
 
             this.form.remark = draft.remark;
-            // this.form.staff_id = draft.staff_id;
-            // this.form.staff_name = data.staff_name;
-            // this.form.department_id = draft.department_id;
-            // this.form.department_name = data.department_name;
+
+            if (val !== '' && val.type === 2) {
+              this.form.staff_id = draft.staff_id;
+              this.form.staff_name = draft.staff_name;
+              this.form.department_id = draft.department_id;
+              this.form.department_name = draft.department_name;
+            }
           } else {
             this.form.id = '';
           }
@@ -870,6 +903,7 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.contract_id = '';
         this.form.house.id = '';
         this.form.house.name = '';
