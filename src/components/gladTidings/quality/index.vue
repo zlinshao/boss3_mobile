@@ -494,6 +494,7 @@
 
         followUp: false,                    //后续报备
         processStatus: '',                  //后续报备
+        newID: {},                          //后续报备
       }
     },
     mounted() {
@@ -513,23 +514,23 @@
         let newID = vm.$route.query;
         if (newID.newID !== undefined) {
           if (newID.type === 2) {
+            vm.newID = newID;
             vm.processStatus = 'revise';
-          } else {
-            vm.processStatus = 'add';
+            vm.routerTo('/publishDetail', newID.ids, 1);
+            vm.routerTo('/publishDetail', newID.ids, 2);
           }
-          vm.routerTo('/publishDetail', newID.ids, 1);
-          vm.routerTo('/publishDetail', newID.ids, 2);
           vm.close_();
           vm.dicts(newID);
         } else {
-          if (from.path === '/index') {
+          if (from.path === '/index' && vm.processStatus === 'revise') {
             vm.routerIndex('');
             vm.ddRent('');
-            if (vm.processStatus === 'revise') {
-              vm.processStatus = 'add';
-              vm.close_();
-              vm.dicts('');
-            }
+            vm.processStatus = 'add';
+            vm.close_();
+            vm.dicts('');
+          } else {
+            vm.routerTo('/publishDetail', vm.newID.ids, 1);
+            vm.routerTo('/publishDetail', vm.newID.ids, 2);
           }
         }
       })
