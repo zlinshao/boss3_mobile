@@ -129,9 +129,10 @@
     </div>
 
     <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
+      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
+      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
     </div>
   </div>
 </template>
@@ -156,6 +157,7 @@
         form: {
           address: '',
           id: '',
+          processable_id: '',
           draft: 0,
           payWay: [''],                 //付款方式
           price_arr: [''],              //月单价
@@ -176,10 +178,16 @@
           department_name: '',            //部门name
         },
         screenshots: {},                //截图
+        processStatus: '',
       }
     },
     mounted() {
-      this.refundDetail('');
+      let newID = this.$route.query;
+      if (newID.newID === undefined) {
+        this.close_();
+        this.processStatus = 'add';
+        this.refundDetail('');
+      }
     },
     activated() {
       let newID = this.$route.query;
@@ -187,8 +195,23 @@
         this.refundDetail(newID.newID);
       }
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        let newID = vm.$route.query;
+        if (newID.newID !== undefined) {
+          if (newID.type === 2) {
+            vm.processStatus = 'revise';
+            vm.routerTo('/publishDetail', newID.ids, 1);
+            vm.routerTo('/publishDetail', newID.ids, 2);
+          }
+          vm.close_();
+          vm.refundDetail(newID);
+        } else {
+          vm.routerIndex('');
+          vm.ddRent('');
+        }
+      })
     },
     methods: {
       payWayClick(val) {
@@ -264,7 +287,7 @@
       },
       contractID(id) {
         this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=1').then((res) => {
-          if (res.data.code === '51110') {
+          if (res.data.code === '51110' || res.data.code === '51130') {
             let pay = res.data.data;
             this.form.money_sum = pay.money_sum;
             this.form.payWay = [];
@@ -280,9 +303,13 @@
       },
 
       refundDetail(val) {
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/refund/' + val;
+          type = 'bulletin/refund/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          }
         } else {
           type = 'bulletin/refund';
         }
@@ -328,6 +355,7 @@
         this.form.price_arr = [''];
         this.form.money_sum = '';
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.amount = '';
         this.form.account = '';
         this.form.bank = '';

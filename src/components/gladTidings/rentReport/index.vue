@@ -546,11 +546,6 @@
       }
     },
     activated() {
-      if (this.processStatus === 'revise') {
-        this.processStatus = 'add';
-        this.close_();
-        this.dicts('');
-      }
       this.houseInfo();
     },
     beforeRouteEnter(to, from, next) {
@@ -567,6 +562,11 @@
         } else {
           vm.routerIndex('');
           vm.ddRent('');
+          if (this.processStatus === 'revise') {
+            this.processStatus = 'add';
+            this.close_();
+            this.dicts('');
+          }
         }
       })
     },
