@@ -150,7 +150,7 @@
       </div>
     </van-popup>
 
-    <SwitchCraft v-if="approvedStatus" :process="process"></SwitchCraft>
+    <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(path) === -1" :process="process"></SwitchCraft>
   </div>
 </template>
 
@@ -175,6 +175,8 @@
         disabled: false,
         printscreen: ['款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '房屋影像', '房屋照片', '退租交接单'],
         placeStatus: ['published', 'rejected', 'cancelled'],
+
+        routerLinks: ['/drawback', '/friedBill', '/clearRetreat', '/checkout', '/agencyRent', '/special', '/finalPayment'],
         // address: '',
         message: '',
         ids: '',

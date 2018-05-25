@@ -5,8 +5,8 @@
       <transition name="move">
         <div class="menu" v-show="show">
           <div class="inner inner-1" @click="newly"><i class="iconfont icon-xiugai--"></i></div>
-          <div class="inner inner-2">2</div>
-          <div class="inner inner-3">3</div>
+          <!--<div class="inner inner-2">2</div>-->
+          <!--<div class="inner inner-3">3</div>-->
         </div>
       </transition>
     </div>
