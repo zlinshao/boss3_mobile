@@ -523,10 +523,10 @@
         } else {
           vm.routerIndex('');
           vm.ddRent('');
-          if (this.processStatus === 'revise') {
-            this.processStatus = 'add';
-            this.close_();
-            this.dicts('');
+          if (vm.processStatus === 'revise') {
+            vm.processStatus = 'add';
+            vm.close_();
+            vm.dicts('');
           }
         }
       })

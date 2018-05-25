@@ -190,10 +190,6 @@
       }
     },
     activated() {
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.refundDetail(newID.newID);
-      }
       this.houseInfo();
     },
     beforeRouteEnter(to, from, next) {
@@ -210,6 +206,11 @@
         } else {
           vm.routerIndex('');
           vm.ddRent('');
+          if (vm.processStatus === 'revise') {
+            vm.processStatus = 'add';
+            vm.close_();
+            vm.refundDetail('');
+          }
         }
       })
     },
