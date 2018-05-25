@@ -337,10 +337,9 @@
     </div>
 
     <div class="footer">
-      <div v-if="processStatus === 'revise'" @click="saveCollect(0)">修改</div>
-      <div v-if="processStatus === 'add'" @click="close_()">重置</div>
-      <div v-if="processStatus === 'add'" @click="saveCollect(1)">草稿</div>
-      <div v-if="processStatus === 'add'" @click="saveCollect(0)">发布</div>
+      <div @click="close_()">重置</div>
+      <div @click="saveCollect(1)">草稿</div>
+      <div @click="saveCollect(0)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
