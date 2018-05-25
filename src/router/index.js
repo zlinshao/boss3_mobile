@@ -11,10 +11,15 @@ import Comments from '@/components/examine/writings/comments.vue'
 // import CardDetail from '@/components/examine/cardDetail/index.vue'
 // import CreditCard from '@/components/examine/creditCard/index.vue'
 
-// 问卷调查
-import Questionnaire from '@/components/examine/questionnaire/index.vue'
+
 //我的考试
 import Exam from '@/components/examine/exam/index.vue'
+// 问卷调查
+import Questionnaire from '@/components/examine/questionnaire/index.vue'
+import BeforeNaire from '@/components/examine/questionnaire/components/beforeNaire.vue'
+import MyNaire from '@/components/examine/questionnaire/components/myNaire.vue'
+import NaireStatistic from '@/components/examine/questionnaire/components/naireStatistic.vue'
+import AnswerAll from '@/components/examine/questionnaire/components/answerAll.vue'
 
 import CollectReport from '../components/gladTidings/collectReport/index.vue'
 import Quality from '../components/gladTidings/quality/index.vue'
@@ -418,7 +423,34 @@ export default new Router({
       hidden: 'exam',
       component: Questionnaire
     },
-
+    {
+      path: '/beforeNaire',
+      name: '开始之前',
+      meta: {title: '开始之前'},
+      hidden: false,
+      component: BeforeNaire
+    },
+    {
+      path: '/myNaire',
+      name: '我的问卷',
+      meta: {title: '我的问卷'},
+      hidden: false,
+      component: MyNaire
+    },
+    {
+      path: '/naireStatistic',
+      name: '问卷详情',
+      meta: {title: '问卷详情'},
+      hidden: false,
+      component: NaireStatistic
+    },
+    {
+      path: '/answerAll',
+      name: '所有回答',
+      meta: {title: '所有回答'},
+      hidden: false,
+      component: AnswerAll
+    },
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',

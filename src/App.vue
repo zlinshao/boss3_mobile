@@ -45,7 +45,7 @@
     },
     methods: {
       responses() {
-        if(navigator.userAgent == 'app/ApartMent'){
+        if (navigator.userAgent == 'app/ApartMent') {
           sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
           globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
@@ -60,14 +60,14 @@
             data.department_name = res.data.data.org[0].name;
             data.department_id = res.data.data.org[0].id;
             sessionStorage.setItem('personal', JSON.stringify(data));
-          })
-        }else {
+          });
+        } else {
           sessionStorage.setItem('queryType', 'ding');
           if (sessionStorage.myData !== undefined) {
             let head = JSON.parse(sessionStorage.myData);
             globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
           } else {
-            this.loading = true;
+            // this.loading = true;
             this.corp();
           }
         }
@@ -232,7 +232,7 @@
                 })
               },
               onFail: function (err) {
-                  alert(JSON.stringify(err));
+                alert(JSON.stringify(err));
                 alert('您不在系统内，请联系管理员添加！！');
                 dd.biz.navigation.close({
                   onSuccess: function (result) {
@@ -291,7 +291,7 @@
     }
   }
 
-  body ,html {
+  body, html {
     background-color: #f8f8f8;
     height: 100%;
   }

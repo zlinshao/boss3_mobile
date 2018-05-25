@@ -36,7 +36,8 @@
                 </van-checkbox>
               </van-checkbox-group>
             </div>
-            <div class="contents" v-if="index === '158'" style="margin-top: 10px;border-radius: 8px;width: 96%;border: none;">
+            <div class="contents" v-if="index === '158'"
+                 style="margin-top: 10px;border-radius: 8px;width: 96%;border: none;">
               <van-cell-group>
                 <van-field
                   v-model="answer[key1.id]"
@@ -61,19 +62,34 @@
       <div class="box">
         <img src="../../../assets/confirm_success.png" alt="">
         <div class="words">您已成功提交问卷</div>
+        <div style="position: relative;margin: 26px auto;text-align: center;">
+          <van-button size="small" class="words" @click="goIndex">
+            确定
+          </van-button>
+        </div>
       </div>
     </div>
     <div class="mask" v-show="confirmType==='failed'">
       <div class="box">
         <img src="../../../assets/confirm_fail.png" alt="">
-        <div class="words">提交问卷失败 请<span style="color: #ff259a;" @click="onSubmit">重试</span></div>
+        <div class="words">提交问卷失败 请<span style="color: #ff259a;" @click="onSubmit"> 重试</span></div>
+        <div style="position: relative;margin: 26px auto;text-align: center;">
+          <van-button size="small" class="words" @click="goIndex">
+            确定
+          </van-button>
+        </div>
       </div>
     </div>
     <div class="mask" v-show="confirmType==='repeat'">
-      <div class="box" style="text-align: center;height: 200px;">
+      <div class="box" style="text-align: center;height: 230px;">
         <div style="margin-top: 80px;">
           <p>您已完成本次问卷</p>
           <p style="color: #ff259a;">请勿重复提交</p>
+          <div style="position: relative;margin: 26px auto;text-align: center;">
+            <van-button size="small" class="words" @click="goIndex">
+              确定
+            </van-button>
+          </div>
         </div>
       </div>
     </div>
@@ -94,7 +110,7 @@
         question_set: {},       //试题
         answer: {},             //答案
         message: '',
-        questionnaire_id: '14',
+        questionnaire_id: this.$route.query.id,
         confirmType: '',
       }
     },
@@ -106,32 +122,38 @@
         }
         this.questionType = sub;
       });
-      this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
-        if (res.data.code === '30000') {
-          this.question_set = res.data.data.question_set;
-          this.paper_name = res.data.data.paper_name;
-
-          if (this.question_set[154] && this.question_set[154].length > 0) {
-            this.question_set[154].forEach((item) => {
-              this.$set(this.answer, item.id, []);
-            });
-          }
-          if (this.question_set[155] && this.question_set[155].length > 0) {
-            this.question_set[155].forEach((item) => {
-              this.$set(this.answer, item.id, []);
-            });
-          }
-        } else {
-          this.message = res.data.msg;
-        }
-      })
+      this.getPaperData();
     },
     activated() {
-      this.examId = this.$route.query.id;
       this.confirmType = this.$route.query.type;
     },
     watch: {},
     methods: {
+      goIndex() {
+        this.confirmType = '';
+        this.$router.push({path: '/index'});
+      },
+      getPaperData(){
+        this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
+          if (res.data.code === '30000') {
+            this.question_set = res.data.data.question_set;
+            this.paper_name = res.data.data.paper_name;
+
+            if (this.question_set[154] && this.question_set[154].length > 0) {
+              this.question_set[154].forEach((item) => {
+                this.$set(this.answer, item.id, []);
+              });
+            }
+            if (this.question_set[155] && this.question_set[155].length > 0) {
+              this.question_set[155].forEach((item) => {
+                this.$set(this.answer, item.id, []);
+              });
+            }
+          } else {
+            this.message = res.data.msg;
+          }
+        });
+      },
       onSubmit() {
         Dialog.confirm({
           title: '提交问卷',
@@ -142,7 +164,6 @@
             answer: this.answer,
             is_questionnaire: true
           }).then((res) => {
-            alert(this.answer)
             if (res.data.code === '36010') {
               this.confirmType = 'success';
             } else if (res.data.code === '36012') {
@@ -179,20 +200,19 @@
         position: fixed;
         width: 70%;
         background: #fff;
-        top: 25%;
+        top: 20%;
         margin-left: 15%;
         border-radius: 8px;
-        p{
+        p {
           font-size: 18px;
           line-height: 30px;
         }
         .words {
-          position: absolute;
+          position: relative;
           text-align: center;
           font-size: 18px;
           color: #101010;
-          top: 70%;
-          left: 23%;
+          margin-top: -100px;
         }
       }
     }
@@ -225,10 +245,10 @@
       color: #949494;
     }
     .exercise {
-      width: 96%;
-      margin: 10px auto;
-      box-shadow: 0 0 5px 0 #aaaaaa;
-      border-radius: 8px;
+      /*width: 96%;*/
+      /*margin: 10px auto;*/
+      /*box-shadow: 0 0 5px 0 #aaaaaa;*/
+      /*border-radius: 8px;*/
       background-color: #FFFFFF;
       padding: .2rem;
       .subject {
