@@ -7,7 +7,7 @@
             <img v-if="val.is_video" src="../../assets/video.jpg" style="width: 1.5rem; height: 1.5rem;">
             <img :src="val.uri" style="width: 1.5rem; height: 1.5rem;" v-else>
             <div class="progress"><b style="color: #fff !important;"></b></div>
-            <div v-if="!dis" class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
+            <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
             </div>
           </div>
         </div>

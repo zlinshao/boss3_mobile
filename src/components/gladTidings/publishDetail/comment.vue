@@ -74,14 +74,14 @@
           <div class="title">图片</div>
           <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
         </div>
-        <div v-if="marking === 1">
+        <div v-if="queries.marking === 1">
           <van-cell-group>
             <van-switch-cell v-model="is_electric_status" title="家电是否齐全"/>
             <van-switch-cell v-model="is_clean_status" title="卫生是否干净"/>
           </van-cell-group>
         </div>
         <div class="footer">
-          <div @click="manager(marking)">确认</div>
+          <div @click="manager(queries.marking)">确认</div>
         </div>
       </div>
     </div>
@@ -104,23 +104,25 @@
     components: {Toast, UpLoad},
     data() {
       return {
-        urls: globalConfig.server_user,
-        addr: globalConfig.server,
+        address: globalConfig.server_user,
+        urls: globalConfig.server,
         haveInHand: true,
         isClear: false,
         picStatus: true,
 
-        tabs: '',
-        columns: [],              //select值
-        selectHide: false,
+        show: false,
+        text: '',
+        // tabs: '',
+        // columns: [],              //select值
+        // selectHide: false,
 
-        decorateAll: [],
-        decorate_name: [],
-        decorationOn: '',
+        // decorateAll: [],
+        // decorate_name: [],
+        // decorationOn: '',
 
-        propertyAll: [],
-        property_name: [],
-        propertyOn: '',
+        // propertyAll: [],
+        // property_name: [],
+        // propertyOn: '',
 
         is_electric_status: true,         //家电是否齐全
         is_clean_status: true,            //卫生是否干净
@@ -130,20 +132,16 @@
           photo: [],
         },
         forms: {
-          is_electric_appliance: 1,   //家电是否齐全
-          is_clean: 1,                //是否干净
-          // house_grade: 1,            //评分
-          // suggest_price: '',         //价格
-          // decoration: '',            //装修
-          // house_feature: '',         //特色
+          is_electric_appliance: 1,     //家电是否齐全
+          is_clean: 1,                  //是否干净
+          // house_grade: 1,              //评分
+          // suggest_price: '',           //价格
+          // decoration: '',              //装修
+          // house_feature: '',           //特色
         },
         // status: ['很差', '一般', '满意', '很满意', '非常满意'],
         path: '',
-        pitch: '',
-        detail: '',
-        address: '',
-        marking: '',
-
+        queries: {},
         showContent: false,
       }
     },
@@ -159,10 +157,7 @@
     },
     activated() {
       this.haveInHand = true;
-      this.pitch = this.$route.query.data;
-      this.detail = this.$route.query.detail;
-      this.address = this.$route.query.address;
-      this.marking = this.$route.query.marking;
+      this.queries = this.$route.query;
 
       this.forms.is_electric_appliance = 1;
       this.forms.is_clean = 1;
@@ -233,7 +228,7 @@
 
       // 确认评论
       manager(val) {
-        if (this.detail !== 'to_comment') {
+        if (this.queries.detail !== 'to_comment') {
           this.sure(val);
         } else {
           if (this.form.remark !== '' || this.form.photo.length !== 0) {
@@ -247,9 +242,9 @@
       mark() {
         this.forms.is_electric_appliance = this.is_electric_status ? 1 : 0;
         this.forms.is_clean = this.is_clean_status ? 1 : 0;
-        this.$http.put(this.addr + 'bulletin/helper/score/' + this.pitch, this.forms).then((res) => {
+        this.$http.put(this.urls + 'bulletin/helper/score/' + this.queries.ids, this.forms).then((res) => {
           if (res.data.code === '51110') {
-            this.$router.replace({path: this.path, query: {ids: this.pitch}});
+            this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
             this.close_();
             $('.imgItem').remove();
           } else {
@@ -257,12 +252,13 @@
           }
         });
       },
+
       sure(val) {
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-            this.$http.put(this.urls + 'process/' + this.pitch, {
-              operation: this.detail,
+            this.$http.put(this.address + 'process/' + this.queries.ids, {
+              operation: this.queries.detail,
               comment: this.form.remark,
               album: this.form.photo,
             }).then((res) => {
@@ -272,7 +268,7 @@
                   this.mark();
                 } else {
                   Toast.success(res.data.message);
-                  this.$router.replace({path: this.path, query: {ids: this.pitch}});
+                  this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
                   this.close_();
                   $('.imgItem').remove();
                 }
@@ -308,7 +304,7 @@
           dd.biz.navigation.setLeft({
             control: true, //是否控制点击事件，true 控制，false 不控制， 默认false
             onSuccess: function (result) {
-              that.$router.push({path: urls, query: {ids: that.pitch}});
+              that.$router.push({path: urls, query: {ids: that.queries.ids}});
             },
             onFail: function (err) {
             }
@@ -316,7 +312,7 @@
         } else {
           document.addEventListener('backbutton', function (e) {
             e.preventDefault();
-            that.$router.push({path: urls, query: {ids: that.pitch}});
+            that.$router.push({path: urls, query: {ids: that.queries.ids}});
           });
         }
       }

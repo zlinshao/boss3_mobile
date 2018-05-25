@@ -329,7 +329,7 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
-        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos" :dis="noRemove"></UpLoad>
+        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -428,6 +428,7 @@
         house_name: '',
         form: {
           id: '',
+          processable_id: '',
           house_id: '',
           quality_up: '0',
           is_draft: 0,
@@ -489,7 +490,6 @@
         community_name: '',
         photos: [],                     //房屋影像
 
-        noRemove: false,
         isValue1: true,
 
         numbers: '',
@@ -502,13 +502,24 @@
       this.haveInHand = true;
       let newID = this.$route.query;
       if (newID.newID !== undefined) {
-        this.dicts(newID.newID);
+        this.newID = newID;
+        this.dicts(newID);
       }
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
-    },
 
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        let newID = vm.$route.query;
+        if (newID.newID !== undefined && newID.type === 2) {
+          vm.routerTo('/publishDetail', newID.ids, 1);
+          vm.routerTo('/publishDetail', newID.ids, 2);
+        } else {
+          vm.routerIndex('');
+          vm.ddRent('');
+        }
+      })
+    },
     methods: {
       qualityChange(val) {
         if (this.numbers !== val) {
@@ -526,7 +537,7 @@
           this.form.department_name = per.department_name;
         }
       },
-      dicts(val) {
+      dicts(val, id) {
         // 城市
         this.dictionary(306, 1).then((res) => {
           this.cities = [];
@@ -563,7 +574,7 @@
               for (let i = 0; i < res.data.length; i++) {
                 this.property_name.push(res.data[i].dictionary_name);
               }
-              this.qualityDetail(val);
+              this.qualityDetail(val, id);
             });
 
           });
@@ -775,7 +786,7 @@
             this.form.is_draft = val;
             this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === "51410") {
+              if (res.data.code === "51410" || res.data.code === "51430") {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -792,7 +803,6 @@
           }
         } else {
           Toast('图片上传中...');
-
         }
       },
 
@@ -832,20 +842,27 @@
       },
 
       qualityDetail(val) {
-        this.userInfo(true);
         this.close_();
         let type;
+        this.form.processable_id = '';
         if (val !== '') {
-          type = 'bulletin/quality/' + val;
+          type = 'bulletin/quality/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          } else {
+            this.userInfo(true);
+          }
         } else {
+          this.userInfo(true);
           type = 'bulletin/quality';
         }
+
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === "51420") {
             let data = res.data.data;
             this.form.id = res.data.id;
             this.form.house_id = data.house_id;
-            if (data.quality_up) {
+            if (data.quality_up && data.quality_up !== undefined) {
               this.form.quality_up = String(data.quality_up);
               this.numbers = String(data.quality_up);
               if (String(data.quality_up) === '1') {
@@ -856,7 +873,15 @@
                 this.house_name = '';
               }
             } else {
+              this.followUp = false;
               data.quality_up = '0';
+              this.form.quality_up = '0';
+            }
+            if (val !== '' && val.type === 2) {
+              this.form.staff_id = data.staff_id;
+              this.form.staff_name = data.staff_name;
+              this.form.department_id = data.department_id;
+              this.form.department_name = data.department_name;
             }
             this.prefill(res.data.data, 'draught');
           } else {
@@ -940,28 +965,7 @@
           for (let i = 0; i < data.photo.length; i++) {
             this.form.photo.push(data.photo[i].id);                       //房屋影像
           }
-        // } else {
-        //   this.$http.get(this.urls + 'bulletin/helper/image', {
-        //     params: {
-        //       id: data.photo
-        //     }
-        //   }).then((res) => {
-        //     this.noRemove = true;
-        //     if (res.data.code === '51110') {
-        //       this.photos = res.data.data;
-        //       this.form.photo = [];
-        //       //房屋影像
-        //       for (let i = 0; i < res.data.data.length; i++) {
-        //         this.form.photo.push(res.data.data[i].id);                       //房屋影像
-        //
-        //       }
-        //     }
-        //   })
         }
-        // this.form.staff_id = data.staff_id;
-        // this.form.staff_name = data.staff_name;
-        // this.form.department_id = data.department_id;
-        // this.form.department_name = data.department_name;
       },
 
       close_() {
@@ -971,9 +975,9 @@
         });
         this.userInfo(true);
         $('.imgItem').remove();
-        this.noRemove = false;
         this.picStatus = true;
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.house_id = '';
         this.house_name = '';
         this.form.city_id = this.beforeCityId;    //城市

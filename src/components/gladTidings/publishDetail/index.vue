@@ -3,7 +3,7 @@
     <div class="detail">
       <div class="detailLeft">
         <div>
-          <img :src="personal.avatar" v-if="personal.avatar !== '' && personal.avatar !== null">
+          <img :src="personal.avatar" v-if="personal.avatar">
           <img src="../../../assets/head.png" v-else>
         </div>
       </div>
@@ -34,7 +34,7 @@
         <div class="load" v-if="vLoading">
           <van-loading type="spinner" color="black"/>
         </div>
-        <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message !== ''">{{message}}</p>
+        <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message">{{message}}</p>
         <div v-for="(key,index) in formList"
              v-if="printscreen.indexOf(index) === -1">
           <p>{{index}}</p>
@@ -65,7 +65,7 @@
 
       <ul
         v-waterfall-lower="loadMore"
-        waterfall-disabled="disabled1"
+        waterfall-disabled="disabled"
         waterfall-offset="300">
         <li class="started">
           <!--评论-->
@@ -75,7 +75,7 @@
               <div class="commentTitle">
                 <div class="staff">
                   <p>
-                    <img :src="key.user.avatar" v-if="key.user.avatar !== '' && key.user.avatar !== null">
+                    <img :src="key.user.avatar" v-if="key.user.avatar">
                     <img src="../../../assets/head.png" v-else>
                   </p>
                   <div>
@@ -97,28 +97,28 @@
                 </div>
               </div>
             </div>
-            <div v-if="commentList.length === 0 && disabled1" style="text-align: center;padding: .3rem 0 0;">
+            <div v-if="commentList.length === 0 && disabled" style="text-align: center;padding: .3rem 0 0;">
               暂无评论
             </div>
           </div>
         </li>
       </ul>
       <div class="bottom">
-        <span v-show="disabled1 && commentList.length > 6">我是有底线的</span>
-        <van-loading v-show="!disabled1" type="spinner" color="black"/>
+        <span v-show="disabled && commentList.length > 6">我是有底线的</span>
+        <van-loading v-show="!disabled" type="spinner" color="black"/>
       </div>
 
     </div>
     <div class="footer">
       <div @click="newly()"
-           v-if="personalId.id === personal.id && (place.status === 'published' || place.status === 'rejected' || place.status === 'cancelled')">
+           v-if="personalId.id === personal.id && (placeStatus.indexOf(place.status) > -1)">
         重新提交
       </div>
-      <div v-for="(key,index) in operation" @click="commentOn(index, marking, key)">{{key}}</div>
+      <div v-for="(key,index) in operation" @click="commentOn(index, marking)">{{key}}</div>
     </div>
 
     <div id="videoId" v-show="videoSrc !== ''">
-      <video id="video" :src="videoSrc" muted controls autoplay width="90%" height="80%"></video>
+      <video id="video" :src="videoSrc" muted controls autoplay width="90%" height="88%"></video>
       <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
     </div>
 
@@ -136,13 +136,12 @@
       <div class="showContent">
         <div v-for="key in role_name" class="showRoleName">
           <div class="showImg">
-            <img :src="key.avatar" v-if="key.avatar !== '' && key.avatar !== null">
+            <img :src="key.avatar" v-if="key.avatar">
             <img src="../../../assets/head.png" v-else>
           </div>
           <div>
             <p>姓名：{{key.name}}</p>
             <p>手机号：<a :href="'tel:' + key.phone">{{key.phone}}</a></p>
-            <!--<p>岗位：<span v-for="item in key.role">{{item.display_name}}</span></p>-->
           </div>
         </div>
       </div>
@@ -150,6 +149,8 @@
         关闭
       </div>
     </van-popup>
+
+    <SwitchCraft v-if="approvedStatus" :process="process"></SwitchCraft>
   </div>
 </template>
 
@@ -157,10 +158,11 @@
   import {Waterfall} from 'vant';
   import {ImagePreview} from 'vant';
   import {Toast} from 'vant';
+  import SwitchCraft from '../../common/switchCraft.vue';
 
   export default {
     name: "index",
-    components: {ImagePreview, Toast},
+    components: {ImagePreview, Toast, SwitchCraft},
     directives: {
       WaterfallLower: Waterfall('lower'),
       WaterfallUpper: Waterfall('upper'),
@@ -170,13 +172,13 @@
         urls: globalConfig.server_user,
         personalId: {},
         vLoading: true,
-        disabled1: false,
+        disabled: false,
         printscreen: ['款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '房屋影像', '房屋照片', '退租交接单'],
         placeStatus: ['published', 'rejected', 'cancelled'],
-        address: '',
+        // address: '',
         message: '',
         ids: '',
-        active: false,
+
         personal: {},
         place: {},
         formList: {},
@@ -201,6 +203,7 @@
         role_name: [],
         showContent: false,
 
+        approvedStatus: false,
         marking: '',
       }
     },
@@ -225,7 +228,7 @@
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
-      this.disabled1 = false;
+      this.disabled = false;
     },
     watch: {
       showContent(val) {
@@ -257,10 +260,14 @@
         }
         return flag;
       },
+
       checkTv(val) {
         this.videoSrc = val;
       },
+
       close_() {
+        this.approvedStatus = false;
+        this.vLoading = true;
         this.videoSrc = '';
         this.formList = {};
         this.operation = {};
@@ -268,20 +275,26 @@
         this.place = {};
         this.commentList = [];
       },
+
       loadMore() {
-        if (!this.disabled1) {
+        if (!this.disabled) {
           this.comments(this.ids, this.page);
           this.page++;
         }
       },
+
       search() {
         this.formDetail(this.ids);
       },
+
       formDetail(val) {
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
             this.formList = JSON.parse(res.data.data.process.content.show_content_compress);
+            this.operation = res.data.data.operation;
+            this.deal = res.data.data.deal;
+
             let houseName = res.data.data.process.content;
             if (houseName.address) {
               this.address = houseName.address;
@@ -290,35 +303,33 @@
             } else {
               this.address = houseName.house.name;
             }
-            this.operation = res.data.data.operation;
-            this.deal = res.data.data.deal;
 
-            let pro = res.data.data.process;
-            this.personal = pro.user;
-            this.place = pro.place;
+            let main = res.data.data.process;
+            this.process = main;
+            this.personal = main.user;
+            this.place = main.place;
+            this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
 
-            if (houseName.quality_up && pro.place.name === 'appraiser-officer_review') {
+            if (houseName.quality_up && main.place.name === 'appraiser-officer_review') {
               this.marking = 1;
             } else {
               this.marking = 2;
             }
-
-            if (this.placeStatus.indexOf(pro.place.status) === -1) {
-              this.placeFalse = true;
-            } else {
-              this.placeFalse = false;
-            }
-            this.process = pro;
-
-            this.vLoading = false;
           } else {
             this.personal.avatar = '';
             this.personal.name = 'XXXX';
             this.message = res.data.message;
-            this.vLoading = false;
+          }
+          this.vLoading = false;
+          for (let key in this.operation) {
+            if (key.indexOf('approved') > -1) {
+              this.approvedStatus = true;
+              return;
+            }
           }
         });
       },
+
       comments(val, page) {
         this.$http.get(this.urls + 'comments?id=' + val, {
           params: {
@@ -332,7 +343,7 @@
               this.commentList.push(data[i]);
             }
           } else {
-            this.disabled1 = true;
+            this.disabled = true;
           }
         })
       },
@@ -352,6 +363,7 @@
           ImagePreview(arr, index);
         }
       },
+
       next(val) {
         this.onIndex++;
         if (this.onIndex === val.length) {
@@ -359,6 +371,7 @@
         }
         this.bigPic = val[this.onIndex];
       },
+
       pre(val) {
         this.onIndex--;
         if (this.onIndex < 0) {
@@ -366,69 +379,74 @@
         }
         this.bigPic = val[this.onIndex];
       },
+
       closePic() {
         this.bigPicShow = false;
         document.getElementsByTagName('body')[0].className = '';
       },
+
       // 评论
-      commentOn(val, index, key) {
-        if(key === '同意') {
-          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: index}});
-        }else{
-          this.$router.push({path: '/comment', query: {detail: val, data: this.ids, address: this.address, marking: 2}});
-        }
+      commentOn(val, index) {
+        this.close_();
+        let num;
+        num = val.indexOf('approved') > -1 ? index : 2;
+        this.$router.push({
+          path: '/comment',
+          query: {detail: val, ids: this.ids, marking: num}
+        });
       },
+
       // 重新提交
       newly() {
-        let proId = this.process.processable_id;
+        let proID = this.process.processable_id;
         switch (this.process.processable_type) {
           case 'bulletin_quality'://质量
-            this.$router.push({path: '/quality', query: {newID: proId}});
+            this.$router.push({path: '/quality', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_collect_basic'://收
-            this.$router.push({path: '/collectReport', query: {newID: proId}});
+            this.$router.push({path: '/collectReport', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_collect_continued'://续收报备
-            this.$router.push({path: '/continueCollect', query: {newID: proId}});
+            this.$router.push({path: '/continueCollect', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_rent_basic'://租
-            this.$router.push({path: '/rentReport', query: {newID: proId}});
+            this.$router.push({path: '/rentReport', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_rent_trans'://转租
-            this.$router.push({path: '/changeRent', query: {newID: proId}});
+            this.$router.push({path: '/changeRent', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_rent_continued'://续租
-            this.$router.push({path: '/continueRent', query: {newID: proId}});
+            this.$router.push({path: '/continueRent', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_rent_RWC'://未收先祖
-            this.$router.push({path: '/unCollectBeforeRent', query: {newID: proId}});
+            this.$router.push({path: '/unCollectBeforeRent', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_RWC_confirm'://未收先祖确定
-            this.$router.push({path: '/unCollectBeforeRentSure', query: {newID: proId}});
+            this.$router.push({path: '/unCollectBeforeRentSure', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_agency'://中介费报备
-            this.$router.push({path: '/agencyRent', query: {newID: proId}});
+            this.$router.push({path: '/agencyRent', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_banish'://清退
-            this.$router.push({path: '/clearRetreat', query: {newID: proId}});
+            this.$router.push({path: '/clearRetreat', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_change'://调房
-            this.$router.push({path: '/transferReport', query: {newID: proId}});
+            this.$router.push({path: '/transferReport', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_lose'://炸单
-            this.$router.push({path: '/friedBill', query: {newID: proId}});
+            this.$router.push({path: '/friedBill', query: {newID: proID, type: 1}});
             break;
           case 'bulletin_refund'://退款
-            this.$router.push({path: '/drawback', query: {newID: proId}});
+            this.$router.push({path: '/drawback', query: {newID: proID, ids: ''}});
             break;
           case 'bulletin_retainage'://尾款
-            this.$router.push({path: '/finalPayment', query: {newID: proId}});
+            this.$router.push({path: '/finalPayment', query: {newID: proID, ids: ''}});
             break;
           case 'bulletin_special'://特殊
-            this.$router.push({path: '/special', query: {newID: proId}});
+            this.$router.push({path: '/special', query: {newID: proID, ids: ''}});
             break;
           case 'bulletin_checkout'://退租
-            this.$router.push({path: '/checkout', query: {newID: proId}});
+            this.$router.push({path: '/checkout', query: {newID: proID, ids: ''}});
             break;
         }
       },
