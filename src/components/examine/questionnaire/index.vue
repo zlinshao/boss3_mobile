@@ -59,7 +59,7 @@
       {{message}}
     </div>
     <div class="mask" v-show="confirmType==='success'">
-      <div class="box">
+      <div class="box success" >
         <img src="../../../assets/confirm_success.png" alt="">
         <div class="words">您已成功提交问卷</div>
         <div style="position: relative;margin: 26px auto;text-align: center;">
@@ -105,7 +105,7 @@
         answer: {},             //答案
         message: '',
         questionnaire_id: '',
-        confirmType: 'success',
+        confirmType: '',
       }
     },
     mounted() {
@@ -193,6 +193,9 @@
       height: 100%;
       background: rgba(0, 0, 0, 0.3);
       z-index: 99;
+      /*.success{*/
+        /*background: url('../../../assets/confirm_success.png') ;*/
+      /*}*/
       .box {
         position: fixed;
         width: 70%;
@@ -211,6 +214,7 @@
           text-align: center;
           font-size: 18px;
           color: #101010;
+          margin-top: -100px;
         }
         .btn{
           border: 1px solid #dddddd;

@@ -38,16 +38,16 @@
               </p>
               <h1>{{key.name}}</h1>
             </router-link>
-            <!--<a v-for="(key,index) in paths" v-if="key.hidden === 'exam'">-->
-              <!--<p :style="{'background': key.back}" @click="goBefore(key.path)">-->
-                <!--<i :class="key.icon"></i>-->
-              <!--</p>-->
-              <!--<h1>{{key.name}}-->
-                <!--<span v-if="key.name==='我的考试' && examData && examData.available" class="circle_red"></span>-->
-                <!--<span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available"-->
-                      <!--class="circle_red"></span>-->
-              <!--</h1>-->
-            <!--</a>-->
+            <a v-for="(key,index) in paths" v-if="key.hidden === 'exam'">
+              <p :style="{'background': key.back}" @click="goBefore(key.path)">
+                <i :class="key.icon"></i>
+              </p>
+              <h1>{{key.name}}
+                <span v-if="key.name==='我的考试' && examData && examData.available" class="circle_red"></span>
+                <span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available"
+                      class="circle_red"></span>
+              </h1>
+            </a>
           </div>
         </div>
       </div>
@@ -230,35 +230,17 @@
       this.disabled = false;
       this.scrollTops();
       this.confirmArrival = localStorage.getItem('confirmArrival');
-      // this.getExamNaireRedCircle();
-      // if(this.$route.query.refresh === 'refresh'){
-      //   this.getExamNaireRedCircle();
-      // }
+      this.getExamNaireRedCircle();
+      if(this.$route.query.refresh === 'refresh'){
+        this.getExamNaireRedCircle();
+      }
     },
     methods: {
       goBefore(val) {
-        this.getExamNaireRedCircle();
         if (val === '/exam') {
-          // if (this.examData.available) {
-          //   if (this.confirmArrival && this.confirmArrival.length > 0 && this.confirmArrival.indexOf(this.examData.id) > -1) {
-          //     this.$router.push({path: val, query: {id: this.examData.id, type: ''}});
-          //   } else {
-          //     this.$http.post(globalConfig.server + 'exam/check_in/' + this.examData.id).then((res) => {
-          //       if (res.data.code === '30000') {
-          //         let arr = [];
-          //         arr.push(this.examData.id);
-          //         localStorage.setItem('confirmArrival', arr);  //保存已到场的考试id
-          //         this.$router.push({path: val, query: {id: this.examData.id, type: ''}});
-          //       }
-          //     });
-          //   }
-          // } else {
-          //   this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
-          // }
           this.$router.push({path: '/beforeExam'});
         }else if(val === '/questionnaire') {
            this.$router.push({path: '/beforeNaire'});
-           // this.$router.push({path: '/questionnaire'});
         }
       },
       getExamNaireRedCircle() {
@@ -272,7 +254,6 @@
         this.$http.get(globalConfig.server + 'questionnaire/active').then((res) => {
           if (res.data.code === '30000') {
             this.questionnaireData = res.data.data;
-            // alert(JSON.stringify(res.data.data))
           }else{
             this.questionnaireData = [];
           }

@@ -73,7 +73,7 @@
             let head = JSON.parse(sessionStorage.myData);
             globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
           } else {
-            this.loading = true;
+            // this.loading = true;
             this.corp();
           }
         }
