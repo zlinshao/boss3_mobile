@@ -544,7 +544,6 @@
       if (count === '21') {
         let newID = JSON.parse(sessionStorage.process);
         if (newID.type === 2) {
-          this.close_();
           this.routerTo('/publishDetail', newID.ids);
         } else {
           this.counts = '1';
