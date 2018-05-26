@@ -54,7 +54,7 @@
       clearTimeout(this.timeClear);
       clearTimeout(this.examDataTime);
       this.confirmArrival = sessionStorage.getItem('confirmArrival');
-      // this.goAnswerExam();
+      this.goAnswerExam();
 
     },
     watch:{
