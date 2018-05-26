@@ -39,6 +39,12 @@
         questionNaireData: {},
       };
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex('/beforeNaire', 'house');
+        vm.ddRent('/beforeNaire', 'house');
+      })
+    },
     mounted() {
       this.personal = JSON.parse(sessionStorage.personal);
       this.getQuesNaireData();

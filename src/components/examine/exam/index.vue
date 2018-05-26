@@ -166,6 +166,7 @@
         this.clockSubmit();
       }, 1000 * 60);
     },
+
     mounted() {
       this.dictionary(152, 1).then((res) => {
         let sub = {};

@@ -51,6 +51,12 @@
         examDataTime: ''
       };
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex('');
+        vm.ddRent('');
+      })
+    },
     activated() {
       clearTimeout(this.timeClear);
       clearTimeout(this.examDataTime);
