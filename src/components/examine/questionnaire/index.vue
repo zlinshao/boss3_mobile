@@ -15,7 +15,7 @@
             <van-col span="18" style="float: initial;display: inline-block;">
               <p v-html="key1.stem"></p>
             </van-col>
-            <van-col span="3" style="float: right;">
+            <van-col span="3" style="float: right;margin-top: -5px;">
               <p style="width: 45px;font-size: 12px;color: #aaaaaa;line-height: 20px;">{{questionType[index]}}</p>
             </van-col>
           </van-row>

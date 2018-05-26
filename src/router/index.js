@@ -17,6 +17,8 @@ import Development from '@/components/common/development.vue'
 //我的考试
 import Exam from '@/components/examine/exam/index.vue'
 import BeforeExam from '@/components/examine/exam/components/beforeExam.vue'
+import MyExam from '@/components/examine/exam/components/myExam.vue'
+import LookExam from '@/components/examine/exam/components/lookExam.vue'
 // 问卷调查
 import Questionnaire from '@/components/examine/questionnaire/index.vue'
 import BeforeNaire from '@/components/examine/questionnaire/components/beforeNaire.vue'
@@ -417,6 +419,20 @@ export default new Router({
       icon: 'iconfont icon-xinjianshijuan',
       hidden: 'exam',
       component: Exam
+    },
+    {
+      path: '/myExam',
+      name: '我的考试',
+      meta: {title: '我的考试'},
+      hidden: false,
+      component: MyExam
+    },
+    {
+      path: '/lookExam',
+      name: '考试结果',
+      meta: {title: '考试结果'},
+      hidden: false,
+      component: LookExam
     },
     {
       path: '/beforeExam',

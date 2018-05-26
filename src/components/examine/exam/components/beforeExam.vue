@@ -23,6 +23,15 @@
         </div>
         <van-button class="view_history" @click="goHistory">查看历史考试</van-button>
       </div>
+      <div class="content" v-show="showType==='third'">
+        <div class="content_img"><img src="../../../../assets/time_out.png" style="width: 50%;"></div>
+        <div class="title">您已超过规定开考时间</div>
+        <div class="title" style="margin-top: 15px;color: #e4393c;">无法参加考试</div>
+        <div style="margin-top: 30px;color: #333;line-height: 28px;">
+          <div>如有疑问，请联系主考官</div>
+        </div>
+        <van-button class="view_history" @click="goHistory">查看历史考试</van-button>
+      </div>
     </div>
   </div>
 </template>
@@ -32,7 +41,7 @@
     data() {
       return {
         examData: {},
-        showType: '',
+        showType: 'first',
         showExamInfo: false,
         flag: true,
         timeString: '09:59:59',
@@ -45,7 +54,7 @@
       clearTimeout(this.timeClear);
       clearTimeout(this.examDataTime);
       this.confirmArrival = sessionStorage.getItem('confirmArrival');
-      this.goAnswerExam();
+      // this.goAnswerExam();
 
     },
     watch:{
@@ -76,6 +85,7 @@
                     sessionStorage.setItem('confirmArrival', arr);  //保存已到场的考试id
                     this.$router.push({path: '/exam', query: {id: this.examData.id}});
                   } else {
+
                     //todo 迟到
                   }
                 });
