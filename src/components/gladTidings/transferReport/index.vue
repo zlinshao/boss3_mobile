@@ -345,7 +345,11 @@
       </van-cell-group>
     </div>
 
-    <div class="footer">
+    <div class="footer" v-if="counts === '2' || counts === '21'">
+      <div @click="saveCollect(0)">修改</div>
+    </div>
+
+    <div class="footer" v-if="counts === '1' || counts === '11'">
       <div @click="close_()">重置</div>
       <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
@@ -430,6 +434,7 @@
 
           address: '',
           id: '',
+          processable_id: '',
           draft: 0,
           contract_id_rent: '',         //原租房合同id
           contract_id: '',              //现房屋合同id
@@ -480,25 +485,64 @@
         value8: [],
 
         isValue1: true,
+        counts: '',
       }
     },
     mounted() {
       this.getNowFormatDate();
-      let newID = this.$route.query;
-      if (newID.newID === undefined) {
+      let count = sessionStorage.count;
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
         this.close_();
         this.dicts('');
       }
     },
     activated() {
-      this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
+      let count = sessionStorage.count;
+      this.counts = count;
 
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.dicts(newID.newID);
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
       }
+      if (count === '1') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.dicts('');
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      if (count === '21') {
+        this.isValue1 = false;
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.routerIndex('');
+          this.ddRent('');
+        }
+      }
+      if (count === '2') {
+        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.close_();
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.close_();
+          this.routerIndex('');
+          this.ddRent('');
+        }
+        this.close_();
+        this.dicts(newID);
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      this.houseInfo();
     },
 
     methods: {
@@ -872,11 +916,17 @@
       },
 
       rentDetail(val) {
-        this.userInfo(true);
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/change/' + val;
+          type = 'bulletin/change/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          } else {
+            this.userInfo(true);
+          }
         } else {
+          this.userInfo(true);
           type = 'bulletin/change';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -972,8 +1022,14 @@
             this.leaders = data.screenshot_leader;
             this.form.photo = draft.photo;
             this.photos = data.photo;
-
             this.form.remark = draft.remark;
+
+            if (val !== '' && val.type === 2) {
+              this.form.staff_id = draft.staff_id;
+              this.form.staff_name = draft.staff_name;
+              this.form.department_id = draft.department_id;
+              this.form.department_name = draft.department_name;
+            }
           } else {
             this.receiptNum();
             this.form.id = '';
@@ -998,6 +1054,7 @@
         this.form.old_money_sum = '';
 
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.contract_id_rent = '';
         this.form.contract_id = '';
         this.form.house_id_rent = '';

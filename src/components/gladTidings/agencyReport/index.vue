@@ -5,7 +5,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group v-model="form.collect_or_rent" @change="rentChange">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent" @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -182,10 +182,14 @@
       </van-cell-group>
     </div>
 
-    <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+    <div class="footer" v-if="counts === '2' || counts === '21'">
+      <div @click="saveCollect(0)">修改</div>
+    </div>
+
+    <div class="footer" v-if="counts === '1' || counts === '11'">
+      <div @click="close_()">重置</div>
+      <div @click="saveCollect(1)">草稿</div>
+      <div @click="saveCollect(0)">发布</div>
     </div>
 
   </div>
@@ -213,6 +217,7 @@
         form: {
           address: '',
           id: '',
+          processable_id: '',
           draft: 0,
           payWay: [''],                 //付款方式
           price_arr: [''],              //月单价
@@ -248,19 +253,63 @@
         agency2: false,
         agency3: false,
         agency4: false,
+
+        counts: '',
       }
     },
     mounted() {
-      this.agencyDetail('');
+      let count = sessionStorage.count;
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.agencyDetail('');
+      }
     },
     activated() {
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.agencyDetail(newID.newID);
+      let count = sessionStorage.count;
+      this.counts = count;
+
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
+      }
+      if (count === '1') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.agencyDetail('');
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      if (count === '21') {
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.routerIndex('');
+          this.ddRent('');
+        }
+      }
+      if (count === '2') {
+        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.close_();
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.close_();
+          this.routerIndex('');
+          this.ddRent('');
+        }
+        this.close_();
+        this.agencyDetail(newID);
+        count = count + '1';
+        sessionStorage.setItem('count', count);
       }
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
     },
     methods: {
       payWayClick(val) {
@@ -414,9 +463,13 @@
         })
       },
       agencyDetail(val) {
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/agency/' + val;
+          type = 'bulletin/agency/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          }
         } else {
           type = 'bulletin/agency';
         }
@@ -477,6 +530,7 @@
         this.form.price_arr = [''];
         this.form.address = '';
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.contract_id = '';
         this.form.house_id = '';
         this.form.collect_or_rent = '';

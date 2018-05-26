@@ -4,7 +4,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">报备性质</div>
-          <van-radio-group v-model="form.type">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.type">
             <van-radio name="0">清退报备</van-radio>
             <van-radio name="1">取消报备</van-radio>
           </van-radio-group>
@@ -78,10 +78,14 @@
       </van-cell-group>
     </div>
 
-    <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+    <div class="footer" v-if="counts === '2' || counts === '21'">
+      <div @click="saveCollect(0)">修改</div>
+    </div>
+
+    <div class="footer" v-if="counts === '1' || counts === '11'">
+      <div @click="close_()">重置</div>
+      <div @click="saveCollect(1)">草稿</div>
+      <div @click="saveCollect(0)">发布</div>
     </div>
 
   </div>
@@ -107,6 +111,7 @@
         form: {
           address: '',
           id: '',
+          processable_id: '',
           type: '0',
           draft: 0,
           payWay: [''],                   //付款方式
@@ -120,19 +125,62 @@
           department_name: '',            //部门name
         },
         screenshots: {},
+        counts: '',
       }
     },
     mounted() {
-      this.friedDetail('');
+      let count = sessionStorage.count;
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.friedDetail('');
+      }
     },
     activated() {
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.friedDetail(newID.newID);
+      let count = sessionStorage.count;
+      this.counts = count;
+
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
+      }
+      if (count === '1') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.friedDetail('');
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      if (count === '21') {
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.routerIndex('');
+          this.ddRent('');
+        }
+      }
+      if (count === '2') {
+        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.close_();
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.close_();
+          this.routerIndex('');
+          this.ddRent('');
+        }
+        this.close_();
+        this.friedDetail(newID);
+        count = count + '1';
+        sessionStorage.setItem('count', count);
       }
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
     },
     methods: {
       payWayClick(val) {
@@ -161,7 +209,7 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/banish', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50410') {
+              if (res.data.code === '50410' || res.data.code === '50430') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -212,9 +260,13 @@
         })
       },
       friedDetail(val) {
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/banish/' + val;
+          type = 'bulletin/banish/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          }
         } else {
           type = 'bulletin/banish';
         }
@@ -253,6 +305,7 @@
         this.form.payWay = [''];
         this.form.price_arr = [''];
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.type = '0';
         this.form.screenshot_leader = [];
         this.screenshots = {};

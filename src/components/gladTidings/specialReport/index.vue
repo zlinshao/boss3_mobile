@@ -4,7 +4,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group v-model="form.collect_or_rent" @change="rentChange">
+          <van-radio-group  :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent" @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -57,11 +57,16 @@
       </van-cell-group>
     </div>
 
-    <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(1)">草稿</div>
-      <div class="" @click="saveCollect(0)">发布</div>
+    <div class="footer" v-if="counts === '2' || counts === '21'">
+      <div @click="saveCollect(0)">修改</div>
     </div>
+
+    <div class="footer" v-if="counts === '1' || counts === '11'">
+      <div @click="close_()">重置</div>
+      <div @click="saveCollect(1)">草稿</div>
+      <div @click="saveCollect(0)">发布</div>
+    </div>
+
   </div>
 </template>
 
@@ -83,6 +88,7 @@
         form: {
           address: '',
           id: '',
+          processable_id: '',
           draft: 0,
           collect_or_rent: '',
           house_id: '',
@@ -98,19 +104,62 @@
         screenshots: {},
         screenshots_leader: {},
         numbers: '',
+        counts: '',
       }
     },
     mounted() {
-      this.specialDetail('');
+      let count = sessionStorage.count;
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.specialDetail('');
+      }
     },
     activated() {
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.specialDetail(newID.newID);
+      let count = sessionStorage.count;
+      this.counts = count;
+
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
+      }
+      if (count === '1') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.specialDetail('');
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      if (count === '21') {
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.routerIndex('');
+          this.ddRent('');
+        }
+      }
+      if (count === '2') {
+        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.close_();
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.close_();
+          this.routerIndex('');
+          this.ddRent('');
+        }
+        this.close_();
+        this.specialDetail(newID);
+        count = count + '1';
+        sessionStorage.setItem('count', count);
       }
       this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
     },
     methods: {
       searchSelect(val) {
@@ -149,7 +198,7 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/special', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '51010') {
+              if (res.data.code === '51010' || res.data.code === '51030') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -184,9 +233,13 @@
       },
 
       specialDetail(val) {
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/special/' + val;
+          type = 'bulletin/special/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          }
         } else {
           type = 'bulletin/special';
         }
@@ -224,6 +277,7 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.address = '';
         this.form.collect_or_rent = '';
         this.form.house_id = '';
