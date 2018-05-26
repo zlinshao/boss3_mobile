@@ -42,7 +42,7 @@
     data() {
       return {
         examData: {},
-        showType: 'first',
+        showType: '',
         showExamInfo: false,
         flag: true,
         timeString: '09:59:59',
@@ -61,6 +61,7 @@
       })
     },
     activated() {
+      this.showType = '';
       this.confirmArrival = sessionStorage.getItem('confirmArrival');
       this.goAnswerExam();
 
