@@ -1,46 +1,154 @@
 <template>
-  <div id="questionnaire">
-    <div class="questionnaireTitle">
-      <div style="position: absolute;top: 80px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题
+  <div id="exam">
+    <div class="examTitle">
+      <div class="key" style="height: 50px;border-bottom: 1px solid #ebebeb;">场次名称<span
+        class="value">{{examData.name}}</span></div>
+      <div style="position: absolute;top: 80px;width: 90%;margin-left: 5%;margin-right: 5%;">
+        <van-row gutter="15">
+          <van-col span="8">
+            <div class="import_questions" style="border: 1px solid #39b1ff;">
+              <div class="import_left"><span style="float:left; font-size:12px;">总时长</span><i
+                style="float:right; color:#58d788;font-size:16px;" class="iconfont icon-shijian1"></i></div>
+              <div style="font-size: 12px;"><span style="font-size:30px; color:#58d788;">{{ examData.duration }}</span>分钟
+              </div>
+            </div>
+          </van-col>
+          <van-col span="8">
+            <div class="import_questions" style="border: 1px solid #fdca41;">
+              <div class="import_left"><span style="float:left; font-size:12px;">总题数</span><i
+                style="float:right; color:#fdca41;font-size:16px;" class="iconfont icon-shujutu"></i></div>
+              <div style="font-size: 12px;"><span
+                style="font-size:30px; color:#fdca41">{{examData.question_count}}</span>题
+              </div>
+            </div>
+          </van-col>
+          <van-col span="8">
+            <div class="import_questions" style="border: 1px solid #fb4699;">
+              <div class="import_left"><span style="float:left; font-size:12px;">考生成绩</span><i
+                style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
+              <div><span style="font-size:20px; color:#fb4699">{{resultData.score}}</span>分</div>
+              <div style="position: absolute;top: 60px;right: 15px;font-size: 12px">总分：{{examData.score}}分</div>
+            </div>
+          </van-col>
+        </van-row>
       </div>
-      <img src="../../../../assets/backgroundPic.png" alt="">
     </div>
     <div class="exercise" v-if="!message">
-      <div v-for="(key,index) in question_set">
+      <div v-for="(key,index) in questionData">
         <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
-          <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
           <van-row>
             <van-col span="2" style="float: left">
-              <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
+              <p style="display: inline-block;width: 30px;margin-top: 5px;">{{key1.number}}.</p>
             </van-col>
             <van-col span="18" style="float: initial;display: inline-block;">
-              <p v-html="key1.stem"></p>
+              <p v-html="key1.stem" style="line-height: 28px;"></p>
             </van-col>
             <van-col span="3" style="float: right;">
-              <p style="width: 45px;font-size: 12px;color: #aaaaaa;line-height: 20px;">{{questionType[index]}}</p>
+              <p style="width: 42px;font-size: 12px;color: #aaaaaa;line-height: 20px;">{{questionType[index]}}
+                <span style="display: block;font-size: 12px;text-align: center;width: 42px;">{{key1.score}}分</span>
+              </p>
             </van-col>
           </van-row>
-          <div class="subjectTitle">
-            <!--<div class="subjectA" v-html="key1.stem"></div>-->
-            <div class="subjectB" v-if="index != 157 && index !=158">
-              <p v-for="(key2,index2) in key1.choice" :key="index2" :name="index2" style="margin-left: 7px;">
-                <span  style="line-height: 25px;font-size: 16px;">{{index2}}&nbsp;&nbsp;{{key2}}</span>
-                <van-row :key="kk" v-for="(vv,kk) in (statisticData[key1.id] && statisticData[key1.id].answer)"
-                         v-if="kk==index2">
-                  <div style="text-align: center;color: #9c9c9c;">回复量：<span style="color: #6c6c6c;">{{vv}}</span></div>
-                  <Progress style="width: 90%;margin:10px 0;" color="#39b1ff" :percentage="Math.round(vv*100/statisticData[key1.id].count)" :pivot-text="`${Math.round(vv*100/statisticData[key1.id].count)}%`"/>
-                </van-row>
-
-                <van-row style="color: #fb4699;padding: 8px 0;font-size: 14px;"
-                         v-if="!(statisticData[key1.id] && statisticData[key1.id].answer)">
-                  暂无统计数据...
-                </van-row>
-              </p>
+          <div class="subjectTitle" v-if="(index==153 || index==156) && questionData[index].length>0">
+            <div v-if="answerData && answerData[key1.id] && resultData">
+              <div style="line-height: 22px;font-size: 13px;">
+                <span style="color:#fc83b6;margin-right: 10px;">正确答案： {{answerData[key1.id]}}</span> |
+                <span style="color:#409EFF;margin-left: 10px;">本题得分： <span v-if="resultData.subjective_detail">{{resultData.subjective_detail[key1.id]}}</span><span
+                  v-else>暂无</span></span>
+              </div>
+              <van-row gutter="20" style="margin-top: 10px;">
+                <div v-for="(val,ind) in key1.choice">
+                  <van-col span="18" style="line-height:24px;">
+                    <div v-if="ind == (resultData.answer && resultData.answer[key1.id])" style="color: #409EFF;">
+                      {{ind}}：{{val}}
+                    </div>
+                    <div v-else>{{ind}}：{{val}}</div>
+                  </van-col>
+                  <van-col span="4" style="background: #000;">
+                    <div style="color:rgb(88, 215, 136);"
+                         v-if="(resultData.answer && resultData.answer[key1.id]) == answerData[key1.id] && (resultData.answer && resultData.answer[key1.id])==ind">
+                      正确
+                    </div>
+                    <div style="color:#fc83b6;"
+                         v-if="(resultData.answer && resultData.answer[key1.id]) != answerData[key1.id] && (resultData.answer && resultData.answer[key1.id])==ind">
+                      错误
+                    </div>
+                  </van-col>
+                </div>
+              </van-row>
             </div>
-            <div class="subjectB" v-if="index == 158">
-              <p style="margin-left: 7px;">
-                <span  style="line-height: 25px;font-size: 16px;color: #39b1ff;" @click="openAll(key1.id)">查看全部回答</span>
-              </p>
+          </div>
+          <div class="subjectTitle" v-if="(index==154 || index==155) && questionData[index].length>0">
+            <div v-if="answerData && answerData[key1.id] && resultData">
+              <div style="line-height: 22px;font-size: 13px;">
+                <span style="color:#fc83b6;margin-right: 10px;">正确答案： {{answerData[key1.id]}}</span> |
+                <span style="color:#409EFF;margin-left: 10px;">本题得分： <span v-if="resultData.subjective_detail">{{resultData.subjective_detail[key1.id]}}</span><span
+                  v-else>暂无</span></span>
+              </div>
+              <van-row gutter="20" style="margin-top: 10px;">
+                <div v-for="(val,ind) in key1.choice">
+                  <van-col span="18" style="line-height:24px;">
+                    <div
+                      v-if="resultData.answer && resultData.answer[key1.id] && resultData.answer[key1.id].indexOf(index)>-1"
+                      style="color: #409EFF;">{{ind}}：{{val}}
+                    </div>
+                    <div v-else>{{ind}}：{{val}}</div>
+                  </van-col>
+                  <van-col span="4" style="background: #000;">
+                    <div style="color:rgb(88, 215, 136);"
+                         v-for="ans in (resultData.answer && resultData.answer[key1.id])"
+                         v-if="answerData[key1.id].indexOf(ans)>-1 && ans==index ">正确
+                    </div>
+                    <div style="color:#fc83b6;" v-for="ans in (resultData.answer && resultData.answer[key1.id])"
+                         v-if="answerData[key1.id].indexOf(ans)<0 && ans==index ">错误
+                    </div>
+                  </van-col>
+                </div>
+              </van-row>
+            </div>
+          </div>
+          <div class="subjectTitle" v-if="index==157 && questionData[index].length>0">
+            <div v-if="answerData && answerData[key1.id] && resultData">
+              <div style="line-height: 22px;font-size: 13px;">
+                <span style="color:#fc83b6;margin-right: 10px;">正确答案： {{answerData[key1.id]}}</span> |
+                <span style="color:#409EFF;margin-left: 10px;">本题得分： <span v-if="resultData.subjective_detail">{{resultData.subjective_detail[key1.id]}}</span><span
+                  v-else>暂无</span></span>
+              </div>
+              <van-row gutter="20" style="margin-top: 10px;">
+                <div v-for="(val,ind) in key1.choice">
+                  <van-col span="18" style="line-height:24px;">
+                    <div v-for="(value,ak) in key1.answer_count"
+                         v-if="resultData.answer && resultData.answer[key1.id][ak]" style="color: #409EFF;">
+                      第{{ak+1}}处答案：{{value}}
+                    </div>
+                  </van-col>
+                  <van-col span="4" style="background: #000;">
+                    <div style="color:rgb(88, 215, 136);"
+                         v-for="(vv, kk) in (resultData.answer && resultData.answer[key1.id])"
+                         v-if="answerData[key1.id].indexOf(vv)>-1 && kk==ak ">正确
+                    </div>
+                    <div style="color:#fc83b6;" v-for="(vv, kk) in (resultData.answer && resultData.answer[key1.id])"
+                         v-if="answerData[key1.id].indexOf(vv)<0 && kk==ak">错误
+                    </div>
+                  </van-col>
+                </div>
+              </van-row>
+            </div>
+          </div>
+          <div class="subjectTitle" v-if="index==158 && questionData[index].length>0">
+            <div v-if="answerData && answerData[key1.id] && resultData">
+              <div style="line-height: 22px;font-size: 13px;">
+                <span style="color:#fc83b6;margin-right: 10px;">正确答案： {{answerData[key1.id]}}</span> |
+                <span style="color:#409EFF;margin-left: 10px;">本题得分： <span v-if="resultData.subjective_detail">{{resultData.subjective_detail[key1.id]}}</span><span
+                  v-else>暂无</span></span>
+              </div>
+              <van-row gutter="20" style="margin-top: 10px;">
+                <van-col span="22" style="line-height:24px;">
+                  <div style="color: #409EFF;">
+                    {{resultData && resultData.answer && resultData.answer[key1.id]}}
+                  </div>
+                </van-col>
+              </van-row>
             </div>
           </div>
         </div>
@@ -60,16 +168,13 @@
     components: {Progress},
     data() {
       return {
-        urls: globalConfig.server,
-        radio: '',
-        paperData: {},
-        questionType: {},       //题型
-        question_set: {},       //试题
-        answer: {},             //答案
         message: '',
-        exam_id: this.$route.query.id,
-        confirmType: '',
-        statisticData: {},
+        resultId: '',
+        examId: '',
+        examData: {},
+        questionData: {},
+        resultData: {},
+        answerData: {},
       }
     },
     mounted() {
@@ -80,42 +185,32 @@
         }
         this.questionType = sub;
       });
-      this.$http.get(this.urls + 'questionnaire/' + this.exam_id).then((res) => {
-        if (res.data.code === '30000') {
-          this.question_set = res.data.data.question_set;
-          this.paperData = res.data.data;
-
-          if (this.question_set[154] && this.question_set[154].length > 0) {
-            this.question_set[154].forEach((item) => {
-              this.$set(this.answer, item.id, []);
-            });
-          }
-          if (this.question_set[155] && this.question_set[155].length > 0) {
-            this.question_set[155].forEach((item) => {
-              this.$set(this.answer, item.id, []);
-            });
-          }
-        } else {
-          this.message = res.data.msg;
-        }
-      })
     },
     activated() {
-      // this.confirmType = this.$route.query.type;
-      this.getStatisticData();
+      this.resultId = this.$route.query.result_id;
+      this.examId = this.$route.query.exam_id;
+      this.myData(this.resultId, this.examId);
     },
     watch: {},
     methods: {
-      openAll(id){
-        this.$router.push({path: '/answerAll', query: {id: this.questionnaire_id, ques_id: id}});
-      },
-      getStatisticData() {
-        this.$http.get(globalConfig.server + 'questionnaire/statistic/' + this.questionnaire_id).then((res) => {
+      myData(a, b) {
+        this.$http.get(globalConfig.server + 'exam/' + a + '?see=answer').then((res) => {
           if (res.data.code === '30000') {
-            this.statisticData = res.data.data;
+            this.message = '';
+            this.examData = res.data.data;
+            this.questionData = res.data.data.question_set;
+            this.answerData = res.data.data.reference_set;
           } else {
-            this.statisticData = [];
+            this.examData = {};
+            this.questionData = {};
             this.message = res.data.msg;
+          }
+        });
+        this.$http.get(globalConfig.server + 'exam/result/' + b).then((res) => {
+          if (res.data.code === '36000') {
+            this.resultData = res.data.data;
+          } else {
+            this.resultData = {};
           }
         });
       },
@@ -124,7 +219,7 @@
 </script>
 
 <style lang="scss">
-  #questionnaire {
+  #exam {
     img {
       width: 100%;
     }
@@ -171,16 +266,37 @@
     .onClass {
       color: #409EFF;
     }
-    .questionnaireTitle {
+    .examTitle {
+      margin-top: 20px;
+      background: #fff;
       height: 3rem;
-      overflow: hidden;
-      div {
-        padding: .3rem;
+      .key {
+        padding: 15px 0px;
+        margin-bottom: 10px;
         line-height: .4rem;
-        color: #FFFFFF;
         position: absolute;
-        bottom: 0;
-        left: 0;
+        left: 20px;
+        color: #9c9c9c;
+        font-size: 14px;
+        width: 90%;
+        .value {
+          margin-left: 10px;
+          color: #6c6c6c;
+          font-size: 16px;
+        }
+      }
+      .import_questions {
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        border-radius: 5px;
+        .import_left {
+          width: 90%;
+          height: 36px;
+          line-height: 36px;
+          margin: 0 auto;
+        }
       }
     }
     .msg {
@@ -188,10 +304,7 @@
       color: #949494;
     }
     .exercise {
-      /*width: 96%;*/
-      /*margin: 10px auto;*/
-      /*box-shadow: 0 0 5px 0 #aaaaaa;*/
-      /*border-radius: 8px;*/
+      margin-top: 20px;
       background-color: #FFFFFF;
       padding: .2rem;
       padding-bottom: 50px;

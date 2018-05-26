@@ -15,7 +15,8 @@
       </div>
       <div class="content" v-show="showType==='second'">
         <div class="content_img"><img src="../../../../assets/count_down.png" style="width: 50%;"></div>
-        <div class="title">开考倒计时 <span style="margin-left: 15px;color: #e4393c;font-size: 20px;">{{timeString}}</span></div>
+        <div class="title">开考倒计时 <span style="margin-left: 15px;color: #e4393c;font-size: 20px;">{{timeString}}</span>
+        </div>
         <div class="last_title">最近一场</div>
         <div style="margin-top: 10px;color: #333;line-height: 28px;">
           <div>场次名称：{{examData.name}}</div>
@@ -57,7 +58,7 @@
       this.goAnswerExam();
 
     },
-    watch:{
+    watch: {
       countDown(num) {
         clearTimeout(this.timeClear);
         if (num >= 0) {
@@ -84,9 +85,8 @@
                     arr.push(this.examData.id);
                     sessionStorage.setItem('confirmArrival', arr);  //保存已到场的考试id
                     this.$router.push({path: '/exam', query: {id: this.examData.id}});
-                  } else {
-
-                    //todo 迟到
+                  } else if (res.data.code === '30003') {
+                    this.showType = 'third';
                   }
                 });
               }
@@ -146,8 +146,8 @@
                 arr.push(this.examData.id);
                 localStorage.setItem('confirmArrival', arr);  //保存已到场的考试id
                 this.$router.push({path: '/exam', query: {id: this.examData.id}});
-              }else{
-                alert(res.data.msg)
+              } else if (res.data.code === '30003') {
+                this.showType = 'third';
               }
             });
           }

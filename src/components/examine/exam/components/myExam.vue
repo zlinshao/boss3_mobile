@@ -1,6 +1,7 @@
 <template>
   <div id="myNaire">
     <div class="container">
+      <div style="position: relative;width: 100%;height: 20px;background: #f8f8f8;"></div>
       <div class="content" v-for="item in examData">
         <div class="top">
           <div style="float: left;"><img :src="personal.avatar" style="width: 50px;height: 50px;border-radius: 50%;">
@@ -20,9 +21,9 @@
           <p>考试时长 <span>{{item.duration}} </span>分钟</p>
         </div>
         <div style="position: relative;text-align: center;">
-          <van-button class="view_history" @click="goDetail(item.id)">查看考试结果</van-button>
+          <van-button class="view_history" @click="goDetail(item)">查看考试结果</van-button>
         </div>
-        <div style="position: relative;margin-top: 20px;width: 100%;height: 20px;background: #eee;"></div>
+        <div style="position: relative;margin-top: 20px;width: 100%;height: 20px;background: #f8f8f8;"></div>
       </div>
     </div>
 
@@ -46,7 +47,7 @@
     },
     methods: {
       goDetail(val) {
-        // this.$router.push({path: '/lookExam', query: {id: val}});
+        this.$router.push({path: '/lookExam', query: {result_id: val.result_id, exam_id: val.id}});
       },
       getExamData() {
         this.$http.get(globalConfig.server + 'exam/exam/my?enrolled=1').then((res) => {
@@ -74,9 +75,6 @@
       background: #fff;
       width: 100%;
       height: 100%;
-      .top{
-        border-top:1px solid #ebebeb;
-      }
       .top {
         position: relative;
         padding: 15px 20px;

@@ -1,18 +1,38 @@
 <template>
   <div id="exam">
-    <div class="questionnaireTitle">
-      <div style="position: absolute;top: 25px;height: 33px;border-bottom: 1px solid #ccccccb3;">场次名称：<span>{{examData.name}}</span>
+    <div class="examTitle">
+      <div class="key" style="height: 50px;border-bottom: 1px solid #ebebeb;">场次名称<span
+        class="value">{{examData.name}}</span></div>
+      <div style="position: absolute;top: 80px;width: 90%;margin-left: 5%;margin-right: 5%;">
+        <van-row gutter="15">
+          <van-col span="8">
+            <div class="import_questions" style="border: 1px solid #39b1ff;">
+              <div class="import_left"><span style="float:left; font-size:12px;">总时长</span><i
+                style="float:right; color:#58d788;font-size:16px;" class="iconfont icon-shijian1"></i></div>
+              <div style="font-size: 12px;"><span style="font-size:30px; color:#58d788;">{{ examData.duration }}</span>分钟</div>
+            </div>
+          </van-col>
+          <van-col span="8">
+            <div class="import_questions" style="border: 1px solid #fdca41;">
+              <div class="import_left"><span style="float:left; font-size:12px;">总题数</span><i
+                style="float:right; color:#fdca41;font-size:16px;" class="iconfont icon-shujutu"></i></div>
+              <div style="font-size: 12px;"><span style="font-size:30px; color:#fdca41">{{examData.question_count}}</span>题</div>
+            </div>
+          </van-col>
+          <van-col span="8" >
+            <div class="import_questions" style="border: 1px solid #fb4699;">
+              <div class="import_left"><span style="float:left; font-size:12px;">倒计时</span><i
+                style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
+              <div><span style="font-size:20px; color:#fb4699">{{timeString}}</span></div>
+              <div style="position: absolute;top: 60px;right: 15px;font-size: 12px">总分：{{examData.score}}分</div>
+            </div>
+          </van-col>
+        </van-row>
       </div>
-      <div style="position: absolute;top: 60px;">总题数： <span>{{examData.question_count}}</span>题</div>
-      <div style="position: absolute;top: 85px;">总时长： <span>{{ examData.duration }}</span>分钟</div>
-      <div style="position: absolute;top: 110px;height: 33px;border-bottom: 1px solid #ccccccb3;">总分值：
-        <span>{{examData.score}}分</span></div>
-      <div class="count_down">倒计时： <span style="color: #fb4699;">09：59：59</span></div>
     </div>
     <div class="exercise" v-if="!message">
       <div v-for="(key,index) in question_set">
         <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
-          <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
           <van-row>
             <van-col span="2" style="float: left">
               <p style="display: inline-block;width: 30px;margin-top: 5px;">{{key1.number}}.</p>
@@ -137,9 +157,6 @@
       this.examId = this.$route.query.id;
       clearTimeout(this.timeOut);
       clearTimeout(this.timeClear);
-      if (this.examId) {
-        this.getExamData();
-      }
       this.clockSubmit();
       this.timeOut = setTimeout(() => {
         clearTimeout(this.timeClear);
@@ -154,7 +171,6 @@
         }
         this.questionType = sub;
       });
-
     },
     watch: {
       countDown(num) {
@@ -163,10 +179,15 @@
           this.clock(num);
         }
       },
+      examId(val) {
+        if (val) {
+          this.getExamData();
+        }
+      }
     },
     methods: {
       getExamData() {
-        this.$http.get(this.globalConfig.server + 'exam/' + this.examId).then((res) => {
+        this.$http.get(globalConfig.server + 'exam/' + this.examId).then((res) => {
           if (res.data.code === '30000') {
             this.question_set = res.data.data.question_set;
             this.examData = res.data.data;
@@ -274,6 +295,11 @@
     img {
       width: 100%;
     }
+    .border_col {
+      /*border: 1px solid #39b1ff;*/
+      /*height: 100px;*/
+    }
+
     .boxHeight {
       height: 200px !important;
     }
@@ -288,11 +314,11 @@
       position: absolute;
       text-align: center;
       font-size: 14px;
-      top: 85%;
+      top: 86%;
       left: 13%;
       color: #aaaaaa;
       width: 75%;
-      line-height: 20px;
+      line-height: 18px;
     }
     .van-cell:not(:last-child)::after {
       border: none;
@@ -349,26 +375,36 @@
     .onClass {
       color: #409EFF;
     }
-    .questionnaireTitle {
-      width: 96%;
-      margin: 2px auto;
-      box-shadow: 0 0 5px 0 #aaaaaa;
-      border-radius: 8px;
-      background: #F3F9FF;
+    .examTitle {
+      margin-top: 20px;
+      background: #fff;
       height: 3rem;
-      overflow: hidden;
-      div {
-        padding: 5px 10px;
+      .key {
+        padding: 15px 0px;
+        margin-bottom: 10px;
         line-height: .4rem;
-        color: #FFFFFF;
         position: absolute;
         left: 20px;
-        color: #666666;
+        color: #9c9c9c;
         font-size: 14px;
         width: 90%;
-        span {
-          color: #393939;
-          font-size: 18px;
+        .value {
+          margin-left: 10px;
+          color: #6c6c6c;
+          font-size: 16px;
+        }
+      }
+      .import_questions {
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        border-radius: 5px;
+        .import_left {
+          width: 90%;
+          height: 36px;
+          line-height: 36px;
+          margin: 0 auto;
         }
       }
     }
@@ -377,10 +413,11 @@
       color: #949494;
     }
     .exercise {
-      width: 96%;
-      margin: 10px auto;
-      box-shadow: 0 0 5px 0 #aaaaaa;
-      border-radius: 8px;
+      /*width: 96%;*/
+      /*margin: 10px auto;*/
+      /*box-shadow: 0 0 5px 0 #aaaaaa;*/
+      /*border-radius: 8px;*/
+      margin-top: 20px;
       background-color: #FFFFFF;
       padding: .2rem;
       .subject {
