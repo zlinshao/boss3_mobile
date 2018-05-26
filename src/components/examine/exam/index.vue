@@ -158,15 +158,20 @@
     },
     activated() {
       this.examId = this.$route.query.id;
-      clearTimeout(this.timeOut);
-      clearTimeout(this.timeClear);
       this.clockSubmit();
+      let that = this;
       this.timeOut = setTimeout(() => {
-        clearTimeout(this.timeClear);
+        clearTimeout(that.timeClear);
         this.clockSubmit();
       }, 1000 * 60);
     },
-
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        let that = vm;
+        clearTimeout(that.timeOut);
+        clearTimeout(that.timeClear);
+      })
+    },
     mounted() {
       this.dictionary(152, 1).then((res) => {
         let sub = {};
@@ -178,7 +183,8 @@
     },
     watch: {
       countDown(num) {
-        clearTimeout(this.timeClear);
+        let that = this;
+        clearTimeout(that.timeClear);
         if (num >= 0) {
           this.clock(num);
         }

@@ -53,20 +53,22 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
+        let that = vm;
+        clearTimeout(that.timeClear);
+        clearTimeout(that.examDataTime);
         vm.routerIndex('');
         vm.ddRent('');
       })
     },
     activated() {
-      clearTimeout(this.timeClear);
-      clearTimeout(this.examDataTime);
       this.confirmArrival = sessionStorage.getItem('confirmArrival');
       this.goAnswerExam();
 
     },
     watch: {
       countDown(num) {
-        clearTimeout(this.timeClear);
+        let that = this;
+        clearTimeout(that.timeClear);
         this.clock((num / 1000) + 2);
       },
 
