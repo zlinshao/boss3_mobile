@@ -38,54 +38,55 @@
       newly() {
         let proID = this.process.processable_id;    //预填ID
         let id = this.process.id;                   //报备ID
+        let list = {newID: proID, ids: id, type: 2};
         switch (this.process.processable_type) {
           case 'bulletin_quality'://质量
-            this.$router.push({path: '/quality', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/quality', query: list});
             break;
           case 'bulletin_collect_basic'://收
-            this.$router.push({path: '/collectReport', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/collectReport', query: list});
             break;
           case 'bulletin_collect_continued'://续收报备
-            this.$router.push({path: '/continueCollect', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/continueCollect', query: list});
             break;
           case 'bulletin_rent_basic'://租
-            this.$router.push({path: '/rentReport', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/rentReport', query: list});
             break;
           case 'bulletin_rent_trans'://转租
-            this.$router.push({path: '/changeRent', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/changeRent', query: list});
             break;
           case 'bulletin_rent_continued'://续租
-            this.$router.push({path: '/continueRent', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/continueRent', query: list});
             break;
           case 'bulletin_rent_RWC'://未收先祖
-            this.$router.push({path: '/unCollectBeforeRent', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/unCollectBeforeRent', query: list});
             break;
           case 'bulletin_RWC_confirm'://未收先祖确定
-            this.$router.push({path: '/unCollectBeforeRentSure', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/unCollectBeforeRentSure', query: list});
             break;
           case 'bulletin_agency'://中介费报备
-            this.$router.push({path: '/agencyRent', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/agencyRent', query: list});
             break;
           case 'bulletin_banish'://清退
-            this.$router.push({path: '/clearRetreat', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/clearRetreat', query: list});
             break;
           case 'bulletin_change'://调房
-            this.$router.push({path: '/transferReport', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/transferReport', query: list});
             break;
           case 'bulletin_lose'://炸单
-            this.$router.push({path: '/friedBill', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/friedBill', query: list});
             break;
           case 'bulletin_refund'://退款
-            this.$router.push({path: '/drawback', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/drawback', query: list});
             break;
           case 'bulletin_retainage'://尾款
-            this.$router.push({path: '/finalPayment', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/finalPayment', query: list});
             break;
           case 'bulletin_special'://特殊
-            this.$router.push({path: '/special', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/special', query: list});
             break;
           case 'bulletin_checkout'://退租
-            this.$router.push({path: '/checkout', query: {newID: proID, ids: id, type: 2}});
+            this.$router.push({path: '/checkout', query: list});
             break;
         }
       },

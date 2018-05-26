@@ -48,20 +48,19 @@ export default {
 
     Vue.prototype.routerTo = function (url, id, val) {
       let that = this;
-      if (val === 1) {
-        document.addEventListener('backbutton', function (e) {
-          e.preventDefault();
+      document.addEventListener('backbutton', function (e) {
+        e.preventDefault();
+        that.$router.push({path: url, query: {ids: id}});
+      });
+
+      dd.biz.navigation.setLeft({
+        control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+        onSuccess: function () {
           that.$router.push({path: url, query: {ids: id}});
-        });
-      } else {
-        dd.biz.navigation.setLeft({
-          control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
-          onSuccess: function () {
-            that.$router.push({path: url, query: {ids: id}});
-          },
-          onFail: function (err) {}
-        });
-      }
+        },
+        onFail: function (err) {
+        }
+      });
     };
 
     Vue.prototype.routerDetail = function (val) {
