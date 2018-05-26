@@ -24,7 +24,7 @@
               <div class="import_left"><span style="float:left; font-size:12px;">倒计时</span><i
                 style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
               <div><span style="font-size:20px; color:#fb4699">{{timeString}}</span></div>
-              <div style="position: absolute;top: 60px;right: 15px;font-size: 12px">总分：{{examData.score}}分</div>
+              <div style="position: absolute;top: 70px;right: 5px;font-size: 10px;color: #6c6c6c;">总分：{{examData.score}}分</div>
             </div>
           </van-col>
         </van-row>
@@ -97,7 +97,10 @@
       </div>
     </div>
     <div class="exercise msg" v-if="message">
-      {{message}}
+      <div>
+        <img src="../../../assets/no_data.png" style="width: 40%;">
+        <div style="margin-top: 10px;">暂无数据</div>
+      </div>
     </div>
     <div class="mask" v-show="confirmType==='success'">
       <div class="box">
@@ -411,6 +414,7 @@
     .msg {
       text-align: center;
       color: #949494;
+      margin-top: 10px;
     }
     .exercise {
       /*width: 96%;*/

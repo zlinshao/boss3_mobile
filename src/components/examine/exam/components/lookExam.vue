@@ -1,6 +1,6 @@
 <template>
   <div id="exam">
-    <div class="examTitle">
+    <div class="examTitle" v-if="!message">
       <div class="key" style="height: 50px;border-bottom: 1px solid #ebebeb;">场次名称<span
         class="value">{{examData.name}}</span></div>
       <div style="position: absolute;top: 80px;width: 90%;margin-left: 5%;margin-right: 5%;">
@@ -26,8 +26,8 @@
             <div class="import_questions" style="border: 1px solid #fb4699;">
               <div class="import_left"><span style="float:left; font-size:12px;">考生成绩</span><i
                 style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
-              <div><span style="font-size:20px; color:#fb4699">{{resultData.score}}</span>分</div>
-              <div style="position: absolute;top: 60px;right: 15px;font-size: 12px">总分：{{examData.score}}分</div>
+              <div><span style="font-size:30px; color:#fb4699">{{resultData.score}}</span>分</div>
+              <div style="position: absolute;top: 70px;right: 5px;font-size: 10px;color: #6c6c6c;">总分：{{examData.score}}分</div>
             </div>
           </van-col>
         </van-row>
@@ -89,18 +89,18 @@
                 <div v-for="(val,ind) in key1.choice">
                   <van-col span="18" style="line-height:24px;">
                     <div
-                      v-if="resultData.answer && resultData.answer[key1.id] && resultData.answer[key1.id].indexOf(index)>-1"
+                      v-if="resultData.answer && resultData.answer[key1.id] && resultData.answer[key1.id].indexOf(ind)>-1"
                       style="color: #409EFF;">{{ind}}：{{val}}
                     </div>
                     <div v-else>{{ind}}：{{val}}</div>
                   </van-col>
-                  <van-col span="4" style="background: #000;">
+                  <van-col span="4">
                     <div style="color:rgb(88, 215, 136);"
                          v-for="ans in (resultData.answer && resultData.answer[key1.id])"
-                         v-if="answerData[key1.id].indexOf(ans)>-1 && ans==index ">正确
+                         v-if="answerData[key1.id].indexOf(ans)>-1 && ans==ind ">正确
                     </div>
                     <div style="color:#fc83b6;" v-for="ans in (resultData.answer && resultData.answer[key1.id])"
-                         v-if="answerData[key1.id].indexOf(ans)<0 && ans==index ">错误
+                         v-if="answerData[key1.id].indexOf(ans)<0 && ans==ind ">错误
                     </div>
                   </van-col>
                 </div>
@@ -123,7 +123,7 @@
                       第{{ak+1}}处答案：<span style="color: #409EFF;">{{value}}</span>
                     </div>
                   </van-col>
-                  <van-col span="4" style="background: #000;">
+                  <van-col span="4">
                     <div style="color:rgb(88, 215, 136);"
                          v-for="(vv, kk) in (resultData.answer && resultData.answer[key1.id])"
                          v-if="answerData[key1.id].indexOf(vv)>-1 && kk==ak ">正确
@@ -156,7 +156,10 @@
       </div>
     </div>
     <div class="exercise msg" v-if="message">
-      {{message}}
+      <div>
+        <img src="../../../../assets/no_data.png" style="width: 40%;">
+        <div style="margin-top: 10px;">暂无数据</div>
+      </div>
     </div>
   </div>
 </template>
@@ -303,6 +306,7 @@
     .msg {
       text-align: center;
       color: #949494;
+      margin-top: 10px;
     }
     .exercise {
       margin-top: 20px;
