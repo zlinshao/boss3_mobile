@@ -50,9 +50,9 @@
           this.loading = true;
           // add by cj 2018-05-25
           if(android.queryType() === 'exam'){
-            this.$router.push({path: '/beforeExam'});
+            this.$router.push({path: '/development'});
           }else if(android.queryType() === 'questionnaire'){
-            this.$router.push({path: '/beforeNaire'});
+            this.$router.push({path: '/development'});
           }
           globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {

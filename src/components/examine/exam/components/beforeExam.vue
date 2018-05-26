@@ -42,7 +42,7 @@
     data() {
       return {
         examData: {},
-        showType: 'first',
+        showType: '',
         showExamInfo: false,
         flag: true,
         timeString: '09:59:59',
@@ -61,6 +61,7 @@
       })
     },
     activated() {
+      this.showType = '';
       this.confirmArrival = sessionStorage.getItem('confirmArrival');
       this.goAnswerExam();
 
@@ -128,11 +129,11 @@
                 this.showType = 'first';
                 this.showExamInfo = false;
               }
-              // if (this.flag) {
-              this.examDataTime = setTimeout(() => {
-                this.goAnswerExam();
-              }, 1000);
-              // }
+              if (this.flag) {
+                this.examDataTime = setTimeout(() => {
+                  this.goAnswerExam();
+                }, 1000);
+              }
             }
           }
         });
