@@ -136,7 +136,7 @@
       },
       clock(n) {
         let val = Number(n);
-        if (val < 0) {
+        if (val <= 0) {
           if (this.confirmArrival && this.confirmArrival.length > 0 && this.confirmArrival.indexOf(this.examData.id) > -1) {
             this.$router.push({path: '/exam', query: {id: this.examData.id}});
           } else {
