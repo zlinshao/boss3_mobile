@@ -109,58 +109,6 @@
         </div>
       </div>
     </div>
-    <div class="mask" v-show="confirmType==='first'">
-      <div class="box" style="text-align: center;height: 300px;color: #999;" :class="{'boxHeight': !showExamInfo }">
-        <div style="margin-top: 45px;">
-          <div style="font-size: 20px;">您目前没有考试</div>
-          <div style="font-size: 16px;text-align: left;margin-top: 25px;margin-left: 60px;line-height: 30px;"
-               v-show="showExamInfo">
-            <div>最近一场考试</div>
-            <div>场次名称：
-              <div style="color: #101010;">1111</div>
-            </div>
-            <div>考试时间：
-              <div style="color: #101010;">2018-05-22 09:59:59</div>
-            </div>
-          </div>
-          <van-button size="small" style=" position: absolute;bottom: 15px;right: 100px;" @click="goIndex">确定
-          </van-button>
-        </div>
-      </div>
-    </div>
-    <div class="mask" v-show="confirmType==='second'">
-      <div class="box" style="text-align: center;height: 360px;color: #999;">
-        <div style="margin-top: 35px;">
-          <div style="font-size: 20px;">开考倒计时</div>
-          <div style="font-size: 20px;margin-top: 10px;">{{beforeTimeString}}</div>
-          <div style="font-size: 16px;margin-top: 15px;line-height: 30px;">
-            <div style="text-align: left;margin-left: 80px;">最近一场考试</div>
-            <div>场次名称：
-              <div style="color: #101010;">1111</div>
-            </div>
-            <div>考试时间：
-              <div style="color: #101010;">2018-05-22 09:59:59</div>
-            </div>
-            <div>试卷时长：
-              <div style="color: #101010;">120 分钟</div>
-            </div>
-          </div>
-          <van-button size="small" style="margin-top: 10px;" @click="goIndex">确定</van-button>
-        </div>
-      </div>
-    </div>
-    <div class="mask" v-show="confirmType==='third'">
-      <div class="box" style="text-align: center;height: 200px;color: #999;">
-        <div style="margin-top: 35px;">
-          <div style="font-size: 20px;">您已超过规定开考时间</div>
-          <div style="font-size: 20px;margin-top: 10px;">无法参加考试</div>
-          <div style="font-size: 16px;margin-top: 15px;line-height: 30px;">
-            <div style="color: #101010;">如有疑问，请联系主考官</div>
-          </div>
-          <van-button size="small" style="margin-top: 10px;" @click="goIndex">确定</van-button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -171,8 +119,6 @@
     name: "index",
     data() {
       return {
-        urls: globalConfig.server,
-        radio: '',
         examData: {},
         questionType: {},       //题型
         question_set: {},       //试题
@@ -185,17 +131,13 @@
         timeClear: '',
         timeOut: '',
         showForceWords: false,
-        showExamInfo: false,  //弹框展示考试信息
-        beforeTimeString: '09:59:59'
       }
     },
     activated() {
       this.examId = this.$route.query.id;
-      this.confirmType = this.$route.query.type;
-
       clearTimeout(this.timeOut);
       clearTimeout(this.timeClear);
-      if (this.examId){
+      if (this.examId) {
         this.getExamData();
       }
       this.clockSubmit();
@@ -205,7 +147,6 @@
       }, 1000 * 60);
     },
     mounted() {
-      alert(window.location.href)
       this.dictionary(152, 1).then((res) => {
         let sub = {};
         for (let i = 0; i < res.data.length; i++) {
@@ -222,44 +163,21 @@
           this.clock(num);
         }
       },
-      examId(val) {
-        if (val) {
-          this.getExamData();
-        }
-      },
     },
     methods: {
-      getExamData(){
-        this.$http.get(this.urls + 'exam/' + this.examId).then((res) => {
+      getExamData() {
+        this.$http.get(this.globalConfig.server + 'exam/' + this.examId).then((res) => {
           if (res.data.code === '30000') {
             this.question_set = res.data.data.question_set;
             this.examData = res.data.data;
             this.combinaData();
-            if(this.examData && this.examData.start_time){
-              if ((new Date(this.examData.start_time).getTime() - (new Date().getTime())) > 10 * 60 * 1000) {
-                this.confirmType = 'first';
-                this.showExamInfo = true;
-              } else {
-                if (this.confirmType != 'third') {
-                  if ((new Date(this.examData.start_time).getTime() - (new Date().getTime())) <= 10 * 60 * 1000 && (new Date(this.examData.start_time).getTime() - (new Date().getTime())) > 0) {
-                    this.confirmType = 'second';
-                    this.countDown = new Date(res.data.data.start_time).getTime() - (new Date().getTime());
-                  }
-                  if ((new Date().getTime()) > (new Date(this.examData.end_time).getTime())) {
-                    this.confirmType = 'first';
-                    this.showExamInfo = false;
-                  }
-                }
-              }
-            }
-
           } else {
             this.message = res.data.msg;
           }
         });
       },
       goIndex() {
-        this.$router.push({path: '/index'});
+        this.$router.push({path: '/index', query: {refresh: 'refresh'}});
       },
       combinaData() {
         if (this.question_set[154] && this.question_set[154].length > 0) {

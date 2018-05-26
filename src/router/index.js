@@ -11,6 +11,8 @@ import Comments from '@/components/examine/writings/comments.vue'
 // import CardDetail from '@/components/examine/cardDetail/index.vue'
 // import CreditCard from '@/components/examine/creditCard/index.vue'
 
+//开发中
+import Development from '@/components/common/development.vue'
 
 //我的考试
 import Exam from '@/components/examine/exam/index.vue'
@@ -418,8 +420,8 @@ export default new Router({
     },
     {
       path: '/beforeExam',
-      name: '敬请期待',
-      meta: {title: '敬请期待'},
+      name: '即将开考',
+      meta: {title: '即将开考'},
       hidden: false,
       component: BeforeExam
     },
@@ -433,8 +435,8 @@ export default new Router({
     },
     {
       path: '/beforeNaire',
-      name: '开始之前',
-      meta: {title: '开始之前'},
+      name: '即将开始',
+      meta: {title: '即将开始'},
       hidden: false,
       component: BeforeNaire
     },
@@ -458,6 +460,13 @@ export default new Router({
       meta: {title: '所有回答'},
       hidden: false,
       component: AnswerAll
+    },
+    {
+      path: '/development',
+      name: '开发中',
+      meta: {title: '开发中'},
+      hidden: false,
+      component: Development
     },
     // {
     //   path: '/cardDetail',
