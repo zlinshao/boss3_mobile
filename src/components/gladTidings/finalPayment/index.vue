@@ -623,6 +623,7 @@
               }
             }
             this.form.money_sep = draft.money_sep;
+            this.form.retainage_date = draft.retainage_date;
             this.form.money_way = draft.money_way;
 
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
@@ -663,6 +664,7 @@
         this.form.contract_id = '';
         this.form.house_id = '';
         this.form.money_sum = '';
+        this.form.retainage_date = '';
         this.amountMoney = 1;
         this.moneyNum = [''];
         this.form.money_sep = [''];

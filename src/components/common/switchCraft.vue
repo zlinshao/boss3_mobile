@@ -99,7 +99,7 @@
     .btnBox {
       position: fixed;
       bottom: 1.5rem;
-      right: 10px;
+      right: 16px;
       z-index: 10;
       width: 50px;
       height: 50px;
@@ -125,7 +125,7 @@
     .menu {
       position: fixed;
       bottom: 1.5rem;
-      right: 10px;
+      right: 16px;
       width: 50px;
       height: 50px;
       border-radius: 50%;
@@ -165,9 +165,9 @@
       .inner {
         display: inline-block;
         position: absolute;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
+        width: 34px;
+        height: 34px;
+        line-height: 34px;
         border-radius: 50%;
         background: #F19851;
         text-align: center;
