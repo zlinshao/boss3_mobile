@@ -1,6 +1,6 @@
 <template>
   <div id="questionnaire">
-    <div class="questionnaireTitle">
+    <div class="questionnaireTitle" v-if="!message">
       <div style="position: absolute;top: 80px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题
       </div>
       <img src="../../../../assets/backgroundPic.png" alt="">
@@ -47,7 +47,10 @@
       </div>
     </div>
     <div class="exercise msg" v-if="message">
-      {{message}}
+      <div>
+        <img src="../../../../assets/no_data.png" style="width: 40%;">
+        <div style="margin-top: 10px;">暂无数据</div>
+      </div>
     </div>
   </div>
 </template>
@@ -186,6 +189,7 @@
     .msg {
       text-align: center;
       color: #949494;
+      margin-top: 10px;
     }
     .exercise {
       /*width: 96%;*/

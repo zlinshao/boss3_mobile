@@ -56,7 +56,10 @@
       </div>
     </div>
     <div class="exercise msg" v-if="message">
-      {{message}}
+      <div>
+        <img src="../../../assets/no_data.png" style="width: 40%;">
+        <div style="margin-top: 10px;">暂无数据</div>
+      </div>
     </div>
     <div class="mask" v-show="confirmType==='success'">
       <div class="box success" >
@@ -251,6 +254,7 @@
     .msg {
       text-align: center;
       color: #949494;
+      margin-top: 10px;
     }
     .exercise {
       /*width: 96%;*/
