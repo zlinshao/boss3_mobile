@@ -538,7 +538,7 @@
           this.form.department_name = per.department_name;
         }
       },
-      dicts() {
+      dicts(val) {
         this.receiptNum();
         //房东租客
         this.dictionary(449, 1).then((res) => {
@@ -556,7 +556,7 @@
             for (let i = 0; i < res.data.length; i++) {
               this.value8.push(res.data[i].dictionary_name);
             }
-            this.rentDetail('');
+            this.rentDetail(val);
           });
 
         });
