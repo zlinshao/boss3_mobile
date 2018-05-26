@@ -4,7 +4,8 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group  :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent" @change="rentChange">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent"
+                           @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -261,9 +262,16 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots_leader = data.screenshot_leader;
             this.form.staff_name = draft.staff_name;
-            this.form.department_name = draft.depart_name;
+            if (draft.department_name) {
+              this.form.department_id = draft.department_id;
+              this.form.department_name = draft.department_name;
+            } else {
+              this.form.department_id = data.department_id;
+              this.form.department_name = data.department_name;
+            }
+
             this.form.staff_id = draft.staff_id;
-            this.form.department_id = draft.department_id;
+
           } else {
             this.form.id = '';
           }
