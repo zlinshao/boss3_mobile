@@ -105,7 +105,7 @@
     <div class="mask" v-show="confirmType==='success'">
       <div class="box">
         <img src="../../../assets/confirm_success.png" alt="">
-        <div class="words">您已成功提交考试</div>
+        <div class="exam_words">您已成功提交考试</div>
         <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
           <div @click="goIndex" class="btn">确定</div>
         </div>
@@ -115,7 +115,7 @@
     <div class="mask" v-show="confirmType==='failed'">
       <div class="box">
         <img src="../../../assets/confirm_fail.png" alt="">
-        <div class="words">提交考试失败 请<span style="color: #ff259a;font-size: 18px;" @click="onSubmit">重试</span></div>
+        <div class="exam_words">提交考试失败 请<span style="color: #ff259a;font-size: 18px;" @click="onSubmit">重试</span></div>
         <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
           <div @click="goIndex" class="btn">确定</div>
         </div>
@@ -356,7 +356,7 @@
           font-size: 18px;
           line-height: 30px;
         }
-        .words {
+        .exam_words {
           position: absolute;
           text-align: center;
           font-size: 18px;
