@@ -414,8 +414,8 @@ export default new Router({
     },
     {
       path: '/exam',
-      name: '我的考试',
-      meta: {title: '我的考试'},
+      name: '考试作答',
+      meta: {title: '考试作答'},
       icon: 'iconfont icon-xinjianshijuan',
       hidden: 'exam',
       component: Exam
