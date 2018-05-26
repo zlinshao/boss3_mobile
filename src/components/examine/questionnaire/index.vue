@@ -65,7 +65,7 @@
       <div class="box" >
         <img src="../../../assets/confirm_success.png" alt="">
         <div class="words">您已成功提交问卷</div>
-        <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
+        <div style="position: absolute;text-align: center;width: 100%;top: 75%;">
           <div @click="goIndex" class="btn">确定</div>
         </div>
       </div>
@@ -74,7 +74,7 @@
       <div class="box">
         <img src="../../../assets/confirm_fail.png" alt="">
         <div class="words">提交问卷失败 请<span style="color: #ff259a;" @click="onSubmit"> 重试</span></div>
-        <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
+        <div style="position: absolute;text-align: center;width: 100%;top: 75%;">
           <div @click="goIndex" class="btn">确定</div>
         </div>
       </div>
@@ -84,7 +84,7 @@
         <div style="margin-top: 80px;">
           <p>您已完成本次问卷</p>
           <p style="color: #ff259a;">请勿重复提交</p>
-          <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
+          <div style="position: absolute;text-align: center;width: 100%;top: 75%;">
             <div @click="goIndex" class="btn">确定</div>
           </div>
         </div>
@@ -211,11 +211,11 @@
         }
         .words {
           position: absolute;
+          width: 100%;
           text-align: center;
           font-size: 18px;
           color: #101010;
-          width: 100%;
-          top: 60%;
+          top: 65%;
         }
         .btn{
           border: 1px solid #dddddd;
