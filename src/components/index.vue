@@ -39,14 +39,14 @@
               <h1>{{key.name}}</h1>
             </router-link>
             <!--<a v-for="(key,index) in paths" v-if="key.hidden === 'exam'">-->
-              <!--<p :style="{'background': key.back}" @click="goBefore(key.path)">-->
-                <!--<i :class="key.icon"></i>-->
-              <!--</p>-->
-              <!--<h1>{{key.name}}-->
-                <!--<span v-if="key.name==='我的考试' && examData && examData.available" class="circle_red"></span>-->
-                <!--<span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available"-->
-                      <!--class="circle_red"></span>-->
-              <!--</h1>-->
+            <!--<p :style="{'background': key.back}" @click="goBefore(key.path)">-->
+            <!--<i :class="key.icon"></i>-->
+            <!--</p>-->
+            <!--<h1>{{key.name}}-->
+            <!--<span v-if="key.name==='我的考试' && examData && examData.available" class="circle_red"></span>-->
+            <!--<span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available"-->
+            <!--class="circle_red"></span>-->
+            <!--</h1>-->
             <!--</a>-->
           </div>
         </div>
@@ -214,6 +214,10 @@
       }
     },
     beforeRouteEnter(to, from, next) {
+      let count = sessionStorage.count;
+      if ((count && (count === '2')) || from.path === '/') {
+        sessionStorage.setItem('count', '1');
+      }
       next(vm => {
         vm.toDone();
       })
@@ -256,16 +260,16 @@
           //   this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
           // }
           this.$router.push({path: '/beforeExam'});
-        }else if(val === '/questionnaire') {
-           this.$router.push({path: '/beforeNaire'});
-           // this.$router.push({path: '/questionnaire'});
+        } else if (val === '/questionnaire') {
+          this.$router.push({path: '/beforeNaire'});
+          // this.$router.push({path: '/questionnaire'});
         }
       },
       getExamNaireRedCircle() {
         this.$http.get(globalConfig.server + 'exam/active').then((res) => {
           if (res.data.code === '30000') {
             this.examData = res.data.data;
-          }else{
+          } else {
             this.examData = [];
           }
         });
@@ -273,7 +277,7 @@
           if (res.data.code === '30000') {
             this.questionnaireData = res.data.data;
             // alert(JSON.stringify(res.data.data))
-          }else{
+          } else {
             this.questionnaireData = [];
           }
         });
