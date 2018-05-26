@@ -244,11 +244,11 @@
       this.ddRent('', 'close');
       this.disabled = false;
       this.scrollTops();
-      this.confirmArrival = localStorage.getItem('confirmArrival');
-      this.getExamNaireRedCircle();
-      if(this.$route.query.refresh === 'refresh'){
-        this.getExamNaireRedCircle();
-      }
+      // this.confirmArrival = localStorage.getItem('confirmArrival');
+      // this.getExamNaireRedCircle();
+      // if(this.$route.query.refresh === 'refresh'){
+      //   this.getExamNaireRedCircle();
+      // }
     },
     methods: {
       goBefore(val) {

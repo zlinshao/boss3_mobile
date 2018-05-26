@@ -129,11 +129,11 @@
                 this.showType = 'first';
                 this.showExamInfo = false;
               }
-              // if (this.flag) {
-              this.examDataTime = setTimeout(() => {
-                this.goAnswerExam();
-              }, 1000);
-              // }
+              if (this.flag) {
+                this.examDataTime = setTimeout(() => {
+                  this.goAnswerExam();
+                }, 1000);
+              }
             }
           }
         });
