@@ -103,6 +103,12 @@
         }
       })
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex('/myNaire', 'house');
+        vm.ddRent('/myNaire', 'house');
+      })
+    },
     activated() {
       // this.confirmType = this.$route.query.type;
       this.getStatisticData();

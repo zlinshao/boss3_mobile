@@ -59,6 +59,12 @@
         ques_id: this.$route.query.ques_id,
       }
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex(from.path, 'house');
+        vm.ddRent(from.path, 'house');
+      })
+    },
     mounted() {
       this.dictionary(152, 1).then((res) => {
         let sub = {};

@@ -27,7 +27,9 @@
               <div class="import_left"><span style="float:left; font-size:12px;">考生成绩</span><i
                 style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
               <div><span style="font-size:30px; color:#fb4699">{{resultData.score}}</span>分</div>
-              <div style="position: absolute;top: 70px;right: 5px;font-size: 10px;color: #6c6c6c;">总分：{{examData.score}}分</div>
+              <div style="position: absolute;top: 70px;right: 5px;font-size: 10px;color: #6c6c6c;">
+                总分：{{examData.score}}分
+              </div>
             </div>
           </van-col>
         </van-row>
@@ -139,7 +141,8 @@
           <div class="subjectTitle" v-if="index==158 && questionData[index].length>0">
             <div v-if="resultData">
               <div style="line-height: 22px;font-size: 13px;">
-                <span style="color:#409EFF;">本题得分： <span v-if="resultData.objective_detail && resultData.objective_detail[key1.id] != null">{{resultData.objective_detail[key1.id]}}</span><span
+                <span style="color:#409EFF;">本题得分： <span
+                  v-if="resultData.objective_detail && resultData.objective_detail[key1.id] != null">{{resultData.objective_detail[key1.id]}}</span><span
                   v-else>暂无</span></span>
               </div>
               <van-row gutter="20" style="margin-top: 10px;">
@@ -189,6 +192,12 @@
         }
         this.questionType = sub;
       });
+    },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex(from.path, 'house');
+        vm.ddRent(from.path, 'house');
+      })
     },
     activated() {
       this.resultId = this.$route.query.result_id;

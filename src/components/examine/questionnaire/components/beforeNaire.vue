@@ -20,6 +20,12 @@
     activated(){
       this.goAnswerNaire();
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.routerIndex('');
+        vm.ddRent('');
+      })
+    },
     methods: {
       goAnswerNaire() {
         this.$http.get(globalConfig.server + 'questionnaire/active').then((res) => {
