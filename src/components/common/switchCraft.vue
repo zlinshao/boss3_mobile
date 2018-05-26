@@ -5,8 +5,8 @@
       <transition name="move">
         <div class="menu" v-show="show">
           <div class="inner inner-1" @click="newly"><i class="iconfont icon-xiugai--"></i></div>
-          <!--<div class="inner inner-2">2</div>-->
-          <!--<div class="inner inner-3">3</div>-->
+          <div class="inner inner-2"><i class="iconfont icon-jinyong--"></i></div>
+          <div class="inner inner-3"><i class="iconfont icon-jinyong--"></i></div>
         </div>
       </transition>
     </div>
@@ -181,10 +181,12 @@
       .inner-2 {
         left: -30px;
         top: -30px;
+        background: #DDDDDD;
       }
       .inner-3 {
         left: -50px;
         top: 10px;
+        background: #DDDDDD;
       }
     }
   }
