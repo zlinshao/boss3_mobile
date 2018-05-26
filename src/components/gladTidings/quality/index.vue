@@ -4,7 +4,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>报备类型</div>
-          <van-radio-group v-model="form.quality_up" @change="qualityChange">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.quality_up" @change="qualityChange">
             <van-radio name="0">新增</van-radio>
             <van-radio name="1">跟进</van-radio>
           </van-radio-group>
