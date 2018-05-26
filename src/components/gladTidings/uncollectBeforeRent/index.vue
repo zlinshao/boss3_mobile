@@ -373,7 +373,11 @@
       </van-cell-group>
     </div>
 
-    <div class="footer">
+    <div class="footer" v-if="counts === '2' || counts === '21'">
+      <div @click="saveCollect(0)">修改</div>
+    </div>
+
+    <div class="footer" v-if="counts === '1' || counts === '11'">
       <div @click="close_()">重置</div>
       <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
@@ -422,31 +426,33 @@
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
-        timeShow: false,          //日期状态
+        timeShow: false,              //日期状态
         timeIndex: '',
-        timeValue: '',            //日期value
+        timeValue: '',                //日期value
 
-        first_date: [],            //日期value
+        first_date: [],               //日期value
 
         amountPrice: 1,
         datePrice: [],
 
         amountPay: 1,
         datePay: [],
-        payTypeNum: [''],           //付款方式
-        payIndex: '',               //付款方式index
+        payTypeNum: [''],             //付款方式
+        payIndex: '',                 //付款方式index
 
         amountMoney: 1,
         moneyNum: [''],               //分金额 付款方式
 
-        amountReceipt: 1,                  //收据编号
+        amountReceipt: 1,             //收据编号
         receiptDate: '',
 
         cusFrom: '',                  //是否中介
-        corp: true,                    //公司单
+        corp: true,                   //公司单
         other_fee_status: false,
+
         form: {
           id: '',
+          processable_id: '',
           type: 4,
           draft: 0,
           rwc_type: 1,
@@ -505,6 +511,7 @@
         value8: [],
 
         isValue1: true,
+        counts: '',
       }
     },
     watch: {
@@ -519,21 +526,59 @@
     },
     mounted() {
       this.getNowFormatDate();
-      let newID = this.$route.query;
-      if (newID.newID === undefined) {
+      let count = sessionStorage.count;
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
         this.close_();
         this.dicts('');
       }
     },
     activated() {
-      this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
+      let count = sessionStorage.count;
+      this.counts = count;
 
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.dicts(newID.newID);
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
       }
+      if (count === '1') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.dicts('');
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      if (count === '21') {
+        this.isValue1 = false;
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.routerIndex('');
+          this.ddRent('');
+        }
+      }
+      if (count === '2') {
+        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.close_();
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.close_();
+          this.routerIndex('');
+          this.ddRent('');
+        }
+        this.close_();
+        this.dicts(newID);
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      this.houseInfo();
     },
 
     methods: {
@@ -785,7 +830,7 @@
             period: per,
           }
         }).then((res) => {
-          if (res.data.code === '51110' || res.data.code === '51130') {
+          if (res.data.code === '51110') {
             if (val === 1) {
               this.datePrice = this.first_date.concat(res.data.data);
             } else if (res.data.code === '50220') {
@@ -829,7 +874,7 @@
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50210') {
+              if (res.data.code === '50210' || res.data.code === '50230') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -879,11 +924,17 @@
       },
 
       rentDetail(val) {
-        this.userInfo(true);
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/rent/' + val;
+          type = 'bulletin/rent/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          } else {
+            this.userInfo(true);
+          }
         } else {
+          this.userInfo(true);
           type = 'bulletin/rent?type=4';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -989,6 +1040,12 @@
             this.photos = data.photo;
             this.form.remark = draft.remark;
 
+            if (val !== '' && val.type === 2) {
+              this.form.staff_id = draft.staff_id;
+              this.form.staff_name = draft.staff_name;
+              this.form.department_id = draft.department_id;
+              this.form.department_name = draft.department_name;
+            }
           } else {
             this.receiptNum();
             this.form.id = '';
@@ -1005,6 +1062,7 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.rent_without_collect_address = '';
         this.form.contract_id = '';
         this.form.house_id = '';

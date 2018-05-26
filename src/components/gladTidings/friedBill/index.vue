@@ -4,7 +4,7 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group v-model="form.collect_or_rent" @change="rentChange">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent" @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -87,7 +87,11 @@
       </van-cell-group>
     </div>
 
-    <div class="footer">
+    <div class="footer" v-if="counts === '2' || counts === '21'">
+      <div @click="saveCollect(0)">修改</div>
+    </div>
+
+    <div class="footer" v-if="counts === '1' || counts === '11'">
       <div @click="close_()">重置</div>
       <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
@@ -118,6 +122,7 @@
         form: {
           address: '',
           id: '',
+          processable_id: '',
           type: '0',
           draft: 0,
           payWay: [''],                   //付款方式
@@ -135,25 +140,62 @@
         },
         screenshots: {},                //截图
         numbers: '',
+        counts: '',
       }
     },
     mounted() {
-      let newID = this.$route.query;
-      if (newID.newID === undefined) {
+      let count = sessionStorage.count;
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
         this.close_();
-        this.processStatus = 'add';
         this.friedDetail('');
       }
     },
     activated() {
-      this.houseInfo();
-      this.routerIndex('');
-      this.ddRent('');
+      let count = sessionStorage.count;
+      this.counts = count;
 
-      let newID = this.$route.query;
-      if (newID.newID !== undefined) {
-        this.friedDetail(newID.newID);
+      if (count === '11') {
+        this.routerIndex('');
+        this.ddRent('');
       }
+      if (count === '1') {
+        this.routerIndex('');
+        this.ddRent('');
+        this.close_();
+        this.friedDetail('');
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      if (count === '21') {
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.routerIndex('');
+          this.ddRent('');
+        }
+      }
+      if (count === '2') {
+        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
+        let newID = JSON.parse(sessionStorage.process);
+        if (newID.type === 2) {
+          this.close_();
+          this.routerTo('/publishDetail', newID.ids);
+        } else {
+          this.counts = '1';
+          this.close_();
+          this.routerIndex('');
+          this.ddRent('');
+        }
+        this.close_();
+        this.friedDetail(newID);
+        count = count + '1';
+        sessionStorage.setItem('count', count);
+      }
+      this.houseInfo();
     },
 
     methods: {
@@ -199,7 +241,7 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50710') {
+              if (res.data.code === '50710' || res.data.code === '50730') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -250,9 +292,13 @@
         })
       },
       friedDetail(val) {
+        this.form.processable_id = '';
         let type;
         if (val !== '') {
-          type = 'bulletin/lose/' + val;
+          type = 'bulletin/lose/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
+          }
         } else {
           type = 'bulletin/lose';
         }
@@ -296,6 +342,7 @@
         this.form.payWay = [''];
         this.form.price_arr = [''];
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.collect_or_rent = '';
         this.form.refund = 0;
         this.form.type = '0';

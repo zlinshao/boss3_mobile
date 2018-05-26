@@ -511,7 +511,7 @@
     activated() {
       let count = sessionStorage.count;
       this.counts = count;
-      this.haveInHand = true;
+
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
@@ -525,7 +525,6 @@
         sessionStorage.setItem('count', count);
       }
       if (count === '21') {
-        this.isValue1 = false;
         let newID = JSON.parse(sessionStorage.process);
         if (newID.type === 2) {
           this.routerTo('/publishDetail', newID.ids);
@@ -878,7 +877,6 @@
 
       qualityDetail(val) {
         this.form.processable_id = '';
-        console.log(typeof val);
         let type;
         if (val !== '') {
           type = 'bulletin/quality/' + val.newID;
@@ -1012,6 +1010,7 @@
         $('.imgItem').remove();
         this.picStatus = true;
         this.form.id = '';
+        this.form.processable_id = '';
         this.form.house_id = '';
         this.house_name = '';
         this.form.city_id = this.beforeCityId;    //城市
