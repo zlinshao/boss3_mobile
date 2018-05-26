@@ -123,6 +123,7 @@
     },
     activated() {
       this.answer = {};
+      this.confirmType = '';
       this.questionnaire_id = this.$route.query.id;
       this.getPaperData();
     },

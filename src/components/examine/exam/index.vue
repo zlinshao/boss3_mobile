@@ -24,7 +24,7 @@
               <div class="import_left"><span style="float:left; font-size:12px;">倒计时</span><i
                 style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
               <div><span style="font-size:20px; color:#fb4699">{{timeString}}</span></div>
-              <div style="position: absolute;top: 70px;right: 5px;font-size: 10px;color: #6c6c6c;">总分：{{examData.score}}分</div>
+              <div style="position: absolute;top: 67px;right: 5px;font-size: 10px;color: #6c6c6c;">总分：{{examData.score}}分</div>
             </div>
           </van-col>
         </van-row>

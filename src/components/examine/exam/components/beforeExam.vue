@@ -67,9 +67,7 @@
     watch: {
       countDown(num) {
         clearTimeout(this.timeClear);
-        if (num >= 0) {
-          this.clock(num / 1000);
-        }
+        this.clock((num / 1000) + 2);
       },
 
     },
@@ -128,11 +126,11 @@
                 this.showType = 'first';
                 this.showExamInfo = false;
               }
-              if (this.flag) {
-                this.examDataTime = setTimeout(() => {
-                  this.goAnswerExam();
-                }, 1000);
-              }
+              // if (this.flag) {
+              this.examDataTime = setTimeout(() => {
+                this.goAnswerExam();
+              }, 1000);
+              // }
             }
           }
         });
