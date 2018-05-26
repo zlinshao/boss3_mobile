@@ -525,6 +525,7 @@
         sessionStorage.setItem('count', count);
       }
       if (count === '21') {
+        this.isValue1 = false;
         let newID = JSON.parse(sessionStorage.process);
         if (newID.type === 2) {
           this.routerTo('/publishDetail', newID.ids);
@@ -876,6 +877,8 @@
       },
 
       qualityDetail(val) {
+        this.form.processable_id = '';
+        console.log(typeof val);
         let type;
         if (val !== '') {
           type = 'bulletin/quality/' + val.newID;
