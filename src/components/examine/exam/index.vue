@@ -106,9 +106,9 @@
       <div class="box">
         <img src="../../../assets/confirm_success.png" alt="">
         <div class="words">您已成功提交考试</div>
-        <van-button size="small" class="words" style="margin-top: 26px;left: 40%;line-height: 25px;" @click="goIndex">
-          确定
-        </van-button>
+        <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
+          <div @click="goIndex" class="btn">确定</div>
+        </div>
         <div class="force" v-show="showForceWords">考试时间已到，系统已为您自动提交考试</div>
       </div>
     </div>
@@ -116,10 +116,9 @@
       <div class="box">
         <img src="../../../assets/confirm_fail.png" alt="">
         <div class="words">提交考试失败 请<span style="color: #ff259a;font-size: 18px;" @click="onSubmit">重试</span></div>
-        <van-button size="small" class="words"
-                    style="background: #ff259a;color: #fff;margin-top: 26px;left: 40%;line-height: 25px;"
-                    @click="goIndex">确定
-        </van-button>
+        <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
+          <div @click="goIndex" class="btn">确定</div>
+        </div>
       </div>
     </div>
     <div class="mask" v-show="confirmType==='repeat'">
@@ -127,8 +126,9 @@
         <div style="margin-top: 65px;">
           <p>您已完成本次考试</p>
           <p style="color: #ff259a;">请勿重复提交</p>
-          <van-button size="small" style="background: #ff259a;color: #fff;margin-top: 10px;" @click="goIndex">确定
-          </van-button>
+          <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
+            <div @click="goIndex" class="btn">确定</div>
+          </div>
         </div>
       </div>
     </div>
@@ -360,8 +360,14 @@
           text-align: center;
           font-size: 18px;
           color: #101010;
-          top: 70%;
-          left: 23%;
+          width: 100%;
+          top: 60%;
+        }
+        .btn{
+          border: 1px solid #dddddd;
+          display: inline-block;
+          padding: 10px 20px;
+          border-radius: 8px;
         }
       }
     }

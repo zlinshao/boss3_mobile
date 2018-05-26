@@ -62,10 +62,10 @@
       </div>
     </div>
     <div class="mask" v-show="confirmType==='success'">
-      <div class="box success" >
+      <div class="box" >
         <img src="../../../assets/confirm_success.png" alt="">
         <div class="words">您已成功提交问卷</div>
-        <div style="position: relative;margin: 26px auto;text-align: center;">
+        <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
           <div @click="goIndex" class="btn">确定</div>
         </div>
       </div>
@@ -74,7 +74,7 @@
       <div class="box">
         <img src="../../../assets/confirm_fail.png" alt="">
         <div class="words">提交问卷失败 请<span style="color: #ff259a;" @click="onSubmit"> 重试</span></div>
-        <div style="position: relative;margin: 26px auto;text-align: center;">
+        <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
           <div @click="goIndex" class="btn">确定</div>
         </div>
       </div>
@@ -84,7 +84,7 @@
         <div style="margin-top: 80px;">
           <p>您已完成本次问卷</p>
           <p style="color: #ff259a;">请勿重复提交</p>
-          <div style="position: relative;margin: 0px auto;text-align: center;">
+          <div style="position: absolute;text-align: center;width: 100%;top: 70%;">
             <div @click="goIndex" class="btn">确定</div>
           </div>
         </div>
@@ -196,15 +196,13 @@
       height: 100%;
       background: rgba(0, 0, 0, 0.3);
       z-index: 99;
-      /*.success{*/
-        /*background: url('../../../assets/confirm_success.png') ;*/
-      /*}*/
+
       .box {
         position: fixed;
         width: 70%;
         background: #fff;
         top: 20%;
-        height: 55%;
+        height: 50%;
         margin-left: 15%;
         border-radius: 8px;
         p {
@@ -212,12 +210,12 @@
           line-height: 30px;
         }
         .words {
-          position: relative;
-          top: 0px;
+          position: absolute;
           text-align: center;
           font-size: 18px;
           color: #101010;
-          margin-top: -100px;
+          width: 100%;
+          top: 60%;
         }
         .btn{
           border: 1px solid #dddddd;
