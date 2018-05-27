@@ -57,11 +57,10 @@
         let that = vm;
         clearTimeout(that.timeClear);
         clearTimeout(that.examDataTime);
-        vm.routerIndex('');
-        vm.ddRent('');
       })
     },
     activated() {
+      this.returnIndex();
       this.showType = '';
       let exam = localStorage.getItem('confirmArrival');
       if (exam) {
@@ -81,6 +80,24 @@
 
     },
     methods: {
+      returnIndex() {
+        let that = this;
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          clearTimeout(that.timeClear);
+          clearTimeout(that.examDataTime);
+          that.$router.push({path: '/index'});
+        });
+        dd.biz.navigation.setLeft({
+          control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+          onSuccess: function (result) {
+            clearTimeout(that.timeClear);
+            clearTimeout(that.examDataTime);
+            that.$router.push({path: '/index'});
+          },
+          onFail: function (err) {}
+        });
+      },
       // 获取考试信息
       getExamData(id) {
         this.$http.get(globalConfig.server + 'exam/' + id).then((res) => {
