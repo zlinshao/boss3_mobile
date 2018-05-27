@@ -25,8 +25,8 @@
         </div>
         <div style="position: relative;margin-top: 20px;width: 100%;height: 20px;background: #f8f8f8;"></div>
       </div>
-      <div class="content" style="text-align: center;margin-top: 20px;" v-if="questionNaireData.length<1">
-        <div  >
+      <div class="content" style="text-align: center;margin-top: 20px;" v-if="examData.length<1">
+        <div>
           <img src="../../../../assets/no_data.png" style="width: 40%;">
           <div style="margin-top: 10px;">暂无数据</div>
         </div>
