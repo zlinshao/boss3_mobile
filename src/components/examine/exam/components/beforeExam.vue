@@ -180,6 +180,7 @@
                 }
               } else {
                 // 最近没有考试
+                this.loading = false;
                 this.showType = 'first';
                 this.showExamInfo = false;
               }
@@ -191,6 +192,7 @@
             }
           }else{
             // 最近没有考试
+            this.loading = false;
             this.showType = 'first';
             this.showExamInfo = false;
           }
