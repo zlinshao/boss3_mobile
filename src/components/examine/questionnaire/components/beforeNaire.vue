@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div class="container">
+    <div class="module" v-if="loading"></div>
+    <div class="loading" v-if="loading">
+      <img src="../../../../assets/loding1.gif">
+    </div>
+    <div class="container" v-if="!loading">
       <div class="content">
         <div class="content_img"><img src="../../../../assets/waiting.png" style="width: 60%;"></div>
         <div class="title">您目前没有问卷调查</div>
@@ -15,9 +19,10 @@
     data() {
       return {
         questionnaireData: {},
+        loading: false,
       };
     },
-    activated(){
+    activated() {
       this.goAnswerNaire();
     },
     beforeRouteEnter(to, from, next) {
@@ -28,7 +33,9 @@
     },
     methods: {
       goAnswerNaire() {
+        this.loading = true;
         this.$http.get(globalConfig.server + 'questionnaire/active').then((res) => {
+          this.loading = false;
           if (res.data.code === '30000') {
             this.questionnaireData = res.data.data;
             if(this.questionnaireData.available){

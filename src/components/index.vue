@@ -94,7 +94,7 @@
                 <i :class="key.icon"></i>
               </p>
               <h1>{{key.name}}
-                <span v-if="key.name==='我的考试' && examData && examData.available" class="circle_red"></span>
+                <span v-if="key.name==='在线考试' && examData && examData.available" class="circle_red"></span>
                 <span v-if="key.name==='问卷调查' && questionnaireData && questionnaireData.available"
                       class="circle_red"></span>
               </h1>

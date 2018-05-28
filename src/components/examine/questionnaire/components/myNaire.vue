@@ -10,7 +10,7 @@
             <p style="color: #333;font-size: 20px;">{{personal.name}}</p>
             <p style="font-size: 16px;">{{personal.department_name}}</p>
           </div>
-          <div style="float: right;margin-right: 0px;height: 30px;line-height:30px;margin-top: 33px;color: #39b1ff;">
+          <div style="float: right;margin-right: 0px;height: 30px;margin-top: -23px;color: #39b1ff;">
             <span v-if="item.available">进行中</span>
             <span style="color: #e4393c;" v-else>已结束</span>
           </div>

@@ -21,7 +21,9 @@
           <p>考试时长 <span>{{item.duration}} </span>分钟</p>
         </div>
         <div style="position: relative;text-align: center;">
-          <van-button class="view_history" @click="goDetail(item)">查看考试结果</van-button>
+          <van-button class="view_history disabled" v-if="!item.available && !item.result_id " disabled>缺考</van-button>
+          <van-button class="view_history"  @click="goDetail(item)" v-if="item.result_id !== 0">查看考试结果</van-button>
+          <van-button class="view_history"  @click="answerExam(item)" v-if="item.result_id == 0 && item.available">点击作答</van-button>
         </div>
         <div style="position: relative;margin-top: 20px;width: 100%;height: 20px;background: #f8f8f8;"></div>
       </div>
@@ -59,6 +61,9 @@
       this.getExamData();
     },
     methods: {
+      answerExam(val){
+        this.$router.push({path: '/beforeExam'});
+      },
       goDetail(val) {
         this.$router.push({path: '/lookExam', query: {result_id: val.result_id, exam_id: val.id}});
       },
@@ -112,6 +117,9 @@
         background: #39b1ff;
         color: #fff;
         margin-top: 20px;
+      }
+      .view_history.disabled{
+        background: #aaaaaa;
       }
     }
 

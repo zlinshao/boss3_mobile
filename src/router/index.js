@@ -414,16 +414,16 @@ export default new Router({
     },
     {
       path: '/exam',
-      name: '考试作答',
-      meta: {title: '考试作答'},
+      name: '在线考试',
+      meta: {title: '在线考试'},
       icon: 'iconfont icon-xinjianshijuan',
       hidden: 'exam',
       component: Exam
     },
     {
       path: '/myExam',
-      name: '我的考试',
-      meta: {title: '我的考试'},
+      name: '考试列表',
+      meta: {title: '考试列表'},
       hidden: false,
       component: MyExam
     },
@@ -436,8 +436,8 @@ export default new Router({
     },
     {
       path: '/beforeExam',
-      name: '即将开考',
-      meta: {title: '即将开考'},
+      name: '我的考试',
+      meta: {title: '我的考试'},
       hidden: false,
       component: BeforeExam
     },
@@ -451,15 +451,15 @@ export default new Router({
     },
     {
       path: '/beforeNaire',
-      name: '即将开始',
-      meta: {title: '即将开始'},
+      name: '我的问卷',
+      meta: {title: '我的问卷'},
       hidden: false,
       component: BeforeNaire
     },
     {
       path: '/myNaire',
-      name: '我的问卷',
-      meta: {title: '我的问卷'},
+      name: '问卷列表',
+      meta: {title: '问卷列表'},
       hidden: false,
       component: MyNaire
     },

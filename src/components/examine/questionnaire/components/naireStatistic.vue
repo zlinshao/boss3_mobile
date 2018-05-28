@@ -1,57 +1,64 @@
 <template>
   <div id="questionnaire">
-    <div class="questionnaireTitle" v-if="!message">
-      <div style="position: absolute;top: 80px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题
-      </div>
-      <img src="../../../../assets/backgroundPic.png" alt="">
+    <div class="module" v-if="loading"></div>
+    <div class="loading" v-if="loading">
+      <img src="../../../../assets/loding1.gif">
     </div>
-    <div class="exercise" v-if="!message">
-      <div v-for="(key,index) in question_set">
-        <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
-          <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
-          <van-row>
-            <van-col span="2" style="float: left">
-              <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
-            </van-col>
-            <van-col span="18" style="float: initial;display: inline-block;">
-              <p v-html="key1.stem"></p>
-            </van-col>
-            <van-col span="3" style="float: right;">
-              <p style="width: 45px;font-size: 12px;color: #aaaaaa;line-height: 20px;">{{questionType[index]}}</p>
-            </van-col>
-          </van-row>
-          <div class="subjectTitle">
-            <!--<div class="subjectA" v-html="key1.stem"></div>-->
-            <div class="subjectB" v-if="index != 157 && index !=158">
-              <p v-for="(key2,index2) in key1.choice" :key="index2" :name="index2" style="margin-left: 7px;">
-                <span  style="line-height: 25px;font-size: 16px;">{{index2}}&nbsp;&nbsp;{{key2}}</span>
-                <van-row :key="kk" v-for="(vv,kk) in (statisticData[key1.id] && statisticData[key1.id].answer)"
-                         v-if="kk==index2">
-                  <div style="text-align: center;color: #9c9c9c;">回复量：<span style="color: #6c6c6c;">{{vv}}</span></div>
-                  <Progress style="width: 90%;margin:10px 0;" color="#39b1ff" :percentage="Math.round(vv*100/statisticData[key1.id].count)" :pivot-text="`${Math.round(vv*100/statisticData[key1.id].count)}%`"/>
-                </van-row>
+    <div v-if="!loading">
+      <div class="questionnaireTitle" v-if="!message">
+        <div style="position: absolute;top: 80px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题
+        </div>
+        <img src="../../../../assets/backgroundPic.png" alt="">
+      </div>
+      <div class="exercise" v-if="!message">
+        <div v-for="(key,index) in question_set">
+          <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
+            <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
+            <van-row>
+              <van-col span="2" style="float: left">
+                <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
+              </van-col>
+              <van-col span="18" style="float: initial;display: inline-block;">
+                <p v-html="key1.stem"></p>
+              </van-col>
+              <van-col span="3" style="float: right;">
+                <p style="width: 45px;font-size: 12px;color: #aaaaaa;line-height: 20px;">{{questionType[index]}}</p>
+              </van-col>
+            </van-row>
+            <div class="subjectTitle">
+              <!--<div class="subjectA" v-html="key1.stem"></div>-->
+              <div class="subjectB" v-if="index != 157 && index !=158">
+                <p v-for="(key2,index2) in key1.choice" :key="index2" :name="index2" style="margin-left: 7px;">
+                  <span  style="line-height: 25px;font-size: 16px;">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                  <van-row :key="kk" v-for="(vv,kk) in (statisticData[key1.id] && statisticData[key1.id].answer)"
+                           v-if="kk==index2">
+                    <div style="text-align: center;color: #9c9c9c;">回复量：<span style="color: #6c6c6c;">{{vv}}</span></div>
+                    <Progress style="width: 90%;margin:10px 0;" color="#39b1ff" :percentage="Math.round(vv*100/statisticData[key1.id].count)" :pivot-text="`${Math.round(vv*100/statisticData[key1.id].count)}%`"/>
+                  </van-row>
 
-                <van-row style="color: #fb4699;padding: 8px 0;font-size: 14px;"
-                         v-if="!(statisticData[key1.id] && statisticData[key1.id].answer)">
-                  暂无统计数据...
-                </van-row>
-              </p>
-            </div>
-            <div class="subjectB" v-if="index == 158">
-              <p style="margin-left: 7px;">
-                <span  style="line-height: 25px;font-size: 16px;color: #39b1ff;" @click="openAll(key1.id)">查看全部回答</span>
-              </p>
+                  <van-row style="color: #fb4699;padding: 8px 0;font-size: 14px;"
+                           v-if="!(statisticData[key1.id] && statisticData[key1.id].answer)">
+                    暂无统计数据...
+                  </van-row>
+                </p>
+              </div>
+              <div class="subjectB" v-if="index == 158">
+                <p style="margin-left: 7px;">
+                  <span  style="line-height: 25px;font-size: 16px;color: #39b1ff;" @click="openAll(key1.id)">查看全部回答</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="exercise msg" v-if="message">
-      <div>
-        <img src="../../../../assets/no_data.png" style="width: 40%;">
-        <div style="margin-top: 10px;">暂无数据</div>
+      <div class="exercise msg" v-if="message">
+        <div>
+          <img src="../../../../assets/no_data.png" style="width: 40%;">
+          <div style="margin-top: 10px;">暂无数据</div>
+        </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -73,6 +80,7 @@
         questionnaire_id: this.$route.query.id,
         confirmType: '',
         statisticData: {},
+        loading: false,
       }
     },
     mounted() {
@@ -83,25 +91,7 @@
         }
         this.questionType = sub;
       });
-      this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
-        if (res.data.code === '30000') {
-          this.question_set = res.data.data.question_set;
-          this.paperData = res.data.data;
 
-          if (this.question_set[154] && this.question_set[154].length > 0) {
-            this.question_set[154].forEach((item) => {
-              this.$set(this.answer, item.id, []);
-            });
-          }
-          if (this.question_set[155] && this.question_set[155].length > 0) {
-            this.question_set[155].forEach((item) => {
-              this.$set(this.answer, item.id, []);
-            });
-          }
-        } else {
-          this.message = res.data.msg;
-        }
-      })
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -111,15 +101,39 @@
     },
     activated() {
       // this.confirmType = this.$route.query.type;
+      this.getQuesTionNaireData();
       this.getStatisticData();
+      this.loading = true;
     },
     watch: {},
     methods: {
       openAll(id){
         this.$router.push({path: '/answerAll', query: {id: this.questionnaire_id, ques_id: id}});
       },
+      getQuesTionNaireData(){
+        this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
+          this.loading = false;
+          if (res.data.code === '30000') {
+            this.question_set = res.data.data.question_set;
+            this.paperData = res.data.data;
+            if (this.question_set[154] && this.question_set[154].length > 0) {
+              this.question_set[154].forEach((item) => {
+                this.$set(this.answer, item.id, []);
+              });
+            }
+            if (this.question_set[155] && this.question_set[155].length > 0) {
+              this.question_set[155].forEach((item) => {
+                this.$set(this.answer, item.id, []);
+              });
+            }
+          } else {
+            this.message = res.data.msg;
+          }
+        });
+      },
       getStatisticData() {
         this.$http.get(globalConfig.server + 'questionnaire/statistic/' + this.questionnaire_id).then((res) => {
+          this.loading = false;
           if (res.data.code === '30000') {
             this.statisticData = res.data.data;
           } else {
