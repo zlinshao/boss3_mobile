@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div class="container">
+    <div class="module" v-if="loading"></div>
+    <div class="loading" v-if="loading">
+      <img src="../../../../assets/loding1.gif">
+    </div>
+    <div class="container"  v-if="!loading" >
       <div class="content" v-show="showType==='first'">
         <div class="content_img"><img src="../../../../assets/waiting.png" style="width: 50%;"></div>
         <div class="title">您目前没有考试</div>
@@ -42,7 +46,7 @@
     data() {
       return {
         examData: {},
-        showType: 'first',
+        showType: '',
         showExamInfo: false,
         flag: true,
         timeString: '09:59:59',
@@ -50,6 +54,7 @@
         countDown: '',
         examDataTime: '',
         confirmArrival: [],
+        loading: false,
       };
     },
     beforeRouteEnter(to, from, next) {
@@ -57,11 +62,13 @@
         let that = vm;
         clearTimeout(that.timeClear);
         clearTimeout(that.examDataTime);
+        // vm.routerIndex('');
+        // vm.ddRent('');
       })
     },
     activated() {
       this.returnIndex();
-      // this.showType = '';
+      this.showType = '';
       let exam = localStorage.getItem('confirmArrival');
       if (exam) {
         this.confirmArrival = JSON.parse(exam);
@@ -103,6 +110,7 @@
         this.$http.get(globalConfig.server + 'exam/' + id).then((res) => {
           this.flag = true;
           if (res.data.code === '30000') {
+            this.loading = false;
             this.examData = res.data.data;
 
             let start_time = Date.parse(new Date(this.examData.start_time.split('-').join('/')));
@@ -133,13 +141,8 @@
       // 考试签到
       sign_in(id) {
         this.$http.post(globalConfig.server + 'exam/check_in/' + id).then((res) => {
+          this.loading = false;
           if (res.data.code === '30000') {
-            // let arr = this.confirmArrival;
-            // for (let i = 0; i < arr.length; i++) {
-            //   if (arr[i] !== id) {
-            //     arr.push(id);
-            //   }
-            // }
             let examID = [];
             examID.push(id);
             localStorage.setItem('confirmArrival', JSON.stringify(examID));  //保存已到场的考试id
@@ -153,6 +156,7 @@
 
       goAnswerExam() {
         this.flag = false;
+        this.loading = true;
         this.$http.get(globalConfig.server + 'exam/active').then((res) => {
           if (res.data.code === '30000') {
             let data = res.data.data;
@@ -162,6 +166,7 @@
               //有正在进行的考试
               let arr = this.confirmArrival;
               if (arr && arr.length > 0 && arr.indexOf(data.id) > -1) {
+                this.loading = false;
                 this.$router.push({path: '/exam', query: {id: data.id}});
               } else {
                 // 签到
@@ -186,10 +191,6 @@
                 }, 1000);
               }
             }
-          }else{
-            // 最近没有考试
-            this.showType = 'first';
-            this.showExamInfo = false;
           }
         });
       },
