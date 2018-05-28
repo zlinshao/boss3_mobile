@@ -40,10 +40,6 @@
             this.questionnaireData = res.data.data;
             if(this.questionnaireData.available){
               this.$router.push({path: '/questionnaire', query: {id: this.questionnaireData.id}});
-            }else{
-              setTimeout(() => {
-                this.goAnswerNaire();
-              }, 1000);
             }
           }
         });
