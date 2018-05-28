@@ -162,8 +162,6 @@
             let data = res.data.data;
             if (data.available) {
               // 开始以后 迟到之前
-
-              //有正在进行的考试
               let arr = this.confirmArrival;
               if (arr && arr.length > 0 && arr.indexOf(data.id) > -1) {
                 this.loading = false;
@@ -191,6 +189,10 @@
                 }, 1000);
               }
             }
+          }else{
+            // 最近没有考试
+            this.showType = 'first';
+            this.showExamInfo = false;
           }
         });
       },
@@ -204,17 +206,6 @@
             this.$router.push({path: '/exam', query: {id: this.examData.id}});
           } else {
             this.sign_in(this.examData.id);
-
-            // this.$http.post(globalConfig.server + 'exam/check_in/' + this.examData.id).then((res) => {
-            //   if (res.data.code === '30000') {
-            //     let arr = [];
-            //     arr.push(this.examData.id);
-            //     localStorage.setItem('confirmArrival', arr);  //保存已到场的考试id
-            //     this.$router.push({path: '/exam', query: {id: this.examData.id}});
-            //   } else if (res.data.code === '30003') {
-            //     this.showType = 'third';
-            //   }
-            // });
           }
           let that = this;
           clearTimeout(that.timeClear);
