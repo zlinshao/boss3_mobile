@@ -3,7 +3,7 @@
     <div class="examTitle">
       <div class="key" style="height: 50px;border-bottom: 1px solid #ebebeb;">场次名称<span
         class="value">{{examData.name}}</span></div>
-      <div style="position: absolute;top: 80px;width: 90%;margin-left: 5%;margin-right: 5%;">
+      <div style="position: absolute;top: 85px;width: 90%;margin-left: 5%;margin-right: 5%;">
         <van-row gutter="15">
           <van-col span="8">
             <div class="import_questions" style="border: 1px solid #39b1ff;">
@@ -24,7 +24,7 @@
               <div class="import_left"><span style="float:left; font-size:12px;">倒计时</span><i
                 style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
               <div><span style="font-size:20px; color:#fb4699">{{timeString}}</span></div>
-              <div style="position: absolute;top: 67px;right: 5px;font-size: 10px;color: #6c6c6c;">总分：{{examData.score}}分</div>
+              <div style="position: absolute;top: 58px;right: 5px;font-size: 10px;color: #6c6c6c;">总分：{{examData.score}}分</div>
             </div>
           </van-col>
         </van-row>
@@ -274,6 +274,8 @@
           exam_id: this.examId,
           answer: this.answer,
         }).then((res) => {
+          clearTimeout(this.timeOut);
+          clearTimeout(this.timeClear);
           if (res.data.code === '36010') {
             this.confirmType = 'success';
           } else if (res.data.code === '36012') {
@@ -414,12 +416,12 @@
         text-align: center;
         align-items: center;
         justify-content: center;
-        height: 80px;
+        height: 75px;
         border-radius: 5px;
         .import_left {
           width: 90%;
-          height: 36px;
-          line-height: 36px;
+          height: 25px;
+          line-height: 25px;
           margin: 0 auto;
         }
       }
