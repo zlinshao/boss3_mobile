@@ -42,7 +42,7 @@
     data() {
       return {
         examData: {},
-        showType: '',
+        showType: 'first',
         showExamInfo: false,
         flag: true,
         timeString: '09:59:59',
@@ -62,7 +62,7 @@
       })
     },
     activated() {
-      this.showType = '';
+      // this.showType = '';
       let exam = localStorage.getItem('confirmArrival');
       if (exam) {
         this.confirmArrival = JSON.parse(exam);
@@ -169,6 +169,10 @@
                 }, 1000);
               }
             }
+          }else{
+            // 最近没有考试
+            this.showType = 'first';
+            this.showExamInfo = false;
           }
         });
       },
