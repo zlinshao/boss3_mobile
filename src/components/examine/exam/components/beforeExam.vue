@@ -42,7 +42,7 @@
     data() {
       return {
         examData: {},
-        showType: 'first',
+        showType: '',
         showExamInfo: false,
         flag: true,
         timeString: '09:59:59',
@@ -62,7 +62,7 @@
       })
     },
     activated() {
-      // this.showType = '';
+      this.showType = '';
       let exam = localStorage.getItem('confirmArrival');
       if (exam) {
         this.confirmArrival = JSON.parse(exam);
