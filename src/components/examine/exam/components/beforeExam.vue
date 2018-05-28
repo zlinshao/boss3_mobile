@@ -42,7 +42,7 @@
     data() {
       return {
         examData: {},
-        showType: 'first',
+        showType: '',
         showExamInfo: false,
         flag: true,
         timeString: '09:59:59',
@@ -57,9 +57,12 @@
         let that = vm;
         clearTimeout(that.timeClear);
         clearTimeout(that.examDataTime);
+        // vm.routerIndex('');
+        // vm.ddRent('');
       })
     },
     activated() {
+      this.showType = '';
       this.returnIndex();
       // this.showType = '';
       let exam = localStorage.getItem('confirmArrival');
