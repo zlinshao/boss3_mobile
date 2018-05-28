@@ -142,7 +142,7 @@
             <div v-if="resultData">
               <div style="line-height: 22px;font-size: 13px;">
                 <span style="color:#409EFF;">本题得分： <span
-                  v-if="resultData.objective_detail && resultData.objective_detail[key1.id] != null">{{resultData.objective_detail[key1.id]}}</span><span
+                  v-if="resultData.subjective_detail && resultData.subjective_detail[key1.id] != null">{{resultData.subjective_detail[key1.id]}}</span><span
                   v-else>暂无</span></span>
               </div>
               <van-row gutter="20" style="margin-top: 10px;">
