@@ -6,11 +6,11 @@
         <div class="top">
           <div style="float: left;"><img :src="personal.avatar" style="width: 50px;height: 50px;border-radius: 50%;">
           </div>
-          <div style="width: 65%;float: left;margin-left: 20px;line-height: 35px;margin-top: -6px;">
+          <div style="width: 60%;float: left;margin-left: 20px;line-height: 35px;margin-top: -6px;">
             <p style="color: #333;font-size: 20px;">{{personal.name}}</p>
             <p style="font-size: 16px;">{{personal.department_name}}</p>
           </div>
-          <div style="float: right;margin-right: 0px;height: 30px;margin-top: -23px;color: #39b1ff;">
+          <div style="float: right;margin-right: 0px;height: 30px;line-height:30px;margin-top: 33px;color: #39b1ff;">
             <span v-if="item.available">进行中</span>
             <span style="color: #e4393c;" v-else>已结束</span>
           </div>

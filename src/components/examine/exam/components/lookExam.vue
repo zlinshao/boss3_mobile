@@ -8,7 +8,7 @@
       <div class="examTitle" v-if="!message">
         <div class="key" style="height: 50px;border-bottom: 1px solid #ebebeb;">场次名称<span
           class="value">{{examData.name}}</span></div>
-        <div style="position: absolute;top: 80px;width: 90%;margin-left: 5%;margin-right: 5%;">
+        <div style="position: absolute;top: 85px;width: 90%;margin-left: 5%;margin-right: 5%;">
           <van-row gutter="15">
             <van-col span="8">
               <div class="import_questions" style="border: 1px solid #39b1ff;">
@@ -32,7 +32,7 @@
                 <div class="import_left"><span style="float:left; font-size:12px;">考生成绩</span><i
                   style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
                 <div><span style="font-size:30px; color:#fb4699">{{resultData.score}}</span>分</div>
-                <div style="position: absolute;top: 70px;right: 5px;font-size: 10px;color: #6c6c6c;">
+                <div style="position: absolute;top: 60px;right: 5px;font-size: 10px;color: #6c6c6c;">
                   总分：{{examData.score}}分
                 </div>
               </div>
@@ -63,7 +63,7 @@
                   <span style="color:#409EFF;margin-left: 10px;">本题得分： <span v-if="resultData.objective_detail">{{resultData.objective_detail[key1.id]}}</span><span
                     v-else>暂无</span></span>
                 </div>
-                <van-row gutter="20" style="margin-top: 10px;">
+                <van-row gutter="20" style="margin-top: 10px;margin-bottom: 10px;">
                   <div v-for="(val,ind) in key1.choice">
                     <van-col span="18" style="line-height:24px;">
                       <div v-if="ind == (resultData.answer && resultData.answer[key1.id])" style="color: #409EFF;">
@@ -92,7 +92,7 @@
                   <span style="color:#409EFF;margin-left: 10px;">本题得分： <span v-if="resultData.objective_detail">{{resultData.objective_detail[key1.id]}}</span><span
                     v-else>暂无</span></span>
                 </div>
-                <van-row gutter="20" style="margin-top: 10px;">
+                <van-row gutter="20" style="margin-top: 10px;margin-bottom: 10px;">
                   <div v-for="(val,ind) in key1.choice">
                     <van-col span="18" style="line-height:24px;">
                       <div
@@ -121,7 +121,7 @@
                   <span style="color:#409EFF;margin-left: 10px;">本题得分： <span v-if="resultData.objective_detail">{{resultData.objective_detail[key1.id]}}</span><span
                     v-else>暂无</span></span>
                 </div>
-                <van-row gutter="20" style="margin-top: 10px;">
+                <van-row gutter="20" style="margin-top: 10px;margin-bottom: 10px;">
                   <div>
                     <van-col span="18" style="line-height:24px;">
                       <div v-if="resultData.answer && resultData.answer[key1.id]"
@@ -150,7 +150,7 @@
                   v-if="resultData.subjective_detail && resultData.subjective_detail[key1.id] != null">{{resultData.subjective_detail[key1.id]}}</span><span
                   v-else>暂无</span></span>
                 </div>
-                <van-row gutter="20" style="margin-top: 10px;">
+                <van-row gutter="20" style="margin-top: 10px;margin-bottom: 10px;">
                   <van-col span="22" style="line-height:24px;color: #9c9c9c;">
                     我的答案：
                     <span style="color: #409EFF;">
@@ -313,12 +313,13 @@
         text-align: center;
         align-items: center;
         justify-content: center;
-        height: 80px;
+        height: 75px;
         border-radius: 5px;
+        color: #9c9c9c;
         .import_left {
           width: 90%;
-          height: 36px;
-          line-height: 36px;
+          height: 25px;
+          line-height: 25px;
           margin: 0 auto;
         }
       }
