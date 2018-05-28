@@ -157,6 +157,7 @@
       goAnswerExam() {
         this.flag = false;
         this.loading = true;
+
         this.$http.get(globalConfig.server + 'exam/active').then((res) => {
           if (res.data.code === '30000') {
             let data = res.data.data;
@@ -190,6 +191,7 @@
               }
             }
           }else{
+            this.loading = false;
             // 最近没有考试
             this.showType = 'first';
             this.showExamInfo = false;
