@@ -133,6 +133,9 @@
         this.confirmType = '';
         this.questionnaire_id = '';
         this.$router.push({path: '/index', query:{refresh: 'refresh'}});
+        if (navigator.userAgent == 'app/ApartMent') {
+          android.goHome();
+        }
       },
       getPaperData(){
         this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {

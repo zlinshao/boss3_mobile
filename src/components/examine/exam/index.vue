@@ -209,6 +209,10 @@
       },
       goIndex() {
         this.$router.push({path: '/index', query: {refresh: 'refresh'}});
+        if (navigator.userAgent == 'app/ApartMent') {
+          android.goHome();
+        }
+
       },
       combinaData() {
         if (this.question_set[154] && this.question_set[154].length > 0) {
