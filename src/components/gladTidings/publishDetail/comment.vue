@@ -51,7 +51,7 @@
       <!--<van-field-->
       <!--v-model="forms.suggest_price"-->
       <!--label="价格"-->
-      <!--type="number"-->
+      <!--type="text"          class="number"-->
       <!--placeholder="请填写金额">-->
       <!--</van-field>-->
       <!--</van-cell-group>-->
