@@ -9,22 +9,27 @@
             <div class="import_questions" style="border: 1px solid #39b1ff;">
               <div class="import_left"><span style="float:left; font-size:12px;">总时长</span><i
                 style="float:right; color:#58d788;font-size:16px;" class="iconfont icon-shijian1"></i></div>
-              <div style="font-size: 12px;"><span style="font-size:30px; color:#58d788;">{{ examData.duration }}</span>分钟</div>
+              <div style="font-size: 12px;"><span style="font-size:30px; color:#58d788;">{{ examData.duration }}</span>分钟
+              </div>
             </div>
           </van-col>
           <van-col span="8">
             <div class="import_questions" style="border: 1px solid #fdca41;">
               <div class="import_left"><span style="float:left; font-size:12px;">总题数</span><i
                 style="float:right; color:#fdca41;font-size:16px;" class="iconfont icon-shujutu"></i></div>
-              <div style="font-size: 12px;"><span style="font-size:30px; color:#fdca41">{{examData.question_count}}</span>题</div>
+              <div style="font-size: 12px;"><span
+                style="font-size:30px; color:#fdca41">{{examData.question_count}}</span>题
+              </div>
             </div>
           </van-col>
-          <van-col span="8" >
+          <van-col span="8">
             <div class="import_questions" style="border: 1px solid #fb4699;">
               <div class="import_left"><span style="float:left; font-size:12px;">倒计时</span><i
                 style="float:right; color:#fb4699;font-size:16px;" class="iconfont icon-chengjiguanli"></i></div>
-              <div><span style="font-size:20px; color:#fb4699">{{timeString}}</span></div>
-              <div style="position: absolute;top: 58px;right: 5px;font-size: 10px;color: #6c6c6c;">总分：{{examData.score}}分</div>
+              <div><span style="font-size:25px; color:#fb4699">{{timeString}}</span></div>
+              <div style="position: absolute;top: 58px;right: 5px;font-size: 10px;color: #6c6c6c;">
+                总分：{{examData.score}}分
+              </div>
             </div>
           </van-col>
         </van-row>
@@ -47,19 +52,19 @@
             </van-col>
           </van-row>
           <div class="subjectTitle">
-            <!--<div class="subjectA" v-html="key1.stem"></div>-->
             <div class="subjectB" v-if="index === '153' || index === '156'">
               <van-radio-group v-model="answer[key1.id]">
                 <van-radio v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
-                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}} : &nbsp;&nbsp;{{key2}}</span>
                 </van-radio>
               </van-radio-group>
             </div>
             <div class="subjectB" v-if="index === '154' || index === '155'">
               <van-checkbox-group v-model="answer[key1.id]">
                 <van-checkbox
-                  v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
-                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                  v-for="(key3,index3) in key1.choice" :key="index3" :name="index3">
+                  <span
+                    :class="{'onClass': answer[key1.id].indexOf(index3)>-1}">{{index3}} : &nbsp;&nbsp;{{key3}}</span>
                 </van-checkbox>
               </van-checkbox-group>
             </div>
@@ -93,7 +98,9 @@
         </div>
       </div>
       <div style="text-align: center;margin-top: 15px;">
-        <van-button type="primary" size="normal" style="padding: 0px 50px;" @click="onSubmit">提交试卷</van-button>
+        <van-button size="normal" style="width: 90%;margin-left:3%;background: #39baff;margin-bottom: 20px;color: #fff;"
+                    @click="onSubmit">提交试卷
+        </van-button>
       </div>
     </div>
     <div class="exercise msg" v-if="message">
@@ -185,9 +192,7 @@
       countDown(num) {
         let that = this;
         clearTimeout(that.timeClear);
-        if (num >= 0) {
-          this.clock(num);
-        }
+        this.clock(num + 2);
       },
       examId(val) {
         if (val) {
@@ -233,6 +238,12 @@
       },
       clock(n) {
         let val = Number(n);
+        if (val <= 0) {
+          this.onForceSubmit('force');
+          clearTimeout(this.timeOut);
+          clearTimeout(this.timeClear);
+          return;
+        }
         let h = Number(Math.floor(val / 3600));
         let m = 0, s = 0;
         if ((val - h * 3600) >= 0) {
@@ -278,8 +289,6 @@
           exam_id: this.examId,
           answer: this.answer,
         }).then((res) => {
-          clearTimeout(this.timeOut);
-          clearTimeout(this.timeClear);
           if (res.data.code === '36010') {
             this.confirmType = 'success';
           } else if (res.data.code === '36012') {
@@ -376,7 +385,7 @@
           width: 100%;
           top: 60%;
         }
-        .btn{
+        .btn {
           border: 1px solid #dddddd;
           display: inline-block;
           padding: 10px 20px;
@@ -444,25 +453,53 @@
       background-color: #FFFFFF;
       padding: .2rem;
       .subject {
-        border-top: 1px solid #dfe6fb;
+        border-top: 1px solid #ebebeb;
         padding-top: 15px;
         padding-bottom: 5px;
         .subjectTitle {
           margin-left: .5rem;
-          .subjectA {
-            line-height: .4rem;
-            margin: .2rem 0;
+          color: #6c6c6c;
+          line-height: 25px;
+          .subjectB {
+            .van-radio {
+              .van-radio__input {
+                margin-top: 3px;
+              }
+              .van-radio__label {
+                line-height: 25px;
+              }
+            }
+            .van-checkbox {
+              height: 25px !important;
+              .van-checkbox__input {
+                margin-top: 4px;
+              }
+              .van-checkbox__label {
+                line-height: 25px;
+              }
+            }
           }
         }
       }
       .content {
         text-align: center;
         margin-bottom: .2rem;
-        /*background: #ffffff;*/
         .van-cell.van-hairline.van-field {
           .van-cell__value {
             padding-left: 0;
           }
+        }
+        ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+          color: #dddee0;
+        }
+        :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+          color: #dddee0;
+        }
+        ::-moz-placeholder { /* Mozilla Firefox 19+ */
+          color: #dddee0;
+        }
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+          color: #dddee0;
         }
         .van-cell-group {
           padding-left: 0;
@@ -472,6 +509,7 @@
             input {
               background: #F3F9FF;
               padding: 10px 15px;
+              color: #6c6c6c;
             }
             .van-field__icon {
               color: #999;
@@ -481,6 +519,7 @@
           .van-field--has-textarea {
             background: #F3F9FF;
             border-radius: 5px;
+            color: #6c6c6c;
             .van-field__control {
               margin-left: .2rem;
               background: #F3F9FF;

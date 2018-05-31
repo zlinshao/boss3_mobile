@@ -7,7 +7,7 @@
     </div>
     <div class="exercise" v-if="!message">
       <div v-for="(key,index) in question_set" v-if="index == 158 ">
-        <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}" v-if="ques_id && key1.id ==ques_id" >
+        <div class="subject" v-for="(key1,index1) in key"  v-if="ques_id && key1.id ==ques_id" >
           <van-row>
             <van-col span="2" style="float: left">
               <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
@@ -120,9 +120,6 @@
     img {
       width: 100%;
     }
-    .borderTop {
-      border-top: none !important;
-    }
     .mask {
       position: fixed;
       top: 0;
@@ -188,7 +185,7 @@
       padding: .2rem;
       padding-bottom: 50px;
       .subject {
-        border-top: 1px solid #dfe6fb;
+        /*border-top: 1px solid #dfe6fb;*/
         padding-top: 25px;
         padding-bottom: 15px;
         .subjectTitle {
