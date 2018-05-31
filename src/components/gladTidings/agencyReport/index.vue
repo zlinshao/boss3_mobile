@@ -58,13 +58,13 @@
         <!--</van-field>-->
         <!--<van-field-->
         <!--v-model="form.agency_before_price"-->
-        <!--type="number"-->
+        <!--type="text"          class="number"-->
         <!--disabled-->
         <!--placeholder="中介费已禁用">-->
         <!--</van-field>-->
         <!--<van-field-->
         <!--v-model="form.agency_price"-->
-        <!--type="number"-->
+        <!--type="text"          class="number"-->
         <!--class="twoBorder"-->
         <!--placeholder="请填写修改写金额"-->
         <!--icon="clear"-->
@@ -74,7 +74,8 @@
 
         <van-field
           v-model="form.agency_price"
-          type="number"
+          type="text"
+          class="number"
           label="中介费"
           placeholder="请填写金额"
           @click-icon="form.agency_price = ''"
@@ -100,7 +101,8 @@
         </van-field>
         <van-field
           v-model="form.agency_phone"
-          type="number"
+          type="text"
+          class="number"
           :disabled="agency4"
           label="中介联系方式"
           placeholder="请填写中介联系方式"
@@ -111,7 +113,8 @@
         <van-field
           v-model="form.account"
           label="卡号"
-          type="number"
+          type="text"
+          class="number"
           @blur="accountBank(form.account)"
           placeholder="请填写卡号"
           icon="clear"

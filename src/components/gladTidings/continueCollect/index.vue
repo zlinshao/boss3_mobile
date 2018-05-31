@@ -36,14 +36,16 @@
           </van-field>
           <van-field
             v-model="form.month"
-            type="number"
+            type="text"
+            class="number"
             @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class=""
             v-model="form.day"
-            type="number"
+            type="text"
+            class="number"
             @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
@@ -108,7 +110,8 @@
           </van-field>
           <van-field
             v-model="form.period_price_arr[index]"
-            type="number"
+            type="text"
+            class="number"
             label="周期"
             :disabled="amountPrice === 1 && form.period_price_arr[index] === form.month"
             @keyup="periodDate(1)"
@@ -117,7 +120,8 @@
           </van-field>
           <van-field
             v-model="form.price_arr[index]"
-            type="number"
+            type="text"
+            class="number"
             label="价格"
             placeholder="请填写金额"
             required>
@@ -144,7 +148,8 @@
           </van-field>
           <van-field
             v-model="form.period_pay_arr[index]"
-            type="number"
+            type="text"
+            class="number"
             label="周期"
             :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
             @keyup="periodDate(2)"
@@ -170,7 +175,8 @@
         <van-field
           v-model="form.deposit"
           label="押金"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写押金"
           icon="clear"
           @click-icon="form.deposit = ''"
@@ -185,13 +191,15 @@
           </van-field>
           <van-field
             v-model="form.warranty"
-            type="number"
+            type="text"
+            class="number"
             placeholder="保修期(月)">
           </van-field>
           <van-field
             class="twoBorder"
             v-model="form.warranty_day"
-            type="number"
+            type="text"
+            class="number"
             placeholder="保修期(天)">
           </van-field>
         </div>
@@ -216,7 +224,8 @@
         <van-field
           v-model="form.phone"
           label="客户手机"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写客户手机号"
           icon="clear"
           @click-icon="form.phone = ''"
@@ -225,7 +234,8 @@
         <van-field
           v-model="form.account"
           label="卡号"
-          type="number"
+          type="text"
+          class="number"
           @blur="accountBank(form.account)"
           placeholder="请填写卡号"
           icon="clear"
@@ -270,7 +280,8 @@
         <van-field
           v-model="form.penalty"
           label="违约金"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写违约金"
           icon="clear"
           @click-icon="form.penalty = ''"

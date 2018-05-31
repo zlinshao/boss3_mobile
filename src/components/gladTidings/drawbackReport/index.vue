@@ -51,7 +51,8 @@
 
         <van-field
           v-model="form.amount"
-          type="number"
+          type="text"
+          class="number"
           label="退款金额"
           placeholder="请填写退款金额"
           icon="clear"
@@ -62,7 +63,8 @@
         <van-field
           v-model="form.account"
           label="卡号"
-          type="number"
+          type="text"
+          class="number"
           @blur="accountBank(form.account)"
           placeholder="请填写卡号"
           icon="clear"

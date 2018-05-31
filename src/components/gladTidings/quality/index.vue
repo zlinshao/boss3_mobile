@@ -80,11 +80,13 @@
           placeholder="请选择户型"
           required>
         </van-field>
+        {{form.area}}
         <van-field
           v-model="form.area"
           label="面积"
           required
-          type="number"
+          type="text"
+          class="number"
           :disabled="followUp"
           placeholder="请填写面积">
         </van-field>
@@ -127,14 +129,16 @@
           </van-field>
           <van-field
             v-model="form.floor"
-            type="number"
+            type="text"
+            class="number"
             :disabled="followUp"
             placeholder="请填写房屋楼层">
           </van-field>
           <van-field
             class="twoBorder"
             v-model="form.floors"
-            type="number"
+            type="text"
+            class="number"
             :disabled="followUp"
             placeholder="请填写总楼层">
           </van-field>
@@ -250,7 +254,8 @@
           <van-field
             v-model="form.dining_table"
             label="餐桌"
-            type="number"
+            type="text"
+            class="number"
             placeholder="请填写餐桌数量">
           </van-field>
           <b>张</b>
@@ -259,7 +264,8 @@
           <van-field
             v-model="form.chair"
             label="椅子"
-            type="number"
+            type="text"
+            class="number"
             placeholder="请填写椅子数量">
           </van-field>
           <b>把</b>
