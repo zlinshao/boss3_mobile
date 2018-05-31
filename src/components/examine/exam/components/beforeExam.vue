@@ -42,7 +42,7 @@
 </template>
 <script>
   export default {
-    name: "before-naire",
+    name: "before-exam",
     data() {
       return {
         examData: {},
@@ -53,7 +53,7 @@
         timeClear: '',
         countDown: '',
         examDataTime: '',
-        confirmArrival: [],
+        confirmArrival: '',
         loading: false,
       };
     },
@@ -64,19 +64,18 @@
         clearTimeout(that.examDataTime);
         // vm.routerIndex('');
         // vm.ddRent('');
-      })
+      });
     },
     activated() {
       this.returnIndex();
       this.showType = '';
-      let exam = localStorage.getItem('confirmArrival');
-      if (exam) {
-        this.confirmArrival = JSON.parse(exam);
-      } else {
-        this.confirmArrival = [];
-      }
-      this.goAnswerExam();
+      this.confirmArrival = JSON.parse(localStorage.getItem('confirmArrival'));
+      if(this.$route.query.id){
 
+        this.getExamData(this.$route.query.id);
+      }else{
+        this.goAnswerExam();
+      }
     },
     watch: {
       countDown(num) {
@@ -84,7 +83,6 @@
         clearTimeout(that.timeClear);
         this.clock((num / 1000) + 2);
       },
-
     },
     methods: {
       returnIndex() {
@@ -133,7 +131,11 @@
               this.showType = 'first';
               this.showExamInfo = false;
             } else {
-              this.sign_in(id);
+              if (this.confirmArrival && this.confirmArrival.length > 0 && this.confirmArrival.indexOf(id) > -1) {
+                this.$router.push({path: '/exam', query: {id: id}});
+              } else {
+                this.sign_in(id);
+              }
             }
           }
         });
@@ -143,16 +145,20 @@
         this.$http.post(globalConfig.server + 'exam/check_in/' + id).then((res) => {
           this.loading = false;
           if (res.data.code === '30000') {
-            let examID = [];
-            examID.push(id);
-            localStorage.setItem('confirmArrival', JSON.stringify(examID));  //保存已到场的考试id
+            let examIds;
+            if (this.confirmArrival === null) {
+              examIds = [];
+            }else {
+              examIds = this.confirmArrival;
+            }
+            examIds.push(id);
+            localStorage.setItem('confirmArrival', JSON.stringify(examIds));  //保存已到场的考试id
             this.$router.push({path: '/exam', query: {id: id}});
           } else if (res.data.code === '30003') {
             this.showType = 'third';
           }
         });
       },
-
 
       goAnswerExam() {
         this.flag = false;
@@ -184,6 +190,7 @@
                 this.loading = false;
                 this.showType = 'first';
                 this.showExamInfo = false;
+
               }
               if (this.flag) {
                 this.examDataTime = setTimeout(() => {
@@ -257,7 +264,7 @@
       }
       .title {
         position: relative;
-        margin-top: 20px;
+        margin-top: 30px;
         font-size: 25px;
         color: #39b1ff;
       }

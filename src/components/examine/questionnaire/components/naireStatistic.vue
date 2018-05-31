@@ -11,7 +11,7 @@
         <img src="../../../../assets/backgroundPic.png" alt="">
       </div>
       <div class="exercise" v-if="!message">
-        <div v-for="(key,index) in question_set">
+        <div v-for="(key,index) in question_set" v-if="index!=157">
           <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
             <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
             <van-row>
@@ -28,11 +28,11 @@
             <div class="subjectTitle">
               <!--<div class="subjectA" v-html="key1.stem"></div>-->
               <div class="subjectB" v-if="index != 157 && index !=158">
-                <p v-for="(key2,index2) in key1.choice" :key="index2" :name="index2" style="margin-left: 7px;">
-                  <span  style="line-height: 25px;font-size: 16px;">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                <p v-for="(key2,index2) in key1.choice" :key="index2" :name="index2" style="margin-left: 7px;margin-top: 10px;color: #6c6c6c;">
+                  <span  style="line-height: 25px;font-size: 16px;">{{index2}}: &nbsp;&nbsp;{{key2}}</span>
                   <van-row :key="kk" v-for="(vv,kk) in (statisticData[key1.id] && statisticData[key1.id].answer)"
                            v-if="kk==index2">
-                    <div style="text-align: center;color: #9c9c9c;">回复量：<span style="color: #6c6c6c;">{{vv}}</span></div>
+                    <div style="text-align: right;margin-right: 30px;color: #9c9c9c;font-size: 12px;">回复量：<span style="color: #6c6c6c;">{{vv}}</span></div>
                     <Progress style="width: 90%;margin:10px 0;" color="#39b1ff" :percentage="Math.round(vv*100/statisticData[key1.id].count)" :pivot-text="`${Math.round(vv*100/statisticData[key1.id].count)}%`"/>
                   </van-row>
 
@@ -52,9 +52,16 @@
         </div>
       </div>
       <div class="exercise msg" v-if="message">
-        <div>
-          <img src="../../../../assets/no_data.png" style="width: 40%;">
-          <div style="margin-top: 10px;">暂无数据</div>
+        <!--<div>-->
+          <!--<img src="../../../../assets/no_data.png" style="width: 40%;">-->
+          <!--<div style="margin-top: 10px;">暂无数据</div>-->
+        <!--</div>-->
+        <div class="container">
+          <div class="content">
+            <div class="content_img"><img src="../../../../assets/no_power.png" style="width: 50%;"></div>
+            <div class="last_title" style="font-size: 25px;color: #39b1ff;">Sorry</div>
+            <div class="last_title" style="font-size: 18px;color: #42474d">抱歉，您暂无权限访问该页面...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -77,7 +84,7 @@
         question_set: {},       //试题
         answer: {},             //答案
         message: '',
-        questionnaire_id: this.$route.query.id,
+        questionnaire_id: '',
         confirmType: '',
         statisticData: {},
         loading: false,
@@ -101,6 +108,7 @@
     },
     activated() {
       // this.confirmType = this.$route.query.type;
+      this.questionnaire_id = this.$route.query.id;
       this.getQuesTionNaireData();
       this.getStatisticData();
       this.loading = true;
@@ -252,6 +260,33 @@
           }
         }
       }
+    }
+
+    .container {
+      background: #fff;
+      color: #999;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      position: absolute;
+      .content {
+        .content_img {
+          position: relative;
+          margin-top: 100px;
+        }
+        .title {
+          position: relative;
+          margin-top: 20px;
+          font-size: 25px;
+          color: #39b1ff;
+        }
+        .last_title {
+          position: relative;
+          margin-top: 30px;
+          font-size: 14px;
+        }
+      }
+
     }
   }
 </style>

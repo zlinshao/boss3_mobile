@@ -1,18 +1,18 @@
 <template>
   <div id="myNaire">
-    <div class="container">
+    <div class="container" :class="{'minHeight':examData.length<1}">
       <div style="position: relative;width: 100%;height: 20px;background: #f8f8f8;"></div>
       <div class="content" v-for="item in examData">
         <div class="top">
           <div style="float: left;"><img :src="personal.avatar" style="width: 50px;height: 50px;border-radius: 50%;">
           </div>
-          <div style="width: 60%;float: left;margin-left: 20px;line-height: 35px;margin-top: -6px;">
+          <div style="width: 60%;float: left;margin-left: 20px;line-height: 33px;margin-top: -6px;">
             <p style="color: #333;font-size: 20px;">{{personal.name}}</p>
             <p style="font-size: 16px;">{{personal.department_name}}</p>
           </div>
-          <div style="float: right;margin-right: 0px;height: 30px;line-height:30px;margin-top: 33px;color: #39b1ff;">
-            <span v-if="item.available">进行中</span>
-            <span style="color: #e4393c;" v-else>已结束</span>
+          <div style="float: right;margin-right: 20px;height: 30px;line-height:30px;margin-top: 30px;color: #39b1ff;">
+            <span style="font-size: 16px;" v-if="item.available">进行中</span>
+            <span style="color: #e4393c;font-size: 16px;" v-else>已结束</span>
           </div>
         </div>
         <div class="info">
@@ -58,11 +58,13 @@
     },
     mounted() {
       this.personal = JSON.parse(sessionStorage.personal);
+    },
+    activated(){
       this.getExamData();
     },
     methods: {
       answerExam(val){
-        this.$router.push({path: '/beforeExam'});
+        this.$router.push({path: '/beforeExam', query: {id: val.id}});
       },
       goDetail(val) {
         this.$router.push({path: '/lookExam', query: {result_id: val.result_id, exam_id: val.id}});
@@ -84,19 +86,22 @@
 </script>
 
 <style lang="scss" scoped>
+  .minHeight{
+    min-height: 600px;
+  }
   .container {
     background: #fff;
     color: #999;
     width: 100%;
     height: 100%;
-    min-height: 600px;
     .content {
       background: #fff;
       width: 100%;
       height: 100%;
       .top {
+        margin: 0px 20px;
         position: relative;
-        padding: 15px 20px;
+        padding: 15px 0px;
         border-bottom: 1px solid #ebebeb;
         min-height: 80px;
         margin-right: 0;
