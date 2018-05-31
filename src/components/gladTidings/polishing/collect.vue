@@ -43,7 +43,8 @@
           </van-field>
           <van-field
             v-model="form.customers[index].phone"
-            type="number"
+            type="text"
+            class="number"
             :disabled="index === 0"
             label="联系方式"
             placeholder="请填写联系方式">
@@ -79,7 +80,8 @@
         <van-field
           v-model="form.water"
           label="水表底数"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写水表底数"
           icon="clear"
           @click-icon="form.water = ''">
@@ -91,7 +93,8 @@
           </van-field>
           <van-field
             v-model="form.electricity_peak"
-            type="number"
+            type="text"
+            class="number"
             placeholder="峰值"
             icon="clear"
             @click-icon="form.electricity_peak = ''">
@@ -99,7 +102,8 @@
           <van-field
             class="twoBorder"
             v-model="form.electricity_valley"
-            type="number"
+            type="text"
+            class="number"
             placeholder="谷值"
             icon="clear"
             @click-icon="form.electricity_valley = ''">
@@ -108,7 +112,8 @@
         <van-field
           v-model="form.gas"
           label="燃气表底数"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写燃气表底数"
           icon="clear"
           @click-icon="form.gas = ''">
@@ -140,7 +145,8 @@
         <van-field
           v-model="form.public_fee"
           label="公摊费用"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写公摊费用"
           icon="clear"
           @click-icon="form.public_fee = ''">

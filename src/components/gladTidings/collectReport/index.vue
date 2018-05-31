@@ -29,14 +29,16 @@
           </van-field>
           <van-field
             v-model="form.month"
-            type="number"
+            type="text"
+            class="number"
             @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             class=""
             v-model="form.day"
-            type="number"
+            type="text"
+            class="number"
             @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
@@ -54,7 +56,8 @@
         <van-field
           v-model="form.vacancy"
           label="空置期(天)"
-          type="number"
+          type="text"
+          class="number"
           @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
           placeholder="请填写空置期"
           icon="clear"
@@ -136,7 +139,8 @@
           </van-field>
           <van-field
             v-model="form.period_price_arr[index]"
-            type="number"
+            type="text"
+            class="number"
             label="付款周期"
             :disabled="amountPrice === 1 && form.period_price_arr[index] === form.month"
             @keyup="periodDate(1)"
@@ -145,7 +149,8 @@
           </van-field>
           <van-field
             v-model="form.price_arr[index]"
-            type="number"
+            type="text"
+            class="number"
             label="价格"
             placeholder="请填写金额"
             required>
@@ -172,7 +177,8 @@
           </van-field>
           <van-field
             v-model="form.period_pay_arr[index]"
-            type="number"
+            type="text"
+            class="number"
             label="付款周期"
             :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
             @keyup="periodDate(2)"
@@ -217,7 +223,8 @@
           <van-field
             v-model="form.agency_price"
             label="中介费"
-            type="number"
+            type="text"
+            class="number"
             placeholder="请填写中介费"
             icon="clear"
             @click-icon="form.agency_price = ''"
@@ -235,7 +242,8 @@
           <van-field
             v-model="form.agency_phone"
             label="中介联系方式"
-            type="number"
+            type="text"
+            class="number"
             placeholder="请填写中介联系方式"
             icon="clear"
             @click-icon="form.agency_phone = ''"
@@ -246,7 +254,8 @@
         <van-field
           v-model="form.deposit"
           label="押金"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写押金"
           icon="clear"
           @click-icon="form.deposit = ''"
@@ -261,13 +270,15 @@
           </van-field>
           <van-field
             v-model="form.warranty"
-            type="number"
+            type="text"
+            class="number"
             placeholder="保修期(月)">
           </van-field>
           <van-field
             class="twoBorder"
             v-model="form.warranty_day"
-            type="number"
+            type="text"
+            class="number"
             placeholder="保修期(天)">
           </van-field>
         </div>
@@ -293,7 +304,8 @@
         <van-field
           v-model="form.phone"
           label="联系方式"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写联系方式"
           icon="clear"
           @click-icon="form.phone = ''"
@@ -304,7 +316,8 @@
           v-model="form.account"
           label="卡号"
           @blur="accountBank(form.account)"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写卡号"
           icon="clear"
           @click-icon="form.account = ''"
@@ -348,7 +361,8 @@
         <van-field
           v-model="form.penalty"
           label="违约金"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写违约金"
           icon="clear"
           @click-icon="form.penalty = ''"

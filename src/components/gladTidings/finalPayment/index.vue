@@ -57,7 +57,8 @@
         <van-field
           v-model="form.money_sum"
           label="总金额"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写总金额"
           required>
         </van-field>
@@ -71,7 +72,8 @@
         <van-cell-group>
           <van-field
             v-model="form.money_sep[index]"
-            type="number"
+            type="text"
+            class="number"
             label="金额"
             placeholder="请填写金额"
             required>
@@ -108,7 +110,8 @@
           v-if="other_fee_status"
           v-model="form.other_fee"
           label="费用金额"
-          type="number"
+          type="text"
+          class="number"
           placeholder="请填写金额"
           icon="clear"
           @click-icon="form.other_fee = ''"
