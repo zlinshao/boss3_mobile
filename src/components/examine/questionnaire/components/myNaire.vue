@@ -1,6 +1,6 @@
 <template>
   <div id="myNaire">
-    <div class="container" :class="{'minHeight':questionNaireData.length<1}">
+    <div class="container" v-if="questionNaireData.length>0">
       <div style="position: relative;width: 100%;height: 20px;background: #f8f8f8;"></div>
       <div class="content" v-for="item in questionNaireData">
         <div class="top">
@@ -10,7 +10,8 @@
             <p style="color: #333;font-size: 20px;">{{personal.name}}</p>
             <p style="font-size: 16px;">{{personal.department_name}}</p>
           </div>
-          <div style="float: right;margin-right: 20px;height: 30px;line-height:30px;margin-top: 26px;color: #39b1ff;font-size: 15px;">
+          <div
+            style="float: right;margin-right: 20px;height: 30px;line-height:30px;margin-top: 26px;color: #39b1ff;font-size: 15px;">
             <span style="font-size: 16px;" v-if="item.available">进行中</span>
             <span style="color: #e4393c;font-size: 16px;" v-else>已结束</span>
           </div>
@@ -24,11 +25,11 @@
         </div>
         <div style="position: relative;margin-top: 20px;width: 100%;height: 20px;background: #f8f8f8;"></div>
       </div>
-      <div class="content" style="text-align: center;margin-top: 20px;" v-if="questionNaireData.length<1">
-        <div  >
-          <img src="../../../../assets/no_data.png" style="width: 40%;">
-          <div style="margin-top: 10px;">暂无数据</div>
-        </div>
+    </div>
+    <div class="no_data" v-if="questionNaireData.length<1">
+      <div class="content" style="text-align: center;margin-top: 20px;background: #fff;">
+        <div class="content_img"><img src="../../../../assets/no_data2.png" style="width: 40%;"></div>
+        <div class="last_title">暂无数据 ...</div>
       </div>
     </div>
   </div>
@@ -54,7 +55,7 @@
     mounted() {
       this.personal = JSON.parse(sessionStorage.personal);
     },
-    activated(){
+    activated() {
       this.getQuesNaireData();
     },
     methods: {
@@ -78,8 +79,34 @@
 </script>
 
 <style lang="scss" scoped>
-  .minHeight{
+  .minHeight {
     min-height: 600px;
+  }
+
+  .no_data {
+    background: #fff;
+    color: #999;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    position: absolute;
+    .content {
+      .content_img {
+        position: relative;
+        margin-top: 150px;
+      }
+      .title {
+        position: relative;
+        margin-top: 20px;
+        font-size: 25px;
+        color: #39b1ff;
+      }
+      .last_title {
+        position: relative;
+        margin-top: 30px;
+        font-size: 18px;
+      }
+    }
   }
   .container {
     background: #fff;
@@ -104,7 +131,7 @@
         margin-left: 20px;
         line-height: 30px;
         border-bottom: 1px solid #dddddd;
-        p{
+        p {
           font-size: 16px;
         }
         span {
