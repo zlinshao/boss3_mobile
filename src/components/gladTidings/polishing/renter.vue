@@ -117,10 +117,9 @@
             @click-icon="form.electricity_peak = ''">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.electricity_valley"
             type="text"
-            class="number"
             placeholder="谷值"
             icon="clear"
             @click-icon="form.electricity_valley = ''">

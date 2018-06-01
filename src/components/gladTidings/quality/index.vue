@@ -135,10 +135,9 @@
             placeholder="请填写房屋楼层">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.floors"
             type="text"
-            class="number"
             :disabled="followUp"
             placeholder="请填写总楼层">
           </van-field>

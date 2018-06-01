@@ -81,10 +81,9 @@
             placeholder="请填写月数">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.day"
             type="text"
-            class="number"
             @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
