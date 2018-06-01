@@ -379,7 +379,7 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50310') {
+              if (res.data.code === '50310' || res.data.code === '50330') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
