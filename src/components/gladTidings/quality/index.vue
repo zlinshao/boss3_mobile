@@ -80,7 +80,7 @@
           placeholder="请选择户型"
           required>
         </van-field>
- 
+
         <van-field
           v-model="form.area"
           label="面积"
