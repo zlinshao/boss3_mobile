@@ -66,7 +66,7 @@
       }
       .title{
         position: relative;
-        margin-top: 20px;
+        margin-top: 30px;
         font-size: 25px;
         color: #39b1ff;
       }
