@@ -6,11 +6,11 @@
         <div class="top">
           <div style="float: left;"><img :src="personal.avatar" style="width: 50px;height: 50px;border-radius: 50%;">
           </div>
-          <div style="width: 60%;float: left;margin-left: 20px;line-height: 33px;margin-top: -6px;">
+          <div style="width: 60%;float: left;margin-left: 20px;line-height: 28px;margin-top: 0px;">
             <p style="color: #333;font-size: 20px;">{{personal.name}}</p>
             <p style="font-size: 16px;">{{personal.department_name}}</p>
           </div>
-          <div style="float: right;margin-right: 20px;height: 30px;line-height:30px;margin-top: 30px;color: #39b1ff;font-size: 16px;">
+          <div style="float: right;margin-right: 20px;height: 30px;line-height:30px;margin-top: 26px;color: #39b1ff;font-size: 15px;">
             <span style="font-size: 16px;" v-if="item.available">进行中</span>
             <span style="color: #e4393c;font-size: 16px;" v-else>已结束</span>
           </div>
@@ -104,6 +104,9 @@
         margin-left: 20px;
         line-height: 30px;
         border-bottom: 1px solid #dddddd;
+        p{
+          font-size: 16px;
+        }
         span {
           color: #393939;
           margin-left: 10px;
