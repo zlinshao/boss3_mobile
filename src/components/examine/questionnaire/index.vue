@@ -6,7 +6,7 @@
     </div>
     <div class="exercise" v-if="!message">
       <div v-for="(key,index) in question_set">
-        <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
+        <div class="subject" v-if="index != 157" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
           <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
           <van-row>
             <van-col span="2" style="float: left">
@@ -20,19 +20,18 @@
             </van-col>
           </van-row>
           <div class="subjectTitle">
-            <!--<div class="subjectA" v-html="key1.stem"></div>-->
             <div class="subjectB" v-if="index === '153' || index === '156'">
               <van-radio-group v-model="answer[key1.id]">
                 <van-radio v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
-                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}} :&nbsp;&nbsp;{{key2}}</span>
                 </van-radio>
               </van-radio-group>
             </div>
             <div class="subjectB" v-if="index === '154' || index === '155'">
               <van-checkbox-group v-model="answer[key1.id]">
                 <van-checkbox
-                  v-for="(key2,index2) in key1.choice" :key="index2" :name="index2">
-                  <span :class="{'onClass': answer[key1.id] === index2}">{{index2}}&nbsp;&nbsp;{{key2}}</span>
+                  v-for="(key3,index3) in key1.choice" :key="index3" :name="index3">
+                  <span :class="{'onClass': answer[key1.id].indexOf(index3)>-1}">{{index3}} :&nbsp;&nbsp;{{key3}}</span>
                 </van-checkbox>
               </van-checkbox-group>
             </div>
@@ -52,7 +51,7 @@
         </div>
       </div>
       <div style="text-align: center;margin-top: 15px;">
-        <van-button type="primary" size="normal" style="padding: 0px 50px;" @click="onSubmit">提交问卷</van-button>
+        <van-button size="normal"  style="width: 90%;margin-left:3%;background: #39baff;margin-bottom: 20px;color: #fff;" @click="onSubmit">提交问卷</van-button>
       </div>
     </div>
     <div class="exercise msg" v-if="message">
@@ -266,15 +265,31 @@
       background-color: #FFFFFF;
       padding: .2rem;
       .subject {
-        border-top: 1px solid #dfe6fb;
+        border-top: 1px solid #ebebeb;
         padding-top: 15px;
         padding-bottom: 5px;
         .subjectTitle {
           margin-left: .5rem;
-
-          .subjectA {
-            line-height: .4rem;
-            margin: .2rem 0;
+          color: #6c6c6c;
+          line-height: 25px;
+          .subjectB {
+            margin-top: 20px;
+            .van-radio {
+              .van-radio__input {
+                margin-top: 3px;
+              }
+              .van-radio__label {
+                line-height: 28px;
+              }
+            }
+            .van-checkbox{
+              .van-checkbox__input {
+                margin-top: 4px;
+              }
+              .van-checkbox__label {
+                line-height: 28px;
+              }
+            }
           }
         }
       }
@@ -291,6 +306,7 @@
           padding-left: 0;
           .van-field--has-textarea {
             background: #F3F9FF;
+            color: #6c6c6c;
             .van-field__control {
               margin-left: .2rem;
               background: #F3F9FF;

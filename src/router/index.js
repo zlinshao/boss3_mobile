@@ -465,8 +465,8 @@ export default new Router({
     },
     {
       path: '/naireStatistic',
-      name: '问卷详情',
-      meta: {title: '问卷详情'},
+      name: '问卷统计',
+      meta: {title: '问卷统计'},
       hidden: false,
       component: NaireStatistic
     },
