@@ -196,10 +196,9 @@
             placeholder="保修期(月)">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.warranty_day"
             type="text"
-            class="number"
             placeholder="保修期(天)">
           </van-field>
         </div>
