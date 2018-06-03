@@ -49,9 +49,9 @@
           sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
           // add by cj 2018-05-25
-          if(android.queryType() === 'exam'){
+          if (android.queryType() === 'exam') {
             this.$router.push({path: '/beforeExam'});
-          }else if(android.queryType() === 'questionnaire'){
+          } else if (android.queryType() === 'questionnaire') {
             this.$router.push({path: '/beforeNaire'});
           }
           globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
@@ -84,9 +84,9 @@
         }, function (error) {
           if (error && error.response) {
             if (error.response.status === 500) {
-              alert('服务器故障,请联系产品经理');
+              alert('服务器故障,请联系产品经理~');
               DingTalkPC.device.notification.alert({
-                message: "服务器故障,请联系产品经理！",
+                message: "服务器故障,请联系产品经理~",
                 title: "提示信息",
                 buttonName: "关闭",
                 onSuccess: function () {
@@ -102,8 +102,41 @@
               });
             }
             if (error.response.data.status_code === 401) {
-              that.loading = false;
-              that.corp();
+              alert('登陆超时，请保存草稿，重新登陆并发布！');
+              DingTalkPC.device.notification.alert({
+                message: "登陆超时，请保存草稿，重新登陆并发布！",
+                title: "提示信息",
+                buttonName: "关闭",
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
+              });
+              // that.loading = false;
+              // that.corp();
+            } else if (error.response.status === 401) {
+              alert('登陆超时，请保存草稿，重新登陆并发布！');
+              DingTalkPC.device.notification.alert({
+                message: "登陆超时，请保存草稿，重新登陆并发布！",
+                title: "提示信息",
+                buttonName: "关闭",
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
+              });
+            }
+            if (error.response.status === 404) {
+              alert('登陆超时，请保存草稿，重新登陆并发布！！');
+              DingTalkPC.device.notification.alert({
+                message: "登陆超时，请保存草稿，重新登陆并发布！！",
+                title: "提示信息",
+                buttonName: "关闭",
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
+              });
             }
           }
           return Promise.reject(error);
