@@ -196,6 +196,11 @@
       },
       showAll(id) {
         this.disabledIds[id] = true;
+        for(var v in this.disabledIds) {
+          if(v!=id){
+            this.disabledIds[v] = false;
+          }
+        }
         if (this.showHide === id) {
           this.showStatus = !this.showStatus;
         } else {
