@@ -59,8 +59,8 @@
         <div class="container">
           <div class="content">
             <div class="content_img"><img src="../../../../assets/no_power.png" style="width: 50%;"></div>
-            <div class="last_title" style="font-size: 25px;color: #39b1ff;">Sorry</div>
-            <div class="last_title" style="font-size: 18px;color: #42474d">抱歉，您暂无权限访问该页面...</div>
+            <!--<div class="last_title" style="font-size: 25px;color: #39b1ff;">Sorry</div>-->
+            <div class="last_title" style="font-size: 18px;color: #42474d">我在努力寻找进入你的接口...</div>
           </div>
         </div>
       </div>

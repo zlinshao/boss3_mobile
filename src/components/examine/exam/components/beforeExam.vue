@@ -69,7 +69,7 @@
     activated() {
       this.returnIndex();
       this.showType = '';
-      this.confirmArrival = JSON.parse(localStorage.getItem('confirmArrival'));
+      this.confirmArrival = JSON.parse(localStorage.getItem('confirmArrivals'));
       if(this.$route.query.id){
 
         this.getExamData(this.$route.query.id);
@@ -152,7 +152,7 @@
               examIds = this.confirmArrival;
             }
             examIds.push(id);
-            localStorage.setItem('confirmArrival', JSON.stringify(examIds));  //保存已到场的考试id
+            localStorage.setItem('confirmArrivals', JSON.stringify(examIds));  //保存已到场的考试id
             this.$router.push({path: '/exam', query: {id: id}});
           } else if (res.data.code === '30003') {
             this.showType = 'third';
