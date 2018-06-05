@@ -4,7 +4,8 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent" @change="rentChange">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent"
+                           @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -15,7 +16,7 @@
           v-model="form.check_type.name"
           label="退房性质"
           type="text"
-          @click="selectShow()"
+          @click="selectShow(1)"
           readonly
           placeholder="请选择退房性质"
           required>
@@ -24,7 +25,7 @@
           v-model="form.address"
           label="房屋地址"
           type="text"
-          @click="searchSelect(form.collect_or_rent)"
+          @click="searchSelect(form.collect_or_rent, 1)"
           readonly
           placeholder="请选择房屋地址"
           required>
@@ -57,6 +58,51 @@
         <div class="accordion" v-if="priceStatus && form.price_arr.length > 1">
           <div v-for="(key,index) in form.price_arr" v-show="index !== 0">{{key}}</div>
         </div>
+        <van-field
+          v-model="form.checkout_date"
+          type="text"
+          label="退租日期"
+          @click="timeChoose()"
+          placeholder="请选择退租日期"
+          readonly
+          required>
+        </van-field>
+        <van-field
+          v-model="form.handover_staff.name"
+          @click="searchSelect('', 2)"
+          label="交接人"
+          type="text"
+          readonly
+          placeholder="请选择交接人"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.handover_department.name"
+          @click="searchSelect('', 3)"
+          label="交接部门"
+          type="text"
+          readonly
+          placeholder="请选择部门"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.number_key"
+          label="钥匙数量"
+          type="text"
+          placeholder="请输入钥匙数量"
+          icon="clear"
+          @click-icon="form.phone = ''"
+          required>
+        </van-field>
+        <van-field
+          @click="selectShow(2)"
+          v-model="cleanup"
+          label="是否需要保洁"
+          type="text"
+          placeholder="请选择"
+          readonly
+          required>
+        </van-field>
       </van-cell-group>
 
       <div class="aloneModel">
@@ -70,15 +116,6 @@
 
       </div>
       <van-cell-group>
-        <van-field
-          v-model="form.checkout_date"
-          type="text"
-          label="退租日期"
-          @click="timeChoose()"
-          placeholder="请选择退租日期"
-          readonly
-          required>
-        </van-field>
         <van-field
           v-model="form.remark"
           label="备注"
@@ -164,6 +201,9 @@
         check_name: [],
         checkAll: [],
 
+        tabs: '',
+        cleanup: '',
+
         form: {
           address: '',
           id: '',
@@ -177,6 +217,18 @@
           payWay: [''],                   //付款方式
           price_arr: [''],                //月单价
           house_id: '',
+
+          handover_staff: {             //交接人
+            id: '',
+            name: '',
+          },
+          handover_department: {          //交接部门
+            id: '',
+            name: '',
+          },
+          number_key: '',               //钥匙数量
+          is_cleanup: '',               //是否需要保洁
+
           contract_id: '',              //合同id
           photo: [],                    //领导截图 数组
           checkout_photo: [],           //领导截图 数组
@@ -190,6 +242,8 @@
         photos: {},
         checkouts: {},
         numbers: '',
+
+        isValue1: true,
         counts: '',
       }
     },
@@ -277,13 +331,23 @@
         let strDate = date.getDate();
         this.currentDate = new Date(year, month, strDate);
       },
-      searchSelect(val) {
-        if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
-        } else if (val === '1') {
-          this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
-        } else {
-          Toast('请选择收租标记');
+      searchSelect(val, num) {
+        switch (num) {
+          case 1:
+            if (val === '0') {
+              this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+            } else if (val === '1') {
+              this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
+            } else {
+              Toast('请选择收租标记');
+            }
+            break;
+          case 2:
+            this.$router.push({path: '/organize'});
+            break;
+          case 3:
+            this.$router.push({path: '/depart'});
+            break;
         }
       },
       // 日期选择
@@ -301,18 +365,29 @@
       },
 
       // select 显示
-      selectShow() {
+      selectShow(val) {
+        this.tabs = val;
         this.selectHide = true;
-        this.columns = this.check_name;
+        if (val === 1) {
+          this.columns = this.check_name;
+        } else {
+          this.columns = ['不需要', '需要'];
+        }
       },
       // select选择
-      onConfirm(value) {
-        this.form.check_type.name = value;
-        for (let i = 0; i < this.checkAll.length; i++) {
-          if (this.checkAll[i].dictionary_name === value) {
-            this.form.check_type.id = this.checkAll[i].id;
+      onConfirm(value, index) {
+        if (this.tabs === 1) {
+          this.form.check_type.name = value;
+          for (let i = 0; i < this.checkAll.length; i++) {
+            if (this.checkAll[i].dictionary_name === value) {
+              this.form.check_type.id = this.checkAll[i].id;
+            }
           }
+        } else {
+          this.cleanup = value;
+          this.form.is_cleanup = index;
         }
+
         this.selectHide = false;
       },
       // select关闭
@@ -331,7 +406,7 @@
         }
       },
       rentChange(val) {
-        if(this.numbers !== val){
+        if (this.numbers !== val) {
           this.form.address = '';
           this.form.house_id = '';
           this.form.contract_id = '';
@@ -360,7 +435,7 @@
               }
             })
           } else {
-            Toast('正在提交...');
+            Toast('正在提交，请耐心等待...');
           }
         } else {
           Toast('图片上传中...');
@@ -380,6 +455,20 @@
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
           this.helperBulletin(val.id);
+        }
+        if (t.staff !== undefined && t.staff !== '') {
+          let val = JSON.parse(t.staff);
+          this.form.handover_staff.id = val.staff_id;
+          this.form.handover_staff.name = val.staff_name;
+          this.form.handover_department.id = val.depart_id;
+          this.form.handover_department.name = val.depart_name;
+          this.isValue1 = val.activeRevise;
+        }
+        if (t.depart !== undefined && t.depart !== '') {
+          let val = JSON.parse(t.depart);
+          this.form.handover_department.id = val.id;
+          this.form.handover_department.name = val.name;
+          this.isValue1 = val.activeRevise;
         }
       },
       helperBulletin(id) {
@@ -429,6 +518,13 @@
             this.form.checkout_date = draft.checkout_date;
             this.form.payWay = draft.payWay;
             this.form.price_arr = draft.price_arr;
+
+            this.form.handover_staff = draft.handover_staff;
+            this.form.handover_department = draft.handover_department;
+            this.form.number_key = draft.number_key;
+            this.form.is_cleanup = draft.is_cleanup;
+            this.cleanup = draft.is_cleanup === 0 ? '不需要' : '需要';
+
             this.form.remark = draft.remark;
             this.form.staff_name = draft.staff_name;
             this.form.department_name = draft.department_name;
@@ -446,6 +542,13 @@
           this.isClear = false;
         });
         $('.imgItem').remove();
+        this.form.handover_staff.id = '';
+        this.form.handover_staff.name = '';
+        this.form.handover_department.id = '';
+        this.form.handover_department.name = '';
+        this.form.number_key = '';
+        this.cleanup = '';
+        this.form.is_cleanup = '';
         this.picStatus = true;
         this.form.house_id = '';
         this.form.processable_id = '';

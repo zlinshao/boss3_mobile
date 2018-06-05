@@ -80,7 +80,7 @@
           placeholder="请选择户型"
           required>
         </van-field>
-        {{form.area}}
+
         <van-field
           v-model="form.area"
           label="面积"
@@ -135,10 +135,9 @@
             placeholder="请填写房屋楼层">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.floors"
             type="text"
-            class="number"
             :disabled="followUp"
             placeholder="请填写总楼层">
           </van-field>
@@ -839,7 +838,7 @@
               }
             })
           } else {
-            Toast('正在提交...');
+            Toast('正在提交，请耐心等待...');
           }
         } else {
           Toast('图片上传中...');

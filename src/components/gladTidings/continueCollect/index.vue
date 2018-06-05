@@ -42,7 +42,6 @@
             placeholder="请填写月数">
           </van-field>
           <van-field
-            class=""
             v-model="form.day"
             type="text"
             class="number"
@@ -196,10 +195,9 @@
             placeholder="保修期(月)">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.warranty_day"
             type="text"
-            class="number"
             placeholder="保修期(天)">
           </van-field>
         </div>
@@ -793,7 +791,7 @@
               }
             })
           } else {
-            Toast('正在提交...');
+            Toast('正在提交，请耐心等待...');
           }
         } else {
           Toast('图片上传中...');

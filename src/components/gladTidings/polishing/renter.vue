@@ -117,10 +117,9 @@
             @click-icon="form.electricity_peak = ''">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.electricity_valley"
             type="text"
-            class="number"
             placeholder="谷值"
             icon="clear"
             @click-icon="form.electricity_valley = ''">
@@ -569,7 +568,7 @@
                 }
               })
             } else {
-              Toast('正在提交...');
+              Toast('正在提交，请耐心等待...');
             }
           } else {
             Toast('图片上传中...');

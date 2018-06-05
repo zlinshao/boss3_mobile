@@ -79,7 +79,7 @@
           </div>
         </div>
       </div>
-      <div class="inRough" v-if="queryType == 0 || queryType === 'ding'">
+      <div class="inRough" v-if="queryType == 'exam' || queryType == 'questionnaire' || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
             <div>
@@ -99,6 +99,25 @@
                       class="circle_red"></span>
               </h1>
             </a>
+          </div>
+        </div>
+      </div>
+      <div class="inRough" v-if="queryType == 'interlocution' || queryType === 'ding'">
+        <div class="mainIndex">
+          <div class="mainTop">
+            <div>
+              <span>问答中心</span>
+              <!--<span>3</span>-->
+            </div>
+            <!--<div>收起</div>-->
+          </div>
+          <div class="mainMain">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'inter'" :to="key.path" :key="index">
+              <p :style="{'background': key.back}">
+                <i :class="key.icon"></i>
+              </p>
+              <h1>{{key.name}}</h1>
+            </router-link>
           </div>
         </div>
       </div>

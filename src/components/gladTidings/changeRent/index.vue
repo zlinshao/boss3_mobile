@@ -42,10 +42,9 @@
             placeholder="请填写月数">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.day"
             type="text"
-            class="number"
             @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
@@ -949,7 +948,7 @@
               }
             })
           } else {
-            Toast('正在提交...');
+            Toast('正在提交，请耐心等待...');
           }
         } else {
           Toast('图片上传中...');

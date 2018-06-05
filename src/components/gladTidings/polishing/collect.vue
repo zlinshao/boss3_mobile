@@ -100,10 +100,9 @@
             @click-icon="form.electricity_peak = ''">
           </van-field>
           <van-field
-            class="twoBorder"
+            class="twoBorder number"
             v-model="form.electricity_valley"
             type="text"
-            class="number"
             placeholder="谷值"
             icon="clear"
             @click-icon="form.electricity_valley = ''">
@@ -281,9 +280,9 @@
     </div>
 
     <div class="footer">
-      <div class="" @click="close_()">重置</div>
-      <div class="" @click="saveCollect(0)">保存</div>
-      <div class="" @click="saveCollect(1)">提交审核</div>
+      <div @click="close_()">重置</div>
+      <div @click="saveCollect(0)">保存</div>
+      <div @click="saveCollect(1)">提交审核</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -646,7 +645,7 @@
                 }
               })
             } else {
-              Toast('正在提交...');
+              Toast('正在提交，请耐心等待...');
             }
           } else {
             Toast('图片上传中...');

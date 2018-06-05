@@ -63,7 +63,7 @@
         this.$router.push({path: '/naireStatistic', query: {id: val}});
       },
       getQuesNaireData() {
-        this.$http.get(globalConfig.server + 'questionnaire/my').then((res) => {
+        this.$http.get(globalConfig.server + 'questionnaire/my?page=1&limit=500').then((res) => {
           if (res.data.code === '30000') {
             this.questionNaireData = res.data.data.data;
             if (res.data.data.data.length < 1) {

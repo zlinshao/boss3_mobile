@@ -280,7 +280,7 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
               this.haveInHand = true;
-              if (res.data.code === '50810') {
+              if (res.data.code === '50810' || res.data.code === '50830') {
                 Toast.success(res.data.msg);
                 this.close_();
                 $('.imgItem').remove();
@@ -293,7 +293,7 @@
               }
             })
           } else {
-            Toast('正在提交...');
+            Toast('正在提交，请耐心等待...');
           }
         } else {
           Toast('图片上传中...');
