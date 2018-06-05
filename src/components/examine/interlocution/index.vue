@@ -42,8 +42,8 @@
                 </div>
               </div>
               <div class="contents1">
-                <p style="margin: 10px 0;line-height: 26px;">{{item.title}}</p>
-                <div style="line-height: 26px;">
+                <p style="margin: 10px 0;line-height: 28px;">{{item.title}}</p>
+                <div style="line-height: 28px;">
                   {{item.description}}
                 </div>
               </div>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="boxShadow" style="border-bottom: 1px solid #E0E0E0;">
                   <div class="contents2">
-                    <div style="line-height: 26px;">
+                    <div style="line-height: 28px;">
                       {{value.content}}
                     </div>
                     <div class="con" @click="commentNum(value.id)" v-if="value.comments_count>0">
@@ -110,7 +110,7 @@
                         {{comment.create_time}}
                       </div>
                     </div>
-                    <div class="article" style="line-height: 26px;">
+                    <div class="article" style="line-height: 28px;">
                       {{comment.content}}
                     </div>
                   </div>

@@ -492,7 +492,7 @@ export default new Router({
     {
       path: '/interlocution',
       name: '问答中心',
-      icon: 'iconfont icon-wenda',
+      icon: 'iconfont icon-answercenter',
       meta: {title: '问答中心'},
       hidden: 'inter',
       component: Interlocution
