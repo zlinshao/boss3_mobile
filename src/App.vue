@@ -53,6 +53,8 @@
             this.$router.push({path: '/beforeExam'});
           } else if (android.queryType() === 'questionnaire') {
             this.$router.push({path: '/beforeNaire'});
+          }else if (android.queryType() === 'interlocution') {
+            this.$router.push({path: '/interlocution'});
           }
           globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {

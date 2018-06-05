@@ -129,10 +129,15 @@
           this.typeCategory = res.data.data;
         }
       });
+      this.form.title = '';
+      this.form.description = '';
+      this.form.is_anonymous = false;
+      this.form.type = '';
+      this.form.type_name = '';
     },
     watch: {},
     methods: {
-      goInterlocution(){
+      goInterlocution() {
         this.$router.push({path: '/interlocution'});
       },
       anonymousChange(val) {
@@ -152,7 +157,12 @@
         this.typeCategory.forEach((item) => {
           this.columns.push(item.name);
         });
-        this.selectHide = true;
+        if (this.columns.length < 1) {
+          Toast.fail('当前没有问题类型');
+        } else {
+          this.selectHide = true;
+        }
+
       },
       onSubmit() {
         Dialog.confirm({
@@ -198,6 +208,7 @@
       border-radius: 4px;
     }
   }
+
   .van-cell:not(:last-child)::after {
     border: none;
   }
