@@ -25,7 +25,7 @@
             required
           />
           <span
-            style="font-family: PingFangHK-Light;font-size: 13px;color: #58D788;margin-left: 110px">描述精确的问题更容易得到答案</span>
+            style="font-family: PingFangHK-Light;font-size: 13px;color: #58D788;margin-left: 113px">描述精确的问题更容易得到答案</span>
         </van-cell-group>
         <van-cell-group>
           <van-field
@@ -174,7 +174,30 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+  .question_btn {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    height: 100px;
+    background: #FFFFFF;
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
+    span {
+      margin-top: 30px;
+      color: #FFFFFF;
+      display: inline-block;
+      background: #536DFE;
+      width: 96%;
+      height: 50px;
+      line-height: 50px;
+      box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.40);
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+    }
+  }
   .van-cell:not(:last-child)::after {
     border: none;
   }

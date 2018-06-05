@@ -5,7 +5,7 @@
         <div class="bgColor" style="border: #f8f9ff;">
           <i class="van-icon van-icon-search" style="font-size: 20px;vertical-align: middle;"></i>
           <!--<input class="bgColor" type="text" @focus="interModule = true" v-model="form.search" @keyup.enter="search">-->
-          <input class="bgColor" type="text" v-model="form.search" @keyup.enter="search" placeholder="请输入标题"
+          <input class="bgColor" type="text" v-model="form.search" @focus="interModule = true" @keyup.enter="search" placeholder="请输入标题"
                  style="padding: 6px 0;">
           <!--<i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>-->
         </div>
@@ -119,7 +119,7 @@
         <span>我要提问</span>
       </div>
       <!--遮罩-->
-      <div v-if="interModule" class="interModule"></div>
+      <div v-if="interModule" class="interModule" @click="interModule=false"></div>
     </div>
     <!--暂无数据-->
     <div class="no_data" v-if="noData">
@@ -183,6 +183,7 @@
       },
       getListData() {
         this.$http.get(globalConfig.server + "qa/front/question", {params: this.form}).then((res) => {
+          this.interModule = false;
           if (res.data.code === "70210") {
             this.questions = res.data.data;
             if (res.data.data.length > 0) {
@@ -250,7 +251,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .question_btn {
     position: absolute;
     bottom: 10px;
