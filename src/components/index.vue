@@ -79,7 +79,7 @@
           </div>
         </div>
       </div>
-      <div class="inRough" v-if="queryType == 0 || queryType === 'ding'">
+      <div class="inRough">
         <div class="mainIndex">
           <div class="mainTop">
             <div>

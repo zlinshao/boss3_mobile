@@ -43,10 +43,13 @@
               </div>
             </div>
             <div class="interFooter">
-              <div style="font-size: 15px;">{{item.answers_count}}条回答</div>
-              <div style="font-size: 15px;" @click="showAll(item.id)" v-if="item.answers_count>0 && !disabledIds[item.id]">显示全部
+              <div style="font-size: 18px;">{{item.answers_count}}条回答</div>
+              <div style="font-size: 18px;" @click="showAll(item.id)"
+                   v-if="item.answers_count>0 && !disabledIds[item.id]">显示全部
               </div>
-              <div style="font-size: 15px;" @click="answerDetail=[];disabledIds[item.id]=false" v-if="item.answers_count>0 && disabledIds[item.id]">收起</div>
+              <div style="font-size: 18px;" @click="answerDetail=[];disabledIds[item.id]=false"
+                   v-if="item.answers_count>0 && disabledIds[item.id]">收起
+              </div>
             </div>
           </div>
           <div class="main2">
@@ -73,7 +76,10 @@
                   <div>
                     {{value.content}}
                   </div>
-                  <div class="con" @click="commentNum(value.id)">
+                  <div class="con" @click="commentNum(value.id)" v-if="value.comments_count>0">
+                    <i class="iconfont icon-pinglun"></i><span>评论({{value.comments_count}})</span>
+                  </div>
+                  <div class="con" v-if="value.comments_count<1">
                     <i class="iconfont icon-pinglun"></i><span>评论({{value.comments_count}})</span>
                   </div>
                 </div>
@@ -107,6 +113,10 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="question_btn" @click="propQuestion">
+        <span>我要提问</span>
       </div>
       <!--遮罩-->
       <div v-if="interModule" class="interModule"></div>
@@ -160,10 +170,14 @@
         vm.ddRent('');
       });
     },
+
     activated() {
       this.getListData();
     },
     methods: {
+      propQuestion() {
+        this.$router.push({ path: '/proposeQuestion' });
+      },
       search() {
         this.getListData();
       },
@@ -173,7 +187,7 @@
             this.questions = res.data.data;
             if (res.data.data.length > 0) {
               res.data.data.forEach((item) => {
-                if(this.disabledIds[item.id] == null || this.disabledIds[item.id] == undefined){
+                if (this.disabledIds[item.id] == null || this.disabledIds[item.id] == undefined) {
                   this.$set(this.disabledIds, item.id, false);
                 }
               });
@@ -196,17 +210,17 @@
       },
       showAll(id) {
         this.disabledIds[id] = true;
-        for(var v in this.disabledIds) {
-          if(v!=id){
+        for (var v in this.disabledIds) {
+          if (v != id) {
             this.disabledIds[v] = false;
           }
         }
-        if (this.showHide === id) {
-          this.showStatus = !this.showStatus;
-        } else {
-          this.showStatus = true;
-          this.showHide = id;
-        }
+        // if (this.showHide === id) {
+        //   this.showStatus = !this.showStatus;
+        // } else {
+        this.showStatus = true;
+        this.showHide = id;
+        // }
         this.$http.get(globalConfig.server + 'qa/front/answer?question_id=' + id).then((res) => {
           if (res.data.code === '70310') {
             this.answerDetail = res.data.data;
@@ -237,6 +251,30 @@
 </script>
 
 <style lang="scss">
+  .question_btn {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    height: 100px;
+    background: #FFFFFF;
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
+    span {
+      margin-top: 30px;
+      color: #FFFFFF;
+      display: inline-block;
+      background: #536DFE;
+      width: 96%;
+      height: 50px;
+      line-height: 50px;
+      box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.40);
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+    }
+  }
+
   .no_data {
     background: #fff;
     color: #999;
@@ -316,7 +354,7 @@
     .interMain {
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      height: 88%;
+      height: 75%;
       .main1 {
         padding: .4rem;
         background: #FFFFFF;

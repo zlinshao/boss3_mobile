@@ -72,7 +72,8 @@ import MapSearch from '../components/gladTidings/villageManage/components/mapSea
 import AddNewAddress from '../components/gladTidings/villageManage/components/addNewAddress.vue'
 
 // 问答中心
-import Interlocution from '../components/examine/interlocution/index.vue'
+import Interlocution from '../components/examine/interlocution/index.vue';
+import ProposeQuestion from '../components/examine/interlocution/proposeQuestion.vue';
 
 Vue.use(Router);
 
@@ -491,10 +492,17 @@ export default new Router({
     {
       path: '/interlocution',
       name: '问答中心',
-      icon: 'iconfont icon-xiugai',
+      icon: 'iconfont icon-shijuan',
       meta: {title: '问答中心'},
       hidden: 'inter',
       component: Interlocution
+    },
+    {
+      path: '/proposeQuestion',
+      name: '我要提问',
+      meta: {title: '我要提问'},
+      hidden: false,
+      component: ProposeQuestion
     },
     // {
     //   path: '/cardDetail',
