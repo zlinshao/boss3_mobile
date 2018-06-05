@@ -22,9 +22,10 @@
 <script>
   import fileImage from '../../assets/video.jpg'
   import {Dialog} from 'vant';
+
   export default {
     name: 'hello',
-    props: ['ID', 'editImage', 'isClear','dis'],
+    props: ['ID', 'editImage', 'isClear', 'dis'],
     data() {
       return {
         imgArray: [],
@@ -95,10 +96,17 @@
         }, 1000)
       },
       getToken() {
+        this.$http.defaults.timeout = 5000;
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.token = res.data.data;
-          if(!this.uploader){
+          this.$http.defaults.timeout = null;
+          if (!this.uploader) {
             this.uploaderReady(res.data.data);
+          }
+        }).catch((res) => {
+          this.$http.defaults.timeout = null;
+          if (!this.uploader) {
+            alert('网络故障，上传组件创建失败，请保存草稿，稍后再试');
           }
         })
       },

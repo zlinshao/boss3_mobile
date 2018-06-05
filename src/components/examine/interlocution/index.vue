@@ -4,12 +4,13 @@
     <div class="loading" v-if="loading">
       <img src="../../../assets/loding1.gif">
     </div>
-    <div class="searchClass bgColor" v-if="!noData && !noPower && !loading">
+    <div class="searchClass bgColor" v-if="!noPower && !loading">
       <div class="searchCustom">
         <div class="bgColor" style="border: #f8f9ff;">
           <i class="van-icon van-icon-search" style="font-size: 20px;vertical-align: middle;"></i>
           <!--<input class="bgColor" type="text" @focus="interModule = true" v-model="form.search" @keyup.enter="search">-->
-          <input class="bgColor" type="text" v-model="form.search" @focus="interModule = true" @keyup.enter="search" placeholder="请输入标题"
+          <input class="bgColor" type="text" v-model="form.search" @focus="interModule = true" @keyup.enter="search"
+                 placeholder="请输入标题"
                  style="padding: 6px 0;">
           <!--<i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>-->
         </div>
@@ -42,17 +43,17 @@
                 </div>
               </div>
               <div class="contents1">
-                <p style="margin: 10px 0;line-height: 28px;">{{item.title}}</p>
-                <div style="line-height: 28px;">
+                <p style="margin: 5px 0;line-height: 28px;font-size: 18px;">{{item.title}}</p>
+                <div style="line-height: 26px;font-size: 15px;">
                   {{item.description}}
                 </div>
               </div>
               <div class="interFooter">
-                <div style="font-size: 18px;">{{item.answers_count}}条回答</div>
-                <div style="font-size: 18px;" @click="showAll(item.id)"
+                <div style="font-size: 15px;">{{item.answers_count}}条回答</div>
+                <div style="font-size: 15px;" @click="showAll(item.id)"
                      v-if="item.answers_count>0 && !disabledIds[item.id]">显示全部
                 </div>
-                <div style="font-size: 18px;" @click="answerDetail=[];disabledIds[item.id]=false"
+                <div style="font-size: 15px;line-height: 24px;" @click="answerDetail=[];disabledIds[item.id]=false"
                      v-if="item.answers_count>0 && disabledIds[item.id]">收起
                 </div>
               </div>
@@ -95,7 +96,7 @@
                       <div class="mainTopA">
                         <p>
                           <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
-                               style="border-radius: 50%;">
+                               style="border-radius: 50%;width: 45px;height: 35px;">
                           <img src="../../../assets/head.png" v-else>
                           <span>
                           <span>{{comment.staff.name}}</span>&nbsp;&nbsp;
@@ -119,6 +120,12 @@
             </div>
           </div>
         </div>
+        <div class="no_data" style="top: 70px;" v-if="noData && form.search != ''">
+          <div class="content" style="text-align: center;margin-top: 20px;background: #fff;">
+            <div class="content_img"><img src="../../../assets/no_data2.png" style="width: 40%;"></div>
+            <div class="last_title">暂无数据 ...</div>
+          </div>
+        </div>
       </div>
 
       <div class="question_btn" @click="propQuestion">
@@ -128,7 +135,7 @@
       <div v-if="interModule" class="interModule" @click="interModule=false"></div>
     </div>
     <!--暂无数据-->
-    <div class="no_data" v-if="noData">
+    <div class="no_data" v-if="noData && form.search==''">
       <div class="content" style="text-align: center;margin-top: 20px;background: #fff;">
         <div class="content_img"><img src="../../../assets/no_data2.png" style="width: 40%;"></div>
         <div class="last_title">暂无数据 ...</div>
@@ -152,7 +159,7 @@
     components: {Toast},
     data() {
       return {
-        loading: false,
+        loading: true,
         searchValue: '',
         interModule: false,
         showHide: '',
@@ -175,21 +182,49 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        vm.routerIndex('');
-        vm.ddRent('');
+        // vm.routerIndex('');
+        // vm.ddRent('');
       });
     },
-    activated(){
+    activated() {
       // let mainHeight = $('body').height() - 140;
-      // $('.interMain').css('height', mainHeight + 'px');
+      // $('#interMain').css('height', mainHeight + 'px');
+
       // let _this = this;
       // $('#interMain').scroll(function () {
       //   _this.scroll_bar_move();
       // });
+      this.returnIndex();
+      this.loading = true;
+      this.noPower = false;
+      this.noData = false;
       this.getListData();
     },
-
+    watch: {
+      loading(val){
+        if(val){
+          this.noPower = false;
+          this.noData = false;
+        }
+      }
+    } ,
     methods: {
+      returnIndex() {
+        let that = this;
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          that.loading = true;
+          that.$router.push({path: '/index'});
+        });
+        dd.biz.navigation.setLeft({
+          control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+          onSuccess: function (result) {
+            that.loading = true;
+            that.$router.push({path: '/index'});
+          },
+          onFail: function (err) {}
+        });
+      },
       //滚动条
       scroll_bar_move() {
         let mainContent = $('#interMain');
@@ -208,7 +243,7 @@
         }
       },
       propQuestion() {
-        this.$router.push({ path: '/proposeQuestion' });
+        this.$router.push({path: '/proposeQuestion'});
       },
       search() {
         this.getListData();
@@ -333,7 +368,7 @@
         margin-top: 30px;
         font-size: 18px;
       }
-      .ques_btn{
+      .ques_btn {
         cursor: pointer;
         margin-top: 20px;
         color: #FFFFFF;
@@ -401,11 +436,14 @@
       overflow-y: scroll;
       overflow-scrolling: touch;
       -webkit-overflow-scrolling: touch;
+
       .main1 {
-        padding: .4rem;
+        padding: .2rem .4rem;
         background: #FFFFFF;
       }
-
+      #mainContent {
+        margin-bottom: 100px;
+      }
       .mainContent {
         margin-bottom: .2rem;
         .contents1 {
@@ -441,7 +479,7 @@
           .article {
             margin: 0 .2rem 0 1.1rem;
             padding-bottom: .3rem;
-            line-height: .36rem;
+            line-height: .35rem;
             border-bottom: $bottom;
           }
         }
@@ -495,8 +533,8 @@
           justify-content: center;
           align-items: center;
           img {
-            width: .7rem;
-            height: .7rem;
+            width: 40px;
+            height: 40px;
             margin-right: .2rem;
           }
           span {
