@@ -1,6 +1,10 @@
 <template>
   <div id="interLocution">
-    <div class="searchClass bgColor" v-if="!noData && !noPower">
+    <div class="module" v-if="loading"></div>
+    <div class="loading" v-if="loading">
+      <img src="../../../assets/loding1.gif">
+    </div>
+    <div class="searchClass bgColor" v-if="!noData && !noPower && !loading">
       <div class="searchCustom">
         <div class="bgColor" style="border: #f8f9ff;">
           <i class="van-icon van-icon-search" style="font-size: 20px;vertical-align: middle;"></i>
@@ -126,6 +130,7 @@
       <div class="content" style="text-align: center;margin-top: 20px;background: #fff;">
         <div class="content_img"><img src="../../../assets/no_data2.png" style="width: 40%;"></div>
         <div class="last_title">暂无数据 ...</div>
+        <div @click="propQuestion" class="ques_btn">我要提问</div>
       </div>
     </div>
     <div class="container" v-if="noPower">
@@ -145,6 +150,7 @@
     components: {Toast},
     data() {
       return {
+        loading: false,
         searchValue: '',
         interModule: false,
         showHide: '',
@@ -182,8 +188,10 @@
         this.getListData();
       },
       getListData() {
+        this.loading = true;
         this.$http.get(globalConfig.server + "qa/front/question", {params: this.form}).then((res) => {
           this.interModule = false;
+          this.loading = false;
           if (res.data.code === "70210") {
             this.questions = res.data.data;
             if (res.data.data.length > 0) {
@@ -298,6 +306,16 @@
         position: relative;
         margin-top: 30px;
         font-size: 18px;
+      }
+      .ques_btn{
+        cursor: pointer;
+        margin-top: 20px;
+        color: #FFFFFF;
+        display: inline-block;
+        background: #536DFE;
+        border-radius: 4px;
+        padding: 15px 50px;
+        box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.40);
       }
     }
   }
