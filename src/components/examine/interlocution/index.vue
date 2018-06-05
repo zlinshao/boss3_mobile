@@ -17,16 +17,17 @@
         <!--<p v-if="searchValue.length > 0 && interModule" @click="search" style="color: #666666;">搜索</p>-->
         <!--<p v-if="searchValue.length < 1 && interModule" @click="onCancel">取消</p>-->
       </div>
-      <div class="interMain" :class="{'mainOver': interModule}">
-        <div class="mainContent" v-for="(item,index) in questions">
-          <div class="main1 boxShadow">
-            <div class="mainTop">
-              <div class="mainTopA">
-                <p>
-                  <img :src="item.asker.avatar" v-if="item && item.asker && item.asker.avatar && !item.is_anonymous"
-                       style="border-radius: 50%;">
-                  <img src="../../../assets/head.png" v-else>
-                  <span>
+      <div id="interMain" class="interMain">
+        <div id="mainContent">
+          <div class="mainContent" v-for="(item,index) in questions">
+            <div class="main1 boxShadow">
+              <div class="mainTop">
+                <div class="mainTopA">
+                  <p>
+                    <img :src="item.asker.avatar" v-if="item && item.asker && item.asker.avatar && !item.is_anonymous"
+                         style="border-radius: 50%;">
+                    <img src="../../../assets/head.png" v-else>
+                    <span>
                   <span v-if="!item.is_anonymous">{{item && item.asker && item.asker.name}}</span>
                   <span v-if="item.is_anonymous">匿名</span>
                   <span v-if="!item.is_anonymous">
@@ -34,83 +35,84 @@
                       <span v-if="item && item.asker && item.asker.role.length>0" v-for="v in item.asker.role">&nbsp;{{v.display_name}}&nbsp;</span>
                   </span>
                 </span>
-                </p>
+                  </p>
+                </div>
+                <div class="topTime">
+                  {{item.create_time}}
+                </div>
               </div>
-              <div class="topTime">
-                {{item.create_time}}
+              <div class="contents1">
+                <p style="margin: 10px 0;line-height: 26px;">{{item.title}}</p>
+                <div style="line-height: 26px;">
+                  {{item.description}}
+                </div>
+              </div>
+              <div class="interFooter">
+                <div style="font-size: 18px;">{{item.answers_count}}条回答</div>
+                <div style="font-size: 18px;" @click="showAll(item.id)"
+                     v-if="item.answers_count>0 && !disabledIds[item.id]">显示全部
+                </div>
+                <div style="font-size: 18px;" @click="answerDetail=[];disabledIds[item.id]=false"
+                     v-if="item.answers_count>0 && disabledIds[item.id]">收起
+                </div>
               </div>
             </div>
-            <div class="contents1">
-              <p>{{item.title}}</p>
-              <div>
-                {{item.description}}
-              </div>
-            </div>
-            <div class="interFooter">
-              <div style="font-size: 18px;">{{item.answers_count}}条回答</div>
-              <div style="font-size: 18px;" @click="showAll(item.id)"
-                   v-if="item.answers_count>0 && !disabledIds[item.id]">显示全部
-              </div>
-              <div style="font-size: 18px;" @click="answerDetail=[];disabledIds[item.id]=false"
-                   v-if="item.answers_count>0 && disabledIds[item.id]">收起
-              </div>
-            </div>
-          </div>
-          <div class="main2">
-            <div v-for="(value,key) in answerDetail" class="allContent" v-if="showHide === item.id && showStatus">
-              <div class="mainTop padNone topNone">
-                <div class="mainTopA">
-                  <p>
-                    <img :src="value.staff.avatar" v-if="value.staff.avatar" style="border-radius: 50%;">
-                    <img src="../../../assets/head.png" v-else>
-                    <span>{{value.staff.name}}
+            <div class="main2">
+              <div v-for="(value,key) in answerDetail" class="allContent" v-if="showHide === item.id && showStatus">
+                <div class="mainTop padNone topNone">
+                  <div class="mainTopA">
+                    <p>
+                      <img :src="value.staff.avatar" v-if="value.staff.avatar" style="border-radius: 50%;">
+                      <img src="../../../assets/head.png" v-else>
+                      <span>{{value.staff.name}}
                       <span>
                         <span v-if="value.staff.org.length>0" v-for="v in value.staff.org">&nbsp;{{v.name}}&nbsp;</span>-
                         <span v-if="value.staff.role.length>0" v-for="v in value.staff.role">&nbsp;{{v.display_name}}&nbsp;</span>
                       </span>
                     </span>
-                  </p>
-                </div>
-                <div class="topTime">
-                  {{value.create_time}}
-                </div>
-              </div>
-              <div class="boxShadow" style="border-bottom: 1px solid #E0E0E0;">
-                <div class="contents2">
-                  <div>
-                    {{value.content}}
+                    </p>
                   </div>
-                  <div class="con" @click="commentNum(value.id)" v-if="value.comments_count>0">
-                    <i class="iconfont icon-pinglun"></i><span>评论({{value.comments_count}})</span>
-                  </div>
-                  <div class="con" v-if="value.comments_count<1">
-                    <i class="iconfont icon-pinglun"></i><span>评论({{value.comments_count}})</span>
+                  <div class="topTime">
+                    {{value.create_time}}
                   </div>
                 </div>
-              </div>
-              <div class="boxShadow man3" :class="{'marginBot': comments === value.id && comStatus}">
-                <div class="contents3" v-for="comment in commentDetail" v-if="comments === value.id && comStatus">
-                  <div class="mainTop padNone">
-                    <div class="mainTopA">
-                      <p>
-                        <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
-                             style="border-radius: 50%;">
-                        <img src="../../../assets/head.png" v-else>
-                        <span>
+                <div class="boxShadow" style="border-bottom: 1px solid #E0E0E0;">
+                  <div class="contents2">
+                    <div style="line-height: 26px;">
+                      {{value.content}}
+                    </div>
+                    <div class="con" @click="commentNum(value.id)" v-if="value.comments_count>0">
+                      <i class="iconfont icon-pinglun"></i><span>评论({{value.comments_count}})</span>
+                    </div>
+                    <div class="con" v-if="value.comments_count<1">
+                      <i class="iconfont icon-pinglun"></i><span>评论({{value.comments_count}})</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="boxShadow man3" :class="{'marginBot': comments === value.id && comStatus}">
+                  <div class="contents3" v-for="comment in commentDetail" v-if="comments === value.id && comStatus">
+                    <div class="mainTop padNone">
+                      <div class="mainTopA">
+                        <p>
+                          <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
+                               style="border-radius: 50%;">
+                          <img src="../../../assets/head.png" v-else>
+                          <span>
                           <span>{{comment.staff.name}}</span>&nbsp;&nbsp;
                           <span>
                             <span v-if="comment.staff.org.length>0" v-for="v in comment.staff.org">&nbsp;{{v.name}}&nbsp;</span>-
                             <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">&nbsp;{{v.display_name}}&nbsp;</span>
                           </span>
                         </span>
-                      </p>
+                        </p>
+                      </div>
+                      <div class="topTime">
+                        {{comment.create_time}}
+                      </div>
                     </div>
-                    <div class="topTime">
-                      {{comment.create_time}}
+                    <div class="article" style="line-height: 26px;">
+                      {{comment.content}}
                     </div>
-                  </div>
-                  <div class="article">
-                    {{comment.content}}
                   </div>
                 </div>
               </div>
@@ -163,11 +165,12 @@
         form: {
           search: '',
           page: 1,
-          limit: 5,
+          limit: 500,
         },
         noPower: false,  //无权
         noData: false, //无数据
         disabledIds: {},  //全部显示 和收起的显示
+        scrollTop: 0,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -176,11 +179,34 @@
         vm.ddRent('');
       });
     },
-
-    activated() {
+    activated(){
+      // let mainHeight = $('body').height() - 140;
+      // $('.interMain').css('height', mainHeight + 'px');
+      // let _this = this;
+      // $('#interMain').scroll(function () {
+      //   _this.scroll_bar_move();
+      // });
       this.getListData();
     },
+
     methods: {
+      //滚动条
+      scroll_bar_move() {
+        let mainContent = $('#interMain');
+        let body_height = mainContent.height();
+        let body_scrollTop = mainContent.scrollTop();
+        this.scrollTop = mainContent.scrollTop();
+        let scroll_height = $('#mainContent').height();
+
+        if (this.scrollHeight < scroll_height) {
+          this.isGetMore = true;
+        }
+        this.scrollHeight = scroll_height;
+        if (scroll_height - body_scrollTop - body_height < 500) {
+          // this.getMore();
+          // this.isGetMore = false;
+        }
+      },
       propQuestion() {
         this.$router.push({ path: '/proposeQuestion' });
       },
@@ -262,7 +288,7 @@
 <style lang="scss" scoped>
   .question_btn {
     position: absolute;
-    bottom: 10px;
+    bottom: 0px;
     width: 100%;
     height: 100px;
     background: #FFFFFF;
@@ -371,9 +397,10 @@
       @include boxShadow;
     }
     .interMain {
-      overflow-y: auto;
+      height: 500px;
+      overflow-y: scroll;
+      overflow-scrolling: touch;
       -webkit-overflow-scrolling: touch;
-      height: 75%;
       .main1 {
         padding: .4rem;
         background: #FFFFFF;
@@ -510,7 +537,7 @@
     }
 
     .mainOver {
-      overflow-y: hidden;
+      /*overflow-y: hidden;*/
     }
   }
 </style>

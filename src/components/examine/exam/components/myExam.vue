@@ -72,7 +72,7 @@
         this.$router.push({path: '/lookExam', query: {result_id: val.result_id, exam_id: val.id}});
       },
       getExamData() {
-        this.$http.get(globalConfig.server + 'exam/exam/my?enrolled=1').then((res) => {
+        this.$http.get(globalConfig.server + 'exam/exam/my?enrolled=1&page=1&limit=500').then((res) => {
           if (res.data.code === '30000') {
             this.examData = res.data.data.data;
             if (res.data.data.data.length < 1) {
