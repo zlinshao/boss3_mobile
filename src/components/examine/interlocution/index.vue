@@ -539,6 +539,8 @@
           }
           span {
             width: 2.6rem;
+            height: 20px;
+            line-height: 20px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
