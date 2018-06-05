@@ -186,8 +186,8 @@
 
 <style lang="scss" scoped>
   .question_btn {
-    position: relative;
-    margin-top: 90px;
+    position: fixed;
+    bottom: 0;
     width: 100%;
     height: 100px;
     background: #FFFFFF;

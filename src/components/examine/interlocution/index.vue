@@ -49,8 +49,8 @@
                 </div>
               </div>
               <div class="interFooter">
-                <div style="font-size: 15px;">{{item.answers_count}}条回答</div>
-                <div style="font-size: 15px;" @click="showAll(item.id)"
+                <div style="font-size: 15px;line-height: 24px;">{{item.answers_count}}条回答</div>
+                <div style="font-size: 15px;line-height: 24px;" @click="showAll(item.id)"
                      v-if="item.answers_count>0 && !disabledIds[item.id]">显示全部
                 </div>
                 <div style="font-size: 15px;line-height: 24px;" @click="answerDetail=[];disabledIds[item.id]=false"
@@ -96,7 +96,7 @@
                       <div class="mainTopA">
                         <p>
                           <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
-                               style="border-radius: 50%;width: 45px;height: 35px;">
+                               style="border-radius: 50%;">
                           <img src="../../../assets/head.png" v-else>
                           <span>
                           <span>{{comment.staff.name}}</span>&nbsp;&nbsp;
@@ -510,7 +510,7 @@
         padding: .2rem 0 0;
         .allContent {
           .mainTop {
-            padding: .1rem .4rem 0;
+            padding: .1rem .2rem 0;
           }
           .man3 {
             margin: 0 .3rem;
