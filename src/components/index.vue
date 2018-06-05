@@ -79,7 +79,7 @@
           </div>
         </div>
       </div>
-      <div class="inRough">
+      <div class="inRough" v-if="queryType == 'exam' || queryType == 'questionnaire' || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
             <div>
@@ -102,7 +102,7 @@
           </div>
         </div>
       </div>
-      <div class="inRough">
+      <div class="inRough" v-if="queryType == 'interlocution' || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
             <div>
