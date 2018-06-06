@@ -69,7 +69,7 @@
             </span>
               <span style="font-size: 0.2rem;margin: 0 .1rem">丨</span>
               <span>
-              <span v-if="item.area">{{item.floor}}/{{item.floors}}8层</span>
+              <span v-if="item.area">{{item.floor}}/{{item.floors}}层</span>
               <span v-else="">/</span>
             </span>
               <span style="font-size: 0.2rem;margin: 0 .1rem">丨</span>

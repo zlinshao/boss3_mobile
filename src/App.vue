@@ -140,7 +140,6 @@
           }
           return Promise.reject(error);
         });
-
       },
 
       // 认证

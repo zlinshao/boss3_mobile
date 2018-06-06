@@ -120,7 +120,6 @@
           this.$http.get(this.urls + 'setting/community/', {
             params: this.params,
           }).then((res) => {
-            alert(JSON.stringify(this.params));
             if (this.searchValue !== '') {
               if (res.data.code === '10000' && res.data.data.list.length !== 0) {
                 let data = res.data.data.list;

@@ -205,9 +205,7 @@
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
-
-//              _this.isUpId = file.id;
-
+              _this.$http.defaults.timeout = 5000;
               _this.$http.post(globalConfig.server_user + 'files', {
                 url: sourceLink,
                 name: url.key,
@@ -215,16 +213,19 @@
                 type: file.type,
                 size: file.size
               }).then((res) => {
+                _this.$http.defaults.timeout = null;
                 if (res.data.status === "success") {
                   _this.imgId.push(res.data.data.id);
-
                   let object = {};
                   object.id = res.data.data.id;
                   object.name = file.id;
                   _this.imgArray.push(object);
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
-              })
+              }).catch(error => {
+                _this.$http.defaults.timeout = null;
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-close"></span>';
+              });
             },
             'UploadComplete': function () {
               //队列文件处理完毕后，处理相关的事情
