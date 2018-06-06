@@ -4,7 +4,8 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>报备类型</div>
-          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.quality_up" @change="qualityChange">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.quality_up"
+                           @change="qualityChange">
             <van-radio name="0">新增</van-radio>
             <van-radio name="1">跟进</van-radio>
           </van-radio-group>
@@ -402,6 +403,7 @@
         cities: [],                         //城市
         beforeCity: '',                     //当前城市
         beforeCityId: '',                   //当前城市ID
+        beforeProvinceId: '',               //当前城市ID
         house_type_name: '1室1厅1卫',
         refundSta: true,
 
@@ -587,13 +589,20 @@
 
           this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
             if (res.data.code === '1000120') {
+              this.form.province_id = '';
+              this.form.city_id = '';
               let address = res.data.data.data[2] + '市';
               this.form.city_name = address;
               this.beforeCity = address;
               for (let i = 0; i < this.allCity.length; i++) {
                 if (this.allCity[i].dictionary_name === address) {
-                  this.form.city_id = this.allCity[i].variable.city_id;
-                  this.beforeCityId = this.allCity[i].variable.city_id;
+                  if (this.allCity[i].variable.is_province) {
+                    this.form.province_id = this.allCity[i].variable.city_id;
+                    this.beforeProvinceId = this.allCity[i].variable.city_id;
+                  } else {
+                    this.form.city_id = this.allCity[i].variable.city_id;
+                    this.beforeCityId = this.allCity[i].variable.city_id;
+                  }
                 }
               }
             }
@@ -629,7 +638,9 @@
         switch (val) {
           case 1:
             if (this.form.city_id !== '') {
-              this.$router.push({path: '/citySearch', query: {city: this.form.city_id}});
+              this.$router.push({path: '/citySearch', query: {city: this.form.city_id, type: 1}});
+            } else if (this.form.province_id !== '') {
+              this.$router.push({path: '/citySearch', query: {city: this.form.province_id, type: 2}});
             } else {
               Toast('请选择城市');
             }
@@ -717,9 +728,15 @@
             this.form.house_type = index;
             break;
           case 2:
+            this.form.city_id = '';
+            this.form.province_id = '';
             for (let i = 0; i < this.allCity.length; i++) {
               if (this.allCity[i].dictionary_name === value) {
-                this.form.city_id = this.allCity[i].variable.city_id;
+                if (this.allCity[i].variable.is_province) {
+                  this.form.province_id = this.allCity[i].variable.city_id;
+                } else {
+                  this.form.city_id = this.allCity[i].variable.city_id;
+                }
               }
             }
             this.form.city_name = value;
@@ -931,6 +948,7 @@
       prefill(data, val) {
         this.isClear = false;
         this.form.city_id = data.city_id;                     //城市
+        this.form.province_id = data.province_id;             //城市
         this.form.city_name = data.city_name;                 //城市
         this.form.community = data.community;                 //小区id
         this.community_name = data.community.village_name;    //小区id
@@ -1018,10 +1036,11 @@
         this.form.processable_id = '';
         this.form.house_id = '';
         this.house_name = '';
-        this.form.city_id = this.beforeCityId;    //城市
-        this.form.city_name = this.beforeCity;    //城市
-        this.form.community = {};                 //小区id
-        this.community_name = '';                 //小区名称
+        this.form.city_id = this.beforeCityId;            //城市
+        this.form.province_id = this.beforeProvinceId;    //城市
+        this.form.city_name = this.beforeCity;            //城市
+        this.form.community = {};                         //小区id
+        this.community_name = '';                         //小区名称
         this.form.door_address = ['', '', ''];
 
         this.form.house_type = [1, 1, 1];
