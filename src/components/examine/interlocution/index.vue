@@ -4,7 +4,7 @@
     <div class="loading" v-if="loading">
       <img src="../../../assets/loding1.gif">
     </div>
-    <div class="searchClass bgColor" v-if="!noPower && !loading">
+    <div class="searchClass bgColor" v-if="!noPower && !loading ">
       <div class="searchCustom">
         <div class="bgColor" style="border: #f8f9ff;">
           <i class="van-icon van-icon-search" style="font-size: 20px;vertical-align: middle;"></i>
@@ -120,10 +120,11 @@
             </div>
           </div>
         </div>
-        <div class="no_data" style="top: 70px;" v-if="noData && form.search != ''">
+        <div class="no_data" style="top: 70px;" v-if="noData">
           <div class="content" style="text-align: center;margin-top: 20px;background: #fff;">
             <div class="content_img"><img src="../../../assets/no_data2.png" style="width: 40%;"></div>
             <div class="last_title">暂无数据 ...</div>
+            <!--<div @click="propQuestion" class="ques_btn">我要提问</div>-->
           </div>
         </div>
       </div>
@@ -134,12 +135,14 @@
       <!--遮罩-->
       <div v-if="interModule" class="interModule" @click="interModule=false"></div>
     </div>
-    <!--暂无数据-->
-    <div class="no_data" v-if="noData && form.search==''">
-      <div class="content" style="text-align: center;margin-top: 20px;background: #fff;">
-        <div class="content_img"><img src="../../../assets/no_data2.png" style="width: 40%;"></div>
-        <div class="last_title">暂无数据 ...</div>
-        <div @click="propQuestion" class="ques_btn">我要提问</div>
+    <div class="searchClass bgColor" v-if="!noPower && !loading && noData && first">
+      <!--暂无数据-->
+      <div class="no_data" v-if="noData && form.search==''">
+        <div class="content" style="text-align: center;margin-top: 20px;background: #fff;">
+          <div class="content_img"><img src="../../../assets/no_data2.png" style="width: 40%;"></div>
+          <div class="last_title">暂无数据 ...</div>
+          <div @click="propQuestion" class="ques_btn">我要提问</div>
+        </div>
       </div>
     </div>
     <div class="container" v-if="noPower">
@@ -178,6 +181,7 @@
         noData: false, //无数据
         disabledIds: {},  //全部显示 和收起的显示
         scrollTop: 0,
+        first: true,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -201,28 +205,33 @@
       this.getListData();
     },
     watch: {
-      loading(val){
-        if(val){
+      loading(val) {
+        if (val) {
           this.noPower = false;
           this.noData = false;
         }
       }
-    } ,
+    },
     methods: {
       returnIndex() {
         let that = this;
         document.addEventListener('backbutton', function (e) {
           e.preventDefault();
+          that.first = true;
+          that.form.search = '';
           that.loading = true;
           that.$router.push({path: '/index'});
         });
         dd.biz.navigation.setLeft({
           control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
           onSuccess: function (result) {
+            that.first = true;
+            that.form.search = '';
             that.loading = true;
             that.$router.push({path: '/index'});
           },
-          onFail: function (err) {}
+          onFail: function (err) {
+          }
         });
       },
       //滚动条
@@ -246,6 +255,7 @@
         this.$router.push({path: '/proposeQuestion'});
       },
       search() {
+        this.first = false;
         this.getListData();
       },
       getListData() {
