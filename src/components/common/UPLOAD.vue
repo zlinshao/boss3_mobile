@@ -189,16 +189,13 @@
               });
             },
             'UploadProgress': function (up, file) {
-
               // 每个文件上传时，处理相关的事情
               if (document.getElementById(file.id)) {
-
                 if (file.percent < 100) {
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
                 } else {
-                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>处理中</span>';
                 }
-
               }
             },
             'FileUploaded': function (up, file, info) {
@@ -221,6 +218,7 @@
                   object.name = file.id;
                   _this.imgArray.push(object);
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
                 }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
@@ -241,7 +239,6 @@
                 });
               }
             }
-
 //            'Key': function (up, file) {
 //              // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 //              // 该配置必须要在unique_names: false，save_key: false时才生效
