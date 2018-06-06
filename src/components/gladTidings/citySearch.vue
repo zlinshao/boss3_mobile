@@ -11,7 +11,8 @@
         <p v-else @click="onCancel">取消</p>
       </div>
 
-      <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
+      <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮
+      </div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 2">暂无相关信息</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 1">
         <van-loading type="spinner" color="black"/>
@@ -55,15 +56,19 @@
         urls: globalConfig.server,
         searchValue: '',          //搜索
         city_id: '',
+        province_id: '',
         lists: [],
         path: '',
         page: 1,
         disabled: true,
         showDetail: 0,
+        params: {},
+        type: '',
       }
     },
 
     activated() {
+      this.type = this.$route.query.type;
       this.city_id = this.$route.query.city;
       this.routerIndex(this.path);
       this.close_();
@@ -101,16 +106,21 @@
         }
       },
       onSearch(val, page) {
+        this.params = {};
+        this.params.num = 20;
+        this.params.keywords = val;
+        this.params.pages = page;
+        if (this.type === 1) {
+          this.params.city = this.city_id;
+        } else {
+          this.params.province = this.city_id;
+        }
         if (val !== '') {
           this.showDetail = 1;
           this.$http.get(this.urls + 'setting/community/', {
-            params: {
-              num: 20,
-              city: this.city_id,
-              keywords: val,
-              pages: page,
-            }
+            params: this.params,
           }).then((res) => {
+            alert(JSON.stringify(this.params));
             if (this.searchValue !== '') {
               if (res.data.code === '10000' && res.data.data.list.length !== 0) {
                 let data = res.data.data.list;

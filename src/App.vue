@@ -54,10 +54,14 @@
           } else if (android.queryType() === 'questionnaire') {
             this.$router.push({path: '/beforeNaire'});
           }
+          // let head = {};
+          // head.token_type = "Bearer";
+          // head.access_token = android.queryToken();
+          // sessionStorage.setItem('myData', JSON.stringify(head));
           globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-            // sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -69,13 +73,15 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          if (sessionStorage.myData !== undefined) {
-            let head = JSON.parse(sessionStorage.myData);
-            globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-          } else {
-            this.loading = true;
-            this.corp();
-          }
+          this.loading = true;
+          this.corp();
+          // if (sessionStorage.myData !== undefined) {
+          //   let head = JSON.parse(sessionStorage.myData);
+          //   globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+          // } else {
+          //   this.loading = true;
+          //   this.corp();
+          // }
         }
 
         let that = this;
@@ -157,7 +163,6 @@
                     data.phone = res.data.phone;
                     data.department_name = res.data.org[0].name;
                     data.department_id = res.data.org[0].id;
-                    // data.display_name = res.data.role[0].display_name;
                     sessionStorage.setItem('personal', JSON.stringify(data));
                     globalConfig.personal = data;
                     that.$http.post(that.address + 'oauth/token', {
@@ -167,7 +172,7 @@
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {
-                      sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                      // sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                       that.loading = false;
@@ -223,10 +228,8 @@
                       data.phone = res.data.phone;
                       data.department_name = res.data.org[0].name;
                       data.department_id = res.data.org[0].id;
-                      // data.display_name = res.data.role[0].display_name;
                       sessionStorage.setItem('personal', JSON.stringify(data));
                       globalConfig.personal = data;
-
                       that.$http.post(that.address + 'oauth/token', {
                         client_secret: globalConfig.client_secret,
                         client_id: globalConfig.client_id,
@@ -234,7 +237,7 @@
                         username: res.data.phone,
                         password: res.data.code,
                       }).then((res) => {
-                        sessionStorage.setItem('myData', JSON.stringify(res.data.data));
+                        // sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                         let head = res.data.data;
                         globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                         that.loading = false;
