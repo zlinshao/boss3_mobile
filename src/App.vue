@@ -140,7 +140,6 @@
           }
           return Promise.reject(error);
         });
-
       },
 
       // 认证
@@ -267,7 +266,6 @@
                 })
               },
               onFail: function (err) {
-                alert(JSON.stringify(err));
                 alert('您不在系统内，请联系管理员添加！！');
                 dd.biz.navigation.close({
                   onSuccess: function (result) {

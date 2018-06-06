@@ -189,25 +189,20 @@
               });
             },
             'UploadProgress': function (up, file) {
-
               // 每个文件上传时，处理相关的事情
               if (document.getElementById(file.id)) {
-
                 if (file.percent < 100) {
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
                 } else {
-                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>处理中</span>';
                 }
-
               }
             },
             'FileUploaded': function (up, file, info) {
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
-
-//              _this.isUpId = file.id;
-
+              _this.$http.defaults.timeout = 5000;
               _this.$http.post(globalConfig.server_user + 'files', {
                 url: sourceLink,
                 name: url.key,
@@ -215,16 +210,20 @@
                 type: file.type,
                 size: file.size
               }).then((res) => {
+                _this.$http.defaults.timeout = null;
                 if (res.data.status === "success") {
                   _this.imgId.push(res.data.data.id);
-
                   let object = {};
                   object.id = res.data.data.id;
                   object.name = file.id;
                   _this.imgArray.push(object);
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
                 }
-              })
+              }).catch(error => {
+                _this.$http.defaults.timeout = null;
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-close"></span>';
+              });
             },
             'UploadComplete': function () {
               //队列文件处理完毕后，处理相关的事情
@@ -240,7 +239,6 @@
                 });
               }
             }
-
 //            'Key': function (up, file) {
 //              // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 //              // 该配置必须要在unique_names: false，save_key: false时才生效
