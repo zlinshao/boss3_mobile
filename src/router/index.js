@@ -58,6 +58,8 @@ import CollectHouse from '../components/gladTidings/collectHouse.vue'       //�
 import Organize from '../components/gladTidings/organize.vue'               //开单人搜索
 import Depart from '../components/common/selectDepartment.vue'              //部门搜索
 
+import AndroidStaff from '../components/common/androidStaff.vue'              //安卓搜索
+
 //管控中心
 import ProductControlCenter from '../components/gladTidings/productControlCenter/index.vue'
 import ProductDetail from '../components/gladTidings/productControlCenter/components/productDetail.vue'
@@ -113,6 +115,13 @@ export default new Router({
       hidden: false,
       meta: {title: '部门'},
       component: Depart
+    },
+    {
+      path: '/androidStaff',
+      name: '组织架构',
+      hidden: 'glad',
+      meta: {title: '组织架构'},
+      component: AndroidStaff
     },
 
     {

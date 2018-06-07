@@ -22,9 +22,11 @@
 <script>
   import fileImage from '../../assets/video.jpg'
   import {Dialog} from 'vant';
+  import {Toast} from 'vant';
 
   export default {
     name: 'hello',
+    components: {Toast},
     props: ['ID', 'editImage', 'isClear', 'dis'],
     data() {
       return {
@@ -237,6 +239,8 @@
                 }).then(() => {
                   // on close
                 });
+              } else {
+                Toast(errTip);
               }
             }
 //            'Key': function (up, file) {
