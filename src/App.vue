@@ -75,7 +75,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          // this.loading = true;
+          this.loading = true;
           this.corp();
           // if (sessionStorage.myData !== undefined) {
           //   let head = JSON.parse(sessionStorage.myData);
