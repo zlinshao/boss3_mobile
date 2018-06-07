@@ -152,12 +152,12 @@
           placeholder="请填写价格">
         </van-field>
 
-        <!--<div class="titleSwitch">-->
-        <!--<div class="cellGroup">-->
-        <!--<span class="requiredIcon">*</span>-->
-        <!--<van-switch-cell v-model="cusFrom" title="是否中介"/>-->
-        <!--</div>-->
-        <!--</div>-->
+        <div class="titleSwitch">
+          <div class="cellGroup">
+            <span class="requiredIcon">*</span>
+            <van-switch-cell v-model="cusFrom1" title="是否中介"/>
+          </div>
+        </div>
 
         <van-field
           v-model="cusFrom"
@@ -408,6 +408,7 @@
         refundSta: true,
 
         cusFrom: '',                        //是否中介
+        cusFrom1: false,                        //是否中介
         heaterOn: true,                     //暖气
         gasOn: true,                        //天然气
         is_cleanOn: true,                   //房屋交接是否干净
