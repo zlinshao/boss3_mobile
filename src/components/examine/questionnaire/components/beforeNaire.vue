@@ -6,7 +6,7 @@
     </div>
     <div class="container" v-if="!loading">
       <div class="content">
-        <div class="content_img"><img src="../../../../assets/waiting.png" style="width: 60%;"></div>
+        <div class="content_img"><img src="../../../../assets/waiting.png" style="width: 45%;"></div>
         <div class="title">您目前没有问卷调查</div>
         <van-button class="view_history" @click="goHistory">查看历史问卷</van-button>
       </div>

@@ -4,7 +4,9 @@
       <div style="position: relative;width: 100%;height: 20px;background: #f8f8f8;"></div>
       <div class="content" v-for="item in questionNaireData">
         <div class="top">
-          <div style="float: left;"><img :src="personal.avatar" style="width: 50px;height: 50px;border-radius: 50%;">
+          <div style="float: left;">
+            <img v-if="personal.avatar" :src="personal.avatar"  style="width: 50px;height: 50px;border-radius: 50%;">
+            <img src="../../../../assets/head.png" v-else style="width: 50px;height: 50px;border-radius: 50%;">
           </div>
           <div style="width: 60%;float: left;margin-left: 20px;line-height: 28px;margin-top: 0px;">
             <p style="color: #333;font-size: 20px;">{{personal.name}}</p>
