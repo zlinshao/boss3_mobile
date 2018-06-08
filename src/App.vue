@@ -4,7 +4,7 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    <div v-if="!loading" style="height: 100%">
+    <div v-if="!loading">
       <keep-alive>
         <router-view v-wechat-title="$route.meta.title"/>
       </keep-alive>

@@ -1,32 +1,33 @@
 <template>
   <div id="androidStaff">
+    <div class="moduleStaff" v-if="searchStatus"></div>
     <div class="breadCrumb">
       <div class="staffSearch">
         <div class="searchCon">
           <div>
             <i class="van-icon van-icon-search"></i>
-            <input type="text" v-model="searchValue" @keyup.enter="search" placeholder="请输入搜索内容">
+            <input type="text" v-model="searchValue" @focus="searchSta(1)" @keyup.enter="search" placeholder="请输入搜索内容">
             <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
           </div>
         </div>
-        <p v-if="searchValue.length > 0" @click="search" style="color: #666666;">搜索</p>
-        <p v-else @click="onCancel">取消</p>
+        <p v-if="searchValue.length > 0 && searchStatus" @click="search" style="color: #666666;">搜索</p>
+        <p v-if="searchValue.length < 1 && searchStatus" @click="onCancel" style="color: #06bf04;">取消</p>
       </div>
       <div class="breadA">
         <div class="breadAuto">
-          <div class="">
+          <div>
             <span @click="breadcrumbSearch(1, '')">{{highestDepart}}</span>
           </div>
-          <div class="hhhhhh" v-for="(item,index) in breadcrumbList" @click="breadcrumbSearch(item,index)">
+          <div v-for="(item,index) in breadcrumbList" @click="breadcrumbSearch(item,index)">
             <span>&nbsp;/&nbsp;{{item.name}}</span>
           </div>
         </div>
       </div>
     </div>
     <div class="staffList">
-      <div class="checkedClass" v-if="staffList.length > 0">
-        <van-checkbox v-model="checked">全选</van-checkbox>
-      </div>
+      <!--<div class="checkedClass" v-if="staffList.length > 0">-->
+      <!--<van-checkbox v-model="checked">全选</van-checkbox>-->
+      <!--</div>-->
       <ul
         v-waterfall-lower="loadMore"
         waterfall-disabled="disabled"
@@ -43,11 +44,14 @@
         <li v-for="(item,index) in staffList">
           <div class="checks">
             <van-checkbox-group v-model="selectId">
-              <van-checkbox :key="index" :name="item.id">
+              <van-checkbox :key="index" :name="item">
                 {{item.name}}
               </van-checkbox>
             </van-checkbox-group>
           </div>
+        </li>
+        <li class="noData" v-if="staffList.length === 0 && organizeList.length === 0">
+          暂无数据
         </li>
       </ul>
     </div>
@@ -75,15 +79,21 @@
     data() {
       return {
         disabled: true,
-        checked: false,          //全选
+        checked: false,         //全选
         highestDepart: '',      //最高级岗位
         breadcrumbList: [],     //面包屑列表
         organizeList: [],       //组织架构部门列表
         staffList: [],          //人员列表
         selectId: [],           //人员ID
-        pages: 1,
-        org_id: 1,
+
         searchValue: '',
+        searchStatus: false,
+        staffData: [],
+        params: {
+          is_dimission: 0,
+          org_id: '',
+          pages: 1,
+        }
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -101,23 +111,29 @@
         }
       });
     },
-    watch: {
-      breadcrumbList(val) {
-        alert(document.getElementsByClassName('hhhhhh').length)
-      }
-    },
     methods: {
       loadMore() {
         if (!this.disabled) {
-          this.getDepartment(this.org_id, this.pages);
-          this.pages++;
+          this.getDepartment(this.params.org_id, this.params.pages);
+          this.params.pages++;
+        }
+      },
+      searchSta(val) {
+        if (val === 1) {
+          this.searchStatus = true;
         }
       },
       search() {
-
+        this.$http.get(globalConfig.server_user + 'users?q=' + this.searchValue).then((res) => {
+          if (res.data.status === 'success' && res.data.data.length > 0) {
+            this.staffData = res.data.data;
+          } else {
+            this.staffData = [];
+          }
+        })
       },
       onCancel() {
-
+        this.searchStatus = false;
       },
       getDepartment(id, page) {
         this.$http.get(globalConfig.server_user + 'organizations?parent_id=' + id + '&per_page_number=50').then((res) => {
@@ -126,7 +142,14 @@
             // this.lastPage_depart = res.data.meta.last_page;
           }
         });
-        this.$http.get(globalConfig.server_user + 'users?org_id=' + id + '&is_dimission=0&pages=' + page).then((res) => {
+        this.getStaffs(id, page);
+      },
+      getStaffs(id, page) {
+        this.params.org_id = id;
+        this.params.pages = page;
+        this.$http.get(globalConfig.server_user + 'users', {
+          params: this.params,
+        }).then((res) => {
           if (res.data.status === 'success' && res.data.data.length > 0) {
             let data = res.data.data;
             for (let i = 0; i < data.length; i++) {
@@ -141,7 +164,7 @@
       //面包屑搜索
       breadcrumbSearch(item, index) {
         this.close_();
-        this.org_id = item.id;
+        this.params.org_id = item.id;
         if (item === 1) {
           this.getDepartment(1, 1);
           this.breadcrumbList = [];
@@ -153,7 +176,7 @@
       //搜索下级部门
       getNextLevel(item) {
         this.close_();
-        this.org_id = item.id;
+        this.params.org_id = item.id;
         this.getDepartment(item.id, 1);
         let isExist = false;
         this.breadcrumbList.forEach((x) => {
@@ -164,14 +187,13 @@
         if (!isExist) {
           this.breadcrumbList.push(item);
         }
-        alert();
       },
       close_(val) {
         if (val === 'id') {
           this.selectId = [];
         } else {
           this.staffList = [];
-          this.pages = 1;
+          this.params.pages = 1;
         }
       },
       sureIds() {
@@ -198,7 +220,15 @@
       -moz-border-radius: $n;
       border-radius: $n;
     }
-
+    .moduleStaff {
+      position: fixed;
+      top: 2.02rem;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1001;
+    }
     .breadCrumb {
       position: fixed;
       top: 0;
@@ -229,6 +259,7 @@
         .searchCon {
           width: 100%;
           div {
+            @include border_radius(6px);
             padding: .06rem .2rem;
             @include flex;
             align-items: center;
@@ -290,6 +321,11 @@
         .organizeList {
           height: 1rem;
           line-height: 1rem;
+        }
+        .noData {
+          text-align: center;
+          padding: .42rem 0;
+          color: #E0E0E0;
         }
       }
     }
