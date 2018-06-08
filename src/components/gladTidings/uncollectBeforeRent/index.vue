@@ -505,7 +505,7 @@
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
-          screenshot: [],               //领导截图 数组
+          screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注

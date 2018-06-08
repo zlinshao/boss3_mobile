@@ -329,6 +329,12 @@
       <div @click="priceAmount(4)" class="addInput">
         +增加收据编号
       </div>
+
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>凭证截图</div>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+      </div>
+
       <div class="aloneModel">
         <div class="title">领导同意截图</div>
         <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
@@ -482,6 +488,7 @@
           name: '',
           phone: '',
 
+          screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
 
           remark: '',                   //备注
@@ -490,6 +497,7 @@
           staff_name: '',                  //开单人name
           department_name: '',             //部门name
         },
+        screenshots: {},
         leaders: {},
         dictValue8: [],                  //支付方式
         value8: [],
@@ -595,7 +603,7 @@
           if (res.data.code === '1000120') {
             // 收据编号默认日期
             this.receiptDate = res.data.data.py + res.data.data.year;
-            let receipt =  res.data.data.py + res.data.data.year;
+            let receipt = res.data.data.py + res.data.data.year;
             this.form.receipt.push(receipt);
           }
         });
@@ -821,6 +829,8 @@
         this.picStatus = !val[2];
         if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
+        } else {
+          this.form.screenshot = val[1];
         }
       },
       saveCollect(val) {
@@ -1071,6 +1081,9 @@
 
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.screenshot_leader;
+
+            this.form.screenshot = draft.screenshot_leader;
+            this.screenshots = data.screenshot_leader;
 
             this.form.name = draft.name;
             this.form.phone = draft.phone;
