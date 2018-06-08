@@ -197,7 +197,7 @@
         }
       },
       sureIds() {
-        android.staffIds(this.selectId);
+        android.staffIds(JSON.stringify(this.selectId));
         this.selectId = [];
       },
     },
