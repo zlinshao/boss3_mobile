@@ -6,7 +6,7 @@
     </div>
     <div class="container"  v-if="!loading" >
       <div class="content" v-show="showType==='first'">
-        <div class="content_img"><img src="../../../../assets/waiting.png" style="width: 50%;"></div>
+        <div class="content_img"><img src="../../../../assets/waiting.png" style="width: 45%;"></div>
         <div class="title">您目前没有考试</div>
         <div v-show="showExamInfo">
           <div class="last_title">最近一场</div>
@@ -18,7 +18,7 @@
         <van-button class="view_history" @click="goHistory">查看历史考试</van-button>
       </div>
       <div class="content" v-show="showType==='second'">
-        <div class="content_img"><img src="../../../../assets/count_down.png" style="width: 50%;"></div>
+        <div class="content_img"><img src="../../../../assets/count_down.png" style="width: 45%;"></div>
         <div class="title">开考倒计时 <span style="margin-left: 15px;color: #e4393c;font-size: 20px;">{{timeString}}</span>
         </div>
         <div class="last_title">最近一场</div>
@@ -29,7 +29,7 @@
         <van-button class="view_history" @click="goHistory">查看历史考试</van-button>
       </div>
       <div class="content" v-show="showType==='third'">
-        <div class="content_img"><img src="../../../../assets/time_out.png" style="width: 50%;"></div>
+        <div class="content_img"><img src="../../../../assets/time_out.png" style="width: 45%;"></div>
         <div class="title">您已超过规定开考时间</div>
         <div class="title" style="margin-top: 15px;color: #e4393c;">无法参加考试</div>
         <div style="margin-top: 30px;color: #333;line-height: 28px;">
