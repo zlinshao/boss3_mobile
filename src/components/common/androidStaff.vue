@@ -199,6 +199,8 @@
       sureIds() {
         android.staffIds(JSON.stringify(this.selectId));
         this.selectId = [];
+        this.getDepartment(1, 1);
+        this.params.pages = 1;
       },
     },
   }

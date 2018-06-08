@@ -119,7 +119,7 @@ export default new Router({
     {
       path: '/androidStaff',
       name: '组织架构',
-      hidden: 'glad',
+      hidden: false,
       meta: {title: '组织架构'},
       component: AndroidStaff
     },
