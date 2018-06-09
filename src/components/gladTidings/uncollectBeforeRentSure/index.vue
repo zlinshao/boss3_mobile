@@ -298,7 +298,7 @@
           type="text"
           placeholder="请填写客户姓名"
           icon="clear"
-          @click-icon="form.name = ''">
+          @click-icon="form.name = ''" required>
         </van-field>
         <van-field
           v-model="form.phone"
@@ -307,7 +307,7 @@
           class="number"
           placeholder="请填写联系方式"
           icon="clear"
-          @click-icon="form.phone = ''">
+          @click-icon="form.phone = ''" required>
         </van-field>
       </van-cell-group>
       <div class="changes" v-for="(key,index) in amountReceipt">
