@@ -57,11 +57,15 @@
               </van-col>
             </van-row>
             <div class="subjectTitle" v-if="(index==153 || index==156) && questionData[index].length>0">
-              <div v-if="answerData && answerData[key1.id] && resultData">
+              <div v-if="answerData && resultData">
                 <div style="line-height: 22px;font-size: 14px;">
-                  <span style="color:#fc83b6;margin-right: 10px;font-size: 14px;">正确答案： {{answerData[key1.id]}}</span> |
+                  <span style="color:#fc83b6;margin-right: 10px;font-size: 14px;">正确答案：
+                    <span v-if="answerData[key1.id]">{{answerData[key1.id]}}</span>
+                    <span style="font-size: 14px;" v-else>暂无</span>
+                  </span> |
                   <span style="color:#409EFF;margin-left: 10px;font-size: 14px;">本题得分：
-                    <span v-if="resultData.objective_detail" style="font-size: 14px;">{{resultData.objective_detail[key1.id]}}</span>
+                    <span v-if="resultData.objective_detail && resultData.objective_detail[key1.id]" style="font-size: 14px;">{{resultData.objective_detail[key1.id]}}</span>
+                    <span v-else-if="resultData.subjective_detail && resultData.subjective_detail[key1.id]" style="font-size: 14px;">{{resultData.subjective_detail[key1.id]}}</span>
                     <span style="font-size: 14px;" v-else>暂无</span>
                   </span>
                 </div>
@@ -79,7 +83,7 @@
                         正确
                       </div>
                       <div style="color:#fc83b6;line-height: 28px;margin: 5px 0;"
-                           v-if="(resultData.answer && resultData.answer[key1.id]) != answerData[key1.id] && (resultData.answer && resultData.answer[key1.id])==ind">
+                           v-if="(resultData.answer && resultData.answer[key1.id]) != answerData[key1.id] && answerData[key1.id] && (resultData.answer && resultData.answer[key1.id])==ind">
                         错误
                       </div>
                     </van-col>
@@ -88,12 +92,15 @@
               </div>
             </div>
             <div class="subjectTitle" v-if="(index==154 || index==155) && questionData[index].length>0">
-              <div v-if="answerData && answerData[key1.id] && resultData">
+              <div v-if="answerData && resultData">
                 <div style="line-height: 22px;font-size: 14px;">
                   <span style="color:#fc83b6;margin-right: 10px;font-size: 14px;">正确答案：
-                    <span v-for="aa in answerData[key1.id]">{{aa}} </span></span> |
+                    <span v-if="answerData[key1.id] && answerData[key1.id].length>0" v-for="aa in answerData[key1.id]">{{aa}} </span>
+                    <span style="font-size: 14px;" v-if="!(answerData[key1.id] && answerData[key1.id].length>0)">暂无</span>
+                  </span> |
                   <span style="color:#409EFF;margin-left: 10px;font-size: 14px;">本题得分：
-                    <span v-if="resultData.objective_detail">{{resultData.objective_detail[key1.id]}}</span>
+                    <span v-if="resultData.objective_detail && resultData.objective_detail[key1.id]">{{resultData.objective_detail[key1.id]}}</span>
+                    <span v-else-if="resultData.subjective_detail && resultData.subjective_detail[key1.id]">{{resultData.subjective_detail[key1.id]}}</span>
                     <span style="font-size: 14px;" v-else>暂无</span>
                   </span>
                 </div>
@@ -109,10 +116,10 @@
                     <van-col span="4">
                       <div style="color:rgb(88, 215, 136);line-height: 28px;margin: 5px 0;"
                            v-for="ans in (resultData.answer && resultData.answer[key1.id])"
-                           v-if="answerData[key1.id].indexOf(ans)>-1 && ans==ind ">正确
+                           v-if="answerData && answerData[key1.id] && answerData[key1.id].indexOf(ans)>-1 && ans==ind ">正确
                       </div>
                       <div style="color:#fc83b6;line-height: 28px;margin: 5px 0;" v-for="ans in (resultData.answer && resultData.answer[key1.id])"
-                           v-if="answerData[key1.id].indexOf(ans)<0 && ans==ind ">错误
+                           v-if="answerData && answerData[key1.id] && answerData[key1.id].indexOf(ans)<0 && ans==ind ">错误
                       </div>
                     </van-col>
                   </div>
@@ -120,31 +127,34 @@
               </div>
             </div>
             <div class="subjectTitle" v-if="index==157 && questionData[index].length>0">
-              <div v-if="answerData && answerData[key1.id] && resultData">
+              <div v-if="answerData && resultData">
                 <div style="margin-top: 10px;">
                   <span style="color:#fc83b6;line-height:24px;font-size: 14px;">正确答案：
-                    <span style="font-size: 14px;" v-for="aa in answerData[key1.id]">{{aa}} &nbsp;&nbsp;&nbsp;</span>
+                    <span style="font-size: 14px;" v-if="answerData[key1.id] && answerData[key1.id].length>0" v-for="aa in answerData[key1.id]">{{aa}} &nbsp;&nbsp;&nbsp;</span>
+                    <span style="font-size: 14px;" v-else>{{aa}} &nbsp;&nbsp;&nbsp;</span>
                   </span> |
                   <span style="color:#409EFF;margin-left: 10px;line-height:24px;font-size: 14px;">本题得分：
-                    <span v-if="resultData.objective_detail">{{resultData.objective_detail[key1.id]}}</span>
-                    <span style="font-size: 14px;" v-else>暂无</span></span>
+                    <span v-if="resultData.objective_detail && resultData.objective_detail[key1.id]">{{resultData.objective_detail[key1.id]}}</span>
+                    <span v-else-if="resultData.subjective_detail && resultData.subjective_detail[key1.id]">{{resultData.subjective_detail[key1.id]}}</span>
+                    <span style="font-size: 14px;" v-else>暂无</span>
+                  </span>
                 </div>
                 <van-row gutter="20" style="margin-top: 10px;margin-bottom: 10px;">
                   <div>
-                    <van-col span="18" style="line-height:24px;">
+                    <van-col span="18" style="line-height:26px;">
                       <div v-if="resultData.answer && resultData.answer[key1.id]"
                            v-for="(value,ak) in (resultData.answer && resultData.answer[key1.id])"
-                           style="color: #9c9c9c;">
+                           style="color: #9c9c9c;line-height:26px;">
                         第{{ak+1}}处答案：<span style="color: #409EFF;">{{value}}</span>
                       </div>
                     </van-col>
                     <van-col span="4">
                       <div style="color:rgb(88, 215, 136);"
                            v-for="(vv, kk) in (resultData.answer && resultData.answer[key1.id])"
-                           v-if="answerData[key1.id].indexOf(vv)>-1 && kk==ak ">正确
+                           v-if="answerData && answerData[key1.id] && answerData[key1.id].indexOf(vv)>-1 && kk==ak ">正确
                       </div>
                       <div style="color:#fc83b6;" v-for="(vv, kk) in (resultData.answer && resultData.answer[key1.id])"
-                           v-if="answerData[key1.id].indexOf(vv)<0 && kk==ak">错误
+                           v-if="answerData && answerData[key1.id] && answerData[key1.id].indexOf(vv)<0 && kk==ak">错误
                       </div>
                     </van-col>
                   </div>
@@ -155,8 +165,9 @@
               <div v-if="resultData">
                 <div style="line-height: 22px;font-size: 13px;">
                 <span style="color:#409EFF;font-size: 14px;line-height: 25px;">本题得分：
-                  <span v-if="resultData.subjective_detail && resultData.subjective_detail[key1.id] != null">{{resultData.subjective_detail[key1.id]}}</span>
-                  <span style="font-size: 14px;" v-else>暂无</span>
+                  <span v-if="resultData.objective_detail && resultData.objective_detail[key1.id]"> {{resultData.objective_detail[key1.id]}}</span>
+                  <span v-else-if="resultData.subjective_detail && resultData.subjective_detail[key1.id]"> {{resultData.subjective_detail[key1.id]}}</span>
+                  <span v-else > 暂无</span>
                 </span>
                 </div>
                 <van-row gutter="20" style="margin-top: 10px;margin-bottom: 10px;">
@@ -173,9 +184,11 @@
         </div>
       </div>
       <div class="exercise msg" v-if="message">
-        <div>
-          <img src="../../../../assets/no_data.png" style="width: 40%;">
-          <div style="margin-top: 10px;">暂无数据</div>
+        <div class="no_data">
+          <div class="content" style="text-align: center;background: #fff;">
+            <div class="content_img"><img src="../../../../assets/no_data2.png" style="width: 40%;"></div>
+            <div class="last_title">暂无数据 ...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -244,6 +257,7 @@
             this.resultData = res.data.data;
           } else {
             this.resultData = {};
+            this.examData.score = 0;
           }
         });
       },
@@ -252,6 +266,32 @@
 </script>
 
 <style lang="scss">
+  .no_data {
+    background: #fff;
+    color: #999;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    text-align: center;
+    position: absolute;
+    .content {
+      .content_img {
+        position: relative;
+        margin-top: 150px;
+      }
+      .title {
+        position: relative;
+        margin-top: 20px;
+        font-size: 25px;
+        color: #39b1ff;
+      }
+      .last_title {
+        position: relative;
+        margin-top: 30px;
+        font-size: 18px;
+      }
+    }
+  }
   #exam {
     img {
       width: 100%;
