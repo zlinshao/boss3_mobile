@@ -1,17 +1,30 @@
 <template>
   <div id="androidStaff">
-    <div class="moduleStaff" v-if="searchStatus"></div>
+    <div class="moduleStaff" v-if="searchStatus">
+      <div class="moduleMain" v-for="key in staffData" @click="staffOn(key.id)">
+        <div class="moduleLeft">
+          <img :src="key.avatar" v-if="key.avatar">
+          <img src="../../assets/head.png" v-else>
+        </div>
+        <div class="moduleRight">
+          <div>{{key.name}}</div>
+          <div></div>
+        </div>
+      </div>
+    </div>
     <div class="breadCrumb">
       <div class="staffSearch">
         <div class="searchCon">
-          <div>
+          <div style="width: 100%;">
             <i class="van-icon van-icon-search"></i>
             <input type="text" v-model="searchValue" @focus="searchSta(1)" @keyup.enter="search" placeholder="请输入搜索内容">
             <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
           </div>
+          <div>
+            <p v-if="searchValue.length > 0 && searchStatus" @click="search" style="color: #666666;">搜索</p>
+            <p v-if="searchValue.length < 1 && searchStatus" @click="onCancel" style="color: #FF4081;">取消</p>
+          </div>
         </div>
-        <p v-if="searchValue.length > 0 && searchStatus" @click="search" style="color: #666666;">搜索</p>
-        <p v-if="searchValue.length < 1 && searchStatus" @click="onCancel" style="color: #06bf04;">取消</p>
       </div>
       <div class="breadA">
         <div class="breadAuto">
@@ -44,7 +57,8 @@
         <li v-for="(item,index) in staffList">
           <div class="checks">
             <van-checkbox-group v-model="selectId">
-              <van-checkbox :key="index" :name="item">
+              <van-checkbox :disabled="selectId.length > 4 && selectId.indexOf(item.id) < 0" :key="index"
+                            :name="item.id">
                 {{item.name}}
               </van-checkbox>
             </van-checkbox-group>
@@ -89,6 +103,7 @@
         searchValue: '',
         searchStatus: false,
         staffData: [],
+        staffID: '',
         params: {
           is_dimission: 0,
           org_id: '',
@@ -134,6 +149,20 @@
       },
       onCancel() {
         this.searchStatus = false;
+      },
+      staffOn(val) {
+        if (this.selectId.length > 0) {
+          for (let i = 0; i < this.selectId.length; i++) {
+            if (this.selectId[i] !== val) {
+              this.selectId.push(val);
+            }
+          }
+        } else {
+          this.selectId.push(val);
+        }
+        alert(JSON.stringify(this.selectId));
+        this.onCancel();
+        this.searchValue = '';
       },
       getDepartment(id, page) {
         this.$http.get(globalConfig.server_user + 'organizations?parent_id=' + id + '&per_page_number=50').then((res) => {
@@ -200,7 +229,6 @@
         android.staffIds(JSON.stringify(this.selectId));
         this.selectId = [];
         this.getDepartment(1, 1);
-        this.params.pages = 1;
       },
     },
   }
@@ -208,6 +236,7 @@
 
 <style lang="scss">
   #androidStaff {
+    overflow: hidden;
     @mixin flex {
       display: flex;
       display: -webkit-flex;
@@ -223,13 +252,48 @@
       border-radius: $n;
     }
     .moduleStaff {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      border-top: 1px solid #F2F2F2;
       position: fixed;
-      top: 2.02rem;
+      top: 1.93rem;
       left: 0;
       right: 0;
       bottom: 0;
       background-color: rgba(0, 0, 0, 0.4);
       z-index: 1001;
+      .moduleMain {
+        @mixin minMax($n) {
+          min-width: $n;
+          max-width: $n;
+          min-height: $n;
+          max-height: $n;
+        }
+        padding: 0 .3rem;
+        @include flex;
+        align-items: center;
+        background-color: #FFFFFF;
+        .moduleLeft {
+          margin-right: .3rem;
+          @include minMax(.8rem);
+          img {
+            @include border_radius(50%);
+            @include minMax(.8rem);
+          }
+        }
+        .moduleRight {
+          padding: .36rem 0;
+          width: 100%;
+          div:first-of-type {
+            margin-bottom: .1rem;
+          }
+        }
+      }
+      .moduleMain + .moduleMain {
+        .moduleRight {
+          border-top: 1px solid #F2F2F2;
+        }
+      }
     }
     .breadCrumb {
       position: fixed;
@@ -256,23 +320,30 @@
         }
       }
       .staffSearch {
-        @include flex;
-        align-items: center;
         .searchCon {
           width: 100%;
+          height: .66rem;
+          padding: 0 .1rem 0 .2rem;
+          @include flex;
+          align-items: center;
+          justify-content: space-between;
+          @include border_radius(6px);
+          background-color: #F8F9FF;
           div {
-            @include border_radius(6px);
-            padding: .06rem .2rem;
             @include flex;
             align-items: center;
-            background-color: #F8F9FF;
             .van-icon.van-icon-search {
               font-size: .36rem;
+              margin-right: .2rem;
             }
             input {
               width: 100%;
               background-color: #F8F9FF;
               border: 0;
+              line-height: .36rem;
+            }
+            i {
+              padding-right: .06rem;
             }
           }
         }
@@ -280,6 +351,8 @@
       p {
         min-width: 1rem;
         text-align: center;
+        font-size: .26rem;
+        margin-top: .04rem;
       }
     }
     .staffList {
