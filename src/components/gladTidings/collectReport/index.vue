@@ -584,7 +584,6 @@
       }
     },
     activated() {
-      globalConfig.header.Authorization = '';
       let count = sessionStorage.count;
       this.counts = count;
 
