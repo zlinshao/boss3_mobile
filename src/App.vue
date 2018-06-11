@@ -109,10 +109,10 @@
                 }
               });
             }
-            if (error.response.data.status_code === 401) {
-              that.loading = false;
-              that.corp();
-            }
+            // if (error.response.data.status_code === 401) {
+            //   that.loading = false;
+            //   that.corp();
+            // }
             // if (error.response.data.status_code === 401) {
             //   alert('登陆超时，请保存草稿，重新登陆并发布！');
             //   DingTalkPC.device.notification.alert({
@@ -173,7 +173,6 @@
                       username: res.data.phone,
                       password: res.data.code,
                     }).then((res) => {
-                      // sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                       let head = res.data.data;
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                       that.loading = false;
@@ -238,7 +237,6 @@
                         username: res.data.phone,
                         password: res.data.code,
                       }).then((res) => {
-                        // sessionStorage.setItem('myData', JSON.stringify(res.data.data));
                         let head = res.data.data;
                         globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                         that.loading = false;

@@ -559,6 +559,8 @@
 
         isValue1: true,
         counts: '',
+
+        retry: 0,
       }
     },
     watch: {
@@ -938,6 +940,17 @@
                 Toast.success(res.data.msg);
               } else {
                 Toast(res.data.msg);
+              }
+            }).catch((error) => {
+              alert(JSON.stringify(error.response));
+              if (error.response.data.status_code === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+                    this.haveInHand = false;
+                    this.saveCollect(this.form.draft);
+                  }
+                });
               }
             })
           } else {

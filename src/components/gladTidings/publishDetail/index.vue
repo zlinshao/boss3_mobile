@@ -462,6 +462,7 @@
 
 <style lang="scss">
   #cardDetail {
+    overflow: hidden;
     @mixin flex {
       display: flex;
       display: -webkit-flex;
@@ -846,7 +847,7 @@
                 }
               }
               div {
-                width: 4rem;
+                width: 100%;
                 overflow: hidden;
                 line-height: .9rem;
                 -ms-text-overflow: ellipsis;
