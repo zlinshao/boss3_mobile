@@ -134,7 +134,7 @@
       },
       // 搜索
       onSearch(type, val, page) {
-      
+
         let urls;
         this.params = {};
         switch (type) {

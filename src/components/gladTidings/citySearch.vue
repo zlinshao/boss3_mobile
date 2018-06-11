@@ -102,7 +102,6 @@
       loadMore() {
         if (!this.disabled) {
           this.onSearch(this.searchValue, this.page);
-          this.page++;
         }
       },
       onSearch(val, page) {
@@ -126,6 +125,7 @@
                 data.forEach((data) => {
                   this.lists.push(data);
                   this.showDetail = 2;
+                  this.page++;
                 });
               } else {
                 this.disabled = true;
