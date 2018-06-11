@@ -115,6 +115,7 @@
       next(vm => {
         vm.routerIndex('');
         vm.ddRent('');
+        vm.disabled = false;
       })
     },
     mounted() {
@@ -130,7 +131,6 @@
       loadMore() {
         if (!this.disabled) {
           this.getDepartment(this.params.org_id, this.params.pages);
-          this.params.pages++;
         }
       },
       searchSta(val) {
@@ -166,7 +166,7 @@
       },
       getDepartment(id, page) {
         this.$http.get(globalConfig.server_user + 'organizations?parent_id=' + id + '&per_page_number=50').then((res) => {
-          if (res.data.status === 'success') {
+          if (res.data.status === 'success' && res.data.data.length > 0) {
             this.organizeList = res.data.data;
             // this.lastPage_depart = res.data.meta.last_page;
           }
@@ -184,8 +184,10 @@
             for (let i = 0; i < data.length; i++) {
               this.staffList.push(data[i]);
             }
+            this.params.pages++;
             // this.lastPage_user = res.data.meta.last_page;
           } else {
+            this.disabled = true;
             this.close_();
           }
         })

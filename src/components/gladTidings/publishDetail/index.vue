@@ -284,7 +284,6 @@
       loadMore() {
         if (!this.disabled) {
           this.comments(this.ids, this.page);
-          this.page++;
         }
       },
 
@@ -347,6 +346,7 @@
             for (let i = 0; i < data.length; i++) {
               this.commentList.push(data[i]);
             }
+            this.page++;
           } else {
             this.disabled = true;
           }

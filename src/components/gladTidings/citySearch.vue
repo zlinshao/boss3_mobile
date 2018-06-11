@@ -125,8 +125,8 @@
                 data.forEach((data) => {
                   this.lists.push(data);
                   this.showDetail = 2;
-                  this.page++;
                 });
+                this.page++;
               } else {
                 this.disabled = true;
                 this.showDetail = 2;

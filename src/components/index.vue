@@ -341,7 +341,6 @@
       loadMore() {
         if (!this.disabled) {
           this.lists(this.page, this.active, this.readActive);
-          this.page++;
         }
       },
       routerLink(val) {
@@ -452,6 +451,7 @@
                 }
                 this.list.push(user);
               }
+              this.page++;
             } else {
               this.disabled = true;
             }
