@@ -130,11 +130,11 @@
       loadMore() {
         if (!this.disabled) {
           this.onSearch(this.types, this.searchValue, this.page);
-          this.page++;
         }
       },
       // 搜索
       onSearch(type, val, page) {
+      
         let urls;
         this.params = {};
         switch (type) {
@@ -200,10 +200,11 @@
                   this.showDetail = 2;
                 }
               }
+              this.page++;
             } else {
               this.disabled = true;
             }
-            if (data.length === 0 && this.params.page === 1 && res.data.status === 'success') {
+            if (data.length === 0 && res.data.status === 'success') {
               this.showDetail = 2;
             }
             if (res.data.status === 'fail') {
@@ -220,6 +221,8 @@
         for (let j = 0; j < val.lords.length; j++) {
           if (val.lords[j].is_agency === 1) {
             this.contracts(val, type, val.lords[j]);
+          } else {
+            this.showDetail = 2;
           }
         }
       },
@@ -228,6 +231,8 @@
         for (let j = 0; j < val.renters.length; j++) {
           if (val.renters[j].is_agency === 1) {
             this.contracts(val, type, val.renters[j]);
+          } else {
+            this.showDetail = 2;
           }
         }
       },
