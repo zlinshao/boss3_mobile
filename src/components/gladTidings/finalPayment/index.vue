@@ -56,10 +56,10 @@
         </van-field>
         <van-field
           v-model="form.money_sum"
-          label="总金额"
+          label="本次已收金额"
           type="text"
           class="number"
-          placeholder="请填写总金额"
+          placeholder="请填写金额"
           required>
         </van-field>
       </van-cell-group>
