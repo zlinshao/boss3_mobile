@@ -68,6 +68,7 @@
           required>
         </van-field>
         <van-field
+          v-if="form.collect_or_rent === '1'"
           v-model="form.handover_staff.name"
           @click="searchSelect('', 2)"
           label="交接人"
@@ -77,6 +78,7 @@
           required>
         </van-field>
         <van-field
+          v-if="form.collect_or_rent === '1'"
           v-model="form.handover_department.name"
           @click="searchSelect('', 3)"
           label="交接部门"
@@ -86,6 +88,7 @@
           required>
         </van-field>
         <van-field
+          v-if="form.collect_or_rent === '1'"
           v-model="form.number_key"
           label="钥匙数量"
           type="text"
@@ -95,6 +98,7 @@
           required>
         </van-field>
         <van-field
+          v-if="form.collect_or_rent === '1'"
           @click="selectShow(2)"
           v-model="cleanup"
           label="是否需要保洁"

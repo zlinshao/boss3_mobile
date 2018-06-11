@@ -329,8 +329,7 @@
           type="text"
           placeholder="请填写客户姓名"
           icon="clear"
-          @click-icon="form.name = ''"
-          required>
+          @click-icon="form.name = ''" required>
         </van-field>
         <van-field
           v-model="form.phone"
@@ -339,8 +338,7 @@
           class="number"
           placeholder="请填写联系方式"
           icon="clear"
-          @click-icon="form.phone = ''"
-          required>
+          @click-icon="form.phone = ''" required>
         </van-field>
         <van-field
           v-model="form.contract_number"

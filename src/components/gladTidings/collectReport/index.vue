@@ -559,6 +559,8 @@
 
         isValue1: true,
         counts: '',
+
+        // retry: 0,
       }
     },
     watch: {
@@ -940,6 +942,18 @@
                 Toast(res.data.msg);
               }
             })
+            //   .catch((error) => {
+            //   alert(error.response.status);
+            //   if (error.response.status === 401) {
+            //     this.personalGet().then((data) => {
+            //       if (data && this.retry === 0) {
+            //         this.retry++;
+            //         this.haveInHand = true;
+            //         this.saveCollect(this.form.draft);
+            //       }
+            //     });
+            //   }
+            // })
           } else {
             Toast('正在提交，请耐心等待...');
           }

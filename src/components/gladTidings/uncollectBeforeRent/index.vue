@@ -327,8 +327,7 @@
           type="text"
           placeholder="请填写客户姓名"
           icon="clear"
-          @click-icon="form.name = ''"
-          required>
+          @click-icon="form.name = ''" required>
         </van-field>
         <van-field
           v-model="form.phone"
@@ -337,8 +336,7 @@
           class="number"
           placeholder="请填写客户手机号"
           icon="clear"
-          @click-icon="form.phone = ''"
-          required>
+          @click-icon="form.phone = ''" required>
         </van-field>
       </van-cell-group>
 
@@ -505,7 +503,7 @@
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
-          screenshot: [],               //领导截图 数组
+          screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
