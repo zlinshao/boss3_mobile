@@ -134,7 +134,6 @@
       },
       // 搜索
       onSearch(type, val, page) {
-
         let urls;
         this.params = {};
         switch (type) {
@@ -154,6 +153,7 @@
         if (val !== '') {
           this.showDetail = 1;
           this.myData(type, val, urls);
+          this.page++;
         }
       },
       myData(type, val, urls) {
@@ -200,7 +200,6 @@
                   this.showDetail = 2;
                 }
               }
-              this.page++;
             } else {
               this.disabled = true;
             }

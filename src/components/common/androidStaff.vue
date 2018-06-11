@@ -131,6 +131,7 @@
       loadMore() {
         if (!this.disabled) {
           this.getDepartment(this.params.org_id, this.params.pages);
+          this.params.pages++;
         }
       },
       searchSta(val) {
@@ -160,7 +161,6 @@
         } else {
           this.selectId.push(val);
         }
-        alert(JSON.stringify(this.selectId));
         this.onCancel();
         this.searchValue = '';
       },
@@ -184,7 +184,6 @@
             for (let i = 0; i < data.length; i++) {
               this.staffList.push(data[i]);
             }
-            this.params.pages++;
             // this.lastPage_user = res.data.meta.last_page;
           } else {
             this.disabled = true;
