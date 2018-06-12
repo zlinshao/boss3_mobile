@@ -114,7 +114,7 @@
     watch: {},
     methods: {
       goInterlocution() {
-        this.$router.push({path: '/interlocution'});
+        this.$router.push({path: '/interlocution', query: {question_id: this.$route.query.id, scrollTop: this.$route.query.scrollTop }});
       },
       getData() {
         this.$http.get(globalConfig.server + 'qa/front/question/' + this.$route.query.id).then((res) => {
