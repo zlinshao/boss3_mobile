@@ -640,6 +640,7 @@
               this.form.is_submit = val;
               this.$http.put(this.urls + 'bulletin/complete/collect/' + this.contract_id, this.form).then((res) => {
                 this.haveInHand = true;
+                this.retry = 0;
                 if (res.data.code === '51510') {
                   Toast.success(res.data.msg);
                 } else {
