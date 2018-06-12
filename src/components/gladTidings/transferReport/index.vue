@@ -184,10 +184,10 @@
           </van-field>
           <van-field
             v-model="form.pay_way_arr[index]"
-            label="付款方式"
+            label="付(月数)"
             type="text"
             class="number"
-            placeholder="请填写付款方式"
+            placeholder="如:半年付请输入6"
             required>
           </van-field>
         </van-cell-group>

@@ -584,6 +584,7 @@
       }
     },
     activated() {
+      globalConfig.header.Authorization = '';
       let count = sessionStorage.count;
       this.counts = count;
 
@@ -918,6 +919,7 @@
       },
 
       saveCollect(val) {
+        alert(globalConfig.header.Authorization);  
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
@@ -942,7 +944,6 @@
                 Toast(res.data.msg);
               }
             }).catch((error) => {
-              alert(error.response.status);
               if (error.response.status === 401) {
                 this.personalGet().then((data) => {
                   if (data && this.retry === 0) {
