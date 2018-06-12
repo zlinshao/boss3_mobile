@@ -169,7 +169,11 @@
                   list.house_id = data[i].id;
                   list.house_name = data[i].name;
                   list.house_res = data[i].house_res;
-                  this.lists.push(list);
+                  for (let j = 0; j < this.lists.length; j++) {
+                    if (this.lists[j].house_id !== list.id) {
+                      this.lists.push(list);
+                    }
+                  }
                 }
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i], type);
@@ -193,7 +197,11 @@
                   } else {
                     list.is_agency = 0;
                   }
-                  this.lists.push(list);
+                  for (let j = 0; j < this.lists.length; j++) {
+                    if (this.lists[j].house_id !== list.id) {
+                      this.lists.push(list);
+                    }
+                  }
                 }
                 if ((type === 'renter' || type === 'lord' || type === 'renter1' || type === 'lord1') && data[i].lords.length === 0 && data[i].renters.length === 0) {
                   this.showDetail = 2;
@@ -215,6 +223,8 @@
           }
         })
       },
+
+
       // 中介费收
       lord1(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
@@ -289,7 +299,11 @@
           list.department_id = '';
           list.department_name = '---';
         }
-        this.lists.push(list);
+        for (let j = 0; j < this.lists.length; j++) {
+          if (this.lists[j].house_id !== list.id) {
+            this.lists.push(list);
+          }
+        }
         this.showDetail = 2;
       },
 
