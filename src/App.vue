@@ -177,6 +177,24 @@
                       globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
                       that.loading = false;
                     });
+                  } else {
+                    setTimeout(() => {
+                      DingTalkPC.device.notification.alert({
+                        message: "请求超时请稍后再试",
+                        title: "提示信息",
+                        buttonName: "关闭",
+                        onSuccess: function () {
+                        },
+                        onFail: function (err) {
+                        }
+                      });
+                      dd.biz.navigation.close({
+                        onSuccess: function (result) {
+                        },
+                        onFail: function (err) {
+                        }
+                      });
+                    }, 3000);
                   }
                 } else {
                   DingTalkPC.device.notification.alert({
