@@ -153,6 +153,7 @@
         if (val !== '') {
           this.showDetail = 1;
           this.myData(type, val, urls);
+          this.page++;   
         }
       },
       myData(type, val, urls) {
@@ -169,11 +170,7 @@
                   list.house_id = data[i].id;
                   list.house_name = data[i].name;
                   list.house_res = data[i].house_res;
-                  for (let j = 0; j < this.lists.length; j++) {
-                    if (this.lists[j].house_id !== list.id) {
-                      this.lists.push(list);
-                    }
-                  }
+                  this.lists.push(list);
                 }
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i], type);
@@ -197,17 +194,12 @@
                   } else {
                     list.is_agency = 0;
                   }
-                  for (let j = 0; j < this.lists.length; j++) {
-                    if (this.lists[j].house_id !== list.id) {
-                      this.lists.push(list);
-                    }
-                  }
+                  this.lists.push(list);
                 }
                 if ((type === 'renter' || type === 'lord' || type === 'renter1' || type === 'lord1') && data[i].lords.length === 0 && data[i].renters.length === 0) {
                   this.showDetail = 2;
                 }
               }
-              this.page++;
             } else {
               this.disabled = true;
             }
@@ -299,11 +291,7 @@
           list.department_id = '';
           list.department_name = '---';
         }
-        for (let j = 0; j < this.lists.length; j++) {
-          if (this.lists[j].house_id !== list.id) {
-            this.lists.push(list);
-          }
-        }
+        this.lists.push(list);
         this.showDetail = 2;
       },
 
