@@ -153,7 +153,7 @@
         if (val !== '') {
           this.showDetail = 1;
           this.myData(type, val, urls);
-          this.page++;
+          this.page++;   
         }
       },
       myData(type, val, urls) {
