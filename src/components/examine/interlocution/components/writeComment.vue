@@ -55,7 +55,8 @@
                 <div class="mainTopA">
                   <div>
                     <div style="float: left;">
-                      <img :src="answerData.staff.avatar" v-if="answerData.staff.avatar" style="border-radius: 50%;">
+                      <img :src="answerData.staff.avatar"
+                           v-if="answerData && answerData.staff && answerData.staff.avatar" style="border-radius: 50%;">
                       <img src="../../../../assets/head.png" v-else>
                     </div>
                     <div style="margin-left: 50px;">
@@ -63,7 +64,8 @@
                       <div class="text_ellipsis">
                         <span v-if="answerData.staff.org.length>0"
                               v-for="v in answerData.staff.org" style="font-size: 13px;">{{v.name}}&nbsp;</span>-
-                        <span v-if="answerData.staff.role.length>0" v-for="v in answerData.staff.role" style="font-size: 13px;">{{v.display_name}}&nbsp;</span>
+                        <span v-if="answerData.staff.role.length>0" v-for="v in answerData.staff.role"
+                              style="font-size: 13px;">{{v.display_name}}&nbsp;</span>
                       </div>
                     </div>
                   </div>
@@ -146,9 +148,16 @@
     watch: {},
     methods: {
       goInterlocution() {
-        this.$router.push({path: '/interlocution'});
+        this.$router.push({
+          path: '/interlocution',
+          query: {
+            question_id: this.$route.query.ques_id,
+            answer_id: this.$route.query.answer_id,
+            scrollTop: this.$route.query.scrollTop
+          }
+        });
       },
-      getData(){
+      getData() {
         this.$http.get(globalConfig.server + 'qa/front/question/' + this.$route.query.ques_id).then((res) => {
           this.loading = false;
           if (res.data.code === '70210') {
@@ -310,7 +319,7 @@
         .main1 {
           padding: .2rem 0 .2rem .4rem;
           background: #FFFFFF;
-          box-shadow: 0 2px 14px 0 rgba(61,90,254,0.15);
+          box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
         }
         .mainContent {
           margin-bottom: 0rem;
@@ -335,10 +344,10 @@
             padding: .1rem 0 0;
             .allContent {
               .mainTop {
-                padding: 0.1rem  0rem .1rem 0.4rem;
+                padding: 0.1rem 0rem .1rem 0.4rem;
               }
               .contents2 {
-                padding: 0rem .2rem  0.3rem  1.3rem;
+                padding: 0rem .2rem 0.3rem 1.3rem;
               }
             }
           }
