@@ -53,7 +53,7 @@
             this.$router.push({path: '/beforeExam'});
           } else if (android.queryType() === 'questionnaire') {
             this.$router.push({path: '/beforeNaire'});
-          }else if (android.queryType() === 'interlocution') {
+          } else if (android.queryType() === 'interlocution') {
             this.$router.push({path: '/interlocution'});
           }
           // let head = {};
@@ -85,13 +85,11 @@
           //   this.corp();
           // }
         }
-
-        let that = this;
         this.$http.interceptors.response.use(function (response) {
           return response;
         }, function (error) {
           if (error && error.response) {
-            if (error.response.status === 500) {
+            if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
               DingTalkPC.device.notification.alert({
                 message: "服务器故障,请联系产品经理~",
@@ -109,34 +107,6 @@
                 }
               });
             }
-            // if (error.response.data.status_code === 401) {
-            //   that.loading = false;
-            //   that.corp();
-            // }
-            // if (error.response.data.status_code === 401) {
-            //   alert('登陆超时，请保存草稿，重新登陆并发布！');
-            //   DingTalkPC.device.notification.alert({
-            //     message: "登陆超时，请保存草稿，重新登陆并发布！",
-            //     title: "提示信息",
-            //     buttonName: "关闭",
-            //     onSuccess: function () {
-            //     },
-            //     onFail: function (err) {
-            //     }
-            //   });
-            // }
-            // if (error.response.status === 404) {
-            //   alert('登陆超时，请保存草稿，重新登陆并发布！！');
-            //   DingTalkPC.device.notification.alert({
-            //     message: "登陆超时，请保存草稿，重新登陆并发布！！",
-            //     title: "提示信息",
-            //     buttonName: "关闭",
-            //     onSuccess: function () {
-            //     },
-            //     onFail: function (err) {
-            //     }
-            //   });
-            // }
           }
           return Promise.reject(error);
         });
