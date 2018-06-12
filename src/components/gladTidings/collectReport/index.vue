@@ -929,6 +929,7 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
               this.haveInHand = true;
+              this.retry = 0;
               if (res.data.code === '50110' || res.data.code === '50130') {
                 Toast.success(res.data.msg);
                 this.routerDetail(res.data.data.data.id);
@@ -943,6 +944,10 @@
                 Toast(res.data.msg);
               }
             }).catch((error) => {
+              if (error.response === undefined) {
+                alert('网络连接失败!');
+                this.haveInHand = true;  
+              }
               if (error.response.status === 401) {
                 this.personalGet().then((data) => {
                   if (data && this.retry === 0) {
