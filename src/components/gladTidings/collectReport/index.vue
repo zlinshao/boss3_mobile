@@ -946,7 +946,7 @@
             }).catch((error) => {
               if (error.response === undefined) {
                 alert('网络连接失败!');
-                this.haveInHand = true;
+                this.haveInHand = true;  
               }
               if (error.response.status === 401) {
                 this.personalGet().then((data) => {
