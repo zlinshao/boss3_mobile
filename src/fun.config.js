@@ -228,7 +228,7 @@ export default {
                 })
               },
               onFail: function (err) {
-                alert('您不在系统内，请联系管理员添加！！');
+                alert('您不在系统内，请联系管理员添加！！');  
                 dd.biz.navigation.close({
                   onSuccess: function (result) {},
                   onFail: function (err) {}
