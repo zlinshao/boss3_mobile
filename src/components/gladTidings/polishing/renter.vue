@@ -288,6 +288,8 @@
         tabIndex: '',
         columns: [],
 
+        retry: 0,
+
         prove_name: [],
         prove_all: [],
 
@@ -557,6 +559,7 @@
               this.form.is_submit = val;
               this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
                 this.haveInHand = true;
+                this.retry = 0;
                 if (res.data.code === '51610') {
                   if (receipt.length === 0) {
                     this.form.receipt = [];
@@ -566,12 +569,25 @@
                 } else {
                   Toast(res.data.msg);
                 }
+              }).catch((error) => {
+                if (error.response.status === 401) {
+                  this.personalGet().then((data) => {
+                    if (data && this.retry === 0) {
+                      this.retry++;
+                      this.haveInHand = true;
+                      this.saveCollect(this.form.is_submit);
+                    }
+                  });
+                } else if (error.response === undefined) {
+                  this.alertMsg('net');
+                  this.haveInHand = true;
+                }
               })
             } else {
-              Toast('正在提交，请耐心等待...');
+              Toast(this.alertMsg('sub'));
             }
           } else {
-            Toast('图片上传中...');
+            Toast(this.alertMsg('pic'));
           }
         } else {
           Toast('请选择房屋...');

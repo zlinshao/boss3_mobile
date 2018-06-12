@@ -97,6 +97,17 @@ export default {
         })
       })
     };
+    Vue.prototype.alertMsg = function (val) {
+      switch (val){
+        case 'net':
+          alert('网络连接失败,请检查网络信号!');
+          break;
+        case 'sub':
+          return '正在提交，请耐心等待...';
+        case 'pic':
+          return '图片上传中...';
+      }
+    };
 
     Vue.prototype.personalGet = function () {
       let that = this;
