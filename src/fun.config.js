@@ -100,7 +100,7 @@ export default {
     Vue.prototype.alertMsg = function (val) {
       switch (val){
         case 'net':
-          alert('网络连接失败,请检查网络信号!');
+          alert('网络连接失败,请检查网络是否正常!');
           break;
         case 'sub':
           return '正在提交，请耐心等待...';
