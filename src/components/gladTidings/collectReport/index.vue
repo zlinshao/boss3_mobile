@@ -584,7 +584,6 @@
       }
     },
     activated() {
-      globalConfig.header.Authorization = '';
       let count = sessionStorage.count;
       this.counts = count;
 
@@ -919,7 +918,7 @@
       },
 
       saveCollect(val) {
-        alert(globalConfig.header.Authorization);
+        console.log(globalConfig.header.Authorization);
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
@@ -985,6 +984,7 @@
           this.form.department_name = val.name;
           this.form.department_id = val.id;
           this.isValue1 = val.activeRevise;
+          globalConfig.header.Authorization = '';
           this.stick();
         }
         if (t.tops === '') {
