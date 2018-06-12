@@ -7,7 +7,7 @@
           <input type="text" v-model="searchValue" @keyup.enter="search">
           <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
         </div>
-        <p v-if="searchValue.length > 0" @click="search" style="color: #666666;">搜索</p>
+        <p v-if="searchValue.length > 0" @click="search" style="color: #666666;">搜索搜索</p>
         <p v-else @click="onCancel">取消</p>
       </div>
       <div class="searchContent">
