@@ -10,29 +10,41 @@
           <div class="main1 boxShadow">
             <div class="mainTop">
               <div class="mainTopA">
-                <p>
-                  <img :src="questionData.asker.avatar"
-                       v-if="questionData && questionData.asker && questionData.asker.avatar && !questionData.is_anonymous"
-                       style="border-radius: 50%;">
-                  <img src="../../../../assets/head.png" v-else>
-                  <span>
-                      <span v-if="!questionData.is_anonymous">{{questionData && questionData.asker && questionData.asker.name}}</span>
-                      <span v-if="questionData.is_anonymous">匿名</span>
-                      <span v-if="!questionData.is_anonymous">
+                <div v-if="!questionData.is_anonymous">
+                  <div style="float: left;">
+                    <img :src="questionData.asker.avatar"
+                         v-if="questionData && questionData.asker && questionData.asker.avatar && !questionData.is_anonymous"
+                         style="border-radius: 50%;">
+                    <img src="../../../../assets/head.png" v-else>
+                  </div>
+                  <div style="margin-left: 50px;">
+                    <div v-if="!questionData.is_anonymous">
+                      <div>
+                        <span>{{questionData && questionData.asker && questionData.asker.name}}</span>
+                      </div>
+                      <div class="text_ellipsis">
                           <span v-if="questionData && questionData.asker && questionData.asker.org.length>0"
-                                v-for="v in questionData.asker.org">&nbsp;{{v.name}}&nbsp;</span>-
-                          <span v-if="questionData && questionData.asker && questionData.asker.role.length>0"
-                                v-for="v in questionData.asker.role">&nbsp;{{v.display_name}}&nbsp;</span>
-                      </span>
-                    </span>
-                </p>
+                                v-for="v in questionData.asker.org" style="font-size: 13px;">{{v.name}}&nbsp;</span>-
+                        <span v-if="questionData && questionData.asker && questionData.asker.role.length>0"
+                              v-for="v in questionData.asker.role"
+                              style="font-size: 13px;">{{v.display_name}}&nbsp;</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="questionData.is_anonymous"
+                     style="display: flex;justify-content: center;align-items: center;">
+                  <img src="../../../../assets/head.png">
+                  <span style="width: 2.6rem;margin-left: 10px;">匿名</span>
+                </div>
               </div>
               <div class="topTime">
                 {{questionData.create_time}}
               </div>
             </div>
             <div class="contents1 ">
-              <p style="margin: 3px 0;line-height: 28px;font-size: 18px;">{{questionData.title}}</p>
+              <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">
+                {{questionData.title}}</p>
               <div style="line-height: 26px;font-size: 15px;">
                 {{questionData.description}}
               </div>
@@ -104,11 +116,27 @@
       goInterlocution() {
         this.$router.push({path: '/interlocution'});
       },
-      getData(){
+      getData() {
         this.$http.get(globalConfig.server + 'qa/front/question/' + this.$route.query.id).then((res) => {
           this.loading = false;
           if (res.data.code === '70210') {
             this.questionData = res.data.data;
+            let create_time = Date.parse(new Date(this.questionData.create_time.split('-').join('/')));
+            let now_time = Date.parse(new Date());
+            let difference = (now_time - create_time) / 1000;
+            if (difference >= 0 && difference < 60) {
+              this.questionData.create_time = difference + ' 秒前';
+            } else if (difference >= 60 && difference < 3600) {
+              this.questionData.create_time = Math.floor(difference / 60) + ' 分钟前';
+            } else if (difference >= 3600 && difference < 3600 * 24) {
+              this.questionData.create_time = Math.floor(difference / 3600) + ' 小时前';
+            } else if (difference >= 3600 * 24 && difference < 3600 * 24 * 30) {
+              this.questionData.create_time = Math.floor(difference / 3600 / 24) + ' 天前';
+            } else if (difference >= 3600 * 24 * 30 && difference < 3600 * 24 * 30 * 12) {
+              this.questionData.create_time = Math.floor(difference / 3600 / 24 / 30) + ' 个月前';
+            } else if (difference >= 3600 * 24 * 30 * 12) {
+              this.questionData.create_time = Math.floor(difference / 3600 / 24 / 30 / 12) + ' 年前';
+            }
           } else {
             this.questionData = {};
           }
@@ -119,7 +147,10 @@
           title: '提交回答',
           message: '确认提交回答吗'
         }).then(() => {
-          this.$http.post(globalConfig.server + 'qa/front/answer', {content: this.content, question_id: this.$route.query.id}).then((res) => {
+          this.$http.post(globalConfig.server + 'qa/front/answer', {
+            content: this.content,
+            question_id: this.$route.query.id
+          }).then((res) => {
             if (res.data.code === '70310') {
               this.confirmType = 'success';
             } else {
@@ -221,7 +252,7 @@
       .interMain {
         height: 100%;
         .main1 {
-          padding: .2rem 0  0.2rem .4rem;
+          padding: .2rem 0 0.2rem .4rem;
           background: #FFFFFF;
 
         }
@@ -230,9 +261,9 @@
           .contents1 {
             border-top: $bottom;
             margin-bottom: 7px;
+            padding-right: 0.25rem;
             p {
               color: $colorTitle;
-              padding: .2rem 0;
               font-size: .30rem;
             }
             div {
@@ -249,29 +280,33 @@
         color: $colorP;
         padding-bottom: .2rem;
         .mainTopA {
-          p {
-            @include flex;
-            justify-content: center;
-            align-items: center;
+          div {
+            /*<!--@include flex;-->*/
+            /*<!--justify-content: center;-->*/
+            /*<!--align-items: center;-->*/
             img {
               width: 40px;
               height: 40px;
-              margin-right: .2rem;
+              /*margin-right: .2rem;*/
             }
-            span {
-              width: 2.6rem;
-              height: 20px;
-              line-height: 20px;
+            .text_ellipsis {
+              margin-top: 3px;
+              width: 3rem;
+              height: 26px;
+              line-height: 26px;
               white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
+              /*overflow: hidden;*/
+              /*text-overflow: ellipsis;*/
             }
           }
         }
         .topTime {
-          padding-right: .4rem;
-          min-width: 3rem;
+          display: inline-block;
+          padding-right: .3rem;
+          width: 1.5rem;
           text-align: right;
+          font-size: 13px;
+          color: #aaaaaa;
         }
       }
     }

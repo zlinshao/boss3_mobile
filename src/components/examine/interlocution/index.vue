@@ -24,60 +24,73 @@
             <div class="main1 boxShadow">
               <div class="mainTop">
                 <div class="mainTopA">
-                  <p>
-                    <img :src="item.asker.avatar" v-if="item && item.asker && item.asker.avatar && !item.is_anonymous"
-                         style="border-radius: 50%;">
-                    <img src="../../../assets/head.png" v-else>
-                    <span>
-                      <span v-if="!item.is_anonymous">{{item && item.asker && item.asker.name}}</span>
-                      <span v-if="item.is_anonymous">匿名</span>
-                      <span v-if="!item.is_anonymous">
-                          <span v-if="item && item.asker && item.asker.org.length>0" v-for="v in item.asker.org">&nbsp;{{v.name}}&nbsp;</span>-
-                          <span v-if="item && item.asker && item.asker.role.length>0" v-for="v in item.asker.role">&nbsp;{{v.display_name}}&nbsp;</span>
-                      </span>
-                    </span>
-                  </p>
+                  <div v-if="!item.is_anonymous">
+                      <div style="float: left;">
+                        <img :src="item.asker.avatar" v-if="item && item.asker && item.asker.avatar"
+                             style="border-radius: 50%;">
+                        <img src="../../../assets/head.png" v-else>
+                      </div>
+                      <div style="margin-left: 50px;">
+                      <div>{{item && item.asker && item.asker.name}}</div>
+                      <div class="text_ellipsis">
+                          <span v-if="item && item.asker && item.asker.org.length>0" v-for="v in item.asker.org">{{v.name}}&nbsp;</span>-
+                          <span v-if="item && item.asker && item.asker.role.length>0" v-for="v in item.asker.role">{{v.display_name}}&nbsp;</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="item.is_anonymous"
+                       style="display: flex;justify-content: center;align-items: center;">
+                    <img src="../../../assets/head.png">
+                    <span style="width: 2.6rem;margin-left: 10px;">匿名</span>
+                  </div>
                 </div>
                 <div class="topTime">
                   {{item.create_time}}
                 </div>
               </div>
               <div class="contents1">
-                <p style="margin: 5px 0;line-height: 28px;font-size: 18px;">{{item.title}}</p>
+                <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">{{item.title}}</p>
                 <div style="line-height: 26px;font-size: 15px;">
                   {{item.description}}
                 </div>
               </div>
               <div class="interFooter">
                 <div>
-                  <span v-if="item.answers_count>0 && !disabledIds[item.id]"  @click="showAll(item.id)">显示回答 ({{item.answers_count}})</span>
-                  <span v-if="item.answers_count>0 && disabledIds[item.id]" @click="answerDetail=[];disabledIds[item.id]=false">收起回答 ({{item.answers_count}})</span>
+                  <span v-if="item.answers_count>0 && !disabledIds[item.id]" @click="showAll(item.id)">显示回答 ({{item.answers_count}})</span>
+                  <span v-if="item.answers_count>0 && disabledIds[item.id]"
+                        @click="answerDetail=[];disabledIds[item.id]=false">收起回答 ({{item.answers_count}})</span>
                 </div>
-                <div @click="writeAnswer(item.id)"> <van-icon name="chat" style="font-size: 18px;" /></div>
+                <div @click="writeAnswer(item.id)">
+                  <van-icon name="chat" style="font-size: 18px;"/>
+                </div>
               </div>
             </div>
-            <div class="main2">
-              <div v-for="(value,key) in answerDetail" class="allContent" v-if="showHide === item.id && showStatus" >
-                <div  class="mainTop padNone topNone"  >
+            <div class="main2" >
+              <!--:class="{'boxShadow2': comStatus}"-->
+              <div v-for="(value,key) in answerDetail" class="allContent boxShadow2" v-if="showHide === item.id && showStatus">
+                <div class="mainTop topNone" >
                   <div class="mainTopA">
-                    <p>
-                      <img :src="value.staff.avatar" v-if="value.staff.avatar" style="border-radius: 50%;">
-                      <img src="../../../assets/head.png" v-else>
-                      <span>{{value.staff.name}}
-                      <span>
-                        <span v-if="value.staff.org.length>0" v-for="v in value.staff.org">&nbsp;{{v.name}}&nbsp;</span>-
-                        <span v-if="value.staff.role.length>0" v-for="v in value.staff.role">&nbsp;{{v.display_name}}&nbsp;</span>
-                      </span>
-                    </span>
-                    </p>
+                    <div>
+                      <div style="float: left;">
+                        <img :src="value.staff.avatar" v-if="value.staff.avatar" style="border-radius: 50%;">
+                        <img src="../../../assets/head.png" v-else>
+                      </div>
+                      <div style="margin-left: 50px;">
+                         <div>{{value && value.staff && value.staff.name}}</div>
+                          <div class="text_ellipsis">
+                            <span v-if="value.staff.org.length>0" v-for="v in value.staff.org">{{v.name}}&nbsp;</span>-
+                            <span v-if="value.staff.role.length>0" v-for="v in value.staff.role">{{v.display_name}}&nbsp;</span>
+                          </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="topTime">
                     {{value.create_time}}
                   </div>
                 </div>
-                <div class="boxShadow" >
+                <div class="boxShadow">
                   <div class="contents2">
-                    <div style="line-height: 28px;">
+                    <div style="line-height: 28px;margin-top: 5px;">
                       {{value.content}}
                     </div>
                     <div class="interFooter2">
@@ -98,24 +111,26 @@
                   <div class="contents3" v-for="comment in commentDetail" v-if="comments === value.id && comStatus">
                     <div class="mainTop padNone">
                       <div class="mainTopA">
-                        <p>
-                          <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
-                               style="border-radius: 50%;">
-                          <img src="../../../assets/head.png" v-else>
-                          <span>
-                          <span>{{comment.staff.name}}</span>&nbsp;&nbsp;
-                          <span>
-                            <span v-if="comment.staff.org.length>0" v-for="v in comment.staff.org">&nbsp;{{v.name}}&nbsp;</span>-
-                            <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">&nbsp;{{v.display_name}}&nbsp;</span>
-                          </span>
-                        </span>
-                        </p>
+                        <div>
+                          <div style="float: left;">
+                            <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
+                                 style="border-radius: 50%;">
+                            <img src="../../../assets/head.png" v-else>
+                          </div>
+                          <div style="margin-left: 50px;">
+                            <div>{{comment && comment.staff && comment.staff.name}}</div>
+                            <div class="text_ellipsis">
+                              <span v-if="comment.staff.org.length>0" v-for="v in comment.staff.org">{{v.name}}&nbsp;</span>-
+                              <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       <div class="topTime">
                         {{comment.create_time}}
                       </div>
                     </div>
-                    <div class="article" style="line-height: 28px;">
+                    <div class="article" style="line-height: 28px;margin-top: 5px;">
                       {{comment.content}}
                     </div>
                   </div>
@@ -217,11 +232,11 @@
       }
     },
     methods: {
-      writeComment(ques_id, answer_id){
-        this.$router.push({path: '/writeComment', query:{ques_id: ques_id, answer_id: answer_id}});
+      writeComment(ques_id, answer_id) {
+        this.$router.push({path: '/writeComment', query: {ques_id: ques_id, answer_id: answer_id}});
       },
-      writeAnswer(id){
-        this.$router.push({path: '/writeAnswer', query:{id: id}});
+      writeAnswer(id) {
+        this.$router.push({path: '/writeAnswer', query: {id: id}});
       },
       returnIndex() {
         let that = this;
@@ -280,6 +295,22 @@
                 if (this.disabledIds[item.id] == null || this.disabledIds[item.id] == undefined) {
                   this.$set(this.disabledIds, item.id, false);
                 }
+                let create_time = Date.parse(new Date(item.create_time.split('-').join('/')));
+                let now_time = Date.parse(new Date());
+                let difference = (now_time - create_time) / 1000;
+                if (difference >= 0 && difference < 60) {
+                  item.create_time = difference + ' 秒前';
+                } else if (difference >= 60 && difference < 3600) {
+                  item.create_time = Math.floor(difference / 60) + ' 分钟前';
+                } else if (difference >= 3600 && difference < 3600 * 24) {
+                  item.create_time = Math.floor(difference / 3600) + ' 小时前';
+                } else if (difference >= 3600 * 24 && difference < 3600 * 24 * 30) {
+                  item.create_time = Math.floor(difference / 3600 / 24) + ' 天前';
+                } else if (difference >= 3600 * 24 * 30 && difference < 3600 * 24 * 30 * 12) {
+                  item.create_time = Math.floor(difference / 3600 / 24 / 30) + ' 个月前';
+                } else if (difference >= 3600 * 24 * 30 * 12) {
+                  item.create_time = Math.floor(difference / 3600 / 24 / 30 / 12) + ' 年前';
+                }
               });
             }
             if (res.data.data.length < 1) {
@@ -314,6 +345,29 @@
         this.$http.get(globalConfig.server + 'qa/front/answer?question_id=' + id).then((res) => {
           if (res.data.code === '70310') {
             this.answerDetail = res.data.data;
+            if (res.data.data.length > 0) {
+              res.data.data.forEach((item) => {
+                // if (this.disabledIds[item.id] == null || this.disabledIds[item.id] == undefined) {
+                //   this.$set(this.disabledIds, item.id, false);
+                // }
+                let create_time = Date.parse(new Date(item.create_time.split('-').join('/')));
+                let now_time = Date.parse(new Date());
+                let difference = (now_time - create_time) / 1000;
+                if (difference >= 0 && difference < 60) {
+                  item.create_time = difference + ' 秒前';
+                } else if (difference >= 60 && difference < 3600) {
+                  item.create_time = Math.floor(difference / 60) + ' 分钟前';
+                } else if (difference >= 3600 && difference < 3600 * 24) {
+                  item.create_time = Math.floor(difference / 3600) + ' 小时前';
+                } else if (difference >= 3600 * 24 && difference < 3600 * 24 * 30) {
+                  item.create_time = Math.floor(difference / 3600 / 24) + ' 天前';
+                } else if (difference >= 3600 * 24 * 30 && difference < 3600 * 24 * 30 * 12) {
+                  item.create_time = Math.floor(difference / 3600 / 24 / 30) + ' 个月前';
+                } else if (difference >= 3600 * 24 * 30 * 12) {
+                  item.create_time = Math.floor(difference / 3600 / 24 / 30 / 12) + ' 年前';
+                }
+              });
+            }
           } else {
             this.answerDetail = [];
             Toast.fail(res.data.msg);
@@ -330,6 +384,26 @@
         this.$http.get(globalConfig.server + 'qa/front/comment?answer_id=' + id).then((res) => {
           if (res.data.code === '70410') {
             this.commentDetail = res.data.data;
+            if (res.data.data.length > 0) {
+              res.data.data.forEach((item) => {
+                let create_time = Date.parse(new Date(item.create_time.split('-').join('/')));
+                let now_time = Date.parse(new Date());
+                let difference = (now_time - create_time) / 1000;
+                if (difference >= 0 && difference < 60) {
+                  item.create_time = difference + ' 秒前';
+                } else if (difference >= 60 && difference < 3600) {
+                  item.create_time = Math.floor(difference / 60) + ' 分钟前';
+                } else if (difference >= 3600 && difference < 3600 * 24) {
+                  item.create_time = Math.floor(difference / 3600) + ' 小时前';
+                } else if (difference >= 3600 * 24 && difference < 3600 * 24 * 30) {
+                  item.create_time = Math.floor(difference / 3600 / 24) + ' 天前';
+                } else if (difference >= 3600 * 24 * 30 && difference < 3600 * 24 * 30 * 12) {
+                  item.create_time = Math.floor(difference / 3600 / 24 / 30) + ' 个月前';
+                } else if (difference >= 3600 * 24 * 30 * 12) {
+                  item.create_time = Math.floor(difference / 3600 / 24 / 30 / 12) + ' 年前';
+                }
+              });
+            }
           } else {
             this.commentDetail = [];
             Toast.fail(res.data.msg);
@@ -428,6 +502,9 @@
 
   }
 
+  .boxShadow2{
+    box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);
+  }
   #interLocution {
     @mixin flex {
       display: flex;
@@ -458,18 +535,19 @@
       -webkit-overflow-scrolling: touch;
 
       .main1 {
-        padding: .2rem  0 .2rem .4rem;
+        padding: .2rem 0 .2rem .4rem;
         background: #FFFFFF;
-        box-shadow:  0 2px 14px 0 rgba(61,90,254,0.15);
+        box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
         margin-bottom: .2rem;
       }
       .mainContent {
         margin-bottom: .2rem;
         .contents1 {
           border-top: $bottom;
+          margin-bottom: 7px;
+          padding-right: 0.25rem;
           p {
             color: $colorTitle;
-            padding: .2rem 0;
             font-size: .30rem;
           }
           div {
@@ -516,7 +594,7 @@
         }
         .contents3 {
           .article {
-            margin: 0 .2rem 0  1.1rem;
+            margin: 0 .2rem 0 1.1rem;
             padding-bottom: .2rem;
             border-bottom: $bottom;
           }
@@ -535,9 +613,9 @@
           margin-top: .3rem;
           padding-top: .2rem;
           height: 35px;
-          div{
+          div {
             cursor: pointer;
-            span{
+            span {
               font-size: 15px;
               line-height: 24px;
             }
@@ -547,9 +625,9 @@
           }
           div:last-of-type {
             background: #536DFE;
-            box-shadow: 0 4px 10px 0 rgba(83,109,254,0.30);
+            box-shadow: 0 4px 10px 0 rgba(83, 109, 254, 0.30);
             color: #FFFFFF;
-            padding: 8px 7px 6px 8px;
+            padding: 8px 8px 6px;
             border-radius: 50%;
             margin-top: -45px;
           }
@@ -570,6 +648,7 @@
             margin: 0 .3rem;
           }
         }
+
       }
     }
     .mainTop {
@@ -579,29 +658,33 @@
       color: $colorP;
       padding-bottom: .2rem;
       .mainTopA {
-        p {
-          @include flex;
-          justify-content: center;
-          align-items: center;
+        div {
+          //@include flex;
+          /*justify-content: center;*/
+          /*align-items: center;*/
           img {
             width: 40px;
             height: 40px;
-            margin-right: .2rem;
           }
-          span {
-            width: 2.6rem;
-            height: 20px;
-            line-height: 20px;
+          .text_ellipsis {
+            margin-top: 3px;
+            width: 3rem;
+            height: 26px;
+            line-height: 26px;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            span{
+              font-size: 13px;
+            }
           }
         }
       }
       .topTime {
-        padding-right: .4rem;
-        min-width: 3rem;
+        display: inline-block;
+        padding-right: .3rem;
+        width: 1.5rem;
         text-align: right;
+        font-size: 13px;
+        color: #aaaaaa;
       }
     }
     .topNone {
