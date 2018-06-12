@@ -919,7 +919,7 @@
       },
 
       saveCollect(val) {
-        alert(globalConfig.header.Authorization);
+        alert(globalConfig.header.Authorization);  
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
