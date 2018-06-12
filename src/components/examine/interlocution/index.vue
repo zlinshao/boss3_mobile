@@ -21,20 +21,20 @@
       <div id="interMain" class="interMain">
         <div id="mainContent">
           <div class="mainContent" v-for="(item,index) in questions">
-            <div class="main1 boxShadow">
+            <div class="main1">
               <div class="mainTop">
                 <div class="mainTopA">
                   <div v-if="!item.is_anonymous">
-                      <div style="float: left;">
-                        <img :src="item.asker.avatar" v-if="item && item.asker && item.asker.avatar"
-                             style="border-radius: 50%;">
-                        <img src="../../../assets/head.png" v-else>
-                      </div>
-                      <div style="margin-left: 50px;">
+                    <div style="float: left;">
+                      <img :src="item.asker.avatar" v-if="item && item.asker && item.asker.avatar"
+                           style="border-radius: 50%;">
+                      <img src="../../../assets/head.png" v-else>
+                    </div>
+                    <div style="margin-left: 50px;">
                       <div>{{item && item.asker && item.asker.name}}</div>
                       <div class="text_ellipsis">
-                          <span v-if="item && item.asker && item.asker.org.length>0" v-for="v in item.asker.org">{{v.name}}&nbsp;</span>-
-                          <span v-if="item && item.asker && item.asker.role.length>0" v-for="v in item.asker.role">{{v.display_name}}&nbsp;</span>
+                        <span v-if="item && item.asker && item.asker.org.length>0" v-for="v in item.asker.org">{{v.name}}&nbsp;</span>-
+                        <span v-if="item && item.asker && item.asker.role.length>0" v-for="v in item.asker.role">{{v.display_name}}&nbsp;</span>
                       </div>
                     </div>
                   </div>
@@ -49,7 +49,9 @@
                 </div>
               </div>
               <div class="contents1">
-                <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">{{item.title}}</p>
+                <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">
+                  {{item.title}}
+                </p>
                 <div style="line-height: 26px;font-size: 15px;">
                   {{item.description}}
                 </div>
@@ -65,10 +67,11 @@
                 </div>
               </div>
             </div>
-            <div class="main2" >
+            <div class="main2">
               <!--:class="{'boxShadow2': comStatus}"-->
-              <div v-for="(value,key) in answerDetail" class="allContent boxShadow2" v-if="showHide === item.id && showStatus">
-                <div class="mainTop topNone" >
+              <div v-for="(value,key) in answerDetail" class="allContent boxShadow2"
+                   v-if="showHide === item.id && showStatus">
+                <div class="mainTop topNone">
                   <div class="mainTopA">
                     <div>
                       <div style="float: left;">
@@ -76,15 +79,16 @@
                         <img src="../../../assets/head.png" v-else>
                       </div>
                       <div style="margin-left: 50px;">
-                         <div>{{value && value.staff && value.staff.name}}</div>
-                          <div class="text_ellipsis">
-                            <span v-if="value.staff.org.length>0" v-for="v in value.staff.org">{{v.name}}&nbsp;</span>-
-                            <span v-if="value.staff.role.length>0" v-for="v in value.staff.role">{{v.display_name}}&nbsp;</span>
-                          </div>
+                        <div>{{value && value.staff && value.staff.name}}</div>
+                        <div class="text_ellipsis">
+                          <span v-if="value.staff.org.length>0" v-for="v in value.staff.org">{{v.name}}&nbsp;</span>-
+                          <span v-if="value.staff.role.length>0"
+                                v-for="v in value.staff.role">{{v.display_name}}&nbsp;</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="topTime">
+                  <div class="topTime" style="padding-right: 0.15rem;">
                     {{value.create_time}}
                   </div>
                 </div>
@@ -94,17 +98,17 @@
                       {{value.content}}
                     </div>
                     <div class="interFooter2">
-                      <div class="con" @click="commentNum(value.id)" v-if="value.comments_count>0">
-                        <span>显示评论 ({{value.comments_count}})</span>
+                      <div class="con" v-if="value.comments_count>0">
+                        <span v-if="!showCommentIds[value.id]" @click="commentNum(value.id)">显示评论 ({{value.comments_count}})</span>
+                        <span v-if="showCommentIds[value.id]" @click="commentDetail=[];showCommentIds[value.id]=false">收起评论 ({{value.comments_count}})</span>
                       </div>
                       <div class="con" v-if="value.comments_count<1">
                         <span>显示评论 ({{value.comments_count}})</span>
                       </div>
-                      <div class="con" @click="writeComment(item.id, value.id)">
+                      <div class="con" @click="writeComment(item.id, value.id)" style="padding-right: 0;margin-right: 0;text-align: right;">
                         <i class="iconfont icon-pinglun"></i><span> 发表评论</span>
                       </div>
                     </div>
-
                   </div>
                 </div>
                 <div class="boxShadow man3">
@@ -119,14 +123,15 @@
                           </div>
                           <div style="margin-left: 50px;">
                             <div>{{comment && comment.staff && comment.staff.name}}</div>
-                            <div class="text_ellipsis">
-                              <span v-if="comment.staff.org.length>0" v-for="v in comment.staff.org">{{v.name}}&nbsp;</span>-
+                            <div class="text_ellipsis" style="width: 4.2rem;">
+                              <span v-if="comment.staff.org.length>0"
+                                    v-for="v in comment.staff.org">{{v.name}}&nbsp;</span>-
                               <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="topTime">
+                      <div class="topTime" style="padding-right: 0rem;">
                         {{comment.create_time}}
                       </div>
                     </div>
@@ -181,7 +186,7 @@
     components: {Toast},
     data() {
       return {
-        loading: true,
+        loading: false,
         searchValue: '',
         interModule: false,
         showHide: '',
@@ -199,6 +204,7 @@
         noPower: false,  //无权
         noData: false, //无数据
         disabledIds: {},  //全部显示 和收起的显示
+        showCommentIds: {},  //显示评论 和收起评论的显示
         scrollTop: 0,
         first: true,
       }
@@ -219,9 +225,28 @@
       // });
       this.returnIndex();
       this.loading = true;
+      this.getListData();
       this.noPower = false;
       this.noData = false;
-      this.getListData();
+
+      $("#interMain").height(500);
+      if (this.$route.query.question_id) {
+        this.showAll(this.$route.query.question_id);
+        setTimeout(() => {
+          if (this.$route.query.answer_id) {
+            this.commentNum(this.$route.query.answer_id);
+            setTimeout(() => {
+              if (this.$route.query.scrollTop) {
+                $("#interMain").scrollTop(this.$route.query.scrollTop);
+              }
+            }, 1000);
+          }
+          if (this.$route.query.scrollTop) {
+            $("#interMain").scrollTop(this.$route.query.scrollTop);
+          }
+        }, 1000);
+
+      }
     },
     watch: {
       loading(val) {
@@ -233,10 +258,13 @@
     },
     methods: {
       writeComment(ques_id, answer_id) {
-        this.$router.push({path: '/writeComment', query: {ques_id: ques_id, answer_id: answer_id}});
+        this.$router.push({
+          path: '/writeComment',
+          query: {ques_id: ques_id, answer_id: answer_id, scrollTop: $("#interMain").scrollTop()}
+        });
       },
       writeAnswer(id) {
-        this.$router.push({path: '/writeAnswer', query: {id: id}});
+        this.$router.push({path: '/writeAnswer', query: {id: id, scrollTop: $("#interMain").scrollTop()}});
       },
       returnIndex() {
         let that = this;
@@ -298,8 +326,8 @@
                 let create_time = Date.parse(new Date(item.create_time.split('-').join('/')));
                 let now_time = Date.parse(new Date());
                 let difference = (now_time - create_time) / 1000;
-                if (difference >= 0 && difference < 60) {
-                  item.create_time = difference + ' 秒前';
+                if (difference*1000 >= 0 && difference < 60) {
+                  item.create_time = Math.floor(difference) + ' 秒前';
                 } else if (difference >= 60 && difference < 3600) {
                   item.create_time = Math.floor(difference / 60) + ' 分钟前';
                 } else if (difference >= 3600 && difference < 3600 * 24) {
@@ -317,6 +345,7 @@
               this.questions = [];
               this.noData = true;
             }
+            // localStorage.setItem("questionData", JSON.stringify(res.data.data));
           } else if (res.data.code === '70288') {
             this.questions = [];
             this.noPower = true;
@@ -347,9 +376,9 @@
             this.answerDetail = res.data.data;
             if (res.data.data.length > 0) {
               res.data.data.forEach((item) => {
-                // if (this.disabledIds[item.id] == null || this.disabledIds[item.id] == undefined) {
-                //   this.$set(this.disabledIds, item.id, false);
-                // }
+                if (this.showCommentIds[item.id] == null || this.showCommentIds[item.id] == undefined) {
+                  this.$set(this.showCommentIds, item.id, false);
+                }
                 let create_time = Date.parse(new Date(item.create_time.split('-').join('/')));
                 let now_time = Date.parse(new Date());
                 let difference = (now_time - create_time) / 1000;
@@ -375,12 +404,18 @@
         });
       },
       commentNum(id) {
-        if (this.comments === id) {
-          this.comStatus = !this.comStatus;
-        } else {
-          this.comStatus = true;
-          this.comments = id;
+        this.showCommentIds[id] = true;
+        for (var v in this.showCommentIds) {
+          if (v != id) {
+            this.showCommentIds[v] = false;
+          }
         }
+        // if (this.comments === id) {
+        //   this.comStatus = !this.comStatus;
+        // } else {
+        this.comStatus = true;
+        this.comments = id;
+        // }
         this.$http.get(globalConfig.server + 'qa/front/comment?answer_id=' + id).then((res) => {
           if (res.data.code === '70410') {
             this.commentDetail = res.data.data;
@@ -502,8 +537,18 @@
 
   }
 
-  .boxShadow2{
-    box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);
+  .boxShadow2 {
+    box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.15);
+  }
+  .second_line_camp{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    word-break: break-all;
+    height: 55px;
   }
   #interLocution {
     @mixin flex {
@@ -533,12 +578,14 @@
       overflow-y: scroll;
       overflow-scrolling: touch;
       -webkit-overflow-scrolling: touch;
-
       .main1 {
         padding: .2rem 0 .2rem .4rem;
         background: #FFFFFF;
         box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
         margin-bottom: .2rem;
+      }
+      #mainContent{
+        margin-bottom: 100px;
       }
       .mainContent {
         margin-bottom: .2rem;
@@ -557,7 +604,7 @@
         }
         .contents2 {
           border-bottom: 1px solid #E0E0E0;
-          margin-left: 1.1rem;
+          margin-left: 58px;
           padding-right: 0.36rem;
           div {
             color: $colorTitle;
@@ -575,7 +622,7 @@
             height: 35px;
             .con {
               margin: .16rem 0 0;
-              width: 1.6rem;
+              width: 1.8rem;
               padding-bottom: .2rem;
               cursor: pointer;
               span {
@@ -594,7 +641,7 @@
         }
         .contents3 {
           .article {
-            margin: 0 .2rem 0 1.1rem;
+            margin: 0 .2rem 0 59px;
             padding-bottom: .2rem;
             border-bottom: $bottom;
           }
@@ -667,12 +714,16 @@
             height: 40px;
           }
           .text_ellipsis {
+            width: 4.5rem;
+            height: 26px;
             margin-top: 3px;
-            width: 3rem;
             height: 26px;
             line-height: 26px;
+            overflow: hidden;
             white-space: nowrap;
-            span{
+            text-overflow: ellipsis;
+            word-break: break-all;
+            span {
               font-size: 13px;
             }
           }
@@ -681,7 +732,7 @@
       .topTime {
         display: inline-block;
         padding-right: .3rem;
-        width: 1.5rem;
+        width: 2rem;
         text-align: right;
         font-size: 13px;
         color: #aaaaaa;
