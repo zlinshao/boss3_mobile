@@ -256,17 +256,19 @@
                 Toast(res.data.msg);
               }
             }).catch((error) => {
-              if (error.response.status === 401) {
-                this.personalGet().then((data) => {
-                  if (data && this.retry === 0) {
-                    this.retry++;
-                    this.haveInHand = true;
-                    this.saveCollect(this.form.draft);
-                  }
-                });
-              } else if (error.response === undefined) {
+              if (error.response === undefined) {
                 this.alertMsg('net');
                 this.haveInHand = true;
+              } else {
+                if (error.response.status === 401) {
+                  this.personalGet().then((data) => {
+                    if (data && this.retry === 0) {
+                      this.retry++;
+                      this.haveInHand = true;
+                      this.saveCollect(this.form.draft);
+                    }
+                  });
+                }
               }
             })
           } else {
