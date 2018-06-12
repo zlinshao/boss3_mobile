@@ -49,7 +49,9 @@
                 </div>
               </div>
               <div class="contents1">
-                <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">{{item.title}}</p>
+                <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">
+                  {{item.title}}
+                </p>
                 <div style="line-height: 26px;font-size: 15px;">
                   {{item.description}}
                 </div>
@@ -86,7 +88,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="topTime">
+                  <div class="topTime" style="padding-right: 0.15rem;">
                     {{value.create_time}}
                   </div>
                 </div>
@@ -103,11 +105,10 @@
                       <div class="con" v-if="value.comments_count<1">
                         <span>显示评论 ({{value.comments_count}})</span>
                       </div>
-                      <div class="con" @click="writeComment(item.id, value.id)">
+                      <div class="con" @click="writeComment(item.id, value.id)" style="padding-right: 0;margin-right: 0;text-align: right;">
                         <i class="iconfont icon-pinglun"></i><span> 发表评论</span>
                       </div>
                     </div>
-
                   </div>
                 </div>
                 <div class="boxShadow man3">
@@ -122,7 +123,7 @@
                           </div>
                           <div style="margin-left: 50px;">
                             <div>{{comment && comment.staff && comment.staff.name}}</div>
-                            <div class="text_ellipsis">
+                            <div class="text_ellipsis" style="width: 4.2rem;">
                               <span v-if="comment.staff.org.length>0"
                                     v-for="v in comment.staff.org">{{v.name}}&nbsp;</span>-
                               <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
@@ -130,7 +131,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="topTime">
+                      <div class="topTime" style="padding-right: 0rem;">
                         {{comment.create_time}}
                       </div>
                     </div>
@@ -185,7 +186,7 @@
     components: {Toast},
     data() {
       return {
-        loading: true,
+        loading: false,
         searchValue: '',
         interModule: false,
         showHide: '',
@@ -224,9 +225,10 @@
       // });
       this.returnIndex();
       this.loading = true;
+      this.getListData();
       this.noPower = false;
       this.noData = false;
-      this.getListData();
+
       $("#interMain").height(500);
       if (this.$route.query.question_id) {
         this.showAll(this.$route.query.question_id);
@@ -324,8 +326,8 @@
                 let create_time = Date.parse(new Date(item.create_time.split('-').join('/')));
                 let now_time = Date.parse(new Date());
                 let difference = (now_time - create_time) / 1000;
-                if (difference >= 0 && difference < 60) {
-                  item.create_time = difference + ' 秒前';
+                if (difference*1000 >= 0 && difference < 60) {
+                  item.create_time = Math.floor(difference) + ' 秒前';
                 } else if (difference >= 60 && difference < 3600) {
                   item.create_time = Math.floor(difference / 60) + ' 分钟前';
                 } else if (difference >= 3600 && difference < 3600 * 24) {
@@ -343,7 +345,7 @@
               this.questions = [];
               this.noData = true;
             }
-
+            // localStorage.setItem("questionData", JSON.stringify(res.data.data));
           } else if (res.data.code === '70288') {
             this.questions = [];
             this.noPower = true;
@@ -538,7 +540,16 @@
   .boxShadow2 {
     box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.15);
   }
-
+  .second_line_camp{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    word-break: break-all;
+    height: 55px;
+  }
   #interLocution {
     @mixin flex {
       display: flex;
@@ -567,12 +578,14 @@
       overflow-y: scroll;
       overflow-scrolling: touch;
       -webkit-overflow-scrolling: touch;
-
       .main1 {
         padding: .2rem 0 .2rem .4rem;
         background: #FFFFFF;
         box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
         margin-bottom: .2rem;
+      }
+      #mainContent{
+        margin-bottom: 100px;
       }
       .mainContent {
         margin-bottom: .2rem;
@@ -591,7 +604,7 @@
         }
         .contents2 {
           border-bottom: 1px solid #E0E0E0;
-          margin-left: 1.1rem;
+          margin-left: 58px;
           padding-right: 0.36rem;
           div {
             color: $colorTitle;
@@ -609,7 +622,7 @@
             height: 35px;
             .con {
               margin: .16rem 0 0;
-              width: 1.6rem;
+              width: 1.8rem;
               padding-bottom: .2rem;
               cursor: pointer;
               span {
@@ -628,7 +641,7 @@
         }
         .contents3 {
           .article {
-            margin: 0 .2rem 0 1.1rem;
+            margin: 0 .2rem 0 59px;
             padding-bottom: .2rem;
             border-bottom: $bottom;
           }
@@ -701,11 +714,15 @@
             height: 40px;
           }
           .text_ellipsis {
+            width: 4.5rem;
+            height: 26px;
             margin-top: 3px;
-            width: 3rem;
             height: 26px;
             line-height: 26px;
+            overflow: hidden;
             white-space: nowrap;
+            text-overflow: ellipsis;
+            word-break: break-all;
             span {
               font-size: 13px;
             }
@@ -715,7 +732,7 @@
       .topTime {
         display: inline-block;
         padding-right: .3rem;
-        width: 1.5rem;
+        width: 2rem;
         text-align: right;
         font-size: 13px;
         color: #aaaaaa;

@@ -130,6 +130,7 @@
     methods: {
       goInterlocution() {
         this.$router.push({path: '/interlocution'});
+
       },
       anonymousChange(val) {
         this.form.is_anonymous = val === '0' ? false : true;
