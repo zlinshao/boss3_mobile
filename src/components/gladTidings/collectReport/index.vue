@@ -918,7 +918,6 @@
       },
 
       saveCollect(val) {
-        console.log(globalConfig.header.Authorization);
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
@@ -944,10 +943,6 @@
                 Toast(res.data.msg);
               }
             }).catch((error) => {
-              if (error.response === undefined) {
-                alert('网络连接失败!');
-                this.haveInHand = true;  
-              }
               if (error.response.status === 401) {
                 this.personalGet().then((data) => {
                   if (data && this.retry === 0) {
@@ -956,13 +951,16 @@
                     this.saveCollect(this.form.draft);
                   }
                 });
+              } else if (error.response === undefined) {
+                this.alertMsg('net');
+                this.haveInHand = true;
               }
             })
           } else {
-            Toast('正在提交，请耐心等待...');
+            Toast(this.alertMsg('sub'));
           }
         } else {
-          Toast('图片上传中...');
+          Toast(this.alertMsg('pic'));
         }
       },
 
@@ -973,7 +971,7 @@
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
           this.form.is_agency = val.is_agency;                           //是否中介
-          this.cusFrom = dicts.value8[val.is_agency];                //是否中介
+          this.cusFrom = dicts.value8[val.is_agency];                    //是否中介
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -989,7 +987,6 @@
           this.form.department_name = val.name;
           this.form.department_id = val.id;
           this.isValue1 = val.activeRevise;
-          globalConfig.header.Authorization = '';
           this.stick();
         }
         if (t.tops === '') {

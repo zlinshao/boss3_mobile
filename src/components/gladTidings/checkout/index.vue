@@ -249,6 +249,8 @@
 
         isValue1: true,
         counts: '',
+
+        retry: 0,
       }
     },
     mounted() {
@@ -426,6 +428,7 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
               this.haveInHand = true;
+              this.retry = 0;
               if (res.data.code === '51210' || res.data.code === '51230') {
                 Toast.success(res.data.msg);
                 this.close_();
@@ -437,13 +440,25 @@
               } else {
                 Toast(res.data.msg);
               }
+            }).catch((error) => {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+                    this.haveInHand = true;
+                    this.saveCollect(this.form.draft);
+                  }
+                });
+              } else if (error.response === undefined) {
+                this.alertMsg('net');
+                this.haveInHand = true;
+              }
             })
           } else {
-            Toast('正在提交，请耐心等待...');
+            Toast(this.alertMsg('sub'));
           }
         } else {
-          Toast('图片上传中...');
-
+          Toast(this.alertMsg('pic'));
         }
       },
 
