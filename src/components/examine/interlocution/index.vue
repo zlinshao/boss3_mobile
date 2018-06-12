@@ -52,8 +52,17 @@
                 <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">
                   {{item.title}}
                 </p>
-                <div style="line-height: 26px;font-size: 15px;">
-                  {{item.description}}
+                <div>
+                  <div class="second_line_camp" :id="`desc-${item.id}`" style="line-height: 26px;font-size: 15px;">
+                    {{item.description}}
+                  </div>
+                  <div style="color: #536DFE;margin-top: 10px;" v-if="showDescIds[item.id]" @click="showDesc(item.id, 'show')">
+                    显示全部
+                  </div>
+                  <div style="color: #536DFE;margin-top: 10px;" v-if="showDescIds[item.id] == false"
+                       @click="showDesc(item.id, 'hide')">
+                    收起
+                  </div>
                 </div>
               </div>
               <div class="interFooter">
@@ -68,8 +77,7 @@
               </div>
             </div>
             <div class="main2">
-              <!--:class="{'boxShadow2': comStatus}"-->
-              <div v-for="(value,key) in answerDetail" class="allContent boxShadow2"
+              <div v-for="(value,key) in answerDetail" class="allContent"
                    v-if="showHide === item.id && showStatus">
                 <div class="mainTop topNone">
                   <div class="mainTopA">
@@ -105,7 +113,8 @@
                       <div class="con" v-if="value.comments_count<1">
                         <span>显示评论 ({{value.comments_count}})</span>
                       </div>
-                      <div class="con" @click="writeComment(item.id, value.id)" style="padding-right: 0;margin-right: 0;text-align: right;">
+                      <div class="con" @click="writeComment(item.id, value.id)"
+                           style="padding-right: 0;margin-right: 0;text-align: right;">
                         <i class="iconfont icon-pinglun"></i><span> 发表评论</span>
                       </div>
                     </div>
@@ -207,6 +216,7 @@
         showCommentIds: {},  //显示评论 和收起评论的显示
         scrollTop: 0,
         first: true,
+        showDescIds: {},
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -247,6 +257,7 @@
         }, 1000);
 
       }
+
     },
     watch: {
       loading(val) {
@@ -254,9 +265,18 @@
           this.noPower = false;
           this.noData = false;
         }
-      }
+      },
     },
     methods: {
+      showDesc(id, val) {
+        if (val === 'show') {
+          this.showDescIds[id] = false;
+          $('#desc-'+id).addClass('show_desc').removeClass('second_line_camp');
+        } else if (val === 'hide') {
+          this.showDescIds[id] = true;
+          $('#desc-'+id).removeClass('show_desc').addClass('second_line_camp');
+        }
+      },
       writeComment(ques_id, answer_id) {
         this.$router.push({
           path: '/writeComment',
@@ -323,10 +343,11 @@
                 if (this.disabledIds[item.id] == null || this.disabledIds[item.id] == undefined) {
                   this.$set(this.disabledIds, item.id, false);
                 }
+
                 let create_time = Date.parse(new Date(item.create_time.split('-').join('/')));
                 let now_time = Date.parse(new Date());
                 let difference = (now_time - create_time) / 1000;
-                if (difference*1000 >= 0 && difference < 60) {
+                if (difference * 1000 >= 0 && difference < 60) {
                   item.create_time = Math.floor(difference) + ' 秒前';
                 } else if (difference >= 60 && difference < 3600) {
                   item.create_time = Math.floor(difference / 60) + ' 分钟前';
@@ -339,13 +360,21 @@
                 } else if (difference >= 3600 * 24 * 30 * 12) {
                   item.create_time = Math.floor(difference / 3600 / 24 / 30 / 12) + ' 年前';
                 }
+                if (item.description) {
+                  let arr = item.description.match(/[^\x00-\xff]/ig);
+                  let length = item.description.length + (arr == null ? 0 : arr.length);
+                  if (length >= 22 * 2 * 2) {
+                    if (this.showDescIds[item.id] == null || this.showDescIds[item.id] == undefined) {
+                      this.$set(this.showDescIds, item.id, true);
+                    }
+                  }
+                }
               });
             }
             if (res.data.data.length < 1) {
               this.questions = [];
               this.noData = true;
             }
-            // localStorage.setItem("questionData", JSON.stringify(res.data.data));
           } else if (res.data.code === '70288') {
             this.questions = [];
             this.noPower = true;
@@ -410,12 +439,8 @@
             this.showCommentIds[v] = false;
           }
         }
-        // if (this.comments === id) {
-        //   this.comStatus = !this.comStatus;
-        // } else {
         this.comStatus = true;
         this.comments = id;
-        // }
         this.$http.get(globalConfig.server + 'qa/front/comment?answer_id=' + id).then((res) => {
           if (res.data.code === '70410') {
             this.commentDetail = res.data.data;
@@ -538,17 +563,24 @@
   }
 
   .boxShadow2 {
-    box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.15);
+    box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.10);
   }
-  .second_line_camp{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
+  .second_line_camp {
+    display: inline-block;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     box-orient: vertical;
     word-break: break-all;
     height: 55px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .show_desc{
+    display: inline-block;
+    height: initial;
+    overflow: initial;
+    text-overflow: initial;
+    word-break: break-all;
   }
   #interLocution {
     @mixin flex {
@@ -584,7 +616,7 @@
         box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
         margin-bottom: .2rem;
       }
-      #mainContent{
+      #mainContent {
         margin-bottom: 100px;
       }
       .mainContent {
@@ -685,9 +717,9 @@
         }
       }
       .main2 {
-        padding: 0rem 0 0;
         .allContent {
           /*<!--box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);-->*/
+          padding-bottom: 0.1rem;
           .mainTop {
             padding: .2rem .2rem 0;
           }
