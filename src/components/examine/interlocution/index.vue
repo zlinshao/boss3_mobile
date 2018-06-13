@@ -52,15 +52,24 @@
                 <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">
                   {{item.title}}
                 </p>
-                <div style="line-height: 26px;font-size: 15px;">
-                  {{item.description}}
+                <div>
+                  <div class="second_line_camp" :id="`desc-${item.id}`" style="line-height: 26px;font-size: 15px;">
+                    {{item.description}}
+                  </div>
+                  <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id]" @click="showDesc(item.id, 'show')">
+                    显示全部
+                  </div>
+                  <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id] == false"
+                       @click="showDesc(item.id, 'hide')">
+                    收起
+                  </div>
                 </div>
               </div>
               <div class="interFooter">
                 <div>
                   <span v-if="item.answers_count>0 && !disabledIds[item.id]" @click="showAll(item.id)">显示回答 ({{item.answers_count}})</span>
                   <span v-if="item.answers_count>0 && disabledIds[item.id]"
-                        @click="answerDetail=[];disabledIds[item.id]=false">收起回答 ({{item.answers_count}})</span>
+                        @click="answerDetail=[];disabledIds[item.id]=false;answerLoading=false">收起回答 ({{item.answers_count}})</span>
                 </div>
                 <div @click="writeAnswer(item.id)">
                   <van-icon name="chat" style="font-size: 18px;"/>
@@ -68,10 +77,12 @@
               </div>
             </div>
             <div class="main2">
-              <!--:class="{'boxShadow2': comStatus}"-->
-              <div v-for="(value,key) in answerDetail" class="allContent boxShadow2"
-                   v-if="showHide === item.id && showStatus">
-                <div class="mainTop topNone">
+              <div style="text-align: center;position: relative;margin-left: 45%;" v-if="showHide === item.id && answerLoading">
+                <van-loading type="spinner" color="black" />
+              </div>
+              <div v-for="(value,key) in answerDetail" class="allContent"
+                   v-if="showHide === item.id && !answerLoading">
+                <div class="mainTop topNone" :class="{'padTop3': key!=0}">
                   <div class="mainTopA">
                     <div>
                       <div style="float: left;">
@@ -94,49 +105,55 @@
                 </div>
                 <div class="boxShadow">
                   <div class="contents2">
-                    <div style="line-height: 28px;margin-top: 5px;">
+                    <div class="show_desc" style="line-height: 28px;margin-top: 5px;">
                       {{value.content}}
                     </div>
                     <div class="interFooter2">
                       <div class="con" v-if="value.comments_count>0">
                         <span v-if="!showCommentIds[value.id]" @click="commentNum(value.id)">显示评论 ({{value.comments_count}})</span>
-                        <span v-if="showCommentIds[value.id]" @click="commentDetail=[];showCommentIds[value.id]=false">收起评论 ({{value.comments_count}})</span>
+                        <span v-if="showCommentIds[value.id]" @click="commentDetail=[];showCommentIds[value.id]=false;commentLoading=false;">收起评论 ({{value.comments_count}})</span>
                       </div>
                       <div class="con" v-if="value.comments_count<1">
                         <span>显示评论 ({{value.comments_count}})</span>
                       </div>
-                      <div class="con" @click="writeComment(item.id, value.id)" style="padding-right: 0;margin-right: 0;text-align: right;">
+                      <div class="con" @click="writeComment(item.id, value.id)"
+                           style="padding-right: 0;margin-right: 0;text-align: right;">
                         <i class="iconfont icon-pinglun"></i><span> 发表评论</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="boxShadow man3">
-                  <div class="contents3" v-for="comment in commentDetail" v-if="comments === value.id && comStatus">
-                    <div class="mainTop padNone">
-                      <div class="mainTopA">
-                        <div>
-                          <div style="float: left;">
-                            <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
-                                 style="border-radius: 50%;">
-                            <img src="../../../assets/head.png" v-else>
-                          </div>
-                          <div style="margin-left: 50px;">
-                            <div>{{comment && comment.staff && comment.staff.name}}</div>
-                            <div class="text_ellipsis" style="width: 4.2rem;">
+                  <div style="text-align: center;position: relative;margin-left: 45%;padding: 10px 0;" v-if="comments === value.id && commentLoading">
+                    <van-loading type="spinner" color="black" />
+                  </div>
+                  <div v-for="(comment,comindex) in commentDetail" v-if="comments === value.id" style="margin-bottom: 6px;">
+                    <div  class="contents3" >
+                      <div class="mainTop" :class="{'padTop3': comindex==0}">
+                        <div class="mainTopA" >
+                          <div>
+                            <div style="float: left;">
+                              <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
+                                   style="border-radius: 50%;">
+                              <img src="../../../assets/head.png" v-else>
+                            </div>
+                            <div style="margin-left: 50px;">
+                              <div>{{comment && comment.staff && comment.staff.name}}</div>
+                              <div class="text_ellipsis" style="width: 4.2rem;">
                               <span v-if="comment.staff.org.length>0"
                                     v-for="v in comment.staff.org">{{v.name}}&nbsp;</span>-
-                              <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
+                                <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div class="topTime" style="padding-right: 0rem;">
+                          {{comment.create_time}}
+                        </div>
                       </div>
-                      <div class="topTime" style="padding-right: 0rem;">
-                        {{comment.create_time}}
+                      <div class="article show_desc" style="line-height: 28px;margin-top: 5px;">
+                        {{comment.content}}
                       </div>
-                    </div>
-                    <div class="article" style="line-height: 28px;margin-top: 5px;">
-                      {{comment.content}}
                     </div>
                   </div>
                 </div>
@@ -190,9 +207,7 @@
         searchValue: '',
         interModule: false,
         showHide: '',
-        showStatus: false,
         comments: '',
-        comStatus: false,
         questions: [],
         answerDetail: [],
         commentDetail: [],
@@ -207,6 +222,9 @@
         showCommentIds: {},  //显示评论 和收起评论的显示
         scrollTop: 0,
         first: true,
+        showDescIds: {},
+        answerLoading: false,
+        commentLoading: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -228,7 +246,6 @@
       this.getListData();
       this.noPower = false;
       this.noData = false;
-
       $("#interMain").height(500);
       if (this.$route.query.question_id) {
         this.showAll(this.$route.query.question_id);
@@ -247,16 +264,27 @@
         }, 1000);
 
       }
+
     },
+
     watch: {
       loading(val) {
         if (val) {
           this.noPower = false;
           this.noData = false;
         }
-      }
+      },
     },
     methods: {
+      showDesc(id, val) {
+        if (val === 'show') {
+          this.showDescIds[id] = false;
+          $('#desc-'+id).addClass('show_desc').removeClass('second_line_camp');
+        } else if (val === 'hide') {
+          this.showDescIds[id] = true;
+          $('#desc-'+id).removeClass('show_desc').addClass('second_line_camp');
+        }
+      },
       writeComment(ques_id, answer_id) {
         this.$router.push({
           path: '/writeComment',
@@ -323,10 +351,11 @@
                 if (this.disabledIds[item.id] == null || this.disabledIds[item.id] == undefined) {
                   this.$set(this.disabledIds, item.id, false);
                 }
+
                 let create_time = Date.parse(new Date(item.create_time.split('-').join('/')));
                 let now_time = Date.parse(new Date());
                 let difference = (now_time - create_time) / 1000;
-                if (difference*1000 >= 0 && difference < 60) {
+                if (difference * 1000 >= 0 && difference < 60) {
                   item.create_time = Math.floor(difference) + ' 秒前';
                 } else if (difference >= 60 && difference < 3600) {
                   item.create_time = Math.floor(difference / 60) + ' 分钟前';
@@ -339,13 +368,22 @@
                 } else if (difference >= 3600 * 24 * 30 * 12) {
                   item.create_time = Math.floor(difference / 3600 / 24 / 30 / 12) + ' 年前';
                 }
+                if (item.description) {
+                  let arr = item.description.match(/[^\x00-\xff]/ig);
+                  let length = item.description.length + (arr == null ? 0 : arr.length);
+                  let count = (window.innerWidth-33)*2/7.5;
+                  if (length >= count) {
+                    if (this.showDescIds[item.id] == null || this.showDescIds[item.id] == undefined) {
+                      this.$set(this.showDescIds, item.id, true);
+                    }
+                  }
+                }
               });
             }
             if (res.data.data.length < 1) {
               this.questions = [];
               this.noData = true;
             }
-            // localStorage.setItem("questionData", JSON.stringify(res.data.data));
           } else if (res.data.code === '70288') {
             this.questions = [];
             this.noPower = true;
@@ -359,19 +397,21 @@
         this.interModule = false;
       },
       showAll(id) {
+        for (var v in this.showCommentIds) {
+          this.showCommentIds[v] = false;
+        }
+        this.comments = '';
         this.disabledIds[id] = true;
         for (var v in this.disabledIds) {
           if (v != id) {
             this.disabledIds[v] = false;
           }
         }
-        // if (this.showHide === id) {
-        //   this.showStatus = !this.showStatus;
-        // } else {
-        this.showStatus = true;
+        this.answerDetail = [];
         this.showHide = id;
-        // }
+        this.answerLoading = true;
         this.$http.get(globalConfig.server + 'qa/front/answer?question_id=' + id).then((res) => {
+          this.answerLoading = false;
           if (res.data.code === '70310') {
             this.answerDetail = res.data.data;
             if (res.data.data.length > 0) {
@@ -410,13 +450,11 @@
             this.showCommentIds[v] = false;
           }
         }
-        // if (this.comments === id) {
-        //   this.comStatus = !this.comStatus;
-        // } else {
-        this.comStatus = true;
+        this.commentDetail = [];
         this.comments = id;
-        // }
+        this.commentLoading = true;
         this.$http.get(globalConfig.server + 'qa/front/comment?answer_id=' + id).then((res) => {
+          this.commentLoading = false;
           if (res.data.code === '70410') {
             this.commentDetail = res.data.data;
             if (res.data.data.length > 0) {
@@ -538,17 +576,23 @@
   }
 
   .boxShadow2 {
-    box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.15);
+    box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.10);
   }
-  .second_line_camp{
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .second_line_camp {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     box-orient: vertical;
     word-break: break-all;
-    height: 55px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .show_desc{
+    display: inline-block;
+    height: initial;
+    overflow: initial;
+    text-overflow: initial;
+    word-break: break-all;
   }
   #interLocution {
     @mixin flex {
@@ -573,6 +617,9 @@
     .boxShadow {
       @include boxShadow;
     }
+    .padTop3{
+      padding-top: 0.3rem!important;
+    }
     .interMain {
       height: 500px;
       overflow-y: scroll;
@@ -584,7 +631,7 @@
         box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
         margin-bottom: .2rem;
       }
-      #mainContent{
+      #mainContent {
         margin-bottom: 100px;
       }
       .mainContent {
@@ -599,7 +646,7 @@
           }
           div {
             color: $colorP;
-            line-height: .36rem;
+            line-height: .30rem;
           }
         }
         .contents2 {
@@ -621,7 +668,7 @@
             padding-right: 0;
             height: 35px;
             .con {
-              margin: .16rem 0 0;
+              margin: .16rem 0 .15rem;
               width: 1.8rem;
               padding-bottom: .2rem;
               cursor: pointer;
@@ -641,15 +688,13 @@
         }
         .contents3 {
           .article {
-            margin: 0 .2rem 0 59px;
+            width: 84%;
+            margin-left: 59px;
+            padding-right: 0%;
             padding-bottom: .2rem;
             border-bottom: $bottom;
           }
-        }
-        .contents3:last-of-type {
-          .article {
-            border-bottom: 0;
-          }
+
         }
         .interFooter {
           @include flex;
@@ -685,7 +730,6 @@
         }
       }
       .main2 {
-        padding: 0rem 0 0;
         .allContent {
           /*<!--box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);-->*/
           .mainTop {
@@ -704,6 +748,7 @@
       align-items: center;
       color: $colorP;
       padding-bottom: .2rem;
+      padding-top: .1rem;
       .mainTopA {
         div {
           //@include flex;
