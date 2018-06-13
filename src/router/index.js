@@ -74,8 +74,10 @@ import MapSearch from '../components/gladTidings/villageManage/components/mapSea
 import AddNewAddress from '../components/gladTidings/villageManage/components/addNewAddress.vue'
 
 // 问答中心
-import Interlocution from '../components/examine/interlocution/index.vue';
-import ProposeQuestion from '../components/examine/interlocution/proposeQuestion.vue';
+import Interlocution from '../components/examine/interlocution/index.vue';  //问题列表
+import ProposeQuestion from '../components/examine/interlocution/components/proposeQuestion.vue';  //提问问题
+import WriteAnswer from '../components/examine/interlocution/components/writeAnswer.vue';  //写回答
+import WriteComment from '../components/examine/interlocution/components/writeComment.vue';  //写评论
 
 Vue.use(Router);
 
@@ -512,6 +514,20 @@ export default new Router({
       meta: {title: '我要提问'},
       hidden: false,
       component: ProposeQuestion
+    },
+    {
+      path: '/writeAnswer',
+      name: '我要回答',
+      meta: {title: '我要回答'},
+      hidden: false,
+      component: WriteAnswer
+    },
+    {
+      path: '/writeComment',
+      name: '我要评论',
+      meta: {title: '我要评论'},
+      hidden: false,
+      component: WriteComment
     },
     // {
     //   path: '/cardDetail',

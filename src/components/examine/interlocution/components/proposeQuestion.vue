@@ -63,19 +63,10 @@
     </van-popup>
     <div class="mask" v-show="confirmType==='success'">
       <div class="box">
-        <img src="../../../assets/confirm_success.png" alt="" style="width: 100%;">
+        <img src="../../../../assets/confirm_success.png" alt="" style="width: 100%;">
         <div class="naire_words">您已成功提交问题</div>
         <div style="position: absolute;text-align: center;width: 100%;top: 75%;">
           <div @click="goInterlocution" class="btn">确定</div>
-        </div>
-      </div>
-    </div>
-    <div class="mask" v-show="confirmType==='failed'">
-      <div class="box">
-        <img src="../../../assets/confirm_fail.png" alt="">
-        <div class="naire_words">提交问卷失败 请<span style="color: #ff259a;" @click="onSubmit"> 重试</span></div>
-        <div style="position: absolute;text-align: center;width: 100%;top: 75%;">
-          <div @click="" class="btn">确定</div>
         </div>
       </div>
     </div>
@@ -131,6 +122,7 @@
       });
       this.form.title = '';
       this.form.description = '';
+      this.is_anonymous = '0';
       this.form.is_anonymous = false;
       this.form.type = '';
       this.form.type_name = '';
@@ -139,6 +131,7 @@
     methods: {
       goInterlocution() {
         this.$router.push({path: '/interlocution'});
+
       },
       anonymousChange(val) {
         this.form.is_anonymous = val === '0' ? false : true;

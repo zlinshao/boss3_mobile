@@ -146,6 +146,7 @@
         this.$router.replace({path: this.path});
       },
       close_() {
+        this.page = 1;
         this.showDetail = 0;
         this.searchValue = '';
         this.lists = [];

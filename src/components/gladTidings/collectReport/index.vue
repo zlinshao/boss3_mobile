@@ -560,7 +560,7 @@
         isValue1: true,
         counts: '',
 
-        // retry: 0,
+        retry: 0,
       }
     },
     watch: {
@@ -928,6 +928,7 @@
             this.form.draft = val;
             this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
               this.haveInHand = true;
+              this.retry = 0;
               if (res.data.code === '50110' || res.data.code === '50130') {
                 Toast.success(res.data.msg);
                 this.routerDetail(res.data.data.data.id);
@@ -941,24 +942,27 @@
               } else {
                 Toast(res.data.msg);
               }
+            }).catch((error) => {
+              if (error.response === undefined) {
+                this.alertMsg('net');
+                this.haveInHand = true;
+              } else {
+                if (error.response.status === 401) {
+                  this.personalGet().then((data) => {
+                    if (data && this.retry === 0) {
+                      this.retry++;
+                      this.haveInHand = true;
+                      this.saveCollect(this.form.draft);
+                    }
+                  });
+                }
+              }
             })
-            //   .catch((error) => {
-            //   alert(error.response.status);
-            //   if (error.response.status === 401) {
-            //     this.personalGet().then((data) => {
-            //       if (data && this.retry === 0) {
-            //         this.retry++;
-            //         this.haveInHand = true;
-            //         this.saveCollect(this.form.draft);
-            //       }
-            //     });
-            //   }
-            // })
           } else {
-            Toast('正在提交，请耐心等待...');
+            Toast(this.alertMsg('sub'));
           }
         } else {
-          Toast('图片上传中...');
+          Toast(this.alertMsg('pic'));
         }
       },
 
@@ -969,7 +973,7 @@
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
           this.form.is_agency = val.is_agency;                           //是否中介
-          this.cusFrom = dicts.value8[val.is_agency];                //是否中介
+          this.cusFrom = dicts.value8[val.is_agency];                    //是否中介
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);

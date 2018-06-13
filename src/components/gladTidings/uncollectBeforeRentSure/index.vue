@@ -147,10 +147,10 @@
           </van-field>
           <van-field
             v-model="form.pay_way_arr[index]"
-            label="付款方式"
+            label="付(月数)"
             type="text"
             class="number"
-            placeholder="请填写付款方式"
+            placeholder="如:半年付请输入6"
             required>
           </van-field>
         </van-cell-group>
@@ -502,6 +502,8 @@
 
         isValue1: true,
         counts: '',
+
+        retry: 0,
       }
     },
     watch: {
@@ -848,6 +850,7 @@
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
               this.haveInHand = true;
+              this.retry = 0;
               if (res.data.code === "51310" || res.data.code === "51330") {
                 Toast.success(res.data.msg);
                 this.close_();
@@ -863,13 +866,27 @@
               } else {
                 Toast(res.data.msg);
               }
+            }).catch((error) => {
+              if (error.response === undefined) {
+                this.alertMsg('net');
+                this.haveInHand = true;
+              } else {
+                if (error.response.status === 401) {
+                  this.personalGet().then((data) => {
+                    if (data && this.retry === 0) {
+                      this.retry++;
+                      this.haveInHand = true;
+                      this.saveCollect(this.form.draft);
+                    }
+                  });
+                }
+              }
             })
           } else {
-            Toast('正在提交，请耐心等待...');
+            Toast(this.alertMsg('sub'));
           }
         } else {
-          Toast('图片上传中...');
-
+          Toast(this.alertMsg('pic'));
         }
       },
 
