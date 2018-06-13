@@ -82,7 +82,7 @@
               </div>
               <div v-for="(value,key) in answerDetail" class="allContent"
                    v-if="showHide === item.id && !answerLoading">
-                <div class="mainTop topNone" style="padding-top: 0.3rem;" :class="{'padTop3': key!=0}">
+                <div class="mainTop topNone" :class="{'padTop3': key!=0}">
                   <div class="mainTopA">
                     <div>
                       <div style="float: left;">
