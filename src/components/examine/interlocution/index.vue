@@ -728,11 +728,12 @@
       .main2 {
         .allContent {
           /*<!--box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);-->*/
-
           .mainTop {
             padding: .2rem .2rem 0;
+
           }
           .man3 {
+            padding: .2rem 0 0;
             margin: 0 .3rem;
           }
         }
@@ -745,6 +746,7 @@
       align-items: center;
       color: $colorP;
       padding-bottom: .2rem;
+      padding-top: .1rem;
       .mainTopA {
         div {
           //@include flex;

@@ -347,7 +347,7 @@
             }
 
             .main2 {
-              padding: .1rem 0 0;
+              padding: .2rem 0 0;
               .allContent {
                 .mainTop {
                   padding: 0.1rem 0rem .1rem 0.4rem;
@@ -366,6 +366,7 @@
           align-items: center;
           color: $colorP;
           padding-bottom: .2rem;
+          padding-top: .1rem;
           .mainTopA {
             div {
               img {

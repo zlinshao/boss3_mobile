@@ -287,6 +287,7 @@
         align-items: center;
         color: $colorP;
         padding-bottom: .2rem;
+        padding-top: .1rem;
         .mainTopA {
           div {
             /*<!--@include flex;-->*/
