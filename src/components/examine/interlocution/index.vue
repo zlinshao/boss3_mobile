@@ -82,7 +82,7 @@
               </div>
               <div v-for="(value,key) in answerDetail" class="allContent"
                    v-if="showHide === item.id && !answerLoading">
-                <div class="mainTop topNone">
+                <div class="mainTop topNone" style="padding-top: 0.3rem;" :class="{'padTop3': key!=0}">
                   <div class="mainTopA">
                     <div>
                       <div style="float: left;">
@@ -127,9 +127,9 @@
                   <div style="text-align: center;position: relative;margin-left: 45%;padding: 10px 0;" v-if="comments === value.id && commentLoading">
                     <van-loading type="spinner" color="black" />
                   </div>
-                  <div v-for="comment in commentDetail" v-if="comments === value.id" style="margin-bottom: 6px;">
-                    <div  class="contents3">
-                      <div class="mainTop">
+                  <div v-for="(comment,comindex) in commentDetail" v-if="comments === value.id" style="margin-bottom: 6px;">
+                    <div  class="contents3" >
+                      <div class="mainTop" :class="{'padTop3': comindex==0}">
                         <div class="mainTopA" >
                           <div>
                             <div style="float: left;">
@@ -617,6 +617,9 @@
     .boxShadow {
       @include boxShadow;
     }
+    .padTop3{
+      padding-top: 0.3rem!important;
+    }
     .interMain {
       height: 500px;
       overflow-y: scroll;
@@ -665,7 +668,7 @@
             padding-right: 0;
             height: 35px;
             .con {
-              margin: .16rem 0 0;
+              margin: .16rem 0 .15rem;
               width: 1.8rem;
               padding-bottom: .2rem;
               cursor: pointer;
@@ -691,6 +694,7 @@
             padding-bottom: .2rem;
             border-bottom: $bottom;
           }
+
         }
         .interFooter {
           @include flex;
@@ -730,10 +734,8 @@
           /*<!--box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);-->*/
           .mainTop {
             padding: .2rem .2rem 0;
-
           }
           .man3 {
-            padding: .2rem 0 0;
             margin: 0 .3rem;
           }
         }
