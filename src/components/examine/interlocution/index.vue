@@ -56,10 +56,10 @@
                   <div class="second_line_camp" :id="`desc-${item.id}`" style="line-height: 26px;font-size: 15px;">
                     {{item.description}}
                   </div>
-                  <div style="color: #536DFE;margin-top: 10px;" v-if="showDescIds[item.id]" @click="showDesc(item.id, 'show')">
+                  <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id]" @click="showDesc(item.id, 'show')">
                     显示全部
                   </div>
-                  <div style="color: #536DFE;margin-top: 10px;" v-if="showDescIds[item.id] == false"
+                  <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id] == false"
                        @click="showDesc(item.id, 'hide')">
                     收起
                   </div>
@@ -238,7 +238,6 @@
       this.getListData();
       this.noPower = false;
       this.noData = false;
-
       $("#interMain").height(500);
       if (this.$route.query.question_id) {
         this.showAll(this.$route.query.question_id);
@@ -363,7 +362,8 @@
                 if (item.description) {
                   let arr = item.description.match(/[^\x00-\xff]/ig);
                   let length = item.description.length + (arr == null ? 0 : arr.length);
-                  if (length >= 22 * 2 * 2) {
+                  let count = (window.innerWidth-33)*2/7.5;
+                  if (length >= count) {
                     if (this.showDescIds[item.id] == null || this.showDescIds[item.id] == undefined) {
                       this.$set(this.showDescIds, item.id, true);
                     }
@@ -394,12 +394,9 @@
             this.disabledIds[v] = false;
           }
         }
-        // if (this.showHide === id) {
-        //   this.showStatus = !this.showStatus;
-        // } else {
+        this.answerDetail = [];
         this.showStatus = true;
         this.showHide = id;
-        // }
         this.$http.get(globalConfig.server + 'qa/front/answer?question_id=' + id).then((res) => {
           if (res.data.code === '70310') {
             this.answerDetail = res.data.data;
@@ -439,6 +436,7 @@
             this.showCommentIds[v] = false;
           }
         }
+        this.commentDetail = [];
         this.comStatus = true;
         this.comments = id;
         this.$http.get(globalConfig.server + 'qa/front/comment?answer_id=' + id).then((res) => {
@@ -566,12 +564,11 @@
     box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.10);
   }
   .second_line_camp {
-    display: inline-block;
+    display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     box-orient: vertical;
     word-break: break-all;
-    height: 55px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -631,7 +628,7 @@
           }
           div {
             color: $colorP;
-            line-height: .36rem;
+            line-height: .30rem;
           }
         }
         .contents2 {
