@@ -151,7 +151,7 @@
                           {{comment.create_time}}
                         </div>
                       </div>
-                      <div class="article show_desc" style="line-height: 28px;margin-top: 5px;">
+                      <div class="article show_desc" style="line-height: 28px;margin-top: 5px;padding-right: 15px;">
                         {{comment.content}}
                       </div>
                     </div>
@@ -759,7 +759,7 @@
             height: 40px;
           }
           .text_ellipsis {
-            width: 4.5rem;
+            width: 4.3rem;
             height: 26px;
             margin-top: 3px;
             height: 26px;
