@@ -314,7 +314,7 @@
         .topTime {
           display: inline-block;
           padding-right: .3rem;
-          width: 1.5rem;
+          width: 2rem;
           text-align: right;
           font-size: 13px;
           color: #aaaaaa;
