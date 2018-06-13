@@ -159,7 +159,7 @@
       },
       getData() {
         this.$http.get(globalConfig.server + 'qa/front/question/' + this.$route.query.ques_id).then((res) => {
-          this.loading = false;
+          // this.loading = false;
           if (res.data.code === '70210') {
             this.questionData = res.data.data;
             let create_time = Date.parse(new Date(this.questionData.create_time.split('-').join('/')));

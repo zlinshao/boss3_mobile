@@ -122,6 +122,7 @@
       });
       this.form.title = '';
       this.form.description = '';
+      this.is_anonymous = '0';
       this.form.is_anonymous = false;
       this.form.type = '';
       this.form.type_name = '';
