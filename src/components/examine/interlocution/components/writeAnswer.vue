@@ -299,13 +299,15 @@
               /*margin-right: .2rem;*/
             }
             .text_ellipsis {
+              width: 4.3rem;
+              height: 26px;
               margin-top: 3px;
-              width: 3rem;
               height: 26px;
               line-height: 26px;
+              overflow: hidden;
               white-space: nowrap;
-              /*overflow: hidden;*/
-              /*text-overflow: ellipsis;*/
+              text-overflow: ellipsis;
+              word-break: break-all;
             }
           }
         }

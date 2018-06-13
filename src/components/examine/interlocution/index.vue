@@ -759,7 +759,7 @@
             height: 40px;
           }
           .text_ellipsis {
-            width: 4.5rem;
+            width: 4.3rem;
             height: 26px;
             margin-top: 3px;
             height: 26px;

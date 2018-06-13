@@ -353,7 +353,7 @@
                   padding: 0.1rem 0rem .1rem 0.4rem;
                 }
                 .contents2 {
-                  padding: 0rem .2rem 0.3rem 1.3rem;
+                  padding: 0rem .2rem 0.3rem 1.45rem;
                 }
               }
             }
@@ -374,20 +374,22 @@
                 height: 40px;
               }
               .text_ellipsis {
+                width: 4.3rem;
+                height: 26px;
                 margin-top: 3px;
-                width: 3.5rem;
-                height: 24px;
-                line-height: 24px;
+                height: 26px;
+                line-height: 26px;
+                overflow: hidden;
                 white-space: nowrap;
-                /*overflow: hidden;*/
-                /*text-overflow: ellipsis;*/
+                text-overflow: ellipsis;
+                word-break: break-all;
               }
             }
           }
           .topTime {
             display: inline-block;
             padding-right: .3rem;
-            width: 1.5rem;
+            width: 2rem;
             text-align: right;
             font-size: 13px;
             color: #aaaaaa;
