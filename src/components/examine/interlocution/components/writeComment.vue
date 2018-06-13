@@ -1,5 +1,5 @@
 <template>
-  <div id="writeComment">
+  <div id="writeAnswer">
     <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
       <img src="../../../../assets/loding1.gif">
@@ -44,7 +44,7 @@
             </div>
             <div class="contents1">
               <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">{{questionData.title}}</p>
-              <div style="line-height: 26px;font-size: 15px;">
+              <div  class="show_desc" style="line-height: 26px;font-size: 15px;">
                 {{questionData.description}}
               </div>
             </div>
@@ -76,7 +76,7 @@
               </div>
               <div>
                 <div class="contents2">
-                  <div style="line-height: 28px;color: #212121;">
+                  <div class="show_desc" style="line-height: 28px;color: #212121;">
                     {{answerData.content}}
                   </div>
                 </div>
@@ -232,7 +232,7 @@
 </script>
 
 <style lang="scss">
-  #writeComment {
+  #writeAnswer {
       .question_btn {
         position: relative;
         width: 100%;
@@ -312,6 +312,13 @@
         }
         .boxShadow {
           @include boxShadow;
+        }
+        .show_desc{
+          display: inline-block;
+          height: initial;
+          overflow: initial;
+          text-overflow: initial;
+          word-break: break-all;
         }
         .interMain {
           height: 100%;
