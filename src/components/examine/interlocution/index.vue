@@ -69,7 +69,7 @@
                 <div>
                   <span v-if="item.answers_count>0 && !disabledIds[item.id]" @click="showAll(item.id)">显示回答 ({{item.answers_count}})</span>
                   <span v-if="item.answers_count>0 && disabledIds[item.id]"
-                        @click="answerDetail=[];disabledIds[item.id]=false">收起回答 ({{item.answers_count}})</span>
+                        @click="answerDetail=[];disabledIds[item.id]=false;answerLoading=false">收起回答 ({{item.answers_count}})</span>
                 </div>
                 <div @click="writeAnswer(item.id)">
                   <van-icon name="chat" style="font-size: 18px;"/>
@@ -111,7 +111,7 @@
                     <div class="interFooter2">
                       <div class="con" v-if="value.comments_count>0">
                         <span v-if="!showCommentIds[value.id]" @click="commentNum(value.id)">显示评论 ({{value.comments_count}})</span>
-                        <span v-if="showCommentIds[value.id]" @click="commentDetail=[];showCommentIds[value.id]=false">收起评论 ({{value.comments_count}})</span>
+                        <span v-if="showCommentIds[value.id]" @click="commentDetail=[];showCommentIds[value.id]=false;commentLoading=false;">收起评论 ({{value.comments_count}})</span>
                       </div>
                       <div class="con" v-if="value.comments_count<1">
                         <span>显示评论 ({{value.comments_count}})</span>
@@ -152,7 +152,7 @@
                         </div>
                       </div>
                       <div class="article show_desc" style="line-height: 28px;margin-top: 5px;">
-                        {{comment.content}}方式打开饭盒时刻提防hi是师傅哦是附送和
+                        {{comment.content}}
                       </div>
                     </div>
                   </div>
@@ -397,6 +397,10 @@
         this.interModule = false;
       },
       showAll(id) {
+        for (var v in this.showCommentIds) {
+          this.showCommentIds[v] = false;
+        }
+        this.comments = '';
         this.disabledIds[id] = true;
         for (var v in this.disabledIds) {
           if (v != id) {
@@ -680,11 +684,10 @@
           }
         }
         .contents3 {
-           /*<!--border-bottom: $bottom;-->*/
           .article {
-            width: 82%;
-            margin-left: 18%;
-            padding-right: 4%;
+            width: 84%;
+            margin-left: 59px;
+            padding-right: 0%;
             padding-bottom: .2rem;
             border-bottom: $bottom;
           }
