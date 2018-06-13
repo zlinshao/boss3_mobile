@@ -77,8 +77,11 @@
               </div>
             </div>
             <div class="main2">
+              <div style="text-align: center;position: relative;margin-left: 45%;" v-if="showHide === item.id && answerLoading">
+                <van-loading type="spinner" color="black" />
+              </div>
               <div v-for="(value,key) in answerDetail" class="allContent"
-                   v-if="showHide === item.id && showStatus">
+                   v-if="showHide === item.id && !answerLoading">
                 <div class="mainTop topNone">
                   <div class="mainTopA">
                     <div>
@@ -102,7 +105,7 @@
                 </div>
                 <div class="boxShadow">
                   <div class="contents2">
-                    <div style="line-height: 28px;margin-top: 5px;">
+                    <div class="show_desc" style="line-height: 28px;margin-top: 5px;">
                       {{value.content}}
                     </div>
                     <div class="interFooter2">
@@ -121,31 +124,36 @@
                   </div>
                 </div>
                 <div class="boxShadow man3">
-                  <div class="contents3" v-for="comment in commentDetail" v-if="comments === value.id && comStatus">
-                    <div class="mainTop padNone">
-                      <div class="mainTopA">
-                        <div>
-                          <div style="float: left;">
-                            <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
-                                 style="border-radius: 50%;">
-                            <img src="../../../assets/head.png" v-else>
-                          </div>
-                          <div style="margin-left: 50px;">
-                            <div>{{comment && comment.staff && comment.staff.name}}</div>
-                            <div class="text_ellipsis" style="width: 4.2rem;">
+                  <div style="text-align: center;position: relative;margin-left: 45%;padding: 10px 0;" v-if="comments === value.id && commentLoading">
+                    <van-loading type="spinner" color="black" />
+                  </div>
+                  <div v-for="comment in commentDetail" v-if="comments === value.id" style="margin-bottom: 6px;">
+                    <div  class="contents3">
+                      <div class="mainTop">
+                        <div class="mainTopA" >
+                          <div>
+                            <div style="float: left;">
+                              <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
+                                   style="border-radius: 50%;">
+                              <img src="../../../assets/head.png" v-else>
+                            </div>
+                            <div style="margin-left: 50px;">
+                              <div>{{comment && comment.staff && comment.staff.name}}</div>
+                              <div class="text_ellipsis" style="width: 4.2rem;">
                               <span v-if="comment.staff.org.length>0"
                                     v-for="v in comment.staff.org">{{v.name}}&nbsp;</span>-
-                              <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
+                                <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div class="topTime" style="padding-right: 0rem;">
+                          {{comment.create_time}}
+                        </div>
                       </div>
-                      <div class="topTime" style="padding-right: 0rem;">
-                        {{comment.create_time}}
+                      <div class="article show_desc" style="line-height: 28px;margin-top: 5px;">
+                        {{comment.content}}方式打开饭盒时刻提防hi是师傅哦是附送和
                       </div>
-                    </div>
-                    <div class="article" style="line-height: 28px;margin-top: 5px;">
-                      {{comment.content}}
                     </div>
                   </div>
                 </div>
@@ -199,9 +207,7 @@
         searchValue: '',
         interModule: false,
         showHide: '',
-        showStatus: false,
         comments: '',
-        comStatus: false,
         questions: [],
         answerDetail: [],
         commentDetail: [],
@@ -217,6 +223,8 @@
         scrollTop: 0,
         first: true,
         showDescIds: {},
+        answerLoading: false,
+        commentLoading: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -258,6 +266,7 @@
       }
 
     },
+
     watch: {
       loading(val) {
         if (val) {
@@ -395,9 +404,10 @@
           }
         }
         this.answerDetail = [];
-        this.showStatus = true;
         this.showHide = id;
+        this.answerLoading = true;
         this.$http.get(globalConfig.server + 'qa/front/answer?question_id=' + id).then((res) => {
+          this.answerLoading = false;
           if (res.data.code === '70310') {
             this.answerDetail = res.data.data;
             if (res.data.data.length > 0) {
@@ -437,9 +447,10 @@
           }
         }
         this.commentDetail = [];
-        this.comStatus = true;
         this.comments = id;
+        this.commentLoading = true;
         this.$http.get(globalConfig.server + 'qa/front/comment?answer_id=' + id).then((res) => {
+          this.commentLoading = false;
           if (res.data.code === '70410') {
             this.commentDetail = res.data.data;
             if (res.data.data.length > 0) {
@@ -669,15 +680,13 @@
           }
         }
         .contents3 {
+           /*<!--border-bottom: $bottom;-->*/
           .article {
-            margin: 0 .2rem 0 59px;
+            width: 82%;
+            margin-left: 18%;
+            padding-right: 4%;
             padding-bottom: .2rem;
             border-bottom: $bottom;
-          }
-        }
-        .contents3:last-of-type {
-          .article {
-            border-bottom: 0;
           }
         }
         .interFooter {
@@ -716,7 +725,7 @@
       .main2 {
         .allContent {
           /*<!--box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);-->*/
-          padding-bottom: 0.1rem;
+
           .mainTop {
             padding: .2rem .2rem 0;
           }

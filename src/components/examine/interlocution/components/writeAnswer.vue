@@ -45,7 +45,7 @@
             <div class="contents1 ">
               <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">
                 {{questionData.title}}</p>
-              <div style="line-height: 26px;font-size: 15px;">
+              <div class="show_desc" style="line-height: 26px;font-size: 15px;">
                 {{questionData.description}}
               </div>
             </div>
@@ -249,6 +249,13 @@
       }
       .boxShadow {
         @include boxShadow;
+      }
+      .show_desc{
+        display: inline-block;
+        height: initial;
+        overflow: initial;
+        text-overflow: initial;
+        word-break: break-all;
       }
       .interMain {
         height: 100%;
