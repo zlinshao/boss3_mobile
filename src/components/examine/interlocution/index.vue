@@ -99,7 +99,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="topTime" style="padding-right: 0.15rem;">
+                  <div class="topTime" style="padding-right: 0rem;">
                     {{value.create_time}}
                   </div>
                 </div>
@@ -652,7 +652,7 @@
         .contents2 {
           border-bottom: 1px solid #E0E0E0;
           margin-left: 70px;
-          padding-right: 0.5rem;
+          padding-right: 0.38rem;
           div {
             color: $colorTitle;
             line-height: .36rem;
