@@ -129,7 +129,7 @@
                   </div>
                   <div v-for="(comment,comindex) in commentDetail" v-if="comments === value.id" style="margin-bottom: 6px;">
                     <div  class="contents3" >
-                      <div class="mainTop" :class="{'padTop3': comindex==0}">
+                      <div class="mainTop"  :class="{'padTop3': comindex==0}" style=" padding: .2rem .2rem 0;;">
                         <div class="mainTopA" >
                           <div>
                             <div style="float: left;">
@@ -651,8 +651,8 @@
         }
         .contents2 {
           border-bottom: 1px solid #E0E0E0;
-          margin-left: 58px;
-          padding-right: 0.36rem;
+          margin-left: 70px;
+          padding-right: 0.5rem;
           div {
             color: $colorTitle;
             line-height: .36rem;
@@ -733,7 +733,7 @@
         .allContent {
           /*<!--box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);-->*/
           .mainTop {
-            padding: .2rem .2rem 0;
+            padding: .2rem .4rem 0;
           }
           .man3 {
             margin: 0 .3rem;
