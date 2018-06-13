@@ -190,7 +190,6 @@
         border-radius: 4px;
       }
     }
-
     .van-hairline--bottom::after, .van-hairline--left::after,
     .van-hairline--right::after,
     .van-hairline--surround::after,
@@ -224,130 +223,127 @@
         }
       }
     }
-
-    #writeAnswer {
+    height: 100%;
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
+    }
+    $colorTitle: #212121;
+    $colorLeft: #58D788;
+    $colorRight: #536DFE;
+    $colorP: #757575;
+    $bottom: 1px solid #E0E0E0;
+    $bgColor: #F8F9FF;
+    .content {
       height: 100%;
-      @mixin flex {
-        display: flex;
-        display: -webkit-flex;
+      background: #FFFFFF;
+      box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
+      margin-top: 10px;
+      @mixin boxShadow {
+        -webkit-box-shadow: 0 6px 10px rgba(61, 90, 254, .1);
+        -moz-box-shadow: 0 6px 10px rgba(61, 90, 254, .1);
+        box-shadow: 0 6px 10px rgba(61, 90, 254, .1);
       }
-      $colorTitle: #212121;
-      $colorLeft: #58D788;
-      $colorRight: #536DFE;
-      $colorP: #757575;
-      $bottom: 1px solid #E0E0E0;
-      $bgColor: #F8F9FF;
-      .content {
+      .bgColor {
+        background-color: $bgColor;
+      }
+      .boxShadow {
+        @include boxShadow;
+      }
+      .interMain {
         height: 100%;
-        background: #FFFFFF;
-        box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
-        margin-top: 10px;
-        @mixin boxShadow {
-          -webkit-box-shadow: 0 6px 10px rgba(61, 90, 254, .1);
-          -moz-box-shadow: 0 6px 10px rgba(61, 90, 254, .1);
-          box-shadow: 0 6px 10px rgba(61, 90, 254, .1);
-        }
-        .bgColor {
-          background-color: $bgColor;
-        }
-        .boxShadow {
-          @include boxShadow;
-        }
-        .interMain {
-          height: 100%;
-          .main1 {
-            padding: .2rem 0 0.2rem .4rem;
-            background: #FFFFFF;
+        .main1 {
+          padding: .2rem 0 0.2rem .4rem;
+          background: #FFFFFF;
 
-          }
-          .mainContent {
-            margin-bottom: 0rem;
-            .contents1 {
-              border-top: $bottom;
-              margin-bottom: 7px;
-              padding-right: 0.25rem;
-              p {
-                color: $colorTitle;
-                font-size: .30rem;
-              }
-              div {
-                color: $colorP;
-                line-height: .36rem;
-              }
-            }
-          }
         }
-        .mainTop {
-          @include flex;
-          justify-content: space-between;
-          align-items: center;
-          color: $colorP;
-          padding-bottom: .2rem;
-          .mainTopA {
+        .mainContent {
+          margin-bottom: 0rem;
+          .contents1 {
+            border-top: $bottom;
+            margin-bottom: 7px;
+            padding-right: 0.25rem;
+            p {
+              color: $colorTitle;
+              font-size: .30rem;
+            }
             div {
-              /*<!--@include flex;-->*/
-              /*<!--justify-content: center;-->*/
-              /*<!--align-items: center;-->*/
-              img {
-                width: 40px;
-                height: 40px;
-                /*margin-right: .2rem;*/
-              }
-              .text_ellipsis {
-                margin-top: 3px;
-                width: 3rem;
-                height: 26px;
-                line-height: 26px;
-                white-space: nowrap;
-                /*overflow: hidden;*/
-                /*text-overflow: ellipsis;*/
-              }
+              color: $colorP;
+              line-height: .36rem;
             }
-          }
-          .topTime {
-            display: inline-block;
-            padding-right: .3rem;
-            width: 1.5rem;
-            text-align: right;
-            font-size: 13px;
-            color: #aaaaaa;
           }
         }
       }
-      .mask {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.3);
-        z-index: 99;
+      .mainTop {
+        @include flex;
+        justify-content: space-between;
+        align-items: center;
+        color: $colorP;
+        padding-bottom: .2rem;
+        .mainTopA {
+          div {
+            /*<!--@include flex;-->*/
+            /*<!--justify-content: center;-->*/
+            /*<!--align-items: center;-->*/
+            img {
+              width: 40px;
+              height: 40px;
+              /*margin-right: .2rem;*/
+            }
+            .text_ellipsis {
+              margin-top: 3px;
+              width: 3rem;
+              height: 26px;
+              line-height: 26px;
+              white-space: nowrap;
+              /*overflow: hidden;*/
+              /*text-overflow: ellipsis;*/
+            }
+          }
+        }
+        .topTime {
+          display: inline-block;
+          padding-right: .3rem;
+          width: 1.5rem;
+          text-align: right;
+          font-size: 13px;
+          color: #aaaaaa;
+        }
+      }
+    }
+    .mask {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 99;
 
-        .box {
-          position: fixed;
-          width: 70%;
-          background: #fff;
-          top: 20%;
-          height: 50%;
-          margin-left: 15%;
+      .box {
+        position: fixed;
+        width: 70%;
+        background: #fff;
+        top: 20%;
+        height: 50%;
+        margin-left: 15%;
+        border-radius: 8px;
+        p {
+          font-size: 18px;
+          line-height: 30px;
+        }
+        .naire_words {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          font-size: 18px;
+          color: #101010;
+          top: 68%;
+        }
+        .btn {
+          border: 1px solid #dddddd;
+          display: inline-block;
+          padding: 10px 20px;
           border-radius: 8px;
-          p {
-            font-size: 18px;
-            line-height: 30px;
-          }
-          .naire_words {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            font-size: 18px;
-            color: #101010;
-            top: 68%;
-          }
-          .btn {
-            border: 1px solid #dddddd;
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-          }
         }
       }
     }
