@@ -45,7 +45,7 @@
             <div class="contents1 ">
               <p style="margin: 10px 0 8px;line-height: 28px;font-size: 18px;">
                 {{questionData.title}}</p>
-              <div style="line-height: 26px;font-size: 15px;">
+              <div class="show_desc" style="line-height: 26px;font-size: 15px;">
                 {{questionData.description}}
               </div>
             </div>
@@ -114,7 +114,10 @@
     watch: {},
     methods: {
       goInterlocution() {
-        this.$router.push({path: '/interlocution', query: {question_id: this.$route.query.id, scrollTop: this.$route.query.scrollTop }});
+        this.$router.push({
+          path: '/interlocution',
+          query: {question_id: this.$route.query.id, scrollTop: this.$route.query.scrollTop}
+        });
       },
       getData() {
         this.$http.get(globalConfig.server + 'qa/front/question/' + this.$route.query.id).then((res) => {
@@ -166,62 +169,60 @@
 </script>
 
 <style lang="scss">
-  .question_btn {
-    position: relative;
-    width: 100%;
-    background: #FFFFFF;
-    text-align: center;
-    font-size: 20px;
-    span {
-      margin-top: 30px;
-      color: #FFFFFF;
-      display: inline-block;
-      background: #536DFE;
-      width: 90%;
-      height: 50px;
-      line-height: 50px;
-      box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.40);
-      -webkit-border-radius: 4px;
-      -moz-border-radius: 4px;
-      border-radius: 4px;
-    }
-  }
-
-  .van-hairline--bottom::after, .van-hairline--left::after,
-  .van-hairline--right::after,
-  .van-hairline--surround::after,
-  .van-hairline--top-bottom::after,
-  .van-hairline--top::after,
-  .van-hairline::after {
-    border: none;
-  }
-
-  .textarea {
-    border-radius: 4px;
-    text-align: center;
-    margin-bottom: .2rem;
-    background: #ffffff;
-    .van-cell.van-hairline.van-field {
-      .van-cell__value {
-        padding-left: 0;
+  #writeAnswer {
+    .question_btn {
+      position: relative;
+      width: 100%;
+      background: #FFFFFF;
+      text-align: center;
+      font-size: 20px;
+      span {
+        margin-top: 30px;
+        color: #FFFFFF;
+        display: inline-block;
+        background: #536DFE;
+        width: 90%;
+        height: 50px;
+        line-height: 50px;
+        box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.40);
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
       }
     }
-    .van-cell-group {
-      padding-left: 0;
-      .van-field--has-textarea {
-        background: #F8F9FF;
-        color: #6c6c6c;
-        .van-field__control {
-          margin-left: .2rem;
+    .van-hairline--bottom::after, .van-hairline--left::after,
+    .van-hairline--right::after,
+    .van-hairline--surround::after,
+    .van-hairline--top-bottom::after,
+    .van-hairline--top::after,
+    .van-hairline::after {
+      border: none;
+    }
+
+    .textarea {
+      border-radius: 4px;
+      text-align: center;
+      margin-bottom: .2rem;
+      background: #ffffff;
+      .van-cell.van-hairline.van-field {
+        .van-cell__value {
+          padding-left: 0;
+        }
+      }
+      .van-cell-group {
+        padding-left: 0;
+        .van-field--has-textarea {
           background: #F8F9FF;
-          min-height: 120px;
-          font-size: 16px;
+          color: #6c6c6c;
+          .van-field__control {
+            margin-left: .2rem;
+            background: #F8F9FF;
+            min-height: 120px;
+            font-size: 16px;
+          }
         }
       }
     }
-  }
-
-  #writeAnswer {
     height: 100%;
     @mixin flex {
       display: flex;
@@ -248,6 +249,13 @@
       }
       .boxShadow {
         @include boxShadow;
+      }
+      .show_desc{
+        display: inline-block;
+        height: initial;
+        overflow: initial;
+        text-overflow: initial;
+        word-break: break-all;
       }
       .interMain {
         height: 100%;
@@ -279,6 +287,7 @@
         align-items: center;
         color: $colorP;
         padding-bottom: .2rem;
+        padding-top: .1rem;
         .mainTopA {
           div {
             /*<!--@include flex;-->*/
@@ -346,6 +355,5 @@
         }
       }
     }
-
   }
 </style>

@@ -56,10 +56,10 @@
                   <div class="second_line_camp" :id="`desc-${item.id}`" style="line-height: 26px;font-size: 15px;">
                     {{item.description}}
                   </div>
-                  <div style="color: #536DFE;margin-top: 10px;" v-if="showDescIds[item.id]" @click="showDesc(item.id, 'show')">
+                  <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id]" @click="showDesc(item.id, 'show')">
                     显示全部
                   </div>
-                  <div style="color: #536DFE;margin-top: 10px;" v-if="showDescIds[item.id] == false"
+                  <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id] == false"
                        @click="showDesc(item.id, 'hide')">
                     收起
                   </div>
@@ -69,7 +69,7 @@
                 <div>
                   <span v-if="item.answers_count>0 && !disabledIds[item.id]" @click="showAll(item.id)">显示回答 ({{item.answers_count}})</span>
                   <span v-if="item.answers_count>0 && disabledIds[item.id]"
-                        @click="answerDetail=[];disabledIds[item.id]=false">收起回答 ({{item.answers_count}})</span>
+                        @click="answerDetail=[];disabledIds[item.id]=false;answerLoading=false">收起回答 ({{item.answers_count}})</span>
                 </div>
                 <div @click="writeAnswer(item.id)">
                   <van-icon name="chat" style="font-size: 18px;"/>
@@ -77,9 +77,12 @@
               </div>
             </div>
             <div class="main2">
+              <div style="text-align: center;position: relative;margin-left: 45%;" v-if="showHide === item.id && answerLoading">
+                <van-loading type="spinner" color="black" />
+              </div>
               <div v-for="(value,key) in answerDetail" class="allContent"
-                   v-if="showHide === item.id && showStatus">
-                <div class="mainTop topNone">
+                   v-if="showHide === item.id && !answerLoading">
+                <div class="mainTop topNone" style="padding-top: 0.3rem;" :class="{'padTop3': key!=0}">
                   <div class="mainTopA">
                     <div>
                       <div style="float: left;">
@@ -102,13 +105,13 @@
                 </div>
                 <div class="boxShadow">
                   <div class="contents2">
-                    <div style="line-height: 28px;margin-top: 5px;">
+                    <div class="show_desc" style="line-height: 28px;margin-top: 5px;">
                       {{value.content}}
                     </div>
                     <div class="interFooter2">
                       <div class="con" v-if="value.comments_count>0">
                         <span v-if="!showCommentIds[value.id]" @click="commentNum(value.id)">显示评论 ({{value.comments_count}})</span>
-                        <span v-if="showCommentIds[value.id]" @click="commentDetail=[];showCommentIds[value.id]=false">收起评论 ({{value.comments_count}})</span>
+                        <span v-if="showCommentIds[value.id]" @click="commentDetail=[];showCommentIds[value.id]=false;commentLoading=false;">收起评论 ({{value.comments_count}})</span>
                       </div>
                       <div class="con" v-if="value.comments_count<1">
                         <span>显示评论 ({{value.comments_count}})</span>
@@ -121,31 +124,36 @@
                   </div>
                 </div>
                 <div class="boxShadow man3">
-                  <div class="contents3" v-for="comment in commentDetail" v-if="comments === value.id && comStatus">
-                    <div class="mainTop padNone">
-                      <div class="mainTopA">
-                        <div>
-                          <div style="float: left;">
-                            <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
-                                 style="border-radius: 50%;">
-                            <img src="../../../assets/head.png" v-else>
-                          </div>
-                          <div style="margin-left: 50px;">
-                            <div>{{comment && comment.staff && comment.staff.name}}</div>
-                            <div class="text_ellipsis" style="width: 4.2rem;">
+                  <div style="text-align: center;position: relative;margin-left: 45%;padding: 10px 0;" v-if="comments === value.id && commentLoading">
+                    <van-loading type="spinner" color="black" />
+                  </div>
+                  <div v-for="(comment,comindex) in commentDetail" v-if="comments === value.id" style="margin-bottom: 6px;">
+                    <div  class="contents3" >
+                      <div class="mainTop" :class="{'padTop3': comindex==0}">
+                        <div class="mainTopA" >
+                          <div>
+                            <div style="float: left;">
+                              <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
+                                   style="border-radius: 50%;">
+                              <img src="../../../assets/head.png" v-else>
+                            </div>
+                            <div style="margin-left: 50px;">
+                              <div>{{comment && comment.staff && comment.staff.name}}</div>
+                              <div class="text_ellipsis" style="width: 4.2rem;">
                               <span v-if="comment.staff.org.length>0"
                                     v-for="v in comment.staff.org">{{v.name}}&nbsp;</span>-
-                              <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
+                                <span v-if="comment.staff.role.length>0" v-for="v in comment.staff.role">{{v.display_name}}&nbsp;</span>
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div class="topTime" style="padding-right: 0rem;">
+                          {{comment.create_time}}
+                        </div>
                       </div>
-                      <div class="topTime" style="padding-right: 0rem;">
-                        {{comment.create_time}}
+                      <div class="article show_desc" style="line-height: 28px;margin-top: 5px;">
+                        {{comment.content}}
                       </div>
-                    </div>
-                    <div class="article" style="line-height: 28px;margin-top: 5px;">
-                      {{comment.content}}
                     </div>
                   </div>
                 </div>
@@ -199,9 +207,7 @@
         searchValue: '',
         interModule: false,
         showHide: '',
-        showStatus: false,
         comments: '',
-        comStatus: false,
         questions: [],
         answerDetail: [],
         commentDetail: [],
@@ -217,6 +223,8 @@
         scrollTop: 0,
         first: true,
         showDescIds: {},
+        answerLoading: false,
+        commentLoading: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -238,7 +246,6 @@
       this.getListData();
       this.noPower = false;
       this.noData = false;
-
       $("#interMain").height(500);
       if (this.$route.query.question_id) {
         this.showAll(this.$route.query.question_id);
@@ -259,6 +266,7 @@
       }
 
     },
+
     watch: {
       loading(val) {
         if (val) {
@@ -363,7 +371,8 @@
                 if (item.description) {
                   let arr = item.description.match(/[^\x00-\xff]/ig);
                   let length = item.description.length + (arr == null ? 0 : arr.length);
-                  if (length >= 22 * 2 * 2) {
+                  let count = (window.innerWidth-33)*2/7.5;
+                  if (length >= count) {
                     if (this.showDescIds[item.id] == null || this.showDescIds[item.id] == undefined) {
                       this.$set(this.showDescIds, item.id, true);
                     }
@@ -388,19 +397,21 @@
         this.interModule = false;
       },
       showAll(id) {
+        for (var v in this.showCommentIds) {
+          this.showCommentIds[v] = false;
+        }
+        this.comments = '';
         this.disabledIds[id] = true;
         for (var v in this.disabledIds) {
           if (v != id) {
             this.disabledIds[v] = false;
           }
         }
-        // if (this.showHide === id) {
-        //   this.showStatus = !this.showStatus;
-        // } else {
-        this.showStatus = true;
+        this.answerDetail = [];
         this.showHide = id;
-        // }
+        this.answerLoading = true;
         this.$http.get(globalConfig.server + 'qa/front/answer?question_id=' + id).then((res) => {
+          this.answerLoading = false;
           if (res.data.code === '70310') {
             this.answerDetail = res.data.data;
             if (res.data.data.length > 0) {
@@ -439,9 +450,11 @@
             this.showCommentIds[v] = false;
           }
         }
-        this.comStatus = true;
+        this.commentDetail = [];
         this.comments = id;
+        this.commentLoading = true;
         this.$http.get(globalConfig.server + 'qa/front/comment?answer_id=' + id).then((res) => {
+          this.commentLoading = false;
           if (res.data.code === '70410') {
             this.commentDetail = res.data.data;
             if (res.data.data.length > 0) {
@@ -566,12 +579,11 @@
     box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.10);
   }
   .second_line_camp {
-    display: inline-block;
+    display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     box-orient: vertical;
     word-break: break-all;
-    height: 55px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -605,6 +617,9 @@
     .boxShadow {
       @include boxShadow;
     }
+    .padTop3{
+      padding-top: 0.3rem!important;
+    }
     .interMain {
       height: 500px;
       overflow-y: scroll;
@@ -631,7 +646,7 @@
           }
           div {
             color: $colorP;
-            line-height: .36rem;
+            line-height: .30rem;
           }
         }
         .contents2 {
@@ -653,7 +668,7 @@
             padding-right: 0;
             height: 35px;
             .con {
-              margin: .16rem 0 0;
+              margin: .16rem 0 .15rem;
               width: 1.8rem;
               padding-bottom: .2rem;
               cursor: pointer;
@@ -673,15 +688,13 @@
         }
         .contents3 {
           .article {
-            margin: 0 .2rem 0 59px;
+            width: 84%;
+            margin-left: 59px;
+            padding-right: 0%;
             padding-bottom: .2rem;
             border-bottom: $bottom;
           }
-        }
-        .contents3:last-of-type {
-          .article {
-            border-bottom: 0;
-          }
+
         }
         .interFooter {
           @include flex;
@@ -719,7 +732,6 @@
       .main2 {
         .allContent {
           /*<!--box-shadow: 0 -4px 16px 0 rgba(61,90,254,0.15);-->*/
-          padding-bottom: 0.1rem;
           .mainTop {
             padding: .2rem .2rem 0;
           }
@@ -736,6 +748,7 @@
       align-items: center;
       color: $colorP;
       padding-bottom: .2rem;
+      padding-top: .1rem;
       .mainTopA {
         div {
           //@include flex;
