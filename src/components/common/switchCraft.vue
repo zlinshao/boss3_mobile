@@ -109,9 +109,10 @@
       outline: none;
       color: #fff;
       background: #409EFF;
+      text-align: center;
       i {
         display: inline-block;
-        margin-left: 2px;
+        margin-left: -1px;
         font-size: 30px;
       }
     }
