@@ -96,6 +96,10 @@
 
 <style lang="scss">
   #switchCraft {
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
+    }
     .btnBox {
       position: fixed;
       bottom: 1.5rem;
@@ -109,16 +113,16 @@
       outline: none;
       color: #fff;
       background: #409EFF;
+      @include flex;
+      align-items: center;
+      justify-content: center;
       i {
-        display: inline-block;
         margin-left: 2px;
         font-size: 30px;
       }
     }
     .btnI {
-      line-height: 45px;
       i {
-        margin-left: 1px;
         font-size: 26px;
       }
     }
