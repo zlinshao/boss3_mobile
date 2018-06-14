@@ -83,9 +83,11 @@
 
 <script>
   import {Waterfall} from 'vant';
+  import {Toast} from 'vant';
 
   export default {
     name: "android-staff",
+    components: {Toast},
     directives: {
       WaterfallLower: Waterfall('lower'),
       WaterfallUpper: Waterfall('upper'),
@@ -119,6 +121,11 @@
       })
     },
     mounted() {
+      Toast.loading({
+        mask: true,
+        duration: 0,
+        message: '加载中...'
+      });
       this.getDepartment(1, 1);
       // 获取顶级部门名称
       this.$http.get(globalConfig.server_user + 'organizations/1').then((res) => {
@@ -166,9 +173,15 @@
       },
       getDepartment(id, page) {
         this.$http.get(globalConfig.server_user + 'organizations?parent_id=' + id + '&per_page_number=50').then((res) => {
+          Toast.clear();
           if (res.data.status === 'success' && res.data.data.length > 0) {
             this.organizeList = res.data.data;
             // this.lastPage_depart = res.data.meta.last_page;
+          } else {
+            this.organizeList = [];
+            if (res.data.status === 'fail') {
+              Toast(res.data.message);
+            }
           }
         });
         this.getStaffs(id, page);
@@ -179,6 +192,7 @@
         this.$http.get(globalConfig.server_user + 'users', {
           params: this.params,
         }).then((res) => {
+          Toast.clear();
           if (res.data.status === 'success' && res.data.data.length > 0) {
             let data = res.data.data;
             for (let i = 0; i < data.length; i++) {
@@ -186,6 +200,9 @@
             }
             // this.lastPage_user = res.data.meta.last_page;
           } else {
+            if (res.data.status === 'fail') {
+              Toast(res.data.message);
+            }
             this.disabled = true;
             this.close_();
           }
