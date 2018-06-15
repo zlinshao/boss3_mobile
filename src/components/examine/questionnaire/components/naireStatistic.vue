@@ -106,18 +106,17 @@
       })
     },
     activated() {
-      // this.confirmType = this.$route.query.type;
-      this.questionnaire_id = this.$route.query.id;
+      this.questionnaire_id = this.$route.query.ids;
       this.getQuesTionNaireData();
       this.getStatisticData();
       this.loading = true;
     },
     watch: {},
     methods: {
-      openAll(id){
-        this.$router.push({path: '/answerAll', query: {id: this.questionnaire_id, ques_id: id}});
+      openAll(id) {
+        this.$router.push({path: '/answerAll', query: {ids: this.questionnaire_id, ques_id: id}});
       },
-      getQuesTionNaireData(){
+      getQuesTionNaireData() {
         this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
           this.loading = false;
           if (res.data.code === '30000') {
