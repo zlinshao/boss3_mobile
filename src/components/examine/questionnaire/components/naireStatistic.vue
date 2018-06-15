@@ -50,7 +50,7 @@
           </div>
         </div>
       </div>
-      <div class="exercise msg" v-if="message">
+      <div class="exercise msg" v-if="message == 'no_power' ">
         <!--<div>-->
           <!--<img src="../../../../assets/no_data.png" style="width: 40%;">-->
           <!--<div style="margin-top: 10px;">暂无数据</div>-->
@@ -62,6 +62,9 @@
             <div class="last_title" style="font-size: 18px;color: #42474d">我在努力寻找进入你的接口...</div>
           </div>
         </div>
+      </div>
+      <div class="exercise msg" v-if="message && message !== 'no_power'">
+        {{message}}
       </div>
     </div>
 
@@ -133,7 +136,9 @@
               });
             }
             this.message = '';
-          } else {
+          } else if(res.data.code==='30044'){
+            this.message = 'no_power';
+          }else{
             this.message = res.data.msg;
           }
         });
