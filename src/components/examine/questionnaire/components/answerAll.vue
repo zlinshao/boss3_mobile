@@ -12,7 +12,7 @@
             <van-col span="2" style="float: left">
               <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
             </van-col>
-            <van-col span="18" style="float: initial;display: inline-block;">
+            <van-col span="18" style="float: initial;display: inline-block;line-height: 26px;margin-top: -3px;">
               <p v-html="key1.stem"></p>
             </van-col>
             <van-col span="3" style="float: right;">
