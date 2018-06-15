@@ -150,7 +150,6 @@
             this.statisticData = res.data.data;
           } else {
             this.statisticData = [];
-            this.message = res.data.msg;
           }
         });
       },
