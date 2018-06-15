@@ -62,7 +62,7 @@
     },
     methods: {
       goDetail(val) {
-        this.$router.push({path: '/naireStatistic', query: {id: val}});
+        this.$router.push({path: '/naireStatistic', query: {ids: val}});
       },
       getQuesNaireData() {
         this.$http.get(globalConfig.server + 'questionnaire/my?page=1&limit=500').then((res) => {

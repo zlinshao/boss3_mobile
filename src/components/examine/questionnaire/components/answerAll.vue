@@ -53,16 +53,17 @@
         question_set: {},       //试题
         answer: {},             //答案
         message: '',
-        questionnaire_id: this.$route.query.id,
+        questionnaire_id: '',
         confirmType: '',
         statisticData: {},
-        ques_id: this.$route.query.ques_id,
+        ques_id: '',
       }
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        vm.routerIndex(from.path, 'house');
-        vm.ddRent(from.path, 'house');
+        // vm.routerIndex(from.path, 'house');
+        // vm.ddRent(from.path, 'house');
+        vm.routerTo('/naireStatistic', vm.questionnaire_id);
       })
     },
     mounted() {
@@ -73,34 +74,36 @@
         }
         this.questionType = sub;
       });
-      this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
-        if (res.data.code === '30000') {
-          this.question_set = res.data.data.question_set;
-          this.paperData = res.data.data;
 
-          if (this.question_set[154] && this.question_set[154].length > 0) {
-            this.question_set[154].forEach((item) => {
-              this.$set(this.answer, item.id, []);
-            });
-          }
-          if (this.question_set[155] && this.question_set[155].length > 0) {
-            this.question_set[155].forEach((item) => {
-              this.$set(this.answer, item.id, []);
-            });
-          }
-        } else {
-          this.message = res.data.msg;
-        }
-      })
     },
     activated() {
-      this.examId = this.$route.query.id;
-      this.confirmType = this.$route.query.type;
+      this.questionnaire_id = this.$route.query.ids;
+      this.ques_id = this.$route.query.ques_id;
+      this.getQuesTionNaireData();
       this.getStatisticData();
     },
     watch: {},
     methods: {
-
+      getQuesTionNaireData() {
+        this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
+          if (res.data.code === '30000') {
+            this.question_set = res.data.data.question_set;
+            this.paperData = res.data.data;
+            if (this.question_set[154] && this.question_set[154].length > 0) {
+              this.question_set[154].forEach((item) => {
+                this.$set(this.answer, item.id, []);
+              });
+            }
+            if (this.question_set[155] && this.question_set[155].length > 0) {
+              this.question_set[155].forEach((item) => {
+                this.$set(this.answer, item.id, []);
+              });
+            }
+          } else {
+            this.message = res.data.msg;
+          }
+        })
+      },
       getStatisticData() {
         this.$http.get(globalConfig.server + 'questionnaire/statistic/' + this.questionnaire_id).then((res) => {
           if (res.data.code === '30000') {

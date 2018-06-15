@@ -4,18 +4,17 @@
     <div class="loading" v-if="loading">
       <img src="../../../../assets/loding1.gif">
     </div>
-    <div v-if="!loading">
-      <div class="questionnaireTitle" v-if="!message">
-        <div style="position: absolute;top: 80px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题
+    <div v-if="!loading"  style="">
+      <div class="questionnaireTitle " v-if="!message">
+        <div style="position: absolute;top: 80px;height: 0px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题
         </div>
-        <img src="../../../../assets/backgroundPic.png" alt="">
+        <img src="../../../../assets/backgroundPic.png">
       </div>
       <div class="exercise" v-if="!message">
         <div v-for="(key,index) in question_set" v-if="index!=157">
           <div class="subject" v-for="(key1,index1) in key" :class="{'borderTop':key1.number==1}">
-            <!--<p>{{key1.number}}. <span class="onClass">{{questionType[index]}}</span></p>-->
             <van-row>
-              <van-col span="2" style="float: left">
+              <van-col span="2" style="float: left;">
                 <p style="display: inline-block;width: 30px;">{{key1.number}}.</p>
               </van-col>
               <van-col span="18" style="float: initial;display: inline-block;">
@@ -42,16 +41,16 @@
                   </van-row>
                 </p>
               </div>
-              <div class="subjectB" v-if="index == 158">
-                <p style="margin-left: 7px;">
-                  <span  style="line-height: 25px;font-size: 16px;color: #39b1ff;" @click="openAll(key1.id)">查看全部回答</span>
+              <div v-show="index == 158" >
+                <p style="margin-left: 7px;margin-top: 10px;" @click="openAll(key1.id)">
+                  <span  style="line-height: 25px;font-size: 16px;color: #39b1ff;cursor: pointer;" >查看全部回答</span>
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="exercise msg" v-if="message">
+      <div class="exercise msg" v-if="message == 'no_power' ">
         <!--<div>-->
           <!--<img src="../../../../assets/no_data.png" style="width: 40%;">-->
           <!--<div style="margin-top: 10px;">暂无数据</div>-->
@@ -63,6 +62,9 @@
             <div class="last_title" style="font-size: 18px;color: #42474d">我在努力寻找进入你的接口...</div>
           </div>
         </div>
+      </div>
+      <div class="exercise msg" v-if="message && message !== 'no_power'">
+        {{message}}
       </div>
     </div>
 
@@ -107,18 +109,17 @@
       })
     },
     activated() {
-      // this.confirmType = this.$route.query.type;
-      this.questionnaire_id = this.$route.query.id;
+      this.questionnaire_id = this.$route.query.ids;
       this.getQuesTionNaireData();
       this.getStatisticData();
       this.loading = true;
     },
     watch: {},
     methods: {
-      openAll(id){
-        this.$router.push({path: '/answerAll', query: {id: this.questionnaire_id, ques_id: id}});
+      openAll(id) {
+        this.$router.push({path: '/answerAll', query: {ids: this.questionnaire_id, ques_id: id}});
       },
-      getQuesTionNaireData(){
+      getQuesTionNaireData() {
         this.$http.get(this.urls + 'questionnaire/' + this.questionnaire_id).then((res) => {
           this.loading = false;
           if (res.data.code === '30000') {
@@ -134,7 +135,10 @@
                 this.$set(this.answer, item.id, []);
               });
             }
-          } else {
+            this.message = '';
+          } else if(res.data.code==='30044'){
+            this.message = 'no_power';
+          }else{
             this.message = res.data.msg;
           }
         });
@@ -146,7 +150,6 @@
             this.statisticData = res.data.data;
           } else {
             this.statisticData = [];
-            this.message = res.data.msg;
           }
         });
       },
