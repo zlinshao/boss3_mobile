@@ -6,7 +6,7 @@
     </div>
     <div v-if="!loading"  style="">
       <div class="questionnaireTitle " v-if="!message">
-        <div style="position: absolute;top: 80px;height: 50px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题
+        <div style="position: absolute;top: 80px;height: 0px;">{{paperData.name}}<span style="margin-left: 20px;">{{paperData.question_count}}</span>题
         </div>
         <img src="../../../../assets/backgroundPic.png">
       </div>
