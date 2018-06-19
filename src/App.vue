@@ -5,6 +5,8 @@
       <img src="./assets/loding1.gif">
     </div>
     <div v-if="!loading">
+      {{signed}} <br>
+      {{token}}
       <keep-alive>
         <router-view v-wechat-title="$route.meta.title"/>
       </keep-alive>
@@ -23,6 +25,7 @@
         showKeyboard: false,
         transitionName: '',
         loading: false,
+        token: '',
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -42,8 +45,24 @@
 
     mounted() {
       this.paths = this.$router.options.routes;
+      this.dataCallback();
+    },
+
+    computed: {
+      // 这里！判断localStorage的变化
+      signed() {
+        if (localStorage.getItem('hwdtoken') != null) {
+          this.token = window.localStorage.getItem('hwdtoken');
+          return true
+        }
+        return false
+      }
     },
     methods: {
+      dataCallback(token) {
+        //iOS可以监听到这个方法
+        alert(token);
+      },
       responses() {
         if (navigator.userAgent == 'app/ApartMent') {
           sessionStorage.setItem('queryType', android.queryType());
