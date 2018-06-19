@@ -42,9 +42,15 @@
 
     mounted() {
       this.paths = this.$router.options.routes;
+      let Data = function DataCallback(a,b,c) {
+        alert(a);
+        alert(b);
+        alert(c);
+      }
     },
     methods: {
       responses() {
+        alert(navigator.userAgent);
         if (navigator.userAgent == 'app/ApartMent') {
           sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
