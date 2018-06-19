@@ -42,16 +42,12 @@
 
     mounted() {
       this.paths = this.$router.options.routes;
-      let Data = function DataCallback(a,b,c) {
-        alert(a);
-        alert(b);
-        alert(c);
-      }
     },
     methods: {
       responses() {
-        alert(navigator.userAgent);
-        if (navigator.userAgent == 'app/ApartMent') {
+        if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios')) {
+          alert(1);
+          alert(JSON.stringify(DataCallback())
           sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
           // add by cj 2018-05-25
@@ -80,6 +76,7 @@
             sessionStorage.setItem('personal', JSON.stringify(data));
           });
         } else {
+          alert(2);
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           this.corp();
