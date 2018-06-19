@@ -44,6 +44,13 @@
       $(window).on("resize",function(){
         $("html").css("fontSize",$(window).width()/7.5);
       }).resize();
+
+      let data = function DataCallback(a, b, c) {
+        alert(3);
+        alert(a);
+        alert(b);
+        alert(c);
+      };
     </script>
   </body>
 </html>

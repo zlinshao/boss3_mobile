@@ -46,13 +46,6 @@
     methods: {
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios')) {
-          alert(1);
-          let data = function DataCallback(a, b, c) {
-            alert(3);
-            alert(a);
-            alert(b);
-            alert(c);
-          };
           sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
           // add by cj 2018-05-25
