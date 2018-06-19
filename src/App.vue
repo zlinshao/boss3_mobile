@@ -45,7 +45,7 @@
     },
     methods: {
       responses() {
-        if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios')) {
+        if (navigator.userAgent == 'app/ApartMent') {
           sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
           // add by cj 2018-05-25
@@ -74,7 +74,6 @@
             sessionStorage.setItem('personal', JSON.stringify(data));
           });
         } else {
-          alert(2);
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           this.corp();
