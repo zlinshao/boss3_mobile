@@ -47,7 +47,7 @@
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios')) {
           alert(1);
-          alert(JSON.stringify(DataCallback())
+          alert(JSON.stringify(DataCallback()));
           sessionStorage.setItem('queryType', android.queryType());
           this.loading = true;
           // add by cj 2018-05-25
