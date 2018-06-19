@@ -2,6 +2,7 @@
   <div id="cardDetail">
     <div class="detail">
       <div class="detailLeft">
+        <!--@click="approvePersonal(2)"-->
         <div>
           <img :src="personal.avatar" v-if="personal.avatar">
           <img src="../../../assets/head.png" v-else>
@@ -16,7 +17,7 @@
         <div class="placeFinish"
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected', 'cancelled':place.status === 'cancelled'}">
 
-          <span class="placeSpan" v-if="placeFalse" @click="approvePersonal">
+          <span class="placeSpan" v-if="placeFalse" @click="approvePersonal(1)">
             <i class="iconfont icon-shenpi1"></i>
             <span>{{place.display_name}}</span>
           </span>
@@ -150,6 +151,25 @@
       </div>
     </van-popup>
 
+    <!--<van-popup v-model="answerFor" style="border-radius: 3px;">-->
+      <!--<div class="showContent">-->
+        <!--<div v-for="key in role_name" class="showRoleName">-->
+          <!--<div class="showImg">-->
+            <!--<img :src="key.avatar" v-if="key.avatar">-->
+            <!--<img src="../../../assets/head.png" v-else>-->
+          <!--</div>-->
+          <!--<div>-->
+            <!--<p>姓名：{{key.name}}</p>-->
+            <!--<p>职位：{{key.name}}</p>-->
+            <!--<p>手机号：<a :href="'tel:' + key.phone">{{key.phone}}</a></p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="showContentFooter" @click="answerFor = false">-->
+        <!--关闭-->
+      <!--</div>-->
+    <!--</van-popup>-->
+
     <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(this.process.processable_type) > -1"
                  :process="process"></SwitchCraft>
   </div>
@@ -205,6 +225,7 @@
 
         role_name: [],
         showContent: false,
+        answerFor: false,
 
         approvedStatus: false,
         marking: '',
@@ -244,10 +265,14 @@
     },
     methods: {
       // 审批人信息
-      approvePersonal() {
-        if (this.place.auditors) {
-          this.role_name = this.place.auditors;
-          this.showContent = true;
+      approvePersonal(val) {
+        if (val === 1) {
+          if (this.place.auditors) {
+            this.role_name = this.place.auditors;
+            this.showContent = true;
+          }
+        } else {
+          this.answerFor = true;
         }
       },
 
