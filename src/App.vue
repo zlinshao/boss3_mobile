@@ -43,16 +43,21 @@
 
     mounted() {
       this.paths = this.$router.options.routes;
-      alert(JSON.stringify(this.$route.query));
-      alert(this.$route.query.token);
-      alert(this.$route.query.type);
     },
     methods: {
       responses() {
         alert(window.location.href);
-        // if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios')) {
-        if (navigator.userAgent == 'app/ApartMent') {
-          let type = android.queryType();
+        if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
+          // if (navigator.userAgent == 'app/ApartMent') {
+          let type,token;
+          if (navigator.userAgent.indexOf('native-ios') > -1) {
+            globalConfig.header.Authorization = "Bearer" + ' ' + this.$route.query.token;
+            token = this.$route.query.token;
+            type = this.$route.query.type;
+          } else {
+            token = android.queryToken();
+            type = android.queryType();
+          }
           sessionStorage.setItem('queryType', type);
           this.loading = true;
           // add by cj 2018-05-25
@@ -67,7 +72,7 @@
           // head.token_type = "Bearer";
           // head.access_token = android.queryToken();
           // sessionStorage.setItem('myData', JSON.stringify(head));
-          globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
+          globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
 
