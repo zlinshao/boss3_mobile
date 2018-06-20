@@ -46,7 +46,6 @@
     },
     methods: {
       responses() {
-        alert(window.location.href);
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           // if (navigator.userAgent == 'app/ApartMent') {
           let type,token;
