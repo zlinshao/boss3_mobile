@@ -462,7 +462,6 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        address: globalConfig.server_user,
         picStatus: true,
         isClear: false,
 
