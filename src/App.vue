@@ -43,8 +43,9 @@
 
     mounted() {
       this.paths = this.$router.options.routes;
-      alert(JSON.stringify(this.$route.token));
-      alert(JSON.stringify(this.$route.type));
+      alert(JSON.stringify(this.$route.query));
+      alert(this.$route.query.type);
+      alert(this.$route.query.type);
     },
     methods: {
       responses() {
