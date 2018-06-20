@@ -46,6 +46,7 @@
     },
     methods: {
       responses() {
+        alert(window.location.href);
         // if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios')) {
         if (navigator.userAgent == 'app/ApartMent') {
           let type = android.queryType();
