@@ -104,7 +104,7 @@
     components: {Toast, UpLoad},
     data() {
       return {
-        // address: globalConfig.server_user,
+        address: globalConfig.server_user,
         urls: globalConfig.server,
         haveInHand: true,
         isClear: false,
@@ -259,7 +259,7 @@
         if (this.picStatus) {
           if (this.haveInHand) {
             this.haveInHand = false;
-            this.$http.put(this.urls + 'process/' + this.queries.ids, {
+            this.$http.put(this.address + 'process/' + this.queries.ids, {
               operation: this.queries.detail,
               comment: this.form.remark,
               album: this.form.photo,

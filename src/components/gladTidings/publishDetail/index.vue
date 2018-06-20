@@ -190,7 +190,7 @@
     },
     data() {
       return {
-        urls: globalConfig.server,
+        urls: globalConfig.server_user,
         personalId: {},
         vLoading: true,
         disabled: false,
