@@ -361,27 +361,19 @@
       },
       lists(val, active, read) {
         this.params = {};
+        this.params.page = val;
+        this.params.type = active;
         switch (active) {
           case 1:
-            this.params.type = active;
-            this.params.page = val;
-            this.processList(this.params);
-            break;
           case 2:
-            this.params.type = active;
-            this.params.page = val;
             this.processList(this.params);
             break;
           case 3:
-            this.params.type = active;
             this.params.published = read;
-            this.params.page = val;
             this.processList(this.params);
             break;
           case 4:
-            this.params.type = active;
             this.params.read_at = read;
-            this.params.page = val;
             this.processList(this.params);
             break;
         }

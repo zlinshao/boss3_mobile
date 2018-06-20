@@ -46,15 +46,19 @@
     },
     methods: {
       responses() {
+        alert(window.location.href);
+        alert(JSON.stringify(DataCallback()));
+        // if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios')) {
         if (navigator.userAgent == 'app/ApartMent') {
-          sessionStorage.setItem('queryType', android.queryType());
+          let type = android.queryType();
+          sessionStorage.setItem('queryType', type);
           this.loading = true;
           // add by cj 2018-05-25
-          if (android.queryType() === 'exam') {
+          if (type === 'exam') {
             this.$router.push({path: '/beforeExam'});
-          } else if (android.queryType() === 'questionnaire') {
+          } else if (type === 'questionnaire') {
             this.$router.push({path: '/beforeNaire'});
-          } else if (android.queryType() === 'interlocution') {
+          } else if (type === 'interlocution') {
             this.$router.push({path: '/interlocution'});
           }
           // let head = {};
