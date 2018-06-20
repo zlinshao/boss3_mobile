@@ -84,7 +84,7 @@
         showDetail: 0,
         disabled: true,
         page: 1,
-        address: globalConfig.server_user,
+        address: globalConfig.server,
         searchValue: '',          //搜索
         lists: [],
         params: {},
