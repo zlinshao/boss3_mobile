@@ -181,18 +181,22 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-let u = navigator.userAgent, app = navigator.appVersion;
-let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
-let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-if (isAndroid) {
-  router.beforeEach((to, from, next) => {
-    document.title = to.meta.title;
-    next();
-  });
-}
-if (isIOS) {
-
-}
+router.afterEach(route => {
+  // 从路由的元信息中获取 title 属性
+  if (route.meta.title) {
+    document.title = route.meta.title;
+    // 如果是 iOS 设备，则使用如下 hack 的写法实现页面标题的更新
+    if (navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+      const hackIframe = document.createElement('iframe');
+      hackIframe.style.display = 'none';
+      hackIframe.src = '/static/html/fixIosTitle.html?r=' + Math.random();
+      document.body.appendChild(hackIframe);
+      setTimeout(_ => {
+        document.body.removeChild(hackIframe);
+      }, 300)
+    }
+  }
+});
 
 new Vue({
   el: '#app',

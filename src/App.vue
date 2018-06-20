@@ -6,7 +6,7 @@
     </div>
     <div v-if="!loading">
       <keep-alive>
-        <router-view v-wechat-title="$route.meta.title"/>
+        <router-view/>
       </keep-alive>
     </div>
   </div>
