@@ -269,11 +269,12 @@
         list.is_agency = value.is_agency;
         list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;
-        if (value.customers.length !== 0) {
-          list.customers = value.customers[0].name;
-        } else {
-          list.customers = '';
-        }
+        // if (value.customers.length !== 0) {
+        //   list.customers = value.customers[0].name;
+        // } else {
+        //   list.customers = '';
+        // }
+        list.customers = '';
         if (value.sign_user !== null) {
           list.staff_id = value.sign_user.id;
           list.staff_name = value.sign_user.name;
