@@ -37,12 +37,9 @@
         }
       }
     },
-    created() {
-      this.responses();
-    },
-
     mounted() {
       this.paths = this.$router.options.routes;
+      this.responses();
     },
     methods: {
       responses() {
@@ -50,7 +47,6 @@
           // if (navigator.userAgent == 'app/ApartMent') {
           let type,token;
           if (navigator.userAgent.indexOf('native-ios') > -1) {
-            globalConfig.header.Authorization = "Bearer" + ' ' + this.$route.query.token;
             token = this.$route.query.token;
             type = this.$route.query.type;
           } else {
