@@ -177,7 +177,7 @@
           label="部门"
           type="text"
           readonly
-          placeholder="部门已禁用">>
+          placeholder="部门已禁用">
         </van-field>
       </van-cell-group>
     </div>
