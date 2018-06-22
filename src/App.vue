@@ -22,7 +22,7 @@
         value: '',
         showKeyboard: false,
         transitionName: '',
-        loading: false,
+        loading: true,
         token: '',
       };
     },

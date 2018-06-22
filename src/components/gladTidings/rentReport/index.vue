@@ -395,7 +395,11 @@
       </van-cell-group>
     </div>
 
-    <div class="footer">
+    <div class="footer" v-if="counts === '2' || counts === '21'">
+      <div @click="saveCollect(0)">修改</div>
+    </div>
+
+    <div class="footer" v-if="counts === '1' || counts === '11'">
       <div @click="close_()">重置</div>
       <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
