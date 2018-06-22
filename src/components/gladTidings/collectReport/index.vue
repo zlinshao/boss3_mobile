@@ -368,7 +368,7 @@
             required>
           </van-field>
         </div>
-        <div class="titleRed">n为年限，且不足一万按一万算</div>
+        <div class="titleRed">n为年限，且金额不足一万按一万算</div>
         <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-field
           v-model="form.contract_number"
