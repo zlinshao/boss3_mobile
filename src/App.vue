@@ -23,6 +23,7 @@
         showKeyboard: false,
         transitionName: '',
         loading: false,
+        token: '',
       };
     },
     watch: {//使用watch 监听$router的变化

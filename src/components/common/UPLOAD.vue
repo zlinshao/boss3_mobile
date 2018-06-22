@@ -105,7 +105,7 @@
           if (!this.uploader) {
             this.uploaderReady(res.data.data);
           }
-        }).catch((res) => {
+        }).catch((error) => {
           this.$http.defaults.timeout = null;
           if (!this.uploader) {
             alert('网络故障，上传组件创建失败，请保存草稿，稍后再试');
