@@ -288,7 +288,7 @@
                     if (data && this.retry === 0) {
                       this.retry++;
 
-                      this.saveCollect(this.form.draft);
+                      this.sure();
                     }
                   });
                 }
