@@ -142,10 +142,10 @@
         switch (type) {
           case 'is_nrcy':
             this.params.is_nrcy = 1;
-            urls = 'coreproject/houses';
+            urls = 'houses';
             break;
           default:
-            urls = 'coreproject/houses';
+            urls = 'houses';
         }
         if (val !== '') {
           this.showDetail = 1;
