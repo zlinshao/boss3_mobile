@@ -275,16 +275,19 @@
           @click-icon="form.relationship = ''"
           required>
         </van-field>
-        <van-field
-          v-model="form.penalty"
-          label="违约金"
-          type="text"
-          class="number"
-          placeholder="请填写违约金"
-          icon="clear"
-          @click-icon="form.penalty = ''"
-          required>
-        </van-field>
+        <div class="month">
+          <van-field
+            v-model="form.penalty"
+            label="违约金"
+            type="text"
+            class="number"
+            placeholder="[n+1]*月单价,(n+1)≥4"
+            icon="clear"
+            @click-icon="form.penalty = ''"
+            required>
+          </van-field>
+        </div>
+        <div class="titleRed">n为年限，且不足一万按一万算</div>
         <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-field
           v-model="form.contract_number"
