@@ -481,6 +481,7 @@
   }
 
   #hello {
+    overflow: hidden;
     @mixin flex {
       display: flex;
       display: -webkit-flex;
