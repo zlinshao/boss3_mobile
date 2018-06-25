@@ -78,7 +78,7 @@
           _this.bigPic = $(this).attr("src");
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.progress', function () {
-          _this.bigPic = $(this).attr("src");
+          _this.bigPic = $(this).prev().attr("src");
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
