@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div id="uploadContainer">
     <div id="container">
+      {{bigPic}}
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style="position: relative;">
@@ -15,6 +16,10 @@
           <span class="plus">+</span>
         </div>
       </div>
+    </div>
+
+    <div class="bigPhoto" v-if="bigPic">
+      <img :src="bigPic">
     </div>
   </div>
 </template>
@@ -38,6 +43,8 @@
         uploader: null,
         editImg: [],
         token: '',
+
+        bigPic: '',
       }
     },
     mounted() {
@@ -63,6 +70,9 @@
       }
     },
     methods: {
+      closePic() {
+        this.bigPic = '';
+      },
       active() {
         let _this = this;
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
@@ -90,6 +100,9 @@
             }
           }
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+        });
+        $(document).on('click', '#pickfiles' + this.ID + ' ' + 'img', function () {
+          _this.bigPic = $(this).attr("src");
         });
         this.getTokenMessage();
         setInterval(() => {
@@ -154,7 +167,7 @@
 
                   $('#pickfiles' + _this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
-                      <div style="width: 1.5rem;height: 1.5rem;position: relative;z-index: 1">
+                      <div class="picCss">
                         <img src="${fileImage}">
                         <div class="progress"><b></b></div>
                         <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}>
@@ -170,7 +183,7 @@
 //                     文件添加进队列后，处理相关的事情
                     $('#pickfiles' + _this.ID).prepend(`
                     <div class="imgItem q" id="${file.id}">
-                      <div style="width: 1.5rem;height: 1.5rem;position: relative;z-index: 1">
+                      <div class="picBig picCss">
                         <img src="${fr.result}">
                         <div class="progress"><b style="color: #fff !important;"></b></div>
                         <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}>
@@ -213,7 +226,6 @@
                 type: file.type,
                 size: file.size
               }).then((res) => {
-                alert(JSON.stringify(res.data.data.uri));
                 _this.$http.defaults.timeout = null;
                 if (res.data.status === "success") {
                   _this.imgId.push(res.data.data.id);
@@ -263,59 +275,76 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-
-  #container {
-    img {
-      width: 1.5rem;
-      height: 1.5rem;
-    }
-    b {
-      color: #fff !important;
-    }
-    padding: 0 .1rem;
-    .pickfiles {
+  #uploadContainer {
+    @mixin flex {
       display: flex;
-      display: -webkit-flex; /* Safari */
-      flex-wrap: wrap;
+      display: -webkit-flex;
+    }
+    .bigPhoto {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, .4);
+      z-index: 1000;
       img {
-        position: absolute;
-        z-index: 6;
+        max-width: 100%;
+        max-height: 100%
       }
-      > div {
-        margin-left: .3rem;
-        margin-top: .3rem;
-      }
-      .upButton {
+    }
+    #container {
+      img {
         width: 1.5rem;
         height: 1.5rem;
-        background: #f6f6f6;
-        text-align: center;
-        line-height: 1.5rem;
-        .plus {
-          font-size: 1rem;
-          color: #aaa;
+      }
+      b {
+        color: #fff !important;
+      }
+      padding: 0 .1rem;
+      .pickfiles {
+        display: flex;
+        display: -webkit-flex; /* Safari */
+        flex-wrap: wrap;
+        .upButton {
+          width: 1.5rem;
+          height: 1.5rem;
+          margin: .3rem 0 0 .3rem;
+          background: #f6f6f6;
+          text-align: center;
+          line-height: 1.5rem;
+          .plus {
+            font-size: 1rem;
+            color: #aaa;
+          }
         }
-      }
-      .progress {
-        width: 100%;
-        position: absolute;
-        bottom: .5rem;
-        font-size: .5rem;
-        text-align: center;
-      }
-      .remove {
-        text-align: center;
-        width: .5rem;
-        height: .5rem;
-        line-height: .5rem;
-        border-radius: 50%;
-        position: absolute;
-        top: -.2rem;
-        right: -.2rem;
-        z-index: 12;
-        background: #333;
-        color: #fff;
-        font-size: .5rem;
+        .progress {
+          width: 100%;
+          position: absolute;
+          bottom: .5rem;
+          font-size: .5rem;
+          text-align: center;
+        }
+        .remove {
+          text-align: center;
+          width: .5rem;
+          height: .5rem;
+          line-height: .5rem;
+          border-radius: 50%;
+          position: absolute;
+          top: -.2rem;
+          right: -.2rem;
+          z-index: 12;
+          background: #333;
+          color: #fff;
+          font-size: .5rem;
+        }
+        .picCss {
+          width: 1.5rem;
+          height: 1.5rem;
+          position: relative;
+          margin: .3rem 0 0 .3rem;
+        }
       }
     }
   }
