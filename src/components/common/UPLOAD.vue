@@ -3,7 +3,7 @@
     <div id="container">
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
-          <div style="position: relative;z-index: 1">
+          <div style="position: relative;">
             <img v-if="val.is_video" src="../../assets/video.jpg">
             <img :src="val.uri" v-else>
             <div class="progress"><b></b></div>
@@ -277,6 +277,10 @@
       display: flex;
       display: -webkit-flex; /* Safari */
       flex-wrap: wrap;
+      img {
+        position: absolute;
+        z-index: 6;
+      }
       > div {
         margin-left: .3rem;
         margin-top: .3rem;
