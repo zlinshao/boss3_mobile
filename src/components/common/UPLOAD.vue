@@ -1,7 +1,6 @@
 <template>
   <div id="uploadContainer">
     <div id="container">
-      {{bigPic}}
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style="position: relative;">
@@ -19,7 +18,7 @@
     </div>
 
     <div class="bigPhoto" v-if="bigPic">
-      <img :src="bigPic">
+        <img @click="closePic" :src="bigPic">
     </div>
   </div>
 </template>
@@ -75,6 +74,9 @@
       },
       active() {
         let _this = this;
+        $(document).on('click', '#pickfiles' + this.ID + ' ' + 'img', function () {
+          _this.bigPic = $(this).attr("src");
+        });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
           let toremove = '';
@@ -100,9 +102,6 @@
             }
           }
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-        });
-        $(document).on('click', '#pickfiles' + this.ID + ' ' + 'img', function () {
-          _this.bigPic = $(this).attr("src");
         });
         this.getTokenMessage();
         setInterval(() => {
@@ -279,6 +278,8 @@
     @mixin flex {
       display: flex;
       display: -webkit-flex;
+      align-items: center;
+      justify-content: center;
     }
     .bigPhoto {
       position: fixed;
@@ -286,8 +287,9 @@
       right: 0;
       top: 0;
       bottom: 0;
-      background-color: rgba(0, 0, 0, .4);
       z-index: 1000;
+      background-color: rgba(0, 0, 0, .4);
+      @include flex;
       img {
         max-width: 100%;
         max-height: 100%
