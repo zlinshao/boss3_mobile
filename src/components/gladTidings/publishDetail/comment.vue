@@ -270,11 +270,11 @@
                 if (val === 1) {
                   this.mark();
                 } else {
-                  Toast.success(res.data.message);
                   this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
                   this.close_();
                   $('.imgItem').remove();
                 }
+                Toast.success(res.data.message);
               } else {
                 Toast(res.data.message);
               }
