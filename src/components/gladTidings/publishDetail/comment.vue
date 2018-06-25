@@ -274,6 +274,7 @@
                   this.close_();
                   $('.imgItem').remove();
                 }
+                Toast.success(res.data.message);
               } else {
                 Toast(res.data.message);
               }

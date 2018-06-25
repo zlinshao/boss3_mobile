@@ -3,10 +3,10 @@
     <div id="container">
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
-          <div style=" position: relative;">
-            <img v-if="val.is_video" src="../../assets/video.jpg" style="width: 1.5rem; height: 1.5rem;">
-            <img :src="val.uri" style="width: 1.5rem; height: 1.5rem;" v-else>
-            <div class="progress"><b style="color: #fff !important;"></b></div>
+          <div style="position: relative;z-index: 1">
+            <img v-if="val.is_video" src="../../assets/video.jpg">
+            <img :src="val.uri" v-else>
+            <div class="progress"><b></b></div>
             <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
             </div>
           </div>
@@ -23,10 +23,11 @@
   import fileImage from '../../assets/video.jpg'
   import {Dialog} from 'vant';
   import {Toast} from 'vant';
+  import {ImagePreview} from 'vant';
 
   export default {
     name: 'hello',
-    components: {Toast},
+    components: {ImagePreview, Toast, Dialog},
     props: ['ID', 'editImage', 'isClear', 'dis'],
     data() {
       return {
@@ -139,7 +140,7 @@
           flash_swf_url: 'path/of/plupload/Moxie.swf',  //引入flash，相对路径
           max_retries: 1,                     // 上传失败最大重试次数
           dragdrop: true,                     // 开启可拖曳上传
-          drop_element: 'pickfiles'+_this.ID, // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
+          drop_element: 'pickfiles' + _this.ID, // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
           chunk_size: '4mb',                  // 分块上传时，每块的体积
           auto_start: true,                   // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
 
@@ -153,10 +154,10 @@
 
                   $('#pickfiles' + _this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
-                      <div style=" width: 1.5rem;  height: 1.5rem; position: relative;">
-                        <img src="${fileImage}" style="width: 1.5rem; height: 1.5rem; ">
-                        <div class="progress"><b style="color: #aaa !important;"></b></div>
-                        <div class="remove pic_delete van-icon van-icon-close"  data-val=${file.id}>
+                      <div style="width: 1.5rem;height: 1.5rem;position: relative;z-index: 1">
+                        <img src="${fileImage}">
+                        <div class="progress"><b></b></div>
+                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}>
 
                         </div>
                       </div>
@@ -168,11 +169,11 @@
                   fr.onload = function () {
 //                     文件添加进队列后，处理相关的事情
                     $('#pickfiles' + _this.ID).prepend(`
-                    <div class="imgItem" id="${file.id}">
-                      <div style=" position: relative;">
-                        <img src="${fr.result}" style="width: 1.5rem; height: 1.5rem; ">
+                    <div class="imgItem q" id="${file.id}">
+                      <div style="width: 1.5rem;height: 1.5rem;position: relative;z-index: 1">
+                        <img src="${fr.result}">
                         <div class="progress"><b style="color: #fff !important;"></b></div>
-                        <div class="remove pic_delete van-icon van-icon-close"  data-val=${file.id}>
+                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}>
 
                         </div>
                       </div>
@@ -212,6 +213,7 @@
                 type: file.type,
                 size: file.size
               }).then((res) => {
+                alert(JSON.stringify(res.data.data.uri));
                 _this.$http.defaults.timeout = null;
                 if (res.data.status === "success") {
                   _this.imgId.push(res.data.data.id);
@@ -263,6 +265,13 @@
 <style lang="scss">
 
   #container {
+    img {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+    b {
+      color: #fff !important;
+    }
     padding: 0 .1rem;
     .pickfiles {
       display: flex;
@@ -299,7 +308,7 @@
         position: absolute;
         top: -.2rem;
         right: -.2rem;
-        z-index: 1;
+        z-index: 12;
         background: #333;
         color: #fff;
         font-size: .5rem;
