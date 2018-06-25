@@ -77,6 +77,9 @@
         $(document).on('click', '#pickfiles' + this.ID + ' ' + 'img', function () {
           _this.bigPic = $(this).attr("src");
         });
+        $(document).on('click', '#pickfiles' + this.ID + ' ' + '.progress', function () {
+          _this.bigPic = $(this).attr("src");
+        });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
           let toremove = '';
