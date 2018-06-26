@@ -274,6 +274,7 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
+        urls_new: globalConfig.server_new,
         selectHide: false,        //select选择
         isClear: false,           //删除图片
         picStatus: true,
@@ -557,7 +558,7 @@
                 this.form.customers[i].sex = this.sexs[i];
               }
               this.form.is_submit = val;
-              this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
+              this.$http.put(this.urls_new + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
                 this.haveInHand = true;
                 this.retry = 0;
                 if (res.data.code === '51610') {
@@ -631,7 +632,7 @@
 
       rentDetail(id) {
         this.picClose();
-        this.$http.get(this.urls + 'bulletin/complete/rent/' + id).then((res) => {
+        this.$http.get(this.urls_new + 'bulletin/complete/rent/' + id).then((res) => {
           if (res.data.code === '51610') {
             let data = res.data.data;
             this.form.customers = [];
