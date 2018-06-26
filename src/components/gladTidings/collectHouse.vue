@@ -84,7 +84,8 @@
         showDetail: 0,
         disabled: true,
         page: 1,
-        address: globalConfig.server_user,
+        address: globalConfig.server_new,
+        // address: globalConfig.server_user,
         searchValue: '',          //搜索
         lists: [],
         params: {},
@@ -141,13 +142,13 @@
         this.params.q = val;
         switch (type) {
           case 'is_nrcy':
-            this.params.is_nrcy = 1;
-            // urls = 'coreproject/houses';
+            // this.params.is_nrcy = 1;
+            urls = 'coreproject/houses';
             urls = 'houses';
             break;
           default:
-            // urls = 'coreproject/houses';
-            urls = 'houses';
+            urls = 'coreproject/houses';
+            // urls = 'houses';
         }
         if (val !== '') {
           this.showDetail = 1;
@@ -156,7 +157,6 @@
         }
       },
       myData(type, val, urls) {
-        alert(this.address + urls);
         this.$http.get(this.address + urls, {
           params: this.params,
         }).then((res) => {
