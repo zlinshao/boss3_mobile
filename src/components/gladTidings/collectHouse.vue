@@ -84,7 +84,7 @@
         showDetail: 0,
         disabled: true,
         page: 1,
-        address: globalConfig.server_new,
+        address: globalConfig.server_user,
         searchValue: '',          //搜索
         lists: [],
         params: {},
@@ -142,10 +142,12 @@
         switch (type) {
           case 'is_nrcy':
             this.params.is_nrcy = 1;
-            urls = 'coreproject/houses';
+            // urls = 'coreproject/houses';
+            urls = 'houses';
             break;
           default:
-            urls = 'coreproject/houses';
+            // urls = 'coreproject/houses';
+            urls = 'houses';
         }
         if (val !== '') {
           this.showDetail = 1;
