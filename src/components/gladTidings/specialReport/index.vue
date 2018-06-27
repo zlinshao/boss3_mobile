@@ -81,7 +81,7 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server,
+        urls: globalConfig.server_new,
         refundSta: false,
         isClear: false,           //删除图片
         picStatus: true,

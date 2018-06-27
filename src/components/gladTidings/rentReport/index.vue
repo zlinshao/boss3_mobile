@@ -438,7 +438,7 @@
       return {
         haveInHand: true,
         personal: globalConfig.personal,
-        urls: globalConfig.server,
+        urls: globalConfig.server_new,
         isClear: false,           //删除图片
         picStatus: true,
 

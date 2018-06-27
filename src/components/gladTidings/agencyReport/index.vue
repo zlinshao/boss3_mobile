@@ -207,7 +207,7 @@
     components: {UpLoad, Toast},
     data() {
       return {
-        urls: globalConfig.server,
+        urls: globalConfig.server_new,
         isClear: '',              //删除图片
         picStatus: true,
         haveInHand: true,
