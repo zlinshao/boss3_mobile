@@ -428,7 +428,8 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server_new,
+        urls: globalConfig.server,
+        urls_new: globalConfig.server_new,
         isClear: false,           //删除图片
         picStatus: true,
 
@@ -886,7 +887,7 @@
             this.form.is_corp = this.corp ? 1 : 0;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
             this.form.day = this.form.day === '' ? '0' : this.form.day;
-            this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+            this.$http.post(this.urls_new + 'bulletin/rent', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '50210' || res.data.code === '50230') {
@@ -967,7 +968,7 @@
           this.userInfo(true);
           type = 'bulletin/rent?type=4';
         }
-        this.$http.get(this.urls + type).then((res) => {
+        this.$http.get(this.urls_new + type).then((res) => {
           if (res.data.code === '50220') {
             this.isClear = false;
             let data = res.data.data;

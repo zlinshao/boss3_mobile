@@ -394,7 +394,7 @@
     methods: {
       //字典匹配
       getDictionary() {
-        this.$http.get(globalConfig.server + 'setting/dictionary/all').then((res) => {
+        this.$http.get(globalConfig.server_new + 'setting/dictionary/all').then((res) => {
           this.all_dic = res.data.data;
         })
       },
@@ -423,7 +423,7 @@
         this.lords = [];
         this.renters = [];
         this.videoArray = [];
-        this.$http.get(globalConfig.server + 'house/album/' + this.$route.query.id).then((res) => {
+        this.$http.get(globalConfig.server_new + 'house/album/' + this.$route.query.id).then((res) => {
           if (res.data.code === '30070') {
             Toast.clear();
             this.detailData = res.data.data.detail;

@@ -464,7 +464,8 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server_new,
+        urls: globalConfig.server,
+        urls_new: globalConfig.server_new,
         picStatus: true,
         isClear: false,
 
@@ -928,7 +929,7 @@
             this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
             this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
             this.form.draft = val;
-            this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+            this.$http.post(this.urls_new + 'bulletin/collect', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '50110' || res.data.code === '50130') {
@@ -1015,7 +1016,7 @@
           this.userInfo(true);
           type = 'bulletin/collect?type=1';
         }
-        this.$http.get(this.urls + type).then((res) => {
+        this.$http.get(this.urls_new + type).then((res) => {
           if (res.data.code === '50120') {
             this.isClear = false;
             let data = res.data.data;

@@ -317,7 +317,6 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server,
         urls_new: globalConfig.server_new,
         selectHide: false,        //select选择
         isClear: false,           //删除图片

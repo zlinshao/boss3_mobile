@@ -225,7 +225,8 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server_new,
+        urls: globalConfig.server,
+        urls_new: globalConfig.server_new,
         isClear: false,           //删除图片
         picStatus: true,
 
@@ -509,7 +510,7 @@
             this.form.receipt = receipt;
             this.form.draft = val;
             this.form.is_other_fee = this.other_fee_status ? 1 : 0;
-            this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
+            this.$http.post(this.urls_new + 'bulletin/retainage', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '50910' || res.data.code === '50930') {
@@ -599,7 +600,7 @@
         } else {
           type = 'bulletin/retainage';
         }
-        this.$http.get(this.urls + type).then((res) => {
+        this.$http.get(this.urls_new + type).then((res) => {
           if (res.data.code === '50920') {
             this.isClear = false;
             let data = res.data.data;

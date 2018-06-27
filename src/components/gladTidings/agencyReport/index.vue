@@ -207,7 +207,8 @@
     components: {UpLoad, Toast},
     data() {
       return {
-        urls: globalConfig.server_new,
+        urls: globalConfig.server,
+        urls_new: globalConfig.server_new,
         isClear: '',              //删除图片
         picStatus: true,
         haveInHand: true,
@@ -378,7 +379,7 @@
               this.form.settle = 0;
             }
             this.form.draft = val;
-            this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
+            this.$http.post(this.urls_new + 'bulletin/agency', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '50310' || res.data.code === '50330') {
@@ -468,7 +469,7 @@
         }
       },
       helperBulletin(id) {
-        this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
+        this.$http.get(this.urls_new + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
           if (res.data.code === '51110') {
             let pay = res.data.data;
             this.form.payWay = [];
@@ -493,7 +494,7 @@
         } else {
           type = 'bulletin/agency';
         }
-        this.$http.get(this.urls + type).then((res) => {
+        this.$http.get(this.urls_new + type).then((res) => {
           if (res.data.code === '50320') {
             this.isClear = false;
             this.agency2 = false;

@@ -101,7 +101,8 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server_new,
+        urls: globalConfig.server,
+        urls_new: globalConfig.server_new,
         isClear: false,           //删除图片
         picStatus: true,
 
@@ -209,7 +210,7 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
-            this.$http.post(this.urls + 'bulletin/banish', this.form).then((res) => {
+            this.$http.post(this.urls_new + 'bulletin/banish', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '50410' || res.data.code === '50430') {
@@ -288,7 +289,7 @@
         } else {
           type = 'bulletin/banish';
         }
-        this.$http.get(this.urls + type).then((res) => {
+        this.$http.get(this.urls_new + type).then((res) => {
           if (res.data.code === '50420') {
             this.isClear = false;
             let data = res.data.data;

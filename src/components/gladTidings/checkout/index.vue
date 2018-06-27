@@ -186,7 +186,8 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server_new,
+        urls: globalConfig.server,
+        urls_new: globalConfig.server_new,
         isClear: false,           //删除图片
         picStatus: true,
         selectHide: false,
@@ -426,7 +427,7 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
-            this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
+            this.$http.post(this.urls_new + 'bulletin/checkout', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '51210' || res.data.code === '51230') {
@@ -519,7 +520,7 @@
         } else {
           type = 'bulletin/checkout';
         }
-        this.$http.get(this.urls + type).then((res) => {
+        this.$http.get(this.urls_new + type).then((res) => {
           if (res.data.code === '51220') {
             this.isClear = false;
             let data = res.data.data;

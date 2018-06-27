@@ -98,7 +98,7 @@
         path: '',
         page: 1,
         showDetail: 0,
-        isManual : false,   //手动添加
+        isManual : false,         //手动添加
 
         manualData:{
           name:'',
