@@ -250,7 +250,7 @@
             this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
             this.close_();
             $('.imgItem').remove();
-          } else {
+          } else {  
             Toast(res.data.msg);
           }
         });
