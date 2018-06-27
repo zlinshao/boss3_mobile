@@ -391,7 +391,7 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server,
+        urls: globalConfig.server_new,
         selectHide: false,
         columns: [],                        //select值
         tabs: '',
