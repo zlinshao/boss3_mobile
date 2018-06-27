@@ -106,6 +106,7 @@
       return {
         address: globalConfig.server_user,
         urls: globalConfig.server,
+        urls_new: globalConfig.server_new,
         haveInHand: true,
         isClear: false,
         picStatus: true,
@@ -244,7 +245,7 @@
       mark() {
         this.forms.is_electric_appliance = this.is_electric_status ? 1 : 0;
         this.forms.is_clean = this.is_clean_status ? 1 : 0;
-        this.$http.put(this.urls + 'bulletin/helper/score/' + this.queries.ids, this.forms).then((res) => {
+        this.$http.put(this.urls_new + 'bulletin/helper/score/' + this.queries.ids, this.forms).then((res) => {
           if (res.data.code === '51110') {
             this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
             this.close_();
