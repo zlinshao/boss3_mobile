@@ -606,7 +606,7 @@
           duration: 0,
           message: '加载中...'
         });
-        this.$http.get(globalConfig.server_new + 'lease/collect/' + this.$route.query.id).then((res) => {
+        this.$http.get(globalConfig.server + 'lease/collect/' + this.$route.query.id).then((res) => {
           Toast.clear();
           if (res.data.code === '61010') {
             this.contractInfo = res.data.data;

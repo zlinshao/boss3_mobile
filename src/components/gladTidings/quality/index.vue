@@ -392,7 +392,6 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        urls_new: globalConfig.server_new,
         selectHide: false,
         columns: [],                        //select值
         tabs: '',
@@ -843,7 +842,7 @@
             this.form.is_fill = this.is_fillOn ? 1 : 0;               //家电是否齐全
             this.form.is_lord_fill = this.is_lordOn ? 1 : 0;          //房东是否予以配齐
             this.form.is_draft = val;
-            this.$http.post(this.urls_new + 'bulletin/quality', this.form).then((res) => {
+            this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === "51410" || res.data.code === "51430") {
@@ -931,7 +930,7 @@
           this.userInfo(true);
           type = 'bulletin/quality';
         }
-        this.$http.get(this.urls_new + type).then((res) => {
+        this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === "51420") {
             let data = res.data.data;
             this.form.id = res.data.id;

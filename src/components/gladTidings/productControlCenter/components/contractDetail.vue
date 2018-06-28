@@ -172,7 +172,7 @@
           duration: 0,
           message: '加载中...'
         });
-        this.$http.get(globalConfig.server_new + 'house/album/' + this.$route.query.id).then((res) => {
+        this.$http.get(globalConfig.server + 'house/album/' + this.$route.query.id).then((res) => {
           Toast.clear();
           if (res.data.code === '30070') {
             this.lords = res.data.data.detail.lords;

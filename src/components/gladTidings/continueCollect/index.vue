@@ -385,7 +385,6 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        urls_new: globalConfig.server_new,
         isClear: false,           //删除图片
         picStatus: true,
 
@@ -775,7 +774,7 @@
             this.form.day = this.form.day === '' ? '0' : this.form.day;
             this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
             this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
-            this.$http.post(this.urls_new + 'bulletin/collect', this.form).then((res) => {
+            this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '50110' || res.data.code === '50130') {
@@ -861,7 +860,7 @@
           this.userInfo(true);
           type = 'bulletin/collect?type=2';
         }
-        this.$http.get(this.urls_new + type).then((res) => {
+        this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === '50120') {
             this.isClear = false;
             let data = res.data.data;

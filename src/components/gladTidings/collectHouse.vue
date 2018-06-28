@@ -84,7 +84,7 @@
         showDetail: 0,
         disabled: true,
         page: 1,
-        address: globalConfig.server_new,
+        address: globalConfig.server,
         // address: globalConfig.server_user,
         searchValue: '',          //搜索
         lists: [],
@@ -163,7 +163,7 @@
           if (this.searchValue !== '') {
             let data = res.data.data;
             if (data.length !== 0 && res.data.status === 'success') {
-              for (let i = 0; i < data.length; i++) {
+              for (let i = 0;  i < data.length; i++) {
                 if (type === 'quality' && data[i].house_res) {
                   let list = {};
                   this.showInfo.push(data[i].id);

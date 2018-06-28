@@ -435,7 +435,7 @@
     methods: {
       //字典匹配
       getDictionary() {
-        this.$http.get(globalConfig.server_new + 'setting/dictionary/all').then((res) => {
+        this.$http.get(globalConfig.server + 'setting/dictionary/all').then((res) => {
           this.all_dic = res.data.data;
         })
       },
@@ -456,7 +456,7 @@
           duration: 0,
           message: '加载中...'
         });
-        this.$http.get(globalConfig.server_new + 'lease/rent/' + this.$route.query.id).then((res) => {
+        this.$http.get(globalConfig.server + 'lease/rent/' + this.$route.query.id).then((res) => {
           Toast.clear();
           if (res.data.code === '61110') {
             this.contractInfo = res.data.data;

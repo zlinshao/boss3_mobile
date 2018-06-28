@@ -154,7 +154,6 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        urls_new: globalConfig.server_new,
         isClear: false,               //删除图片
         picStatus: true,
 
@@ -281,7 +280,7 @@
           if (this.haveInHand) {
             this.haveInHand = false;
             this.form.draft = val;
-            this.$http.post(this.urls_new + 'bulletin/refund', this.form).then((res) => {
+            this.$http.post(this.urls + 'bulletin/refund', this.form).then((res) => {
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '50810' || res.data.code === '50830') {
@@ -362,7 +361,7 @@
         } else {
           type = 'bulletin/refund';
         }
-        this.$http.get(this.urls_new + type).then((res) => {
+        this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === '50820') {
             this.isClear = false;
             let data = res.data.data;

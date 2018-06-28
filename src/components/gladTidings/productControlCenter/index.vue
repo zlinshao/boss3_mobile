@@ -319,7 +319,7 @@
         urls = 'coreproject/houses';
         this.Loading = true;
         this.isEmptyData = false;
-        this.$http.get(globalConfig.server_new + urls, {params: this.params}).then((res) => {
+        this.$http.get(globalConfig.server + urls, {params: this.params}).then((res) => {
           this.Loading = false;
           if (res.data.status === 'success') {
             let arr = [];
