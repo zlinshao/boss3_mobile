@@ -3,7 +3,7 @@
     <div id="container">
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
-          <div style="position: relative;">
+          <div style="position: relative; margin: .3rem 0 0 .3rem;">
             <img v-if="val.is_video" src="../../assets/video.jpg">
             <img :src="val.uri" v-else>
             <div class="progress"><b></b></div>
@@ -18,7 +18,7 @@
     </div>
 
     <div class="bigPhoto" v-if="bigPic">
-        <img @click="closePic" :src="bigPic">
+      <img @click="closePic" :src="bigPic">
     </div>
   </div>
 </template>
