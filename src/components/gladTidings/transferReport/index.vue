@@ -445,10 +445,10 @@
           id: '',
           processable_id: '',
           draft: 0,
-          contract_id_rent: '',         //原租房合同id
-          contract_id: '',              //现房屋合同id
           house_id_rent: '',
+          contract_id_rent: '',         //原租房合同id
           house_id: '',
+          contract_id: '',              //现房屋合同id
           room_id: '',                  //合租房间ID
           rooms_mate: [],               //合租房间
           month: '',                    //签约时长
