@@ -7,7 +7,7 @@
     <div v-if="!loading">
       <div style="background: rgba(61,90,254,0.08);height: 10px;width: 100%;"></div>
       <div>
-        <van-swipe :autoplay="3000">
+        <van-swipe :autoplay="3000" v-if="roundSowData.length>0">
           <van-swipe-item v-for="(image, index) in  roundSowData" :key="index">
             <span v-for="pic in image && image.album && image.album.cover_pic">
               <img v-for="p in pic" :src="p.uri" width="100%" height="140px" @click="goArticleDetail(image.id)"/>
@@ -17,6 +17,9 @@
             </div>
           </van-swipe-item>
         </van-swipe>
+        <div v-if="roundSowData.length<1">
+          <img src="../../assets/swipe_no_data.png"  width="100%" >
+        </div>
       </div>
       <div style="background: #fafafe;height: 10px;width: 100%;margin-top: -2px;"></div>
       <div>
