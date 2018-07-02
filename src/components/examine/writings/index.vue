@@ -165,7 +165,6 @@
     activated() {
       this.assistId = false;
       this.commentsShow = false;
-      // this.returnIndex();
       this.pitch = this.$route.query.id;
       this.contentDetail(this.pitch);
       this.commentList = [];
@@ -173,29 +172,6 @@
     methods: {
       goComment() {
         this.$router.push({path: '/comments', query: {data: this.pitch}});
-      },
-      returnIndex() {
-        let that = this;
-        document.addEventListener('backbutton', function (e) {
-          e.preventDefault();
-          if (that.path !== '/') {
-            that.loading = true;
-            that.$router.push({path: that.path});
-          }
-        });
-        dd.biz.navigation.setLeft({
-          control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
-          onSuccess: function (result) {
-            if (that.path !== '/') {
-              that.loading = true;
-              that.$router.push({path: that.path});
-            } else {
-              that.ddRent('', 'close');
-            }
-          },
-          onFail: function (err) {
-          }
-        });
       },
       IsPC() {
         let userAgentInfo = navigator.userAgent;
