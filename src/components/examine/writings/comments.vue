@@ -14,7 +14,7 @@
       <div style="background: #fafafe;height: 10px;width: 100%;"></div>
       <div class="pic">
         <div class="title">图片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" style="margin-left: -13px;"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" style="margin-left: -15px;"></UpLoad>
       </div>
       <div class="footer">
         <div @click="manager()">发布评论</div>
