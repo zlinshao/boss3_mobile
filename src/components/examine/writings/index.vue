@@ -7,8 +7,9 @@
     <div class="disappear" v-if="undercarriage && !loading">
       <div class="a1">
         <img src="../../../assets/disappear.png">
+        <div class="a2">{{contents}}</div>
       </div>
-      <div class="a2">{{contents}}</div>
+
     </div>
     <div v-if="dercarriage && !loading">
       <div style="background: rgba(61,90,254,0.06);height: 10px;width: 100%;"></div>
@@ -37,8 +38,10 @@
           <i class="iconfont icon-yanjing"><span style="margin-left: 5px;margin-right: 10px;">{{myData.read_num}}</span></i>
           <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"
              style="margin-left: 10px;"><span :class="{'zan': assistId}">{{myData.favor_num}}</span></i>
-          <i class="iconfont icon-pinglun" v-if="myData.comments_count<1" style="margin-left: 20px;"><span style="margin-left: 5px;">{{myData.comments_count}}</span></i>
-          <i class="iconfont icon-pinglun" @click="loadComments" v-else style="margin-left: 20px;"><span style="margin-left: 5px;">{{myData.comments_count}}</span></i>
+          <i class="iconfont icon-pinglun" v-if="myData.comments_count<1" style="margin-left: 20px;"><span
+            style="margin-left: 5px;">{{myData.comments_count}}</span></i>
+          <i class="iconfont icon-pinglun" @click="loadComments" v-else style="margin-left: 20px;"><span
+            style="margin-left: 5px;">{{myData.comments_count}}</span></i>
         </div>
         <div class="nextPrev" v-if="myData.before_content!=null || myData.next_content!=null">
           <p v-if="before_content.id !== '' && before_content.name !== ''" @click="routerLink(before_content.id)">
@@ -146,14 +149,23 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
-        // vm.routerIndex(from.path, 'house');
-        // vm.ddRent(from.path, 'house');
+        vm.loading = true;
+
+        if (from.path === '/') {
+          sessionStorage.setItem('articlePath', vm.path);
+        }
+        if (sessionStorage.articlePath !== '/') {
+          vm.routerIndex('/staffSquare', 'house');
+          vm.ddRent('/staffSquare', 'house');
+        } else {
+          vm.ddRent('', 'close');
+        }
       })
     },
     activated() {
       this.assistId = false;
       this.commentsShow = false;
-      this.returnIndex();
+      // this.returnIndex();
       this.pitch = this.$route.query.id;
       this.contentDetail(this.pitch);
       this.commentList = [];
@@ -168,7 +180,7 @@
           e.preventDefault();
           if (that.path !== '/') {
             that.loading = true;
-            that.$router.push({path: '/staffSquare'});
+            that.$router.push({path: that.path});
           }
         });
         dd.biz.navigation.setLeft({
@@ -176,7 +188,7 @@
           onSuccess: function (result) {
             if (that.path !== '/') {
               that.loading = true;
-              that.$router.push({path: '/staffSquare'});
+              that.$router.push({path: that.path});
             } else {
               that.ddRent('', 'close');
             }
@@ -476,21 +488,28 @@
     .disappear {
       div {
         text-align: center;
+        margin: 0 auto;
+        position: absolute;
       }
       .a1 {
+        position: absolute;
+        top: 100px;
+        left: 50%;
         width: 3rem;
+        margin-left: -1.5rem;
         height: 3rem;
-        margin: 2rem auto 0;
         img {
           width: 100%;
           height: 100%;
         }
+        .a2 {
+          margin-top: .6rem;
+          margin-left: 0.2rem;
+          font-size: .4rem;
+          color: #aaaaaa;
+        }
       }
-      .a2 {
-        margin-top: .6rem;
-        font-size: .4rem;
-        color: #aaaaaa;
-      }
+
     }
     .ql-editor {
       padding: 0;
