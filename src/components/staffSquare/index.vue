@@ -13,12 +13,13 @@
               <img v-for="p in pic" :src="p.uri" width="100%" height="140px" @click="goArticleDetail(image.id)"/>
             </span>
             <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;bottom: 2px;">
-              <span style="color: #FFFFFF;display: inline-block;margin: 10px 20px;width: 70%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
+              <span
+                style="color: #FFFFFF;display: inline-block;margin: 10px 20px;width: 70%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
             </div>
           </van-swipe-item>
         </van-swipe>
         <div v-if="roundSowData.length<1">
-          <img src="../../assets/swipe_no_data.png"  width="100%" >
+          <img src="../../assets/swipe_no_data.png" width="100%">
         </div>
       </div>
       <div style="background: #fafafe;height: 10px;width: 100%;margin-top: -2px;"></div>
@@ -26,12 +27,12 @@
         <div class="staff_type">
           <ul>
             <li v-for="(type, index) in staffSquareType" v-if="type.id==142"
-                :class="{'active': active==index}" @click="active=index">
+                :class="{'active': active==index}" @click="staffSquareTypeMove(index)">
               {{type.dictionary_name}}
             </li>
             <li v-for="(type, index) in staffSquareType"
                 v-if="type.id!=144 && type.id!=145 && type.id!=146 && type.id!=142"
-                :class="{'active': active==index}" @click="active=index">
+                :class="{'active': active==index}" @click="staffSquareTypeMove(index)">
               {{type.dictionary_name}}
             </li>
           </ul>
@@ -110,15 +111,15 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        // vm.routerIndex('');
-        // vm.ddRent('');
+        vm.loading = true;
+        vm.routerIndex('', 'house');
+        vm.ddRent('', ',house');
       });
     },
     mounted() {
       this.getDictionary();
     },
     activated() {
-      this.returnIndex();
       this.getRoundSowing();
       this.getArticleData();
     },
@@ -128,22 +129,21 @@
       }
     },
     methods: {
-      returnIndex() {
-        let that = this;
-        document.addEventListener('backbutton', function (e) {
-          e.preventDefault();
-          that.loading = true;
-          that.$router.push({path: '/index'});
-        });
-        dd.biz.navigation.setLeft({
-          control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
-          onSuccess: function (result) {
-            that.loading = true;
-            that.$router.push({path: '/index'});
-          },
-          onFail: function (err) {
-          }
-        });
+      staffSquareTypeMove(index) {
+        this.active = index;
+        let scrollLeft = 0;
+        setTimeout(() => {
+          $(".staff_type ul li").each(function (index, e) {
+            var self = $(this);
+            if (!self.hasClass('active')) {
+              scrollLeft += self.width();
+            } else {
+              return false;
+            }
+          });
+          scrollLeft -= (window.innerWidth - $(".staff_type ul li.active").width()) / 2 - 80;
+          $(".staff_type ul").scrollLeft(scrollLeft);
+        }, 100);
       },
       goArticleDetail(id) {
         this.loading = true;
@@ -338,14 +338,14 @@
   #staffSquare {
     .van-swipe .van-swipe__indicators {
       left: initial;
-      right: -20px;
+      right: -10px;
       bottom: 15px;
     }
     .van-swipe__indicator--active {
       background-color: #FFFFFF;
     }
     .van-swipe .van-swipe__indicators i {
-      width: 18px;
+      width: 16px;
       height: 2px;
       border-radius: 0;
     }

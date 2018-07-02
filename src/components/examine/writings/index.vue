@@ -150,7 +150,6 @@
       next(vm => {
         vm.path = from.path;
         vm.loading = true;
-
         if (from.path === '/') {
           sessionStorage.setItem('articlePath', vm.path);
         }
