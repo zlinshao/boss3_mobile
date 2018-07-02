@@ -140,6 +140,8 @@
         this.params.page = page;
         this.params.per_page_number = 20;
         this.params.q = val;
+        this.params.mobile = 1;
+        his.params.is_nrcy = 0;
         switch (type) {
           case 'is_nrcy':
             this.params.is_nrcy = 1;
