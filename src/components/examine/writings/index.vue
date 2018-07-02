@@ -21,8 +21,10 @@
           <p class="left">
             <img :src="myData.staffs[0].avatar" v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].avatar">
             <img src="../../../assets/head.png" v-else>
-            <span v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">&nbsp;&nbsp;{{myData.staffs[0].name}}&nbsp;</span>
-            <span class="depart" v-for="item in myData.staffs[0].org">&nbsp;{{item.name}}&nbsp;</span>
+            <span class="depart">
+              <span v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">&nbsp;&nbsp;{{myData.staffs[0].name}}&nbsp;</span>
+              <span v-for="item in myData.staffs[0].org">&nbsp;{{item.name}}&nbsp;</span>
+            </span>
           </p>
           <p class="right">{{myData.create_time}}</p>
         </div>
@@ -56,9 +58,11 @@
                   <p class="left">
                     <img :src="key.avatar" v-if="key.avatar !== null && key.avatar !== ''">
                     <img src="../../../assets/head.png" v-else>
-                    <span>&nbsp;&nbsp;{{key.name}}&nbsp;&nbsp;</span>
-                    <span v-if="key.org.length !== 0" class="depart">
-                      <span v-for="(org,index) in key.org" v-if="index === 0">{{org.name}}&nbsp;&nbsp;</span>
+                    <span class="depart">
+                      <span>&nbsp;&nbsp;{{key.name}}&nbsp;&nbsp;</span>
+                      <span v-if="key.org.length !== 0">
+                        <span v-for="(org,index) in key.org" v-if="index === 0">{{org.name}}&nbsp;&nbsp;</span>
+                      </span>
                     </span>
                   </p>
                   <p class="times right">
@@ -452,19 +456,19 @@
       }
       @keyframes color-me-in {
         0% {
-          -moz-transform:scale(1,1);
-          -webkit-transform:scale(1,1);
-          -o-transform:scale(1,1);
+          -moz-transform: scale(1, 1);
+          -webkit-transform: scale(1, 1);
+          -o-transform: scale(1, 1);
         }
         50% {
-          -moz-transform:scale(2,2);
-          -webkit-transform:scale(2,2);
-          -o-transform:scale(2,2);
+          -moz-transform: scale(2, 2);
+          -webkit-transform: scale(2, 2);
+          -o-transform: scale(2, 2);
         }
         100% {
-          -moz-transform:scale(1,1);
-          -webkit-transform:scale(1,1);
-          -o-transform:scale(1,1);
+          -moz-transform: scale(1, 1);
+          -webkit-transform: scale(1, 1);
+          -o-transform: scale(1, 1);
         }
       }
     }
@@ -587,7 +591,6 @@
         width: 80%;
         color: #757575;
         .depart {
-          width: 65%;
           @include flow;
         }
 
@@ -629,7 +632,6 @@
                   color: #757575;
                   .depart {
                     display: inline-block;
-                    width: 60%;
                     @include flow;
                   }
                 }
@@ -655,7 +657,7 @@
                 @include flex;
                 flex-wrap: wrap;
                 margin-left: 45px;
-                img{
+                img {
                   width: 90%;
                   height: 80%;
                 }
@@ -687,7 +689,7 @@
       margin-bottom: 1.3rem;
       justify-content: center;
       align-items: center;
-      padding: .4rem 0 ;
+      padding: .4rem 0;
       color: #DDDDDD;
     }
     .footer {
