@@ -174,7 +174,8 @@
       width: 100%;
       .title {
         font-size: 18px;
-        padding: .3rem .1rem;
+        padding: .3rem 0;
+        padding-left: 8px;
         padding-bottom: 0;
         color: #9e9e9e;
       }

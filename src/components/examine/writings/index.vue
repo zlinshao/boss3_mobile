@@ -21,10 +21,10 @@
           <p class="left">
             <img :src="myData.staffs[0].avatar" v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].avatar">
             <img src="../../../assets/head.png" v-else>
-            <span class="depart">
-              <span v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">&nbsp;&nbsp;{{myData.staffs[0].name}}&nbsp;</span>
-              <span v-for="item in myData.staffs[0].org">&nbsp;{{item.name}}&nbsp;</span>
-            </span>
+          </p>
+          <p class="depart">
+            <span v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">&nbsp;&nbsp;{{myData.staffs[0].name}}&nbsp;</span>
+            <span v-for="item in myData.staffs[0].org">&nbsp;{{item.name}}&nbsp;</span>
           </p>
           <p class="right">{{myData.create_time}}</p>
         </div>
@@ -58,11 +58,11 @@
                   <p class="left">
                     <img :src="key.avatar" v-if="key.avatar !== null && key.avatar !== ''">
                     <img src="../../../assets/head.png" v-else>
-                    <span class="depart">
-                      <span>&nbsp;&nbsp;{{key.name}}&nbsp;&nbsp;</span>
-                      <span v-if="key.org.length !== 0">
-                        <span v-for="(org,index) in key.org" v-if="index === 0">{{org.name}}&nbsp;&nbsp;</span>
-                      </span>
+                  </p>
+                  <p class="depart">
+                    <span>&nbsp;&nbsp;{{key.name}}&nbsp;&nbsp;</span>
+                    <span v-if="key.org.length !== 0">
+                      <span v-for="(org,index) in key.org" v-if="index === 0">{{org.name}}&nbsp;&nbsp;</span>
                     </span>
                   </p>
                   <p class="times right">
@@ -583,17 +583,19 @@
         display: flex;
         align-items: center;
         float: left;
+        color: #757575;
         img {
           width: 35px;
           height: 35px;
           border-radius: 50%;
         }
-        width: 80%;
-        color: #757575;
-        .depart {
-          @include flow;
-        }
-
+      }
+      .depart {
+        display: inline-block;
+        float: left;
+        width: 65%;
+        @include flow;
+        line-height: 35px;
       }
       .right {
         float: right;
@@ -628,16 +630,19 @@
                     height: 35px;
                     border-radius: 50%;
                   }
-                  width: 75%;
                   color: #757575;
-                  .depart {
-                    display: inline-block;
-                    @include flow;
-                  }
+                }
+                .depart {
+                  display: inline-block;
+                  float: left;
+                  width: 65%;
+                  @include flow;
+                  line-height: 35px;
                 }
                 .right {
                   float: right;
                   display: inline-block;
+                  line-height: 35px;
                   color: #757575;
                   font-size: 14px;
                   line-height: 35px;
