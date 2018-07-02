@@ -23,8 +23,8 @@
             <img src="../../../assets/head.png" v-else>
           </p>
           <p class="depart">
-            <span v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">&nbsp;&nbsp;{{myData.staffs[0].name}}&nbsp;</span>
-            <span v-for="item in myData.staffs[0].org">&nbsp;{{item.name}}&nbsp;</span>
+            <span v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">{{myData.staffs[0].name}}&nbsp;</span>
+            <span v-for="item in myData.staffs[0].org">{{item.name}}&nbsp;</span>
           </p>
           <p class="right">{{myData.create_time}}</p>
         </div>
@@ -33,11 +33,11 @@
         </div>
         <div class="post_text ql-editor" id="content" v-html="myData.content"></div>
         <div class="icons">
-          <i class="iconfont icon-yanjing"></i><span>&nbsp;{{myData.read_num}}&nbsp;&nbsp;&nbsp;</span>
+          <i class="iconfont icon-yanjing"><span>&nbsp;{{myData.read_num}}&nbsp;&nbsp;&nbsp;</span></i>
           <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"><span
             :class="{'zan': assistId}">{{myData.favor_num}}&nbsp;&nbsp;&nbsp;&nbsp;</span></i>
-          <span v-if="myData.comments_count<1"><i class="iconfont icon-pinglun"></i><span>&nbsp;&nbsp;{{myData.comments_count}}</span></span>
-          <span @click="loadComments" v-else><i class="iconfont icon-pinglun"></i><span>&nbsp;&nbsp;{{myData.comments_count}}</span></span>
+          <span v-if="myData.comments_count<1"><i class="iconfont icon-pinglun"><span>&nbsp;&nbsp;{{myData.comments_count}}</span></i></span>
+          <span @click="loadComments" v-else><i class="iconfont icon-pinglun"><span>&nbsp;&nbsp;{{myData.comments_count}}</span></i></span>
         </div>
         <div class="nextPrev" v-if="myData.before_content!=null || myData.next_content!=null">
           <p v-if="before_content.id !== '' && before_content.name !== ''" @click="routerLink(before_content.id)">
@@ -60,9 +60,9 @@
                     <img src="../../../assets/head.png" v-else>
                   </p>
                   <p class="depart">
-                    <span>&nbsp;&nbsp;{{key.name}}&nbsp;&nbsp;</span>
+                    <span>{{key.name}}&nbsp;</span>
                     <span v-if="key.org.length !== 0">
-                      <span v-for="(org,index) in key.org" v-if="index === 0">{{org.name}}&nbsp;&nbsp;</span>
+                      <span v-for="(org,index) in key.org" v-if="index === 0">{{org.name}}&nbsp;</span>
                     </span>
                   </p>
                   <p class="times right">
@@ -591,6 +591,7 @@
         }
       }
       .depart {
+        padding-left: 10px;
         display: inline-block;
         float: left;
         width: 65%;
@@ -633,6 +634,7 @@
                   color: #757575;
                 }
                 .depart {
+                  padding-left: 10px;
                   display: inline-block;
                   float: left;
                   width: 65%;
