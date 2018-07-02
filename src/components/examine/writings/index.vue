@@ -169,6 +169,7 @@
       this.contentDetail(this.pitch);
       this.commentList = [];
     },
+    watch: {},
     methods: {
       goComment() {
         this.$router.push({path: '/comments', query: {data: this.pitch}});
@@ -189,6 +190,12 @@
         this.commentsShow = !this.commentsShow;
         if (this.commentList.length < 1) {
           this.comment(this.pitch);
+        }
+        if ($('#writings').height() >= window.innerHeight) {
+          setTimeout(()=>{
+            document.body.scrollTop = document.body.scrollHeight;
+          },100)
+
         }
       },
       contentDetail(val) {
