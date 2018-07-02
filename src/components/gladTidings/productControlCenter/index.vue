@@ -315,8 +315,8 @@
       //获取房屋列表
       getData() {
         let urls;
-         urls = 'houses';
-//        urls = 'coreproject/houses';
+//         urls = 'houses';
+        urls = 'coreproject/houses';
         this.Loading = true;
         this.isEmptyData = false;
         this.$http.get(globalConfig.server + urls, {params: this.params}).then((res) => {
