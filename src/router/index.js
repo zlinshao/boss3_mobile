@@ -25,6 +25,8 @@ import BeforeNaire from '@/components/examine/questionnaire/components/beforeNai
 import MyNaire from '@/components/examine/questionnaire/components/myNaire.vue'
 import NaireStatistic from '@/components/examine/questionnaire/components/naireStatistic.vue'
 import AnswerAll from '@/components/examine/questionnaire/components/answerAll.vue'
+//员工广场
+import StaffSquare from '@/components/staffSquare/index.vue'
 
 import CollectReport from '../components/gladTidings/collectReport/index.vue'
 import Quality from '../components/gladTidings/quality/index.vue'
@@ -405,7 +407,6 @@ export default new Router({
       meta: {title: '搜索地址'},
       component: MapSearch
     },
-
     {
       path: '/writings',
       hidden: false,
@@ -505,7 +506,7 @@ export default new Router({
       name: '问答中心',
       icon: 'iconfont icon-answercenter',
       meta: {title: '问答中心'},
-      hidden: 'inter',
+      hidden: 'other',
       component: Interlocution
     },
     {
@@ -528,6 +529,16 @@ export default new Router({
       meta: {title: '我要评论'},
       hidden: false,
       component: WriteComment
+    },
+
+    {
+      path: '/staffSquare',
+      name: '员工广场',
+      icon: 'iconfont icon-kehuguanli',
+      hidden: 'other',
+      back: '#F19851',
+      meta: {title: '员工广场'},
+      component: StaffSquare
     },
     // {
     //   path: '/cardDetail',

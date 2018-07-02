@@ -1,8 +1,9 @@
 <template>
   <div>
     <div id="commentOn">
+      <div style="background: #fafafe;height: 10px;width: 100%;"></div>
       <div class="contents">
-        <van-cell-group>
+        <van-cell-group >
           <van-field
             v-model="form.remark"
             type="textarea"
@@ -10,12 +11,13 @@
           </van-field>
         </van-cell-group>
       </div>
+      <div style="background: #fafafe;height: 10px;width: 100%;"></div>
       <div class="pic">
         <div class="title">图片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" style="margin-left: -15px;"></UpLoad>
       </div>
       <div class="footer">
-        <div @click="manager()">确认</div>
+        <div @click="manager()">发布评论</div>
       </div>
     </div>
   </div>
@@ -131,7 +133,6 @@
 
 <style lang="scss">
   #commentOn {
-
     @mixin flex {
       display: flex;
       display: -webkit-flex;
@@ -155,23 +156,41 @@
       }
     }
     .contents {
-      margin-bottom: .2rem;
+      /*margin-bottom: .2rem;*/
       .van-cell-group {
         .van-field--has-textarea {
           .van-field__control {
             min-height: 150px;
+            background: #fafafe;
+            padding: 10px;
+            border-radius: 4px;
           }
         }
       }
     }
     .pic {
-      padding: .1rem .2rem .3rem;
+      padding: .1rem .2rem .3rem ;
       background: #fff;
       width: 100%;
       .title {
-        font-size: .36rem;
-        padding: .26rem .4rem;
+        font-size: 18px;
+        padding: .3rem .1rem;
+        padding-bottom: 0;
+        color: #9e9e9e;
       }
+    }
+    .footer {
+      box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.25);
+      color: #409EFF;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      background: #FFFFFF;
+      z-index: 999;
     }
   }
 </style>
