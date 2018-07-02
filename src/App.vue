@@ -55,6 +55,8 @@
             this.$router.push({path: '/beforeNaire'});
           } else if (android.queryType() === 'interlocution') {
             this.$router.push({path: '/interlocution'});
+          }else if (android.queryType() === 'staffSquare') {
+            this.$router.push({path: '/staffSquare'});
           }
           // let head = {};
           // head.token_type = "Bearer";
