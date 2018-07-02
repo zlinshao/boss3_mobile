@@ -23,7 +23,8 @@
             <img src="../../../assets/head.png" v-else>
           </p>
           <p class="depart">
-            <span v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">{{myData.staffs[0].name}}&nbsp;</span>
+            <span
+              v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">{{myData.staffs[0].name}}&nbsp;</span>
             <span v-for="item in myData.staffs[0].org">{{item.name}}&nbsp;</span>
           </p>
           <p class="right">{{myData.create_time}}</p>
@@ -33,10 +34,11 @@
         </div>
         <div class="post_text ql-editor" id="content" v-html="myData.content"></div>
         <div class="icons">
-          <i class="iconfont icon-yanjing">&nbsp;<span>{{myData.read_num}}</span></i>
-          <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)" style="margin-left: 10px;"><span :class="{'zan': assistId}">{{myData.favor_num}}</span></i>
-          <span v-if="myData.comments_count<1" style="margin-left: 12px;"><i class="iconfont icon-pinglun"></i>&nbsp;<span>{{myData.comments_count}}</span></span>
-          <span @click="loadComments" v-else style="margin-left: 12px;"><i class="iconfont icon-pinglun">&nbsp;<span>{{myData.comments_count}}</span></i></span>
+          <i class="iconfont icon-yanjing"><span style="margin-left: 5px;margin-right: 10px;">{{myData.read_num}}</span></i>
+          <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"
+             style="margin-left: 10px;"><span :class="{'zan': assistId}">{{myData.favor_num}}</span></i>
+          <i class="iconfont icon-pinglun" v-if="myData.comments_count<1" style="margin-left: 20px;"><span style="margin-left: 5px;">{{myData.comments_count}}</span></i>
+          <i class="iconfont icon-pinglun" @click="loadComments" v-else style="margin-left: 20px;"><span style="margin-left: 5px;">{{myData.comments_count}}</span></i>
         </div>
         <div class="nextPrev" v-if="myData.before_content!=null || myData.next_content!=null">
           <p v-if="before_content.id !== '' && before_content.name !== ''" @click="routerLink(before_content.id)">
