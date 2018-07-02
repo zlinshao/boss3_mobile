@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="commentOn">
+    <div id="articleComment">
       <div style="background: #fafafe;height: 10px;width: 100%;"></div>
       <div class="contents">
         <van-cell-group >
@@ -132,7 +132,7 @@
 </script>
 
 <style lang="scss">
-  #commentOn {
+  #articleComment {
     @mixin flex {
       display: flex;
       display: -webkit-flex;
