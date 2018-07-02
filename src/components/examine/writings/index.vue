@@ -146,6 +146,7 @@
       })
     },
     activated() {
+      this.assistId = false;
       this.commentsShow = false;
       this.returnIndex();
       this.pitch = this.$route.query.id;
@@ -236,7 +237,7 @@
       assist(id) {
         this.$http.get(this.urls + 'oa/portal/favor/' + id).then((res) => {
           if (res.data.code === '80070') {
-            this.contentDetail(id);
+            // this.contentDetail(id);
             this.assistId = true;
             if (this.assistId) {
               this.myData.favor_num++;
@@ -448,6 +449,23 @@
       .zan {
         animation: color-me-in 1s;
         color: #fb4699;
+      }
+      @keyframes color-me-in {
+        0% {
+          -moz-transform:scale(1,1);
+          -webkit-transform:scale(1,1);
+          -o-transform:scale(1,1);
+        }
+        50% {
+          -moz-transform:scale(2,2);
+          -webkit-transform:scale(2,2);
+          -o-transform:scale(2,2);
+        }
+        100% {
+          -moz-transform:scale(1,1);
+          -webkit-transform:scale(1,1);
+          -o-transform:scale(1,1);
+        }
       }
     }
     .disappear {
