@@ -1,88 +1,90 @@
 <template>
-  <div id="writings">
-    <div class="disappear" v-if="undercarriage">
+  <div id="writings" :style="{minHeight: `${minHeight}px`}">
+    <div class="module" v-if="loading"></div>
+    <div class="loading" v-if="loading">
+      <img src="../../../assets/loding1.gif">
+    </div>
+    <div class="disappear" v-if="undercarriage && !loading">
       <div class="a1">
         <img src="../../../assets/disappear.png">
       </div>
       <div class="a2">{{contents}}</div>
     </div>
-
-    <div v-if="dercarriage">
-      <div class="writings">
+    <div v-if="dercarriage && !loading">
+      <div style="background: rgba(61,90,254,0.06);height: 10px;width: 100%;"></div>
+      <div class="writings" :class="{'boxShadow': commentsShow}">
         <div class="titles">
-          <p>{{myData.title}}</p>
-          <span>{{create_time.substring(0,10)}}</span>
+          <p class="title">{{myData.title}}</p>
+          <p class="mark">{{myData.dict_ids}}</p>
+        </div>
+        <div class="info clearfix">
+          <p class="left">
+            <img :src="myData.staffs[0].avatar" v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].avatar">
+            <img src="../../../assets/head.png" v-else>
+            <span v-if="myData.staffs && myData.staffs[0] && myData.staffs[0].name">&nbsp;&nbsp;{{myData.staffs[0].name}}&nbsp;</span>
+            <span class="depart" v-for="item in myData.staffs[0].org">&nbsp;{{item.name}}&nbsp;</span>
+          </p>
+          <p class="right">{{myData.create_time}}</p>
         </div>
         <div v-for="key in cover_pic">
           <img v-for="p in key" :src="p.uri">
         </div>
-        <div class="post_text ql-editor" id="content" v-html="myData.content">
-
-        </div>
-        <h6></h6>
+        <div class="post_text ql-editor" id="content" v-html="myData.content"></div>
         <div class="icons">
-          <i class="iconfont icon-pinglun" style="padding: 0 .1rem;"></i><span>{{myData.comments_count}}</span>
-          <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"></i><span
-          :class="{'zan': assistId}">{{myData.favor_num}}</span>
-          <i class="iconfont icon-yanjing" style="padding: 0 .1rem;"></i><span>{{myData.read_num}}</span>
+          <i class="iconfont icon-yanjing"></i><span>&nbsp;{{myData.read_num}}&nbsp;&nbsp;&nbsp;</span>
+          <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"><span
+            :class="{'zan': assistId}">{{myData.favor_num}}&nbsp;&nbsp;&nbsp;&nbsp;</span></i>
+          <span v-if="myData.comments_count<1"><i class="iconfont icon-pinglun"></i><span>&nbsp;&nbsp;{{myData.comments_count}}</span></span>
+          <span @click="loadComments" v-else><i class="iconfont icon-pinglun"></i><span>&nbsp;&nbsp;{{myData.comments_count}}</span></span>
         </div>
-        <div class="nextPrev">
+        <div class="nextPrev" v-if="myData.before_content!=null || myData.next_content!=null">
           <p v-if="before_content.id !== '' && before_content.name !== ''" @click="routerLink(before_content.id)">
             上一篇：<span>{{before_content.title}}</span></p>
           <p v-if="next_content.id !== '' && next_content.name !== ''" @click="routerLink(next_content.id)">下一篇：<span>{{next_content.title}}</span>
           </p>
         </div>
       </div>
-
-      <ul
-        v-waterfall-lower="loadMore"
-        waterfall-disabled="disabled"
-        waterfall-offset="300">
-        <li class="started">
-          <div class="commentArea">
-            <div class="headline">评论<span>{{paging}}</span></div>
-            <div class="commentAreaMain" v-for="key in commentList">
-              <div class="staff">
-                <div>
-                  <p>
+      <div v-if="commentsShow" class="comment_list">
+        <div class="bottom" v-if="commentLoading">
+          <van-loading type="spinner" color="black"/>
+        </div>
+        <ul>
+          <li class="started">
+            <div class="commentArea">
+              <div class="commentAreaMain" v-for="key in commentList">
+                <div class="staff clearfix">
+                  <p class="left">
                     <img :src="key.avatar" v-if="key.avatar !== null && key.avatar !== ''">
                     <img src="../../../assets/head.png" v-else>
+                    <span>&nbsp;&nbsp;{{key.name}}&nbsp;&nbsp;</span>
+                    <span v-if="key.org.length !== 0" class="depart">
+                      <span v-for="(org,index) in key.org" v-if="index === 0">{{org.name}}&nbsp;&nbsp;</span>
+                    </span>
                   </p>
-                  <span>{{key.name}}</span>
-                  <span v-if="key.org.length !== 0">
-                    <span v-for="(org,index) in key.org" v-if="index === 0">-{{org.name}}</span>
-                  </span>
+                  <p class="times right">
+                    {{key.create_time.substring(0,10)}}
+                  </p>
                 </div>
-                <p class="times">
-                  {{key.create_time.substring(0,10)}}
-                </p>
-              </div>
-              <div class="contents">
-                {{key.content}}
-              </div>
-              <div class="pics">
-                <div v-for="(p,index) in key.photos">
-                  <img :src="p" @click="pics(key.photos, index)">
+                <div class="contents">
+                  {{key.content}}
+                </div>
+                <div class="pics">
+                  <div v-for="(p,index) in key.photos">
+                    <img :src="p" @click="pics(key.photos, index)">
+                  </div>
                 </div>
               </div>
             </div>
-            <div v-if="commentList.length === 0 && disabled" style="text-align: center;padding: .3rem 0;">
-              暂无评论
-            </div>
-          </div>
-        </li>
-      </ul>
-
-      <div class="bottom">
-        <span v-show="disabled && commentList.length > 10">我是有底线的</span>
-        <van-loading v-show="!disabled" type="spinner" color="black"/>
+          </li>
+        </ul>
       </div>
-
-      <div class="footer">
-        <router-link :to="{path: '/comments', query: {data: this.pitch}}">评论</router-link>
+      <!--<div class="bottom">-->
+      <!--<van-loading type="spinner" color="black"/>-->
+      <!--</div>-->
+      <div class="footer" @click="goComment">
+        <span>评论</span>
       </div>
     </div>
-
 
     <div class="bigPhotos" v-if="bigPicShow">
       <div>
@@ -97,23 +99,17 @@
 
 <script>
   import {ImagePreview} from 'vant';
-  import {Waterfall} from 'vant';
   import {Toast} from 'vant';
 
   export default {
     components: {ImagePreview, Toast},
-    directives: {
-      WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper')
-    },
     name: "index",
     data() {
       return {
+        loading: false,
         urls: globalConfig.server,
         address: globalConfig.attestation,
         assistId: false,
-        disabled: false,
-        paging: 0,
         pitch: '',
         myData: {},
         cover_pic: {},
@@ -126,9 +122,8 @@
           id: '',
           name: '',
         },
-        params: {},
+        params: {page: 1},
         commentList: [],
-        page: 1,
         path: '',
         undercarriage: false,
         dercarriage: false,
@@ -138,21 +133,52 @@
         active: '',
         bigPic: '',
         bigPicShow: false,
+        commentsShow: false,
+        minHeight: window.innerHeight,
+        commentLoading: false,
       }
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
-        vm.search();
+        // vm.routerIndex(from.path, 'house');
+        // vm.ddRent(from.path, 'house');
       })
     },
     activated() {
+      this.commentsShow = false;
+      this.returnIndex();
       this.pitch = this.$route.query.id;
-      this.close_();
-      this.page = 1;
-      this.disabled = false;
+      this.contentDetail(this.pitch);
+      this.commentList = [];
     },
     methods: {
+      goComment() {
+        this.$router.push({path: '/comments', query: {data: this.pitch}});
+      },
+      returnIndex() {
+        let that = this;
+        document.addEventListener('backbutton', function (e) {
+          e.preventDefault();
+          if (that.path !== '/') {
+            that.loading = true;
+            that.$router.push({path: '/staffSquare'});
+          }
+        });
+        dd.biz.navigation.setLeft({
+          control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+          onSuccess: function (result) {
+            if (that.path !== '/') {
+              that.loading = true;
+              that.$router.push({path: '/staffSquare'});
+            } else {
+              that.ddRent('', 'close');
+            }
+          },
+          onFail: function (err) {
+          }
+        });
+      },
       IsPC() {
         let userAgentInfo = navigator.userAgent;
         let Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPod"];
@@ -165,20 +191,16 @@
         }
         return flag;
       },
-      loadMore() {
-        if (!this.disabled) {
-          this.comment(this.pitch, this.page);
-          this.page++;
+      loadComments() {
+        this.commentsShow = !this.commentsShow;
+        if (this.commentList.length < 1) {
+          this.comment(this.pitch);
         }
       },
-      search() {
-        this.contentDetail(this.pitch);
-      },
-      close_() {
-        this.commentList = [];
-      },
       contentDetail(val) {
+        this.loading = true;
         this.$http.get(this.urls + 'oa/portal/' + val).then((res) => {
+          this.loading = false;
           if (res.data.code === "80020") {
             this.myData = res.data.data;
             if (res.data.data.status === 150) {
@@ -189,7 +211,7 @@
               this.undercarriage = false;
               this.dercarriage = true;
             }
-            this.create_time = res.data.data.create_time;
+            res.data.data.create_time = this.formatDateTime(res.data.data.create_time);
             if (res.data.data.before_content !== null) {
               this.before_content = res.data.data.before_content;
             } else {
@@ -222,11 +244,10 @@
           }
         })
       },
-      comment(val, page) {
-        this.params.pages = page;
-        this.$http.get(this.urls + 'oa/portal/comment/' + val, {
-          params: this.params,
-        }).then((res) => {
+      comment(val) {
+        this.commentLoading = true;
+        this.$http.get(this.urls + 'oa/portal/comment/' + val, {params: this.params}).then((res) => {
+          this.commentLoading = false;
           if (res.data.code === '80090') {
             let data = res.data.data.data;
             for (let i = 0; i < data.length; i++) {
@@ -235,7 +256,7 @@
               com.name = data[i].staffs.name;
               com.role = data[i].staffs.role;
               com.org = data[i].staffs.org;
-              com.create_time = data[i].create_time;
+              com.create_time = this.formatDateTime(data[i].create_time);
               com.content = data[i].content;
               com.photos = [];
               if (data[i].album !== null) {
@@ -248,9 +269,8 @@
               }
               this.commentList.push(com);
             }
-            this.paging = res.data.data.count;
           } else {
-            this.disabled = true;
+            this.commentList = [];
           }
         })
       },
@@ -283,16 +303,33 @@
         this.bigPicShow = false;
         document.getElementsByTagName('body')[0].className = '';
       },
-
       routerLink(val) {
         this.pitch = val;
-        this.close_();
-        this.paging = 0;
-        this.page = 1;
+        this.commentList = [];
         this.$router.push({path: '/writings', query: {id: val}});
         this.contentDetail(val);
-        this.comment(val, 1);
+        this.comment(val);
         document.body.scrollTop = document.documentElement.scrollTop = 0;
+      },
+      formatDateTime(time) {
+        let result;
+        let create_time = Date.parse(new Date(time.split('-').join('/')));
+        let now_time = Date.parse(new Date());
+        let difference = (now_time - create_time) / 1000;
+        if (difference * 1000 >= 0 && difference < 60) {
+          result = Math.floor(difference) + ' 秒前';
+        } else if (difference >= 60 && difference < 3600) {
+          result = Math.floor(difference / 60) + ' 分钟前';
+        } else if (difference >= 3600 && difference < 3600 * 24) {
+          result = Math.floor(difference / 3600) + ' 小时前';
+        } else if (difference >= 3600 * 24 && difference < 3600 * 24 * 30) {
+          result = Math.floor(difference / 3600 / 24) + ' 天前';
+        } else if (difference >= 3600 * 24 * 30 && difference < 3600 * 24 * 30 * 12) {
+          result = Math.floor(difference / 3600 / 24 / 30) + ' 个月前';
+        } else if (difference >= 3600 * 24 * 30 * 12) {
+          result = Math.floor(difference / 3600 / 24 / 30 / 12) + ' 年前';
+        }
+        return result;
       },
     },
   }
@@ -300,6 +337,8 @@
 
 <style lang="scss">
   #writings {
+    background: #ffffff;
+    padding-bottom: 60px;
     @mixin flex {
       display: flex;
       display: -webkit-flex;
@@ -314,6 +353,7 @@
     }
     @mixin flow {
       overflow: hidden;
+      word-break: break-all;
       -ms-text-overflow: ellipsis;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -332,12 +372,6 @@
       line-height: .5rem;
       color: #575757;
     }
-    h6 {
-      border: 1px solid #409EFF;
-      width: .6rem;
-      margin-top: .3rem;
-    }
-
     .bigPhotos {
       position: fixed;
       left: 0;
@@ -404,9 +438,10 @@
     .icons {
       @include flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: left;
+      color: #9e9e9e;
       padding: .3rem 0;
-      border-bottom: 1px solid #f1f1f1;
+      padding-bottom: 20px;
       i {
         vertical-align: middle;
       }
@@ -415,7 +450,6 @@
         color: #fb4699;
       }
     }
-
     .disappear {
       div {
         text-align: center;
@@ -435,13 +469,21 @@
         color: #aaaaaa;
       }
     }
-
+    .ql-editor {
+      padding: 0;
+    }
+    .boxShadow {
+      box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
+    }
     .writings {
+      position: relative;
+      z-index: 1;
       line-height: .5rem;
-      margin-top: .3rem;
-      padding: .3rem;
+      padding: 15px;
+      padding-bottom: 0;
       background: #FFFFFF;
       #content {
+        margin-top: 10px;
         h1 {
           font-size: 32px;
           strong, em, s, u {
@@ -450,31 +492,31 @@
         }
         h2 {
           font-size: 24px;
-           strong, em, s, u {
+          strong, em, s, u {
             font-size: 24px;
           }
         }
         h3 {
           font-size: 18px;
-           strong, em, s, u {
+          strong, em, s, u {
             font-size: 18px;
           }
         }
         h4 {
           font-size: 16px;
-           strong, em, s, u {
+          strong, em, s, u {
             font-size: 16px;
           }
         }
         h5 {
           font-size: 13px;
-           strong, em, s, u {
+          strong, em, s, u {
             font-size: 13px;
           }
         }
         h6 {
           font-size: 12px;
-           strong, em, s, u {
+          strong, em, s, u {
             font-size: 12px;
           }
         }
@@ -483,77 +525,131 @@
         font-weight: bold;
       }
     }
-
     .titles {
       @include flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: .55rem;
-      p {
-        @include minMaxWidth(4.6rem);
-        font-size: .36rem;
+      /*padding: 0 15px;*/
+      .title {
+        font-size: 16px;
+        @include minMaxWidth(5rem);
         color: #101010;
       }
-      span {
+      .mark {
+        float: right;
         text-align: right;
-        @include minMaxWidth(2rem);
-        color: #DDDDDD;
+        border: 1px solid #F50057;
+        border-radius: 2px;
+        color: #F50057;
+        padding: 0 10px;
+        font-size: 14px;
+        /*min-width: 80px;*/
       }
     }
+    .clearfix:before,
+    .clearfix:after {
+      display: table;
+      content: "";
+    }
+    .clearfix:after {
+      clear: both
+    }
+    .info {
+      margin-top: 10px;
+      margin-bottom: 15px;
+      .left {
+        display: flex;
+        align-items: center;
+        float: left;
+        img {
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+        }
+        width: 80%;
+        color: #757575;
+        .depart {
+          width: 65%;
+          @include flow;
+        }
 
-    .commentArea {
-      margin-top: .3rem;
-      line-height: .4rem;
-      background: #FFFFFF;
-      .headline {
-        color: #444444;
-        font-size: .33rem;
-        padding: .3rem 0 .2rem .3rem;
-        font-weight: bold;
-        border-bottom: 1px solid #dddddd;
-        span {
-          font-size: .33rem;
-          font-weight: bold;
-          color: #444444;;
-          padding-left: .1rem;
-        }
       }
-      .commentAreaMain {
-        padding: .3rem;
-        .staff {
-          @include flex;
-          align-items: center;
-          justify-content: space-between;
-          div {
-            @include minMaxWidth(4.6rem);
-            @include flow;
-            @include flex;
-            align-items: center;
-            p, img {
-              margin-right: .16rem;
-              @include minMaxWidth(.9rem);
-              @include minMaxHeight(.9rem);
-              @include border_radius(50%);
-              overflow: hidden;
+      .right {
+        float: right;
+        display: inline-block;
+        line-height: 35px;
+        color: #757575;
+      }
+    }
+    .comment_list {
+      position: relative;
+      z-index: 0;
+      background: #fafafe;
+      ul {
+        margin: 0 15px 50px 15px;
+        background: #F8F9FF;
+        box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.15);
+        position: relative;
+        z-index: 0;
+        padding-left: 15px;
+        li {
+          .commentArea {
+            .commentAreaMain {
+              font-family: PingFangHK-Light;
+              padding-top: 12px;
+              .staff {
+                .left {
+                  display: flex;
+                  align-items: center;
+                  float: left;
+                  img {
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+                  }
+                  width: 75%;
+                  color: #757575;
+                  .depart {
+                    display: inline-block;
+                    width: 60%;
+                    @include flow;
+                  }
+                }
+                .right {
+                  float: right;
+                  display: inline-block;
+                  color: #757575;
+                  font-size: 14px;
+                  line-height: 35px;
+                  text-align: right;
+                  margin-right: 15px;
+                }
+              }
+              .contents {
+                word-break: break-all;
+                margin-left: 45px;
+                line-height: 22px;
+                color: #212121;
+                padding-right: 12px;
+                margin-bottom: 8px;
+              }
+              .pics {
+                @include flex;
+                flex-wrap: wrap;
+                margin-left: 45px;
+                img{
+                  width: 90%;
+                  height: 80%;
+                }
+                div {
+                  width: 1rem;
+                  height: 1rem;
+                  margin: 0rem .1rem 0 0;
+                }
+                padding-bottom: 5px;
+                border-bottom: 1px solid #e0e0e0;
+              }
             }
-          }
-          .times {
-            @include minMaxWidth(2rem);
-            @include flow;
-            text-align: right;
-          }
-        }
-        .contents {
-          margin-left: 1.1rem;
-        }
-        .pics {
-          @include flex;
-          flex-wrap: wrap;
-          margin-left: 1.1rem;
-          div {
-            width: 1rem;
-            height: 1rem;
-            margin: .1rem .1rem 0 0;
           }
         }
       }
@@ -573,18 +669,18 @@
       margin-bottom: 1.3rem;
       justify-content: center;
       align-items: center;
-      padding: .4rem 0 0;
+      padding: .4rem 0 ;
       color: #DDDDDD;
     }
     .footer {
+      box-shadow: 0 2px 14px 0 rgba(61, 90, 254, 0.25);
       color: #409EFF;
-      border-top: 1px solid #ebebeb;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 1rem;
-      line-height: 1rem;
+      height: 60px;
+      line-height: 60px;
       text-align: center;
       background: #FFFFFF;
       z-index: 999;
