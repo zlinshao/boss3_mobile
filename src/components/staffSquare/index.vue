@@ -12,8 +12,8 @@
             <span v-for="pic in image && image.album && image.album.cover_pic">
               <img v-for="p in pic" :src="p.uri" width="100%" height="140px" @click="goArticleDetail(image.id)"/>
             </span>
-            <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;bottom: 2px;padding: 10px 20px;">
-              <span style="color: #FFFFFF;display: inline-block;width: 75%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}的说法就是动画风格设计的时间规划局</span>
+            <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;bottom: 2px;">
+              <span style="color: #FFFFFF;display: inline-block;margin: 10px 20px;width: 70%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
             </div>
           </van-swipe-item>
         </van-swipe>
@@ -397,7 +397,7 @@
       -webkit-box-orient: vertical;
       box-orient: vertical;
       word-break: break-all;
-      height: 48px;
+      height: 45px;
       padding-right: 20px;
       padding-top: 2px;
       color: #212121;
@@ -416,10 +416,10 @@
             border-bottom: 1px solid #e0e0e0;
           }
           .info {
+            margin-top: 6px;
             span {
               display: inline-block;
-              line-height: 30px;
-              /*margin-top: 10px;*/
+
               font-size: 12px;
               color: #9e9e9e;
               width: 70px;
