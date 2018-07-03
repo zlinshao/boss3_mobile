@@ -45,6 +45,8 @@
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           // if (navigator.userAgent == 'app/ApartMent') {
+          android.clearCache();
+          alert(globalConfig.server);
           let type,token;
           if (navigator.userAgent.indexOf('native-ios') > -1) {
             token = this.$route.query.token;
