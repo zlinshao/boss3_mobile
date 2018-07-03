@@ -6,7 +6,7 @@
     </div>
     <div v-if="!loading">
       <keep-alive>
-        <router-view v-wechat-title="$route.meta.title"/>
+        <router-view/>
       </keep-alive>
     </div>
   </div>
@@ -37,31 +37,39 @@
         }
       }
     },
-    created() {
-      this.responses();
-    },
-
     mounted() {
       this.paths = this.$router.options.routes;
+      this.responses();
     },
     methods: {
       responses() {
-        if (navigator.userAgent == 'app/ApartMent') {
-          sessionStorage.setItem('queryType', android.queryType());
+        if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
+          // if (navigator.userAgent == 'app/ApartMent') {
+          let type,token;
+          if (navigator.userAgent.indexOf('native-ios') > -1) {
+            token = this.$route.query.token;
+            type = this.$route.query.type;
+          } else {
+            token = android.queryToken();
+            type = android.queryType();
+          }
+          sessionStorage.setItem('queryType', type);
           this.loading = true;
           // add by cj 2018-05-25
-          if (android.queryType() === 'exam') {
+          if (type === 'exam') {
             this.$router.push({path: '/beforeExam'});
-          } else if (android.queryType() === 'questionnaire') {
+          } else if (type === 'questionnaire') {
             this.$router.push({path: '/beforeNaire'});
-          } else if (android.queryType() === 'interlocution') {
+          } else if (type === 'interlocution') {
             this.$router.push({path: '/interlocution'});
+          }else if (android.queryType() === 'staffSquare') {
+            this.$router.push({path: '/staffSquare'});
           }
           // let head = {};
           // head.token_type = "Bearer";
           // head.access_token = android.queryToken();
           // sessionStorage.setItem('myData', JSON.stringify(head));
-          globalConfig.header.Authorization = "Bearer" + ' ' + android.queryToken();
+          globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
 

@@ -317,11 +317,10 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server,
         selectHide: false,        //select选择
         isClear: false,           //删除图片
         picStatus: true,
-
+        urls: globalConfig.server,
         retry: 0,
 
         result: [],

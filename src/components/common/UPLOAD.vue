@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div id="uploadContainer">
     <div id="container">
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
-          <div style=" position: relative;">
-            <img v-if="val.is_video" src="../../assets/video.jpg" style="width: 1.5rem; height: 1.5rem;">
-            <img :src="val.uri" style="width: 1.5rem; height: 1.5rem;" v-else>
-            <div class="progress"><b style="color: #fff !important;"></b></div>
+          <div style="position: relative; margin: .3rem 0 0 .3rem;">
+            <img v-if="val.is_video" src="../../assets/video.jpg">
+            <img :src="val.uri" v-else>
+            <div class="progress"><b></b></div>
             <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
             </div>
           </div>
@@ -16,6 +16,10 @@
         </div>
       </div>
     </div>
+
+    <div class="bigPhoto" v-if="bigPic">
+      <img @click="closePic" :src="bigPic">
+    </div>
   </div>
 </template>
 
@@ -23,10 +27,11 @@
   import fileImage from '../../assets/video.jpg'
   import {Dialog} from 'vant';
   import {Toast} from 'vant';
+  import {ImagePreview} from 'vant';
 
   export default {
     name: 'hello',
-    components: {Toast},
+    components: {ImagePreview, Toast, Dialog},
     props: ['ID', 'editImage', 'isClear', 'dis'],
     data() {
       return {
@@ -37,6 +42,8 @@
         uploader: null,
         editImg: [],
         token: '',
+
+        bigPic: '',
       }
     },
     mounted() {
@@ -62,8 +69,17 @@
       }
     },
     methods: {
+      closePic() {
+        this.bigPic = '';
+      },
       active() {
         let _this = this;
+        $(document).on('click', '#pickfiles' + this.ID + ' ' + 'img', function () {
+          _this.bigPic = $(this).attr("src");
+        });
+        $(document).on('click', '#pickfiles' + this.ID + ' ' + '.progress', function () {
+          _this.bigPic = $(this).prev().attr("src");
+        });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
           let toremove = '';
@@ -139,7 +155,7 @@
           flash_swf_url: 'path/of/plupload/Moxie.swf',  //引入flash，相对路径
           max_retries: 1,                     // 上传失败最大重试次数
           dragdrop: true,                     // 开启可拖曳上传
-          drop_element: 'pickfiles'+_this.ID, // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
+          drop_element: 'pickfiles' + _this.ID, // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
           chunk_size: '4mb',                  // 分块上传时，每块的体积
           auto_start: true,                   // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
 
@@ -153,10 +169,10 @@
 
                   $('#pickfiles' + _this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
-                      <div style=" width: 1.5rem;  height: 1.5rem; position: relative;">
-                        <img src="${fileImage}" style="width: 1.5rem; height: 1.5rem; ">
-                        <div class="progress"><b style="color: #aaa !important;"></b></div>
-                        <div class="remove pic_delete van-icon van-icon-close"  data-val=${file.id}>
+                      <div class="picCss">
+                        <img src="${fileImage}">
+                        <div class="progress"><b></b></div>
+                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}>
 
                         </div>
                       </div>
@@ -168,11 +184,11 @@
                   fr.onload = function () {
 //                     文件添加进队列后，处理相关的事情
                     $('#pickfiles' + _this.ID).prepend(`
-                    <div class="imgItem" id="${file.id}">
-                      <div style=" position: relative;">
-                        <img src="${fr.result}" style="width: 1.5rem; height: 1.5rem; ">
+                    <div class="imgItem q" id="${file.id}">
+                      <div class="picBig picCss">
+                        <img src="${fr.result}">
                         <div class="progress"><b style="color: #fff !important;"></b></div>
-                        <div class="remove pic_delete van-icon van-icon-close"  data-val=${file.id}>
+                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}>
 
                         </div>
                       </div>
@@ -261,48 +277,79 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-
-  #container {
-    padding: 0 .1rem;
-    .pickfiles {
+  #uploadContainer {
+    @mixin flex {
       display: flex;
-      display: -webkit-flex; /* Safari */
-      flex-wrap: wrap;
-      > div {
-        margin-left: .3rem;
-        margin-top: .3rem;
+      display: -webkit-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bigPhoto {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, .4);
+      @include flex;
+      img {
+        max-width: 100%;
+        max-height: 100%
       }
-      .upButton {
+    }
+    #container {
+      img {
         width: 1.5rem;
         height: 1.5rem;
-        background: #f6f6f6;
-        text-align: center;
-        line-height: 1.5rem;
-        .plus {
-          font-size: 1rem;
-          color: #aaa;
+      }
+      b {
+        color: #fff !important;
+      }
+      padding: 0 .1rem;
+      .pickfiles {
+        display: flex;
+        display: -webkit-flex; /* Safari */
+        flex-wrap: wrap;
+        .upButton {
+          width: 1.5rem;
+          height: 1.5rem;
+          margin: .3rem 0 0 .3rem;
+          background: #f6f6f6;
+          text-align: center;
+          line-height: 1.5rem;
+          .plus {
+            font-size: 1rem;
+            color: #aaa;
+          }
         }
-      }
-      .progress {
-        width: 100%;
-        position: absolute;
-        bottom: .5rem;
-        font-size: .5rem;
-        text-align: center;
-      }
-      .remove {
-        text-align: center;
-        width: .5rem;
-        height: .5rem;
-        line-height: .5rem;
-        border-radius: 50%;
-        position: absolute;
-        top: -.2rem;
-        right: -.2rem;
-        z-index: 1;
-        background: #333;
-        color: #fff;
-        font-size: .5rem;
+        .progress {
+          width: 100%;
+          position: absolute;
+          bottom: .5rem;
+          font-size: .5rem;
+          text-align: center;
+        }
+        .remove {
+          text-align: center;
+          width: .5rem;
+          height: .5rem;
+          line-height: .5rem;
+          border-radius: 50%;
+          position: absolute;
+          top: -.2rem;
+          right: -.2rem;
+          z-index: 12;
+          background: #333;
+          color: #fff;
+          font-size: .5rem;
+        }
+        .picCss {
+          width: 1.5rem;
+          height: 1.5rem;
+          position: relative;
+          margin: .3rem 0 0 .3rem;
+        }
       }
     }
   }

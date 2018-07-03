@@ -371,7 +371,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.identity_photo" :src="value"
-            @click="showLargePic(contractInfo.identity_photo,0)">
+                 @click="showLargePic(contractInfo.identity_photo,0)">
           </div>
         </div>
       </div>
@@ -382,7 +382,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.bank_photo" :src="value"
-            @click="showLargePic(contractInfo.bank_photo,0)">
+                 @click="showLargePic(contractInfo.bank_photo,0)">
           </div>
         </div>
       </div>
@@ -393,7 +393,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.water_photo" :src="value"
-            @click="showLargePic(contractInfo.water_photo,0)">
+                 @click="showLargePic(contractInfo.water_photo,0)">
           </div>
         </div>
       </div>
@@ -404,7 +404,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.electricity_photo" :src="value"
-            @click="showLargePic(contractInfo.electricity_photo,0)">
+                 @click="showLargePic(contractInfo.electricity_photo,0)">
           </div>
         </div>
       </div>
@@ -415,7 +415,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.gas_photo" :src="value"
-            @click="showLargePic(contractInfo.gas_photo,0)">
+                 @click="showLargePic(contractInfo.gas_photo,0)">
           </div>
         </div>
       </div>
@@ -426,7 +426,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.property_photo" :src="value"
-            @click="showLargePic(contractInfo.property_photo,0)">
+                 @click="showLargePic(contractInfo.property_photo,0)">
           </div>
         </div>
       </div>
@@ -437,7 +437,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.water_card_photo" :src="value"
-            @click="showLargePic(contractInfo.water_card_photo,0)">
+                 @click="showLargePic(contractInfo.water_card_photo,0)">
           </div>
         </div>
       </div>
@@ -448,7 +448,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.electricity_card_photo" :src="value"
-            @click="showLargePic(contractInfo.electricity_card_photo,0)">
+                 @click="showLargePic(contractInfo.electricity_card_photo,0)">
           </div>
         </div>
       </div>
@@ -460,7 +460,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.gas_card_photo" :src="value"
-            @click="showLargePic(contractInfo.gas_card_photo,0)">
+                 @click="showLargePic(contractInfo.gas_card_photo,0)">
           </div>
         </div>
       </div>
@@ -471,7 +471,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.checkin_photo" :src="value"
-            @click="showLargePic(contractInfo.checkin_photo,0)">
+                 @click="showLargePic(contractInfo.checkin_photo,0)">
           </div>
         </div>
       </div>
@@ -482,7 +482,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.auth_photo" :src="value"
-            @click="showLargePic(contractInfo.auth_photo,0)">
+                 @click="showLargePic(contractInfo.auth_photo,0)">
           </div>
         </div>
       </div>
@@ -493,7 +493,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.deposit_photo" :src="value"
-            @click="showLargePic(contractInfo.deposit_photo,0)">
+                 @click="showLargePic(contractInfo.deposit_photo,0)">
           </div>
         </div>
       </div>
@@ -504,7 +504,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.promise" :src="value"
-            @click="showLargePic(contractInfo.promise,0)">
+                 @click="showLargePic(contractInfo.promise,0)">
           </div>
         </div>
       </div>
@@ -515,7 +515,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.other_photo" :src="value"
-            @click="showLargePic(contractInfo.other_photo,0)">
+                 @click="showLargePic(contractInfo.other_photo,0)">
           </div>
         </div>
       </div>
@@ -526,7 +526,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.checkout_photo" :src="value"
-            @click="showLargePic(contractInfo.checkout_photo,0)">
+                 @click="showLargePic(contractInfo.checkout_photo,0)">
           </div>
         </div>
       </div>
@@ -537,7 +537,7 @@
         <div class="value">
           <div class="stack stack-spread active">
             <img class="image" v-for="(value,key) in contractInfo.checkout_settle_photo" :src="value"
-            @click="showLargePic(contractInfo.checkout_settle_photo,0)">
+                 @click="showLargePic(contractInfo.checkout_settle_photo,0)">
           </div>
         </div>
       </div>
@@ -554,18 +554,18 @@
     components: {ImagePreview, Toast},
     data() {
       return {
-        all_dic : [],
-        contractInfo:{},
-        largePic : null,
-        fromPath : 'contractDetail',
+        all_dic: [],
+        contractInfo: {},
+        largePic: null,
+        fromPath: 'contractDetail',
       }
     },
-    mounted(){
+    mounted() {
       this.getDictionary();
       this.getData();
       this.fromPath = this.$route.query.from;
     },
-    activated(){
+    activated() {
       this.getData();
       this.fromPath = this.$route.query.from;
     },
@@ -575,14 +575,14 @@
         vm.ddRent(vm.fromPath, 'house');
       })
     },
-    beforeRouteLeave(to, from, next){
+    beforeRouteLeave(to, from, next) {
       Toast.clear();
-      if(this.largePic){
+      if (this.largePic) {
         this.largePic.close();
       }
       next();
     },
-    methods:{
+    methods: {
       //字典匹配
       getDictionary() {
         this.$http.get(globalConfig.server + 'setting/dictionary/all').then((res) => {
@@ -600,27 +600,27 @@
         return dictionary_name;
       },
       //获取合同详情
-      getData(){
+      getData() {
         Toast.loading({
           mask: true,
           duration: 0,
           message: '加载中...'
         });
-        this.$http.get(globalConfig.server + 'lease/collect/'  + this.$route.query.id).then((res) => {
+        this.$http.get(globalConfig.server + 'lease/collect/' + this.$route.query.id).then((res) => {
           Toast.clear();
           if (res.data.code === '61010') {
             this.contractInfo = res.data.data;
-          }else {
+          } else {
             this.contractInfo = {};
           }
         })
       },
-      showLargePic(images,index){
+      showLargePic(images, index) {
         let imgArray = [];
-        for(let key in images){
+        for (let key in images) {
           imgArray.unshift(images[key]);
         }
-        this.largePic = ImagePreview(imgArray,index);
+        this.largePic = ImagePreview(imgArray, index);
       }
     }
   }
@@ -629,7 +629,7 @@
 <style scoped lang="scss">
   #collectDetail {
     box-sizing: border-box;
-    .mainContent{
+    .mainContent {
       .content {
         width: 100%;
         padding: .15rem .3rem;
@@ -639,26 +639,25 @@
         color: #333;
         border-bottom: 1px solid #eee;
         display: flex;
-        .title{
+        .title {
           width: 120px;
-          span{
+          span {
             font-weight: bold;
             font-size: .26rem;
           }
         }
-        .value{
+        .value {
           flex-grow: 1;
-          span{
+          span {
             font-size: .26rem;
           }
         }
-        .image{
+        .image {
           width: 3rem;
           height: 2rem;
           border-radius: 4px;
           margin: 0 .1rem .1rem 0;
         }
-
 
         .stack {
           padding: 0;
@@ -679,13 +678,13 @@
           position: relative;
         }
         .stack-spread.active img:nth-child(15) {
-          -webkit-transform: translate(-5px,5px);
-          transform: translate(-5px,5px);
+          -webkit-transform: translate(-5px, 5px);
+          transform: translate(-5px, 5px);
         }
 
         .stack-spread.active img:first-child {
-          -webkit-transform: translate(5px,-5px);
-          transform: translate(5px,-5px);
+          -webkit-transform: translate(5px, -5px);
+          transform: translate(5px, -5px);
         }
       }
     }

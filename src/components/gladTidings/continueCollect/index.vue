@@ -736,12 +736,7 @@
           this.periodDate(val);
         }
       },
-      // 银行卡
-      gainBank(val) {
-        this.$http.get(this.urls + '').then((res) => {
 
-        })
-      },
       // 日期计算
       periodDate(val) {
         let per;

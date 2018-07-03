@@ -465,7 +465,6 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        address: globalConfig.server_user,
         picStatus: true,
         isClear: false,
 
@@ -1143,8 +1142,8 @@
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 
-        this.form.is_agency = '';                  //是否中介
-        this.cusFrom = '';                      //是否中介
+        this.form.is_agency = '';
+        this.cusFrom = '';
         this.form.agency_name = '';
         this.form.agency_price = '';
         this.form.agency_user_name = '';
@@ -1175,7 +1174,7 @@
         this.property_name = '';
         this.form.sign_date = '';
         this.form.name = '';
-        this.is_corp = 1;
+        this.form.is_corp = 1;
         this.corp = true;
         this.form.phone = '';
         this.form.bank = '';

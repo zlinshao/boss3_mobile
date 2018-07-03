@@ -1098,8 +1098,8 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.screenshot_leader;
 
-            this.form.screenshot = draft.screenshot_leader;
-            this.screenshots = data.screenshot_leader;
+            this.form.screenshot = draft.screenshot;
+            this.screenshots = data.screenshot;
 
             this.form.name = draft.name;
             this.form.phone = draft.phone;

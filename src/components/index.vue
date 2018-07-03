@@ -102,17 +102,17 @@
           </div>
         </div>
       </div>
-      <div class="inRough" v-if="queryType == 'interlocution' || queryType === 'ding'">
+      <div class="inRough" v-if="queryType == 'interlocution' || queryType == 'staffSquare' || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
             <div>
-              <span>问答中心</span>
+              <span>其他应用</span>
               <!--<span>3</span>-->
             </div>
             <!--<div>收起</div>-->
           </div>
           <div class="mainMain">
-            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'inter'" :to="key.path" :key="index">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'other'" :to="key.path" :key="index">
               <p :style="{'background': key.back}">
                 <i :class="key.icon"></i>
               </p>
@@ -365,27 +365,19 @@
       },
       lists(val, active, read) {
         this.params = {};
+        this.params.page = val;
+        this.params.type = active;
         switch (active) {
           case 1:
-            this.params.type = active;
-            this.params.page = val;
-            this.processList(this.params);
-            break;
           case 2:
-            this.params.type = active;
-            this.params.page = val;
             this.processList(this.params);
             break;
           case 3:
-            this.params.type = active;
             this.params.published = read;
-            this.params.page = val;
             this.processList(this.params);
             break;
           case 4:
-            this.params.type = active;
             this.params.read_at = read;
-            this.params.page = val;
             this.processList(this.params);
             break;
         }
@@ -489,6 +481,7 @@
   }
 
   #hello {
+    overflow: hidden;
     @mixin flex {
       display: flex;
       display: -webkit-flex;
