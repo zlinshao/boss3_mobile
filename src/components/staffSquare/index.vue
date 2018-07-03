@@ -9,13 +9,13 @@
       <div style="height: 140px;">
         <van-swipe :autoplay="3000" v-if="roundSowData.length>0">
           <van-swipe-item v-for="(image, index) in roundSowData" :key="index">
-            <span v-for="pic in image && image.album && image.album.cover_pic">
-              <img v-for="p in pic" :src="p.uri" width="100%" height="140" @click="goArticleDetail(image.id)"
+            <span>
+              <img :src="image.album.cover_pic.uri" width="100%" @click="goArticleDetail(image.id)"
                    style="min-height: 140px;"/>
             </span>
             <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;top: 100px;">
               <span
-                style="color: #FFFFFF;display: inline-block;margin: 10px 20px;width: 70%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
+                style="color: #FFFFFF;display: inline-block;margin: 10px 20px;width: 70%;height: 22px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
             </div>
           </van-swipe-item>
         </van-swipe>
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div style="background: #fafafe;height: 11px;width: 100%;margin-top: -2px;position: relative;z-index: 1;"></div>
-      <div style="position: relative;z-index: 1;">
+      <div style="position: relative;z-index: 1;background: #FFFFFF;">
         <div class="staff_type">
           <ul>
             <li v-for="(type, index) in staffSquareType" v-if="type.id==142"
@@ -170,6 +170,20 @@
           this.roundSowData = [];
           let data = res.data && res.data.data && res.data.data.data;
           if (data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+              let cover_pic = data[i] && data[i].album && data[i].album.cover_pic;
+              let first = true;
+              for (let key in cover_pic) {
+                if (first) {
+                  let pic = {};
+                  pic.id = data[i].id;
+                  pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                  pic.title = data[i].title;
+                  data[i].album.cover_pic = pic;
+                }
+                first = false;
+              }
+            }
             data.forEach((item) => {
               this.roundSowData.push(item);
             });
@@ -179,6 +193,20 @@
           this.$http.get(this.urls + 'oa/portal/?dict_id=145', {params: this.form}).then((res) => {
             let data = res.data && res.data.data && res.data.data.data;
             if (data.length > 0) {
+              for (let i = 0; i < data.length; i++) {
+                let cover_pic = data[i] && data[i].album && data[i].album.cover_pic;
+                let first = true;
+                for (let key in cover_pic) {
+                  if (first) {
+                    let pic = {};
+                    pic.id = data[i].id;
+                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                    pic.title = data[i].title;
+                    data[i].album.cover_pic = pic;
+                  }
+                  first = false;
+                }
+              }
               data.forEach((item) => {
                 this.roundSowData.push(item);
               });
@@ -187,6 +215,20 @@
             this.$http.get(this.urls + 'oa/portal/?dict_id=146', {params: this.form}).then((res) => {
               let data = res.data && res.data.data && res.data.data.data;
               if (data.length > 0) {
+                for (let i = 0; i < data.length; i++) {
+                  let cover_pic = data[i] && data[i].album && data[i].album.cover_pic;
+                  let first = true;
+                  for (let key in cover_pic) {
+                    if (first) {
+                      let pic = {};
+                      pic.id = data[i].id;
+                      pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                      pic.title = data[i].title;
+                      data[i].album.cover_pic = pic;
+                    }
+                    first = false;
+                  }
+                }
                 data.forEach((item) => {
                   this.roundSowData.push(item);
                 });
@@ -361,7 +403,7 @@
   #staffSquare {
     .van-swipe .van-swipe__indicators {
       left: initial;
-      right: -20px;
+      right: -10px;
       bottom: initial;
       top: 120px;
     }
