@@ -556,9 +556,9 @@
       align-items: center;
       /*padding: 0 15px;*/
       .title {
-        font-size: 16px;
+        font-size: 20px;
         @include minMaxWidth(5rem);
-        color: #101010;
+        color: #212121;
       }
       .mark {
         float: right;

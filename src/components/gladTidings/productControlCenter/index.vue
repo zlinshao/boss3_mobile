@@ -83,7 +83,8 @@
               <span v-if="item.total_ready_days&&!isNaN(item.total_ready_days)">余{{item.total_ready_days}}天</span>
               <span v-if="item.total_ready_days&&isNaN(item.total_ready_days)">{{item.total_ready_days}}</span>
 
-              <span v-if="item.current_ready_days&&!isNaN(item.current_ready_days)">已空置{{item.current_ready_days}}天</span>
+              <span
+                v-if="item.current_ready_days&&!isNaN(item.current_ready_days)">已空置{{item.current_ready_days}}天</span>
               <span v-if="item.current_ready_days&&isNaN(item.current_ready_days)">{{item.current_ready_days}}</span>
 
               <span v-if="item.is_again_rent>0">二次出租</span>
@@ -222,6 +223,7 @@
           org_id: '',
           is_nrcy: 0,
           is_lord: 1,
+          // is_mobile: 1,
         },
         tableData: [],
         all_dic: [],
@@ -243,7 +245,7 @@
         imgArray: {},
         scrollTop: 0,
         isShow: false,
-        isDetail : true,
+        isDetail: true,
       }
     },
     mounted() {
@@ -313,9 +315,12 @@
       },
       //获取房屋列表
       getData() {
+        let urls;
+//         urls = 'houses';
+        urls = 'coreproject/houses';
         this.Loading = true;
         this.isEmptyData = false;
-        this.$http.get(globalConfig.server_user + 'houses', {params: this.params}).then((res) => {
+        this.$http.get(globalConfig.server + urls, {params: this.params}).then((res) => {
           this.Loading = false;
           if (res.data.status === 'success') {
             let arr = [];
@@ -420,15 +425,15 @@
       },
       changeShow() {
         this.isDetail = false;
-        setTimeout( ()=> {
+        setTimeout(() => {
           this.isShow = false;
-        },100);
-        setTimeout( ()=> {
+        }, 100);
+        setTimeout(() => {
           this.isDetail = true;
-        },500);
+        }, 500);
       },
       searchDetail(item) {
-        if(this.isDetail){
+        if (this.isDetail) {
           this.$router.push({path: '/productDetail', query: {id: item.id}});
         }
       },

@@ -270,25 +270,26 @@
                 if (val === 1) {
                   this.mark();
                 } else {
-                  Toast.success(res.data.message);
                   this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
                   this.close_();
                   $('.imgItem').remove();
                 }
+                Toast.success(res.data.message);
               } else {
                 Toast(res.data.message);
               }
             }).catch((error) => {
+              this.haveInHand = true;
               if (error.response === undefined) {
                 this.alertMsg('net');
-                this.haveInHand = true;
+
               } else {
                 if (error.response.status === 401) {
                   this.personalGet().then((data) => {
                     if (data && this.retry === 0) {
                       this.retry++;
-                      this.haveInHand = true;
-                      this.saveCollect(this.form.draft);
+
+                      this.sure();
                     }
                   });
                 }

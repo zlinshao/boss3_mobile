@@ -162,6 +162,10 @@
                 <span v-if="active !== 3">{{item.title}}</span>
                 <span v-if="active === 3">我的{{item.bulletin}}</span>
               </h3>
+              <h3 v-if="item.money_sum !== '/'">
+                已收金额：
+                <span>{{item.money_sum}}</span>
+              </h3>
               <h3>
                 房屋地址：
                 <span>{{item.house_name}}</span>
@@ -290,8 +294,8 @@
           //   this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
           // }
           this.$router.push({path: '/beforeExam'});
-        }else if(val === '/questionnaire') {
-           this.$router.push({path: '/beforeNaire'});
+        } else if (val === '/questionnaire') {
+          this.$router.push({path: '/beforeNaire'});
         }
       },
       getExamNaireRedCircle() {
@@ -305,7 +309,7 @@
         this.$http.get(globalConfig.server + 'questionnaire/active').then((res) => {
           if (res.data.code === '30000') {
             this.questionnaireData = res.data.data;
-          }else{
+          } else {
             this.questionnaireData = [];
           }
         });
@@ -361,27 +365,19 @@
       },
       lists(val, active, read) {
         this.params = {};
+        this.params.page = val;
+        this.params.type = active;
         switch (active) {
           case 1:
-            this.params.type = active;
-            this.params.page = val;
-            this.processList(this.params);
-            break;
           case 2:
-            this.params.type = active;
-            this.params.page = val;
             this.processList(this.params);
             break;
           case 3:
-            this.params.type = active;
             this.params.published = read;
-            this.params.page = val;
             this.processList(this.params);
             break;
           case 4:
-            this.params.type = active;
             this.params.read_at = read;
-            this.params.page = val;
             this.processList(this.params);
             break;
         }
@@ -405,6 +401,11 @@
                     user.house_name = data[i].content.house.name;
                   } else {
                     user.house_name = '/';
+                  }
+                  if (data[i].content.money_sum) {
+                    user.money_sum = data[i].content.money_sum;
+                  } else {
+                    user.money_sum = '/';
                   }
                   if (data[i].user) {
                     user.avatar = data[i].user.avatar;
@@ -435,6 +436,11 @@
                       user.avatar = '';
                       user.name = '';
                       user.staff = '';
+                    }
+                    if (data[i].flow.content.money_sum) {
+                      user.money_sum = data[i].flow.content.money_sum;
+                    } else {
+                      user.money_sum = '/';
                     }
                     user.id = data[i].flow.id;
                     user.place = data[i].flow.place.display_name;
@@ -475,6 +481,7 @@
   }
 
   #hello {
+    overflow: hidden;
     @mixin flex {
       display: flex;
       display: -webkit-flex;

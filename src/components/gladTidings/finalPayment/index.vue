@@ -177,7 +177,7 @@
           label="部门"
           type="text"
           readonly
-          placeholder="部门已禁用">>
+          placeholder="部门已禁用">
         </van-field>
       </van-cell-group>
     </div>
@@ -528,15 +528,16 @@
                 Toast(res.data.msg);
               }
             }).catch((error) => {
+              this.haveInHand = true;
               if (error.response === undefined) {
                 this.alertMsg('net');
-                this.haveInHand = true;
+
               } else {
                 if (error.response.status === 401) {
                   this.personalGet().then((data) => {
                     if (data && this.retry === 0) {
                       this.retry++;
-                      this.haveInHand = true;
+
                       this.saveCollect(this.form.draft);
                     }
                   });

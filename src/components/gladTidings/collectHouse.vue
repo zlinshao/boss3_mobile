@@ -84,7 +84,8 @@
         showDetail: 0,
         disabled: true,
         page: 1,
-        address: globalConfig.server_user,
+        address: globalConfig.server,
+        // address: globalConfig.server_user,
         searchValue: '',          //搜索
         lists: [],
         params: {},
@@ -136,19 +137,20 @@
       onSearch(type, val, page) {
         let urls;
         this.params = {};
+        this.params.page = page;
+        this.params.per_page_number = 20;
+        this.params.q = val;
+        this.params.mobile = 1;
+        this.params.is_nrcy = 0;
         switch (type) {
           case 'is_nrcy':
-            this.params.page = page;
-            this.params.per_page_number = 20;
             this.params.is_nrcy = 1;
-            this.params.q = val;
-            urls = 'houses';
+            urls = 'coreproject/houses';
+            // urls = 'houses';
             break;
           default:
-            this.params.page = page;
-            this.params.per_page_number = 20;
-            this.params.q = val;
-            urls = 'houses';
+            urls = 'coreproject/houses';
+            // urls = 'houses';
         }
         if (val !== '') {
           this.showDetail = 1;
@@ -163,7 +165,7 @@
           if (this.searchValue !== '') {
             let data = res.data.data;
             if (data.length !== 0 && res.data.status === 'success') {
-              for (let i = 0; i < data.length; i++) {
+              for (let i = 0;  i < data.length; i++) {
                 if (type === 'quality' && data[i].house_res) {
                   let list = {};
                   this.showInfo.push(data[i].id);

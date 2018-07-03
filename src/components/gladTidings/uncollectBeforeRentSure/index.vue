@@ -867,15 +867,16 @@
                 Toast(res.data.msg);
               }
             }).catch((error) => {
+              this.haveInHand = true;
               if (error.response === undefined) {
                 this.alertMsg('net');
-                this.haveInHand = true;
+
               } else {
                 if (error.response.status === 401) {
                   this.personalGet().then((data) => {
                     if (data && this.retry === 0) {
                       this.retry++;
-                      this.haveInHand = true;
+
                       this.saveCollect(this.form.draft);
                     }
                   });
@@ -1097,8 +1098,8 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.screenshot_leader;
 
-            this.form.screenshot = draft.screenshot_leader;
-            this.screenshots = data.screenshot_leader;
+            this.form.screenshot = draft.screenshot;
+            this.screenshots = data.screenshot;
 
             this.form.name = draft.name;
             this.form.phone = draft.phone;

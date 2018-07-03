@@ -317,11 +317,10 @@
     data() {
       return {
         haveInHand: true,
-        urls: globalConfig.server,
         selectHide: false,        //select选择
         isClear: false,           //删除图片
         picStatus: true,
-
+        urls: globalConfig.server,
         retry: 0,
 
         result: [],
@@ -647,15 +646,16 @@
                   Toast(res.data.msg);
                 }
               }).catch((error) => {
+                this.haveInHand = true;
                 if (error.response === undefined) {
                   this.alertMsg('net');
-                  this.haveInHand = true;
+
                 } else {
                   if (error.response.status === 401) {
                     this.personalGet().then((data) => {
                       if (data && this.retry === 0) {
                         this.retry++;
-                        this.haveInHand = true;
+
                         this.saveCollect(this.form.is_submit);
                       }
                     });

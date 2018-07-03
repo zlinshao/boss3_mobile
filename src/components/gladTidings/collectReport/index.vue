@@ -356,16 +356,19 @@
           @click-icon="form.relationship = ''"
           required>
         </van-field>
-        <van-field
-          v-model="form.penalty"
-          label="违约金"
-          type="text"
-          class="number"
-          placeholder="请填写违约金"
-          icon="clear"
-          @click-icon="form.penalty = ''"
-          required>
-        </van-field>
+        <div class="month">
+          <van-field
+            v-model="form.penalty"
+            label="违约金"
+            type="text"
+            class="number"
+            placeholder="[n+1]*月单价,(n+1)≥4"
+            icon="clear"
+            @click-icon="form.penalty = ''"
+            required>
+          </van-field>
+        </div>
+        <div class="titleRed">n为年限，且金额不足一万按一万算</div>
         <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-field
           v-model="form.contract_number"
@@ -462,7 +465,6 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        address: globalConfig.server_user,
         picStatus: true,
         isClear: false,
 
@@ -943,15 +945,16 @@
                 Toast(res.data.msg);
               }
             }).catch((error) => {
+              this.haveInHand = true;
               if (error.response === undefined) {
                 this.alertMsg('net');
-                this.haveInHand = true;
+
               } else {
                 if (error.response.status === 401) {
                   this.personalGet().then((data) => {
                     if (data && this.retry === 0) {
                       this.retry++;
-                      this.haveInHand = true;
+
                       this.saveCollect(this.form.draft);
                     }
                   });
@@ -1139,8 +1142,8 @@
         this.form.pay_first_date = '';
         this.form.pay_second_date = '';
 
-        this.form.is_agency = '';                  //是否中介
-        this.cusFrom = '';                      //是否中介
+        this.form.is_agency = '';
+        this.cusFrom = '';
         this.form.agency_name = '';
         this.form.agency_price = '';
         this.form.agency_user_name = '';
@@ -1171,7 +1174,7 @@
         this.property_name = '';
         this.form.sign_date = '';
         this.form.name = '';
-        this.is_corp = 1;
+        this.form.is_corp = 1;
         this.corp = true;
         this.form.phone = '';
         this.form.bank = '';

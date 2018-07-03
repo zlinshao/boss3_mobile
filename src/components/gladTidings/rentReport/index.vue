@@ -395,7 +395,11 @@
       </van-cell-group>
     </div>
 
-    <div class="footer">
+    <div class="footer" v-if="counts === '2' || counts === '21'">
+      <div @click="saveCollect(0)">修改</div>
+    </div>
+
+    <div class="footer" v-if="counts === '1' || counts === '11'">
       <div @click="close_()">重置</div>
       <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
@@ -433,7 +437,6 @@
     data() {
       return {
         haveInHand: true,
-        personal: globalConfig.personal,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: true,
@@ -920,15 +923,16 @@
                 Toast(res.data.msg);
               }
             }).catch((error) => {
+              this.haveInHand = true;
               if (error.response === undefined) {
                 this.alertMsg('net');
-                this.haveInHand = true;
+
               } else {
                 if (error.response.status === 401) {
                   this.personalGet().then((data) => {
                     if (data && this.retry === 0) {
                       this.retry++;
-                      this.haveInHand = true;
+
                       this.saveCollect(this.form.draft);
                     }
                   });
