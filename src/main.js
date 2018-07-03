@@ -23,7 +23,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
-
+android.clearCache();
 // axios.defaults.retry = 2;
 // axios.defaults.retryDelay = 1000;
 // axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
