@@ -10,8 +10,11 @@
         <van-swipe :autoplay="3000" v-if="roundSowData.length>0">
           <van-swipe-item v-for="(image, index) in roundSowData" :key="index">
             <span>
-              <img :src="image.album.cover_pic.uri" width="100%" @click="goArticleDetail(image.id)"
-                   style="min-height: 140px;"/>
+              <img :src="image && image.album && image.album.cover_pic && image.album.cover_pic.uri" width="100%"
+                   @click="goArticleDetail(image.id)"
+                   style="min-height: 140px;"
+                   v-if="image && image.album && image.album.cover_pic && image.album.cover_pic.uri"/>
+              <img src="../../assets/swipe_no_data.png" width="100%" @click="goArticleDetail(image.id)" v-else>
             </span>
             <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;top: 96px;">
               <span
@@ -177,24 +180,7 @@
                 if (first) {
                   let pic = {};
                   pic.id = data[i].id;
-                  pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
-                  pic.title = data[i].title;
-                  data[i].album.cover_pic = pic;
-                }
-                first = false;
-              }
-            }
-            data.forEach((item) => {
-              this.roundSowData.push(item);
-            });
-            for (let i = 0; i < data.length; i++) {
-              let cover_pic = data[i] && data[i].album && data[i].album.cover_pic;
-              let first = true;
-              for (let key in cover_pic) {
-                if (first) {
-                  let pic = {};
-                  pic.id = data[i].id;
-                  pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                  pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0] && cover_pic[key][0].uri;
                   pic.title = data[i].title;
                   data[i].album.cover_pic = pic;
                 }
@@ -202,9 +188,6 @@
               }
             }
             this.roundSowData.push(data[0]);
-            // data.forEach((item) => {
-            //   this.roundSowData.push(item);
-            // });
           }
           this.loading = false;
           // 次标题1
@@ -218,7 +201,7 @@
                   if (first) {
                     let pic = {};
                     pic.id = data[i].id;
-                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0] && cover_pic[key][0].uri;
                     pic.title = data[i].title;
                     data[i].album.cover_pic = pic;
                   }
@@ -226,9 +209,6 @@
                 }
               }
               this.roundSowData.push(data[0]);
-              // data.forEach((item) => {
-              //   this.roundSowData.push(item);
-              // });
             }
             // 次标题2
             this.$http.get(this.urls + 'oa/portal/?dict_id=146', {params: this.form}).then((res) => {
@@ -241,7 +221,7 @@
                     if (first) {
                       let pic = {};
                       pic.id = data[i].id;
-                      pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                      pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0] && cover_pic[key][0].uri;
                       pic.title = data[i].title;
                       data[i].album.cover_pic = pic;
                     }
@@ -249,9 +229,6 @@
                   }
                 }
                 this.roundSowData.push(data[0]);
-                // data.forEach((item) => {
-                //   this.roundSowData.push(item);
-                // });
               }
             });
           });
@@ -301,7 +278,7 @@
                   if (first) {
                     let pic = {};
                     pic.id = reportData[i].id;
-                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0] && cover_pic[key][0].uri;
                     pic.title = reportData[i].title;
                     reportData[i].album.cover_pic = pic;
                   }
