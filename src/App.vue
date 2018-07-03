@@ -24,7 +24,6 @@
         transitionName: '',
         loading: true,
         token: '',
-        clears: '1',
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -46,13 +45,6 @@
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           // if (navigator.userAgent == 'app/ApartMent') {
-          sessionStorage.setItem('clears', '1');
-          if (sessionStorage.clears === '1') {
-            android.clearCache();
-            sessionStorage.setItem('clears', '2');
-            alert(globalConfig.server);
-          }
-
           let type, token;
           if (navigator.userAgent.indexOf('native-ios') > -1) {
             token = this.$route.query.token;

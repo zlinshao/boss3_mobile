@@ -18,6 +18,7 @@
       }
     },
     mounted() {
+      android.clearCache();
       this.$router.push('/index');
       // this.corp();
     },
