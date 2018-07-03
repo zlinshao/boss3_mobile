@@ -188,21 +188,6 @@
               }
             }
             this.roundSowData.push(data[0]);
-            for (let i = 0; i < data.length; i++) {
-              let cover_pic = data[i] && data[i].album && data[i].album.cover_pic;
-              let first = true;
-              for (let key in cover_pic) {
-                if (first) {
-                  let pic = {};
-                  pic.id = data[i].id;
-                  pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0] && cover_pic[key][0].uri;
-                  pic.title = data[i].title;
-                  data[i].album.cover_pic = pic;
-                }
-                first = false;
-              }
-            }
-            this.roundSowData.push(data[0]);
           }
           this.loading = false;
           // 次标题1
