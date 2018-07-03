@@ -10,7 +10,8 @@
         <van-swipe :autoplay="3000" v-if="roundSowData.length>0">
           <van-swipe-item v-for="(image, index) in roundSowData" :key="index">
             <span v-for="pic in image && image.album && image.album.cover_pic">
-              <img v-for="p in pic" :src="p.uri" width="100%" @click="goArticleDetail(image.id)" style="min-height: 140px;"/>
+              <img v-for="p in pic" :src="p.uri" width="100%" height="140" @click="goArticleDetail(image.id)"
+                   style="min-height: 140px;"/>
             </span>
             <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;top: 100px;">
               <span
@@ -24,7 +25,7 @@
       </div>
       <div style="background: #fafafe;height: 11px;width: 100%;margin-top: -2px;position: relative;z-index: 1;"></div>
       <div style="position: relative;z-index: 1;">
-        <div class="staff_type" >
+        <div class="staff_type">
           <ul>
             <li v-for="(type, index) in staffSquareType" v-if="type.id==142"
                 :class="{'active': active==index}" @click="staffSquareTypeMove(index)">
@@ -37,7 +38,7 @@
             </li>
           </ul>
         </div>
-        <div class="staff_article" style="background: #FFFFFF;">
+        <div class="staff_article">
           <div style="text-align: center;position: relative;margin-left: 45%;height: 80px;padding-top: 40px;"
                v-if="articleLoading">
             <van-loading type="spinner" color="black"/>
@@ -45,12 +46,19 @@
           <ul>
             <li class="clearfix" v-for="(item, key) in articleData" v-if="!articleLoading"
                 @click="goArticleDetail(item.id)">
-              <span v-for="pic in item && item.album && item.album.cover_pic" class="fl">
-                <img v-for="p in pic" :src="p.uri" :width="imgWidth" :height="imgWidth/1.53">
+              <!--<span v-for="pic in item && item.album && item.album.cover_pic" class="fl">-->
+              <!--<img :src="pic.uri" :width="imgWidth" :height="imgWidth/1.53" v-if="pic.uri">-->
+              <!--&lt;!&ndash;<span v-for="(p,k) in pic">&ndash;&gt;-->
+              <!--&lt;!&ndash;<img :src="p.uri" :width="imgWidth" :height="imgWidth/1.53" v-if="p.uri">&ndash;&gt;-->
+              <!--&lt;!&ndash;<img src="../../assets/noImage.png" :width="imgWidth" :height="imgWidth/1.53" v-else>&ndash;&gt;-->
+              <!--&lt;!&ndash;</span>&ndash;&gt;-->
+              <!--</span>-->
+              <span v-if="item && item.album && item.album.cover_pic && item.album.cover_pic.uri" class="fl">
+                <img :src="item.album.cover_pic.uri" :width="imgWidth" :height="imgWidth/1.53">
               </span>
-              <span class="fl" v-if="item.album.cover_pic.length==0"><img src="../../assets/noImage.png"
-                                                                          :width="imgWidth"
-                                                                          :height="imgWidth/1.53"/></span>
+              <span class="fl" v-else>
+                <img src="../../assets/noImage.png" :width="imgWidth" :height="imgWidth/1.53"/>
+              </span>
               <div class="article_right"
                    :style="{marginLeft: `${imgWidth+20}px`, height: `${imgWidth/1.53}px`, width: `${articleWidth}px`}">
                 <p class="second_line_camp">{{item.title}}</p>
@@ -223,6 +231,21 @@
               res.data.data.data.forEach((item) => {
                 item.create_time = this.formatDateTime(item.create_time);
               });
+              for (let i = 0; i < res.data.data.data.length; i++) {
+                let reportData = res.data.data.data;
+                let cover_pic = reportData[i] && reportData[i].album && reportData[i].album.cover_pic;
+                let first = true;
+                for (let key in cover_pic) {
+                  if (first) {
+                    let pic = {};
+                    pic.id = reportData[i].id;
+                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                    pic.title = reportData[i].title;
+                    reportData[i].album.cover_pic = pic;
+                  }
+                  first = false;
+                }
+              }
               this.articleData = res.data && res.data.data && res.data.data.data;
             } else {
               this.articleData = [];
@@ -401,9 +424,9 @@
       -webkit-box-orient: vertical;
       box-orient: vertical;
       word-break: break-all;
-      height: 45px;
+      height: 46px;
       padding-right: 20px;
-      padding-top: 5px;
+      padding-top: 3px;
       color: #212121;
     }
     .staff_article {

@@ -534,7 +534,7 @@ export default new Router({
     {
       path: '/staffSquare',
       name: '员工广场',
-      icon: 'iconfont icon-kehuguanli',
+      icon: 'iconfont icon-yuangongzhongxin',
       hidden: 'other',
       back: '#F19851',
       meta: {title: '员工广场'},
