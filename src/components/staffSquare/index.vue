@@ -186,9 +186,6 @@
               }
             }
             this.roundSowData.push(data[0]);
-            // data.forEach((item) => {
-            //   this.roundSowData.push(item);
-            // });
           }
           this.loading = false;
           // 次标题1
@@ -210,9 +207,6 @@
                 }
               }
               this.roundSowData.push(data[0]);
-              // data.forEach((item) => {
-              //   this.roundSowData.push(item);
-              // });
             }
             // 次标题2
             this.$http.get(this.urls + 'oa/portal/?dict_id=146', {params: this.form}).then((res) => {
@@ -233,9 +227,6 @@
                   }
                 }
                 this.roundSowData.push(data[0]);
-                // data.forEach((item) => {
-                //   this.roundSowData.push(item);
-                // });
               }
             });
           });
