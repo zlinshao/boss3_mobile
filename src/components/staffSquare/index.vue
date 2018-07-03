@@ -13,9 +13,9 @@
               <img v-for="p in pic" :src="p.uri" width="100%" height="140" @click="goArticleDetail(image.id)"
                    style="min-height: 140px;"/>
             </span>
-            <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;top: 100px;">
+            <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;top: 95px;">
               <span
-                style="color: #FFFFFF;display: inline-block;margin: 12px 20px;width: 70%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
+                style="color: #FFFFFF;display: inline-block;height: 25px;line-height: 25px;margin: 10px 20px;width: 70%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
             </div>
           </van-swipe-item>
         </van-swipe>
