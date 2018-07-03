@@ -223,6 +223,7 @@
           org_id: '',
           is_nrcy: 0,
           is_lord: 1,
+          // is_mobile: 1,
         },
         tableData: [],
         all_dic: [],
