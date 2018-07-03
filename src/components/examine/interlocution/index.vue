@@ -18,7 +18,7 @@
         <!--<p v-if="searchValue.length > 0 && interModule" @click="search" style="color: #666666;">搜索</p>-->
         <!--<p v-if="searchValue.length < 1 && interModule" @click="onCancel">取消</p>-->
       </div>
-      <div id="interMain" class="interMain">
+      <div id="interMain" class="interMain" :style="{'height': `${mainHeight}px`}">
         <div id="mainContent">
           <div class="mainContent" v-for="(item,index) in questions">
             <div class="main1">
@@ -56,7 +56,8 @@
                   <div class="second_line_camp" :id="`desc-${item.id}`" style="line-height: 26px;font-size: 15px;">
                     {{item.description}}
                   </div>
-                  <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id]" @click="showDesc(item.id, 'show')">
+                  <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id]"
+                       @click="showDesc(item.id, 'show')">
                     显示全部
                   </div>
                   <div style="color: #536DFE;margin-top: 15px;font-size: 15px;" v-if="showDescIds[item.id] == false"
@@ -77,8 +78,9 @@
               </div>
             </div>
             <div class="main2">
-              <div style="text-align: center;position: relative;margin-left: 45%;" v-if="showHide === item.id && answerLoading">
-                <van-loading type="spinner" color="black" />
+              <div style="text-align: center;position: relative;margin-left: 45%;"
+                   v-if="showHide === item.id && answerLoading">
+                <van-loading type="spinner" color="black"/>
               </div>
               <div v-for="(value,key) in answerDetail" class="allContent"
                    v-if="showHide === item.id && !answerLoading">
@@ -111,7 +113,8 @@
                     <div class="interFooter2">
                       <div class="con" v-if="value.comments_count>0">
                         <span v-if="!showCommentIds[value.id]" @click="commentNum(value.id)">显示评论 ({{value.comments_count}})</span>
-                        <span v-if="showCommentIds[value.id]" @click="commentDetail=[];showCommentIds[value.id]=false;commentLoading=false;">收起评论 ({{value.comments_count}})</span>
+                        <span v-if="showCommentIds[value.id]"
+                              @click="commentDetail=[];showCommentIds[value.id]=false;commentLoading=false;">收起评论 ({{value.comments_count}})</span>
                       </div>
                       <div class="con" v-if="value.comments_count<1">
                         <span>显示评论 ({{value.comments_count}})</span>
@@ -124,13 +127,15 @@
                   </div>
                 </div>
                 <div class="boxShadow man3">
-                  <div style="text-align: center;position: relative;margin-left: 45%;padding: 10px 0;" v-if="comments === value.id && commentLoading">
-                    <van-loading type="spinner" color="black" />
+                  <div style="text-align: center;position: relative;margin-left: 45%;padding: 10px 0;"
+                       v-if="comments === value.id && commentLoading">
+                    <van-loading type="spinner" color="black"/>
                   </div>
-                  <div v-for="(comment,comindex) in commentDetail" v-if="comments === value.id" style="margin-bottom: 6px;">
-                    <div  class="contents3" >
-                      <div class="mainTop"  :class="{'padTop3': comindex==0}" style=" padding: .2rem .2rem 0;;">
-                        <div class="mainTopA" >
+                  <div v-for="(comment,comindex) in commentDetail" v-if="comments === value.id"
+                       style="margin-bottom: 6px;">
+                    <div class="contents3">
+                      <div class="mainTop" :class="{'padTop3': comindex==0}" style=" padding: .2rem .2rem 0;;">
+                        <div class="mainTopA">
                           <div>
                             <div style="float: left;">
                               <img :src="comment.staff.avatar" v-if="comment && comment.staff && comment.staff.avatar"
@@ -225,6 +230,7 @@
         showDescIds: {},
         answerLoading: false,
         commentLoading: false,
+        mainHeight: window.innerHeight - 180,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -279,10 +285,10 @@
       showDesc(id, val) {
         if (val === 'show') {
           this.showDescIds[id] = false;
-          $('#desc-'+id).addClass('show_desc').removeClass('second_line_camp');
+          $('#desc-' + id).addClass('show_desc').removeClass('second_line_camp');
         } else if (val === 'hide') {
           this.showDescIds[id] = true;
-          $('#desc-'+id).removeClass('show_desc').addClass('second_line_camp');
+          $('#desc-' + id).removeClass('show_desc').addClass('second_line_camp');
         }
       },
       writeComment(ques_id, answer_id) {
@@ -371,7 +377,7 @@
                 if (item.description) {
                   let arr = item.description.match(/[^\x00-\xff]/ig);
                   let length = item.description.length + (arr == null ? 0 : arr.length);
-                  let count = (window.innerWidth-33)*2/7.5;
+                  let count = (window.innerWidth - 33) * 2 / 7.5;
                   if (length >= count) {
                     if (this.showDescIds[item.id] == null || this.showDescIds[item.id] == undefined) {
                       this.$set(this.showDescIds, item.id, true);
@@ -578,6 +584,7 @@
   .boxShadow2 {
     box-shadow: 0 -4px 16px 0 rgba(61, 90, 254, 0.10);
   }
+
   .second_line_camp {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -587,13 +594,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .show_desc{
+
+  .show_desc {
     display: inline-block;
     height: initial;
     overflow: initial;
     text-overflow: initial;
     word-break: break-all;
   }
+
   #interLocution {
     @mixin flex {
       display: flex;
@@ -617,11 +626,11 @@
     .boxShadow {
       @include boxShadow;
     }
-    .padTop3{
-      padding-top: 0.3rem!important;
+    .padTop3 {
+      padding-top: 0.3rem !important;
     }
     .interMain {
-      height: 500px;
+      /*height: 600px;*/
       overflow-y: scroll;
       overflow-scrolling: touch;
       -webkit-overflow-scrolling: touch;
