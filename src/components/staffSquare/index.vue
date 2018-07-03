@@ -10,8 +10,10 @@
         <van-swipe :autoplay="3000" v-if="roundSowData.length>0">
           <van-swipe-item v-for="(image, index) in roundSowData" :key="index">
             <span>
-              <img :src="image && image.album && image.album.cover_pic && image.album.cover_pic.uri" width="100%" @click="goArticleDetail(image.id)"
-                   style="min-height: 140px;" v-if="image && image.album && image.album.cover_pic && image.album.cover_pic.uri"/>
+              <img :src="image && image.album && image.album.cover_pic && image.album.cover_pic.uri" width="100%"
+                   @click="goArticleDetail(image.id)"
+                   style="min-height: 140px;"
+                   v-if="image && image.album && image.album.cover_pic && image.album.cover_pic.uri"/>
               <img src="../../assets/swipe_no_data.png" width="100%" @click="goArticleDetail(image.id)" v-else>
             </span>
             <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;top: 96px;">
