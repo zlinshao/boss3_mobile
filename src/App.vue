@@ -24,6 +24,7 @@
         transitionName: '',
         loading: true,
         token: '',
+        clears: 1,
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -45,9 +46,13 @@
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           // if (navigator.userAgent == 'app/ApartMent') {
-          android.clearCache();
-          alert(globalConfig.server);
-          let type,token;
+          if (this.clears === 1) {
+            this.clears++;
+            android.clearCache();
+            alert(globalConfig.server);
+          }
+
+          let type, token;
           if (navigator.userAgent.indexOf('native-ios') > -1) {
             token = this.$route.query.token;
             type = this.$route.query.type;
@@ -64,7 +69,7 @@
             this.$router.push({path: '/beforeNaire'});
           } else if (type === 'interlocution') {
             this.$router.push({path: '/interlocution'});
-          }else if (android.queryType() === 'staffSquare') {
+          } else if (android.queryType() === 'staffSquare') {
             this.$router.push({path: '/staffSquare'});
           }
           // let head = {};
