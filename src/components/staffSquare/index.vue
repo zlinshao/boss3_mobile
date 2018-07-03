@@ -185,9 +185,7 @@
                 first = false;
               }
             }
-            data.forEach((item) => {
-              this.roundSowData.push(item);
-            });
+            this.roundSowData.push(data[0]);
             for (let i = 0; i < data.length; i++) {
               let cover_pic = data[i] && data[i].album && data[i].album.cover_pic;
               let first = true;
