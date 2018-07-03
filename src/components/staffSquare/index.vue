@@ -219,7 +219,7 @@
                   if (first) {
                     let pic = {};
                     pic.id = data[i].id;
-                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0] && cover_pic[key][0].uri;
                     pic.title = data[i].title;
                     data[i].album.cover_pic = pic;
                   }
@@ -242,7 +242,7 @@
                     if (first) {
                       let pic = {};
                       pic.id = data[i].id;
-                      pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                      pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0] && cover_pic[key][0].uri;
                       pic.title = data[i].title;
                       data[i].album.cover_pic = pic;
                     }
@@ -302,7 +302,7 @@
                   if (first) {
                     let pic = {};
                     pic.id = reportData[i].id;
-                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                    pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0] && cover_pic[key][0].uri;
                     pic.title = reportData[i].title;
                     reportData[i].album.cover_pic = pic;
                   }
