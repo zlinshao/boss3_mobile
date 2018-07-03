@@ -6,13 +6,13 @@
     </div>
     <div v-if="!loading">
       <div style="background: rgba(61,90,254,0.08);height: 10px;width: 100%;"></div>
-      <div>
+      <div style="height: 140px;">
         <van-swipe :autoplay="3000" v-if="roundSowData.length>0">
-          <van-swipe-item v-for="(image, index) in  roundSowData" :key="index">
+          <van-swipe-item v-for="(image, index) in roundSowData" :key="index">
             <span v-for="pic in image && image.album && image.album.cover_pic">
-              <img v-for="p in pic" :src="p.uri" width="100%" height="140px" @click="goArticleDetail(image.id)"/>
+              <img v-for="p in pic" :src="p.uri" width="100%" @click="goArticleDetail(image.id)" style="min-height: 140px;"/>
             </span>
-            <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;bottom: 2px;">
+            <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;top: 100px;">
               <span
                 style="color: #FFFFFF;display: inline-block;margin: 10px 20px;width: 70%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
             </div>
@@ -22,9 +22,9 @@
           <img src="../../assets/swipe_no_data.png" width="100%">
         </div>
       </div>
-      <div style="background: #fafafe;height: 10px;width: 100%;margin-top: -2px;"></div>
-      <div>
-        <div class="staff_type">
+      <div style="background: #fafafe;height: 11px;width: 100%;margin-top: -2px;position: relative;z-index: 1;"></div>
+      <div style="position: relative;z-index: 1;">
+        <div class="staff_type" >
           <ul>
             <li v-for="(type, index) in staffSquareType" v-if="type.id==142"
                 :class="{'active': active==index}" @click="staffSquareTypeMove(index)">
@@ -37,8 +37,8 @@
             </li>
           </ul>
         </div>
-        <div class="staff_article">
-          <div style="text-align: center;position: relative;margin-left: 45%;height: 80px;margin-top: 40px;"
+        <div class="staff_article" style="background: #FFFFFF;">
+          <div style="text-align: center;position: relative;margin-left: 45%;height: 80px;padding-top: 40px;"
                v-if="articleLoading">
             <van-loading type="spinner" color="black"/>
           </div>
@@ -338,8 +338,9 @@
   #staffSquare {
     .van-swipe .van-swipe__indicators {
       left: initial;
-      right: -10px;
-      bottom: 15px;
+      right: -20px;
+      bottom: initial;
+      top: 120px;
     }
     .van-swipe__indicator--active {
       background-color: #FFFFFF;
@@ -402,7 +403,7 @@
       word-break: break-all;
       height: 45px;
       padding-right: 20px;
-      padding-top: 2px;
+      padding-top: 5px;
       color: #212121;
     }
     .staff_article {
@@ -419,10 +420,9 @@
             border-bottom: 1px solid #e0e0e0;
           }
           .info {
-            margin-top: 6px;
+            margin-top: 8px;
             span {
               display: inline-block;
-
               font-size: 12px;
               color: #9e9e9e;
               width: 70px;
