@@ -187,6 +187,24 @@
             data.forEach((item) => {
               this.roundSowData.push(item);
             });
+            for (let i = 0; i < data.length; i++) {
+              let cover_pic = data[i] && data[i].album && data[i].album.cover_pic;
+              let first = true;
+              for (let key in cover_pic) {
+                if (first) {
+                  let pic = {};
+                  pic.id = data[i].id;
+                  pic.uri = cover_pic && cover_pic[key] && cover_pic[key][0].uri;
+                  pic.title = data[i].title;
+                  data[i].album.cover_pic = pic;
+                }
+                first = false;
+              }
+            }
+            this.roundSowData.push(data[0]);
+            // data.forEach((item) => {
+            //   this.roundSowData.push(item);
+            // });
           }
           this.loading = false;
           // 次标题1
@@ -207,9 +225,10 @@
                   first = false;
                 }
               }
-              data.forEach((item) => {
-                this.roundSowData.push(item);
-              });
+              this.roundSowData.push(data[0]);
+              // data.forEach((item) => {
+              //   this.roundSowData.push(item);
+              // });
             }
             // 次标题2
             this.$http.get(this.urls + 'oa/portal/?dict_id=146', {params: this.form}).then((res) => {
@@ -229,9 +248,10 @@
                     first = false;
                   }
                 }
-                data.forEach((item) => {
-                  this.roundSowData.push(item);
-                });
+                this.roundSowData.push(data[0]);
+                // data.forEach((item) => {
+                //   this.roundSowData.push(item);
+                // });
               }
             });
           });
