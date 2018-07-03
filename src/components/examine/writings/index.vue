@@ -171,6 +171,7 @@
     watch: {},
     methods: {
       goComment() {
+        this.loading = true;
         this.$router.push({path: '/comments', query: {data: this.pitch}});
       },
       IsPC() {
