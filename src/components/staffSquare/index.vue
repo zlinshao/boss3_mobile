@@ -15,7 +15,7 @@
             </span>
             <div style="position: absolute;z-index: 1;background: rgba(0,0,0,0.3);width: 100%;left: 0;top: 100px;">
               <span
-                style="color: #FFFFFF;display: inline-block;margin: 10px 20px;width: 70%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
+                style="color: #FFFFFF;display: inline-block;margin: 10px 20px;width: 70%;height: 25px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;word-break: break-all;">{{image.title}}</span>
             </div>
           </van-swipe-item>
         </van-swipe>
