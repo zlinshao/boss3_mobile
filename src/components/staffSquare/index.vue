@@ -27,7 +27,7 @@
         </div>
       </div>
       <div style="background: #fafafe;height: 11px;width: 100%;margin-top: -2px;position: relative;z-index: 1;"></div>
-      <div style="position: relative;z-index: 1;background: #FFFFFF;">
+      <div style="position: relative;z-index: 1;background: #FFFFFF;" :style="{'minHeight': `${windowHeight-160}px`}">
         <div class="staff_type">
           <ul>
             <li v-for="(type, index) in staffSquareType" v-if="type.id==142"
