@@ -156,6 +156,9 @@
         if (sessionStorage.articlePath !== '/') {
           vm.routerIndex('/staffSquare', 'house');
           vm.ddRent('/staffSquare', 'house');
+          if (navigator.userAgent == 'app/ApartMent') {
+            this.$router.push({path: '/staffSquare'});
+          }
         } else {
           vm.ddRent('', 'close');
         }
