@@ -130,7 +130,7 @@
           id: '',
           name: '',
         },
-        params: {page: 1},
+        params: {pages: 1, limit: 100},
         commentList: [],
         path: '',
         undercarriage: false,
