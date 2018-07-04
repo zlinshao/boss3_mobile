@@ -235,8 +235,18 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        // vm.routerIndex('');
-        // vm.ddRent('');
+        vm.first = true;
+        vm.form.search = '';
+        vm.loading = true;
+        if (from.path === '/') {
+          sessionStorage.setItem('interlocutionPath', vm.path);
+        }
+        if (sessionStorage.interlocutionPath !== '/') {
+          vm.routerIndex('/index', 'house');
+          vm.ddRent('/index', 'house');
+        } else {
+          vm.ddRent('', 'close');
+        }
       });
     },
     activated() {
@@ -247,7 +257,7 @@
       // $('#interMain').scroll(function () {
       //   _this.scroll_bar_move();
       // });
-      this.returnIndex();
+      // this.returnIndex();
       this.loading = true;
       this.getListData();
       this.noPower = false;
