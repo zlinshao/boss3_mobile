@@ -531,15 +531,15 @@ export default new Router({
       component: WriteComment
     },
 
-    // {
-    //   path: '/staffSquare',
-    //   name: '员工广场',
-    //   icon: 'iconfont icon-yuangongzhongxin',
-    //   hidden: 'other',
-    //   back: '#F19851',
-    //   meta: {title: '员工广场'},
-    //   component: StaffSquare
-    // },
+    {
+      path: '/staffSquare',
+      name: '员工广场',
+      icon: 'iconfont icon-yuangongzhongxin',
+      hidden: 'other',
+      back: '#F19851',
+      meta: {title: '员工广场'},
+      component: StaffSquare
+    },
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',
