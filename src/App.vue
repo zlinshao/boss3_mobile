@@ -62,7 +62,7 @@
             this.$router.push({path: '/beforeNaire'});
           } else if (type === 'interlocution') {
             this.$router.push({path: '/interlocution'});
-          } else if (android.queryType() === 'staffSquare') {
+          } else if (type === 'staffSquare') {
             this.$router.push({path: '/staffSquare'});
           }
           // let head = {};
