@@ -156,6 +156,7 @@
         if (sessionStorage.articlePath !== '/') {
           vm.routerIndex('/staffSquare', 'house');
           vm.ddRent('/staffSquare', 'house');
+          vm.routerTo('/staffSquare');
         } else {
           vm.ddRent('', 'close');
         }
