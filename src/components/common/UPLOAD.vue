@@ -176,7 +176,7 @@
                     <div class="imgItem" id="${file.id}">
                       <div class="picCss">
                         <img class="videos" src="${fileImage}">
-                        <div class="progress"><b></b></div>
+                        <div class="progress"><b>正在上传</b></div>
                         <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}></div>
                       </div>
                     </div>
@@ -190,7 +190,7 @@
                     <div class="imgItem" id="${file.id}">
                       <div class="picBig picCss">
                         <img src="${fr.result}">
-                        <div class="progress"><b></b></div>
+                        <div class="progress"><b>正在上传</b></div>
                         <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}></div>
                       </div>
                     </div>
@@ -198,17 +198,6 @@
                   };
                   fr.readAsDataURL(file.getSource());
                 }
-              });
-            },
-            'FilesRemoved': function (uploader, files) {
-              console.log(uploader);
-              _this.fileLength = _this.editImg.length + uploader.files.length;
-            },
-            'BeforeUpload': function (up, file) {
-              // 每个文件上传前，处理相关的事情
-              _this.isUploading = true;
-              up.setOption('multipart_params', {
-                token: _this.token,               // 上传凭证
               });
             },
             'UploadProgress': function (up, file) {
@@ -220,6 +209,17 @@
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>处理中</span>';
                 }
               }
+            },
+            'FilesRemoved': function (uploader, files) {
+              console.log(uploader);
+              _this.fileLength = _this.editImg.length + uploader.files.length;
+            },
+            'BeforeUpload': function (up, file) {
+              // 每个文件上传前，处理相关的事情
+              _this.isUploading = true;
+              up.setOption('multipart_params', {
+                token: _this.token,               // 上传凭证
+              });
             },
             'FileUploaded': function (up, file, info) {
               let domain = up.getOption('domain');
@@ -279,8 +279,6 @@
       },
     }
   }
-
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -311,9 +309,6 @@
         width: 1.5rem;
         height: 1.5rem;
       }
-      b {
-        color: #fff !important;
-      }
       padding: 0 .1rem;
       .pickfiles {
         display: flex;
@@ -335,7 +330,6 @@
           width: 100%;
           position: absolute;
           bottom: 0;
-          font-size: .5rem;
           text-align: center;
         }
         .remove {
@@ -362,13 +356,16 @@
             display: -webkit-flex;
             align-items: center;
             justify-content: center;
-            font-size: .42rem;
+            font-size: .28rem;
             color: #fff !important;
             background: rgba(0, 0, 0, .2);
             width: 1.5rem;
             height: 1.5rem;
             margin: 0 auto;
             border-radius: 6px;
+            span {
+              font-size: .42rem;
+            }
           }
           .videos {
             width: 1.66rem;
