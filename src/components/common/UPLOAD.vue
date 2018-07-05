@@ -17,8 +17,8 @@
       </div>
     </div>
 
-    <div class="bigPhoto" v-if="bigPic">
-      <img @click="closePic" :src="bigPic">
+    <div class="bigPhoto" @click="closePic" v-if="bigPic">
+      <img :src="bigPic">
     </div>
   </div>
 </template>
