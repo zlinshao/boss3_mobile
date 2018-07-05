@@ -4,7 +4,7 @@
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style="position: relative; margin: .3rem 0 0 .3rem;">
-            <img v-if="val.is_video" src="../../assets/video.jpg">
+            <img v-if="val.is_video" class="videos" src="../../assets/video.jpg">
             <img :src="val.uri" v-else>
             <div class="progress"><b></b></div>
             <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
@@ -44,6 +44,8 @@
         token: '',
 
         bigPic: '',
+
+        fileLength: 0,
       }
     },
     mounted() {
@@ -54,6 +56,9 @@
         deep: true,
         handler(val, old) {
           this.editImg = this.editImage;
+          if (this.editImg.length > 0) {
+            this.fileLength = this.editImg.length;
+          }
           this.imgId = [];
           for (let i = 0; i < val.length; i++) {
             this.imgId.push(val[i].id)
@@ -100,7 +105,6 @@
                   })
                 }
               });
-
               _this.imgArray.splice(i, 1);
             }
           }
@@ -111,7 +115,7 @@
           if (_this.uploader) {
             this.uploader.refresh();
           }
-        }, 1000)
+        }, 1000);
       },
       getToken() {
         this.$http.defaults.timeout = 5000;
@@ -161,6 +165,7 @@
 
           init: {
             'FilesAdded': function (up, files) {
+              _this.fileLength = _this.editImg.length + up.files.length;
               _this.isUploading = true;
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
 
@@ -170,11 +175,9 @@
                   $('#pickfiles' + _this.ID).prepend(`
                     <div class="imgItem" id="${file.id}">
                       <div class="picCss">
-                        <img src="${fileImage}">
+                        <img class="videos" src="${fileImage}">
                         <div class="progress"><b></b></div>
-                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}>
-
-                        </div>
+                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}></div>
                       </div>
                     </div>
                    `);
@@ -184,13 +187,11 @@
                   fr.onload = function () {
 //                     文件添加进队列后，处理相关的事情
                     $('#pickfiles' + _this.ID).prepend(`
-                    <div class="imgItem q" id="${file.id}">
+                    <div class="imgItem" id="${file.id}">
                       <div class="picBig picCss">
                         <img src="${fr.result}">
-                        <div class="progress"><b style="color: #fff !important;"></b></div>
-                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}>
-
-                        </div>
+                        <div class="progress"><b></b></div>
+                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}></div>
                       </div>
                     </div>
                    `);
@@ -198,6 +199,10 @@
                   fr.readAsDataURL(file.getSource());
                 }
               });
+            },
+            'FilesRemoved': function (uploader, files) {
+              console.log(uploader);
+              _this.fileLength = _this.editImg.length + uploader.files.length;
             },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
@@ -210,7 +215,7 @@
               // 每个文件上传时，处理相关的事情
               if (document.getElementById(file.id)) {
                 if (file.percent < 100) {
-                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + '%</span>';
                 } else {
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>处理中</span>';
                 }
@@ -235,18 +240,21 @@
                   object.id = res.data.data.id;
                   object.name = file.id;
                   _this.imgArray.push(object);
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
+                }
+                if (_this.fileLength === _this.imgId.length) {
+                  _this.isUploading = false;
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-passed"></span>';
                 }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="van-icon van-icon-close"></span>';
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
               });
             },
             'UploadComplete': function () {
               //队列文件处理完毕后，处理相关的事情
-              _this.isUploading = false;
-              _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+              // _this.isUploading = false;
+              // _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
             },
             'Error': function (up, err, errTip) {// 每个文件上传失败后,处理相关的事情
               if (err.file && err.file.size !== undefined && err.file.size > 104857600) {
@@ -326,7 +334,7 @@
         .progress {
           width: 100%;
           position: absolute;
-          bottom: .5rem;
+          bottom: 0;
           font-size: .5rem;
           text-align: center;
         }
@@ -349,6 +357,24 @@
           height: 1.5rem;
           position: relative;
           margin: .3rem 0 0 .3rem;
+          b {
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .42rem;
+            color: #fff !important;
+            background: rgba(0, 0, 0, .2);
+            width: 1.5rem;
+            height: 1.5rem;
+            margin: 0 auto;
+            border-radius: 6px;
+          }
+          .videos {
+            width: 1.66rem;
+            height: 1.66rem;
+            margin: -.1rem;
+          }
         }
       }
     }
