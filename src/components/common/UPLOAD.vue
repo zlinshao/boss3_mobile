@@ -206,7 +206,7 @@
                 if (file.percent < 100) {
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + '%</span>';
                 } else {
-                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>处理中</span>';
+                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="texts">处理中</span>';
                 }
               }
             },
@@ -365,6 +365,9 @@
             border-radius: 6px;
             span {
               font-size: .42rem;
+            }
+            .texts {
+              font-size: .28rem;
             }
           }
           .videos {
