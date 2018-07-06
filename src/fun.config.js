@@ -20,7 +20,13 @@ export default {
         }
       });
     };
-
+    Vue.prototype.routLink = function (path, params) {
+      if (path === 'back') {
+        this.$router.go(-1);
+      } else {
+        this.$router.push({path: path, query: params});
+      }
+    };
     Vue.prototype.ddRent = function (url, house) {
       let that = this;
       dd.biz.navigation.setLeft({

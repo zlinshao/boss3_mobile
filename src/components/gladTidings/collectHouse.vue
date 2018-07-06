@@ -1,104 +1,100 @@
 <template>
-  <div id="searchClass">
-    <div class="searchClass">
-      <div class="searchCustom">
-        <div>
-          <i class="van-icon van-icon-search"></i>
-          <input type="text" v-model="searchValue" @keyup.enter="search">
-          <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
-        </div>
-        <p v-if="searchValue.length > 0" @click="search" style="color: #666666;">搜索</p>
-        <p v-else @click="onCancel">取消</p>
+  <div id="houseSearch">
+    <div class="searchCustom">
+      <div>
+        <i class="van-icon van-icon-search"></i>
+        <input type="text" v-model="searchValue" @keyup.enter="onSearch()">
+        <i v-if="searchValue.length > 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
       </div>
-      <div class="searchContent">
-        <ul
-          v-waterfall-lower="loadMore"
-          waterfall-disabled="disabled"
-          waterfall-offset="300">
-          <li>
-            <div class="searchHouse" v-for="key in lists" @click="houseAddress(key)">
-              <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
-                <div>
-                  <span>房屋地址：</span>
-                  <span>{{key.house_name}}</span>
-                </div>
-              </div>
-              <div class="contract" v-else>
-                <div>
-                  <span>房屋地址：</span>
-                  <span>{{key.house_name}}</span>
-                </div>
-                <div>
-                  <span>合同状态：</span>
-                  <span :style="{'color': contractColor[key.status]}">
+      <p class="searchP" v-if="searchValue.length > 0" @click="onSearch()">搜索</p>
+      <p class="cancelP" v-if="searchValue.length === 0" @click="onCancel">取消</p>
+    </div>
+    <div class="mainContent">
+      <div class="mainList">
+        <div v-for="key in houseList" @click="sureRouter(path, key)">
+          <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
+            <div class="contractA">
+              <span>房屋地址：</span>
+              <span>{{key.house_name}}</span>
+            </div>
+          </div>
+          <div class="contract" v-else>
+            <div class="contractA">
+              <span>房屋地址：</span>
+              <span>{{key.house_name}}</span>
+            </div>
+            <div class="contractA">
+              <span>合同状态：</span>
+              <span :style="{'color': contractColor[key.status]}">
                 {{contractStatus[key.status]}}
               </span>
-                </div>
-                <div class="two">
-                  <p><span>报备时间：</span><span>{{key.created_at}}</span></p>
-                  <p><span>签约时长：</span><span>{{key.duration_days}}</span></p>
-                </div>
-                <div class="two">
-                  <p><span>开单人：</span><span>{{key.staff_name}}</span></p>
-                  <p><span>客户姓名：</span><span>{{key.customers}}</span></p>
-                </div>
-                <div class="two" style="line-height: .4rem">
-                  <p><span>所属部门：</span><span>{{key.department_name}}</span></p>
-                  <p v-if="key.end_at !== ''"><span>结束时间：</span><span>{{key.end_at}}</span></p>
-                </div>
-              </div>
             </div>
-          </li>
-        </ul>
-        <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮
-        </div>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 2">暂无相关信息</div>
-        <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 1">
-          <van-loading type="spinner" color="black"/>
-        </div>
-
-        <div class="bottom">
-          <div class="abc" v-if="disabled && this.lists.length > 5">没有更多了</div>
-
-          <div class="abc" v-if="!disabled && this.lists.length !== 0">
-            <van-loading type="spinner" color="black"/>
+            <div class="contractB">
+              <p>
+                <span>报备时间：</span>
+                <span>{{key.created_at}}</span>
+              </p>
+              <p>
+                <span>签约时长{{types}}：</span>
+                <span>{{key.duration_days}}</span>
+              </p>
+            </div>
+            <div class="contractB">
+              <p>
+                <span>开单人：</span>
+                <span>{{key.staff_name}}</span>
+              </p>
+              <p>
+                <span>客户姓名：</span>
+                <span>{{key.customers}}</span>
+              </p>
+            </div>
+            <div class="contractB" :class="{'departB': types ===  'lord' || types ===  'agencyLord'}">
+              <p>
+                <span>所属部门：</span>
+                <span>{{key.department_name}}</span>
+              </p>
+              <p v-if="key.end_at !== ''">
+                <span>结束时间：</span>
+                <span>{{key.end_at}}</span>
+              </p>
+            </div>
           </div>
         </div>
-
       </div>
+
+      <div class="notData" v-if="status === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
+      <div class="notData" v-if="status === 2">暂无相关信息</div>
+      <div class="notData" v-if="status === 1">
+        <van-loading type="spinner" color="black"/>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
-  import {Waterfall} from 'vant';
-
   export default {
-    name: "collect-house",
-    directives: {
-      WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper'),
-    },
+    name: "house-search",
     data() {
       return {
-        showDetail: 0,
-        disabled: true,
-        page: 1,
-        address: globalConfig.server,
-        // address: globalConfig.server_user,
-        searchValue: '',          //搜索
-        lists: [],
-        params: {},
+        urls: globalConfig.server,
         types: '',
         path: '',
+        status: 0,
+        isGetMore: true,          //滑动触发加载
+        isLastPage: false,        //是否最后一页
+        scrollHeight: 0,          //滚动到最底部
+
+        params: {},
+        searchValue: '',
+
         showInfo: [],
+        houseList: [],
+
         contractStatus: {0: '未确定', 1: '未签约', 2: '已签约', 3: '快到期(60天内)', 4: '已结束', 5: '已过期'},
         contractColor: {0: '#87AA97', 1: '#F067E0', 2: '#30CF5C', 3: '#FF6700', 4: '#409EFF', 5: '#F00000'},
       }
-    },
-    activated() {
-      this.close_();
-      this.types = this.$route.query.type;
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -107,72 +103,91 @@
         vm.ddRent(from.path, 'house');
       })
     },
+    activated() {
+      this.types = this.$route.query.type;
+      this.resetting();
+      this.status = 0;
+      this.params = {};
+      this.searchValue = '';
+      this.params.q = '';
+      this.params.mobile = 1;
+      if (this.types === 'is_nrcy') {
+        this.params.is_nrcy = 1;
+      }
+      this.checkScroll();
+    },
     watch: {
       searchValue(val) {
         let value = val.replace(/\s+/g, '');
-        this.searchValue = value;
-        if (value !== '') {
-          // this.disabled = false;
-          // this.page = 1;
-          // this.lists = [];
-          // this.onSearch(this.types, value);
-        } else {
+        this.params.q = value;
+        if (value === '') {
           this.close_();
         }
       }
     },
     methods: {
-      search() {
-        this.disabled = false;
-        this.page = 1;
-        this.lists = [];
-        this.showInfo = [];
+      // 滚动条
+      checkScroll() {
+        let mainHeight = $('body').height() - 83;
+        let mainContent = $('.mainContent');
+        mainContent.scrollTop(0);
+        mainContent.css('height', mainHeight + 'px');
+        let _this = this;
+        mainContent.scroll(function () {
+          _this.scroll_bar();
+        })
       },
-      loadMore() {
-        if (!this.disabled) {
-          this.onSearch(this.types, this.searchValue, this.page);
+      scroll_bar() {
+        let mainContent = $('.mainContent');
+        let body_height = mainContent.height();
+        let body_scrollTop = mainContent.scrollTop();
+        let mainList = $('.mainList').height();
+        if (this.scrollHeight < mainList) {
+          this.isGetMore = true;
+        }
+        this.scrollHeight = mainList;
+        if (mainList - body_scrollTop - body_height < 200) {
+          this.getMore();
+          this.isGetMore = false;
         }
       },
-      // 搜索
-      onSearch(type, val, page) {
-        let urls;
-        this.params = {};
-        this.params.page = page;
-        this.params.per_page_number = 20;
-        this.params.q = val;
-        this.params.mobile = 1;
-        this.params.is_nrcy = 0;
-        switch (type) {
-          case 'is_nrcy':
-            this.params.is_nrcy = 1;
-            urls = 'coreproject/houses';
-            // urls = 'houses';
-            break;
-          default:
-            urls = 'coreproject/houses';
-            // urls = 'houses';
-        }
-        if (val !== '') {
-          this.showDetail = 1;
-          this.myData(type, val, urls);
-          this.page++;
+      // 加载更多
+      getMore() {
+        if (this.isGetMore && !this.isLastPage) {
+          this.params.page++;
+          this.getData(this.params, this.types);
         }
       },
-      myData(type, val, urls) {
-        this.$http.get(this.address + urls, {
-          params: this.params,
+      sureRouter(path, key) {
+        key.type = this.types;
+        key.house = JSON.stringify(key);
+        this.routLink(path, key);
+      },
+      onSearch() {
+        if (this.searchValue !== '') {
+          this.resetting();
+          this.getData(this.params, this.types);
+        }
+      },
+      getData(val, type) {
+        let url = 'coreproject/houses';
+        this.finish(1);
+        this.$http.get(this.urls + url, {
+          params: val,
         }).then((res) => {
-          if (this.searchValue !== '') {
+          if (res.data.status === 'success') {
             let data = res.data.data;
-            if (data.length !== 0 && res.data.status === 'success') {
-              for (let i = 0;  i < data.length; i++) {
+            this.isLastPage = this.params.page === res.data.meta.last_page;
+            if (data.length !== 0) {
+              for (let i = 0; i < data.length; i++) {
                 if (type === 'quality' && data[i].house_res) {
                   let list = {};
                   this.showInfo.push(data[i].id);
                   list.house_id = data[i].id;
                   list.house_name = data[i].name;
                   list.house_res = data[i].house_res;
-                  this.lists.push(list);
+                  this.houseList.push(list);
+                  this.finish(4);
                 }
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i], type);
@@ -181,10 +196,10 @@
                   this.renter(data[i], type);
                 }
                 if (type === 'lord1' && data[i].lords.length !== 0) {
-                  this.lord1(data[i], type);
+                  this.agencyLord(data[i], type);
                 }
                 if (type === 'renter1' && data[i].renters.length !== 0) {
-                  this.renter1(data[i], type);
+                  this.agencyRent(data[i], type);
                 }
                 if (type === '' && data[i].lords.length === 0 && data[i].renters.length === 0) {
                   let list = {};
@@ -196,46 +211,34 @@
                   } else {
                     list.is_agency = 0;
                   }
-                  this.lists.push(list);
+                  this.houseList.push(list);
+                  this.finish(4);
                 }
                 if ((type === 'renter' || type === 'lord' || type === 'renter1' || type === 'lord1') && data[i].lords.length === 0 && data[i].renters.length === 0) {
-                  this.showDetail = 2;
+                  this.finish(2);
                 }
               }
             } else {
-              this.disabled = true;
-            }
-            if (data.length === 0 && res.data.status === 'success') {
-              this.showDetail = 2;
-            }
-            if (res.data.status === 'fail') {
-              this.showDetail = 2;
+              this.finish(2);
             }
           } else {
-            this.disabled = true;
-            this.close_();
+            this.finish(2);
           }
-        })
+        });
       },
-
-
       // 中介费收
-      lord1(val, type) {
+      agencyLord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
           if (val.lords[j].is_agency === 1) {
             this.contracts(val, type, val.lords[j]);
-          } else {
-            this.showDetail = 2;
           }
         }
       },
       // 中介费租
-      renter1(val, type) {
+      agencyRent(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
           if (val.renters[j].is_agency === 1) {
             this.contracts(val, type, val.renters[j]);
-          } else {
-            this.showDetail = 2;
           }
         }
       },
@@ -252,7 +255,6 @@
           this.contracts(val, type, val.renters[j]);
         }
       },
-
       contracts(val, type, value) {
         let list = {};
         if (type === 'is_nrcy') {
@@ -277,7 +279,7 @@
         if (value.customers.length !== 0) {
           list.customers = value.customers[0].name;
         } else {
-          list.customers = '';
+          list.customers = '---';
         }
         if (value.sign_user !== null) {
           list.staff_id = value.sign_user.id;
@@ -293,86 +295,150 @@
           list.department_id = '';
           list.department_name = '---';
         }
-        this.lists.push(list);
-        this.showDetail = 2;
+        this.houseList.push(list);
+        this.finish(4);
       },
-
-      // 房屋地址
-      houseAddress(data) {
-        this.close_();
-        this.$router.replace({
-          path: this.path,
-          query: {house: JSON.stringify(data), type: this.types}
-        });
-      },
-      close_() {
-        this.showDetail = 0;
-        this.lists = [];
-        this.page = 1;
-        this.searchValue = '';
-      },
-      // select关闭
+      // 取消
       onCancel() {
-        this.close_();
-        this.$router.replace({path: this.path, query: {house: '', type: this.types}});
+        this.routLink('back');
+      },
+      finish(val) {
+        this.status = val;
+      },
+      resetting() {
+        let mainContent = $('.mainContent');
+        mainContent.scrollTop(0);
+        this.scrollHeight = 0;
+        this.params.page = 1;
+        this.params.per_page_number = 20;
+        this.showInfo = [];
+        this.houseList = [];
+        this.isGetMore = true;
+        this.isLastPage = false;
       },
     },
   }
 </script>
 
 <style lang="scss">
-  #searchClass {
-    @mixin flex {
+  #houseSearch {
+    $bodyBg: #F8F8F8;
+    $colorF: #FFFFFF;
+    $colorEA: #eaeaea;
+    $color9c: #9c9c9c;
+    @mixin flex($n) {
       display: flex;
       display: -webkit-flex;
-    }
-    .iconfont.icon-cuowu-guanbi {
 
-    }
-    .searchHouse {
-      padding: .15rem .3rem;
-      border-bottom: .02rem solid #DDDDDD;
-      span {
-        color: #555555;
+      @if $n == 'centerSpace' {
+        align-items: center;
+        -webkit-align-items: center;
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
       }
-      .contract {
-        width: 100%;
-        div {
-          margin: .12rem 0;
-        }
-        div:first-of-type {
-          font-size: .33rem;
-          span {
-            color: #101010;
-          }
-        }
-        .two {
-          @include flex;
-          p {
-            width: 50%;
-          }
-          p:not(:first-of-type) {
-            padding-left: .2rem;
-          }
-        }
-      }
-    }
-    .bottom {
-      @include flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      color: #DDDDDD;
-      .abc {
-        @include flex;
+      @if $n == 'center' {
+        align-items: center;
+        -webkit-align-items: center;
         justify-content: center;
-        line-height: .4rem;
-        color: #aaaaaa;
-        text-align: center;
-        background-color: #f4f4f4;
-        padding: .2rem 0;
-        width: 100%;
+        -webkit-justify-content: center;
+      }
+      @if $n == 'itemCenter' {
+        align-items: center;
+        -webkit-align-items: center;
+      }
+      @if $n == 'spaceCenter' {
+        justify-content: center;
+        -webkit-justify-content: center;
+      }
+      @if $n == 'space' {
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
       }
     }
+    @mixin radius($n) {
+      -webkit-border-radius: $n;
+      -moz-border-radius: $n;
+      border-radius: $n;
+    }
+    input {
+      border: none;
+    }
+    .contract {
+      padding: .1rem 0 .2rem;
+      border-bottom: 1px solid $colorEA;
+      @include flex('itemCenter');
+      flex-wrap: wrap;
+      div {
+        @include flex('');
+        width: 100%;
+        span:first-of-type {
+          color: $color9c;
+        }
+      }
+      .contractB {
+        p {
+          width: 100%;
+        }
+      }
+      .departB {
+        p {
+          width: 50%;
+        }
+      }
+    }
+    .searchCustom {
+      background-color: $bodyBg;
+      padding: .2rem .3rem;
+      @include flex('centerSpace');
+      div {
+        background-color: $colorF;
+        @include flex('centerSpace');
+        @include radius(6px);
+        padding: .1rem .2rem;
+        width: 100%;
+        input {
+          width: 100%;
+        }
+      }
+      p {
+        text-align: right;
+        min-width: .88rem;
+      }
+      .searchP {
+        color: #666666;
+      }
+      .cancelP {
+        color: #06bf04;
+      }
+    }
+
+    .mainContent {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: .2rem 0 .2rem .32rem;
+      background-color: $colorF;
+      .mainList {
+        .contract {
+          color: #555555;
+          div {
+            padding-top: .1rem;
+          }
+        }
+        .staffDepart {
+          padding: .18rem .3rem .18rem 0;
+          @include flex('space');
+        }
+      }
+    }
+
+    .notData {
+      text-align: center;
+      padding: .2rem;
+      color: #b3afaf;
+      font-size: .33rem;
+      @include flex('center');
+    }
+
   }
+
 </style>
