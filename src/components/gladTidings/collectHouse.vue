@@ -65,11 +65,13 @@
 
       <div class="notData" v-if="status === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
       <div class="notData" v-if="status === 2">暂无相关信息</div>
+      <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
+    </div>
+    <footer>
       <div class="notData" v-if="status === 1">
         <van-loading type="spinner" color="black"/>
       </div>
-
-    </div>
+    </footer>
   </div>
 </template>
 
@@ -128,7 +130,7 @@
     methods: {
       // 滚动条
       checkScroll() {
-        let mainHeight = $('body').height() - 83;
+        let mainHeight = $('body').height() - 100;
         let mainContent = $('.mainContent');
         mainContent.scrollTop(0);
         mainContent.css('height', mainHeight + 'px');
@@ -310,7 +312,7 @@
         mainContent.scrollTop(0);
         this.scrollHeight = 0;
         this.params.page = 1;
-        this.params.per_page_number = 20;
+        this.params.per_page_number = 6;
         this.showInfo = [];
         this.houseList = [];
         this.isGetMore = true;
@@ -415,9 +417,9 @@
     .mainContent {
       overflow: auto;
       -webkit-overflow-scrolling: touch;
-      padding: .2rem 0 .2rem .32rem;
       background-color: $colorF;
       .mainList {
+        padding: .2rem 0 0 .32rem;
         .contract {
           color: #555555;
           div {
@@ -438,7 +440,10 @@
       font-size: .33rem;
       @include flex('center');
     }
-
+    .bgColor {
+      padding: .33rem;
+      background-color: #F8F8F8;
+    }
   }
 
 </style>
