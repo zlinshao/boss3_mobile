@@ -66,9 +66,12 @@
       <div class="notData" v-if="status === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
       <div class="notData" v-if="status === 2">暂无相关信息</div>
       <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
+      <div class="notData" v-if="status === 1 && params.page < 2">
+        <van-loading type="spinner" color="black"/>
+      </div>
     </div>
     <footer>
-      <div class="notData" v-if="status === 1">
+      <div class="notData" v-if="status === 1 && params.page > 1">
         <van-loading type="spinner" color="black"/>
       </div>
     </footer>
@@ -312,7 +315,7 @@
         mainContent.scrollTop(0);
         this.scrollHeight = 0;
         this.params.page = 1;
-        this.params.per_page_number = 6;
+        this.params.per_page_number = 20;
         this.showInfo = [];
         this.houseList = [];
         this.isGetMore = true;
@@ -392,11 +395,14 @@
       background-color: $bodyBg;
       padding: .2rem .3rem;
       @include flex('centerSpace');
+      i {
+        padding-right: .18rem;
+      }
       div {
         background-color: $colorF;
         @include flex('centerSpace');
         @include radius(6px);
-        padding: .1rem .2rem;
+        padding: .06rem .2rem;
         width: 100%;
         input {
           width: 100%;
