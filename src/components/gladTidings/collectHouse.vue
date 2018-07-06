@@ -35,7 +35,7 @@
                 <span>{{key.created_at}}</span>
               </p>
               <p>
-                <span>签约时长{{types}}：</span>
+                <span>签约时长：</span>
                 <span>{{key.duration_days}}</span>
               </p>
             </div>
