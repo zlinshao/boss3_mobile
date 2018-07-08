@@ -49,6 +49,7 @@
       }
     },
     mounted() {
+      window.webkit.messageHandlers.senderModel.postMessage({body: 'sender message'});
       this.active();
     },
     watch: {
