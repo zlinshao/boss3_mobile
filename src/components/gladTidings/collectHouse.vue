@@ -49,7 +49,7 @@
                 <span>{{key.customers}}</span>
               </p>
             </div>
-            <div class="contractB" :class="{'departB': types ===  'lord' || types ===  'agencyLord'}">
+            <div class="contractB" :class="{'departB': types ===  'lord' || types ===  'lord1'}">
               <p>
                 <span>所属部门：</span>
                 <span>{{key.department_name}}</span>
