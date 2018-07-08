@@ -10,8 +10,6 @@
       <p class="cancelP" v-if="searchValue.length === 0" @click="onCancel">取消</p>
     </div>
     <div class="mainContent">
-      {{params.page}}---{{last_page}} <br>
-      {{isLastPage}}---{{isGetMore}}
       <div class="mainList">
         <div v-for="key in houseList" @click="sureRouter(path, key)">
           <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
