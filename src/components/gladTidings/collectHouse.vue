@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-
+      {{isLastPage}}---{{isGetMore}}
       <div class="notData" v-if="status === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
       <div class="notData" v-if="status === 2 && houseList.length < 1">暂无相关信息</div>
       <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
