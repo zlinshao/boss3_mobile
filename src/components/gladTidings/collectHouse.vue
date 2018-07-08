@@ -10,6 +10,8 @@
       <p class="cancelP" v-if="searchValue.length === 0" @click="onCancel">取消</p>
     </div>
     <div class="mainContent">
+      {{params.page}}---{{last_page}} <br>
+      {{isLastPage}}---{{isGetMore}}
       <div class="mainList">
         <div v-for="key in houseList" @click="sureRouter(path, key)">
           <div class="contract" v-if="showInfo.indexOf(key.house_id) > -1">
@@ -62,7 +64,6 @@
           </div>
         </div>
       </div>
-      {{isLastPage}}---{{isGetMore}}
       <div class="notData" v-if="status === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
       <div class="notData" v-if="status === 2 && houseList.length < 1">暂无相关信息</div>
       <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
@@ -90,7 +91,7 @@
         isGetMore: true,          //滑动触发加载
         isLastPage: false,        //是否最后一页
         scrollHeight: 0,          //滚动到最底部
-
+        last_page: 1,
         params: {},
         searchValue: '',
 
@@ -182,6 +183,7 @@
         }).then((res) => {
           if (res.data.status === 'success') {
             let data = res.data.data;
+            this.last_page = res.data.meta.last_page;
             this.isLastPage = this.params.page === res.data.meta.last_page;
             if (data.length !== 0) {
               for (let i = 0; i < data.length; i++) {
