@@ -118,6 +118,7 @@
         }, 1000);
       },
       getToken() {
+        iOSCamera();
         this.$http.defaults.timeout = 5000;
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.token = res.data.data;
