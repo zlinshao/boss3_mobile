@@ -4,6 +4,7 @@
     <div id="SwiftDiv">
       <span id="jsParamFuncSpan" style="color: orange; font-size: 50px;"></span>
     </div>
+    <input type="text" id="input">
   </div>
 </template>
 
@@ -28,6 +29,9 @@
         }
         window.webkit.messageHandlers.senderModel.postMessage({body: 'Confirm'});
       },
+      sendKey(user_id) {
+        $('#input').val(user_id);
+      }
     },
   }
 </script>
