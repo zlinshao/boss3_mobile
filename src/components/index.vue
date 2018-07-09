@@ -31,6 +31,9 @@
             </div>
             <!--<div>收起</div>-->
           </div>
+          <!--<div>-->
+            <!--<UploadIOS :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UploadIOS>-->
+          <!--</div>-->
           <div class="mainMain">
             <router-link v-for="(key,index) in paths" v-if="key.hidden === 'glad'" :to="key.path" :key="index">
               <p :style="{'background': key.back}">
@@ -219,6 +222,7 @@
 <script>
   import {Waterfall} from 'vant';
   import {Toast} from 'vant';
+  import UploadIOS from './common/uploadIOS.vue'
 
   export default {
     name: 'HelloWorld',
@@ -226,7 +230,7 @@
       WaterfallLower: Waterfall('lower'),
       WaterfallUpper: Waterfall('upper')
     },
-    components: {Toast},
+    components: {Toast, UploadIOS},
     data() {
       return {
         urls: globalConfig.server_user,
@@ -245,6 +249,9 @@
         queryType: '',
         examData: {},
         questionnaireData: {},
+
+        isClear: false,
+        photos: [],
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -274,6 +281,9 @@
       // }
     },
     methods: {
+      getImgData(val) {
+
+      },
       goBefore(val) {
         this.getExamNaireRedCircle();
         if (val === '/exam') {
