@@ -39,7 +39,7 @@
         imgId: [],
         isUploading: false,
         activeIndex: null,
-        uploader: null,
+        upload: null,
         editImg: [],
         token: '',
 
@@ -88,13 +88,13 @@
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
           let toremove = '';
-          for (let i in _this.uploader.files) {
-            if (_this.uploader.files[i].id === id) {
+          for (let i in _this.upload.files) {
+            if (_this.upload.files[i].id === id) {
               toremove = i;
             }
           }
           $('#' + id).remove();
-          _this.uploader.splice(toremove, 1);
+          _this.upload.splice(toremove, 1);
           for (let i = 0; i < _this.imgArray.length; i++) {
             if (_this.imgArray[i].name.indexOf(id) > -1) {
 
@@ -112,8 +112,8 @@
         });
         this.getTokenMessage();
         setInterval(() => {
-          if (_this.uploader) {
-            this.uploader.refresh();
+          if (_this.upload) {
+            this.upload.refresh();
           }
         }, 1000);
       },
@@ -122,12 +122,12 @@
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.token = res.data.data;
           this.$http.defaults.timeout = null;
-          if (!this.uploader) {
+          if (!this.upload) {
             this.uploaderReady(res.data.data);
           }
         }).catch((error) => {
           this.$http.defaults.timeout = null;
-          if (!this.uploader) {
+          if (!this.upload) {
             alert('网络故障，上传组件创建失败，请保存草稿，稍后再试');
           }
         })
@@ -148,7 +148,7 @@
       uploaderReady(token) {
         this.token = token;
         let _this = this;
-        _this.uploader = qiniu.uploader({
+        _this.upload = qiniu.upload({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
           browse_button: _this.ID,     //上传按钮的ID
           uptoken: _this.token,                  // uptoken是上传凭证，由其他程序生成
