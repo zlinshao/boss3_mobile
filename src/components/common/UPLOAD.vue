@@ -111,11 +111,11 @@
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
         });
         this.getTokenMessage();
-        // setInterval(() => {
-        //   if (_this.uploader) {
-        //     this.uploader.refresh();
-        //   }
-        // }, 1000);
+        setInterval(() => {
+          if (_this.uploader) {
+            this.uploader.refresh();
+          }
+        }, 1000);
       },
       getToken() {
         this.$http.defaults.timeout = 5000;
@@ -148,7 +148,7 @@
       uploaderReady(token) {
         this.token = token;
         let _this = this;
-        _this.uploader = qiniu.upload({
+        _this.uploader = WebUploader.create({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
           browse_button: _this.ID,     //上传按钮的ID
           uptoken: _this.token,                  // uptoken是上传凭证，由其他程序生成
