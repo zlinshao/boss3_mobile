@@ -22,7 +22,8 @@
     },
     watch: {},
     methods: {
-      tirggerFile : function (event) {
+      tirggerFile(event) {
+        alert(1);
         let file = event.target.files; // (利用console.log输出看结构就知道如何处理档案资料)
         alert(JSON.stringify(file));
       },
