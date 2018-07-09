@@ -148,7 +148,7 @@
       uploaderReady(token) {
         this.token = token;
         let _this = this;
-        _this.uploader = qiniu.uploader({
+        _this.uploader = qiniu.upload({
           runtimes: 'html5,flash,html4',      // 上传模式，依次退化
           browse_button: _this.ID,     //上传按钮的ID
           uptoken: _this.token,                  // uptoken是上传凭证，由其他程序生成
