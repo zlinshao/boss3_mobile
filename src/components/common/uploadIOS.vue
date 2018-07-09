@@ -5,6 +5,7 @@
       <span id="jsParamFuncSpan" style="color: orange; font-size: 50px;"></span>
     </div>
     <input type="text" id="input">
+    <input type="file" @change="tirggerFile($event)">
   </div>
 </template>
 
@@ -21,6 +22,10 @@
     },
     watch: {},
     methods: {
+      tirggerFile : function (event) {
+        let file = event.target.files; // (利用console.log输出看结构就知道如何处理档案资料)
+        alert(JSON.stringify(file));
+      },
       active() {
         if (confirm('Confirm', 'Please show confirm')) {
           document.getElementById('jsParamFuncSpan').innerHTML = 'true';
