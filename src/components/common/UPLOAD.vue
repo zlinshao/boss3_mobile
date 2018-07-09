@@ -139,12 +139,14 @@
         this.editImg.splice(key, 1);
       },
 
+      // 获取token
       getTokenMessage() {
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.token = res.data.data;
           this.uploaderReady(res.data.data);
         })
       },
+      // 生成实例
       uploaderReady(token) {
         this.token = token;
         let _this = this;
@@ -259,6 +261,7 @@
               // _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
             },
             'Error': function (up, err, errTip) {// 每个文件上传失败后,处理相关的事情
+              alert(JSON.stringify(err));
               if (err.file && err.file.size !== undefined && err.file.size > 104857600) {
                 Dialog.alert({
                   message: '文件最大不能超过100MB'
