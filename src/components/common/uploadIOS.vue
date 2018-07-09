@@ -21,8 +21,9 @@
     watch: {},
     methods: {
       tirggerFile(event) {
-        this.file = event.target.files[0]; // (利用console.log输出看结构就知道如何处理档案资料)
-        console.log(event.target.files[0]);
+        this.file = event.target.files[0].size; // (利用console.log输出看结构就知道如何处理档案资料)
+        console.log(event.target.files[0].size);
+        alert(this.file);
       },
     },
   }
