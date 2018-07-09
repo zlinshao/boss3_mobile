@@ -21,11 +21,6 @@
     watch: {},
     methods: {
       active() {
-        if (confirm('Confirm', 'Please show confirm')) {
-          document.getElementById('jsParamFuncSpan').innerHTML = 'true';
-        } else {
-          document.getElementById('jsParamFuncSpan').innerHTML = 'false';
-        }
         window.webkit.messageHandlers.senderModel.postMessage({body: 'Confirm'});
       },
     },
