@@ -30,6 +30,7 @@
         window.webkit.messageHandlers.senderModel.postMessage({body: 'Confirm'});
       },
       sendKey(user_id) {
+        alert(user_id);
         $('#input').val(user_id);
       }
     },
