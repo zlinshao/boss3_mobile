@@ -167,6 +167,7 @@
 
           init: {
             'FilesAdded': function (up, files) {
+              alert(JSON.stringify(files));
               _this.fileLength = _this.editImg.length + up.files.length;
               _this.isUploading = true;
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
