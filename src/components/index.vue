@@ -31,9 +31,9 @@
             </div>
             <!--<div>收起</div>-->
           </div>
-          <!--<div>-->
-            <!--<UploadIOS :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UploadIOS>-->
-          <!--</div>-->
+          <div>
+            <UploadIOS :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UploadIOS>
+          </div>
           <div class="mainMain">
             <router-link v-for="(key,index) in paths" v-if="key.hidden === 'glad'" :to="key.path" :key="index">
               <p :style="{'background': key.back}">

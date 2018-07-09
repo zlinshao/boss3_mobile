@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <div :id="ID" @click="active" style="width: 200px;height: 30px;background-color: #aaaaaa;"></div>
   </div>
 </template>
 
@@ -9,18 +9,16 @@
     name: "upload-ios",
     props: ['ID', 'editImage', 'isClear'],
     data() {
-      return {
-
-      }
+      return {}
     },
     mounted() {
-      this.active();
     },
-    activated() {},
+    activated() {
+    },
     watch: {},
     methods: {
       active() {
-
+        window.webkit.messageHandlers.senderModel.postMessage();
       },
     },
   }

@@ -25,7 +25,7 @@
           v-model="form.payWay[0]"
           label="付款方式"
           type="text"
-          readonly
+          disabled
           icon="arrow"
           placeholder="付款方式已禁用">
         </van-field>
@@ -39,7 +39,7 @@
           @click="payWayClick(2)"
           label="月单价"
           type="text"
-          readonly
+          disabled
           icon="arrow"
           placeholder="月单价已禁用">
         </van-field>
