@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div :id="ID" style="width: 200px;height: 50px;background-color: #AAA;"></div>
+    <!--<div style="width: 200px;height: 50px;background-color: #AAA;"></div>-->
+    <input type="file" :id="ID" >
   </div>
 </template>
 
@@ -41,7 +42,7 @@
       },
       uploadWithSDK(token, putExtra, config, domain) {
         let that = this;
-        $(this.ID).on("change", function () {
+        $(this.ID).bind("change", function () {
           let file = this.files[0];
           console.log(file);
           alert(file);
