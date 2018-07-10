@@ -1,22 +1,20 @@
 <template>
   <div id="uploadContainer">
     <div id="container">
-      <form method="post" enctype="multipart/form-data" id="form">
-        <div :id="'pickfiles'+ID" class="pickfiles">
-          <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
-            <div style="position: relative; margin: .3rem 0 0 .3rem;">
-              <img v-if="val.is_video" class="videos" src="../../assets/video.jpg">
-              <img :src="val.uri" v-else>
-              <div class="progress"><b></b></div>
-              <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
-              </div>
+      <div :id="'pickfiles'+ID" class="pickfiles">
+        <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
+          <div style="position: relative; margin: .3rem 0 0 .3rem;">
+            <img v-if="val.is_video" class="videos" src="../../assets/video.jpg">
+            <img :src="val.uri" v-else>
+            <div class="progress"><b></b></div>
+            <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
             </div>
           </div>
-          <div class="upButton" @click="getToken" :id="ID">
-            <span class="plus">+</span>
-          </div>
         </div>
-      </form>
+        <div class="upButton" @click="getToken" :id="ID">
+          <span class="plus">+</span>
+        </div>
+      </div>
     </div>
 
     <div class="bigPhoto" @click="closePic" v-if="bigPic">
