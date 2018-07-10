@@ -44,6 +44,7 @@
       uploadWithSDK(token, putExtra, config, domain) {
         $("#" + this.ID).unbind("change").bind("change", function () {
           console.log(this.files[0]);
+          alert(JSON.stringify(this.files[0]))
         });
       }
     }
