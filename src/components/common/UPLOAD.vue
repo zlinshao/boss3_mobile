@@ -167,7 +167,6 @@
 
           init: {
             'FilesAdded': function (up, files) {
-              files.size = 104857500;
               _this.fileLength = _this.editImg.length + up.files.length;
               _this.isUploading = true;
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
