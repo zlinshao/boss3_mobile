@@ -8,6 +8,7 @@
       </div>
       <p class="searchP" v-if="searchValue.length > 0" @click="onSearch()">搜索</p>
       <p class="cancelP" v-if="searchValue.length === 0" @click="onCancel">取消</p>
+      {{houseList}}{{state}}
     </div>
     <div class="mainContent">
       <div class="mainList">
@@ -62,15 +63,15 @@
           </div>
         </div>
       </div>
-      <div class="notData" v-if="status === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
-      <div class="notData" v-if="status === 2 && houseList.length < 1">暂无相关信息</div>
+      <div class="notData" v-if="state === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
+      <div class="notData" v-if="state === 2 && houseList.length < 1">暂无相关信息</div>
       <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
-      <div class="notData" v-if="status === 1 && params.page < 2">
+      <div class="notData" v-if="state === 1 && params.page < 2">
         <van-loading type="spinner" color="black"/>
       </div>
     </div>
     <footer>
-      <div class="notData" v-if="status === 1 && params.page > 1">
+      <div class="notData" v-if="state === 1 && params.page > 1">
         <van-loading type="spinner" color="black"/>
       </div>
     </footer>
@@ -85,7 +86,7 @@
         urls: globalConfig.server,
         types: '',
         path: '',
-        status: 0,
+        state: 0,
         isGetMore: true,          //滑动触发加载
         isLastPage: false,        //是否最后一页
         scrollHeight: 0,          //滚动到最底部
@@ -110,7 +111,7 @@
     activated() {
       this.types = this.$route.query.type;
       this.resetting();
-      this.status = 0;
+      this.state = 0;
       this.params = {};
       this.searchValue = '';
       this.params.q = '';
@@ -219,6 +220,9 @@
                   this.houseList.push(list);
                   this.finish(4);
                 }
+                if (type !== 'quality' && data[i].lords.length === 0 && data[i].renters.length === 0) {
+                  this.finish(2);
+                }
               }
             } else {
               this.finish(2);
@@ -305,7 +309,7 @@
         this.routLink('back');
       },
       finish(val) {
-        this.status = val;
+        this.state = val;
       },
       resetting() {
         let mainContent = $('.mainContent');
