@@ -41,7 +41,7 @@
       },
       uploadWithSDK(token, putExtra, config, domain) {
         let that = this;
-        $(that.ID).unbind("change").bind("change", function () {
+        $(this.ID).on("change", function () {
           let file = this.files[0];
           console.log(file);
           alert(file);
