@@ -8,7 +8,6 @@
       </div>
       <p class="searchP" v-if="searchValue.length > 0" @click="onSearch()">搜索</p>
       <p class="cancelP" v-if="searchValue.length === 0" @click="onCancel">取消</p>
-      {{houseList}}{{state}}
     </div>
     <div class="mainContent">
       <div class="mainList">
