@@ -265,7 +265,7 @@
     activated() {
       this.routerIndex('');
       this.ddRent('', 'close');
-      this.disabled = false;
+      this.disabled = true;
       this.scrollTops();
       // this.confirmArrival = localStorage.getItem('confirmArrival');
       // this.getExamNaireRedCircle();
