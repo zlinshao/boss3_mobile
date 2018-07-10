@@ -226,7 +226,7 @@
       WaterfallLower: Waterfall('lower'),
       WaterfallUpper: Waterfall('upper')
     },
-    components: {Toast},
+    components: {Toast, UploadIOS},
     data() {
       return {
         urls: globalConfig.server_user,
