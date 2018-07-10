@@ -219,9 +219,6 @@
                   this.houseList.push(list);
                   this.finish(4);
                 }
-                if ((type === 'renter' || type === 'lord' || type === 'renter1' || type === 'lord1') && data[i].lords.length === 0 && data[i].renters.length === 0) {
-                  this.finish(2);
-                }
               }
             } else {
               this.finish(2);
