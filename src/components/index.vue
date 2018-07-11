@@ -1,5 +1,9 @@
 <template>
   <div id="hello" class="hello">
+    <div><input type="button" value="Confirm 提示框" @click="hhhhhh()"></div><br/>
+    <div id="SwiftDiv">
+      <span id="jsParamFuncSpan" style="color: orange; font-size: 50px;"></span>
+    </div>
     <div class="top" :class="{'shadow': footActive === 1}">
       <div @click="tabTag(1,0)" :class="{'onDiv': active === 1}">
         <p>
@@ -274,6 +278,16 @@
       // }
     },
     methods: {
+      hhhhhh() {
+        if (confirm('Confirm', 'Please show confirm')) {
+          document.getElementById('jsParamFuncSpan').innerHTML
+            = 'true';
+        } else {
+          document.getElementById('jsParamFuncSpan').innerHTML
+            = 'false';
+        }
+        window.webkit.messageHandlers.senderModel.postMessage({body: 'Confirm'});
+      },
       goBefore(val) {
         this.getExamNaireRedCircle();
         if (val === '/exam') {
