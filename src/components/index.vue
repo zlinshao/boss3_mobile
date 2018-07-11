@@ -1,9 +1,5 @@
 <template>
   <div id="hello" class="hello">
-    <div><input type="button" value="Confirm 提示框" @click="hhhhhh()"></div><br/>
-    <div id="SwiftDiv">
-      <span id="jsParamFuncSpan" style="color: orange; font-size: 50px;"></span>
-    </div>
     <div class="top" :class="{'shadow': footActive === 1}">
       <div @click="tabTag(1,0)" :class="{'onDiv': active === 1}">
         <p>
@@ -24,7 +20,11 @@
         <h1>抄送我的</h1>
       </div>
     </div>
-
+    <input type="text" id="input">
+    <div><input type="button" value="Confirm 提示框" @click="hhhhhh()"></div><br/>
+    <div id="SwiftDiv">
+      <span id="jsParamFuncSpan" style="color: orange; font-size: 50px;"></span>
+    </div>
     <div class="okFinish" v-if="footActive === 1">
       <div class="inRough" v-if="queryType == 0 || queryType === 'ding'">
         <div class="mainIndex">

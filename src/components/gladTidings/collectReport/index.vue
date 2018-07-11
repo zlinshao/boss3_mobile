@@ -1,7 +1,6 @@
 <template>
   <div id="collectReport">
     <div class="main" id="main">
-      <input type="text" id="input">
       <van-cell-group>
         <van-field
           v-model="form.house.name"
