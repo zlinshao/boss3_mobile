@@ -19,13 +19,13 @@
         </p>
         <h1>抄送我的</h1>
       </div>
+    </div>
+    <div class="okFinish" v-if="footActive === 1">
       <input type="text" id="input">
       <div><input type="button" value="Confirm 提示框" @click="hhhhhh()"></div><br/>
       <div id="SwiftDiv">
         <span id="jsParamFuncSpan" style="color: orange; font-size: 50px;"></span>
       </div>
-    </div>
-    <div class="okFinish" v-if="footActive === 1">
       <div class="inRough" v-if="queryType == 0 || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
