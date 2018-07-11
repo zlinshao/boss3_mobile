@@ -267,3 +267,8 @@ export default {
     };
   }
 }
+
+function sendKey(user_id){
+  $("#input").val(user_id);
+  alert(111111);
+}

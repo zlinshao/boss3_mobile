@@ -1,6 +1,8 @@
 <template>
   <div id="collectReport">
     <div class="main" id="main">
+      <button type="button" @click="hhhhhh">点击</button>
+      <input type="text" id="input">
       <van-cell-group>
         <van-field
           v-model="form.house.name"
@@ -633,6 +635,9 @@
     },
 
     methods: {
+      hhhhhh() {
+        window.webkit.messageHandlers.collectSendKey.postMessage({body: 'goodsId=1212'});
+      },
       userInfo(val1) {
         if (val1) {
           let per = JSON.parse(sessionStorage.personal);
