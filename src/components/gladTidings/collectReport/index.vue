@@ -636,7 +636,7 @@
 
     methods: {
       hhhhhh() {
-        window.webkit.messageHandlers.collectSendKey.postMessage({body: 'goodsId=1212'});
+        window.webkit.messageHandlers.senderModel.postMessage({body: 'Confirm'});
       },
       userInfo(val1) {
         if (val1) {
