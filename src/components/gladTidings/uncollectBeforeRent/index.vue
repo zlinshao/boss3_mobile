@@ -327,7 +327,8 @@
           type="text"
           placeholder="请填写客户姓名"
           icon="clear"
-          @click-icon="form.name = ''" required>
+          @click-icon="form.name = ''"
+          required>
         </van-field>
         <van-field
           v-model="form.phone"
@@ -336,7 +337,25 @@
           class="number"
           placeholder="请填写客户手机号"
           icon="clear"
-          @click-icon="form.phone = ''" required>
+          @click-icon="form.phone = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="cardName"
+          label="证件类型"
+          type="text"
+          readonly
+          placeholder="请选择证件类型"
+          required>
+        </van-field>
+        <van-field
+          v-model="form. idcard"
+          label="证件号"
+          type="text"
+          placeholder="请填写证件号"
+          icon="clear"
+          @click-icon="form. idcard = ''"
+          required>
         </van-field>
       </van-cell-group>
 
@@ -503,6 +522,8 @@
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
+          idtype: '',                   //证件类型
+          idcard: '',                   //证件号
           screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
@@ -521,6 +542,10 @@
         value6: [],
         dictValue8: [],         //支付方式
         value8: [],
+
+        prove_name: [],
+        prove_all: [],
+        cardName: '',
 
         isValue1: true,
         counts: '',
@@ -623,7 +648,18 @@
             for (let i = 0; i < res.data.length; i++) {
               this.value8.push(res.data[i].dictionary_name);
             }
-            this.rentDetail(val);
+
+            // 证件类型
+            this.dictionary(409, 1).then((res) => {
+              this.prove_name = [];
+              this.prove_all = res.data;
+              for (let i = 0; i < res.data.length; i++) {
+                this.prove_name.push(res.data[i].dictionary_name);
+              }
+
+              this.rentDetail(val);
+            });
+
           });
 
         });
@@ -636,7 +672,7 @@
           if (res.data.code === '1000120') {
             // 收据编号默认日期
             this.receiptDate = res.data.data.py + res.data.data.year;
-            let receipt =  res.data.data.py + res.data.data.year;
+            let receipt = res.data.data.py + res.data.data.year;
             this.form.receipt.push(receipt);
           }
         });
@@ -747,6 +783,9 @@
           case 5:
             this.columns = dicts.value8;
             break;
+          case 6:
+            this.columns = this.prove_name;
+            break;
         }
       },
       // select选择
@@ -777,6 +816,14 @@
           case 5:
             this.form.is_agency = index;
             this.cusFrom = value;
+            break;
+          case 6:
+            this.cardName = value;
+            for (let i = 0; i < this.prove_all.length; i++) {
+              if (this.prove_all[i].dictionary_name === value) {
+                this.form.idtype = this.prove_all[i].id;
+              }
+            }
             break;
         }
         this.selectHide = false;
@@ -1062,6 +1109,15 @@
             this.form.retainage_date = draft.retainage_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
+
+            this.form.idtype = draft.idtype;
+            this.form.idcard = draft.idcard;
+            for (let j = 0; j < this.prove_all.length; j++) {
+              if (this.prove_all[j].id === draft.idtype) {
+                this.cardName = this.prove_all.dictionary_name;
+              }
+            }
+
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
@@ -1136,6 +1192,9 @@
         this.form.retainage_date = '';
         this.form.name = '';
         this.form.phone = '';
+        this.form.idtype = '';
+        this.form.idcard = '';
+        this.cardName = '';
         this.form.screenshot = [];
         this.screenshots = {};
         this.form.screenshot_leader = [];
