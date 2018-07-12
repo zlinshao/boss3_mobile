@@ -51,15 +51,15 @@
     },
     mounted() {
       this.active();
-      this.fileLength = this.editImg.length;
     },
     watch: {
       editImage(val) {
         if (this.fileLength === 0) {
+          this.fileLength = val.length;
           this.editImg = val;
           this.imgId = [];
           for (let i = 0; i < val.length; i++) {
-            this.imgId.push(val[i].id)
+            this.imgId.push(val[i].id);
           }
         }
       },
@@ -223,10 +223,10 @@
                 }
               }
             },
-            // 'FilesRemoved': function (uploader, files) {
-            //   console.log(uploader);
-            //   _this.fileLength = _this.editImg.length + uploader.files.length;
-            // },
+            'FilesRemoved': function (uploader, files) {
+              console.log(uploader);
+              _this.fileLength = _this.editImg.length + uploader.files.length;
+            },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
               _this.isUploading = true;
