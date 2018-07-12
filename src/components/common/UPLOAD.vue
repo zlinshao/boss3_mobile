@@ -57,6 +57,7 @@
       editImage: {
         deep: true,
         handler(val, old) {
+          console.log(11111111111111);
           this.editImg = this.editImage;
           if (this.editImg.length > 0) {
           }
@@ -87,6 +88,7 @@
           _this.bigPic = $(this).prev().attr("src");
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
+          _this.fileLength--;
           let id = $(this).attr("data-val");
           let toremove = '';
           for (let i in _this.uploader.files) {
@@ -98,6 +100,7 @@
           _this.uploader.splice(toremove, 1);
           for (let i = 0; i < _this.imgArray.length; i++) {
             if (_this.imgArray[i].name.indexOf(id) > -1) {
+
               _this.imgId.forEach((item) => {
                 if (_this.imgArray[i].id === item) {
                   _this.imgId = _this.imgId.filter((x) => {
@@ -133,20 +136,8 @@
         })
       },
       deleteImage(key) {
-        // this.imgId.splice(key, 1);
-        // this.editImg.splice(key, 1);
-        this.imgId = this.imgId.filter((x) => {
-          return x !== key
-        });
-        this.$emit('getImg', [this.ID, this.imgId, this.isUploading]);
-        let imgObject = {};
-        for (let img in this.editImg) {
-          if (img !== key) {
-            imgObject[img] = this.editImg[img];
-          }
-        }
-        this.editImg = {};
-        this.editImg = imgObject;
+        this.imgId.splice(key, 1);
+        this.editImg.splice(key, 1);
       },
 
       // 获取token
