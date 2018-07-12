@@ -350,12 +350,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form. idcard"
+          v-model="form.idcard"
           label="证件号"
           type="text"
           placeholder="请填写证件号"
           icon="clear"
-          @click-icon="form. idcard = ''"
+          @click-icon="form.idcard = ''"
           required>
         </van-field>
       </van-cell-group>
