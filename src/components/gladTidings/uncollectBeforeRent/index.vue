@@ -1115,7 +1115,7 @@
             this.form.idcard = draft.idcard;
             for (let j = 0; j < this.prove_all.length; j++) {
               if (this.prove_all[j].id === draft.idtype) {
-                this.cardName = this.prove_all.dictionary_name;
+                this.cardName = this.prove_all[j].dictionary_name;
               }
             }
 
