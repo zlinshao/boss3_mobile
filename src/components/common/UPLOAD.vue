@@ -47,22 +47,18 @@
         bigPic: '',
 
         fileLength: 0,
-        num: 0,
       }
     },
     mounted() {
       this.active();
+      this.fileLength = this.editImg.length;
     },
     watch: {
       editImage(val) {
-        if (this.num === 0) {
-          this.num++;
-          this.fileLength = val.length;
-          this.editImg = val;
-          this.imgId = [];
-          for (let i = 0; i < val.length; i++) {
-            this.imgId.push(val[i].id);
-          }
+        this.editImg = val;
+        this.imgId = [];
+        for (let i = 0; i < val.length; i++) {
+          this.imgId.push(val[i].id);
         }
       },
       // editImage: {
@@ -225,9 +221,10 @@
                 }
               }
             },
-            'FilesRemoved': function (uploader, files) {
-              _this.fileLength = _this.editImg.length + uploader.files.length;
-            },
+            // 'FilesRemoved': function (uploader, files) {
+            //   console.log(uploader);
+            //   _this.fileLength = _this.editImg.length + uploader.files.length;
+            // },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
               _this.isUploading = true;
@@ -256,10 +253,10 @@
                   _this.imgArray.push(object);
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
-                if (_this.fileLength === _this.imgId.length) {
+                // if (_this.fileLength === _this.imgId.length) {
                   _this.isUploading = false;
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                }
+                // }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
