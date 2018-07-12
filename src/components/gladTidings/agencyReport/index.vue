@@ -5,7 +5,8 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent" @change="rentChange">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent"
+                           @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -20,6 +21,13 @@
           readonly
           placeholder="选择房屋地址"
           required>
+        </van-field>
+        <van-field
+          v-model="form.customer_name"
+          label="客户姓名"
+          type="text"
+          placeholder="客户姓名已禁用"
+          disabled>
         </van-field>
         <van-field
           style="font-size: .18rem"
@@ -107,15 +115,6 @@
           label="中介联系方式"
           placeholder="请填写中介联系方式"
           @click-icon="form.agency_phone = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.customer_name"
-          label="客户姓名"
-          type="text"
-          placeholder="请填写客户姓名"
-          icon="clear"
-          @click-icon="form.customer_name = ''"
           required>
         </van-field>
         <van-field
@@ -428,6 +427,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
+          this.form.customers_name = val.customers;
           if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
             if (val.agency_info.agency_price) {
               this.form.agency_price = val.agency_info.agency_price;
