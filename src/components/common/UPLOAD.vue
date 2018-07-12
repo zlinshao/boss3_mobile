@@ -47,6 +47,7 @@
         bigPic: '',
 
         fileLength: 0,
+        num: 0,
       }
     },
     mounted() {
@@ -54,7 +55,8 @@
     },
     watch: {
       editImage(val) {
-        if (this.fileLength === 0) {
+        if (this.num === 0) {
+          this.num++;
           this.fileLength = val.length;
           this.editImg = val;
           this.imgId = [];
@@ -224,7 +226,6 @@
               }
             },
             'FilesRemoved': function (uploader, files) {
-              console.log(uploader);
               _this.fileLength = _this.editImg.length + uploader.files.length;
             },
             'BeforeUpload': function (up, file) {
