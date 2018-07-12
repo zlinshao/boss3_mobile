@@ -133,8 +133,20 @@
         })
       },
       deleteImage(key) {
-        this.imgId.splice(key, 1);
-        this.editImg.splice(key, 1);
+        // this.imgId.splice(key, 1);
+        // this.editImg.splice(key, 1);
+        this.imgId = this.imgId.filter((x) => {
+          return x !== key
+        });
+        this.$emit('getImg', [this.ID, this.imgId, this.isUploading]);
+        let imgObject = {};
+        for (let img in this.editImg) {
+          if (img !== key) {
+            imgObject[img] = this.editImg[img];
+          }
+        }
+        this.editImg = {};
+        this.editImg = imgObject;
       },
 
       // 获取token
@@ -244,10 +256,10 @@
                   _this.imgArray.push(object);
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
-                // if (_this.fileLength === _this.imgId.length) {
+                if (_this.fileLength === _this.imgId.length) {
                   _this.isUploading = false;
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                // }
+                }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
