@@ -51,29 +51,19 @@
     },
     mounted() {
       this.active();
-      this.fileLength = this.editImg.length;
+      // this.fileLength = this.editImg.length;
     },
     watch: {
-      editImage(val) {
-        this.editImg = val;
-        this.imgId = [];
-        for (let i = 0; i < val.length; i++) {
-          this.imgId.push(val[i].id);
+      editImage: {
+        deep: true,
+        handler(val, old) {
+          this.editImg = val;
+          this.imgId = [];
+          for (let i = 0; i < val.length; i++) {
+            this.imgId.push(val[i].id)
+          }
         }
       },
-      // editImage: {
-      //   deep: true,
-      //   handler(val, old) {
-      //     this.editImg = val;
-      //     if (this.editImg.length > 0) {
-      //
-      //     }
-      //     this.imgId = [];
-      //     for (let i = 0; i < val.length; i++) {
-      //       this.imgId.push(val[i].id)
-      //     }
-      //   }
-      // },
       isClear(val) {
         if (val) {
           this.imgId = [];
@@ -254,8 +244,8 @@
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
                 // if (_this.fileLength === _this.imgId.length) {
-                  _this.isUploading = false;
-                  _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+                _this.isUploading = false;
+                _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 // }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
