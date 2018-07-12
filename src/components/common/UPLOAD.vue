@@ -52,21 +52,23 @@
     mounted() {
       this.active();
       this.fileLength = this.editImg.length;
+      for (let i = 0; i < this.editImage.length; i++) {
+        this.imgId.push(this.editImage[i].id)
+      }
     },
     watch: {
-      editImage: {
-        deep: true,
-        handler(val, old) {
-          console.log(11111111111111);
-          this.editImg = this.editImage;
-          if (this.editImg.length > 0) {
-          }
-          this.imgId = [];
-          for (let i = 0; i < val.length; i++) {
-            this.imgId.push(val[i].id)
-          }
-        }
-      },
+      // editImage: {
+      //   deep: true,
+      //   handler(val, old) {
+      //     this.editImg = this.editImage;
+      //     if (this.editImg.length > 0) {
+      //     }
+      //     this.imgId = [];
+      //     for (let i = 0; i < val.length; i++) {
+      //       this.imgId.push(val[i].id)
+      //     }
+      //   }
+      // },
       isClear(val) {
         if (val) {
           this.imgId = [];
