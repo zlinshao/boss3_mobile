@@ -1193,9 +1193,11 @@
         this.form.retainage_date = '';
         this.form.name = '';
         this.form.phone = '';
+
         this.form.idtype = '';
         this.form.idcard = '';
         this.cardName = '';
+
         this.form.screenshot = [];
         this.screenshots = {};
         this.form.screenshot_leader = [];

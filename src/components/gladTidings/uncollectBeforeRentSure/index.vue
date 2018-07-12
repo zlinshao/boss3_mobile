@@ -309,6 +309,24 @@
           icon="clear"
           @click-icon="form.phone = ''" required>
         </van-field>
+        <van-field
+          @click="selectShow(6, '')"
+          v-model="cardName"
+          label="证件类型"
+          type="text"
+          readonly
+          placeholder="请选择证件类型"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.idcard"
+          label="证件号"
+          type="text"
+          placeholder="请填写证件号"
+          icon="clear"
+          @click-icon="form.idcard = ''"
+          required>
+        </van-field>
       </van-cell-group>
       <div class="changes" v-for="(key,index) in amountReceipt">
         <div class="paddingTitle">
@@ -503,6 +521,10 @@
         isValue1: true,
         counts: '',
 
+        prove_name: [],
+        prove_all: [],
+        cardName: '',
+
         retry: 0,
       }
     },
@@ -592,7 +614,17 @@
           for (let i = 0; i < res.data.length; i++) {
             this.value8.push(res.data[i].dictionary_name);
           }
-          this.rentDetail(val);
+          // 证件类型
+          this.dictionary(409, 1).then((res) => {
+            this.prove_name = [];
+            this.prove_all = res.data;
+            for (let i = 0; i < res.data.length; i++) {
+              this.prove_name.push(res.data[i].dictionary_name);
+            }
+
+            this.rentDetail(val);
+          });
+
         });
       },
 
@@ -717,6 +749,9 @@
           case 5:
             this.columns = dicts.value8;
             break;
+          case 6:
+            this.columns = this.prove_name;
+            break;
         }
       },
       // select选择
@@ -739,6 +774,14 @@
           case 5:
             this.form.is_agency = index;
             this.cusFrom = value;
+            break;
+          case 6:
+            this.cardName = value;
+            for (let i = 0; i < this.prove_all.length; i++) {
+              if (this.prove_all[i].dictionary_name === value) {
+                this.form.idtype = this.prove_all[i].id;
+              }
+            }
             break;
         }
         this.selectHide = false;
@@ -958,6 +1001,14 @@
               this.form.receipt[0] = draft.receipt;
             }
 
+            this.form.idtype = draft.idtype;
+            this.form.idcard = draft.idcard;
+            for (let j = 0; j < this.prove_all.length; j++) {
+              if (this.prove_all[j].id === draft.idtype) {
+                this.cardName = this.prove_all[j].dictionary_name;
+              }
+            }
+
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
@@ -1172,6 +1223,10 @@
         this.form.money_way = [''];
         this.form.discount = 0;
         this.form.retainage_date = '';
+
+        this.form.idtype = '';
+        this.form.idcard = '';
+        this.cardName = '';
 
         this.form.name = '';
         this.form.phone = '';
