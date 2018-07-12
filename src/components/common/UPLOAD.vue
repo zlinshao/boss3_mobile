@@ -51,13 +51,13 @@
     },
     mounted() {
       this.active();
+      this.fileLength = this.editImg.length;
     },
     watch: {
       editImage: {
         deep: true,
         handler(val, old) {
           this.editImg = this.editImage;
-          this.fileLength = this.editImg.length;
           if (this.editImg.length > 0) {
           }
           this.imgId = [];
@@ -246,10 +246,7 @@
                   _this.imgArray.push(object);
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
-                console.log(_this.fileLength);
-                console.log(this.imgId.length);
                 if (_this.fileLength === _this.imgId.length) {
-                  console.log(11111111111);
                   _this.isUploading = false;
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
