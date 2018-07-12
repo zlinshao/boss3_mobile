@@ -51,6 +51,7 @@
     },
     mounted() {
       this.active();
+      this.fileLength = this.editImg.length;
     },
     watch: {
       editImage: {
@@ -58,7 +59,6 @@
         handler(val, old) {
           this.editImg = this.editImage;
           if (this.editImg.length > 0) {
-            this.fileLength = this.editImg.length;
           }
           this.imgId = [];
           for (let i = 0; i < val.length; i++) {
