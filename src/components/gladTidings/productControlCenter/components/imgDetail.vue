@@ -35,7 +35,6 @@
       }
     },
     mounted() {
-      this.getData();
     },
     activated() {
       this.getData();

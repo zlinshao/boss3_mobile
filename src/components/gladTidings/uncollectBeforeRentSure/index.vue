@@ -346,14 +346,24 @@
         +增加收据编号
       </div>
 
+      <div class="aloneModel">
+        <div class="title">领导同意截图</div>
+        <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
+      </div>
+
       <div class="aloneModel required">
         <div class="title"><span>*</span>凭证截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel">
-        <div class="title">领导同意截图</div>
-        <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
+        <div class="title">收据截图</div>
+        <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
+      </div>
+
+      <div class="aloneModel">
+        <div class="title">合同照片</div>
+        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -506,6 +516,8 @@
 
           screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
+          photo: [],                    //合同照片 数组
+          screenshot_receipt: [],       //收据截图 数组
 
           remark: '',                   //备注
           staff_id: '',                 //开单人id
@@ -514,7 +526,9 @@
           department_name: '',             //部门name
         },
         screenshots: {},
+        photos: {},
         leaders: {},
+        receipts: {},
         dictValue8: [],                  //支付方式
         value8: [],
 
@@ -870,10 +884,14 @@
       // 截图
       getImgData(val) {
         this.picStatus = !val[2];
-        if (val[0] === 'leader') {
-          this.form.screenshot_leader = val[1];
-        } else {
+        if (val[0] === 'screenshot') {
           this.form.screenshot = val[1];
+        } else if (val[0] === 'leader') {
+          this.form.screenshot_leader = val[1];
+        } else if (val[0] === 'receipt') {
+          this.form.screenshot_receipt = val[1];
+        } else {
+          this.form.photo = val[1];
         }
       },
       saveCollect(val) {
@@ -1146,11 +1164,14 @@
             this.form.discount = draft.discount;
             this.form.retainage_date = draft.retainage_date;
 
-            this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.screenshot_leader;
-
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.leaders = data.screenshot_leader;
+            this.form.photo = draft.photo;
+            this.photos = data.photo;
+            this.form.screenshot_receipt = draft.screenshot_receipt;
+            this.receipts = data.screenshot_receipt;
 
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -1232,8 +1253,14 @@
         this.form.phone = '';
         this.form.remark = '';
 
+        this.form.screenshot = [];
+        this.screenshots = {};
         this.form.screenshot_leader = [];
         this.leaders = {};
+        this.form.photo = [];
+        this.photos = {};
+        this.form.screenshot_receipt = [];
+        this.receipts = {};
 
         this.form.other_fee_name = '';
         this.form.other_fee = '';

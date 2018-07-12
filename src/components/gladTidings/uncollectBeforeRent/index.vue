@@ -371,6 +371,11 @@
       </div>
 
       <div class="aloneModel">
+        <div class="title">收据截图</div>
+        <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
+      </div>
+
+      <div class="aloneModel">
         <div class="title">合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
@@ -528,6 +533,7 @@
           screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
+          screenshot_receipt: [],       //收据截图 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
@@ -537,6 +543,7 @@
         screenshots: {},
         photos: {},
         leaders: {},
+        receipts: {},
         property_name: '',              //物业费付款人
 
         dictValue6: [],         //房东租客
@@ -707,6 +714,8 @@
           this.form.screenshot = val[1];
         } else if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
+        } else if (val[0] === 'receipt') {
+          this.form.screenshot_receipt = val[1];
         } else {
           this.form.photo = val[1];
         }
@@ -1125,6 +1134,8 @@
             this.leaders = data.screenshot_leader;
             this.form.photo = draft.photo;
             this.photos = data.photo;
+            this.form.screenshot_receipt = draft.screenshot_receipt;
+            this.receipts = data.screenshot_receipt;
             this.form.remark = draft.remark;
 
             if (val !== '' && val.type === 2) {
@@ -1204,6 +1215,8 @@
         this.leaders = {};
         this.form.photo = [];
         this.photos = {};
+        this.form.screenshot_receipt = [];
+        this.receipts = {};
         this.form.remark = '';
 
         this.form.other_fee_name = '';

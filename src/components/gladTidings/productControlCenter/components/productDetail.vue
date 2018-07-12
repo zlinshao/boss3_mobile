@@ -383,7 +383,6 @@
       next();
     },
     mounted() {
-      this.getData();
       this.getDictionary();
     },
     activated(){

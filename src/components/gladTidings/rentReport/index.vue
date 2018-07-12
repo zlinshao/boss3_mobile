@@ -361,7 +361,7 @@
       </div>
 
       <div class="aloneModel">
-        <div class="title">合同照片</div>
+        <div class="title">收据截图</div>
         <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
       </div>
 
@@ -443,36 +443,36 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        isClear: false,           //删除图片
+        isClear: false,                 //删除图片
         picStatus: true,
 
-        amountReceipt: 1,                  //收据编号
+        amountReceipt: 1,               //收据编号
         receiptDate: '',
 
         tabs: '',
-        columns: [],              //select值
-        selectHide: false,        //select选择
+        columns: [],                    //select值
+        selectHide: false,              //select选择
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
-        timeShow: false,          //日期状态
+        timeShow: false,                //日期状态
         timeIndex: '',
-        timeValue: '',            //日期value
+        timeValue: '',                  //日期value
 
-        first_date: '',            //日期value
+        first_date: '',                 //日期value
 
         amountPrice: 1,
         datePrice: [],
 
         amountPay: 1,
         datePay: [],
-        payIndex: '',                 //付款方式index
+        payIndex: '',                   //付款方式index
 
         amountMoney: 1,
-        moneyNum: [''],               //分金额 付款方式
+        moneyNum: [''],                 //分金额 付款方式
 
-        cusFrom: '',                //是否中介
-        corp: true,                    //公司单
+        cusFrom: '',                    //是否中介
+        corp: true,                     //公司单
         other_fee_status: false,
 
         form: {
@@ -529,18 +529,18 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
-          staff_name: '',                  //开单人name
-          department_name: '',             //部门name
+          staff_name: '',               //开单人name
+          department_name: '',          //部门name
         },
         screenshots: {},
         photos: {},
         leaders: {},
         receipts: {},
-        property_name: '',               //物业费付款人
+        property_name: '',              //物业费付款人
 
-        dictValue6: [],         //房东租客
+        dictValue6: [],                 //房东租客
         value6: [],
-        dictValue8: [],         //支付方式
+        dictValue8: [],                 //支付方式
         value8: [],
 
         isValue1: true,

@@ -36,7 +36,8 @@
             <van-col span="12">
               <van-row>
                 <van-col class="itemWord" span="10">开单人 :</van-col>
-                <van-col class="itemWord" span="14">{{item.sign_user.name}}</van-col>
+                <van-col v-if="item.sign_user" class="itemWord" span="14">{{item.sign_user.name}}</van-col>
+                <van-col v-else class="itemWord" span="14">/</van-col>
               </van-row>
             </van-col>
             <van-col span="12">
@@ -50,7 +51,8 @@
             <van-col span="12">
               <van-row>
                 <van-col class="itemWord" span="10">所属部门 :</van-col>
-                <van-col class="itemWord" span="14">{{item.sign_org.name}}</van-col>
+                <van-col v-if="item.sign_org" class="itemWord" span="14">{{item.sign_org.name}}</van-col>
+                <van-col v-else class="itemWord" span="14">/</van-col>
               </van-row>
             </van-col>
             <van-col span="12">
@@ -101,7 +103,8 @@
             <van-col span="12">
               <van-row>
                 <van-col class="itemWord" span="10">开单人 :</van-col>
-                <van-col class="itemWord" span="14">{{item.sign_user.name}}</van-col>
+                <van-col v-if="item.sign_user" class="itemWord" span="14">{{item.sign_user.name}}</van-col>
+                <van-col v-else class="itemWord" span="14">/</van-col>
               </van-row>
             </van-col>
             <van-col span="12">
@@ -115,7 +118,8 @@
             <van-col span="12">
               <van-row>
                 <van-col class="itemWord" span="10">所属部门 :</van-col>
-                <van-col class="itemWord" span="14">{{item.sign_org.name}}</van-col>
+                <van-col v-if="item.sign_org" class="itemWord" span="14">{{item.sign_org.name}}</van-col>
+                <van-col v-else class="itemWord" span="14">/</van-col>
               </van-row>
             </van-col>
             <van-col span="12">
@@ -148,7 +152,7 @@
       }
     },
     mounted() {
-      this.getData();
+
     },
     activated() {
       if (this.$route.query.id) {
