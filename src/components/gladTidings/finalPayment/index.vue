@@ -12,6 +12,13 @@
           required>
         </van-field>
         <van-field
+          v-model="form.customer_name"
+          label="客户姓名"
+          type="text"
+          placeholder="客户姓名已禁用"
+          disabled>
+        </van-field>
+        <van-field
           v-model="form.month"
           type="text"
           label="租房月数"
@@ -114,15 +121,6 @@
           placeholder="请填写金额"
           icon="clear"
           @click-icon="form.other_fee = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.customer_name"
-          label="客户姓名"
-          type="text"
-          placeholder="请填写客户姓名"
-          icon="clear"
-          @click-icon="form.customer_name = ''"
           required>
         </van-field>
         <van-field
