@@ -427,7 +427,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          this.form.customers_name = val.customers;
+          this.form.customer_name = val.customers;
           if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
             if (val.agency_info.agency_price) {
               this.form.agency_price = val.agency_info.agency_price;
