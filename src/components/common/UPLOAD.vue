@@ -109,7 +109,7 @@
               _this.imgArray.splice(i, 1);
             }
           }
-          console.log(fileLength);
+          console.log(_this.fileLength);
           console.log(_this.imgId.length);
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
         });
