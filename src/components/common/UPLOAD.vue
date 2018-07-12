@@ -87,7 +87,6 @@
           _this.bigPic = $(this).prev().attr("src");
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
-          _this.fileLength--;
           let id = $(this).attr("data-val");
           let toremove = '';
           for (let i in _this.uploader.files) {
@@ -99,7 +98,6 @@
           _this.uploader.splice(toremove, 1);
           for (let i = 0; i < _this.imgArray.length; i++) {
             if (_this.imgArray[i].name.indexOf(id) > -1) {
-
               _this.imgId.forEach((item) => {
                 if (_this.imgArray[i].id === item) {
                   _this.imgId = _this.imgId.filter((x) => {
@@ -246,10 +244,10 @@
                   _this.imgArray.push(object);
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
-                if (_this.fileLength === _this.imgId.length) {
+                // if (_this.fileLength === _this.imgId.length) {
                   _this.isUploading = false;
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                }
+                // }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
