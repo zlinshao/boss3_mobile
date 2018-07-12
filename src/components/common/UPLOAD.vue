@@ -1,6 +1,7 @@
 <template>
   <div id="uploadContainer">
     <div id="container">
+      {{fileLength}}---{{imgId}}
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style="position: relative; margin: .3rem 0 0 .3rem;">
@@ -244,10 +245,10 @@
                   _this.imgArray.push(object);
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
-                // if (_this.fileLength === _this.imgId.length) {
+                if (_this.fileLength === _this.imgId.length) {
                   _this.isUploading = false;
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                // }
+                }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
