@@ -56,10 +56,11 @@
     watch: {
       editImage(val) {
         this.editImg = val;
-        this.imgId = [];
+        let imgId = [];
         for (let i = 0; i < val.length; i++) {
-          this.imgId.push(val[i].id)
+          imgId.push(val[i].id);
         }
+        this.imgId = this.imgId.concat(imgId);
       },
       // editImage: {
       //   deep: true,
