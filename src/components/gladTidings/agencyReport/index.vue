@@ -109,7 +109,15 @@
           @click-icon="form.agency_phone = ''"
           required>
         </van-field>
-
+        <van-field
+          v-model="form.customer_name"
+          label="客户姓名"
+          type="text"
+          placeholder="请填写客户姓名"
+          icon="clear"
+          @click-icon="form.customer_name = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.account"
           label="卡号"
@@ -232,7 +240,7 @@
           agency_username: '',          //中介人
           agency_name: '',              //中介名称
           agency_phone: '',             //中介电话
-
+          customer_name: '',            //客户姓名
           purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
           subbranch: '',                //支行名称
@@ -515,6 +523,7 @@
             this.form.agency_name = draft.agency_name;
             this.form.agency_phone = draft.agency_phone;
 
+            this.form.customer_name = draft.customer_name;
             this.form.bank = draft.bank;
             this.form.subbranch = draft.subbranch;
             this.form.account_name = draft.account_name;
@@ -560,6 +569,7 @@
         this.form.agency_name = '';
         this.form.agency_phone = '';
 
+        this.form.customer_name = '';
         this.form.bank = '';
         this.form.subbranch = '';
         this.form.account_name = '';

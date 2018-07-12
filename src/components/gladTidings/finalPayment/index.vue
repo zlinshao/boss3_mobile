@@ -93,7 +93,6 @@
         +支付方式变化
       </div>
 
-
       <van-cell-group>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
@@ -115,6 +114,15 @@
           placeholder="请填写金额"
           icon="clear"
           @click-icon="form.other_fee = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.customer_name"
+          label="客户姓名"
+          type="text"
+          placeholder="请填写客户姓名"
+          icon="clear"
+          @click-icon="form.customer_name = ''"
           required>
         </van-field>
         <van-field
@@ -259,14 +267,15 @@
           draft: 0,
           month: '',
           terms: '',
-          contract_id: '',            //房屋地址id
-          house_id: '',               //房屋地址id
-          payWay: [''],               //付款方式
-          price_arr: [''],            //月单价
+          contract_id: '',              //房屋地址id
+          house_id: '',                 //房屋地址id
+          payWay: [''],                 //付款方式
+          price_arr: [''],              //月单价
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
-          receipt: [],                    //收据编号
+          customer_name: '',            //客户姓名
+          receipt: [],                  //收据编号
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -650,6 +659,7 @@
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
+            this.form.customer_name = draft.customer_name;
 
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
@@ -701,6 +711,7 @@
 
         this.form.other_fee_name = '';
         this.form.other_fee = '';
+        this.form.customer_name = '';
         this.form.is_other_fee = 0;
         this.other_fee_status = false;
 
