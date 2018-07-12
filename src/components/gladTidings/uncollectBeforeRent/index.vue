@@ -341,6 +341,7 @@
           required>
         </van-field>
         <van-field
+          @click="selectShow(6, '')"
           v-model="cardName"
           label="证件类型"
           type="text"
