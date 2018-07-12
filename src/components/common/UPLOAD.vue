@@ -55,12 +55,13 @@
     },
     watch: {
       editImage(val) {
-        this.editImg = val;
-        let imgId = [];
-        for (let i = 0; i < val.length; i++) {
-          imgId.push(val[i].id);
+        if (this.fileLength === 0) {
+          this.editImg = val;
+          this.imgId = [];
+          for (let i = 0; i < val.length; i++) {
+            this.imgId.push(val[i].id)
+          }
         }
-        this.imgId = this.imgId.concat(imgId);
       },
       // editImage: {
       //   deep: true,
@@ -96,7 +97,6 @@
           _this.bigPic = $(this).prev().attr("src");
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
-          _this.fileLength--;
           let id = $(this).attr("data-val");
           let toremove = '';
           for (let i in _this.uploader.files) {
