@@ -87,6 +87,7 @@
           _this.bigPic = $(this).prev().attr("src");
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
+          _this.fileLength--;
           let id = $(this).attr("data-val");
           let toremove = '';
           for (let i in _this.uploader.files) {
@@ -109,8 +110,6 @@
               _this.imgArray.splice(i, 1);
             }
           }
-          console.log(_this.fileLength);
-          console.log(_this.imgId.length);
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
         });
         this.getTokenMessage();
@@ -215,10 +214,10 @@
                 }
               }
             },
-            'FilesRemoved': function (uploader, files) {
-              console.log(uploader);
-              _this.fileLength = _this.editImg.length + uploader.files.length;
-            },
+            // 'FilesRemoved': function (uploader, files) {
+            //   console.log(uploader);
+            //   _this.fileLength = _this.editImg.length + uploader.files.length;
+            // },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
               _this.isUploading = true;
