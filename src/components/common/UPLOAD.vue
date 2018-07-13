@@ -86,7 +86,7 @@
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
-          let close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1;
+          let close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1 ? true : false;
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
               $('#' + id).remove();
@@ -130,7 +130,6 @@
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.token = res.data.data;
           this.$http.defaults.timeout = null;
-          globalConfig.header.Authorization = '';
           if (!this.uploader) {
             this.uploaderReady(res.data.data);
           }
