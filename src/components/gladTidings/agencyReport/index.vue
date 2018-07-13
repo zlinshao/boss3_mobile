@@ -558,7 +558,7 @@
         this.isClear = false;
       });
       $('.imgItem').remove();
-      this.picStatus = 'success';
+      this.picStatus = true;
       this.form.payWay = [''];
       this.form.price_arr = [''];
       this.form.address = '';
@@ -590,8 +590,6 @@
       this.form.department_id = '';
       this.department_name = '';
     }
-  }
-  ,
   }
 </script>
 
