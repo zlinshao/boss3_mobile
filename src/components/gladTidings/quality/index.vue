@@ -397,7 +397,7 @@
         tabs: '',
 
         isClear: false,                     //删除图片
-        picStatus: true,
+        picStatus: false,
 
         allCity: [],                        //城市
         cities: [],                         //城市
@@ -825,63 +825,62 @@
 
       // 截图
       myGetImg(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         this.form.photo = val[1];
       },
 
       saveCollect(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
-            this.form.gas = this.gasOn ? 1 : 0;                       //天然气
-            this.form.is_clean = this.is_cleanOn ? 1 : 0;             //房屋交接是否干净
-            this.form.bed = this.bedOn ? 1 : 0;                       //床+床垫
-            this.form.wardrobe = this.wardrobeOn ? 1 : 0;             //衣柜
-            this.form.curtain = this.curtainOn ? 1 : 0;               //窗帘
-            this.form.is_fill = this.is_fillOn ? 1 : 0;               //家电是否齐全
-            this.form.is_lord_fill = this.is_lordOn ? 1 : 0;          //房东是否予以配齐
-            this.form.is_draft = val;
-            this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === "51410" || res.data.code === "51430") {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === "51420") {
-                this.form.id = res.data.data.id;
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
+        if (this.picStatus === 'errPic') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (!this.picStatus) {
+          Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
+          this.form.gas = this.gasOn ? 1 : 0;                       //天然气
+          this.form.is_clean = this.is_cleanOn ? 1 : 0;             //房屋交接是否干净
+          this.form.bed = this.bedOn ? 1 : 0;                       //床+床垫
+          this.form.wardrobe = this.wardrobeOn ? 1 : 0;             //衣柜
+          this.form.curtain = this.curtainOn ? 1 : 0;               //窗帘
+          this.form.is_fill = this.is_fillOn ? 1 : 0;               //家电是否齐全
+          this.form.is_lord_fill = this.is_lordOn ? 1 : 0;          //房东是否予以配齐
+          this.form.is_draft = val;
+          this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
+            this.haveInHand = true;
+            this.retry = 0;
+            if (res.data.code === "51410" || res.data.code === "51430") {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === "51420") {
+              this.form.id = res.data.data.id;
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
 
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
 
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
+                    this.saveCollect(this.form.draft);
+                  }
+                });
               }
-            })
-          } else {
-            Toast(this.alertMsg('sub'));
-          }
+            }
+          })
         } else {
-          if (this.haveInHand === 'err') {
-            Toast(this.alertMsg('errPic'));
-          } else {
-            Toast(this.alertMsg('pic'));
-          }
+          Toast(this.alertMsg('sub'));
         }
       },
 
@@ -1054,7 +1053,7 @@
         });
         this.userInfo(true);
         $('.imgItem').remove();
-        this.picStatus = true;
+        this.picStatus = false;
         this.form.id = '';
         this.form.processable_id = '';
         this.form.house_id = '';
