@@ -96,25 +96,21 @@
           _this.uploader.splice(toremove, 1);
           for (let i = 0; i < _this.imgArray.length; i++) {
             if (_this.imgArray[i].name.indexOf(id) > -1) {
-
               _this.imgId.forEach((item) => {
                 if (_this.imgArray[i].id === item) {
                   _this.imgId = _this.imgId.filter((x) => {
                     return x !== item
                   })
-                } else {
-                  console.log(_this.errorId);
-                  // _this.errorId.splice(0, 1);
-                  // if (_this.errorId.length === 0) {
-                  //   _this.isUploading = false;
-                  //   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                  // }
                 }
               });
               _this.imgArray.splice(i, 1);
-            } else {
-              console.log(11111111)
             }
+          }
+          let type = _this.imgArray.every((item) => {
+            return item.name.indexOf(id) < 0
+          });
+          if (type) {
+            this.errorId.splice(0, 1);
           }
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
         });
