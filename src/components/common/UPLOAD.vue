@@ -165,7 +165,11 @@
 
           init: {
             'FilesAdded': function (up, files) {
-              console.log(up);
+              up.files.forEach((arr, index, b) => {
+                console.log(arr);
+                console.log(index);
+                console.log(b);
+              });
               _this.fileLength = _this.imgId.length + files.length;
               _this.isUploading = true;
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
@@ -231,8 +235,8 @@
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,
-                // type: file.type,
-                // size: file.size
+                type: file.type,
+                size: file.size
               }).then((res) => {
                 _this.$http.defaults.timeout = null;
                 if (res.data.status === "success") {
@@ -259,7 +263,6 @@
               // _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
             },
             'Error': function (up, err, errTip) {// 每个文件上传失败后,处理相关的事情
-              console.log(up);
               if (err.file && err.file.size !== undefined && err.file.size > 104857600) {
                 Dialog.alert({
                   message: '文件最大不能超过100MB'
