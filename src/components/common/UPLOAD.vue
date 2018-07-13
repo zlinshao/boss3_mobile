@@ -103,14 +103,17 @@
                     return x !== item
                   })
                 } else {
-                  _this.errorId.splice(0, 1);
-                  if (_this.errorId.length === 0) {
-                    this.isUploading = false;
-                    _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                  }
+                  console.log(_this.errorId);
+                  // _this.errorId.splice(0, 1);
+                  // if (_this.errorId.length === 0) {
+                  //   _this.isUploading = false;
+                  //   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+                  // }
                 }
               });
               _this.imgArray.splice(i, 1);
+            } else {
+              console.log(11111111)
             }
           }
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
