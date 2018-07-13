@@ -102,6 +102,12 @@
                   _this.imgId = _this.imgId.filter((x) => {
                     return x !== item
                   })
+                } else {
+                  _this.errorId.splice(0, 1);
+                  if (_this.errorId.length === 0) {
+                    this.isUploading = false;
+                    _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+                  }
                 }
               });
               _this.imgArray.splice(i, 1);
@@ -251,6 +257,7 @@
               }).catch(error => {
                 console.log(error);
                 _this.$http.defaults.timeout = null;
+                let object = {};
                 _this.errorId.push(1);
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
               });
