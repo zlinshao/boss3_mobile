@@ -86,8 +86,7 @@
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
-          let close = $(this).prev().children('b').children('span').attr('class');
-          console.log(close);
+          let close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1;
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
               $('#' + id).remove();
@@ -106,11 +105,16 @@
               _this.imgArray.splice(i, 1);
             }
           }
-          let type = _this.imgArray.every((item) => {
-            return item.name.indexOf(id) < 0;
-          });
-          if (type) {
-            _this.errorId.splice(0, 1);
+          if (close) {
+            let type = _this.imgArray.every((item) => {
+              return item.name.indexOf(id) < 0;
+            });
+            if (type) {
+              _this.errorId.splice(0, 1);
+            }
+            if (_this.errorId.length === 0) {
+              _this.isUploading = false;
+            }
           }
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
         });
