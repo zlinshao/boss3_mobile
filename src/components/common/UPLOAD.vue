@@ -264,6 +264,7 @@
                 _this.$http.defaults.timeout = null;
                 _this.errorId.push(1);
                 _this.isUploading = 'err';
+                _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
               });
             },
