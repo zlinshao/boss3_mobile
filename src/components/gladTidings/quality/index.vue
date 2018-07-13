@@ -833,7 +833,7 @@
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
-        } else if (!this.picStatus) {
+        } else if (this.picStatus === 'lose') {
           Toast(this.alertMsg('pic'));
           return;
         }

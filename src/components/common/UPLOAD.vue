@@ -39,7 +39,7 @@
         imgArray: [],
         imgId: [],
         errorId: [],
-        isUploading: false,
+        isUploading: 'success',
         activeIndex: null,
         uploader: null,
         editImg: [],
@@ -113,7 +113,7 @@
               _this.errorId.splice(0, 1);
             }
             if (_this.errorId.length === 0) {
-              _this.isUploading = false;
+              _this.isUploading = 'success';
             } else {
               _this.isUploading = 'err';
             }
@@ -179,7 +179,7 @@
           init: {
             'FilesAdded': function (up, files) {
               _this.fileLength = _this.imgId.length + files.length;
-              _this.isUploading = true;
+              _this.isUploading = 'lose';
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
               plupload.each(files, function (file) {
                 if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
@@ -229,7 +229,7 @@
             // },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
-              _this.isUploading = true;
+              _this.isUploading = 'lose';
               up.setOption('multipart_params', {
                 token: _this.token,               // 上传凭证
               });
@@ -256,7 +256,7 @@
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
                 if (_this.fileLength === _this.imgId.length) {
-                  _this.isUploading = false;
+                  _this.isUploading = 'success';
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
               }).catch(error => {
