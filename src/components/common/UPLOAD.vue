@@ -86,14 +86,14 @@
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
-          let toremove = '';
+          let close = $(this).children('span').attr("class");
+          console.log(close);
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
-              toremove = i;
+              $('#' + id).remove();
+              _this.uploader.splice(i, 1);
             }
           }
-          $('#' + id).remove();
-          _this.uploader.splice(toremove, 1);
           for (let i = 0; i < _this.imgArray.length; i++) {
             if (_this.imgArray[i].name.indexOf(id) > -1) {
               _this.imgId.forEach((item) => {
@@ -256,7 +256,6 @@
               }).catch(error => {
                 console.log(error);
                 _this.$http.defaults.timeout = null;
-                let object = {};
                 _this.errorId.push(1);
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
               });
