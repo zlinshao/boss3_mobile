@@ -166,6 +166,7 @@
           init: {
             'FilesAdded': function (up, files) {
               _this.fileLength = _this.imgId.length + up.files.length;
+              console.log(files);
               console.log(_this.imgId.length);
               console.log(up.files.length);
               _this.isUploading = true;
@@ -214,8 +215,8 @@
             },
             'FilesRemoved': function (uploader, files) {
               console.log(uploader.files.length);
-              console.log(_this.imgId.length);
-              _this.fileLength = _this.imgId.length + uploader.files.length;
+              console.log(_this.editImg.length);
+              _this.fileLength = _this.editImg.length + uploader.files.length;
             },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
