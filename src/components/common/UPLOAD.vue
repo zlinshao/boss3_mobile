@@ -48,7 +48,6 @@
       }
     },
     mounted() {
-      globalConfig.header.Authorization = '';
       this.active();
       // this.fileLength = this.editImg.length;
     },
@@ -123,6 +122,7 @@
           this.$http.defaults.timeout = null;
           if (!this.uploader) {
             this.uploaderReady(res.data.data);
+            globalConfig.header.Authorization = '';
           }
         }).catch((error) => {
           this.$http.defaults.timeout = null;
