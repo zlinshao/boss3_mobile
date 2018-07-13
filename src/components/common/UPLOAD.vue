@@ -86,7 +86,7 @@
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
-          let close = $(this).prev().children('span').attr('class');
+          let close = $(this).prev().children('b').children('span').attr('class');
           console.log(close);
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
