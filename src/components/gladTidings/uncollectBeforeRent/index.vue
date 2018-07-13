@@ -344,8 +344,7 @@
           label="证件类型"
           type="text"
           readonly
-          placeholder="请选择证件类型"
-          required>
+          placeholder="请选择证件类型">
         </van-field>
         <van-field
           v-model="form.idcard"
@@ -353,8 +352,7 @@
           type="text"
           placeholder="请填写证件号"
           icon="clear"
-          @click-icon="form.idcard = ''"
-          required>
+          @click-icon="form.idcard = ''">
         </van-field>
       </van-cell-group>
 

@@ -80,13 +80,15 @@
             @click="selectShow(1, index)"
             readonly
             label="证件类型"
-            placeholder="请选择证件类型">
+            placeholder="请选择证件类型"
+            required>
           </van-field>
           <van-field
             v-model="form.customers[index].idcard"
             type="text"
             label="证件号码"
-            placeholder="请填写证件号码">
+            placeholder="请填写证件号码"
+            required>
           </van-field>
         </van-cell-group>
       </div>

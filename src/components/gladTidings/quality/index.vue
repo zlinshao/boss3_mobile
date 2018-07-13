@@ -153,10 +153,10 @@
         </van-field>
 
         <!--<div class="titleSwitch">-->
-          <!--<div class="cellGroup">-->
-            <!--<span class="requiredIcon">*</span>-->
-            <!--<van-switch-cell v-model="cusFrom1" title="是否中介"/>-->
-          <!--</div>-->
+        <!--<div class="cellGroup">-->
+        <!--<span class="requiredIcon">*</span>-->
+        <!--<van-switch-cell v-model="cusFrom1" title="是否中介"/>-->
+        <!--</div>-->
         <!--</div>-->
 
         <van-field
@@ -877,7 +877,11 @@
             Toast(this.alertMsg('sub'));
           }
         } else {
-          Toast(this.alertMsg('pic'));
+          if (this.haveInHand === 'err') {
+            Toast(this.alertMsg('errPic'));
+          } else {
+            Toast(this.alertMsg('pic'));
+          }
         }
       },
 

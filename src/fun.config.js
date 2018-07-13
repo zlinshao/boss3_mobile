@@ -112,6 +112,8 @@ export default {
           return '正在提交，请耐心等待...';
         case 'pic':
           return '图片上传中...';
+        case 'errPic':
+          return '请删除上传失败的文件并重新上传!';
       }
     };
 
