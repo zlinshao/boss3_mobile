@@ -344,14 +344,14 @@
         },
         pics: {
           identity_photo: {},               //证件照片
-          photo: {},                        //银行卡照片
-          water_photo: {},                  //合同照片
-          electricity_photo: {},            //水表照片
-          gas_photo: {},                    //电表照片
-          checkin_photo: {},                //气表照片
-          certificate_photo: {},            //交接单照片
-          deposit_photo: {},                //委托书照片
-          other_photo: {},                  //押金照片
+          photo: {},                        //合同照片
+          water_photo: {},                  //水表照片
+          electricity_photo: {},            //电表照片
+          gas_photo: {},                    //气表照片
+          checkin_photo: {},                //交接单照片
+          certificate_photo: {},            //凭证截图
+          deposit_photo: {},                //押金收条
+          other_photo: {},                  //其他照片
         },
       }
     },

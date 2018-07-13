@@ -327,7 +327,8 @@
           type="text"
           placeholder="请填写客户姓名"
           icon="clear"
-          @click-icon="form.name = ''">
+          @click-icon="form.name = ''"
+          required>
         </van-field>
         <van-field
           v-model="form.phone"
@@ -336,7 +337,8 @@
           class="number"
           placeholder="请填写客户手机号"
           icon="clear"
-          @click-icon="form.phone = ''">
+          @click-icon="form.phone = ''"
+          required>
         </van-field>
         <van-field
           @click="selectShow(6, '')"
@@ -367,7 +369,7 @@
       </div>
 
       <div class="aloneModel">
-        <div class="title">收据截图</div>
+        <div class="title">押金收条</div>
         <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
       </div>
 
@@ -529,7 +531,7 @@
           screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
-          screenshot_receipt: [],       //收据截图 数组
+          screenshot_receipt: [],       //押金收条 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
