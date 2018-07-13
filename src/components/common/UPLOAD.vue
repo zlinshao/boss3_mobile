@@ -132,7 +132,6 @@
         this.$http.get(globalConfig.server_user + 'files').then((res) => {
           this.token = res.data.data;
           this.$http.defaults.timeout = null;
-          globalConfig.header.Authorization = '';
           if (!this.uploader) {
             this.uploaderReady(res.data.data);
           }
