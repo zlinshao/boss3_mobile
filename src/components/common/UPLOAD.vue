@@ -1,7 +1,7 @@
 <template>
   <div id="uploadContainer">
     <div id="container">
-      {{fileLength}}---{{imgId}}
+      {{fileLength}}==={{imgId}}==={{imgId.length}}
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style="position: relative; margin: .3rem 0 0 .3rem;">
