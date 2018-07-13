@@ -226,12 +226,12 @@
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
               _this.$http.defaults.timeout = 5000;
-              _this.$http.post(globalConfig.server_user + 'file', {
+              _this.$http.post(globalConfig.server_user + 'files', {
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,
-                type: file.type,
-                size: file.size
+                // type: file.type,
+                // size: file.size
               }).then((res) => {
                 _this.$http.defaults.timeout = null;
                 if (res.data.status === "success") {
