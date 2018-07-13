@@ -825,6 +825,7 @@
 
       // 截图
       myGetImg(val) {
+        console.log(val);
         this.picStatus = !val[2];
         this.form.photo = val[1];
       },

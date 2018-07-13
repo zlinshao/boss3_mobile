@@ -242,10 +242,10 @@
                   _this.imgArray.push(object);
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
-                // if (_this.fileLength === _this.imgId.length) {
+                if (_this.fileLength === _this.imgId.length) {
                 _this.isUploading = false;
                 _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                // }
+                }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
