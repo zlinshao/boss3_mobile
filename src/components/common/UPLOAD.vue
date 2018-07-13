@@ -164,6 +164,7 @@
 
           init: {
             'FilesAdded': function (up, files) {
+              console.log(files);
               _this.fileLength = _this.imgId.length + files.length;
               _this.isUploading = true;
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
@@ -222,6 +223,7 @@
               });
             },
             'FileUploaded': function (up, file, info) {
+              console.log(file);
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
@@ -243,8 +245,8 @@
                   document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
                 }
                 if (_this.fileLength === _this.imgId.length) {
-                _this.isUploading = false;
-                _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+                  _this.isUploading = false;
+                  _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
