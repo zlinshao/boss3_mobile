@@ -37,6 +37,7 @@
       return {
         imgArray: [],
         imgId: [],
+        errorId: [],
         isUploading: false,
         activeIndex: null,
         uploader: null,
@@ -164,10 +165,10 @@
 
           init: {
             'FilesAdded': function (up, files) {
+              console.log(up);
               _this.fileLength = _this.imgId.length + files.length;
               _this.isUploading = true;
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-
               plupload.each(files, function (file) {
                 if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
 
@@ -248,6 +249,7 @@
                 }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
+                this.errorId.push();
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
               });
             },
@@ -257,7 +259,7 @@
               // _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
             },
             'Error': function (up, err, errTip) {// 每个文件上传失败后,处理相关的事情
-              alert(JSON.stringify(err));
+              console.log(up);
               if (err.file && err.file.size !== undefined && err.file.size > 104857600) {
                 Dialog.alert({
                   message: '文件最大不能超过100MB'
