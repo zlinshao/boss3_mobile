@@ -48,6 +48,7 @@
       }
     },
     mounted() {
+      globalConfig.header.Authorization = '';
       this.active();
       // this.fileLength = this.editImg.length;
     },
@@ -165,11 +166,6 @@
 
           init: {
             'FilesAdded': function (up, files) {
-              up.files.forEach((arr, index, b) => {
-                console.log(arr);
-                console.log(index);
-                console.log(b);
-              });
               _this.fileLength = _this.imgId.length + files.length;
               _this.isUploading = true;
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
@@ -253,7 +249,7 @@
                 }
               }).catch(error => {
                 _this.$http.defaults.timeout = null;
-                this.errorId.push();
+                this.errorId.push(1);
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
               });
             },
