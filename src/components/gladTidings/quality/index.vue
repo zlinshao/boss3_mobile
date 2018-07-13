@@ -873,7 +873,7 @@
                   if (data && this.retry === 0) {
                     this.retry++;
 
-                    this.saveCollect(this.form.draft);
+                    this.saveCollect(this.form.is_draft);
                   }
                 });
               }

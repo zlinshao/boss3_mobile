@@ -260,7 +260,6 @@
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
               }).catch(error => {
-                console.log(error);
                 _this.$http.defaults.timeout = null;
                 _this.errorId.push(1);
                 _this.isUploading = 'err';
