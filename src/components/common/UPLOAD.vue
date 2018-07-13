@@ -250,9 +250,9 @@
                 }
               }).catch(error => {
                 console.log(error);
-                this.errorId.push(1);
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
                 _this.$http.defaults.timeout = null;
+                _this.errorId.push(1);
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
               });
             },
             'UploadComplete': function () {
