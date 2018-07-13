@@ -830,7 +830,7 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus === 'errPic') {
+        if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
         } else if (!this.picStatus) {
