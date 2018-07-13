@@ -1218,8 +1218,6 @@
       this.form.remark = '';
     }
   }
-  ,
-  }
 </script>
 
 <style lang="scss">

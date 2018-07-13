@@ -596,7 +596,6 @@
         this.form.department_id = '';
       },
     }
-    ,
   }
 </script>
 
