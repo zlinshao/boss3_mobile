@@ -249,6 +249,7 @@
                   _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
                 }
               }).catch(error => {
+                console.log(error);
                 _this.$http.defaults.timeout = null;
                 this.errorId.push(1);
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
