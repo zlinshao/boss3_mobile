@@ -164,7 +164,6 @@
 
           init: {
             'FilesAdded': function (up, files) {
-              console.log(files);
               _this.fileLength = _this.imgId.length + files.length;
               _this.isUploading = true;
               _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
@@ -223,12 +222,11 @@
               });
             },
             'FileUploaded': function (up, file, info) {
-              console.log(file);
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
               _this.$http.defaults.timeout = 5000;
-              _this.$http.post(globalConfig.server_user + 'files', {
+              _this.$http.post(globalConfig.server_user + 'file', {
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,
