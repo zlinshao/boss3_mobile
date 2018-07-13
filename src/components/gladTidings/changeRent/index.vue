@@ -449,7 +449,7 @@
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
-        picStatus: true,
+        picStatus: 'success',
 
         tabs: '',
         columns: [],              //select值
@@ -668,7 +668,7 @@
           if (res.data.code === '1000120') {
             // 收据编号默认日期
             this.receiptDate = res.data.data.py + res.data.data.year;
-            let receipt =  res.data.data.py + res.data.data.year;
+            let receipt = res.data.data.py + res.data.data.year;
             this.form.receipt.push(receipt);
           }
         });
@@ -701,7 +701,7 @@
       },
       // 截图
       getImgData(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         if (val[0] === 'screenshot') {
           this.form.screenshot = val[1];
         } else if (val[0] === 'leader') {
@@ -920,300 +920,305 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            let receipt = [];
-            for (let i = 0; i < this.form.receipt.length; i++) {
-              if (this.form.receipt[i] !== this.receiptDate) {
-                receipt.push(this.form.receipt[i]);
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
+          Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          let receipt = [];
+          for (let i = 0; i < this.form.receipt.length; i++) {
+            if (this.form.receipt[i] !== this.receiptDate) {
+              receipt.push(this.form.receipt[i]);
+            }
+          }
+          this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
+          this.form.receipt = receipt;
+          this.form.draft = val;
+          this.form.is_corp = this.corp ? 1 : 0;
+          this.form.is_other_fee = this.other_fee_status ? 1 : 0;
+          this.form.day = this.form.day === '' ? '0' : this.form.day;
+          this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+          this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+            this.haveInHand = true;
+            this.retry = 0;
+            if (res.data.code === '50210' || res.data.code === '50230') {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === '50220') {
+              if (receipt.length === 0) {
+                this.form.receipt = [];
+                this.form.receipt.push(this.receiptDate);
+              }
+              this.form.day = this.form.day === '0' ? '' : this.form.day;
+              this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
+              this.form.id = res.data.data.id;
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.saveCollect(this.form.draft);
+                  }
+                });
               }
             }
-            this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
-            this.form.receipt = receipt;
-            this.form.draft = val;
-            this.form.is_corp = this.corp ? 1 : 0;
-            this.form.is_other_fee = this.other_fee_status ? 1 : 0;
-            this.form.day = this.form.day === '' ? '0' : this.form.day;
-            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
-            this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === '50210' || res.data.code === '50230') {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '50220') {
-                if (receipt.length === 0) {
-                  this.form.receipt = [];
-                  this.form.receipt.push(this.receiptDate);
-                }
-                this.form.day = this.form.day === '0' ? '' : this.form.day;
-                this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
-                this.form.id = res.data.data.id;
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
-              }
-            })
-          } else {
-            Toast(this.alertMsg('sub'));
-          }
+          })
         } else {
-          Toast(this.alertMsg('pic'));
+          Toast(this.alertMsg('sub'));
         }
-      },
+      }
+    },
 
-      houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
-          this.form.address = val.house_name;
-          this.form.contract_id = val.id;
-          this.form.house_id = val.house_id;
-        }
-        if (t.staff !== undefined && t.staff !== '') {
-          let val = JSON.parse(t.staff);
-          this.form.staff_id = val.staff_id;
-          this.form.staff_name = val.staff_name;
-          this.form.department_id = val.depart_id;
-          this.form.department_name = val.depart_name;
-          this.isValue1 = val.activeRevise;
-          this.stick();
-        }
-        if (t.depart !== undefined && t.depart !== '') {
-          let val = JSON.parse(t.depart);
-          this.form.department_name = val.name;
-          this.form.department_id = val.id;
-          this.isValue1 = val.activeRevise;
-          this.stick();
-        }
-        if (t.tops === '') {
-          this.stick();
-        }
-        this.userInfo(this.isValue1);
-      },
+    houseInfo() {
+      let t = this.$route.query;
+      if (t.house !== undefined && t.house !== '') {
+        let val = JSON.parse(t.house);
+        this.form.address = val.house_name;
+        this.form.contract_id = val.id;
+        this.form.house_id = val.house_id;
+      }
+      if (t.staff !== undefined && t.staff !== '') {
+        let val = JSON.parse(t.staff);
+        this.form.staff_id = val.staff_id;
+        this.form.staff_name = val.staff_name;
+        this.form.department_id = val.depart_id;
+        this.form.department_name = val.depart_name;
+        this.isValue1 = val.activeRevise;
+        this.stick();
+      }
+      if (t.depart !== undefined && t.depart !== '') {
+        let val = JSON.parse(t.depart);
+        this.form.department_name = val.name;
+        this.form.department_id = val.id;
+        this.isValue1 = val.activeRevise;
+        this.stick();
+      }
+      if (t.tops === '') {
+        this.stick();
+      }
+      this.userInfo(this.isValue1);
+    },
 
-      rentDetail(val) {
-        this.form.processable_id = '';
-        let type;
-        if (val !== '') {
-          type = 'bulletin/rent/' + val.newID;
-          if (val.type === 2) {
-            this.form.processable_id = val.ids;
-          } else {
-            this.userInfo(true);
-          }
+    rentDetail(val) {
+      this.form.processable_id = '';
+      let type;
+      if (val !== '') {
+        type = 'bulletin/rent/' + val.newID;
+        if (val.type === 2) {
+          this.form.processable_id = val.ids;
         } else {
           this.userInfo(true);
-          type = 'bulletin/rent?type=2';
         }
-        this.$http.get(this.urls + type).then((res) => {
-          if (res.data.code === '50220') {
-            this.isClear = false;
-            let data = res.data.data;
-            let draft = res.data.data.draft_content;
+      } else {
+        this.userInfo(true);
+        type = 'bulletin/rent?type=2';
+      }
+      this.$http.get(this.urls + type).then((res) => {
+        if (res.data.code === '50220') {
+          this.isClear = false;
+          let data = res.data.data;
+          let draft = res.data.data.draft_content;
 
-            this.form.trans_type = draft.trans_type;
-            this.form.id = data.id;
-            this.form.contract_id = draft.contract_id;
-            this.form.house_id = draft.house_id;
-            this.form.address = draft.address;
-            this.form.month = draft.month;
-            this.form.discount = draft.discount;
-            this.form.day = draft.day === '0' ? '' : draft.day;
-            this.form.sign_date = draft.sign_date;
-            this.form.end_date = draft.end_date;
-            this.form.begin_date = draft.begin_date;
-            this.first_date = [];
-            this.first_date.push(draft.begin_date);
-            this.datePrice[0] = draft.begin_date;
-            this.datePay[0] = draft.begin_date;
-            for (let i = 0; i < draft.price_arr.length; i++) {
-              this.amountPrice = i + 1;
-              this.form.period_price_arr.push('');
-              this.form.price_arr.push('');
-            }
-            this.form.period_price_arr = draft.period_price_arr;
-            this.countDate(1, draft.period_price_arr);
-            this.form.price_arr = draft.price_arr;
+          this.form.trans_type = draft.trans_type;
+          this.form.id = data.id;
+          this.form.contract_id = draft.contract_id;
+          this.form.house_id = draft.house_id;
+          this.form.address = draft.address;
+          this.form.month = draft.month;
+          this.form.discount = draft.discount;
+          this.form.day = draft.day === '0' ? '' : draft.day;
+          this.form.sign_date = draft.sign_date;
+          this.form.end_date = draft.end_date;
+          this.form.begin_date = draft.begin_date;
+          this.first_date = [];
+          this.first_date.push(draft.begin_date);
+          this.datePrice[0] = draft.begin_date;
+          this.datePay[0] = draft.begin_date;
+          for (let i = 0; i < draft.price_arr.length; i++) {
+            this.amountPrice = i + 1;
+            this.form.period_price_arr.push('');
+            this.form.price_arr.push('');
+          }
+          this.form.period_price_arr = draft.period_price_arr;
+          this.countDate(1, draft.period_price_arr);
+          this.form.price_arr = draft.price_arr;
 
-            this.form.pay_way_bet = draft.pay_way_bet;
-            for (let i = 0; i < draft.pay_way_arr.length; i++) {
-              this.amountPay = i + 1;
-              this.form.period_pay_arr.push('');
-              this.form.pay_way_arr.push('');
-            }
-            this.form.period_pay_arr = draft.period_pay_arr;
-            this.countDate(2, draft.period_pay_arr);
-            this.form.pay_way_arr = draft.pay_way_arr;
+          this.form.pay_way_bet = draft.pay_way_bet;
+          for (let i = 0; i < draft.pay_way_arr.length; i++) {
+            this.amountPay = i + 1;
+            this.form.period_pay_arr.push('');
+            this.form.pay_way_arr.push('');
+          }
+          this.form.period_pay_arr = draft.period_pay_arr;
+          this.countDate(2, draft.period_pay_arr);
+          this.form.pay_way_arr = draft.pay_way_arr;
 
-            this.form.money_sum = draft.money_sum;
-            this.form.money_way = draft.money_way;
-            this.form.money_sep = draft.money_sep;
-            for (let i = 0; i < draft.money_sep.length; i++) {
-              this.amountMoney = i + 1;
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].id === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
-                }
+          this.form.money_sum = draft.money_sum;
+          this.form.money_way = draft.money_way;
+          this.form.money_sep = draft.money_sep;
+          for (let i = 0; i < draft.money_sep.length; i++) {
+            this.amountMoney = i + 1;
+            for (let j = 0; j < this.dictValue8.length; j++) {
+              if (this.dictValue8[j].id === draft.money_way[i]) {
+                this.moneyNum[i] = this.dictValue8[j].dictionary_name;
               }
             }
+          }
 
-            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
-            this.form.deposit = draft.deposit;
-            this.form.is_agency = draft.is_agency;                     //是否中介
-            this.cusFrom = dicts.value8[draft.is_agency];              //是否中介
-            this.form.agency_name = draft.agency_name;
-            this.form.agency_price = draft.agency_price;
-            this.form.agency_user_name = draft.agency_user_name;
-            this.form.agency_phone = draft.agency_phone;
+          this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+          this.form.deposit = draft.deposit;
+          this.form.is_agency = draft.is_agency;                     //是否中介
+          this.cusFrom = dicts.value8[draft.is_agency];              //是否中介
+          this.form.agency_name = draft.agency_name;
+          this.form.agency_price = draft.agency_price;
+          this.form.agency_user_name = draft.agency_user_name;
+          this.form.agency_phone = draft.agency_phone;
 
-            this.is_corp = draft.is_corp;
-            this.corp = draft.is_corp === 1 ? true : false;
+          this.is_corp = draft.is_corp;
+          this.corp = draft.is_corp === 1 ? true : false;
 
-            this.form.property_payer = draft.property_payer;
-            for (let j = 0; j < this.dictValue6.length; j++) {
-              if (this.dictValue6[j].id === draft.property_payer) {
-                this.property_name = this.dictValue6[j].dictionary_name;
-              }
+          this.form.property_payer = draft.property_payer;
+          for (let j = 0; j < this.dictValue6.length; j++) {
+            if (this.dictValue6[j].id === draft.property_payer) {
+              this.property_name = this.dictValue6[j].dictionary_name;
             }
+          }
 
-            if (typeof draft.receipt !== "string") {
-              if (draft.receipt.length !== 0) {
-                this.amountReceipt = draft.receipt.length;
-                this.form.receipt = [];
-                for (let i = 0; i < draft.receipt.length; i++) {
-                  this.form.receipt.push(draft.receipt[i]);
-                }
-              } else {
-                this.amountReceipt = 1;
-                this.form.receipt = [];
-                this.form.receipt[0] = this.receiptDate;
+          if (typeof draft.receipt !== "string") {
+            if (draft.receipt.length !== 0) {
+              this.amountReceipt = draft.receipt.length;
+              this.form.receipt = [];
+              for (let i = 0; i < draft.receipt.length; i++) {
+                this.form.receipt.push(draft.receipt[i]);
               }
             } else {
               this.amountReceipt = 1;
               this.form.receipt = [];
-              this.form.receipt[0] = draft.receipt;
-            }
-
-            this.other_fee_status = draft.is_other_fee === 1 ? true : false;
-            this.form.other_fee_name = draft.other_fee_name;
-            this.form.other_fee = draft.other_fee;
-
-            this.form.retainage_date = draft.retainage_date;
-            this.form.name = draft.name;
-            this.form.phone = draft.phone;
-            this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot;
-            this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.screenshot_leader;
-            this.form.photo = draft.photo;
-            this.photos = data.photo;
-            this.form.screenshot_receipt = draft.screenshot_receipt;
-            this.receipts = data.screenshot_receipt;
-            this.form.remark = draft.remark;
-
-            if (val !== '' && val.type === 2) {
-              this.form.staff_id = draft.staff_id;
-              this.form.staff_name = draft.staff_name;
-              this.form.department_id = draft.department_id;
-              this.form.department_name = draft.department_name;
+              this.form.receipt[0] = this.receiptDate;
             }
           } else {
-            this.receiptNum();
-            this.form.id = '';
+            this.amountReceipt = 1;
+            this.form.receipt = [];
+            this.form.receipt[0] = draft.receipt;
           }
-        })
-      },
 
-      close_() {
-        this.isClear = true;
-        setTimeout(() => {
-          this.isClear = false;
-        });
-        this.userInfo(true);
-        $('.imgItem').remove();
-        this.picStatus = true;
-        this.form.id = '';
-        this.form.processable_id = '';
-        this.form.trans_type = '0';
-        this.form.contract_id = '';
-        this.form.house_id = '';
-        this.form.address = '';
-        this.form.month = '';
-        this.form.day = '';
-        this.form.begin_date = '';
-        this.form.sign_date = '';
-        this.form.end_date = '';
-        this.datePrice = [];
-        this.datePay = [];
-        this.amountPrice = 1;
-        this.form.period_price_arr = [''];
-        this.form.price_arr = [''];
-        this.form.pay_way_bet = '';
-        this.amountPay = 1;
-        this.form.period_pay_arr = [''];
-        this.form.pay_way_arr = [''];
-        this.form.money_sum = '';
-        this.amountMoney = 1;
-        this.moneyNum = [''];
-        this.form.money_sep = [''];
-        this.form.money_way = [''];
-        this.form.deposit = '';
-        this.form.discount = 0;
-        this.is_corp = 1;
-        this.corp = true;
-        this.is_agency = '';
-        this.cusFrom = '';
-        this.form.agency_name = '';
-        this.form.agency_price = '';
-        this.form.agency_user_name = '';
-        this.form.agency_phone = '';
+          this.other_fee_status = draft.is_other_fee === 1 ? true : false;
+          this.form.other_fee_name = draft.other_fee_name;
+          this.form.other_fee = draft.other_fee;
 
-        this.form.other_fee_name = '';
-        this.form.other_fee = '';
-        this.form.is_other_fee = 0;
-        this.other_fee_status = false;
+          this.form.retainage_date = draft.retainage_date;
+          this.form.name = draft.name;
+          this.form.phone = draft.phone;
+          this.form.screenshot = draft.screenshot;
+          this.screenshots = data.screenshot;
+          this.form.screenshot_leader = draft.screenshot_leader;
+          this.leaders = data.screenshot_leader;
+          this.form.photo = draft.photo;
+          this.photos = data.photo;
+          this.form.screenshot_receipt = draft.screenshot_receipt;
+          this.receipts = data.screenshot_receipt;
+          this.form.remark = draft.remark;
 
-        this.amountReceipt = 1;
-        this.form.receipt = [];
-        this.form.receipt[0] = this.receiptDate;
-
-        this.form.contract_number = 'LJZF';
-        this.form.property_payer = '';
-        this.property_name = '';
-        this.form.retainage_date = '';
-        this.form.name = '';
-        this.form.phone = '';
-        this.form.screenshot = [];
-        this.screenshots = {};
-        this.form.screenshot_leader = [];
-        this.leaders = {};
-        this.form.photo = [];
-        this.photos = {};
-        this.form.screenshot_receipt = [];
-        this.receipts = {};
-        this.form.remark = '';
-      }
+          if (val !== '' && val.type === 2) {
+            this.form.staff_id = draft.staff_id;
+            this.form.staff_name = draft.staff_name;
+            this.form.department_id = draft.department_id;
+            this.form.department_name = draft.department_name;
+          }
+        } else {
+          this.receiptNum();
+          this.form.id = '';
+        }
+      })
     },
+
+    close_() {
+      this.isClear = true;
+      setTimeout(() => {
+        this.isClear = false;
+      });
+      this.userInfo(true);
+      $('.imgItem').remove();
+      this.picStatus = 'success';
+      this.form.id = '';
+      this.form.processable_id = '';
+      this.form.trans_type = '0';
+      this.form.contract_id = '';
+      this.form.house_id = '';
+      this.form.address = '';
+      this.form.month = '';
+      this.form.day = '';
+      this.form.begin_date = '';
+      this.form.sign_date = '';
+      this.form.end_date = '';
+      this.datePrice = [];
+      this.datePay = [];
+      this.amountPrice = 1;
+      this.form.period_price_arr = [''];
+      this.form.price_arr = [''];
+      this.form.pay_way_bet = '';
+      this.amountPay = 1;
+      this.form.period_pay_arr = [''];
+      this.form.pay_way_arr = [''];
+      this.form.money_sum = '';
+      this.amountMoney = 1;
+      this.moneyNum = [''];
+      this.form.money_sep = [''];
+      this.form.money_way = [''];
+      this.form.deposit = '';
+      this.form.discount = 0;
+      this.is_corp = 1;
+      this.corp = true;
+      this.is_agency = '';
+      this.cusFrom = '';
+      this.form.agency_name = '';
+      this.form.agency_price = '';
+      this.form.agency_user_name = '';
+      this.form.agency_phone = '';
+
+      this.form.other_fee_name = '';
+      this.form.other_fee = '';
+      this.form.is_other_fee = 0;
+      this.other_fee_status = false;
+
+      this.amountReceipt = 1;
+      this.form.receipt = [];
+      this.form.receipt[0] = this.receiptDate;
+
+      this.form.contract_number = 'LJZF';
+      this.form.property_payer = '';
+      this.property_name = '';
+      this.form.retainage_date = '';
+      this.form.name = '';
+      this.form.phone = '';
+      this.form.screenshot = [];
+      this.screenshots = {};
+      this.form.screenshot_leader = [];
+      this.leaders = {};
+      this.form.photo = [];
+      this.photos = {};
+      this.form.screenshot_receipt = [];
+      this.receipts = {};
+      this.form.remark = '';
+    }
+  }
+  ,
   }
 </script>
 

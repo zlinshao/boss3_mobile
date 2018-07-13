@@ -3,7 +3,7 @@
     <div id="articleComment">
       <div style="background: #fafafe;height: 10px;width: 100%;"></div>
       <div class="contents">
-        <van-cell-group >
+        <van-cell-group>
           <van-field
             v-model="form.remark"
             type="textarea"
@@ -34,7 +34,7 @@
       return {
         haveInHand: true,
         isClear: false,
-        picStatus: true,
+        picStatus: 'success',
         urls: globalConfig.server,
         form: {
           remark: '',
@@ -42,6 +42,7 @@
         },
         pitch: '',
         path: '',
+        retry: 0,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -67,36 +68,55 @@
       },
 
       sure() {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            this.$http.post(this.urls + 'oa/portal/comment', {
-              content: this.form.remark,
-              obj_id: this.pitch,
-              parent_id: 0,
-              image_pic: this.form.photo,
-              video_file: [],
-            }).then((res) => {
-              this.haveInHand = true;
-              if (res.data.code === '80060') {
-                Toast.success(res.data.msg);
-                this.$router.push({path: this.path, query: {id: this.pitch}});
-                this.close_();
-                $('.imgItem').remove();
-              } else {
-                Toast(res.data.msg);
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
+          Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.$http.post(this.urls + 'oa/portal/comment', {
+            content: this.form.remark,
+            obj_id: this.pitch,
+            parent_id: 0,
+            image_pic: this.form.photo,
+            video_file: [],
+          }).then((res) => {
+            this.haveInHand = true;
+            if (res.data.code === '80060') {
+              Toast.success(res.data.msg);
+              this.$router.push({path: this.path, query: {id: this.pitch}});
+              this.close_();
+              $('.imgItem').remove();
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.sure();
+                  }
+                });
               }
-            })
-          } else {
-            Toast('正在提交...');
-          }
+            }
+          })
         } else {
-          Toast('图片上传中...');
+          Toast(this.alertMsg('sub'));
         }
       },
 
       getImgData(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         this.form.photo = val[1];
       },
 
@@ -105,6 +125,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        this.retry = 0;
         this.form.remark = '';
         this.form.photo = [];
       },
@@ -169,7 +190,7 @@
       }
     }
     .pic {
-      padding: .1rem 10px .3rem ;
+      padding: .1rem 10px .3rem;
       background: #fff;
       width: 100%;
       .title {

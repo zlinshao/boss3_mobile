@@ -399,7 +399,7 @@
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
-        picStatus: true,
+        picStatus: 'success',
 
         tabs: '',
         columns: [],              //select值
@@ -626,7 +626,7 @@
       },
       // 截图
       getImgData(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         if (val[0] === 'screenshot') {
           this.form.screenshot = val[1];
         } else if (val[0] === 'leader') {
@@ -829,7 +829,13 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus) {
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
+          Toast(this.alertMsg('pic'));
+          return;
+        }
           if (this.haveInHand) {
             this.haveInHand = false;
             let receipt = [];
@@ -885,9 +891,6 @@
           } else {
             Toast(this.alertMsg('sub'));
           }
-        } else {
-          Toast(this.alertMsg('pic'));
-        }
       },
 
       houseInfo() {
@@ -1073,7 +1076,7 @@
         });
         this.userInfo(true);
         $('.imgItem').remove();
-        this.picStatus = true;
+        this.picStatus = 'success';
         this.form.address = '';
 
         this.form.old_house_name = '';

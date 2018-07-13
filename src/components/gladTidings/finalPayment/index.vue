@@ -233,7 +233,7 @@
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
-        picStatus: true,
+        picStatus: 'success',
 
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
@@ -372,7 +372,7 @@
           if (res.data.code === '1000120') {
             // 收据编号默认日期
             this.receiptDate = res.data.data.py + res.data.data.year;
-            let receipt =  res.data.data.py + res.data.data.year;
+            let receipt = res.data.data.py + res.data.data.year;
             this.form.receipt.push(receipt);
           }
         });
@@ -395,7 +395,7 @@
       },
       // 截图
       screenshot(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
         } else {
@@ -503,59 +503,62 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            let receipt = [];
-            for (let i = 0; i < this.form.receipt.length; i++) {
-              if (this.form.receipt[i] !== this.receiptDate) {
-                receipt.push(this.form.receipt[i]);
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
+          Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          let receipt = [];
+          for (let i = 0; i < this.form.receipt.length; i++) {
+            if (this.form.receipt[i] !== this.receiptDate) {
+              receipt.push(this.form.receipt[i]);
+            }
+          }
+          this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
+          this.form.receipt = receipt;
+          this.form.draft = val;
+          this.form.is_other_fee = this.other_fee_status ? 1 : 0;
+          this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
+            this.haveInHand = true;
+            this.retry = 0;
+            if (res.data.code === '50910' || res.data.code === '50930') {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === '50920') {
+              if (receipt.length === 0) {
+                this.form.receipt = [];
+                this.form.receipt.push(this.receiptDate);
+              }
+              this.form.id = res.data.data.id;
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.saveCollect(this.form.draft);
+                  }
+                });
               }
             }
-            this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
-            this.form.receipt = receipt;
-            this.form.draft = val;
-            this.form.is_other_fee = this.other_fee_status ? 1 : 0;
-            this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === '50910' || res.data.code === '50930') {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '50920') {
-                if (receipt.length === 0) {
-                  this.form.receipt = [];
-                  this.form.receipt.push(this.receiptDate);
-                }
-                this.form.id = res.data.data.id;
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
-              }
-            })
-          } else {
-            Toast(this.alertMsg('sub'));
-          }
+          })
         } else {
-          Toast(this.alertMsg('pic'));
+          Toast(this.alertMsg('sub'));
         }
       },
 
@@ -682,7 +685,7 @@
           this.isClear = false;
         });
         $('.imgItem').remove();
-        this.picStatus = true;
+        this.picStatus = 'success';
         this.form.id = '';
         this.form.processable_id = '';
         this.form.address = '';

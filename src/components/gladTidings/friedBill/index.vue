@@ -4,7 +4,8 @@
       <van-cell-group>
         <div class="checks">
           <div style="min-width: 110px;">收租标记</div>
-          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent" @change="rentChange">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent"
+                           @change="rentChange">
             <van-radio name="0">收房</van-radio>
             <van-radio name="1">租房</van-radio>
           </van-radio-group>
@@ -112,7 +113,7 @@
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
-        picStatus: true,
+        picStatus: 'success',
 
         payStatus: false,
         priceStatus: false,
@@ -222,7 +223,7 @@
 
       // 截图
       headmanAgree(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         this.form.screenshot_leader = val[1];
       },
       rentChange(val) {
@@ -236,47 +237,50 @@
         }
       },
       saveCollect(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            this.form.refund = this.refundSta ? 1 : 0;
-            this.form.draft = val;
-            this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === '50710' || res.data.code === '50730') {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '50720') {
-                this.form.id = res.data.data.id;
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
-              }
-            })
-          } else {
-            Toast(this.alertMsg('sub'));
-          }
-        } else {
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
           Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.refund = this.refundSta ? 1 : 0;
+          this.form.draft = val;
+          this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
+            this.haveInHand = true;
+            this.retry = 0;
+            if (res.data.code === '50710' || res.data.code === '50730') {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === '50720') {
+              this.form.id = res.data.data.id;
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.saveCollect(this.form.draft);
+                  }
+                });
+              }
+            }
+          })
+        } else {
+          Toast(this.alertMsg('sub'));
         }
       },
 
@@ -356,7 +360,7 @@
           this.isClear = false;
         });
         $('.imgItem').remove();
-        this.picStatus = true;
+        this.picStatus = 'success';
         this.form.payWay = [''];
         this.form.price_arr = [''];
         this.form.id = '';

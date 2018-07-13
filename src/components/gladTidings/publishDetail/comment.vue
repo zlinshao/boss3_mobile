@@ -108,7 +108,7 @@
         urls: globalConfig.server,
         haveInHand: true,
         isClear: false,
-        picStatus: true,
+        picStatus: 'success',
 
         show: false,
         text: '',
@@ -256,55 +256,58 @@
       },
 
       sure(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            this.$http.put(this.address + 'process/' + this.queries.ids, {
-              operation: this.queries.detail,
-              comment: this.form.remark,
-              album: this.form.photo,
-            }).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.status === 'success') {
-                if (val === 1) {
-                  this.mark();
-                } else {
-                  this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
-                  this.close_();
-                  $('.imgItem').remove();
-                }
-                Toast.success(res.data.message);
-              } else {
-                Toast(res.data.message);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.sure();
-                    }
-                  });
-                }
-              }
-            })
-          } else {
-            Toast(this.alertMsg('sub'));
-          }
-        } else {
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
           Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.$http.put(this.address + 'process/' + this.queries.ids, {
+            operation: this.queries.detail,
+            comment: this.form.remark,
+            album: this.form.photo,
+          }).then((res) => {
+            this.haveInHand = true;
+            this.retry = 0;
+            if (res.data.status === 'success') {
+              if (val === 1) {
+                this.mark();
+              } else {
+                this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
+                this.close_();
+                $('.imgItem').remove();
+              }
+              Toast.success(res.data.message);
+            } else {
+              Toast(res.data.message);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.sure();
+                  }
+                });
+              }
+            }
+          })
+        } else {
+          Toast(this.alertMsg('sub'));
         }
       },
 
       getImgData(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         this.form.photo = val[1];
       },
 

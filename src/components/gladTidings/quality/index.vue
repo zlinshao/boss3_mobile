@@ -397,7 +397,7 @@
         tabs: '',
 
         isClear: false,                     //删除图片
-        picStatus: false,
+        picStatus: 'success',
 
         allCity: [],                        //城市
         cities: [],                         //城市
@@ -1053,7 +1053,7 @@
         });
         this.userInfo(true);
         $('.imgItem').remove();
-        this.picStatus = false;
+        this.picStatus = 'success';
         this.form.id = '';
         this.form.processable_id = '';
         this.form.house_id = '';

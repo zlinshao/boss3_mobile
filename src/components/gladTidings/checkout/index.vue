@@ -188,7 +188,7 @@
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
-        picStatus: true,
+        picStatus: 'success',
         selectHide: false,
         columns: [],
 
@@ -404,7 +404,7 @@
 
       // 截图
       headmanAgree(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         if (val[0] === 'photos') {
           this.form.photo = val[1];
         } else {
@@ -422,46 +422,49 @@
         }
       },
       saveCollect(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            this.form.draft = val;
-            this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === '51210' || res.data.code === '51230') {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '51220') {
-                this.form.id = res.data.data.id;
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
-              }
-            })
-          } else {
-            Toast(this.alertMsg('sub'));
-          }
-        } else {
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
           Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.draft = val;
+          this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
+            this.haveInHand = true;
+            this.retry = 0;
+            if (res.data.code === '51210' || res.data.code === '51230') {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === '51220') {
+              this.form.id = res.data.data.id;
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.saveCollect(this.form.draft);
+                  }
+                });
+              }
+            }
+          })
+        } else {
+          Toast(this.alertMsg('sub'));
         }
       },
 
@@ -571,7 +574,7 @@
         this.form.number_key = '';
         this.cleanup = '';
         this.form.is_cleanup = '';
-        this.picStatus = true;
+        this.picStatus = 'success';
         this.form.house_id = '';
         this.form.processable_id = '';
         this.form.collect_or_rent = '';

@@ -278,7 +278,7 @@
         urls: globalConfig.server,
         selectHide: false,        //select选择
         isClear: false,           //删除图片
-        picStatus: true,
+        picStatus: 'success',
 
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
@@ -472,7 +472,7 @@
       },
       // 截图
       getImgData(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         switch (val[0]) {
           case 'photo1'://证件照片
             this.form.album.identity_photo = val[1];
@@ -544,55 +544,58 @@
 
       saveCollect(val) {
         if (this.contract_id !== '') {
-          if (this.picStatus) {
-            if (this.haveInHand) {
-              this.haveInHand = false;
-              let receipt = [];
-              for (let i = 0; i < this.form.receipt.length; i++) {
-                if (this.form.receipt[i] !== this.receiptDate) {
-                  receipt.push(this.form.receipt[i]);
-                }
-              }
-              this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
-              this.form.receipt = receipt;
-              for (let i = 0; i < this.sexs.length; i++) {
-                this.form.customers[i].sex = this.sexs[i];
-              }
-              this.form.is_submit = val;
-              this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
-                this.haveInHand = true;
-                this.retry = 0;
-                if (res.data.code === '51610') {
-                  if (receipt.length === 0) {
-                    this.form.receipt = [];
-                    this.form.receipt.push(this.receiptDate);
-                  }
-                  Toast.success(res.data.msg);
-                } else {
-                  Toast(res.data.msg);
-                }
-              }).catch((error) => {
-                this.haveInHand = true;
-                if (error.response === undefined) {
-                  this.alertMsg('net');
-
-                } else {
-                  if (error.response.status === 401) {
-                    this.personalGet().then((data) => {
-                      if (data && this.retry === 0) {
-                        this.retry++;
-
-                        this.saveCollect(this.form.is_submit);
-                      }
-                    });
-                  }
-                }
-              })
-            } else {
-              Toast(this.alertMsg('sub'));
-            }
-          } else {
+          if (this.picStatus === 'err') {
+            Toast(this.alertMsg('errPic'));
+            return;
+          } else if (this.picStatus === 'lose') {
             Toast(this.alertMsg('pic'));
+            return;
+          }
+          if (this.haveInHand) {
+            this.haveInHand = false;
+            let receipt = [];
+            for (let i = 0; i < this.form.receipt.length; i++) {
+              if (this.form.receipt[i] !== this.receiptDate) {
+                receipt.push(this.form.receipt[i]);
+              }
+            }
+            this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
+            this.form.receipt = receipt;
+            for (let i = 0; i < this.sexs.length; i++) {
+              this.form.customers[i].sex = this.sexs[i];
+            }
+            this.form.is_submit = val;
+            this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
+              this.haveInHand = true;
+              this.retry = 0;
+              if (res.data.code === '51610') {
+                if (receipt.length === 0) {
+                  this.form.receipt = [];
+                  this.form.receipt.push(this.receiptDate);
+                }
+                Toast.success(res.data.msg);
+              } else {
+                Toast(res.data.msg);
+              }
+            }).catch((error) => {
+              this.haveInHand = true;
+              if (error.response === undefined) {
+                this.alertMsg('net');
+
+              } else {
+                if (error.response.status === 401) {
+                  this.personalGet().then((data) => {
+                    if (data && this.retry === 0) {
+                      this.retry++;
+
+                      this.saveCollect(this.form.is_submit);
+                    }
+                  });
+                }
+              }
+            })
+          } else {
+            Toast(this.alertMsg('sub'));
           }
         } else {
           Toast('请选择房屋...');
@@ -708,7 +711,7 @@
 
       close_() {
         this.userInfo();
-        this.picStatus = true;
+        this.picStatus = 'success';
         this.amount = 1;
         this.cardName = [];
         this.address = '';

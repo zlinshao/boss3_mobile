@@ -386,7 +386,7 @@
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
-        picStatus: true,
+        picStatus: 'success',
 
         tabs: '',
         columns: [],              //select值
@@ -591,7 +591,7 @@
         this.timeShow = false;
       },
       getImgData(val) {
-        this.picStatus = !val[2];
+        this.picStatus = val[2];
         if (val[0] === 'screenshot') {
           this.form.screenshot_leader = val[1];
         } else {
@@ -766,52 +766,55 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus) {
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            this.form.draft = val;
-            this.form.is_corp = this.corp ? 1 : 0;
-            this.form.day = this.form.day === '' ? '0' : this.form.day;
-            this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
-            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
-            this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === '50110' || res.data.code === '50130') {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '50120') {
-                this.form.day = this.form.day === '0' ? '' : this.form.day;
-                this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
-                this.form.id = res.data.data.id;
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
-              }
-            })
-          } else {
-            Toast(this.alertMsg('sub'));
-          }
-        } else {
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
           Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.form.draft = val;
+          this.form.is_corp = this.corp ? 1 : 0;
+          this.form.day = this.form.day === '' ? '0' : this.form.day;
+          this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
+          this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+          this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+            this.haveInHand = true;
+            this.retry = 0;
+            if (res.data.code === '50110' || res.data.code === '50130') {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === '50120') {
+              this.form.day = this.form.day === '0' ? '' : this.form.day;
+              this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
+              this.form.id = res.data.data.id;
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.saveCollect(this.form.draft);
+                  }
+                });
+              }
+            }
+          })
+        } else {
+          Toast(this.alertMsg('sub'));
         }
       },
 
@@ -954,7 +957,7 @@
         });
         this.userInfo(true);
         $('.imgItem').remove();
-        this.picStatus = true;
+        this.picStatus = 'success';
         this.form.id = '';
         this.form.processable_id = '';
         this.form.contract_id = '';
