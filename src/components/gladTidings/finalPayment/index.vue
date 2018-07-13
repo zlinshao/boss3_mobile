@@ -71,6 +71,22 @@
         </van-field>
       </van-cell-group>
 
+      <div class="aloneModel">
+        <div class="title">凭证截图</div>
+        <div class="showPics">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+          <img src="../../../assets/shenp1.jpg" alt="">
+        </div>
+      </div>
+
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
           <span>已收金额支付方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
@@ -730,5 +746,12 @@
 <style lang="scss">
   #finalReport {
     overflow: hidden;
+    .showPics {
+      img {
+        width: 1.2rem;
+        height: 1.2rem;
+        margin: .3rem 0 0 .3rem;
+      }
+    }
   }
 </style>
