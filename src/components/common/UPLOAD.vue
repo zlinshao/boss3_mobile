@@ -107,10 +107,10 @@
             }
           }
           let type = _this.imgArray.every((item) => {
-            return item.name.indexOf(id) < 0
+            return item.name.indexOf(id) < 0;
           });
           if (type) {
-            this.errorId.splice(0, 1);
+            _this.errorId.splice(0, 1);
           }
           _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
         });
