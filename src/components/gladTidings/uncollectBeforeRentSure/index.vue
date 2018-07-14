@@ -519,7 +519,7 @@
           screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
-          screenshot_receipt: [],       //押金收条 数组
+          deposit_photo: [],       //押金收条 数组
 
           remark: '',                   //备注
           staff_id: '',                 //开单人id
@@ -891,7 +891,7 @@
         } else if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
         } else if (val[0] === 'receipt') {
-          this.form.screenshot_receipt = val[1];
+          this.form.deposit_photo = val[1];
         } else {
           this.form.photo = val[1];
         }
@@ -1175,8 +1175,8 @@
             this.leaders = data.screenshot_leader;
             this.form.photo = draft.photo;
             this.photos = data.photo;
-            this.form.screenshot_receipt = draft.screenshot_receipt;
-            this.receipts = data.screenshot_receipt;
+            this.form.deposit_photo = draft.deposit_photo;
+            this.receipts = data.deposit_photo;
 
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -1264,7 +1264,7 @@
         this.leaders = {};
         this.form.photo = [];
         this.photos = {};
-        this.form.screenshot_receipt = [];
+        this.form.deposit_photo = [];
         this.receipts = {};
 
         this.form.other_fee_name = '';

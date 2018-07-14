@@ -305,7 +305,7 @@
           retainage_date: '',
           screenshot_leader: [],        //领导截图 数组
           screenshot: [],               //凭证截图 数组
-          screenshot_receipt: [],       //押金收条 数组
+          deposit_photo: [],       //押金收条 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
@@ -426,7 +426,7 @@
         if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
         } else if (val[0] === 'receipt') {
-          this.form.screenshot_receipt = val[1];
+          this.form.deposit_photo = val[1];
         } else {
           this.form.screenshot = val[1];
         }
@@ -561,8 +561,8 @@
           let depositPics = [];
           certificatePics = this.form.screenshot.concat(this.certificate_id);
           this.form.screenshot = this.noRepeat(certificatePics);
-          depositPics = this.form.screenshot_receipt.concat(this.deposit_id);
-          this.form.screenshot_receipt = this.noRepeat(depositPics);
+          depositPics = this.form.deposit_photo.concat(this.deposit_id);
+          this.form.deposit_photo = this.noRepeat(depositPics);
 
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
           this.form.receipt = receipt;
@@ -749,8 +749,8 @@
             this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.screenshot_leader;
-            this.form.screenshot_receipt = draft.screenshot_receipt;
-            this.receipts = data.screenshot_receipt;
+            this.form.deposit_photo = draft.deposit_photo;
+            this.receipts = data.deposit_photo;
             this.form.remark = draft.remark;
             this.form.staff_name = draft.staff_name;
             this.form.department_name = draft.department_name;
@@ -790,7 +790,7 @@
         this.screenshots = {};
         this.form.screenshot_leader = [];
         this.leaders = {};
-        this.form.screenshot_receipt = [];
+        this.form.deposit_photo = [];
         this.receipts = {};
         this.amountReceipt = 1;
         this.form.receipt = [];
