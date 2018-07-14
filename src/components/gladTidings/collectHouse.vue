@@ -279,7 +279,7 @@
         list.id = value.id;
         list.agency_info = value.agency_info;
         list.is_agency = value.is_agency;
-        if (value.sign_month) {
+        if (value.sign_month !== null && value.sign_month !== undefined) {
           list.month = value.sign_month;
         } else {
           list.month = '';

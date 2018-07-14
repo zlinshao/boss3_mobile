@@ -530,7 +530,17 @@
           this.form.receipt.splice(index, 1);
         }
       },
-
+      noRepeat(arr) {
+        for (let i = 0; i < arr.length - 1; i++) {
+          for (let j = i + 1; j < arr.length; j++) {
+            if (arr[i] === arr[j]) {
+              arr.splice(j, 1);
+              j--;
+            }
+          }
+        }
+        return arr;
+      },
       saveCollect(val) {
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
@@ -550,9 +560,9 @@
           let certificatePics = [];
           let depositPics = [];
           certificatePics = this.form.screenshot.concat(this.certificate_id);
-          this.form.screenshot = certificatePics;
+          this.form.screenshot = this.noRepeat(certificatePics);
           depositPics = this.form.screenshot_receipt.concat(this.deposit_id);
-          this.form.screenshot_receipt = depositPics;
+          this.form.screenshot_receipt = this.noRepeat(depositPics);
           console.log(this.form.screenshot);
           console.log(this.form.screenshot_receipt);
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
