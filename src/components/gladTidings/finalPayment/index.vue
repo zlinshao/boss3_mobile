@@ -71,21 +71,37 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel">
-        <div class="title">凭证截图</div>
-        <div class="showPics">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-          <img src="../../../assets/shenp1.jpg" alt="">
-        </div>
-      </div>
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">凭证截图</div>-->
+        <!--<div class="showPics">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">押金收条</div>-->
+        <!--<div class="showPics">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+        <!--</div>-->
+      <!--</div>-->
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
@@ -170,12 +186,17 @@
 
       <div class="aloneModel">
         <div class="title">领导同意截图</div>
-        <UpLoad :ID="'leader'" @getImg="screenshot" :isClear="isClear" :editImage="leaders"></UpLoad>
+        <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
       </div>
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>凭证截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+      </div>
+
+      <div class="aloneModel">
+        <div class="title">押金收条</div>
+        <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -295,7 +316,8 @@
           money_way: [''],              //分金额 方式
           retainage_date: '',
           screenshot_leader: [],        //领导截图 数组
-          screenshot: [],               //领导截图 数组
+          screenshot: [],               //凭证截图 数组
+          screenshot_receipt: [],       //押金收条 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
@@ -303,7 +325,8 @@
           department_name: '',          //部门name
         },
         leaders: {},
-        screenshots: {},                //房屋名称
+        screenshots: {},
+        receipts: {},
 
         dictValue8: [],                 //支付方式
         value8: [],
@@ -410,10 +433,12 @@
         }
       },
       // 截图
-      screenshot(val) {
+      getImgData(val) {
         this.picStatus = val[2];
         if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
+        } else if (val[0] === 'receipt') {
+          this.form.screenshot_receipt = val[1];
         } else {
           this.form.screenshot = val[1];
         }
@@ -683,6 +708,8 @@
             this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.screenshot_leader;
+            this.form.screenshot_receipt = draft.screenshot_receipt;
+            this.receipts = data.screenshot_receipt;
             this.form.remark = draft.remark;
             this.form.staff_name = draft.staff_name;
             this.form.department_name = draft.department_name;
@@ -722,7 +749,8 @@
         this.screenshots = {};
         this.form.screenshot_leader = [];
         this.leaders = {};
-
+        this.form.screenshot_receipt = [];
+        this.receipts = {};
         this.amountReceipt = 1;
         this.form.receipt = [];
         this.form.receipt[0] = this.receiptDate;
@@ -750,7 +778,7 @@
       img {
         width: 1.2rem;
         height: 1.2rem;
-        margin: .3rem 0 0 .3rem;
+        margin: .24rem 0 0 .24rem;
       }
     }
   }
