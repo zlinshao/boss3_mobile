@@ -623,7 +623,7 @@
 
       getPic(val) {
         this.$http.post(this.urls + 'special/special/picUrl', {
-          id: val.album.deposit_photo,
+          id: val.deposit_photo,
         }).then((res) => {
 
         })
