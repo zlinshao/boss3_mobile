@@ -547,6 +547,14 @@
               receipt.push(this.form.receipt[i]);
             }
           }
+          let certificatePics = [];
+          let depositPics = [];
+          certificatePics = this.form.screenshot.concat(this.certificate_id);
+          this.form.screenshot = certificatePics;
+          depositPics = this.form.screenshot_receipt.concat(this.deposit_id);
+          this.form.screenshot_receipt = depositPics;
+          console.log(this.form.screenshot);
+          console.log(this.form.screenshot_receipt);
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
           this.form.receipt = receipt;
           this.form.draft = val;
