@@ -87,21 +87,12 @@
       <!--</div>-->
       <!--</div>-->
 
-      <!--<div class="aloneModel">-->
-      <!--<div class="title">押金收条</div>-->
-      <!--<div class="showPics">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--</div>-->
-      <!--</div>-->
+      <div class="aloneModel" v-if="deposit_photo.length > 0">
+        <div class="title">押金收条</div>
+        <div class="showPics">
+          <img v-for="key in deposit_photo" :src="key.uri">
+        </div>
+      </div>
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
@@ -281,6 +272,8 @@
         tabs: '',
         columns: [],              //select值
         selectHide: false,        //select选择
+
+        deposit_photo: [],        //押金收条
 
         periods: [],
 
@@ -625,7 +618,9 @@
         this.$http.post(this.urls + 'special/special/picUrl', {
           id: val.deposit_photo,
         }).then((res) => {
-
+          if (res.data.code === '10000') {
+            this.deposit_photo = res.data.data;
+          }
         })
       },
 
