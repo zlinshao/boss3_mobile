@@ -284,7 +284,12 @@
         if (value.customers.length !== 0) {
           list.customers = value.customers[0].name;
         } else {
-          list.customers = '---';
+          if (value.customer_info !== null) {
+            list.customers = value.customer_info[0].name;
+          } else {
+            list.customers = '---';
+          }
+
         }
         if (value.sign_user !== null) {
           list.staff_id = value.sign_user.id;
