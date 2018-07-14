@@ -279,6 +279,7 @@
         list.id = value.id;
         list.agency_info = value.agency_info;
         list.is_agency = value.is_agency;
+        list.month = value.sign_month;
         list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;
         if (value.customers.length !== 0) {
@@ -289,7 +290,6 @@
           } else {
             list.customers = '---';
           }
-
         }
         if (value.sign_user !== null) {
           list.staff_id = value.sign_user.id;

@@ -609,6 +609,7 @@
           let val = JSON.parse(t.house);
           this.form.customer_name = val.customers;
           this.form.address = val.house_name;
+          this.form.month = val.sign_month;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.form.staff_name = val.staff_name;
@@ -623,7 +624,7 @@
         this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=1').then((res) => {
           if (res.data.code === '51110') {
             let pay = res.data.data;
-            this.form.month = pay.month;
+            // this.form.month = pay.month;
             this.periods = [];
             for (let i = 0; i < pay.terms; i++) {
               this.periods.push(i + 1);
