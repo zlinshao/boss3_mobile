@@ -197,7 +197,7 @@
     </div>
 
     <div class="footer" v-if="counts === '1' || counts === '11'">
-      <div @click="close_1()">重置</div>
+      <div @click="close_()">重置</div>
       <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
     </div>
@@ -273,7 +273,7 @@
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
-        this.close_1();
+        this.close_();
         this.agencyDetail('');
       }
     },
@@ -288,7 +288,7 @@
       if (count === '1') {
         this.routerIndex('');
         this.ddRent('');
-        this.close_1();
+        this.close_();
         this.agencyDetail('');
         count = count + '1';
         sessionStorage.setItem('count', count);
@@ -307,15 +307,15 @@
         sessionStorage.setItem('process', JSON.stringify(this.$route.query));
         let newID = JSON.parse(sessionStorage.process);
         if (newID.type === 2) {
-          this.close_1();
+          this.close_();
           this.routerTo('/publishDetail', newID.ids);
         } else {
           this.counts = '1';
-          this.close_1();
+          this.close_();
           this.routerIndex('');
           this.ddRent('');
         }
-        this.close_1();
+        this.close_();
         this.agencyDetail(newID);
         count = count + '1';
         sessionStorage.setItem('count', count);
@@ -396,7 +396,7 @@
             this.retry = 0;
             if (res.data.code === '50310' || res.data.code === '50330') {
               Toast.success(res.data.msg);
-              this.close_1();
+              this.close_();
               $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50320') {
@@ -424,172 +424,171 @@
         } else {
           Toast(this.alertMsg('sub'));
         }
-      }
-    },
-
-    houseInfo() {
-      let t = this.$route.query;
-      if (t.house !== undefined && t.house !== '') {
-        let val = JSON.parse(t.house);
-        this.form.customer_name = val.customers;
-        if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
-          if (val.agency_info.agency_price) {
-            this.form.agency_price = val.agency_info.agency_price;
+      },
+      houseInfo() {
+        let t = this.$route.query;
+        if (t.house !== undefined && t.house !== '') {
+          let val = JSON.parse(t.house);
+          this.form.customer_name = val.customers;
+          if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
+            if (val.agency_info.agency_price) {
+              this.form.agency_price = val.agency_info.agency_price;
+            } else {
+              this.form.agency_price = '';
+            }
+            if (val.agency_info.agency_user_name) {
+              this.agency2 = true;
+              this.form.agency_username = val.agency_info.agency_user_name;
+            } else {
+              this.agency2 = false;
+              this.form.agency_username = '';
+            }
+            if (val.agency_info.agency_name) {
+              this.agency3 = true;
+              this.form.agency_name = val.agency_info.agency_name;
+            } else {
+              this.agency3 = false;
+              this.form.agency_name = '';
+            }
+            if (val.agency_info.agency_phone) {
+              this.agency4 = true;
+              this.form.agency_phone = val.agency_info.agency_phone;
+            } else {
+              this.agency4 = false;
+              this.form.agency_phone = '';
+            }
           } else {
-            this.form.agency_price = '';
-          }
-          if (val.agency_info.agency_user_name) {
-            this.agency2 = true;
-            this.form.agency_username = val.agency_info.agency_user_name;
-          } else {
+            if (val.agency_info !== null && val.agency_info.price !== null) {
+              this.form.agency_price = val.agency_info.price;
+            } else {
+              this.form.agency_price = '';
+            }
             this.agency2 = false;
-            this.form.agency_username = '';
-          }
-          if (val.agency_info.agency_name) {
-            this.agency3 = true;
-            this.form.agency_name = val.agency_info.agency_name;
-          } else {
             this.agency3 = false;
-            this.form.agency_name = '';
-          }
-          if (val.agency_info.agency_phone) {
-            this.agency4 = true;
-            this.form.agency_phone = val.agency_info.agency_phone;
-          } else {
             this.agency4 = false;
-            this.form.agency_phone = '';
+          }
+          this.form.address = val.house_name;
+          this.form.contract_id = val.id;
+          this.form.house_id = val.house_id;
+          this.form.staff_name = val.staff_name;
+          this.form.department_name = val.department_name;
+          this.form.staff_id = val.staff_id;
+          this.form.department_id = val.department_id;
+          this.helperBulletin(val.id);
+        }
+      },
+      helperBulletin(id) {
+        this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
+          if (res.data.code === '51110') {
+            let pay = res.data.data;
+            this.form.payWay = [];
+            this.form.price_arr = [];
+            for (let i = 0; i < pay.pay_way.length; i++) {
+              this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
+            }
+            for (let i = 0; i < pay.price.length; i++) {
+              this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
+            }
+          }
+        })
+      },
+      agencyDetail(val) {
+        this.form.processable_id = '';
+        let type;
+        if (val !== '') {
+          type = 'bulletin/agency/' + val.newID;
+          if (val.type === 2) {
+            this.form.processable_id = val.ids;
           }
         } else {
-          if (val.agency_info !== null && val.agency_info.price !== null) {
-            this.form.agency_price = val.agency_info.price;
+          type = 'bulletin/agency';
+        }
+        this.$http.get(this.urls + type).then((res) => {
+          if (res.data.code === '50320') {
+            this.isClear = false;
+            this.agency2 = false;
+            this.agency3 = false;
+            this.agency4 = false;
+            let data = res.data.data;
+            let draft = res.data.data.draft_content;
+            this.form.purchase_way = 509;
+            this.form.address = draft.address;
+            this.form.id = data.id;
+            this.form.contract_id = draft.contract_id;
+            this.helperBulletin(draft.contract_id);
+            this.form.house_id = draft.house_id;
+            this.form.collect_or_rent = draft.collect_or_rent;
+            this.numbers = draft.collect_or_rent;
+
+            this.form.agency_price = draft.agency_price;
+            this.form.agency_username = draft.agency_username;
+            this.form.agency_name = draft.agency_name;
+            this.form.agency_phone = draft.agency_phone;
+
+            this.form.customer_name = draft.customer_name;
+            this.form.bank = draft.bank;
+            this.form.subbranch = draft.subbranch;
+            this.form.account_name = draft.account_name;
+            this.form.account = draft.account;
+            this.form.settle = draft.settle;
+            this.form.payWay = draft.payWay;
+            this.form.price_arr = draft.price_arr;
+            this.settleStatus = draft.settle === 1 ? true : false;
+            this.form.screenshot = draft.screenshot;
+            this.screenshots = data.screenshot;
+            this.form.screenshot_leader = draft.screenshot_leader;
+            this.screenshots_leader = data.screenshot_leader;
+            this.form.remark = draft.remark;
+            this.form.staff_name = draft.staff_name;
+            this.form.department_name = draft.department_name;
+            this.form.staff_id = draft.staff_id;
+            this.form.department_id = draft.department_id;
           } else {
-            this.form.agency_price = '';
+            this.form.id = '';
           }
-          this.agency2 = false;
-          this.agency3 = false;
-          this.agency4 = false;
-        }
-        this.form.address = val.house_name;
-        this.form.contract_id = val.id;
-        this.form.house_id = val.house_id;
-        this.form.staff_name = val.staff_name;
-        this.form.department_name = val.department_name;
-        this.form.staff_id = val.staff_id;
-        this.form.department_id = val.department_id;
-        this.helperBulletin(val.id);
-      }
-    },
-    helperBulletin(id) {
-      this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
-        if (res.data.code === '51110') {
-          let pay = res.data.data;
-          this.form.payWay = [];
-          this.form.price_arr = [];
-          for (let i = 0; i < pay.pay_way.length; i++) {
-            this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
-          }
-          for (let i = 0; i < pay.price.length; i++) {
-            this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
-          }
-        }
-      })
-    },
-    agencyDetail(val) {
-      this.form.processable_id = '';
-      let type;
-      if (val !== '') {
-        type = 'bulletin/agency/' + val.newID;
-        if (val.type === 2) {
-          this.form.processable_id = val.ids;
-        }
-      } else {
-        type = 'bulletin/agency';
-      }
-      this.$http.get(this.urls + type).then((res) => {
-        if (res.data.code === '50320') {
+        })
+      },
+
+      close_() {
+        this.form.purchase_way = 509;
+        this.isClear = true;
+        setTimeout(() => {
           this.isClear = false;
-          this.agency2 = false;
-          this.agency3 = false;
-          this.agency4 = false;
-          let data = res.data.data;
-          let draft = res.data.data.draft_content;
-          this.form.purchase_way = 509;
-          this.form.address = draft.address;
-          this.form.id = data.id;
-          this.form.contract_id = draft.contract_id;
-          this.helperBulletin(draft.contract_id);
-          this.form.house_id = draft.house_id;
-          this.form.collect_or_rent = draft.collect_or_rent;
-          this.numbers = draft.collect_or_rent;
+        });
+        $('.imgItem').remove();
+        this.picStatus = true;
+        this.form.payWay = [''];
+        this.form.price_arr = [''];
+        this.form.address = '';
+        this.form.id = '';
+        this.form.processable_id = '';
+        this.form.contract_id = '';
+        this.form.house_id = '';
+        this.form.collect_or_rent = '';
 
-          this.form.agency_price = draft.agency_price;
-          this.form.agency_username = draft.agency_username;
-          this.form.agency_name = draft.agency_name;
-          this.form.agency_phone = draft.agency_phone;
+        this.form.agency_price = '';
+        this.form.agency_username = '';
+        this.form.agency_name = '';
+        this.form.agency_phone = '';
 
-          this.form.customer_name = draft.customer_name;
-          this.form.bank = draft.bank;
-          this.form.subbranch = draft.subbranch;
-          this.form.account_name = draft.account_name;
-          this.form.account = draft.account;
-          this.form.settle = draft.settle;
-          this.form.payWay = draft.payWay;
-          this.form.price_arr = draft.price_arr;
-          this.settleStatus = draft.settle === 1 ? true : false;
-          this.form.screenshot = draft.screenshot;
-          this.screenshots = data.screenshot;
-          this.form.screenshot_leader = draft.screenshot_leader;
-          this.screenshots_leader = data.screenshot_leader;
-          this.form.remark = draft.remark;
-          this.form.staff_name = draft.staff_name;
-          this.form.department_name = draft.department_name;
-          this.form.staff_id = draft.staff_id;
-          this.form.department_id = draft.department_id;
-        } else {
-          this.form.id = '';
-        }
-      })
+        this.form.customer_name = '';
+        this.form.bank = '';
+        this.form.subbranch = '';
+        this.form.account_name = '';
+        this.form.account = '';
+        this.form.settle = 0;
+        this.settleStatus = true;
+        this.form.screenshot = [];
+        this.screenshots = {};
+        this.form.screenshot_leader = [];
+        this.screenshots_leader = {};
+        this.form.remark = '';
+        this.form.staff_name = '';
+        this.form.staff_id = '';
+        this.form.department_id = '';
+        this.department_name = '';
+      }
     },
-
-    close_1() {
-      this.form.purchase_way = 509;
-      this.isClear = true;
-      setTimeout(() => {
-        this.isClear = false;
-      });
-      $('.imgItem').remove();
-      this.picStatus = true;
-      this.form.payWay = [''];
-      this.form.price_arr = [''];
-      this.form.address = '';
-      this.form.id = '';
-      this.form.processable_id = '';
-      this.form.contract_id = '';
-      this.form.house_id = '';
-      this.form.collect_or_rent = '';
-
-      this.form.agency_price = '';
-      this.form.agency_username = '';
-      this.form.agency_name = '';
-      this.form.agency_phone = '';
-
-      this.form.customer_name = '';
-      this.form.bank = '';
-      this.form.subbranch = '';
-      this.form.account_name = '';
-      this.form.account = '';
-      this.form.settle = 0;
-      this.settleStatus = true;
-      this.form.screenshot = [];
-      this.screenshots = {};
-      this.form.screenshot_leader = [];
-      this.screenshots_leader = {};
-      this.form.remark = '';
-      this.form.staff_name = '';
-      this.form.staff_id = '';
-      this.form.department_id = '';
-      this.department_name = '';
-    }
   }
 </script>
 
