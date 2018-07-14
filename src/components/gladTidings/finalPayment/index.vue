@@ -622,6 +622,10 @@
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
           this.helperBulletin(val.id);
+          this.deposit_photo = [];
+          this.deposit_id = [];
+          this.certificate_photo = [];
+          this.certificate_id = [];
           this.getPic(val.album, 1);
           this.getPic(val.album, 2);
           this.deposit_id = val.album.deposit_photo;
@@ -641,12 +645,10 @@
         }).then((res) => {
           if (res.data.code === '10000') {
             if (val === 1) {
-              this.deposit_photo = [];
               res.data.data.forEach((arr) => {
                 this.deposit_photo.push(arr.uri);
               });
             } else {
-              this.certificate_photo = [];
               res.data.data.forEach((arr) => {
                 this.certificate_photo.push(arr.uri);
               });
