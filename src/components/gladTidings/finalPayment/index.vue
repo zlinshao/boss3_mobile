@@ -74,14 +74,14 @@
       <div class="aloneModel" v-if="certificate_photo.length > 0">
         <div class="title">凭证截图</div>
         <div class="showPics">
-          <img v-for="(key,index) in certificate_photo" :src="key.uri" @click="bigPic(key, index)">
+          <img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(key, index)">
         </div>
       </div>
 
       <div class="aloneModel" v-if="deposit_photo.length > 0">
         <div class="title">押金收条</div>
         <div class="showPics">
-          <img v-for="(key,index) in deposit_photo" :src="key.uri" @click="bigPic(key, index)">
+          <img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(key, index)">
         </div>
       </div>
 
