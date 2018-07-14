@@ -90,7 +90,7 @@
       <div class="aloneModel" v-if="deposit_photo.length > 0">
         <div class="title">押金收条</div>
         <div class="showPics">
-          <img v-for="key in deposit_photo" :src="key.uri">
+          <img v-for="(key,index) in deposit_photo" :src="key.uri" @click="bigPic(key, index)">
         </div>
       </div>
 
@@ -251,11 +251,12 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import {ImagePreview} from 'vant';
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, ImagePreview},
     data() {
       return {
         haveInHand: true,
@@ -619,11 +620,17 @@
           id: val.deposit_photo,
         }).then((res) => {
           if (res.data.code === '10000') {
-            this.deposit_photo = res.data.data;
+            this.deposit_photo = [];
+            res.data.data.forEach((arr) => {
+              this.deposit_photo.push(arr.uri);
+            })
+
           }
         })
       },
-
+      bigPic(arr, index) {
+        ImagePreview(arr, index);
+      },
       helperBulletin(id) {
         this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=1').then((res) => {
           if (res.data.code === '51110') {
