@@ -125,7 +125,7 @@
         let value = val.replace(/\s+/g, '');
         this.params.q = value;
         if (value === '') {
-          this.close_();
+
         }
       }
     },

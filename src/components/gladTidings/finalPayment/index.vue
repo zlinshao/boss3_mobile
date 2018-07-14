@@ -71,19 +71,19 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel" v-if="certificate_photo.length > 0">
-        <div class="title">凭证截图</div>
-        <div class="showPics">
-          <img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">
-        </div>
-      </div>
-
-      <div class="aloneModel" v-if="deposit_photo.length > 0">
-        <div class="title">押金收条</div>
-        <div class="showPics">
-          <img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(deposit_photo, index)">
-        </div>
-      </div>
+      <!--<div class="aloneModel" v-if="certificate_photo.length > 0">-->
+        <!--<div class="title">凭证截图</div>-->
+        <!--<div class="showPics">-->
+          <!--<img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">-->
+        <!--</div>-->
+      <!--</div>-->
+<!---->
+      <!--<div class="aloneModel" v-if="deposit_photo.length > 0">-->
+        <!--<div class="title">押金收条</div>-->
+        <!--<div class="showPics">-->
+          <!--<img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(deposit_photo, index)">-->
+        <!--</div>-->
+      <!--</div>-->
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
@@ -768,6 +768,10 @@
         });
         $('.imgItem').remove();
         this.picStatus = 'success';
+        this.deposit_photo = [];
+        this.deposit_id = [];
+        this.certificate_photo = [];
+        this.certificate_id = [];
         this.form.id = '';
         this.form.processable_id = '';
         this.form.address = '';
