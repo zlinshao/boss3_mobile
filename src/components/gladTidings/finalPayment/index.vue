@@ -4,7 +4,7 @@
       <van-cell-group>
         <van-field
           v-model="form.address"
-          label="房屋地址"
+          label="房屋地址11"
           type="text"
           readonly
           @click="searchSelect()"
@@ -668,16 +668,13 @@
             }
             this.form.payWay = [];
             this.form.price_arr = [];
-            if (pay.pay_way.length !== 0) {
-              for (let i = 0; i < pay.pay_way.length; i++) {
-                this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
-              }
+            for (let i = 0; i < pay.pay_way.length; i++) {
+              this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
             }
-            if (pay.price.length !== 0) {
-              for (let i = 0; i < pay.price.length; i++) {
-                this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
-              }
+            for (let i = 0; i < pay.price.length; i++) {
+              this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
             }
+
           }
         })
       },
@@ -716,7 +713,7 @@
               } else {
                 this.amountReceipt = 1;
                 this.form.receipt = [];
-                this.form.receipt[0] = this.receiptDate;
+                this.form.receipt[0] = draft.receiptDate;
               }
             } else {
               this.amountReceipt = 1;
@@ -728,15 +725,15 @@
             this.helperBulletin(draft.contract_id);
             this.form.house_id = draft.house_id;
             this.form.money_sum = draft.money_sum;
-            for (let i = 0; i < draft.money_sep.length; i++) {
-              this.amountMoney = i + 1;
-              this.form.money_way.push('');
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].id === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
-                }
-              }
-            }
+            // for (let i = 0; i < draft.money_sep.length; i++) {
+            //   this.amountMoney = i + 1;
+            //   this.form.money_way.push('');
+            //   for (let j = 0; j < this.dictValue8.length; j++) {
+            //     if (this.dictValue8[j].id === draft.money_way[i]) {
+            //       this.moneyNum[i] = this.dictValue8[j].dictionary_name;
+            //     }
+            //   }
+            // }
             this.form.money_sep = draft.money_sep;
             this.form.retainage_date = draft.retainage_date;
             this.form.money_way = draft.money_way;
