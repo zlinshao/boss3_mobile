@@ -197,7 +197,7 @@
     </div>
 
     <div class="footer" v-if="counts === '1' || counts === '11'">
-      <div @click="close_()">重置</div>
+      <div @click="close_1()">重置</div>
       <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
     </div>
@@ -273,7 +273,7 @@
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
-        this.close_();
+        this.close_1();
         this.agencyDetail('');
       }
     },
@@ -288,7 +288,7 @@
       if (count === '1') {
         this.routerIndex('');
         this.ddRent('');
-        this.close_();
+        this.close_1();
         this.agencyDetail('');
         count = count + '1';
         sessionStorage.setItem('count', count);
@@ -307,15 +307,15 @@
         sessionStorage.setItem('process', JSON.stringify(this.$route.query));
         let newID = JSON.parse(sessionStorage.process);
         if (newID.type === 2) {
-          this.close_();
+          this.close_1();
           this.routerTo('/publishDetail', newID.ids);
         } else {
           this.counts = '1';
-          this.close_();
+          this.close_1();
           this.routerIndex('');
           this.ddRent('');
         }
-        this.close_();
+        this.close_1();
         this.agencyDetail(newID);
         count = count + '1';
         sessionStorage.setItem('count', count);
@@ -396,7 +396,7 @@
             this.retry = 0;
             if (res.data.code === '50310' || res.data.code === '50330') {
               Toast.success(res.data.msg);
-              this.close_();
+              this.close_1();
               $('.imgItem').remove();
               this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50320') {
@@ -551,7 +551,7 @@
       })
     },
 
-    close_() {
+    close_1() {
       this.form.purchase_way = 509;
       this.isClear = true;
       setTimeout(() => {
