@@ -280,6 +280,7 @@
         list.agency_info = value.agency_info;
         list.is_agency = value.is_agency;
         list.month = value.sign_month;
+        list.album = value.album;
         list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;
         if (value.customers.length !== 0) {

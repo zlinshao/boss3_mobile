@@ -72,35 +72,35 @@
       </van-cell-group>
 
       <!--<div class="aloneModel">-->
-        <!--<div class="title">凭证截图</div>-->
-        <!--<div class="showPics">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-        <!--</div>-->
+      <!--<div class="title">凭证截图</div>-->
+      <!--<div class="showPics">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--</div>-->
       <!--</div>-->
 
       <!--<div class="aloneModel">-->
-        <!--<div class="title">押金收条</div>-->
-        <!--<div class="showPics">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-          <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-        <!--</div>-->
+      <!--<div class="title">押金收条</div>-->
+      <!--<div class="showPics">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
+      <!--</div>-->
       <!--</div>-->
 
       <div class="changes" v-for="(key,index) in amountMoney">
@@ -617,7 +617,16 @@
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
           this.helperBulletin(val.id);
+          this.getPic(val.album);
         }
+      },
+
+      getPic(val) {
+        this.$http.post(this.urls + 'special/special/picUrl', {
+          id: val.album.deposit_photo,
+        }).then((res) => {
+
+        })
       },
 
       helperBulletin(id) {
