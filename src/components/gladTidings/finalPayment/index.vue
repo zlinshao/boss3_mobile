@@ -74,14 +74,14 @@
       <div class="aloneModel" v-if="certificate_photo.length > 0">
         <div class="title">凭证截图</div>
         <div class="showPics">
-          <img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(key, index)">
+          <img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">
         </div>
       </div>
 
       <div class="aloneModel" v-if="deposit_photo.length > 0">
         <div class="title">押金收条</div>
         <div class="showPics">
-          <img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(key, index)">
+          <img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(deposit_photo, index)">
         </div>
       </div>
 
@@ -622,22 +622,17 @@
         this.$http.post(this.urls + 'special/special/picUrl', {
           id: pic,
         }).then((res) => {
-          console.log(res.data);
           if (res.data.code === '10000') {
             if (val === 1) {
               this.deposit_photo = [];
               res.data.data.forEach((arr) => {
-                console.log(arr);
                 this.deposit_photo.push(arr.uri);
               });
-              console.log(this.deposit_photo);
             } else {
               this.certificate_photo = [];
               res.data.data.forEach((arr) => {
-                console.log(arr);
                 this.certificate_photo.push(arr.uri);
               });
-              console.log(this.deposit_photo);
             }
           }
         })
