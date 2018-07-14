@@ -71,21 +71,12 @@
         </van-field>
       </van-cell-group>
 
-      <!--<div class="aloneModel">-->
-      <!--<div class="title">凭证截图</div>-->
-      <!--<div class="showPics">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--<img src="../../../assets/shenp1.jpg" alt="">-->
-      <!--</div>-->
-      <!--</div>-->
+      <div class="aloneModel" v-if="certificate_photo.length > 0">
+        <div class="title">凭证截图</div>
+        <div class="showPics">
+          <img v-for="(key,index) in certificate_photo" :src="key.uri" @click="bigPic(key, index)">
+        </div>
+      </div>
 
       <div class="aloneModel" v-if="deposit_photo.length > 0">
         <div class="title">押金收条</div>
@@ -274,7 +265,10 @@
         columns: [],              //select值
         selectHide: false,        //select选择
 
+        certificate_photo: [],    //凭证截图
+        certificate_id: [],       //凭证截图
         deposit_photo: [],        //押金收条
+        deposit_id: [],           //押金收条
 
         periods: [],
 
@@ -611,20 +605,35 @@
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
           this.helperBulletin(val.id);
-          this.getPic(val.album);
+          this.getPic(val.album, 1);
+          this.getPic(val.album, 2);
+          this.deposit_id = val.album.deposit_photo;
+          this.certificate_id = val.album.certificate_photo;
         }
       },
 
-      getPic(val) {
+      getPic(album, val) {
+        let pic;
+        if (val === 1) {
+          pic = album.deposit_photo;
+        } else {
+          pic = album.certificate_photo;
+        }
         this.$http.post(this.urls + 'special/special/picUrl', {
-          id: val.deposit_photo,
+          id: pic,
         }).then((res) => {
           if (res.data.code === '10000') {
-            this.deposit_photo = [];
-            res.data.data.forEach((arr) => {
-              this.deposit_photo.push(arr.uri);
-            })
-
+            if (val === 1) {
+              this.deposit_photo = [];
+              res.data.data.forEach((arr) => {
+                this.deposit_photo.push(arr.uri);
+              })
+            } else {
+              this.certificate_photo = [];
+              res.data.data.forEach((arr) => {
+                this.certificate_photo.push(arr.uri);
+              })
+            }
           }
         })
       },
