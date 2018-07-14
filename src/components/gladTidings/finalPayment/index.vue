@@ -71,19 +71,19 @@
         </van-field>
       </van-cell-group>
 
-      <!--<div class="aloneModel" v-if="certificate_photo.length > 0">-->
-        <!--<div class="title">凭证截图</div>-->
-        <!--<div class="showPics">-->
-          <!--<img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">-->
-        <!--</div>-->
-      <!--</div>-->
-<!---->
-      <!--<div class="aloneModel" v-if="deposit_photo.length > 0">-->
-        <!--<div class="title">押金收条</div>-->
-        <!--<div class="showPics">-->
-          <!--<img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(deposit_photo, index)">-->
-        <!--</div>-->
-      <!--</div>-->
+      <div class="aloneModel" v-if="certificate_photo.length > 0">
+        <div class="title">凭证截图</div>
+        <div class="showPics">
+          <img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">
+        </div>
+      </div>
+
+      <div class="aloneModel" v-if="deposit_photo.length > 0">
+        <div class="title">押金收条</div>
+        <div class="showPics">
+          <img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(deposit_photo, index)">
+        </div>
+      </div>
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
@@ -563,8 +563,7 @@
           this.form.screenshot = this.noRepeat(certificatePics);
           depositPics = this.form.screenshot_receipt.concat(this.deposit_id);
           this.form.screenshot_receipt = this.noRepeat(depositPics);
-          console.log(this.form.screenshot);
-          console.log(this.form.screenshot_receipt);
+
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
           this.form.receipt = receipt;
           this.form.draft = val;
@@ -669,11 +668,15 @@
             }
             this.form.payWay = [];
             this.form.price_arr = [];
-            for (let i = 0; i < pay.pay_way.length; i++) {
-              this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
+            if (pay.pay_way.length !== 0) {
+              for (let i = 0; i < pay.pay_way.length; i++) {
+                this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
+              }
             }
-            for (let i = 0; i < pay.price.length; i++) {
-              this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
+            if (pay.price.length !== 0) {
+              for (let i = 0; i < pay.price.length; i++) {
+                this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
+              }
             }
           }
         })
@@ -768,10 +771,6 @@
         });
         $('.imgItem').remove();
         this.picStatus = 'success';
-        this.deposit_photo = [];
-        this.deposit_id = [];
-        this.certificate_photo = [];
-        this.certificate_id = [];
         this.form.id = '';
         this.form.processable_id = '';
         this.form.address = '';
