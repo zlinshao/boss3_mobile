@@ -526,7 +526,7 @@
           phone: '',                    //电话号码
           screenshot_leader: [],        //领导截图 数组
           screenshot: [],               //凭证截图 数组
-          deposit_photo: [],       //押金收条 数组
+          deposit_photo: [],            //押金收条 数组
           photo: [],                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id

@@ -320,6 +320,11 @@
       </div>
 
       <div class="aloneModel">
+        <div class="title">押金收条</div>
+        <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
+      </div>
+
+      <div class="aloneModel">
         <div class="title">合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
@@ -477,18 +482,20 @@
           other_fee: '',
           other_fee_name: '',
 
-          screenshot: '',               //领导截图 数组
+          screenshot: '',               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
+          deposit_photo: [],            //押金收条 数组
           photo: '',                    //合同照片 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
-          staff_name: '',                  //开单人name
-          department_name: '',             //部门name
+          staff_name: '',               //开单人name
+          department_name: '',          //部门name
         },
         screenshots: {},
         photos: {},
         leaders: {},
+        receipts: {},
 
         dictValue8: [],         //支付方式
         value8: [],
@@ -631,6 +638,8 @@
           this.form.screenshot = val[1];
         } else if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
+        } else if (val[0] === 'receipt') {
+          this.form.deposit_photo = val[1];
         } else {
           this.form.photo = val[1];
         }
@@ -1053,6 +1062,8 @@
             this.leaders = data.screenshot_leader;
             this.form.photo = draft.photo;
             this.photos = data.photo;
+            this.form.deposit_photo = draft.deposit_photo;
+            this.receipts = data.deposit_photo;
 
             this.form.remark = draft.remark;
 
@@ -1136,6 +1147,8 @@
         this.leaders = {};
         this.form.photo = [];
         this.photos = {};
+        this.form.deposit_photo = [];
+        this.receipts = {};
         this.form.remark = '';
 
         this.form.other_fee_name = '';
