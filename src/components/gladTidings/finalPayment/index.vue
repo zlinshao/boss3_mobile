@@ -609,7 +609,7 @@
           let val = JSON.parse(t.house);
           this.form.customer_name = val.customers;
           this.form.address = val.house_name;
-          this.form.month = val.sign_month;
+          this.form.month = val.month;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.form.staff_name = val.staff_name;
