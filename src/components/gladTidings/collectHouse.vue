@@ -129,7 +129,7 @@
         }
       },
       houseList(val) {
-        this.distinct(val);
+        val = this.distinct(val);
       }
     },
     methods: {
