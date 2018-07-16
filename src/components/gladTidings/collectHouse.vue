@@ -127,6 +127,9 @@
         if (value === '') {
 
         }
+      },
+      houseList(val) {
+        this.distinct(val);
       }
     },
     methods: {
@@ -332,6 +335,18 @@
         this.isGetMore = true;
         this.isLastPage = false;
       },
+      distinct(arr) {
+        let result = [], i, j, len = arr.length;
+        for (i = 0; i < len; i++) {
+          for (j = i + 1; j < len; j++) {
+            if (arr[i] === arr[j]) {
+              j = ++i;
+            }
+          }
+          result.push(arr[i]);
+        }
+        return result;
+      }
     },
   }
 </script>
