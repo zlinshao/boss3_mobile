@@ -6,8 +6,8 @@
         <input type="text" v-model="searchValue" @keyup.enter="onSearch()">
         <i v-if="searchValue.length > 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
       </div>
-      <p class="searchP" v-if="searchValue.length > 0" @click="onSearch()">搜索</p>
-      <p class="cancelP" v-if="searchValue.length === 0" @click="onCancel">取消</p>
+      <p class="searchP" v-if="searchValue.length > 0" @click="onSearch()">搜索1</p>
+      <p class="cancelP" v-if="searchValue.length === 0" @click="onCancel">取消1</p>
     </div>
     <div class="mainContent">
       <div class="mainList">
@@ -129,7 +129,7 @@
         }
       },
       houseList(val) {
-        val = this.distinct(val);
+        this.houseList = this.distinct(val);
       }
     },
     methods: {
