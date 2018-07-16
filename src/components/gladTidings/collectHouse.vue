@@ -117,6 +117,10 @@
       this.params.mobile = 1;
       if (this.types === 'is_nrcy') {
         this.params.is_nrcy = 1;
+      } else {
+        if (this.types !== 'transferReport') {
+          this.params.is_nrcy = 0;
+        }
       }
       this.checkScroll();
     },
@@ -197,7 +201,7 @@
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i], type);
                 }
-                if ((type === 'renter' || type === 'is_nrcy') && data[i].renters.length !== 0) {
+                if ((type === 'renter' || type === 'is_nrcy' || type === 'transferReport') && data[i].renters.length !== 0) {
                   this.renter(data[i], type);
                 }
                 if (type === 'lord1' && data[i].lords.length !== 0) {

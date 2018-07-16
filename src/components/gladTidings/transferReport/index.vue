@@ -473,10 +473,10 @@
           money_way: [''],              //分金额 方式
 
           discount: 0,                   //让价金额
-          contract_number: 'LJZF',           //合同编号
-          is_corp: 1,                   //是否公司单  0个人1公司
-          receipt: [''],                    //收据编号
-          retainage_date: '',           //尾款补齐时间
+          contract_number: 'LJZF',       //合同编号
+          is_corp: 1,                    //是否公司单  0个人1公司
+          receipt: [''],                 //收据编号
+          retainage_date: '',            //尾款补齐时间
 
           is_other_fee: 0,
           other_fee: '',
@@ -618,7 +618,7 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'transferReport'}});
             break;
           case 2:
             this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
