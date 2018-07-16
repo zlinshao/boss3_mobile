@@ -128,9 +128,6 @@
 
         }
       },
-      houseList(val) {
-        this.houseList = this.distinct(val);
-      }
     },
     methods: {
       // 滚动条
@@ -195,6 +192,7 @@
                   list.house_name = data[i].name;
                   list.house_res = data[i].house_res;
                   this.houseList.push(list);
+                  this.houseList = this.distinct(this.houseList);
                   this.finish(4);
                 }
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
@@ -220,6 +218,7 @@
                     list.is_agency = 0;
                   }
                   this.houseList.push(list);
+                  this.houseList = this.distinct(this.houseList);
                   this.finish(4);
                 }
                 if (type !== 'quality' && data[i].lords.length === 0 && data[i].renters.length === 0) {
@@ -315,6 +314,7 @@
           list.department_name = '---';
         }
         this.houseList.push(list);
+        this.houseList = this.distinct(this.houseList);
         this.finish(4);
       },
       // 取消
