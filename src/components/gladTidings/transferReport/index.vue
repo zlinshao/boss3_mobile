@@ -618,7 +618,7 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'transferReport'}});
+            this.$router.push({path: '/collectHouse', query: {type: 'report'}});
             break;
           case 2:
             this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
@@ -906,7 +906,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          if (t.type === 'transferReport') {
+          if (t.type === 'report') {
             this.form.old_house_name = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
