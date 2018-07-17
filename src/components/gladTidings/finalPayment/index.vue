@@ -752,11 +752,11 @@
             this.form.screenshot = draft.screenshot;
             this.form.screenshot_new = draft.screenshot_new;
             this.form.screenshot_old = draft.screenshot_old;
-            this.screenshots = data.screenshot;
+            this.screenshots = data.screenshot_new;
             this.form.deposit_photo = draft.deposit_photo;
             this.form.deposit_photo_new = draft.deposit_photo_new;
             this.form.deposit_photo_old = draft.deposit_photo_old;
-            this.receipts = data.deposit_photo;
+            this.receipts = data.deposit_photo_new;
             this.getPic(draft.deposit_photo_old, 1);
             this.getPic(draft.screenshot_old, 2);
             this.form.remark = draft.remark;
