@@ -72,14 +72,14 @@
       </van-cell-group>
 
       <div class="aloneModel" v-if="certificate_photo.length > 0">
-        <div class="title">凭证截图</div>
+        <div class="title">历史凭证截图</div>
         <div class="showPics">
           <img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">
         </div>
       </div>
 
       <div class="aloneModel" v-if="deposit_photo.length > 0">
-        <div class="title">押金收条</div>
+        <div class="title">历史押金收条</div>
         <div class="showPics">
           <img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(deposit_photo, index)">
         </div>
@@ -776,6 +776,10 @@
         this.form.processable_id = '';
         this.form.address = '';
         this.form.month = '';
+        this.certificate_photo = [];
+        this.certificate_id = [];
+        this.deposit_photo = [];
+        this.deposit_id = [];
         this.form.price_arr = [''];
         this.form.payWay = [''];
         this.form.terms = '';
