@@ -266,9 +266,9 @@
         selectHide: false,        //select选择
 
         certificate_photo: [],    //凭证截图
-        certificate_id: [],       //凭证截图
+        // certificate_id: [],       //凭证截图
         deposit_photo: [],        //押金收条
-        deposit_id: [],           //押金收条
+        // deposit_id: [],           //押金收条
 
         periods: [],
 
@@ -305,7 +305,11 @@
           retainage_date: '',
           screenshot_leader: [],        //领导截图 数组
           screenshot: [],               //凭证截图 数组
-          deposit_photo: [],       //押金收条 数组
+          screenshot_old: [],           //凭证截图 数组
+          screenshot_new: [],           //凭证截图 数组
+          deposit_photo: [],            //押金收条 数组
+          deposit_photo_old: [],        //押金收条 数组
+          deposit_photo_new: [],        //押金收条 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
@@ -427,8 +431,10 @@
           this.form.screenshot_leader = val[1];
         } else if (val[0] === 'receipt') {
           this.form.deposit_photo = val[1];
+          this.form.deposit_photo_new = val[1];
         } else {
           this.form.screenshot = val[1];
+          this.form.screenshot_new = val[1];
         }
       },
 
@@ -559,7 +565,7 @@
           }
           let certificatePics = [];
           let depositPics = [];
-          certificatePics = this.form.screenshot.concat(this.certificate_id);
+          certificatePics = this.form.screenshot.concat(this.form.screenshot_old);
           this.form.screenshot = this.noRepeat(certificatePics);
           depositPics = this.form.deposit_photo.concat(this.deposit_id);
           this.form.deposit_photo = this.noRepeat(depositPics);
@@ -623,25 +629,19 @@
           this.form.department_id = val.department_id;
           this.helperBulletin(val.id);
           this.deposit_photo = [];
-          this.deposit_id = [];
+          this.form.deposit_photo_old = [];
           this.certificate_photo = [];
-          this.certificate_id = [];
-          this.getPic(val.album, 1);
-          this.getPic(val.album, 2);
-          this.deposit_id = val.album.deposit_photo;
-          this.certificate_id = val.album.certificate_photo;
+          this.form.screenshot_old = [];
+          this.getPic(val.album.deposit_photo, 1);
+          this.getPic(val.album.certificate_photo, 2);
+          this.form.deposit_photo_old = val.album.deposit_photo;
+          this.form.screenshot_old = val.album.certificate_photo;
         }
       },
 
       getPic(album, val) {
-        let pic;
-        if (val === 1) {
-          pic = album.deposit_photo;
-        } else {
-          pic = album.certificate_photo;
-        }
         this.$http.post(this.urls + 'special/special/picUrl', {
-          id: pic,
+          id: album,
         }).then((res) => {
           if (res.data.code === '10000') {
             if (val === 1) {
@@ -747,12 +747,18 @@
             this.form.other_fee = draft.other_fee;
             this.form.customer_name = draft.customer_name;
 
-            this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.screenshot_leader;
+            this.form.screenshot = draft.screenshot;
+            this.form.screenshot_new = draft.screenshot_new;
+            this.form.screenshot_old = draft.screenshot_old;
+            this.screenshots = data.screenshot;
             this.form.deposit_photo = draft.deposit_photo;
+            this.form.deposit_photo_new = draft.deposit_photo_new;
+            this.form.deposit_photo_old = draft.deposit_photo_old;
             this.receipts = data.deposit_photo;
+            this.getPic(draft.deposit_photo_old, 1);
+            this.getPic(draft.screenshot_old, 2);
             this.form.remark = draft.remark;
             this.form.staff_name = draft.staff_name;
             this.form.department_name = draft.department_name;
@@ -777,9 +783,9 @@
         this.form.address = '';
         this.form.month = '';
         this.certificate_photo = [];
-        this.certificate_id = [];
+
         this.deposit_photo = [];
-        this.deposit_id = [];
+
         this.form.price_arr = [''];
         this.form.payWay = [''];
         this.form.terms = '';
@@ -793,10 +799,14 @@
         this.form.money_sep = [''];
         this.form.money_way = [''];
         this.form.screenshot = [];
+        this.form.screenshot_new = [];
+        this.form.screenshot_old = [];
         this.screenshots = {};
         this.form.screenshot_leader = [];
         this.leaders = {};
         this.form.deposit_photo = [];
+        this.form.deposit_photo_new = [];
+        this.form.deposit_photo_old = [];
         this.receipts = {};
         this.amountReceipt = 1;
         this.form.receipt = [];
