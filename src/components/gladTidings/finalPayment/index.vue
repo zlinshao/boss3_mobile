@@ -71,16 +71,16 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel" v-if="certificate_photo.length > 0">
+      <div class="aloneModel">
         <div class="title">历史凭证截图</div>
-        <div class="showPics">
+        <div class="showPics" v-if="certificate_photo.length > 0">
           <img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">
         </div>
       </div>
 
-      <div class="aloneModel" v-if="deposit_photo.length > 0">
+      <div class="aloneModel">
         <div class="title">历史押金收条</div>
-        <div class="showPics">
+        <div class="showPics" v-if="deposit_photo.length > 0">
           <img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(deposit_photo, index)">
         </div>
       </div>
