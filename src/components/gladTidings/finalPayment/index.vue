@@ -63,12 +63,12 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel">
-        <div class="title">历史凭证截图</div>
-        <div class="showPics" v-if="certificate_photo.length > 0">
-          <img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">
-        </div>
-      </div>
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">历史凭证截图</div>-->
+        <!--<div class="showPics" v-if="certificate_photo.length > 0">-->
+          <!--<img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">-->
+        <!--</div>-->
+      <!--</div>-->
 
       <div class="aloneModel">
         <div class="title">历史押金收条</div>
@@ -630,8 +630,8 @@
           this.form.deposit_photo_old = [];
           this.certificate_photo = [];
           this.form.screenshot_old = [];
-          this.getPic(val.album.deposit_photo, 1);
-          this.getPic(val.album.certificate_photo, 2);
+          // this.getPic(val.album.deposit_photo, 1);
+          // this.getPic(val.album.certificate_photo, 2);
           this.form.deposit_photo_old = val.album.deposit_photo;
           this.form.screenshot_old = val.album.certificate_photo;
         }
@@ -755,8 +755,8 @@
             this.form.deposit_photo_new = draft.deposit_photo_new;
             this.form.deposit_photo_old = draft.deposit_photo_old;
             this.receipts = data.deposit_photo_new;
-            this.getPic(draft.deposit_photo_old, 1);
-            this.getPic(draft.screenshot_old, 2);
+            // this.getPic(draft.deposit_photo_old, 1);
+            // this.getPic(draft.screenshot_old, 2);
             this.form.remark = draft.remark;
             this.form.staff_name = draft.staff_name;
             this.form.department_name = draft.department_name;
