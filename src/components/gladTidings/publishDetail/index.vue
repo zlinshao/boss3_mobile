@@ -350,8 +350,8 @@
             this.place = main.place;
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
 
-            this.$http.get(this.urls + 'manager/staff/' + main.user.org[0].leader_id).then((res) => {
-
+            this.$http.get(globalConfig.server + 'manager/staff/' + main.user.org[0].leader_id).then((res) => {
+            
             });
 
             if (houseName.quality_up && main.place.name === 'appraiser-officer_review') {
