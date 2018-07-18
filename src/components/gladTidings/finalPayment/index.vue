@@ -72,8 +72,8 @@
 
       <div class="aloneModel">
         <div class="title">历史押金收条</div>
-        <div class="showPics" v-if="deposit_photo.length > 0">
-          <img v-for="(key,index) in deposit_photo" :src="key" @click="bigPic(deposit_photo, index)">
+        <div class="showPics" v-if="deposit_photos.length > 0">
+          <img v-for="(key,index) in deposit_photos" :src="key" @click="bigPic(deposit_photos, index)">
         </div>
       </div>
 
@@ -267,7 +267,7 @@
 
         certificate_photo: [],    //凭证截图
         // certificate_id: [],       //凭证截图
-        deposit_photo: [],        //押金收条
+        deposit_photos: [],        //押金收条
         // deposit_id: [],           //押金收条
 
         periods: [],
@@ -430,10 +430,8 @@
         if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
         } else if (val[0] === 'receipt') {
-          // this.form.deposit_photo = val[1];
           this.form.deposit_photo_new = val[1];
         } else {
-          // this.form.screenshot = val[1];
           this.form.screenshot_new = val[1];
         }
       },
@@ -565,26 +563,9 @@
           }
           let certificatePics = [];
           let depositPics = [];
-          let shotNew = this.form.screenshot_new.length;
-          let shotOld = this.form.screenshot_old.length;
-          let depositNew = this.form.deposit_photo_new.length;
-          let depositOld = this.form.deposit_photo_old.length;
-          if (shotNew === 0 && shotOld !== 0) {
-            certificatePics = this.form.screenshot_old;
-          } else if (shotNew !== 0 && shotOld === 0) {
-            certificatePics = this.form.screenshot_new;
-          } else {
-            certificatePics = this.form.screenshot_new.concat(this.form.screenshot_old);
-          }
+          certificatePics = this.form.screenshot_new.concat(this.form.screenshot_old);
           this.form.screenshot = this.noRepeat(certificatePics);
-
-          if (depositNew === 0 && depositOld !== 0) {
-            depositPics = this.form.deposit_photo_old;
-          } else if (depositNew !== 0 && depositOld === 0) {
-            depositPics = this.form.deposit_photo_new;
-          } else {
-            depositPics = this.form.deposit_photo_new.concat(this.form.deposit_photo_old);
-          }
+          depositPics = this.form.deposit_photo_new.concat(this.form.deposit_photo_old);
           this.form.deposit_photo = this.noRepeat(depositPics);
 
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
@@ -645,7 +626,7 @@
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
           this.helperBulletin(val.id);
-          this.deposit_photo = [];
+          this.deposit_photos = [];
           this.form.deposit_photo_old = [];
           this.certificate_photo = [];
           this.form.screenshot_old = [];
@@ -663,7 +644,7 @@
           if (res.data.code === '10000') {
             if (val === 1) {
               res.data.data.forEach((arr) => {
-                this.deposit_photo.push(arr.uri);
+                this.deposit_photos.push(arr.uri);
               });
             } else {
               res.data.data.forEach((arr) => {
@@ -801,7 +782,7 @@
         this.form.month = '';
         this.certificate_photo = [];
 
-        this.deposit_photo = [];
+        this.deposit_photos = [];
 
         this.form.price_arr = [''];
         this.form.payWay = [''];

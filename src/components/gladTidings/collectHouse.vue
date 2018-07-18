@@ -295,7 +295,7 @@
         if (value.customers.length !== 0) {
           list.customers = value.customers[0].name;
         } else {
-          if (value.customer_info !== null) {
+          if (value.customer_info !== null && value.customer_info.length !== 0) {
             list.customers = value.customer_info[0].name;
           } else {
             list.customers = '---';
