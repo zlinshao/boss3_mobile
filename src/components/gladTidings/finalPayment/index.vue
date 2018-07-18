@@ -430,10 +430,10 @@
         if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
         } else if (val[0] === 'receipt') {
-          this.form.deposit_photo = val[1];
+          // this.form.deposit_photo = val[1];
           this.form.deposit_photo_new = val[1];
         } else {
-          this.form.screenshot = val[1];
+          // this.form.screenshot = val[1];
           this.form.screenshot_new = val[1];
         }
       },
@@ -565,9 +565,9 @@
           }
           let certificatePics = [];
           let depositPics = [];
-          certificatePics = this.form.screenshot.concat(this.form.screenshot_old);
+          certificatePics = this.form.screenshot_new.concat(this.form.screenshot_old);
           this.form.screenshot = this.noRepeat(certificatePics);
-          depositPics = this.form.deposit_photo.concat(this.deposit_id);
+          depositPics = this.form.deposit_photo_new.concat(this.form.deposit_photo_old);
           this.form.deposit_photo = this.noRepeat(depositPics);
 
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
