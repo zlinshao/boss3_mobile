@@ -565,9 +565,26 @@
           }
           let certificatePics = [];
           let depositPics = [];
-          certificatePics = this.form.screenshot_new.concat(this.form.screenshot_old);
+          let shotNew = this.form.screenshot_new.length;
+          let shotOld = this.form.screenshot_old.length;
+          let depositNew = this.form.deposit_photo_new.length;
+          let depositOld = this.form.deposit_photo_old.length;
+          if (shotNew === 0 && shotOld !== 0) {
+            certificatePics = this.form.screenshot_old;
+          } else if (shotNew !== 0 && shotOld === 0) {
+            certificatePics = this.form.screenshot_new;
+          } else {
+            certificatePics = this.form.screenshot_new.concat(this.form.screenshot_old);
+          }
           this.form.screenshot = this.noRepeat(certificatePics);
-          depositPics = this.form.deposit_photo_new.concat(this.form.deposit_photo_old);
+
+          if (depositNew === 0 && depositOld !== 0) {
+            depositPics = this.form.deposit_photo_old;
+          } else if (depositNew !== 0 && depositOld === 0) {
+            depositPics = this.form.deposit_photo_new;
+          } else {
+            depositPics = this.form.deposit_photo_new.concat(this.form.deposit_photo_old);
+          }
           this.form.deposit_photo = this.noRepeat(depositPics);
 
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
