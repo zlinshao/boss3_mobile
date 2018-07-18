@@ -164,12 +164,12 @@
         </div>
         <div class="showRoleName">
           <div class="showImg">
-            <img :src="personal.avatar" v-if="personal.avatar">
+            <img :src="bull_name.avatar" v-if="bull_name.avatar">
             <img src="../../../assets/head.png" v-else>
           </div>
           <div>
-            <p>负责人：{{personal.name}}</p>
-            <p>手机号：<a :href="'tel:' + personal.phone">{{personal.phone}}</a></p>
+            <p>负责人：{{bull_name.name}}</p>
+            <p>手机号：<a :href="'tel:' + bull_name.phone">{{bull_name.phone}}</a></p>
           </div>
         </div>
       </div>
@@ -351,7 +351,7 @@
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
 
             this.$http.get(globalConfig.server + 'manager/staff/' + main.user.org[0].leader_id).then((res) => {
-            
+              this.bull_name = res.data.data;
             });
 
             if (houseName.quality_up && main.place.name === 'appraiser-officer_review') {
