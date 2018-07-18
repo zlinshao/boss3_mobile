@@ -70,12 +70,12 @@
         <!--</div>-->
       <!--</div>-->
 
-      <div class="aloneModel">
-        <div class="title">历史押金收条</div>
-        <div class="showPics" v-if="deposit_photos.length > 0">
-          <img v-for="(key,index) in deposit_photos" :src="key" @click="bigPic(deposit_photos, index)">
-        </div>
-      </div>
+      <!--<div class="aloneModel">-->
+        <!--<div class="title">历史押金收条</div>-->
+        <!--<div class="showPics" v-if="deposit_photos.length > 0">-->
+          <!--<img v-for="(key,index) in deposit_photos" :src="key" @click="bigPic(deposit_photos, index)">-->
+        <!--</div>-->
+      <!--</div>-->
 
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
