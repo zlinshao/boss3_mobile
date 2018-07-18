@@ -565,9 +565,9 @@
           this.value6 = [];
           this.dictValue6 = res.data;
           for (let i = 0; i < res.data.length; i++) {
-            if (res.data[i].dictionary_name !== '房东承担') {
+            // if (res.data[i].dictionary_name !== '房东承担') {
               this.value6.push(res.data[i].dictionary_name);
-            }
+            // }
           }
           //支付方式
           this.dictionary(508, 1).then((res) => {
