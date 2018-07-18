@@ -61,14 +61,6 @@
           placeholder="请选择房租期数"
           readonly>
         </van-field>
-        <van-field
-          v-model="form.money_sum"
-          label="本次已收金额"
-          type="text"
-          class="number"
-          placeholder="请填写金额"
-          required>
-        </van-field>
       </van-cell-group>
 
       <div class="aloneModel">
@@ -91,6 +83,14 @@
           <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,1)">删除</span>
         </div>
         <van-cell-group>
+          <van-field
+            v-model="form.money_sum"
+            label="本次已收金额"
+            type="text"
+            class="number"
+            placeholder="请填写金额"
+            required>
+          </van-field>
           <van-field
             v-model="form.money_sep[index]"
             type="text"
