@@ -281,7 +281,6 @@
             this.showContent = true;
           }
         } else {
-
           this.answerFor = true;
         }
       },
@@ -304,6 +303,8 @@
       },
 
       close_() {
+        this.showContent = false;
+        this.answerFor = false;
         this.placeFalse = false;
         this.approvedStatus = false;
         this.vLoading = true;
