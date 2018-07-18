@@ -270,7 +270,14 @@ export default {
   }
 }
 
-function sendKey(user_id){
-  $("#input").val(user_id);
-  alert(111111);
-}
+window.onerror = handleError;
+
+function handleError(msg, url, l) {
+  let txt = "There was an error on this page.\n\n";
+  txt += "Error: " + msg + "\n";
+  txt += "URL: " + url + "\n";
+  txt += "Line: " + l + "\n\n";
+  txt += "Click OK to continue.\n\n";
+  alert(txt);
+  return true
+} //如果返回值为 false，则在控制台 (JavaScript console) 中显示错误消息。反之则不会
