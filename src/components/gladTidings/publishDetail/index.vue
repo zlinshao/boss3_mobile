@@ -2,8 +2,7 @@
   <div id="cardDetail">
     <div class="detail">
       <div class="detailLeft">
-        <!--@click="approvePersonal(2)"-->
-        <div>
+        <div @click="approvePersonal(2)">
           <img :src="personal.avatar" v-if="personal.avatar">
           <img src="../../../assets/head.png" v-else>
         </div>
@@ -151,24 +150,33 @@
       </div>
     </van-popup>
 
-    <!--<van-popup v-model="answerFor" style="border-radius: 3px;">-->
-      <!--<div class="showContent">-->
-        <!--<div v-for="key in role_name" class="showRoleName">-->
-          <!--<div class="showImg">-->
-            <!--<img :src="key.avatar" v-if="key.avatar">-->
-            <!--<img src="../../../assets/head.png" v-else>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<p>姓名：{{key.name}}</p>-->
-            <!--<p>职位：{{key.name}}</p>-->
-            <!--<p>手机号：<a :href="'tel:' + key.phone">{{key.phone}}</a></p>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="showContentFooter" @click="answerFor = false">-->
-        <!--关闭-->
-      <!--</div>-->
-    <!--</van-popup>-->
+    <van-popup v-model="answerFor" style="border-radius: 3px;">
+      <div class="showContent">
+        <div class="showRoleName">
+          <div class="showImg">
+            <img :src="personal.avatar" v-if="personal.avatar">
+            <img src="../../../assets/head.png" v-else>
+          </div>
+          <div>
+            <p>报备人：{{personal.name}}</p>
+            <p>手机号：<a :href="'tel:' + personal.phone">{{personal.phone}}</a></p>
+          </div>
+        </div>
+        <div class="showRoleName">
+          <div class="showImg">
+            <img :src="personal.avatar" v-if="personal.avatar">
+            <img src="../../../assets/head.png" v-else>
+          </div>
+          <div>
+            <p>负责人：{{personal.name}}</p>
+            <p>手机号：<a :href="'tel:' + personal.phone">{{personal.phone}}</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="showContentFooter" @click="answerFor = false">
+        关闭
+      </div>
+    </van-popup>
 
     <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(this.process.processable_type) > -1"
                  :process="process"></SwitchCraft>
@@ -194,7 +202,7 @@
         personalId: {},
         vLoading: true,
         disabled: false,
-        printscreen: ['新凭证截图','旧凭证截图','新押金收条','旧押金收条','押金收条','款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '组长同意截图', '房屋影像', '房屋照片', '退租交接单'],
+        printscreen: ['新凭证截图', '旧凭证截图', '新押金收条', '旧押金收条', '押金收条', '款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '组长同意截图', '房屋影像', '房屋照片', '退租交接单'],
         placeStatus: ['published', 'rejected', 'cancelled'],
 
         routerLinks: ['bulletin_quality', 'bulletin_collect_basic', 'bulletin_collect_continued', 'bulletin_rent_basic', 'bulletin_rent_continued', 'bulletin_rent_trans', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change',],
@@ -223,6 +231,7 @@
         placeFalse: false,
         videoSrc: '',
 
+        bull_name: {},
         role_name: [],
         showContent: false,
         answerFor: false,
@@ -272,6 +281,7 @@
             this.showContent = true;
           }
         } else {
+
           this.answerFor = true;
         }
       },
@@ -339,6 +349,10 @@
             this.personal = main.user;
             this.place = main.place;
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
+
+            this.$http.get(this.urls + 'manager/staff/' + main.user.org[0].leader_id).then((res) => {
+
+            });
 
             if (houseName.quality_up && main.place.name === 'appraiser-officer_review') {
               this.marking = 1;
