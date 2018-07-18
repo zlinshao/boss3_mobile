@@ -272,7 +272,7 @@
         this.timeShow = false;
       },
       searchSelect() {
-        this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
+        this.$router.push({path: '/collectHouse', query: {type: 'report'}});
       },
 
       saveCollect(val) {
