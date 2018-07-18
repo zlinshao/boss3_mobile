@@ -838,7 +838,6 @@
           return;
         }
         if (this.haveInHand) {
-          addalert('1222222');
           this.haveInHand = false;
           this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
           this.form.gas = this.gasOn ? 1 : 0;                       //天然气
