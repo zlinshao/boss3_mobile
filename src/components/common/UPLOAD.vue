@@ -1,7 +1,6 @@
 <template>
   <div id="uploadContainer">
     <div id="container">
-      333333
       <div :id="'pickfiles'+ID" class="pickfiles">
         <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
           <div style="position: relative; margin: .3rem 0 0 .3rem;">
@@ -87,13 +86,9 @@
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
           let span = $(this).prev().children('b').children('span').attr('class');
-          console.log(span);
           let close = false;
           if (span !== undefined) {
-            console.log(1);
-            console.log(span);
             close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1 ? true : false;
-            console.log(1);
           }
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
