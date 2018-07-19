@@ -97,7 +97,6 @@
             }
           }
           for (let i = 0; i < _this.imgArray.length; i++) {
-            console.log(2);
             if (_this.imgArray[i].name.indexOf(id) > -1) {
               _this.imgId.forEach((item) => {
                 if (_this.imgArray[i].id === item) {
@@ -110,8 +109,6 @@
             }
           }
           if (close) {
-            console.log(3);
-            console.log(close);
             let type = _this.imgArray.every((item) => {
               return item.name.indexOf(id) < 0;
             });
