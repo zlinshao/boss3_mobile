@@ -16,7 +16,8 @@
           type="text"
           placeholder="请填写合同编号"
           icon="clear"
-          @click-icon="form.contract_number = ''">
+          @click-icon="form.contract_number = ''"
+          required>
         </van-field>
         <van-field
           v-model="form.penalty"
