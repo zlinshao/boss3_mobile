@@ -85,7 +85,11 @@
         });
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
-          let close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1 ? true : false;
+          let span = $(this).prev().children('b').children('span');
+          let close = false;
+          if (span !== undefined) {
+            close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1 ? true : false;
+          }
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
               $('#' + id).remove();
