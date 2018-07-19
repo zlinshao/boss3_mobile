@@ -87,12 +87,13 @@
         $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
           let id = $(this).attr("data-val");
           let span = $(this).prev().children('b').children('span');
-          console.log($(this).prev().children('b').children('span').attr('class'));
           console.log(span);
           let close = false;
           if (span !== undefined) {
+            console.log(1);
             console.log(span);
             close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1 ? true : false;
+            console.log(1);
           }
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
@@ -101,6 +102,7 @@
             }
           }
           for (let i = 0; i < _this.imgArray.length; i++) {
+            console.log(2);
             if (_this.imgArray[i].name.indexOf(id) > -1) {
               _this.imgId.forEach((item) => {
                 if (_this.imgArray[i].id === item) {
@@ -113,6 +115,7 @@
             }
           }
           if (close) {
+            console.log(3);
             console.log(close);
             let type = _this.imgArray.every((item) => {
               return item.name.indexOf(id) < 0;
