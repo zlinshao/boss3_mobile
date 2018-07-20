@@ -162,7 +162,7 @@
         let url3 = 'personPerformance';
         let url4 = 'personPerformanceRatio';
         this.antVIndex(url1);
-        // this.antVIndex(url2);
+        this.antVIndex(url2);
         this.antVIndex(url3);
         this.antVIndex(url4);
       },
@@ -305,8 +305,16 @@
         });
 
         // 辅助 html
+        let left;
+        if (data < 10) {
+          left = '50%'
+        } else if (100 > data > 9) {
+          left = '49%'
+        } else {
+          left = '48%'
+        }
         this.chart.guide().html({
-          position: ['48%', '50%'],
+          position: [left, '50%'],
           html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;">0%</p>',
         });
         // 使用矩形或者弧形，用面积来表示大小关系的图形，一般构成柱状图、饼图等图表
