@@ -7,11 +7,11 @@
       </div>
       <div>
         <p class="titleP">业绩统计</p>
-        <p><span style="color: #46C460;font-size: .45rem!important;">300000</span>&nbsp;元</p>
+        <p><span style="color: #46C460;font-size: .45rem!important;">{{personPerformance}}</span>&nbsp;元</p>
       </div>
       <div>
         <p class="titleP">资料待提交单数</p>
-        <p><span style="color: #F2617B;font-size: .45rem!important;">10</span>&nbsp;单</p>
+        <p><span style="color: #F2617B;font-size: .45rem!important;">{{personMaterials}}</span>&nbsp;单</p>
       </div>
     </div>
     <div style="background-color: #FFFFFF;margin: .24rem 0;">
@@ -53,10 +53,14 @@
         personal: '',
         chart: null,
         screenWidth: document.body.offsetWidth,
-        data: [{
+        data: [{            //个人业绩占比小组业绩
           x: 1,
           y: 85,
         }],
+        personMaterials: '',        //个人资料待审核的数量
+        personPerformance: '',      //个人业绩总额
+        // personPerformanceRatio: '', //个人业绩占比小组业绩
+        personPerformanceList: '',  //个人业绩详情
         tableData: [
           {
             address: '发的还是是范德萨法10-10-10',
@@ -172,20 +176,25 @@
         }).then((res) => {
           switch (url) {
             case 'personMaterials':
-              console.log('个人业绩占比小组业绩');
+              console.log('个人资料待审核的数量');
               console.log(res.data);
+              this.personMaterials = res.data.data;
               break;
             case 'personPerformanceList':
               console.log('获取个人业绩详情');
               console.log(res.data);
+              this.personPerformanceList = res.data.data;
               break;
             case 'personPerformance':
               console.log('个人业绩总额');
               console.log(res.data);
+              this.personPerformance = res.data.data;
               break;
             case 'personPerformanceRatio':
               console.log('个人业绩占比小组业绩');
               console.log(res.data);
+              this.personPerformanceRatio = res.data.data;
+              this.data[0].y = res.data.data;
               break;
           }
         })
@@ -253,9 +262,10 @@
       },
 
       initialise(Util) {
+        let that = this;
         this.chart = new F2.Chart({
           id: 'mountNode',
-          width: this.screenWidth - 16,
+          width: this.screenWidth,
           pixelRatio: window.devicePixelRatio,
         });
         this.chart.source(this.data, {
@@ -304,7 +314,7 @@
                   endAngle: endAngle,
                 }
               }, animateCfg)).onUpdate(function (frame) {
-                $('#number').text(Math.floor(frame * 85) + '%');
+                $('#number').text(Math.floor(frame * that.personPerformanceRatio) + '%');
               });
             }
           }
