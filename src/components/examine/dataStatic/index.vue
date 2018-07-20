@@ -15,7 +15,7 @@
         <p><span style="color: #F2617B;font-size: .45rem!important;">10</span>&nbsp;单</p>
       </div>
     </div>
-    <div style="background-color: #FFFFFF;">
+    <div style="background-color: #FFFFFF;margin: .24rem 0;">
       <div class="chart-wrapper">
         <canvas id="mountNode"></canvas>
       </div>
@@ -350,9 +350,7 @@
       display: -webkit-flex;
       align-items: center;
     }
-    table {
-      margin-top: .3rem;
-    }
+
     tbody tr:nth-of-type(even) {
       background: #F5F3F6;
     }
