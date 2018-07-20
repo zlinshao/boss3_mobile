@@ -2,16 +2,16 @@
   <div id="dataStatic">
     <div class="modules">
       <div>
-        <p style="color: #5C5C5C;">姓名</p>
+        <p class="titleP">姓名</p>
         <p style="color: #000000;">{{personal}}</p>
       </div>
       <div>
-        <p style="color: #5C5C5C;">业绩统计</p>
-        <p style=""><span style="font-size: .4rem;color: #46C460;">3000000</span>&nbsp;元</p>
+        <p class="titleP">业绩统计</p>
+        <p><span style="color: #46C460;font-size: .4rem;">3000000</span>&nbsp;元</p>
       </div>
       <div>
-        <p style="color: #5C5C5C;">资料待提交单数</p>
-        <p style="color: #F2617B;font-size: .4rem">10单</p>
+        <p class="titleP">资料待提交单数</p>
+        <p><span style="color: #F2617B;font-size: .4rem;">10</span>&nbsp;单</p>
       </div>
     </div>
     <div>
@@ -23,10 +23,10 @@
       <table style="width: 100%;height: auto;">
         <thead style="background-color: #F5F3F6;">
         <tr style="height: .7rem;line-height: .7rem;">
-          <td style="padding: .1rem .1rem;" align=left>地址</td>
-          <td style="padding: .1rem .1rem;min-width: 1.2rem;" align=left>总金额</td>
-          <td style="padding: .1rem .1rem;min-width: 1.2rem;" align=left>月单价</td>
-          <td style="padding: .1rem .1rem;min-width: 1.6rem;" align=left>付款方式</td>
+          <td align=left>地址</td>
+          <td style="min-width: 1.2rem;" align=left>总金额</td>
+          <td style="min-width: 1.2rem;" align=left>月单价</td>
+          <td style="min-width: 1.6rem;" align=left>付款方式</td>
         </tr>
         </thead>
         <tbody>
@@ -89,7 +89,7 @@
       this.drawing();
     },
     activated() {
-      this.personal = sessionStorage.personal.name;
+      this.personal = JSON.parse(sessionStorage.personal).name;
     },
     watch: {},
     methods: {
@@ -271,6 +271,9 @@
 
 <style lang="scss">
   #dataStatic {
+    .titleP {
+      color: #5C5C5C;
+    }
     .modules {
       display: flex;
       display: -webkit-flex;
@@ -295,7 +298,10 @@
     thead td, tbody td {
       color: #5C5C5C;
       vertical-align: middle;
-      padding: .16rem .1rem;
+      padding: .2rem .1rem;
+    }
+    thead td {
+      padding: .1rem .1rem;
     }
   }
 </style>
