@@ -55,11 +55,11 @@
         screenWidth: document.body.offsetWidth,
         data: [{            //个人业绩占比小组业绩
           x: 1,
-          y: 85,
+          y: 0,
         }],
-        personMaterials: '',        //个人资料待审核的数量
-        personPerformance: '',      //个人业绩总额
-        personPerformanceRatio: '', //个人业绩占比小组业绩
+        personMaterials: 0,        //个人资料待审核的数量
+        personPerformance: 0,      //个人业绩总额
+        personPerformanceRatio: 0, //个人业绩占比小组业绩
         personPerformanceList: [],  //个人业绩详情
         tableData: [
           {
