@@ -178,23 +178,33 @@
             case 'personMaterials':
               console.log('个人资料待审核的数量');
               console.log(res.data);
-              this.personMaterials = res.data.data;
+              if (res.data.code === '20000') {
+                this.personMaterials = res.data.data;
+              }
               break;
             case 'personPerformanceList':
               console.log('获取个人业绩详情');
               console.log(res.data);
-              this.personPerformanceList = res.data.data;
+              if (res.data.code === '20000') {
+                this.personPerformanceList = res.data.data;
+              }
               break;
             case 'personPerformance':
               console.log('个人业绩总额');
               console.log(res.data);
-              this.personPerformance = res.data.data;
+              if (res.data.code === '20000') {
+                this.personPerformance = res.data.data;
+              }
               break;
             case 'personPerformanceRatio':
               console.log('个人业绩占比小组业绩');
               console.log(res.data);
-              this.data[0].y = res.data.data;
-              this.drawing(res.data.data);
+              if (res.data.code === '20000') {
+                this.data[0].y = res.data.data;
+                this.drawing(res.data.data);
+              } else {
+                this.drawing(0);
+              }
               break;
           }
         });
@@ -297,7 +307,7 @@
         // 辅助 html
         this.chart.guide().html({
           position: ['48%', '50%'],
-          html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;"></p>',
+          html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;">0%</p>',
         });
         // 使用矩形或者弧形，用面积来表示大小关系的图形，一般构成柱状图、饼图等图表
         this.chart.interval().position('x*y').size(15).shape('tick').animate({
