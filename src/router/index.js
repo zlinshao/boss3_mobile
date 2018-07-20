@@ -34,6 +34,8 @@ import RentReport from '../components/gladTidings/rentReport/index.vue'
 import TransferReport from '../components/gladTidings/transferReport/index.vue'
 import ContinueCollect from '../components/gladTidings/continueCollect/index.vue'
 
+// 数据统计
+import DataStatic from '../components/examine/dataStatic/index.vue'
 
 import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'           //未收先祖
 import UncollectBeforeRentSure from '../components/gladTidings/uncollectBeforeRentSure/index.vue'   //未收先祖确定
@@ -539,6 +541,15 @@ export default new Router({
       back: '#F19851',
       meta: {title: '员工广场'},
       component: StaffSquare
+    },
+    {
+      path: '/dataStatic',
+      name: '业绩报表',
+      icon: 'iconfont icon-yuangongzhongxin',
+      hidden: 'other',
+      back: '#F19851',
+      meta: {title: '业绩报表'},
+      component: DataStatic
     },
     // {
     //   path: '/cardDetail',

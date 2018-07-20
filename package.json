@@ -12,6 +12,7 @@
     "test": "npm run unit"
   },
   "dependencies": {
+    "@antv/f2": "^3.1.15",
     "axios": "^0.18.0",
     "fastclick": "^1.0.6",
     "formidable": "^1.2.1",
