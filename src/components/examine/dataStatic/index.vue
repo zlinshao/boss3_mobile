@@ -162,7 +162,7 @@
         let url3 = 'personPerformance';
         let url4 = 'personPerformanceRatio';
         this.antVIndex(url1);
-        this.antVIndex(url2);
+        // this.antVIndex(url2);
         this.antVIndex(url3);
         this.antVIndex(url4);
       },
@@ -193,14 +193,14 @@
             case 'personPerformanceRatio':
               console.log('个人业绩占比小组业绩');
               console.log(res.data);
-              this.personPerformanceRatio = res.data.data;
               this.data[0].y = res.data.data;
+              this.drawing(res.data.data);
               break;
           }
-        })
+        });
       },
 
-      drawing() {
+      drawing(data) {
         let Shape = F2.Shape;
         let G = F2.G;
         let Util = F2.Util;
@@ -258,11 +258,10 @@
             }
           }
         });
-        this.initialise(Util);
+        this.initialise(Util, data);
       },
 
-      initialise(Util) {
-        let that = this;
+      initialise(Util, data) {
         this.chart = new F2.Chart({
           id: 'mountNode',
           width: this.screenWidth,
@@ -297,7 +296,7 @@
 
         // 辅助 html
         this.chart.guide().html({
-          position: ['49%', '50%'],
+          position: ['48%', '50%'],
           html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;">0%</p>',
         });
         // 使用矩形或者弧形，用面积来表示大小关系的图形，一般构成柱状图、饼图等图表
@@ -314,7 +313,7 @@
                   endAngle: endAngle,
                 }
               }, animateCfg)).onUpdate(function (frame) {
-                $('#number').text(Math.floor(frame * that.personPerformanceRatio) + '%');
+                $('#number').text(Math.floor(frame * data) + '%');
               });
             }
           }
