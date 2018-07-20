@@ -59,8 +59,8 @@
         }],
         personMaterials: '',        //个人资料待审核的数量
         personPerformance: '',      //个人业绩总额
-        // personPerformanceRatio: '', //个人业绩占比小组业绩
-        personPerformanceList: '',  //个人业绩详情
+        personPerformanceRatio: '', //个人业绩占比小组业绩
+        personPerformanceList: [],  //个人业绩详情
         tableData: [
           {
             address: '发的还是是范德萨法10-10-10',
