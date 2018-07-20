@@ -32,7 +32,7 @@
         <tbody>
         <tr v-for="key in personPerformanceList">
           <td style="color: #000000;" align=left>{{key.name}}</td>
-          <td align=left>{{key.month_price}}</td>
+          <td align=left>{{key.performance}}</td>
           <td align=left>{{key.month_price}}</td>
           <td align=left>{{key.pay_way_name}}</td>
         </tr>
