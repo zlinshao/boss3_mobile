@@ -173,19 +173,19 @@
           switch (url) {
             case 'personMaterials':
               console.log('个人业绩占比小组业绩');
-              console.log(res);
+              console.log(res.data);
               break;
             case 'personPerformanceList':
               console.log('获取个人业绩详情');
-              console.log(res);
+              console.log(res.data);
               break;
             case 'personPerformance':
               console.log('个人业绩总额');
-              console.log(res);
+              console.log(res.data);
               break;
             case 'personPerformanceRatio':
               console.log('个人业绩占比小组业绩');
-              console.log(res);
+              console.log(res.data);
               break;
           }
         })
