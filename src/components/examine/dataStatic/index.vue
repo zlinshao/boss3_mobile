@@ -7,11 +7,11 @@
       </div>
       <div>
         <p class="titleP">业绩统计</p>
-        <p><span style="color: #46C460;font-size: .4rem;">3000000</span>&nbsp;元</p>
+        <p><span style="color: #46C460;font-size: .42rem;">3000000</span>&nbsp;元</p>
       </div>
       <div>
         <p class="titleP">资料待提交单数</p>
-        <p><span style="color: #F2617B;font-size: .4rem;">10</span>&nbsp;单</p>
+        <p><span style="color: #F2617B;font-size: .42rem;">10</span>&nbsp;单</p>
       </div>
     </div>
     <div>
@@ -229,7 +229,7 @@
         // 辅助 html
         this.chart.guide().html({
           position: ['49%', '50%'],
-          html: '<p id="number" style="font-size: 32px;margin: 0;color: #1890ff;">0%</p>',
+          html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;">0%</p>',
         });
         // 使用矩形或者弧形，用面积来表示大小关系的图形，一般构成柱状图、饼图等图表
         this.chart.interval().position('x*y').size(15).shape('tick').animate({
@@ -272,6 +272,7 @@
 <style lang="scss">
   #dataStatic {
     .titleP {
+      padding: 0 .3rem;
       color: #5C5C5C;
     }
     .modules {
@@ -290,7 +291,9 @@
       display: -webkit-flex;
       align-items: center;
     }
-
+    table {
+      margin-top: .3rem;
+    }
     tbody tr:nth-of-type(even) {
       background: #F5F3F6;
     }
