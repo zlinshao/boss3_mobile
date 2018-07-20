@@ -1,6 +1,6 @@
 <template>
   <div id="dataStatic">
-    <div class="modules">
+    <div class="modules" style="padding: .3rem 0;">
       <div>
         <p class="titleP">姓名</p>
         <p style="color: #000000;">{{personal}}</p>
@@ -15,7 +15,7 @@
         <p><span style="color: #F2617B;font-size: .45rem!important;">10</span>&nbsp;单</p>
       </div>
     </div>
-    <div>
+    <div style="background-color: #FFFFFF;">
       <div class="chart-wrapper">
         <canvas id="mountNode"></canvas>
       </div>
@@ -330,13 +330,14 @@
 <style lang="scss">
   #dataStatic {
     .titleP {
-      padding: .3rem 0 .24rem;
+      padding-bottom: .24rem;
       color: #5C5C5C;
     }
     .modules {
       display: flex;
       display: -webkit-flex;
       align-items: center;
+      background: #FFFFFF;
     }
 
     .modules > div {
