@@ -81,6 +81,26 @@
             money: '100000',
             month: '3000',
             payWay: '押1付10',
+          }, {
+            address: '发的还是卡10-10-10',
+            money: '100000',
+            month: '3000',
+            payWay: '押1付10',
+          }, {
+            address: '发的还是卡10-10-10',
+            money: '100000',
+            month: '3000',
+            payWay: '押1付10',
+          }, {
+            address: '发的还是卡10-10-10',
+            money: '100000',
+            month: '3000',
+            payWay: '押1付10',
+          }, {
+            address: '发的还是卡10-10-10',
+            money: '100000',
+            month: '3000',
+            payWay: '押1付10',
           },
         ]
       }
@@ -272,7 +292,7 @@
 <style lang="scss">
   #dataStatic {
     .titleP {
-      padding: 3rem 0 .24rem;
+      padding: .3rem 0 .24rem;
       color: #5C5C5C;
     }
     .modules {
