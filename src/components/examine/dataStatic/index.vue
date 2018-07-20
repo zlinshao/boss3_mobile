@@ -30,11 +30,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="key in tableData">
-          <td style="color: #000000;" align=left>{{key.address}}</td>
-          <td align=left>{{key.money}}</td>
-          <td align=left>{{key.month}}</td>
-          <td align=left>{{key.payWay}}</td>
+        <tr v-for="key in personPerformanceList">
+          <td style="color: #000000;" align=left>{{key.name}}</td>
+          <td align=left>{{key.month_price}}</td>
+          <td align=left>{{key.month_price}}</td>
+          <td align=left>{{key.pay_way_name}}</td>
         </tr>
         </tbody>
       </table>
@@ -61,89 +61,6 @@
         personPerformance: 0,      //个人业绩总额
         personPerformanceRatio: 0, //个人业绩占比小组业绩
         personPerformanceList: [],  //个人业绩详情
-        tableData: [
-          {
-            address: '发的还是是范德萨法10-10-10',
-            money: '1000000',
-            month: '3000',
-            payWay: '押1付10',
-          },
-          {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          },
-          {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          },
-          {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          },
-          {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          },
-          {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          }, {
-            address: '发的还是卡10-10-10',
-            money: '100000',
-            month: '3000',
-            payWay: '押1付10',
-          },
-        ]
       }
     },
     mounted() {
