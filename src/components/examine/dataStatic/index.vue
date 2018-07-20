@@ -49,7 +49,7 @@
     name: "index",
     data() {
       return {
-        urls: globalConfig.server,
+        urls: globalConfig.server + 'antv/index/',
         personal: '',
         chart: null,
         screenWidth: document.body.offsetWidth,
@@ -147,42 +147,43 @@
       this.search();
     },
     activated() {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
       this.personal = JSON.parse(sessionStorage.personal).name;
     },
     watch: {},
     methods: {
       search() {
-        let url1 = this.urls + 'antv/index/personMaterials';
-        let url2 = this.urls + 'antv/index/personPerformanceList';
-        let url3 = this.urls + 'antv/index/personPerformance';
-        let url4 = this.urls + 'antv/index/personPerformanceRatio';
-        this.antVIndex(url1, 1);
-        this.antVIndex(url2, 2);
-        this.antVIndex(url3, 3);
-        this.antVIndex(url4, 4);
+        let url1 = 'personMaterials';
+        let url2 = 'personPerformanceList';
+        let url3 = 'personPerformance';
+        let url4 = 'personPerformanceRatio';
+        this.antVIndex(url1);
+        this.antVIndex(url2);
+        this.antVIndex(url3);
+        this.antVIndex(url4);
       },
 
-      antVIndex(url, val) {
-        this.$http.get(url, {
+      antVIndex(url) {
+        this.$http.get(this.urls + url, {
           params: {
             start_time: '',
             end_time: '',
           }
         }).then((res) => {
-          switch (val) {
-            case 1:
+          switch (url) {
+            case 'personMaterials':
               console.log('个人业绩占比小组业绩');
               console.log(res);
               break;
-            case 2:
+            case 'personPerformanceList':
               console.log('获取个人业绩详情');
               console.log(res);
               break;
-            case 3:
+            case 'personPerformance':
               console.log('个人业绩总额');
               console.log(res);
               break;
-            case 4:
+            case 'personPerformanceRatio':
               console.log('个人业绩占比小组业绩');
               console.log(res);
               break;
