@@ -52,7 +52,7 @@
         urls: globalConfig.server,
         personal: '',
         chart: null,
-        screenWidth: '',
+        screenWidth: document.body.offsetWidth,
         data: [{
           x: 1,
           y: 85,
@@ -90,7 +90,6 @@
     },
     activated() {
       this.personal = sessionStorage.personal.name;
-      this.screenWidth = Number($('#app').css('width').split('px')[0]);
     },
     watch: {},
     methods: {
@@ -197,7 +196,7 @@
       initialise(Util) {
         this.chart = new F2.Chart({
           id: 'mountNode',
-          width: this.screenWidth,
+          width: this.screenWidth - 16,
           pixelRatio: window.devicePixelRatio,
         });
         this.chart.source(this.data, {
@@ -272,7 +271,6 @@
 
 <style lang="scss">
   #dataStatic {
-    overflow: hidden;
     .modules {
       display: flex;
       display: -webkit-flex;
