@@ -7,8 +7,7 @@
       </div>
       <div>
         <p class="titleP">业绩统计</p>
-        <!--<p><span style="color: #46C460;font-size: .45rem!important;">3000000</span>&nbsp;元</p>-->
-        <p><span style="color: #46C460;font-size: .45rem!important;">3000000</span>&nbsp;元</p>
+        <p><span style="color: #46C460;font-size: .45rem!important;">300000</span>&nbsp;元</p>
       </div>
       <div>
         <p class="titleP">资料待提交单数</p>
@@ -145,6 +144,7 @@
     },
     mounted() {
       this.drawing();
+      this.search();
     },
     activated() {
       this.personal = JSON.parse(sessionStorage.personal).name;
