@@ -8,7 +8,7 @@
           required>
         </van-field>
         <van-field
-          style="width: 26%;"
+          style="width: 27%;"
           v-model="params.start_time"
           readonly
           type="text"
@@ -16,14 +16,15 @@
           placeholder="开始日期">
         </van-field>
         <van-field
-          style="width: 26%;"
+          style="width: 27%;"
           v-model="params.end_time"
           readonly
           type="text"
           @click="timeChoose(2)"
           placeholder="结束日期">
         </van-field>
-        <div style="display: flex;display: -webkit-flex;justify-content: center"><i class="iconfont icon-cuowu-guanbi"></i></div>
+        <div style="display: flex;display: -webkit-flex;justify-content: center" @click="resetClose()"><i
+          class="iconfont icon-cuowu-guanbi"></i></div>
       </div>
     </van-cell-group>
     <div class="modules">
@@ -48,7 +49,7 @@
         <p><span style="font-weight: bold;font-size: .7rem;color: #409EFF;">{{personPerformanceRatio}}</span>&nbsp;%</p>
       </div>
       <!--<div class="chart-wrapper">-->
-        <!--<canvas id="mountNode"></canvas>-->
+      <!--<canvas id="mountNode"></canvas>-->
       <!--</div>-->
     </div>
     <div class="mainContent">
@@ -344,6 +345,15 @@
         this.personPerformanceRatio = 0;
         this.personPerformanceList = [];
       },
+      resetClose() {
+        this.params.start_time = '';
+        this.params.end_time = '';
+        this.paramsList.start_time = '';
+        this.paramsList.end_time = '';
+        this.close_();
+        this.search(this.params);
+        this.antVIndex(this.paramsList);
+      }
       // drawing(data) {
       //   let Shape = F2.Shape;
       //   let G = F2.G;
@@ -573,6 +583,9 @@
       }
     }
 
+    .first_date {
+      @include flex('center');
+    }
     .notData {
       text-align: center;
       padding: .2rem;
