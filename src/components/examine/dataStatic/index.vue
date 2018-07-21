@@ -55,7 +55,7 @@
     </div>
     <div class="mainContent">
       <div class="mainList">
-        <div style="background-color: #FFFFFF;margin: .06rem;">
+        <div style="background-color: #FFFFFF;margin: 0 .08rem;">
           <table style="width: 100%;height: auto;">
             <thead style="background-color: #F5F3F6;">
             <tr style="height: .72rem;line-height: .72rem;">
