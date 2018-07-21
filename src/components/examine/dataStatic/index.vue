@@ -83,6 +83,7 @@
     },
     mounted() {
       this.search(1);
+      this.checkScroll();
     },
     activated() {
       this.routerIndex('');
@@ -101,7 +102,8 @@
         let _this = this;
         mainContent.scroll(function () {
           _this.scroll_bar();
-        })
+        });
+        console.log()
       },
       scroll_bar() {
         let mainContent = $('.mainContent');
