@@ -75,7 +75,7 @@
           </table>
           <div class="notData" v-if="state === 2 && personPerformanceList.length < 1">暂无相关信息</div>
           <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
-          <div class="notData" v-if="state === 1 && paramsList.page < 2">
+          <div class="notData" v-if="state === 1 && paramsList.page < 1">
             <van-loading type="spinner" color="black"/>
           </div>
         </div>
