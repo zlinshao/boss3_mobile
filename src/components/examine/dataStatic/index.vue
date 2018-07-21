@@ -40,6 +40,9 @@
               <td align=left>{{key.month_price}}</td>
               <td align=left>{{key.pay_way_name}}</td>
             </tr>
+            <tr>
+              <td>法大师傅撒的f</td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -151,7 +154,9 @@
           console.log(res.data);
           if (res.data.code === '20000') {
             this.isLastPage = this.params.page === res.data.page_info.max_page;
-            this.personPerformanceList = res.data.data;
+            for (let i = 0; i < res.data.data.length; i++) {
+              this.personPerformanceList.push(res.data.data[i]);
+            }
           }
         })
       },
@@ -191,7 +196,7 @@
         this.chart = new F2.Chart({
           id: 'mountNode',
           width: this.screenWidth / 2,
-          height:this.screenWidth / 3,
+          height: this.screenWidth / 3,
           pixelRatio: window.devicePixelRatio,
         });
         this.chart.source(this.data, {
