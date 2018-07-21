@@ -351,6 +351,7 @@
         this.params.end_time = '';
         this.paramsList.start_time = '';
         this.paramsList.end_time = '';
+        this.paramsList.page = 1;
         this.close_();
         this.search(this.params);
         this.antVList(this.paramsList);
