@@ -15,7 +15,6 @@
           @click="timeChoose(1)"
           placeholder="开始日期">
         </van-field>
-        <span class="cut" style="padding-right: 20px;">-</span>
         <van-field
           v-model="params.end_time"
           readonly
@@ -70,11 +69,6 @@
         </div>
       </div>
     </div>
-    <div class="notData" v-if="state === 2 && personPerformanceList.length < 1">暂无相关信息</div>
-    <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
-    <div class="notData" v-if="state === 1 && params.page < 2">
-      <van-loading type="spinner" color="black"/>
-    </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
       <van-datetime-picker
@@ -86,6 +80,7 @@
         @cancel="onCancel"
         @confirm="onDate"/>
     </van-popup>
+
   </div>
 </template>
 
