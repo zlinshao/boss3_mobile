@@ -28,23 +28,27 @@
     <div class="modules" style="padding: .3rem 0;">
       <div>
         <p class="titleP">姓名</p>
-        <p style="color: #000000;font-size: .4rem">{{personal}}</p>
+        <p style="color: #000000;font-size: .46rem">{{personal}}</p>
       </div>
       <div>
         <p class="titleP">业绩统计</p>
-        <p><span style="font-weight: bold;color: #46C460;font-size: .45rem;"></span>&nbsp;万元
+        <p><span style="font-weight: bold;color: #46C460;font-size: .7rem;">{{personPerformance}}</span>&nbsp;万元
         </p>
       </div>
     </div>
     <div class="modules" style="background-color: #FFFFFF;margin: .24rem 0;padding-bottom: .24rem">
       <div>
         <p class="titleP">资料待提交单数{{personPerformanceList.length}}</p>
-        <p><span style="font-weight: bold;color: #F2617B;font-size: .6rem;">{{personMaterials}}</span>&nbsp;单
+        <p><span style="font-weight: bold;color: #F2617B;font-size: .7rem;">{{personMaterials}}</span>&nbsp;单
         </p>
       </div>
-      <div class="chart-wrapper">
-        <canvas id="mountNode"></canvas>
+      <div>
+        <p style="color: #5C5C5C;padding: 0 0 .2rem;">个人业绩小组占比</p>
+        <p><span style="font-size: .7rem;color: #F2617B;">{{personPerformanceRatio}}</span>&nbsp;%</p>
       </div>
+      <!--<div class="chart-wrapper">-->
+        <!--<canvas id="mountNode"></canvas>-->
+      <!--</div>-->
     </div>
     <div class="mainContent">
       <div class="mainList">
@@ -148,7 +152,7 @@
     methods: {
       // 滚动条
       checkScroll() {
-        let mainHeight = 7;
+        let mainHeight = 6.6;
         let mainContent = $('.mainContent');
         mainContent.scrollTop(0);
         mainContent.css('height', mainHeight + 'rem');
@@ -233,11 +237,13 @@
               console.log('个人业绩占比小组业绩');
               console.log(res.data);
               if (res.data.code === '20000') {
-                this.data[0].y = res.data.data;
-                this.drawing(res.data.data);
-              } else {
-                this.drawing(0);
+                this.personPerformanceRatio = res.data.data;
+                // this.data[0].y = res.data.data;
+                // this.drawing(res.data.data);
               }
+              // else {
+              //   this.drawing(0);
+              // }
               break;
           }
         });
@@ -480,7 +486,7 @@
 <style lang="scss">
   #dataStatic {
     .titleP {
-      padding-bottom: .24rem;
+      padding-bottom: .33rem;
       color: #7D7D7D;
     }
     .modules {
@@ -488,7 +494,6 @@
       display: -webkit-flex;
       align-items: center;
       background: #FFFFFF;
-      height: 2rem;
     }
 
     .modules > div {
