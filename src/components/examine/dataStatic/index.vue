@@ -22,6 +22,7 @@
           @click="timeChoose(2)"
           placeholder="结束日期">
         </van-field>
+        <span><i class="iconfont icon-yuangongzhongxin"></i></span>
       </div>
     </van-cell-group>
     <div class="modules" style="padding: .3rem 0;">
@@ -66,6 +67,11 @@
             </tr>
             </tbody>
           </table>
+          <div class="notData" v-if="state === 2 && personPerformanceList.length < 1">暂无相关信息</div>
+          <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
+          <div class="notData" v-if="state === 1 && params.page < 2">
+            <van-loading type="spinner" color="black"/>
+          </div>
         </div>
       </div>
     </div>
@@ -80,7 +86,6 @@
         @cancel="onCancel"
         @confirm="onDate"/>
     </van-popup>
-
   </div>
 </template>
 
