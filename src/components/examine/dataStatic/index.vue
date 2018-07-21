@@ -8,7 +8,7 @@
           required>
         </van-field>
         <van-field
-          style="width: 30%;"
+          style="width: 26%;"
           v-model="params.start_time"
           readonly
           type="text"
@@ -16,13 +16,14 @@
           placeholder="开始日期">
         </van-field>
         <van-field
+          style="width: 26%;"
           v-model="params.end_time"
           readonly
           type="text"
           @click="timeChoose(2)"
           placeholder="结束日期">
         </van-field>
-        <span><i class="iconfont icon-yuangongzhongxin"></i></span>
+        <div style="display: flex;display: -webkit-flex;justify-content: center"><i class="iconfont icon-cuowu-guanbi"></i></div>
       </div>
     </van-cell-group>
     <div class="modules">
