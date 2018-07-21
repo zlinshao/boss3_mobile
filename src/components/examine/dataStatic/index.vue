@@ -190,7 +190,7 @@
           id: 'mountNode',
           width: this.screenWidth / 3,
           height:this.screenWidth / 3,
-          pixelRatio: window.devicePixelRatio
+          pixelRatio: window.devicePixelRatio,
         });
         this.chart.source(this.data, {
           y: {
@@ -218,7 +218,7 @@
           position: ['50%', '50%'],
           content: val + '%',
           style: {
-            fontSize: 24,
+            fontSize: 16,
             fill: '#1890FF'
           }
         });
