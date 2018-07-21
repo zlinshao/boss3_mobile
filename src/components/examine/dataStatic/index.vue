@@ -23,7 +23,7 @@
     </div>
     <div class="mainContent">
       <div class="mainList">
-        <div class="modules">
+        <div style="background-color: #FFFFFF;">
           <table style="width: 100%;height: auto;">
             <thead style="background-color: #F5F3F6;">
             <tr style="height: .7rem;line-height: .7rem;">
@@ -98,10 +98,10 @@
     methods: {
       // 滚动条
       checkScroll() {
-        let mainHeight = $('body').height() - 100;
+        let mainHeight = 2;
         let mainContent = $('.mainContent');
         mainContent.scrollTop(0);
-        mainContent.css('height', mainHeight + 'px');
+        mainContent.css('height', mainHeight + 'rem');
         let _this = this;
         mainContent.scroll(function () {
           _this.scroll_bar();
@@ -389,6 +389,7 @@
       display: -webkit-flex;
       align-items: center;
       background: #FFFFFF;
+      height: 2rem;
     }
 
     .modules > div {
