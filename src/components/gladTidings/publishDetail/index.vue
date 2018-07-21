@@ -252,7 +252,6 @@
         } else {
           vm.ddRent('', 'close');
         }
-        vm.search();
       })
     },
     activated() {
@@ -262,6 +261,7 @@
       this.page = 1;
       this.close_();
       this.disabled = false;
+      this.search();
     },
     watch: {
       showContent(val) {

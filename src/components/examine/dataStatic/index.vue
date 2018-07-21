@@ -14,7 +14,7 @@
         <p><span style="color: #F2617B;font-size: .45rem!important;">{{personMaterials}}</span>&nbsp;单</p>
       </div>
     </div>
-    <div style="background-color: #FFFFFF;margin-bottom: .24rem;padding-bottom: .24rem">
+    <div style="background-color: #FFFFFF;margin: .24rem 0;padding-bottom: .24rem">
       <div class="chart-wrapper">
         <canvas id="mountNode"></canvas>
       </div>
