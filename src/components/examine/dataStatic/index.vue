@@ -188,6 +188,8 @@
       drawing(val) {
         this.chart = new F2.Chart({
           id: 'mountNode',
+          width: this.screenWidth / 3,
+          height:this.screenWidth / 3,
           pixelRatio: window.devicePixelRatio
         });
         this.chart.source(this.data, {
@@ -204,23 +206,23 @@
           radius: 0.85
         });
         this.chart.guide().arc({
-          start: [0, 0],
+          start: [1, 0],
           end: [1, 99.98],
           top: false,
           style: {
-            lineWidth: 20,
+            lineWidth: 10,
             stroke: '#ccc'
           }
         });
         this.chart.guide().text({
           position: ['50%', '50%'],
-          content: '85%',
+          content: val + '%',
           style: {
             fontSize: 24,
             fill: '#1890FF'
           }
         });
-        this.chart.interval().position('x*y').size(20).animate({
+        this.chart.interval().position('x*y').size(10).animate({
           appear: {
             duration: 1200,
             easing: 'cubicIn'
@@ -328,7 +330,7 @@
       //     html: '<p id="number" style="font-size: 32px;margin: 0;color: #1890ff;transform: translate(-50%, -40%);"></p>',
       //   });
       //   // 使用矩形或者弧形，用面积来表示大小关系的图形，一般构成柱状图、饼图等图表
-      //   this.chart.interval().position('x*y').size(15).shape('tick').animate({
+      //   this.chart.interval().position('x*y' ).size(15).shape('tick').animate({
       //     appear: {
       //       duration: 1200,
       //       easing: 'cubicIn',
