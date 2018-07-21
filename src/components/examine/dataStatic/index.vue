@@ -1,5 +1,30 @@
 <template>
   <div id="dataStatic">
+    <van-cell-group>
+      <div class="first_date">
+        <van-field
+          class="title"
+          label="日期筛选"
+          required>
+        </van-field>
+        <van-field
+          style="width: 30%;"
+          v-model="params.start_time"
+          readonly
+          type="text"
+          @click="timeChoose(1)"
+          placeholder="开始日期">
+        </van-field>
+        <span class="cut" style="padding-right: 20px;">-</span>
+        <van-field
+          v-model="params.end_time"
+          readonly
+          type="text"
+          @click="timeChoose(2)"
+          placeholder="结束日期">
+        </van-field>
+      </div>
+    </van-cell-group>
     <div class="modules" style="padding: .3rem 0;">
       <div>
         <p class="titleP">姓名</p>
@@ -50,6 +75,17 @@
     <div class="notData" v-if="state === 1 && params.page < 2">
       <van-loading type="spinner" color="black"/>
     </div>
+
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
+      <van-datetime-picker
+        v-model="currentDate"
+        type="date"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @change="monthDate"
+        @cancel="onCancel"
+        @confirm="onDate"/>
+    </van-popup>
   </div>
 </template>
 
@@ -61,10 +97,26 @@
     data() {
       return {
         urls: globalConfig.server + 'antv/index/',
+
+        minDate: new Date(2000, 0, 1),
+        maxDate: new Date(2200, 12, 31),
+        currentDate: '',
+        timeShow: false,          //日期状态
+        timeIndex: '',
+        timeValue: '',            //日期value
+
         personal: '',
         chart: null,
-        params: {},
-        paramsList: {},
+        params: {
+          start_time: '',
+          end_time: '',
+        },
+        paramsList: {
+          start_time: '',
+          end_time: '',
+          limit: 10,
+          page: 1,
+        },
         isGetMore: true,          //滑动触发加载
         isLastPage: false,        //是否最后一页
         scrollHeight: 0,          //滚动到最底部
@@ -81,7 +133,8 @@
       }
     },
     mounted() {
-      this.search(1);
+      this.search(this.params);
+      this.antVList(this.paramsList);
       this.checkScroll();
     },
     activated() {
@@ -102,7 +155,6 @@
         mainContent.scroll(function () {
           _this.scroll_bar();
         });
-        console.log()
       },
       scroll_bar() {
         let mainContent = $('.mainContent');
@@ -125,24 +177,17 @@
           this.antVList(this.paramsList);
         }
       },
-      search(page) {
+      search(params) {
         let url1 = 'personMaterials';
         let url3 = 'personPerformance';
         let url4 = 'personPerformanceRatio';
-        this.params.start_time = '';
-        this.params.end_time = '';
 
-        this.paramsList.start_time = '';
-        this.paramsList.end_time = '';
-        this.paramsList.limit = 10;
-        this.paramsList.page = page;
-        this.antVIndex(url1, this.params);
-        this.antVIndex(url3, this.params);
-        this.antVIndex(url4, this.params);
-        this.antVList(this.paramsList);
+        this.antVIndex(url1, params);
+        this.antVIndex(url3, params);
+        this.antVIndex(url4, params);
+
       },
       antVList(params) {
-        console.log(params);
         this.$http.get(this.urls + 'personPerformanceList', {
           params: params
         }).then((res) => {
@@ -240,7 +285,49 @@
           }
         });
         this.chart.render();
-      }
+      },
+      // 获取当前时间
+      getNowFormatDate() {
+        let date = new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        let strDate = date.getDate();
+        this.currentDate = new Date(year, month, strDate);
+      },
+
+      // 日期选择
+      timeChoose(val) {
+        setTimeout(() => {
+          this.timeShow = true;
+        }, 200);
+        this.timeIndex = val;
+      },
+      // 日期拼接
+      monthDate(peaker) {
+        this.timeValue = peaker.getValues().join('-');
+      },
+      // 确认日期
+      onDate() {
+        this.timeShow = false;
+        switch (this.timeIndex) {
+          case 1:
+            this.params.start_time = this.timeValue;
+            this.paramsList.start_time = this.timeValue;
+            this.search(this.params);
+            this.antVList(this.params);
+            break;
+          case 2:
+            this.params.end_time = this.timeValue;
+            this.paramsList.end_time = this.timeValue;
+            this.search(this.params);
+            this.antVList(this.params);
+            break;
+        }
+        this.onCancel();
+      },
+      onCancel() {
+        this.timeShow = false;
+      },
       // drawing(data) {
       //   let Shape = F2.Shape;
       //   let G = F2.G;
