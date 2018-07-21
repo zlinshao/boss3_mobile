@@ -19,26 +19,37 @@
         <canvas id="mountNode"></canvas>
       </div>
     </div>
-    <div class="modules">
-      <table style="width: 100%;height: auto;">
-        <thead style="background-color: #F5F3F6;">
-        <tr style="height: .7rem;line-height: .7rem;">
-          <td align=left>地址</td>
-          <td style="min-width: 1.2rem;" align=left>总金额</td>
-          <td style="min-width: 1.2rem;" align=left>月单价</td>
-          <td style="min-width: 1.6rem;" align=left>付款方式</td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="key in personPerformanceList">
-          <td style="color: #000000;" align=left>{{key.name}}</td>
-          <td align=left>{{key.performance}}</td>
-          <td align=left>{{key.month_price}}</td>
-          <td align=left>{{key.pay_way_name}}</td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="mainContent">
+      <div class="mainList">
+        <div class="modules">
+          <table style="width: 100%;height: auto;">
+            <thead style="background-color: #F5F3F6;">
+            <tr style="height: .7rem;line-height: .7rem;">
+              <td style="padding-left: .3rem;" align=left>地址</td>
+              <td style="min-width: 1.2rem;" align=left>总金额</td>
+              <td style="min-width: 1.2rem;" align=left>月单价</td>
+              <td style="min-width: 1.6rem;" align=left>付款方式</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="key in personPerformanceList">
+              <td style="color: #000000;padding-left: .3rem;" align=left>{{key.name}}</td>
+              <td align=left>{{key.performance}}</td>
+              <td align=left>{{key.month_price}}</td>
+              <td align=left>{{key.pay_way_name}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!--<div class="notData" v-if="state === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>-->
+      <!--<div class="notData" v-if="state === 2 && houseList.length < 1">暂无相关信息</div>-->
+      <!--<div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>-->
+      <!--<div class="notData" v-if="state === 1 && params.page < 2">-->
+      <!--<van-loading type="spinner" color="black"/>-->
+      <!--</div>-->
     </div>
+
   </div>
 </template>
 
@@ -52,8 +63,12 @@
         urls: globalConfig.server + 'antv/index/',
         personal: '',
         chart: null,
+        params: {},
+        isGetMore: true,          //滑动触发加载
+        isLastPage: false,        //是否最后一页
+        scrollHeight: 0,          //滚动到最底部
         screenWidth: document.body.offsetWidth,
-        data: [{            //个人业绩占比小组业绩
+        data: [{                  //个人业绩占比小组业绩
           x: 1,
           y: 0,
         }],
@@ -64,8 +79,7 @@
       }
     },
     mounted() {
-      this.drawing();
-      this.search();
+      this.search(1);
     },
     activated() {
       this.routerIndex('');
@@ -75,23 +89,57 @@
     },
     watch: {},
     methods: {
-      search() {
+      // 滚动条
+      checkScroll() {
+        let mainHeight = $('body').height() - 100;
+        let mainContent = $('.mainContent');
+        mainContent.scrollTop(0);
+        mainContent.css('height', mainHeight + 'px');
+        let _this = this;
+        mainContent.scroll(function () {
+          _this.scroll_bar();
+        })
+      },
+      scroll_bar() {
+        let mainContent = $('.mainContent');
+        let body_height = mainContent.height();
+        let body_scrollTop = mainContent.scrollTop();
+        let mainList = $('.mainList').height();
+        if (this.scrollHeight < mainList) {
+          this.isGetMore = true;
+        }
+        this.scrollHeight = mainList;
+        if (mainList - body_scrollTop - body_height < 200) {
+          this.getMore();
+          this.isGetMore = false;
+        }
+      },
+      // 加载更多
+      getMore() {
+        if (this.isGetMore && !this.isLastPage) {
+          this.params.page++;
+          this.antVIndex('personPerformanceList');
+        }
+      },
+      search(page) {
         let url1 = 'personMaterials';
         let url2 = 'personPerformanceList';
         let url3 = 'personPerformance';
         let url4 = 'personPerformanceRatio';
-        this.antVIndex(url1);
-        this.antVIndex(url2);
-        this.antVIndex(url3);
-        this.antVIndex(url4);
+        this.params.start_time = '';
+        this.params.end_time = '';
+        if (url2 === 'personPerformanceList') {
+          this.params.page = page;
+        }
+        this.antVIndex(url1, this.params);
+        this.antVIndex(url2, this.params);
+        this.antVIndex(url3, this.params);
+        this.antVIndex(url4, this.params);
       },
 
-      antVIndex(url) {
+      antVIndex(url, params) {
         this.$http.get(this.urls + url, {
-          params: {
-            start_time: '',
-            end_time: '',
-          }
+          params: params
         }).then((res) => {
           switch (url) {
             case 'personMaterials':
@@ -254,7 +302,7 @@
         this.chart.guide().text({
           top: true, // 指定 guide 是否绘制在 canvas 最上层，默认为 true, 即绘制在最上层
           position: [0, 0], // 文本的起始位置，值为原始数据值，支持 callback
-          content: '业绩占比(%)', // 显示的文本内容
+          content: '个人业绩占比(%)', // 显示的文本内容
           style: {
             fill: '#666', // 文本颜色
             fontSize: '12', // 文本大小
@@ -274,7 +322,7 @@
   #dataStatic {
     .titleP {
       padding-bottom: .24rem;
-      color: #5C5C5C;
+      color: #7D7D7D;
     }
     .modules {
       display: flex;
@@ -304,7 +352,67 @@
       padding: .2rem .1rem;
     }
     thead td {
-      padding: .1rem .1rem;
+      padding: .16rem .1rem;
+    }
+    $colorF: #FFFFFF;
+    @mixin flex($n) {
+      display: flex;
+      display: -webkit-flex;
+
+      @if $n == 'centerSpace' {
+        align-items: center;
+        -webkit-align-items: center;
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+      }
+      @if $n == 'center' {
+        align-items: center;
+        -webkit-align-items: center;
+        justify-content: center;
+        -webkit-justify-content: center;
+      }
+      @if $n == 'itemCenter' {
+        align-items: center;
+        -webkit-align-items: center;
+      }
+      @if $n == 'spaceCenter' {
+        justify-content: center;
+        -webkit-justify-content: center;
+      }
+      @if $n == 'space' {
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+      }
+    }
+    .mainContent {
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      background-color: $colorF;
+      .mainList {
+        padding: .2rem 0 0 .32rem;
+        .contract {
+          color: #555555;
+          div {
+            padding-top: .1rem;
+          }
+        }
+        .staffDepart {
+          padding: .18rem .3rem .18rem 0;
+          @include flex('space');
+        }
+      }
+    }
+
+    .notData {
+      text-align: center;
+      padding: .2rem;
+      color: #b3afaf;
+      font-size: .33rem;
+      @include flex('center');
+    }
+    .bgColor {
+      padding: .33rem;
+      background-color: #F8F8F8;
     }
   }
 </style>

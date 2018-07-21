@@ -352,7 +352,9 @@
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
 
             this.$http.get(globalConfig.server + 'manager/staff/' + main.user.org[0].leader_id).then((res) => {
-              this.bull_name = res.data.data;
+              if (res.data.code === '10020') {
+                this.bull_name = res.data.data;
+              }
             });
 
             if (houseName.quality_up && main.place.name === 'appraiser-officer_review') {
