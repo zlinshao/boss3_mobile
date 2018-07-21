@@ -14,7 +14,7 @@
         <p><span style="color: #F2617B;font-size: .45rem!important;">{{personMaterials}}</span>&nbsp;单</p>
       </div>
     </div>
-    <div style="background-color: #FFFFFF;margin: .24rem 0;">
+    <div style="background-color: #FFFFFF;margin-bottom: .24rem;padding-bottom: .24rem">
       <div class="chart-wrapper">
         <canvas id="mountNode"></canvas>
       </div>
@@ -222,17 +222,9 @@
         });
 
         // 辅助 html
-        let left;
-        if (data < 10) {
-          left = '50%'
-        } else if (100 > data > 9) {
-          left = '49%'
-        } else {
-          left = '48%'
-        }
         this.chart.guide().html({
-          position: [left, '50%'],
-          html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;"></p>',
+          position: ['50%', '50%'],
+          html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;transform: translate(-30%, -20%);"></p>',
         });
         // 使用矩形或者弧形，用面积来表示大小关系的图形，一般构成柱状图、饼图等图表
         this.chart.interval().position('x*y').size(15).shape('tick').animate({
