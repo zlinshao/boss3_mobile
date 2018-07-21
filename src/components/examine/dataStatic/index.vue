@@ -32,7 +32,7 @@
       </div>
       <div>
         <p class="titleP">业绩统计</p>
-        <p><span style="font-weight: bold;color: #46C460;font-size: .45rem;">{{personPerformance}}</span>&nbsp;元
+        <p><span style="font-weight: bold;color: #46C460;font-size: .45rem;"></span>&nbsp;万元
         </p>
       </div>
     </div>
@@ -136,6 +136,7 @@
       this.search(this.params);
       this.antVList(this.paramsList);
       this.checkScroll();
+      this.getNowFormatDate();
     },
     activated() {
       this.routerIndex('');
@@ -309,6 +310,7 @@
       // 确认日期
       onDate() {
         this.timeShow = false;
+        this.close_();
         switch (this.timeIndex) {
           case 1:
             this.params.start_time = this.timeValue;
@@ -327,6 +329,12 @@
       },
       onCancel() {
         this.timeShow = false;
+      },
+      close_() {
+        this.personMaterials = 0;
+        this.personPerformance = 0;
+        this.personPerformanceRatio = 0;
+        this.personPerformanceList = [];
       },
       // drawing(data) {
       //   let Shape = F2.Shape;
