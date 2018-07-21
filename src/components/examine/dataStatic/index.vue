@@ -39,7 +39,7 @@
         </p>
       </div>
     </div>
-    <div class="modules" style="background-color: #FFFFFF;margin: .24rem 0;padding-bottom: .24rem">
+    <div class="modules">
       <div>
         <p class="titleP">资料待提交单数</p>
         <p><span style="font-weight: bold;font-size: .7rem;color: #F2617B;">{{personMaterials}}</span>&nbsp;单
