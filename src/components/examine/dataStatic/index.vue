@@ -18,7 +18,7 @@
         </p>
       </div>
       <div class="chart-wrapper">
-        <canvas id="mountNode" style="margin-top: -18px;"></canvas>
+        <canvas id="mountNode" style="margin-top: -10px;"></canvas>
       </div>
     </div>
     <div class="mainContent">
@@ -189,7 +189,7 @@
         this.chart = new F2.Chart({
           id: 'mountNode',
           width: this.screenWidth / 2,
-          height:this.screenWidth / 2.5,
+          height:this.screenWidth / 3,
           pixelRatio: window.devicePixelRatio,
         });
         this.chart.source(this.data, {
