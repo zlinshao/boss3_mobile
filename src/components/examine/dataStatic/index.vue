@@ -19,6 +19,7 @@
       </div>
       <div class="chart-wrapper">
         <canvas id="mountNode" style="margin-top: -10px;"></canvas>
+        <div>个人业绩占比</div>
       </div>
     </div>
     <div class="mainContent">
