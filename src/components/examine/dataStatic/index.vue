@@ -45,7 +45,7 @@
         </p>
       </div>
       <div>
-        <p style="color: #5C5C5C;">个人业绩小组占比</p>
+        <p class="titleP">个人业绩小组占比</p>
         <p><span style="font-weight: bold;font-size: .7rem;color: #409EFF;">{{personPerformanceRatio}}</span>&nbsp;%</p>
       </div>
       <!--<div class="chart-wrapper">-->
@@ -203,7 +203,7 @@
           console.log(res.data);
           if (res.data.code === '20000') {
             if (res.data.data.length !== 0) {
-              this.isLastPage = this.params.page === res.data.page_info.max_page;
+              this.isLastPage = this.paramsList.page === res.data.page_info.max_page;
               for (let i = 0; i < res.data.data.length; i++) {
                 this.personPerformanceList.push(res.data.data[i]);
               }
