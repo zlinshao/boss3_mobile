@@ -325,13 +325,13 @@
             this.params.start_time = this.timeValue;
             this.paramsList.start_time = this.timeValue;
             this.search(this.params);
-            this.antVList(this.params);
+            this.antVList(this.paramsList);
             break;
           case 2:
             this.params.end_time = this.timeValue;
             this.paramsList.end_time = this.timeValue;
             this.search(this.params);
-            this.antVList(this.params);
+            this.antVList(this.paramsList);
             break;
         }
         this.onCancel();
@@ -352,7 +352,7 @@
         this.paramsList.end_time = '';
         this.close_();
         this.search(this.params);
-        this.antVIndex(this.paramsList);
+        this.antVList(this.paramsList);
       }
       // drawing(data) {
       //   let Shape = F2.Shape;
