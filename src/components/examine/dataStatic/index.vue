@@ -18,7 +18,7 @@
         </p>
       </div>
       <div class="chart-wrapper">
-        <canvas id="mountNode"></canvas>
+        <canvas id="mountNode" style="margin-top: -20px;"></canvas>
       </div>
     </div>
     <div class="mainContent">
@@ -188,8 +188,8 @@
       drawing(val) {
         this.chart = new F2.Chart({
           id: 'mountNode',
-          width: this.screenWidth / 3,
-          height:this.screenWidth / 3,
+          width: this.screenWidth / 2,
+          height:this.screenWidth / 2.5,
           pixelRatio: window.devicePixelRatio,
         });
         this.chart.source(this.data, {
@@ -394,6 +394,7 @@
       display: -webkit-flex;
       align-items: center;
       justify-content: center;
+      height: 100px;
     }
 
     tbody tr:nth-of-type(even) {
