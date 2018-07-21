@@ -120,7 +120,7 @@
       getMore() {
         if (this.isGetMore && !this.isLastPage) {
           this.params.page++;
-          this.antVIndex('personPerformanceList');
+          this.antVList(this.params);
         }
       },
       search(page) {
@@ -132,13 +132,25 @@
         this.params.end_time = '';
         if (url2 === 'personPerformanceList') {
           this.params.page = page;
+          this.params.linmit = 15;
         }
         this.antVIndex(url1, this.params);
         this.antVIndex(url2, this.params);
         this.antVIndex(url3, this.params);
         this.antVIndex(url4, this.params);
       },
-
+      antVList(params) {
+        console.log(params);
+        this.$http.get(this.urls + 'personPerformanceList', {
+          params: params
+        }).then((res) => {
+          console.log('获取个人业绩详情');
+          console.log(res.data);
+          if (res.data.code === '20000') {
+            this.personPerformanceList = res.data.data;
+          }
+        })
+      },
       antVIndex(url, params) {
         this.$http.get(this.urls + url, {
           params: params
@@ -149,13 +161,6 @@
               console.log(res.data);
               if (res.data.code === '20000') {
                 this.personMaterials = res.data.data;
-              }
-              break;
-            case 'personPerformanceList':
-              console.log('获取个人业绩详情');
-              console.log(res.data);
-              if (res.data.code === '20000') {
-                this.personPerformanceList = res.data.data;
               }
               break;
             case 'personPerformance':
