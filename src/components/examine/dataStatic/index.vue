@@ -66,6 +66,7 @@
         personal: '',
         chart: null,
         params: {},
+        paramsList: {},
         isGetMore: true,          //滑动触发加载
         isLastPage: false,        //是否最后一页
         scrollHeight: 0,          //滚动到最底部
@@ -119,25 +120,25 @@
       // 加载更多
       getMore() {
         if (this.isGetMore && !this.isLastPage) {
-          this.params.page++;
-          this.antVList(this.params);
+          this.paramsList.page++;
+          this.antVList(this.paramsList);
         }
       },
       search(page) {
         let url1 = 'personMaterials';
-        let url2 = 'personPerformanceList';
         let url3 = 'personPerformance';
         let url4 = 'personPerformanceRatio';
         this.params.start_time = '';
         this.params.end_time = '';
-        if (url2 === 'personPerformanceList') {
-          this.params.page = page;
-          this.params.linmit = 15;
-        }
+
+        this.paramsList.start_time = '';
+        this.paramsList.end_time = '';
+        this.paramsList.limit = 15;
+        this.paramsList.page = page;
         this.antVIndex(url1, this.params);
-        this.antVIndex(url2, this.params);
         this.antVIndex(url3, this.params);
         this.antVIndex(url4, this.params);
+        this.antVList(this.paramsList);
       },
       antVList(params) {
         console.log(params);
@@ -147,6 +148,7 @@
           console.log('获取个人业绩详情');
           console.log(res.data);
           if (res.data.code === '20000') {
+            this.isLastPage = this.params.page === res.data.page_info.max_page;
             this.personPerformanceList = res.data.data;
           }
         })
