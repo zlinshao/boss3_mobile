@@ -55,10 +55,10 @@
     </div>
     <div class="mainContent">
       <div class="mainList">
-        <div style="background-color: #FFFFFF;">
+        <div style="background-color: #FFFFFF;margin: .06rem;">
           <table style="width: 100%;height: auto;">
             <thead style="background-color: #F5F3F6;">
-            <tr style="height: .7rem;line-height: .7rem;">
+            <tr style="height: .72rem;line-height: .72rem;">
               <td style="padding-left: .3rem;" align=left>地址</td>
               <td style="min-width: 1.2rem;" align=left>总金额</td>
               <td style="min-width: 1.2rem;" align=left>月单价</td>
@@ -531,7 +531,7 @@
     thead td, tbody td {
       color: #5C5C5C;
       vertical-align: middle;
-      padding: .24rem .1rem;
+      padding: .28rem .1rem;
     }
     thead td {
       padding: .16rem .1rem;
