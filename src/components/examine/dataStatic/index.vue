@@ -23,7 +23,7 @@
           @click="timeChoose(2)"
           placeholder="结束日期">
         </van-field>
-        <div class="resetClose" @click="resetClose()">
+        <div class="resetClose" @click="resetClose()" v-if="params.start_time || params.end_time">
           <i class="iconfont icon-cuowu-guanbi"></i>
         </div>
       </div>
