@@ -138,7 +138,7 @@
 
         this.paramsList.start_time = '';
         this.paramsList.end_time = '';
-        this.paramsList.limit = 5;
+        this.paramsList.limit = 10;
         this.paramsList.page = page;
         this.antVIndex(url1, this.params);
         this.antVIndex(url3, this.params);
