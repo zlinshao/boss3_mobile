@@ -181,7 +181,7 @@
           id: 'mountNode',
           pixelRatio: window.devicePixelRatio
         });
-        this.chart.source(data, {
+        this.chart.source(this.data, {
           y: {
             max: 100,
             min: 0
