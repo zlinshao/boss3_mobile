@@ -224,7 +224,7 @@
         // 辅助 html
         this.chart.guide().html({
           position: ['50%', '50%'],
-          html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;transform: translate(-30%, -20%);"></p>',
+          html: '<p id="number" style="font-size: .56rem;margin: 0;color: #1890ff;transform: translate(-20%, -20%);"></p>',
         });
         // 使用矩形或者弧形，用面积来表示大小关系的图形，一般构成柱状图、饼图等图表
         this.chart.interval().position('x*y').size(15).shape('tick').animate({
