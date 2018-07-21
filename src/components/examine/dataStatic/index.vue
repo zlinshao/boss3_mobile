@@ -7,11 +7,13 @@
       </div>
       <div>
         <p class="titleP">业绩统计</p>
-        <p><span style="color: #46C460;font-size: .45rem!important;">{{personPerformance}}</span>&nbsp;元</p>
+        <p><span style="font-weight: bold;color: #46C460;font-size: .45rem!important;">{{personPerformance}}</span>&nbsp;元
+        </p>
       </div>
       <div>
         <p class="titleP">资料待提交单数</p>
-        <p><span style="color: #F2617B;font-size: .45rem!important;">{{personMaterials}}</span>&nbsp;单</p>
+        <p><span style="font-weight: bold;color: #F2617B;font-size: .45rem!important;">{{personMaterials}}</span>&nbsp;单
+        </p>
       </div>
     </div>
     <div style="background-color: #FFFFFF;margin: .24rem 0;padding-bottom: .24rem">
