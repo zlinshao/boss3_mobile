@@ -12,13 +12,13 @@
       </div>
     </div>
     <div class="modules" style="background-color: #FFFFFF;margin: .24rem 0;padding-bottom: .24rem">
-      <div class="chart-wrapper">
-        <canvas id="mountNode"></canvas>
-      </div>
       <div>
         <p class="titleP">资料待提交单数</p>
         <p><span style="font-weight: bold;color: #F2617B;font-size: .6rem!important;">{{personMaterials}}</span>&nbsp;单
         </p>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="mountNode"></canvas>
       </div>
     </div>
     <div class="mainContent">
@@ -393,6 +393,7 @@
       display: flex;
       display: -webkit-flex;
       align-items: center;
+      justify-content: center;
     }
 
     tbody tr:nth-of-type(even) {
