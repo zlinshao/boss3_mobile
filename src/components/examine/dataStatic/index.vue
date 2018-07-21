@@ -23,8 +23,9 @@
           @click="timeChoose(2)"
           placeholder="结束日期">
         </van-field>
-        <div style="display: flex;display: -webkit-flex;justify-content: center" @click="resetClose()"><i
-          class="iconfont icon-cuowu-guanbi"></i></div>
+        <div class="resetClose" @click="resetClose()">
+          <i class="iconfont icon-cuowu-guanbi"></i>
+        </div>
       </div>
     </van-cell-group>
     <div class="modules">
@@ -535,6 +536,7 @@
     thead td {
       padding: .16rem .1rem;
     }
+
     $colorF: #FFFFFF;
     @mixin flex($n) {
       display: flex;
@@ -564,6 +566,9 @@
         justify-content: space-between;
         -webkit-justify-content: space-between;
       }
+    }
+    .resetClose {
+      @include flex('spaceCenter');
     }
     .mainContent {
       overflow: auto;
