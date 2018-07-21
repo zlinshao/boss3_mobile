@@ -18,7 +18,7 @@
         </p>
       </div>
       <div class="chart-wrapper">
-        <canvas id="mountNode" style="margin-top: -20px;"></canvas>
+        <canvas id="mountNode" style="margin-top: -18px;"></canvas>
       </div>
     </div>
     <div class="mainContent">
@@ -395,6 +395,7 @@
       align-items: center;
       justify-content: center;
       height: 100px;
+      overflow: hidden;
     }
 
     tbody tr:nth-of-type(even) {
