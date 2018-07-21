@@ -25,10 +25,10 @@
         <span><i class="iconfont icon-yuangongzhongxin"></i></span>
       </div>
     </van-cell-group>
-    <div class="modules" style="padding: .3rem 0;">
+    <div class="modules">
       <div>
         <p class="titleP">姓名</p>
-        <p style="color: #000000;font-size: .46rem">{{personal}}</p>
+        <p style="color: #000000;font-size: .6rem">{{personal}}</p>
       </div>
       <div>
         <p class="titleP">业绩统计</p>
@@ -193,6 +193,7 @@
 
       },
       antVList(params) {
+        this.state = 1;
         this.$http.get(this.urls + 'personPerformanceList', {
           params: params
         }).then((res) => {
@@ -204,7 +205,7 @@
               for (let i = 0; i < res.data.data.length; i++) {
                 this.personPerformanceList.push(res.data.data[i]);
               }
-              this.state = 1;
+              this.state = 0;
             } else {
               this.state = 2
             }
@@ -494,6 +495,7 @@
       display: -webkit-flex;
       align-items: center;
       background: #FFFFFF;
+      padding: .3rem 0;
     }
 
     .modules > div {
