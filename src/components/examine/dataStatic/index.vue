@@ -68,6 +68,8 @@
       this.search();
     },
     activated() {
+      this.routerIndex('');
+      this.ddRent('');
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       this.personal = JSON.parse(sessionStorage.personal).name;
     },
