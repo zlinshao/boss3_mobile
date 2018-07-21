@@ -530,7 +530,7 @@
     thead td, tbody td {
       color: #5C5C5C;
       vertical-align: middle;
-      padding: .2rem .1rem;
+      padding: .24rem .1rem;
     }
     thead td {
       padding: .16rem .1rem;
