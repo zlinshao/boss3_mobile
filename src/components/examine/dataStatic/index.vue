@@ -121,7 +121,7 @@
         paramsList: {
           start_time: '',
           end_time: '',
-          limit: 15,
+          limit: 10,
           page: 1,
         },
         isGetMore: true,          //滑动触发加载
