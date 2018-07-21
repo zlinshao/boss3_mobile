@@ -3,18 +3,18 @@
     <div class="modules" style="padding: .3rem 0;">
       <div>
         <p class="titleP">姓名</p>
-        <p style="color: #000000;">{{personal}}</p>
+        <p style="color: #000000;font-size: .4rem">{{personal}}</p>
       </div>
       <div>
         <p class="titleP">业绩统计</p>
-        <p><span style="font-weight: bold;color: #46C460;font-size: .45rem!important;">{{personPerformance}}</span>&nbsp;元
+        <p><span style="font-weight: bold;color: #46C460;font-size: .45rem;">{{personPerformance}}</span>&nbsp;元
         </p>
       </div>
     </div>
     <div class="modules" style="background-color: #FFFFFF;margin: .24rem 0;padding-bottom: .24rem">
       <div>
         <p class="titleP">资料待提交单数{{personPerformanceList.length}}</p>
-        <p><span style="font-weight: bold;color: #F2617B;font-size: .6rem!important;">{{personMaterials}}</span>&nbsp;单
+        <p><span style="font-weight: bold;color: #F2617B;font-size: .6rem;">{{personMaterials}}</span>&nbsp;单
         </p>
       </div>
       <div class="chart-wrapper">
@@ -40,19 +40,15 @@
               <td align=left>{{key.month_price}}</td>
               <td align=left>{{key.pay_way_name}}</td>
             </tr>
-            <tr>
-              <td>法大师傅撒的f</td>
-            </tr>
             </tbody>
           </table>
         </div>
+        <div class="notData" v-if="state === 2 && personPerformanceList.length < 1">暂无相关信息</div>
+        <div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>
+        <div class="notData" v-if="state === 1 && params.page < 2">
+          <van-loading type="spinner" color="black"/>
+        </div>
       </div>
-      <!--<div class="notData" v-if="state === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>-->
-      <!--<div class="notData" v-if="state === 2 && houseList.length < 1">暂无相关信息</div>-->
-      <!--<div class="notData bgColor" v-if="isLastPage && !isGetMore">我是有底线的</div>-->
-      <!--<div class="notData" v-if="state === 1 && params.page < 2">-->
-      <!--<van-loading type="spinner" color="black"/>-->
-      <!--</div>-->
     </div>
 
   </div>
@@ -73,6 +69,7 @@
         isGetMore: true,          //滑动触发加载
         isLastPage: false,        //是否最后一页
         scrollHeight: 0,          //滚动到最底部
+        state: 0,
         screenWidth: document.body.offsetWidth,
         data: [{                  //个人业绩占比小组业绩
           x: 1,
@@ -153,10 +150,18 @@
           console.log('获取个人业绩详情');
           console.log(res.data);
           if (res.data.code === '20000') {
-            this.isLastPage = this.params.page === res.data.page_info.max_page;
-            for (let i = 0; i < res.data.data.length; i++) {
-              this.personPerformanceList.push(res.data.data[i]);
+            if (res.data.data.length !== 0) {
+              this.isLastPage = this.params.page === res.data.page_info.max_page;
+              for (let i = 0; i < res.data.data.length; i++) {
+                this.personPerformanceList.push(res.data.data[i]);
+              }
+              this.state = 1;
+            } else {
+              this.state = 2
             }
+          } else {
+            this.state = 2;
+            this.personPerformanceList = [];
           }
         })
       },
