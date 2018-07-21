@@ -13,7 +13,7 @@
     </div>
     <div class="modules" style="background-color: #FFFFFF;margin: .24rem 0;padding-bottom: .24rem">
       <div>
-        <p class="titleP">资料待提交单数</p>
+        <p class="titleP">资料待提交单数{{personPerformanceList.length}}</p>
         <p><span style="font-weight: bold;color: #F2617B;font-size: .6rem!important;">{{personMaterials}}</span>&nbsp;单
         </p>
       </div>
@@ -98,7 +98,7 @@
     methods: {
       // 滚动条
       checkScroll() {
-        let mainHeight = 2;
+        let mainHeight = 7;
         let mainContent = $('.mainContent');
         mainContent.scrollTop(0);
         mainContent.css('height', mainHeight + 'rem');
