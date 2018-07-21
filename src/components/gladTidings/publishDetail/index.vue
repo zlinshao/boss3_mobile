@@ -162,9 +162,9 @@
             <p>手机号：<a :href="'tel:' + personal.phone">{{personal.phone}}</a></p>
           </div>
         </div>
-        <div class="showRoleName">
+        <div class="showRoleName" v-if="JSON.stringify(bull_name) !== '{}'">
           <div class="showImg">
-            <img :src="bull_name.avatar" v-if="bull_name.avatar">
+            <img :src="bull_name.avatar" v-if="bull_name.avatar ">
             <img src="../../../assets/head.png" v-else>
           </div>
           <div>
