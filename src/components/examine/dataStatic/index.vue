@@ -2,12 +2,13 @@
   <div id="dataStatic">
     <van-cell-group>
       <div class="first_date">
+        <!--<van-field-->
+        <!--class="title"-->
+        <!--label="日期筛选">-->
+        <!--</van-field>-->
+        <div style="width: 80px;">日期筛选</div>
         <van-field
-          class="title"
-          label="日期筛选">
-        </van-field>
-        <van-field
-          style="width: 27%;"
+          style="width: 28%;"
           v-model="params.start_time"
           readonly
           type="text"
@@ -15,7 +16,7 @@
           placeholder="开始日期">
         </van-field>
         <van-field
-          style="width: 27%;"
+          style="width: 28%;"
           v-model="params.end_time"
           readonly
           type="text"
@@ -503,10 +504,6 @@
     .titleP {
       padding-bottom: .4rem;
       color: #7D7D7D;
-      span {
-        font-weight: bold;
-        font-size: .7rem;
-      }
     }
     .modules {
       display: flex;
@@ -514,6 +511,10 @@
       /*align-items: center;*/
       background: #FFFFFF;
       padding: .4rem 0;
+      span {
+        font-weight: bold;
+        font-size: .7rem;
+      }
     }
 
     .modules > div {
