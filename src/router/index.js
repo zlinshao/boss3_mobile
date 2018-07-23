@@ -546,7 +546,7 @@ export default new Router({
       path: '/dataStatic',
       name: '业绩报表',
       icon: 'iconfont icon-shujutu',
-      hidden: 'other',
+      hidden: 'dataStatic',
       back: '#F19851',
       meta: {title: '业绩报表'},
       component: DataStatic
