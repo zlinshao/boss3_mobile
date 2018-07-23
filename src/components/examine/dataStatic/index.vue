@@ -679,7 +679,7 @@
           border-radius: 0 0 6px 0;
         }
         thead {
-          background-color: #555555;
+          background-color: #B8B8B8;
           tr {
             height: .72rem;
             line-height: .72rem;
@@ -692,7 +692,7 @@
         }
         tbody {
           tr:nth-of-type(odd) {
-            background: #CCCCCC;
+            background: #F5F3F6;
           }
           tr {
             td {
