@@ -2,13 +2,12 @@
   <div id="dataStatic">
     <van-cell-group>
       <div class="first_date">
-        <!--<van-field-->
-        <!--class="title"-->
-        <!--label="日期筛选">-->
-        <!--</van-field>-->
-        <div style="width: 80px;">日期筛选</div>
         <van-field
-          style="width: 28%;"
+          class="title"
+          label="日期筛选">
+        </van-field>
+        <van-field
+          style="width: 29%;"
           v-model="params.start_time"
           readonly
           type="text"
@@ -16,7 +15,7 @@
           placeholder="开始日期">
         </van-field>
         <van-field
-          style="width: 28%;"
+          style="width: 29%;"
           v-model="params.end_time"
           readonly
           type="text"
