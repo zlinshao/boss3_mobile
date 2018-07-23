@@ -55,13 +55,13 @@
     <div class="mainContent">
       <div class="mainList">
         <div class="tableCss">
-          <table style="width: 100%;height: auto;">
-            <thead style="background-color: #F5F3F6;">
-            <tr style="height: .72rem;line-height: .72rem;">
-              <td style="padding-left: .3rem;" align=left>地址</td>
-              <td style="min-width: 1.2rem;" align=left>总金额</td>
-              <td style="min-width: 1.2rem;" align=left>月单价</td>
-              <td style="min-width: 1.6rem;" align=left>付款方式</td>
+          <table>
+            <thead>
+            <tr>
+              <th style="padding-left: .3rem;" align=left>地址</th>
+              <th style="min-width: 1.2rem;" align=left>总金额</th>
+              <th style="min-width: 1.2rem;" align=left>月单价</th>
+              <th style="min-width: 1.6rem;" align=left>付款方式</th>
             </tr>
             </thead>
             <tbody>
@@ -548,30 +548,57 @@
       height: 100px;
       overflow: hidden;
     }
+
     .tableCss {
       background-color: #FFFFFF;
       table {
+        font-family: Futura, Arial, sans-serif;
+        width: 100%;
+        height: auto;
         margin: 0 .1rem;
         -webkit-border-radius: .08rem;
         -moz-border-radius: .08rem;
         border-radius: .08rem;
+        th, td {
+          color: #5C5C5C;
+          vertical-align: middle;
+          padding: .28rem .1rem;
+        }
+        th:first-child {
+          border-radius: 6px 0 0 0;
+        }
+        th:last-child {
+          border-radius: 0 6px 0 0;
+        }
+        tr:last-child td:first-child {
+          border-radius: 0 0 0 6px;
+        }
+        tr:last-child td:last-child {
+          border-radius: 0 0 6px 0;
+        }
+        thead {
+          background-color: #555555;
+          color: #FFFFFF;
+          tr {
+            height: .72rem;
+            line-height: .72rem;
+            th {
+              font-size: .33rem;
+              padding: .16rem .1rem;
+            }
+          }
+        }
+        tbody {
+          tr:nth-of-type(odd) {
+            background: #CCCCCC;
+          }
+          tr {
+            td {
+              font-size: .26rem;
+            }
+          }
+        }
       }
-    }
-    tbody tr:nth-of-type(even) {
-      background: #F5F3F6;
-    }
-
-    thead td, tbody td {
-      color: #5C5C5C;
-      vertical-align: middle;
-      padding: .28rem .1rem;
-    }
-    thead td {
-      font-size: .33rem;
-      padding: .16rem .1rem;
-    }
-    tbody td {
-      font-size: .26rem;
     }
 
     $colorF: #FFFFFF;
