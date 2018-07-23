@@ -140,12 +140,13 @@
       }
     },
     mounted() {
-      this.search(this.params);
-      this.antVList(this.paramsList);
+      // this.search(this.params);
+      // this.antVList(this.paramsList);
       this.checkScroll();
       this.getNowFormatDate();
     },
     activated() {
+      this.resetClose();
       this.routerIndex('');
       this.ddRent('');
       document.body.scrollTop = document.documentElement.scrollTop = 0;
