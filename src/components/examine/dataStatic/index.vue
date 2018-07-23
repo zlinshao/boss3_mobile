@@ -565,11 +565,11 @@
       padding: .28rem .1rem;
     }
     thead td {
-      font-size: .36rem;
+      font-size: .33rem;
       padding: .16rem .1rem;
     }
     tbody td {
-      font-size: .24rem;
+      font-size: .26rem;
     }
 
     $colorF: #FFFFFF;
