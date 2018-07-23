@@ -136,133 +136,7 @@
         personMaterials: 0,        //个人资料待审核的数量
         personPerformance: 0,      //个人业绩总额
         personPerformanceRatio: 0, //个人业绩占比小组业绩
-        personPerformanceList: [
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-          {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          }, {
-            name: '范德萨法法沙发反倒是',
-            performance: '23132',
-            month_price: '32321',
-            pay_way_name: '押一付二',
-          },
-        ],  //个人业绩详情
+        personPerformanceList: [],  //个人业绩详情
       }
     },
     mounted() {
@@ -322,27 +196,27 @@
 
       },
       antVList(params) {
-        // this.state = 1;
-        // this.$http.get(this.urls + 'personPerformanceList', {
-        //   params: params
-        // }).then((res) => {
-        //   console.log('获取个人业绩详情');
-        //   console.log(res.data);
-        //   if (res.data.code === '20000') {
-        //     if (res.data.data.length !== 0) {
-        //       this.isLastPage = this.paramsList.page === res.data.page_info.max_page;
-        //       for (let i = 0; i < res.data.data.length; i++) {
-        //         this.personPerformanceList.push(res.data.data[i]);
-        //       }
-        //       this.state = 0;
-        //     } else {
-        //       this.state = 2
-        //     }
-        //   } else {
-        //     this.state = 2;
-        //     this.personPerformanceList = [];
-        //   }
-        // })
+        this.state = 1;
+        this.$http.get(this.urls + 'personPerformanceList', {
+          params: params
+        }).then((res) => {
+          console.log('获取个人业绩详情');
+          console.log(res.data);
+          if (res.data.code === '20000') {
+            if (res.data.data.length !== 0) {
+              this.isLastPage = this.paramsList.page === res.data.page_info.max_page;
+              for (let i = 0; i < res.data.data.length; i++) {
+                this.personPerformanceList.push(res.data.data[i]);
+              }
+              this.state = 0;
+            } else {
+              this.state = 2
+            }
+          } else {
+            this.state = 2;
+            this.personPerformanceList = [];
+          }
+        })
       },
       antVIndex(url, params) {
         this.$http.get(this.urls + url, {
