@@ -66,7 +66,8 @@
             </thead>
             <tbody>
             <tr v-for="key in personPerformanceList">
-              <td style="color: #000000;padding-left: .3rem;" align=left>{{key.name}}</td>
+              <!--<td style="color: #000000;padding-left: .3rem;" align=left>{{key.name}}</td>-->
+              <td align=left>{{key.name}}</td>
               <td align=left>{{key.performance}}</td>
               <td align=left>{{key.month_price}}</td>
               <td align=left>{{key.pay_way_name}}</td>
@@ -182,7 +183,7 @@
         let mainHeight = 6.6;
         let mainContent = $('.mainContent');
         mainContent.scrollTop(0);
-        mainContent.css('height', mainHeight + 'rem');
+        mainContent.css('maxHeight', mainHeight + 'rem');
         let _this = this;
         mainContent.scroll(function () {
           _this.scroll_bar();
@@ -578,11 +579,11 @@
         }
         thead {
           background-color: #555555;
-          color: #FFFFFF;
           tr {
             height: .72rem;
             line-height: .72rem;
             th {
+              color: #FFFFFF;
               font-size: .33rem;
               padding: .16rem .1rem;
             }
@@ -636,6 +637,7 @@
     }
     .mainContent {
       overflow: auto;
+      overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
       background-color: $colorF;
       .mainList {
