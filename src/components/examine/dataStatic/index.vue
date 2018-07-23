@@ -74,7 +74,7 @@
             </tr>
             </tbody>
           </table>
-          <div class="notData" v-if="state === 2 && personPerformanceList.length < 1">暂无相关信息</div>
+          <div class="notData" style="padding: .3rem;" v-if="state === 2 && personPerformanceList.length < 1">暂无相关信息</div>
           <div class="notData bgColor" v-if="state === 2 && personPerformanceList.length > 10">我是有底线的</div>
           <div class="notData" v-if="state === 1">
             <van-loading type="spinner" color="black"/>
@@ -638,7 +638,7 @@
     }
     .notData {
       text-align: center;
-      padding: .3rem;
+      padding: .2rem;
       color: #b3afaf;
       font-size: .33rem;
       @include flex('center');
