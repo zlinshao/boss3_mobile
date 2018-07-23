@@ -563,7 +563,7 @@
             line-height: .72rem;
             th {
               color: #FFFFFF;
-              font-size: .33rem;
+              font-size: .31rem;
               padding: .16rem .1rem;
             }
           }
