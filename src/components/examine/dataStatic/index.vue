@@ -550,10 +550,12 @@
     }
     .tableCss {
       background-color: #FFFFFF;
-      margin: 0 .1rem;
-      -webkit-border-radius: .08rem;
-      -moz-border-radius: .08rem;
-      border-radius: .08rem;
+      table {
+        margin: 0 .1rem;
+        -webkit-border-radius: .08rem;
+        -moz-border-radius: .08rem;
+        border-radius: .08rem;
+      }
     }
     tbody tr:nth-of-type(even) {
       background: #F5F3F6;
