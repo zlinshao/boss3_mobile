@@ -281,7 +281,7 @@
     methods: {
       // 滚动条
       checkScroll() {
-        let mainHeight = 6.6;
+        let mainHeight = 6;
         let mainContent = $('.mainContent');
         mainContent.scrollTop(0);
         mainContent.css('maxHeight', mainHeight + 'rem');
@@ -652,12 +652,12 @@
     }
 
     .tableCss {
+      padding: 0 .1rem;
       background-color: #FFFFFF;
       table {
         font-family: Futura, Arial, sans-serif;
         width: 100%;
         height: auto;
-        margin: 0 .1rem;
         -webkit-border-radius: .08rem;
         -moz-border-radius: .08rem;
         border-radius: .08rem;
