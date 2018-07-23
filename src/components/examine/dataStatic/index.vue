@@ -34,19 +34,19 @@
       </div>
       <div>
         <p class="titleP">业绩统计</p>
-        <p><span style="font-weight: bold;font-size: .7rem;color: #46C460;">{{personPerformance}}</span>&nbsp;万元
+        <p><span style="color: #46C460;">{{personPerformance}}</span>&nbsp;万元
         </p>
       </div>
     </div>
     <div class="modules" style="margin-bottom: .2rem">
       <div>
         <p class="titleP">资料待提交单数</p>
-        <p><span style="font-weight: bold;font-size: .7rem;color: #F2617B;">{{personMaterials}}</span>&nbsp;单
+        <p><span style="color: #F2617B;">{{personMaterials}}</span>&nbsp;单
         </p>
       </div>
       <div>
         <p class="titleP">个人业绩小组占比</p>
-        <p><span style="font-weight: bold;font-size: .7rem;color: #409EFF;">{{personPerformanceRatio}}</span>&nbsp;%</p>
+        <p><span style="color: #409EFF;">{{personPerformanceRatio}}</span>&nbsp;%</p>
       </div>
       <!--<div class="chart-wrapper">-->
       <!--<canvas id="mountNode"></canvas>-->
@@ -503,6 +503,10 @@
     .titleP {
       padding-bottom: .4rem;
       color: #7D7D7D;
+      span {
+        font-weight: bold;
+        font-size: .7rem;
+      }
     }
     .modules {
       display: flex;
