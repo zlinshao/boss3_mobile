@@ -625,6 +625,7 @@
 
 <style lang="scss">
   #dataStatic {
+    font-family: Futura, Arial, sans-serif;
     .titleP {
       padding-bottom: .4rem;
       color: #7D7D7D;
@@ -655,7 +656,6 @@
       padding: 0 .1rem;
       background-color: #FFFFFF;
       table {
-        font-family: Futura, Arial, sans-serif;
         width: 100%;
         height: auto;
         -webkit-border-radius: .08rem;
