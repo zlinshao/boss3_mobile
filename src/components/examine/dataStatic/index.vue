@@ -4,8 +4,7 @@
       <div class="first_date">
         <van-field
           class="title"
-          label="日期筛选"
-          required>
+          label="日期筛选">
         </van-field>
         <van-field
           style="width: 27%;"
