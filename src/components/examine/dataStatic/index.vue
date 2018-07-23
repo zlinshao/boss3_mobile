@@ -638,7 +638,7 @@
     }
     .notData {
       text-align: center;
-      padding: .2rem;
+      padding: .3rem;
       color: #b3afaf;
       font-size: .33rem;
       @include flex('center');
