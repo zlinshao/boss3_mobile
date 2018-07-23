@@ -27,7 +27,7 @@
         </div>
       </div>
     </van-cell-group>
-    <div class="modules">
+    <div class="modules" style="margin-top: .2rem">
       <div>
         <p class="titleP">姓名</p>
         <p style="color: #000000;font-size: .6rem">{{personal}}</p>
@@ -38,7 +38,7 @@
         </p>
       </div>
     </div>
-    <div class="modules">
+    <div class="modules" style="margin-bottom: .2rem">
       <div>
         <p class="titleP">资料待提交单数</p>
         <p><span style="font-weight: bold;font-size: .7rem;color: #F2617B;">{{personMaterials}}</span>&nbsp;单
@@ -54,7 +54,7 @@
     </div>
     <div class="mainContent">
       <div class="mainList">
-        <div style="background-color: #FFFFFF;margin: 0 .08rem;">
+        <div class="tableCss">
           <table style="width: 100%;height: auto;">
             <thead style="background-color: #F5F3F6;">
             <tr style="height: .72rem;line-height: .72rem;">
@@ -548,7 +548,13 @@
       height: 100px;
       overflow: hidden;
     }
-
+    .tableCss {
+      background-color: #FFFFFF;
+      margin: 0 .1rem;
+      -webkit-border-radius: .08rem;
+      -moz-border-radius: .08rem;
+      border-radius: .08rem;
+    }
     tbody tr:nth-of-type(even) {
       background: #F5F3F6;
     }
