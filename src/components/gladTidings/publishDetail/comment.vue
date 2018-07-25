@@ -270,7 +270,6 @@
             comment: this.form.remark,
             album: this.form.photo,
           }).then((res) => {
-            this.haveInHand = true;
             this.retry = 0;
             if (res.data.status === 'success') {
               if (val === 1) {
@@ -281,8 +280,10 @@
                 $('.imgItem').remove();
               }
               Toast.success(res.data.message);
+              this.haveInHand = true;
             } else {
               Toast(res.data.message);
+              this.haveInHand = true;
             }
           }).catch((error) => {
             this.haveInHand = true;
