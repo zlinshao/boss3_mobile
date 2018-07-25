@@ -240,6 +240,8 @@
         for (let j = 0; j < val.lords.length; j++) {
           if (val.lords[j].is_agency === 1) {
             this.contracts(val, type, val.lords[j]);
+          } else {
+            this.finish(2);
           }
         }
       },
@@ -248,6 +250,8 @@
         for (let j = 0; j < val.renters.length; j++) {
           if (val.renters[j].is_agency === 1) {
             this.contracts(val, type, val.renters[j]);
+          } else {
+            this.finish(2);
           }
         }
       },
