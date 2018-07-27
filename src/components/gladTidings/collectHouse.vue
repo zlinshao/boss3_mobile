@@ -115,6 +115,7 @@
       this.searchValue = '';
       this.params.q = '';
       this.params.mobile = 1;
+      this.params.invalid_status = 3;
       if (this.types === 'is_nrcy') {
         this.params.is_nrcy = 1;
       } else {
