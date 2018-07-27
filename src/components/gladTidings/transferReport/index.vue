@@ -55,6 +55,41 @@
           disabled
           placeholder="原房屋定金已禁用">
         </van-field>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''">
+        </van-field>
+        <van-field
+          v-model="form.sign_dat"
+          @click="timeChoose(4)"
+          label="签约日期"
+          type="text"
+          class="number"
+          placeholder="请填写签约日期"
+          icon="clear"
+          @click-icon="form.sign_dat = ''">
+        </van-field>
+        <van-field
+          v-model="form.name"
+          label="客户姓名"
+          type="text"
+          placeholder="请填写客户姓名"
+          icon="clear"
+          @click-icon="form.name = ''">
+        </van-field>
+        <van-field
+          v-model="form.phone"
+          label="联系方式"
+          type="text"
+          class="number"
+          placeholder="请填写客户联系方式"
+          icon="clear"
+          @click-icon="form.phone = ''">
+        </van-field>
       </van-cell-group>
       <van-cell-group>
         <van-field
@@ -446,6 +481,11 @@
           old_money_sum: '',
           old_house_name: '',
 
+          deposit: '',
+          sign_dat:  '',
+          name:  '',
+          phone:  '',
+
           address: '',
           id: '',
           processable_id: '',
@@ -688,6 +728,9 @@
           case 3:
             this.form.end_date = this.timeValue;
             break;
+          case 4:
+            this.form.sign_dat = this.timeValue;
+            break;
         }
       },
       // 结束日期
@@ -910,6 +953,10 @@
             this.form.old_house_name = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
+            this.form.deposit = val.mortgage_price;
+            this.form.sign_date = val.start_at;
+            this.form.name = val.name;
+            this.form.phone = val.cusPhone;
 
             this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
               if (res.data.code === '51110') {

@@ -292,17 +292,23 @@
         } else {
           list.month = '';
         }
-
+        if(type === 'renter') {
+          list.mortgage_price = value.mortgage_price;
+        }
+        list.start_at = value.start_at;
         list.album = value.album;
         list.status = value.status !== null ? value.status : 0;
         list.duration_days = value.duration_days;
         if (value.customers.length !== 0) {
           list.customers = value.customers[0].name;
+          list.cusPhone = value.customers[0].phone;
         } else {
           if (value.customer_info !== null && value.customer_info.length !== 0) {
             list.customers = value.customer_info[0].name;
+            list.cusPhone = value.customer_info[0].phone;
           } else {
             list.customers = '---';
+            list.cusPhone = '';
           }
         }
         if (value.sign_user !== null) {
