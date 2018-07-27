@@ -1040,6 +1040,11 @@
             this.form.old_price = draft.old_price;
             this.form.old_money_sum = draft.old_money_sum;
 
+            this.form.deposit = draft.deposit;
+            this.form.sign_date = draft.sign_date;
+            this.form.name = draft.name;
+            this.form.phone = draft.phone;
+
             this.form.begin_date = draft.begin_date;
             this.form.end_date = draft.end_date;
             this.first_date = [];
@@ -1143,6 +1148,11 @@
         this.form.old_pay_way_arr = [''];
         this.form.old_price = [''];
         this.form.old_money_sum = '';
+
+        this.form.deposit = '';
+        this.form.sign_date = '';
+        this.form.name = '';
+        this.form.phone = '';
 
         this.form.id = '';
         this.form.processable_id = '';
