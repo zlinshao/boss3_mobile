@@ -71,6 +71,7 @@
           class="number"
           placeholder="请填写签约日期"
           icon="clear"
+          readonly
           @click-icon="form.sign_date = ''">
         </van-field>
         <van-field
