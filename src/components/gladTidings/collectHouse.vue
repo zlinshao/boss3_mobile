@@ -292,7 +292,7 @@
         } else {
           list.month = '';
         }
-        if(type === 'renter') {
+        if(type === 'report') {
           list.mortgage_price = value.mortgage_price;
         }
         list.start_at = value.start_at;

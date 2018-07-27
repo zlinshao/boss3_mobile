@@ -64,14 +64,14 @@
           @click-icon="form.deposit = ''">
         </van-field>
         <van-field
-          v-model="form.sign_dat"
+          v-model="form.sign_date"
           @click="timeChoose(4)"
           label="签约日期"
           type="text"
           class="number"
           placeholder="请填写签约日期"
           icon="clear"
-          @click-icon="form.sign_dat = ''">
+          @click-icon="form.sign_date = ''">
         </van-field>
         <van-field
           v-model="form.name"
@@ -482,7 +482,7 @@
           old_house_name: '',
 
           deposit: '',
-          sign_dat:  '',
+          sign_date:  '',
           name:  '',
           phone:  '',
 
@@ -729,7 +729,7 @@
             this.form.end_date = this.timeValue;
             break;
           case 4:
-            this.form.sign_dat = this.timeValue;
+            this.form.sign_date = this.timeValue;
             break;
         }
       },
@@ -955,7 +955,7 @@
             this.form.house_id_rent = val.house_id;
             this.form.deposit = val.mortgage_price;
             this.form.sign_date = val.start_at;
-            this.form.name = val.name;
+            this.form.name = val.customers;
             this.form.phone = val.cusPhone;
 
             this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
