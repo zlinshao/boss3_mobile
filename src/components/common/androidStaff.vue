@@ -75,7 +75,7 @@
       </div>
       <div class="footerBtn">
         <div @click="close_('id')">清空</div>
-        <div @click="sureIds">确定1</div>
+        <div @click="sureIds">确定</div>
       </div>
     </div>
   </div>
@@ -247,7 +247,7 @@
       },
       sureIds() {
         if (this.lengths === 0) {
-          this.$http.post(this.urls + 'special/special/user_infos', {
+          this.$http.post(this.urls + 'special/special/userInfos', {
             id: this.selectId,
           }).then((res) => {
             alert(JSON.stringify(res));
