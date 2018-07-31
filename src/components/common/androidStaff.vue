@@ -249,14 +249,14 @@
         if (this.lengths === 0) {
           this.$http.get(this.urls + 'manager/staff/' + this.selectId[0]).then((res) => {
             if (res.data.code === '10020') {
-              this.staffIds(res.data.data);
+              this.staffId(res.data.data);
             }
           });
         } else {
-          this.staffIds(this.selectId);
+          this.staffId(this.selectId);
         }
       },
-      staffIds(val) {
+      staffId(val) {
         android.staffIds(JSON.stringify(val));
         this.selectId = [];
         this.getDepartment(1, 1);
