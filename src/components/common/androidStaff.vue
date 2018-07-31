@@ -57,7 +57,7 @@
         <li v-for="(item,index) in staffList">
           <div class="checks">
             <van-checkbox-group v-model="selectId">
-              <van-checkbox :disabled="selectId.length > 4 && selectId.indexOf(item.id) < 0" :key="index"
+              <van-checkbox :disabled="selectId.length > lengths && selectId.indexOf(item.id) < 0" :key="index"
                             :name="item.id">
                 {{item.name}}
               </van-checkbox>
@@ -101,7 +101,7 @@
         organizeList: [],       //组织架构部门列表
         staffList: [],          //人员列表
         selectId: [],           //人员ID
-
+        lengths: 1,
         searchValue: '',
         searchStatus: false,
         staffData: [],
@@ -121,6 +121,7 @@
       })
     },
     mounted() {
+      // this.lengths = this.$route.query.lengths;
       Toast.loading({
         mask: true,
         duration: 0,
