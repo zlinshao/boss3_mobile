@@ -101,7 +101,7 @@
         organizeList: [],       //组织架构部门列表
         staffList: [],          //人员列表
         selectId: [],           //人员ID
-        lengths: 1,
+        lengths: 0,
         searchValue: '',
         searchStatus: false,
         staffData: [],
