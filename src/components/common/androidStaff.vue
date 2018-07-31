@@ -122,7 +122,7 @@
       })
     },
     mounted() {
-      // this.lengths = Number(this.$route.query.lengths) - 1;
+      this.lengths = Number(this.$route.query.lengths) - 1;
       Toast.loading({
         mask: true,
         duration: 0,
@@ -262,7 +262,6 @@
         }
       },
       staffId(val) {
-        alert(JSON.stringify(val));
         android.staffIds(JSON.stringify(val));
         this.selectId = [];
         this.getDepartment(1, 1);
