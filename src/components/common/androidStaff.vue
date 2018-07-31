@@ -75,7 +75,7 @@
       </div>
       <div class="footerBtn">
         <div @click="close_('id')">清空</div>
-        <div @click="sureIds">确定</div>
+        <div @click="sureIds">确定1</div>
       </div>
     </div>
   </div>
@@ -122,7 +122,7 @@
       })
     },
     mounted() {
-      this.lengths = Number(this.$route.query.lengths) - 1;
+      // this.lengths = Number(this.$route.query.lengths) - 1;
       Toast.loading({
         mask: true,
         duration: 0,
