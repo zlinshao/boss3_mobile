@@ -122,7 +122,7 @@
       })
     },
     mounted() {
-      // this.lengths = Number(this.$route.query.lengths) - 1;
+      this.lengths = Number(this.$route.query.lengths) - 1;
       Toast.loading({
         mask: true,
         duration: 0,
