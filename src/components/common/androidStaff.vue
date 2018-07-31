@@ -75,7 +75,7 @@
       </div>
       <div class="footerBtn">
         <div @click="close_('id')">清空</div>
-        <div @click="sureIds">确定1</div>
+        <div @click="sureIds">确定2</div>
       </div>
     </div>
   </div>
@@ -123,8 +123,6 @@
     },
     mounted() {
       this.lengths = Number(this.$route.query.lengths) - 1;
-      alert(this.lengths);
-      alert(window.location.href);
       Toast.loading({
         mask: true,
         duration: 0,
@@ -248,14 +246,10 @@
         }
       },
       sureIds() {
-        alert(typeof this.lengths);
-        alert(this.lengths);
         if (this.lengths === 0) {
-          alert(this.lengths + '2');
           this.$http.get(this.urls + 'manager/staff/' + this.selectId[0]).then((res) => {
-            alert(this.lengths + '3');
+            alert(JSON.stringify(res));
             if (res.data.code === '10020') {
-              alert(this.lengths + '4');
               this.staffId(res.data.data);
             }
           });
