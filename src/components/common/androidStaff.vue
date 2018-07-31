@@ -94,6 +94,7 @@
     },
     data() {
       return {
+        urls: globalConfig.server,
         disabled: true,
         checked: false,         //全选
         highestDepart: '',      //最高级岗位
