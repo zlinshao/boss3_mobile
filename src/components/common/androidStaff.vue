@@ -247,16 +247,19 @@
       },
       sureIds() {
         if (this.lengths === 0) {
-          this.$http.post(this.urls + 'special/special/userInfos', {
-            id: this.selectId,
-          }).then((res) => {
-            alert(JSON.stringify(res));
-            if (res.data.code === '10080') {
-              this.staffId(res.data.data);
-            } else {
-              Toast(res.data.msg);
-            }
-          });
+          if (this.selectId) {
+            this.$http.post(this.urls + 'special/special/userInfos', {
+              id: this.selectId,
+            }).then((res) => {
+              if (res.data.code === '10080') {
+                this.staffId(res.data.data);
+              } else {
+                Toast(res.data.msg);
+              }
+            });
+          } else {
+            Toast('请选择开单人');
+          }
         } else {
           this.staffId(this.selectId);
         }
