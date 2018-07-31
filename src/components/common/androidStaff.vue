@@ -248,6 +248,8 @@
         }
       },
       sureIds() {
+        alert(typeof this.lengths);
+        alert(this.lengths);
         if (this.lengths === 0) {
           this.$http.get(this.urls + 'manager/staff/' + this.selectId[0]).then((res) => {
             if (res.data.code === '10020') {
