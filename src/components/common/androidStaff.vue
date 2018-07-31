@@ -257,6 +257,7 @@
         }
       },
       staffId(val) {
+        console.log(JSON.stringify(val));
         android.staffIds(JSON.stringify(val));
         this.selectId = [];
         this.getDepartment(1, 1);
