@@ -75,7 +75,7 @@
       </div>
       <div class="footerBtn">
         <div @click="close_('id')">清空</div>
-        <div @click="sureIds">确定2</div>
+        <div @click="sureIds">确定</div>
       </div>
     </div>
   </div>
@@ -250,6 +250,7 @@
           this.$http.post(this.urls + 'special/special/user_infos', {
             id: this.selectId,
           }).then((res) => {
+            alert(JSON.stringify(res));
             if (res.data.code === '10080') {
               this.staffId(res.data.data);
             } else {
