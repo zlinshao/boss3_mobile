@@ -247,7 +247,7 @@
       },
       sureIds() {
         if (this.lengths === 0) {
-          if (this.selectId) {
+          if (this.selectId.length > 0) {
             this.$http.post(this.urls + 'special/special/userInfos', {
               id: this.selectId,
             }).then((res) => {
