@@ -251,8 +251,11 @@
         alert(typeof this.lengths);
         alert(this.lengths);
         if (this.lengths === 0) {
+          alert(this.lengths + '2');
           this.$http.get(this.urls + 'manager/staff/' + this.selectId[0]).then((res) => {
+            alert(this.lengths + '3');
             if (res.data.code === '10020') {
+              alert(this.lengths + '4');
               this.staffId(res.data.data);
             }
           });
