@@ -247,10 +247,13 @@
       },
       sureIds() {
         if (this.lengths === 0) {
-          this.$http.get(this.urls + 'manager/staff/' + this.selectId[0]).then((res) => {
-            alert(JSON.stringify(res));
-            if (res.data.code === '10020') {
+          this.$http.post(this.urls + 'special/special/user_infos', {
+            id: this.selectId,
+          }).then((res) => {
+            if (res.data.code === '10080') {
               this.staffId(res.data.data);
+            } else {
+              Toast(res.data.msg);
             }
           });
         } else {
