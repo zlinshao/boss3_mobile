@@ -121,7 +121,7 @@
       })
     },
     mounted() {
-      this.lengths = Number(this.$route.query.lengths) - 1;
+      // this.lengths = Number(this.$route.query.lengths) - 1;
       Toast.loading({
         mask: true,
         duration: 0,
@@ -245,7 +245,7 @@
         }
       },
       sureIds() {
-        if (this.lengths === 1) {
+        if (this.lengths === 0) {
           this.$http.get(this.urls + 'manager/staff/' + this.selectId[0]).then((res) => {
             if (res.data.code === '10020') {
               this.staffIds(res.data.data);
