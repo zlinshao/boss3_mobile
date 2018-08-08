@@ -141,7 +141,7 @@
         active: '',
         bigPic: '',
         bigPicShow: false,
-        commentsShow: false,
+        commentsShow: true,
         minHeight: window.innerHeight,
         commentLoading: false,
       }
@@ -163,7 +163,7 @@
     },
     activated() {
       this.assistId = false;
-      this.commentsShow = false;
+      this.commentsShow = true;
       this.pitch = this.$route.query.id;
       this.contentDetail(this.pitch);
       this.commentList = [];
@@ -187,7 +187,7 @@
         return flag;
       },
       loadComments() {
-        this.commentsShow = !this.commentsShow;
+        // this.commentsShow = !this.commentsShow;
         if (this.commentList.length < 1) {
           this.comment(this.pitch);
         }
