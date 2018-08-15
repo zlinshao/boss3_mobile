@@ -768,6 +768,8 @@
             break;
           case 7:
             this.form.end_date = this.timeValue;
+            let time = this.timeValue.split('-');
+            this.currentDate = new Date(time[0], time[1], time[2]);
             break;
         }
       },
