@@ -768,8 +768,6 @@
             break;
           case 7:
             this.form.end_date = this.timeValue;
-            let time = this.timeValue.split('-');
-            this.currentDate = new Date(time[0], time[1], time[2]);
             break;
         }
       },
@@ -885,8 +883,12 @@
           if (res.data.code === '51110') {
             if (val === 1) {
               this.datePrice = this.first_date.concat(res.data.data);
+              let time1 = res.data.data.split('-');
+              this.currentDate = new Date(time1[0], time1[1], time1[2]);
             } else {
               this.datePay = this.first_date.concat(res.data.data);
+              let time2 = res.data.data.split('-');
+              this.currentDate = new Date(time2[0], time2[1], time2[2]);
             }
           }
         })
