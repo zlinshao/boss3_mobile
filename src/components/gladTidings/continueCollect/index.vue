@@ -229,17 +229,20 @@
           @click-icon="form.phone = ''"
           required>
         </van-field>
-        <van-field
-          v-model="form.account"
-          label="卡号"
-          type="text"
-          class="number"
-          @blur="accountBank(form.account)"
-          placeholder="请填写卡号"
-          icon="clear"
-          @click-icon="form.account = ''"
-          required>
-        </van-field>
+        <div class="month">
+          <van-field
+            v-model="form.account"
+            label="卡号"
+            type="text"
+            class="number"
+            @blur="accountBank(form.account)"
+            placeholder="请填写卡号"
+            icon="clear"
+            @click-icon="form.account = ''"
+            required>
+          </van-field>
+        </div>
+        <div class="titleRed">请尽量提供一类卡卡号</div>
         <van-field
           v-model="form.bank"
           label="银行"
