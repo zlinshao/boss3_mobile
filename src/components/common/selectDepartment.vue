@@ -117,7 +117,9 @@
       confirmAdd() {
         if (this.selectId) {
           if (navigator.userAgent == 'app/ApartMent') {
-            android.staffIds(JSON.stringify(this.selectDepart));
+            let data = [];
+            data[0] = this.selectDepart;
+            android.staffIds(JSON.stringify(data));
             return;
           }
           this.$router.replace({path: this.path, query: {depart: JSON.stringify(this.selectDepart)}});
