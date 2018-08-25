@@ -39,7 +39,7 @@
           <i class="iconfont icon-zan" :class="{'zan': assistId}" @click="assist(pitch)"
              style="margin-left: 10px;"><span :class="{'zan': assistId}">{{myData.favor_num}}</span></i>
           <i class="iconfont icon-pinglun" v-if="myData.comments_count<1" style="margin-left: 20px;"><span
-            style="margin-left: 5px;">{{myData.comments_count}}</span></i>\
+            style="margin-left: 5px;">{{myData.comments_count}}</span></i>
           <!--loadComments-->
           <i class="iconfont icon-pinglun" v-else style="margin-left: 20px;">
             <span style="margin-left: 5px;">{{myData.comments_count}}</span></i>

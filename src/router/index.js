@@ -36,6 +36,7 @@ import ContinueCollect from '../components/gladTidings/continueCollect/index.vue
 
 // 数据统计
 import DataStatic from '../components/examine/dataStatic/index.vue'
+import Statistics from '../components/examine/statistics/index.vue'
 
 import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'           //未收先祖
 import UncollectBeforeRentSure from '../components/gladTidings/uncollectBeforeRentSure/index.vue'   //未收先祖确定
@@ -551,6 +552,15 @@ export default new Router({
       meta: {title: '业绩报表'},
       component: DataStatic
     },
+    // {
+    //   path: '/statistics',
+    //   name: '业绩统计',
+    //   icon: 'iconfont icon-shujutu',
+    //   hidden: 'dataStatic',
+    //   back: '#E3705B',
+    //   meta: {title: '业绩统计'},
+    //   component: Statistics
+    // },
     // {
     //   path: '/cardDetail',
     //   name: '研发补卡申请详情',
