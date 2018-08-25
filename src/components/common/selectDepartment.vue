@@ -117,8 +117,10 @@
       confirmAdd() {
         if (this.selectId) {
           if (navigator.userAgent == 'app/ApartMent') {
-            let data = [];
-            data[0] = this.selectDepart;
+            let data = [], value = {};
+            value.org_id = this.selectDepart.id;
+            value.org_name = this.selectDepart.name;
+            data.push(value);
             android.staffIds(JSON.stringify(data));
             return;
           }
