@@ -558,15 +558,15 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
-          staff_name: '',                 //开单人name
-          department_name: '',            //部门name
+          staff_name: '',               //开单人name
+          department_name: '',          //部门name
         },
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
         photos: {},                     //合同照片
         screenshots: {},                //领导截图
-        deed_photos: {},                 //房产证照片
-        identify_photos: {},             //证件照片
+        deed_photos: {},                //房产证照片
+        identify_photos: {},            //证件照片
 
 
         dictValue4: [],                 //付款方式
@@ -1147,7 +1147,6 @@
             this.identify_photos = data.identify_photos;
 
             this.form.remark = draft.remark;
-
             if (val !== '' && val.type === 2) {
               this.form.staff_id = draft.staff_id;
               this.form.staff_name = draft.staff_name;
@@ -1234,6 +1233,7 @@
         this.deed_photos = {};
         this.form.identify_photo = [];
         this.identify_photos = {};
+
         this.form.remark = '';
       }
     },

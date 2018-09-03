@@ -313,6 +313,16 @@
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>房产证照片</div>
+        <UpLoad :ID="'deed_photo'" @getImg="getImgData" :isClear="isClear" :editImage="deed_photos"></UpLoad>
+      </div>
+
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>证件照片</div>
+        <UpLoad :ID="'identify_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identify_photos"></UpLoad>
+      </div>
+
       <van-cell-group>
         <van-field
           v-model="form.remark"
@@ -454,8 +464,10 @@
           penalty: '',                  //违约金
           is_corp: 1,                   //是否公司单  0个人1公司
           contract_number: 'LJSF',      //合同编号
-          screenshot_leader: '',        //领导截图 数组
-          photo: '',                    //合同照片 数组
+          screenshot_leader: [],        //领导截图 数组
+          photo: [],                    //合同照片 数组
+          deed_photo: [],               //房产证照片
+          identify_photo: [],           //证件照片
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
@@ -465,6 +477,8 @@
         property_name: '',              //物业费付款人
         photos: {},                     //照片
         screenshots: {},                //照片
+        deed_photos: {},                //房产证照片
+        identify_photos: {},            //证件照片
 
         dictValue4: [],         //付款方式
         value4: [],
@@ -593,13 +607,24 @@
         this.selectHide = false;
         this.timeShow = false;
       },
+      // 图片
       getImgData(val) {
         this.picStatus = val[2];
-        if (val[0] === 'screenshot') {
-          this.form.screenshot_leader = val[1];
-        } else {
-          this.form.photo = val[1];
+        switch (val[0]) {
+          case 'screenshot':
+            this.form.screenshot_leader = val[1];
+            break;
+          case 'photo':
+            this.form.photo = val[1];
+            break;
+          case 'deed_photo':
+            this.form.deed_photo = val[1];
+            break;
+          case 'identify_photo':
+            this.form.identify_photo = val[1];
+            break;
         }
+
       },
       // 结束日期
       endDate(time, month, day, val) {
@@ -939,6 +964,11 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots = data.screenshot_leader;
 
+            this.form.deed_photo = draft.deed_photo;
+            this.deed_photos = data.deed_photos;
+            this.form.identify_photo = draft.identify_photo;
+            this.identify_photos = data.identify_photos;
+
             this.form.remark = draft.remark;
             if (val !== '' && val.type === 2) {
               this.form.staff_id = draft.staff_id;
@@ -1011,6 +1041,10 @@
         this.photos = {};
         this.form.screenshot_leader = [];
         this.screenshots = {};
+        this.form.deed_photo = [];
+        this.deed_photos = {};
+        this.form.identify_photo = [];
+        this.identify_photos = {};
 
         this.form.remark = '';
       }
