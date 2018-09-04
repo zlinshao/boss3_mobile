@@ -393,15 +393,15 @@
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
-      <!--<div class="aloneModel required">-->
-        <!--<div class="title"><span>*</span>房产证照片</div>-->
-        <!--<UpLoad :ID="'deed_photo'" @getImg="getImgData" :isClear="isClear" :editImage="deed_photos"></UpLoad>-->
-      <!--</div>-->
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>房产证照片</div>
+        <UpLoad :ID="'deed_photo'" @getImg="getImgData" :isClear="isClear" :editImage="deed_photos"></UpLoad>
+      </div>
 
-      <!--<div class="aloneModel required">-->
-        <!--<div class="title"><span>*</span>证件照片</div>-->
-        <!--<UpLoad :ID="'identify_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identify_photos"></UpLoad>-->
-      <!--</div>-->
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>证件照片</div>
+        <UpLoad :ID="'identify_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identify_photos"></UpLoad>
+      </div>
 
       <van-cell-group>
         <van-field
@@ -553,8 +553,8 @@
           contract_number: 'LJSF',      //合同编号
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
-          // deed_photo: [],               //房产证照片
-          // identify_photo: [],           //证件照片
+          deed_photo: [],               //房产证照片
+          identify_photo: [],           //证件照片
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
@@ -565,9 +565,8 @@
         property_name: '',              //物业费付款人
         photos: {},                     //合同照片
         screenshots: {},                //领导截图
-        // deed_photos: {},                //房产证照片
-        // identify_photos: {},            //证件照片
-
+        deed_photos: {},                //房产证照片
+        identify_photos: {},            //证件照片
 
         dictValue4: [],                 //付款方式
         value4: [],
@@ -1001,7 +1000,6 @@
         } else {
           Toast(this.alertMsg('sub'));
         }
-
       },
 
       houseInfo() {
@@ -1141,11 +1139,10 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots = data.screenshot_leader;
 
-            // this.form.deed_photo = draft.deed_photo;
-            // this.deed_photos = data.deed_photo;
-            // this.form.identify_photo = draft.identify_photo;
-            // this.identify_photos = data.identify_photo;
-
+            this.form.deed_photo = draft.deed_photo;
+            this.deed_photos = data.deed_photo;
+            this.form.identify_photo = draft.identify_photo;
+            this.identify_photos = data.identify_photo;
 
             this.form.remark = draft.remark;
             if (val !== '' && val.type === 2) {
@@ -1230,10 +1227,10 @@
         this.photos = {};
         this.form.screenshot_leader = [];
         this.screenshots = {};
-        // this.form.deed_photo = [];
-        // this.deed_photos = {};
-        // this.form.identify_photo = [];
-        // this.identify_photos = {};
+        this.form.deed_photo = [];
+        this.deed_photos = {};
+        this.form.identify_photo = [];
+        this.identify_photos = {};
 
         this.form.remark = '';
       }
