@@ -965,9 +965,9 @@
             this.screenshots = data.screenshot_leader;
 
             this.form.deed_photo = draft.deed_photo;
-            this.deed_photos = data.deed_photos;
+            this.deed_photos = data.deed_photo;
             this.form.identify_photo = draft.identify_photo;
-            this.identify_photos = data.identify_photos;
+            this.identify_photos = data.identify_photo;
 
             this.form.remark = draft.remark;
             if (val !== '' && val.type === 2) {
