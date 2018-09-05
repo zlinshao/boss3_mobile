@@ -395,7 +395,7 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>房产证照片</div>
-        <UpLoad :ID="'deed_photo'" @getImg="getImgData" :isClear="isClear" :editImage="deed_photos"></UpLoad>
+        <UpLoad :ID="'property_photo'" @getImg="getImgData" :isClear="isClear" :editImage="property_photos"></UpLoad>
       </div>
 
       <div class="aloneModel required">
@@ -553,7 +553,7 @@
           contract_number: 'LJSF',      //合同编号
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
-          deed_photo: [],               //房产证照片
+          property_photo: [],               //房产证照片
           identify_photo: [],           //证件照片
           remark: '',                   //备注
           staff_id: '',                 //开单人id
@@ -565,7 +565,7 @@
         property_name: '',              //物业费付款人
         photos: {},                     //合同照片
         screenshots: {},                //领导截图
-        deed_photos: {},                //房产证照片
+        property_photos: {},                //房产证照片
         identify_photos: {},            //证件照片
 
         dictValue4: [],                 //付款方式
@@ -729,8 +729,8 @@
           case 'photo':
             this.form.photo = val[1];
             break;
-          case 'deed_photo':
-            this.form.deed_photo = val[1];
+          case 'property_photo':
+            this.form.property_photo = val[1];
             break;
           case 'identify_photo':
             this.form.identify_photo = val[1];
@@ -1139,8 +1139,8 @@
             this.form.screenshot_leader = draft.screenshot_leader;
             this.screenshots = data.screenshot_leader;
 
-            this.form.deed_photo = draft.deed_photo;
-            this.deed_photos = data.deed_photo;
+            this.form.property_photo = draft.property_photo;
+            this.property_photos = data.property_photo;
             this.form.identify_photo = draft.identify_photo;
             this.identify_photos = data.identify_photo;
 
@@ -1227,8 +1227,8 @@
         this.photos = {};
         this.form.screenshot_leader = [];
         this.screenshots = {};
-        this.form.deed_photo = [];
-        this.deed_photos = {};
+        this.form.property_photo = [];
+        this.property_photos = {};
         this.form.identify_photo = [];
         this.identify_photos = {};
 

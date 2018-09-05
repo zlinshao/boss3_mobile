@@ -167,12 +167,12 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel">
-        <div class="title">证件照片</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>证件照片</div>
         <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="pics.identity_photo"></UpLoad>
       </div>
-      <div class="aloneModel">
-        <div class="title">合同照片</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>合同照片</div>
         <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="pics.photo"></UpLoad>
       </div>
       <div class="aloneModel">
