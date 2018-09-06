@@ -177,16 +177,16 @@
         </van-checkbox-group>
       </div>
 
-      <div class="aloneModel">
-        <div class="title">证件照片</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>证件照片</div>
         <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="pics.identity_photo"></UpLoad>
       </div>
       <div class="aloneModel">
         <div class="title">银行卡照片</div>
         <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="pics.bank_photo"></UpLoad>
       </div>
-      <div class="aloneModel">
-        <div class="title">合同照片</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>合同照片</div>
         <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="pics.photo"></UpLoad>
       </div>
       <div class="aloneModel">
@@ -217,8 +217,8 @@
         <div class="title">承诺书照片</div>
         <UpLoad :ID="'photo10'" @getImg="getImgData" :isClear="isClear" :editImage="pics.promise"></UpLoad>
       </div>
-      <div class="aloneModel">
-        <div class="title">房产证照片</div>
+      <div class="aloneModel required">
+        <div class="title"><span>*</span>房产证照片</div>
         <UpLoad :ID="'photo14'" @getImg="getImgData" :isClear="isClear" :editImage="pics.property_photo"></UpLoad>
       </div>
       <div class="aloneModel">

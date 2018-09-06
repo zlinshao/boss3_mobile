@@ -320,7 +320,7 @@
 
       <div class="aloneModel required">
         <div class="title"><span>*</span>证件照片</div>
-        <UpLoad :ID="'identify_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identify_photos"></UpLoad>
+        <UpLoad :ID="'identity_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identity_photos"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -467,7 +467,7 @@
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
           property_photo: [],               //房产证照片
-          identify_photo: [],           //证件照片
+          identity_photo: [],           //证件照片
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
@@ -478,7 +478,7 @@
         photos: {},                     //照片
         screenshots: {},                //照片
         property_photos: {},                //房产证照片
-        identify_photos: {},            //证件照片
+        identity_photos: {},            //证件照片
 
         dictValue4: [],         //付款方式
         value4: [],
@@ -620,8 +620,8 @@
           case 'property_photo':
             this.form.property_photo = val[1];
             break;
-          case 'identify_photo':
-            this.form.identify_photo = val[1];
+          case 'identity_photo':
+            this.form.identity_photo = val[1];
             break;
         }
 
@@ -966,8 +966,8 @@
 
             this.form.property_photo = draft.property_photo;
             this.property_photos = data.property_photo;
-            this.form.identify_photo = draft.identify_photo;
-            this.identify_photos = data.identify_photo;
+            this.form.identity_photo = draft.identity_photo;
+            this.identity_photos = data.identity_photo;
 
             this.form.remark = draft.remark;
             if (val !== '' && val.type === 2) {
@@ -1044,8 +1044,8 @@
 
         this.form.property_photo = [];
         this.property_photos = {};
-        this.form.identify_photo = [];
-        this.identify_photos = {};
+        this.form.identity_photo = [];
+        this.identity_photos = {};
 
         this.form.remark = '';
       }
