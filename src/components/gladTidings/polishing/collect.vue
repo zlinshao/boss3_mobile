@@ -753,13 +753,17 @@
                     }
                   }
                   if (item === 'album') {
+                    console.log(data.album);
                     for (let pic in data.album) {
                       for (let pics in this.pics) {
                         if (pics === pic) {
                           this.pics[pics] = data.album[pic];
+                          console.log(pics);
+                          console.log(this.pics[pics]);
                           for (let i = 0; i < data.album[pic].length; i++) {
                             this.form[key][pics].push(data.album[pic][i].id);
                           }
+                          console.log(this.form[key][pics]);
                         }
                       }
                     }
