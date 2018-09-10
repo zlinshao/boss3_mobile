@@ -24,6 +24,9 @@
             <i class="iconfont icon-yanqi--"></i>
             <span>{{deal}}</span>
           </span>
+          <span class="placeSpan">
+            <span>{{priceRegion}}</span>
+          </span>
         </div>
       </div>
     </div>
@@ -202,7 +205,7 @@
         personalId: {},
         vLoading: true,
         disabled: false,
-        printscreen: ['新凭证截图','证件照片','房产证照片', '旧凭证截图', '新押金收条', '旧押金收条', '押金收条', '款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '组长同意截图', '房屋影像', '房屋照片', '退租交接单'],
+        printscreen: ['新凭证截图', '证件照片', '房产证照片', '旧凭证截图', '新押金收条', '旧押金收条', '押金收条', '款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '组长同意截图', '房屋影像', '房屋照片', '退租交接单'],
         placeStatus: ['published', 'rejected', 'cancelled'],
 
         routerLinks: ['bulletin_quality', 'bulletin_collect_basic', 'bulletin_collect_continued', 'bulletin_rent_basic', 'bulletin_rent_continued', 'bulletin_rent_trans', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change',],
@@ -238,6 +241,7 @@
 
         approvedStatus: false,
         marking: '',
+        priceRegion: '',
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -346,6 +350,7 @@
             }
 
             let main = res.data.data.process;
+            this.priceArea(main.house_id);
             this.process = main;
             this.personal = main.user;
             this.place = main.place;
@@ -376,7 +381,12 @@
           }
         });
       },
-
+      // 价格区间
+      priceArea(id) {
+        this.$http.get(globalConfig.server + 'bulletin/quality/range?house_id=' + id).then((res) => {
+          this.priceRegion = res.data.priceMin + ' - ' + res.data.priceMax + ' 元';
+        });
+      },
       comments(val, page) {
         this.$http.get(this.urls + 'comments?id=' + val, {
           params: {
