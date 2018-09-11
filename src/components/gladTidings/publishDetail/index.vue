@@ -24,7 +24,7 @@
             <i class="iconfont icon-yanqi--"></i>
             <span>{{deal}}</span>
           </span>
-          <span class="placeSpan">
+          <span class="placeSpan deal" v-if="placeFalse && marking === 1">
             <span>{{priceRegion}}</span>
           </span>
         </div>
@@ -384,7 +384,7 @@
       // 价格区间
       priceArea(id) {
         this.$http.get(globalConfig.server + 'bulletin/quality/range?house_id=' + id).then((res) => {
-          this.priceRegion = res.data.priceMin + ' - ' + res.data.priceMax + ' 元';
+          this.priceRegion = res.data.priceMin + '-' + res.data.priceMax + '元';
         });
       },
       comments(val, page) {
