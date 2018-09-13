@@ -710,6 +710,10 @@
       timeChoose(val) {
         if (val === 4) {
           let time = this.form.end_date.split('-');
+          console.log(time[1]);
+          console.log(typeof time[1]);
+          console.log(time[1] - 1);
+          console.log(typeof time[1] - 1);
           this.currentDate = new Date(time[0], time[1], time[2]);
         } else {
           this.getNowFormatDate();
