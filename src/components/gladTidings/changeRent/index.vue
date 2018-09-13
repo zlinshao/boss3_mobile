@@ -647,7 +647,7 @@
           this.dictValue6 = res.data;
           for (let i = 0; i < res.data.length; i++) {
             // if (res.data[i].dictionary_name !== '房东承担') {
-              this.value6.push(res.data[i].dictionary_name);
+            this.value6.push(res.data[i].dictionary_name);
             // }
           }
           //支付方式
@@ -725,8 +725,6 @@
         if (time && (month || day)) {
           this.computedDate(params).then((date) => {
             this.form.end_date = date;
-            let time = date.split('-');
-            this.currentDate = new Date(time[0], time[1], time[2]);
           })
         } else {
           this.form.end_date = '';
@@ -744,6 +742,12 @@
 
       // 日期选择
       timeChoose(val) {
+        if (val === 4) {
+          let time = this.form.end_date.split('-');
+          this.currentDate = new Date(time[0], time[1], time[2]);
+        } else {
+          this.getNowFormatDate();
+        }
         setTimeout(() => {
           this.timeShow = true;
         }, 200);

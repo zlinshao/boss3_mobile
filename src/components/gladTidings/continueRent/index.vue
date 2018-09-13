@@ -644,6 +644,12 @@
 
       // 日期选择
       timeChoose(val) {
+        if (val === 4) {
+          let time = this.form.end_date.split('-');
+          this.currentDate = new Date(time[0], time[1], time[2]);
+        } else {
+          this.getNowFormatDate();
+        }
         setTimeout(() => {
           this.timeShow = true;
         }, 200);
@@ -691,8 +697,6 @@
         params.type = val;
         if (time && (month || day)) {
           this.computedDate(params).then((date) => {
-            let time = date.split('-');
-            this.currentDate = new Date(time[0], time[1], time[2]);
             this.form.end_date = date;
           })
         } else {
