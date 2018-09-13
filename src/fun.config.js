@@ -79,6 +79,7 @@ export default {
       let time2 = Number(time[2]);
       console.log(time1);
       console.log(time2);
+      console.log(new Date(time[0], time1, time2));
       return new Date(time[0], time1, time2);
     };
 
