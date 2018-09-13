@@ -73,6 +73,15 @@ export default {
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
 
+    Vue.prototype.chooseTime = function (val) {
+      let time = val.split('-');
+      let time1 = Number(time[1]) - 1;
+      let time2 = Number(time[2]);
+      console.log(time1);
+      console.log(time2);
+      return new Date(time[0], time1, time2);
+    };
+
     Vue.prototype.stick = function () {
       document.getElementById('main').scrollTop = document.getElementById('main').scrollHeight;
       // console.log(document.getElementsByTagName('.main')[0].scrollHeight);
