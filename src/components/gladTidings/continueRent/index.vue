@@ -691,6 +691,8 @@
         params.type = val;
         if (time && (month || day)) {
           this.computedDate(params).then((date) => {
+            let time = date.split('-');
+            this.currentDate = new Date(time[0], time[1], time[2]);
             this.form.end_date = date;
           })
         } else {
