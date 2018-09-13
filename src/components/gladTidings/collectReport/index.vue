@@ -751,14 +751,8 @@
       // 日期选择
       timeChoose(val, time) {
         if (time) {
-          console.log(time);
-          console.log(11111);
-          console.log(this.chooseTime(time));
           this.currentDate = this.chooseTime(time);
-          console.log(this.currentDate)
         } else {
-          console.log(time);
-          console.log(22222);
           this.getNowFormatDate();
         }
         setTimeout(() => {
