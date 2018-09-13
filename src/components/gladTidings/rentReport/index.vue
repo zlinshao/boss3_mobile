@@ -16,7 +16,7 @@
           label="签约日期"
           readonly
           type="text"
-          @click="timeChoose(1)"
+          @click="timeChoose(1, form.sign_date)"
           placeholder="请选择签约日期"
           required>
         </van-field>
@@ -47,7 +47,7 @@
           label="合同开始日期"
           readonly
           type="text"
-          @click="timeChoose(3)"
+          @click="timeChoose(3, form.begin_date)"
           placeholder="请选择合同开始日期"
           required>
         </van-field>
@@ -56,7 +56,7 @@
           label="合同结束日期"
           readonly
           type="text"
-          @click="timeChoose(4)"
+          @click="timeChoose(4, form.end_date)"
           placeholder="请选择合同结束日期"
           required>
         </van-field>
@@ -319,7 +319,7 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(2)"
+          @click="timeChoose(2, form.retainage_date)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
@@ -707,9 +707,9 @@
       },
 
       // 日期选择
-      timeChoose(val) {
-        if (val === 4) {
-          this.currentDate = this.chooseTime(this.form.end_date);
+      timeChoose(val, time) {
+        if (time) {
+          this.currentDate = this.chooseTime(time);
         } else {
           this.getNowFormatDate();
         }

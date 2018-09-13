@@ -154,7 +154,7 @@
         </van-field>
         <van-field
           v-model="form.data_date"
-          @click="timeChoose"
+          @click="timeChoose(form.data_date)"
           label="资料补齐时间"
           type="text"
           readonly
@@ -526,7 +526,12 @@
         this.currentDate = new Date(year, month, strDate);
       },
       // 日期选择
-      timeChoose(val) {
+      timeChoose(time) {
+        if (time) {
+          this.currentDate = this.chooseTime(time);
+        } else {
+          this.getNowFormatDate();
+        }
         setTimeout(() => {
           this.timeShow = true;
         }, 200);

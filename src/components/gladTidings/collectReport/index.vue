@@ -16,7 +16,7 @@
           label="签约日期"
           readonly
           type="text"
-          @click="timeChoose(4)"
+          @click="timeChoose(4, form.sign_date)"
           placeholder="请选择签约日期日期"
           required>
         </van-field>
@@ -49,7 +49,7 @@
           label="空置期开始"
           placeholder="请选择空置期开始日期"
           readonly
-          @click="timeChoose(1)"
+          @click="timeChoose(1, form.begin_date)"
           required>
         </van-field>
         <van-field
@@ -69,7 +69,7 @@
           label="空置期结束"
           placeholder="请选择空置期结束日期"
           readonly
-          @click="timeChoose(6)"
+          @click="timeChoose(6, form.end_date_vacant)"
           required>
         </van-field>
         <van-field
@@ -94,7 +94,7 @@
           label="合同结束日期"
           readonly
           type="text"
-          @click="timeChoose(7)"
+          @click="timeChoose(7, form.end_date)"
           placeholder="请选择合同结束日期"
           required>
         </van-field>
@@ -109,7 +109,7 @@
             v-model="form.pay_first_date"
             readonly
             type="text"
-            @click="timeChoose(2)"
+            @click="timeChoose(2, form.pay_first_date)"
             placeholder="第一次打款日期">
           </van-field>
           <span class="cut" style="padding-right: 20px;">-</span>
@@ -117,7 +117,7 @@
             v-model="form.pay_second_date"
             readonly
             type="text"
-            @click="timeChoose(3)"
+            @click="timeChoose(3, form.pay_second_date)"
             placeholder="第二次打款日期">
           </van-field>
         </div>
@@ -749,13 +749,9 @@
       },
 
       // 日期选择
-      timeChoose(val) {
-        if (val === 6) {
-          let time = this.form.end_date_vacant.split('-');
-          this.currentDate = new Date(time[0], time[1], time[2]);
-        } else if (val === 7) {
-          let time = this.form.end_date.split('-');
-          this.currentDate = new Date(time[0], time[1], time[2]);
+      timeChoose(val, time) {
+        if (time) {
+          this.currentDate = this.chooseTime(time);
         } else {
           this.getNowFormatDate();
         }

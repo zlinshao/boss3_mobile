@@ -65,7 +65,7 @@
         </van-field>
         <van-field
           v-model="form.sign_date"
-          @click="timeChoose(4)"
+          @click="timeChoose(4, form.sign_date)"
           label="签约日期"
           type="text"
           class="number"
@@ -129,7 +129,7 @@
           type="text"
           label="合同开始日期"
           placeholder="获取开始日期"
-          @click="timeChoose(2)"
+          @click="timeChoose(2, form.begin_date)"
           readonly
           required>
         </van-field>
@@ -138,7 +138,7 @@
           type="text"
           label="合同结束日期"
           placeholder="获取结束日期"
-          @click="timeChoose(3)"
+          @click="timeChoose(3, form.end_date)"
           readonly
           required>
         </van-field>
@@ -339,7 +339,7 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(1)"
+          @click="timeChoose(1, form.retainage_date)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
@@ -695,10 +695,9 @@
       },
 
       // 日期选择
-      timeChoose(val) {
-        if (val === 3) {
-          let time = this.form.end_date.split('-');
-          this.currentDate = new Date(time[0], time[1], time[2]);
+      timeChoose(val, time) {
+        if (time) {
+          this.currentDate = this.chooseTime(time);
         } else {
           this.getNowFormatDate();
         }

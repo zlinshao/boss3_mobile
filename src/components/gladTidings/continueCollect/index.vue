@@ -23,7 +23,7 @@
           label="签约日期"
           readonly
           type="text"
-          @click="timeChoose(4)"
+          @click="timeChoose(4, form.sign_date)"
           placeholder="请选择签约日期"
           required>
         </van-field>
@@ -56,7 +56,7 @@
           label="合同开始时间"
           placeholder="请选择合同开始时间"
           readonly
-          @click="timeChoose(1)"
+          @click="timeChoose(1, form.begin_date)"
           required>
         </van-field>
         <van-field
@@ -64,7 +64,7 @@
           label="合同结束日期"
           readonly
           type="text"
-          @click="timeChoose(5)"
+          @click="timeChoose(5, form.end_date)"
           placeholder="请选择合同结束日期"
           required>
         </van-field>
@@ -78,7 +78,7 @@
             v-model="form.pay_first_date"
             readonly
             type="text"
-            @click="timeChoose(2)"
+            @click="timeChoose(2, form.pay_first_date)"
             placeholder="第一次打款日期">
           </van-field>
           <span class="cut">-</span>
@@ -87,7 +87,7 @@
             v-model="form.pay_second_date"
             readonly
             type="text"
-            @click="timeChoose(3)"
+            @click="timeChoose(3, form.pay_second_date)"
             placeholder="第二次打款日期">
           </van-field>
         </div>
@@ -651,10 +651,9 @@
       },
 
       // 日期选择
-      timeChoose(val) {
-        if (val === 5) {
-          let time = this.form.end_date.split('-');
-          this.currentDate = new Date(time[0], time[1], time[2]);
+      timeChoose(val, time) {
+        if (time) {
+          this.currentDate = this.chooseTime(time);
         } else {
           this.getNowFormatDate();
         }
