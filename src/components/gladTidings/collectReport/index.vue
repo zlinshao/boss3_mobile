@@ -907,12 +907,8 @@
           if (res.data.code === '51110') {
             if (val === 1) {
               this.datePrice = this.first_date.concat(res.data.data);
-              let time1 = res.data.data.split('-');
-              this.currentDate = new Date(time1[0], time1[1], time1[2]);
             } else {
               this.datePay = this.first_date.concat(res.data.data);
-              let time2 = res.data.data.split('-');
-              this.currentDate = new Date(time2[0], time2[1], time2[2]);
             }
           }
         })
@@ -929,6 +925,8 @@
             this.computedDate(params).then((date) => {
               this.form.end_date_vacant = date;
               this.endDate(date, this.form.month, this.form.day, 2);
+              let time = date.split('-');
+              this.currentDate = new Date(time[0], time[1], time[2]);
             })
           } else {
             this.form.end_date_vacant = '';
@@ -942,6 +940,8 @@
           if (time && (month || day)) {
             this.computedDate(params).then((date) => {
               this.form.end_date = date;
+              let time = date.split('-');
+              this.currentDate = new Date(time[0], time[1], time[2]);
             })
           } else {
             this.form.end_date = '';
