@@ -24,9 +24,9 @@
             <i class="iconfont icon-yanqi--"></i>
             <span>{{deal}}</span>
           </span>
-          <span class="placeSpan deal" v-if="placeFalse && marking === 1">
-            <span>{{priceRegion}}</span>
-          </span>
+          <!--<span class="placeSpan deal" v-if="placeFalse && marking === 1">-->
+            <!--<span>{{priceRegion}}</span>-->
+          <!--</span>-->
         </div>
       </div>
     </div>
