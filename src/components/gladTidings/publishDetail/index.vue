@@ -25,7 +25,7 @@
             <span>{{deal}}</span>
           </span>
           <!--<span class="placeSpan deal" v-if="placeFalse && marking === 1">-->
-            <!--<span>{{priceRegion}}</span>-->
+          <!--<span>{{priceRegion}}</span>-->
           <!--</span>-->
         </div>
       </div>
@@ -348,9 +348,12 @@
             } else {
               this.address = houseName.house.name;
             }
-
+            let price = {};
+            price.community = houseName.community.id;
+            price.decorate = houseName.decorate.id;
+            price.property_type = houseName.property_type.id;
             let main = res.data.data.process;
-            this.priceArea(main.house_id);
+            this.priceArea(price);
             this.process = main;
             this.personal = main.user;
             this.place = main.place;
@@ -382,8 +385,11 @@
         });
       },
       // 价格区间
-      priceArea(id) {
-        this.$http.get(globalConfig.server + 'bulletin/quality/range?house_id=' + id).then((res) => {
+      priceArea(price) {
+        this.$http.get(globalConfig.server + 'bulletin/quality/range', {
+          params: price,
+        }).then((res) => {
+          console.log(res);
           this.priceRegion = res.data.priceMin + '-' + res.data.priceMax + '元';
         });
       },
