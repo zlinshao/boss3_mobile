@@ -502,7 +502,7 @@
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
 
-          is_agency: '',                 //客户来源    0个人1中介
+          is_agency: '',                //客户来源    0个人1中介
           agency_name: '',              //中介名
           agency_price: '',             //中介费
           agency_user_name: '',         //中介人
@@ -519,13 +519,13 @@
           screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
-          deposit_photo: [],       //押金收条 数组
+          deposit_photo: [],            //押金收条 数组
 
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
-          staff_name: '',                  //开单人name
-          department_name: '',             //部门name
+          staff_name: '',               //开单人name
+          department_name: '',          //部门name
         },
         screenshots: {},
         photos: {},
@@ -997,13 +997,13 @@
             }
             this.countDate(2, this.form.period_pay_arr);
 
-            this.form.money_sum = rent.mortgage_price;
+            this.form.money_sum = rent.money_sum;
             this.form.money_sep = [];
             this.form.money_way = [];
             for (let i = 0; i < rent.month_price.length; i++) {
               this.amountMoney = i + 1;
-              this.form.money_sep.push(rent.month_price[i].price);
-              this.form.money_way.push(rent.month_price[i].period);
+              this.form.money_sep.push(rent.money_table[i].money_sep);
+              this.form.money_way.push(rent.money_table[i].money_way);
               for (let j = 0; j < this.dictValue8.length; j++) {
                 if (this.dictValue8[j].id === rent.month_price[i].period) {
                   this.moneyNum[i] = this.dictValue8[j].dictionary_name;
@@ -1011,12 +1011,12 @@
               }
             }
 
-            if (typeof draft.receipt !== "string") {
-              if (draft.receipt.length !== 0) {
-                this.amountReceipt = draft.receipt.length;
+            if (typeof rent.receipt !== "string") {
+              if (rent.receipt.length !== 0) {
+                this.amountReceipt = rent.receipt.length;
                 this.form.receipt = [];
-                for (let i = 0; i < draft.receipt.length; i++) {
-                  this.form.receipt.push(draft.receipt[i]);
+                for (let i = 0; i < rent.receipt.length; i++) {
+                  this.form.receipt.push(rent.receipt[i]);
                 }
               } else {
                 this.amountReceipt = 1;
@@ -1026,20 +1026,20 @@
             } else {
               this.amountReceipt = 1;
               this.form.receipt = [];
-              this.form.receipt[0] = draft.receipt;
+              this.form.receipt[0] = rent.receipt;
             }
 
-            this.form.idtype = draft.idtype;
-            this.form.idcard = draft.idcard;
+            this.form.idtype = rent.idtype;
+            this.form.idcard = rent.idcard;
             for (let j = 0; j < this.prove_all.length; j++) {
-              if (this.prove_all[j].id === draft.idtype) {
+              if (this.prove_all[j].id === rent.idtype) {
                 this.cardName = this.prove_all[j].dictionary_name;
               }
             }
 
-            this.other_fee_status = draft.is_other_fee === 1 ? true : false;
-            this.form.other_fee_name = draft.other_fee_name;
-            this.form.other_fee = draft.other_fee;
+            this.other_fee_status = rent.is_other_fee === 1 ? true : false;
+            this.form.other_fee_name = rent.other_fee_name;
+            this.form.other_fee = rent.other_fee;
 
             this.form.retainage_date = rent.end_at.substring(0, 10);
             this.form.name = rent.customers[0].name;
