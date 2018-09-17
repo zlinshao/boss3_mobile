@@ -348,12 +348,12 @@
             } else {
               this.address = houseName.house.name;
             }
-            let price = {};
-            price.community = houseName.community.id;
-            price.decorate = houseName.decorate.id;
-            price.property_type = houseName.property_type.id;
+            // let price = {};
+            // price.community = houseName.community.id;
+            // price.decorate = houseName.decorate.id;
+            // price.property_type = houseName.property_type.id;
+            // this.priceArea(price);
             let main = res.data.data.process;
-            this.priceArea(price);
             this.process = main;
             this.personal = main.user;
             this.place = main.place;
