@@ -956,7 +956,6 @@
               this.form.quality_up = '0';
             }
             this.prefill(res.data.data, 'draught');
-            console.log(data);
             if (val !== '' && val.type === 2 && this.followUp) {
               this.form.staff_id = data.staff_id;
               this.form.staff_name = data.staff_name;
@@ -970,12 +969,16 @@
       },
 
       prefill(data, val) {
+        console.log(val);
+        console.log(data);
         this.isClear = false;
         this.form.city_id = data.city_id;                     //城市
         this.form.province_id = data.province_id;             //城市
         this.form.city_name = data.city_name;                 //城市
-        this.form.community = data.community;                 //小区id
-        this.community_name = data.community.village_name;    //小区id
+        if (data.community) {
+          this.form.community = data.community.id;              //小区id
+          this.community_name = data.community.village_name;    //小区id
+        }
         this.form.door_address = data.door_address;
 
         this.form.house_type = data.house_type;
@@ -1038,13 +1041,19 @@
         this.is_cleanOn = data.is_clean === 1 ? true : false;           //是否干净
         this.form.other_remark = data.other_remark;                     //其他问题
         this.form.other_furniture = data.other_furniture;               //其他家具
-        if (val === 'draught') {
+        if (val === 'draught' && data.photo) {
           this.photos = data.photo;                                       //房屋影像
           this.form.photo = [];
           //房屋影像
           for (let i = 0; i < data.photo.length; i++) {
             this.form.photo.push(data.photo[i].id);                       //房屋影像
           }
+        }
+        if (this.followUp) {
+          this.form.staff_id = data.staff_id;
+          this.form.staff_name = data.staff_name;
+          this.form.department_id = data.department_id;
+          this.form.department_name = data.department_name;
         }
       },
 
