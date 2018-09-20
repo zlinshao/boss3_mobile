@@ -346,7 +346,8 @@
           type="text"
           placeholder="请选择开单人"
           required
-          readonly>
+          :disabled="followUp"
+          :readonly="!followUp">
         </van-field>
         <van-field
           @click="searchSelect(4)"
@@ -355,7 +356,8 @@
           type="text"
           placeholder="请选择部门"
           required
-          readonly>
+          :disabled="followUp"
+          :readonly="!followUp">
         </van-field>
       </van-cell-group>
     </div>
@@ -954,8 +956,8 @@
               this.form.quality_up = '0';
             }
             this.prefill(res.data.data, 'draught');
-
-            if (val !== '' && val.type === 2) {
+            console.log(data);
+            if (val !== '' && val.type === 2 && this.followUp) {
               this.form.staff_id = data.staff_id;
               this.form.staff_name = data.staff_name;
               this.form.department_id = data.department_id;
