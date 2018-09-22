@@ -191,12 +191,6 @@
             if (data.length !== 0) {
               for (let i = 0; i < data.length; i++) {
                 if (type === 'allHouse') {
-                  if (data[i].lords.length !== 0) {
-                    this.lord(data[i], type);
-                  }
-                  if (data[i].renters.length !== 0) {
-                    this.renter(data[i], type);
-                  }
                   if (data[i].lords.length === 0 && data[i].renters.length === 0) {
                     let list = {};
                     this.showInfo.push(data[i].id);
@@ -209,6 +203,12 @@
                     }
                     this.houseList.push(list);
                     this.finish(4);
+                  }
+                  if (data[i].lords.length !== 0) {
+                    this.lord(data[i], type);
+                  }
+                  if (data[i].renters.length !== 0) {
+                    this.renter(data[i], type);
                   }
                 }
                 if (type === 'quality' && data[i].house_res) {
@@ -354,6 +354,11 @@
         } else {
           list.department_id = '';
           list.department_name = '---';
+        }
+        if (val.house_res) {
+          list.house_res = val.house_res;
+        } else {
+          list.house_res = {};
         }
         this.houseList.push(list);
         this.finish(4);

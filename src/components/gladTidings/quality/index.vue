@@ -961,13 +961,7 @@
               data.quality_up = '0';
               this.form.quality_up = '0';
             }
-            this.prefill(res.data.data, 'draught');
-            if (val !== '' && val.type === 2 && !this.followUp) {
-              this.form.staff_id = data.staff_id;
-              this.form.staff_name = data.staff_name;
-              this.form.department_id = data.department_id;
-              this.form.department_name = data.department_name;
-            }
+            this.prefill(data, 'draught');
           } else {
             this.form.id = '';
           }
@@ -1047,6 +1041,10 @@
         this.is_cleanOn = data.is_clean === 1 ? true : false;           //是否干净
         this.form.other_remark = data.other_remark;                     //其他问题
         this.form.other_furniture = data.other_furniture;               //其他家具
+        this.form.staff_id = data.staff_id;
+        this.form.staff_name = data.staff_name;
+        this.form.department_id = data.department_id;
+        this.form.department_name = data.department_name;
         if (val === 'draught' && data.photo) {
           this.photos = data.photo;                                       //房屋影像
           this.form.photo = [];
@@ -1054,12 +1052,6 @@
           for (let i = 0; i < data.photo.length; i++) {
             this.form.photo.push(data.photo[i].id);                       //房屋影像
           }
-        }
-        if (this.followUp) {
-          this.form.staff_id = data.staff_id;
-          this.form.staff_name = data.staff_name;
-          this.form.department_id = data.department_id;
-          this.form.department_name = data.department_name;
         }
       },
 
