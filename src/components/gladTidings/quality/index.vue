@@ -977,7 +977,7 @@
         this.form.province_id = data.province_id;             //城市
         this.form.city_name = data.city_name;                 //城市
         if (data.community) {
-          this.form.community = data.community.id;              //小区id
+          this.form.community = data.community;              //小区id
           this.community_name = data.community.village_name;    //小区id
         }
         this.form.door_address = data.door_address;
