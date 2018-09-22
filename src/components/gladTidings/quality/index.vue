@@ -962,7 +962,7 @@
               this.form.quality_up = '0';
             }
             this.prefill(res.data.data, 'draught');
-            if (val !== '' && val.type === 2 && this.followUp) {
+            if (val !== '' && val.type === 2 && !this.followUp) {
               this.form.staff_id = data.staff_id;
               this.form.staff_name = data.staff_name;
               this.form.department_id = data.department_id;
