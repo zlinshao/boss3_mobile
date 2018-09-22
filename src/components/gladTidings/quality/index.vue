@@ -574,6 +574,8 @@
         }
       },
       userInfo(val1) {
+        console.log(val1);
+        console.log(this.form);
         if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
@@ -925,6 +927,7 @@
           this.stick();
         }
         this.userInfo(this.isValue1);
+        console.log(1)
       },
 
       qualityDetail(val) {
@@ -936,9 +939,11 @@
             this.form.processable_id = val.ids;
           } else {
             this.userInfo(true);
+            console.log(2)
           }
         } else {
           this.userInfo(true);
+          console.log(3);
           type = 'bulletin/quality';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -969,8 +974,6 @@
       },
 
       prefill(data, val) {
-        console.log(val);
-        console.log(data);
         this.isClear = false;
         this.form.city_id = data.city_id;                     //城市
         this.form.province_id = data.province_id;             //城市
@@ -1045,6 +1048,7 @@
         this.form.staff_name = data.staff_name;
         this.form.department_id = data.department_id;
         this.form.department_name = data.department_name;
+        console.log(this.form);
         if (val === 'draught' && data.photo) {
           this.photos = data.photo;                                       //房屋影像
           this.form.photo = [];
@@ -1061,6 +1065,7 @@
           this.isClear = false;
         });
         this.userInfo(true);
+        console.log(6)
         $('.imgItem').remove();
         this.picStatus = 'success';
         this.form.id = '';
