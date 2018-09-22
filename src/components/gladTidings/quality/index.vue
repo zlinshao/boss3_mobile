@@ -639,6 +639,12 @@
         this.selectHide = false;
       },
       searchSelect(val) {
+        let types;
+        if (this.form.quality_up === '0') {
+          types = 'quality';
+        } else {
+          types = 'allHouse';
+        }
         switch (val) {
           case 1:
             if (this.form.city_id !== '') {
@@ -653,7 +659,7 @@
             this.$router.push({path: '/organize'});
             break;
           case 3:
-            this.$router.push({path: '/collectHouse', query: {type: 'quality'}});
+            this.$router.push({path: '/collectHouse', query: {type: types}});
             break;
           case 4:
             this.$router.push({path: '/depart'});

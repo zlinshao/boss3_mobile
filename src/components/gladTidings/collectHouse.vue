@@ -190,6 +190,27 @@
             this.isLastPage = this.params.page === res.data.meta.last_page;
             if (data.length !== 0) {
               for (let i = 0; i < data.length; i++) {
+                if (type === 'allHouse') {
+                  if (data[i].lords.length !== 0) {
+                    this.lord(data[i], type);
+                  }
+                  if (data[i].renters.length !== 0) {
+                    this.renter(data[i], type);
+                  }
+                  if (data[i].lords.length === 0 && data[i].renters.length === 0) {
+                    let list = {};
+                    this.showInfo.push(data[i].id);
+                    list.house_id = data[i].id;
+                    list.house_name = data[i].name;
+                    if (data[i].house_res) {
+                      list.house_res = data[i].house_res;
+                    } else {
+                      list.house_res = {};
+                    }
+                    this.houseList.push(list);
+                    this.finish(4);
+                  }
+                }
                 if (type === 'quality' && data[i].house_res) {
                   let list = {};
                   this.showInfo.push(data[i].id);
