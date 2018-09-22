@@ -574,9 +574,7 @@
         }
       },
       userInfo(val1) {
-        console.log(val1);
-        console.log(this.form);
-        if (val1) {
+        if (val1 && this.form.quality_up !== '1') {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
