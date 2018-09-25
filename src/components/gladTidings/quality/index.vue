@@ -46,8 +46,8 @@
           v-model="form.community.property_fee"
           label="物业费单价"
           type="text"
-          :disabled="form.community.property_fee"
-          placeholder="请填写物业费单价"
+          :disabled="followUp"
+          :placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"
           required>
         </van-field>
         <van-field
