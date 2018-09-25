@@ -42,14 +42,17 @@
           placeholder="请选择小区地址"
           required>
         </van-field>
-        <van-field
-          v-model="form.community.property_fee"
-          label="物业费单价"
-          type="text"
-          :disabled="followUp"
-          :placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"
-          required>
-        </van-field>
+        <div class="month">
+          <van-field
+            v-model="property_fee"
+            label="物业费单价"
+            type="text"
+            :disabled="followUp"
+            :placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"
+            required>
+          </van-field>
+        </div>
+        <div class="titleRed">单位：元/平米/月</div>
         <van-field
           v-model="form.community.property_phone"
           label="物业联系方式"
@@ -522,6 +525,7 @@
 
         followUp: false,                    //后续报备
         counts: '',
+        property_fee: '',
 
         retry: 0,
       }
@@ -862,6 +866,7 @@
           return;
         }
         if (this.haveInHand) {
+          this.form.community.property_fee = this.property_fee;
           this.haveInHand = false;
           this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
           this.form.gas = this.gasOn ? 1 : 0;                       //天然气
@@ -920,6 +925,7 @@
           let val = JSON.parse(t.city);
           this.form.community = val;
           this.community_name = val.village_name;
+          this.property_fee = val.property_fee;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -994,7 +1000,8 @@
         this.form.city_name = data.city_name;                 //城市
         if (data.community) {
           this.form.community = data.community;              //小区id
-          this.community_name = data.community.village_name;    //小区id
+          this.property_fee = data.community.property_fee;   //小区id
+          this.community_name = data.community.village_name; //小区id
         }
         this.form.door_address = data.door_address;
 
@@ -1079,7 +1086,6 @@
           this.isClear = false;
         });
         this.userInfo(true);
-        console.log(6)
         $('.imgItem').remove();
         this.picStatus = 'success';
         this.form.id = '';
@@ -1090,6 +1096,7 @@
         this.form.province_id = this.beforeProvinceId;    //城市
         this.form.city_name = this.beforeCity;            //城市
         this.form.community = {};                         //小区id
+        this.property_fee = '';                         //小区id
         this.community_name = '';                         //小区名称
         this.form.door_address = ['', '', ''];
 
