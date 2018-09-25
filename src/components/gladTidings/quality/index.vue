@@ -57,7 +57,7 @@
           v-model="form.community.property_phone"
           label="物业联系方式"
           type="text"
-          :disabled="form.community.property_phone"
+          :disabled="followUp"
           placeholder="请填写物业联系方式"
           required>
         </van-field>
