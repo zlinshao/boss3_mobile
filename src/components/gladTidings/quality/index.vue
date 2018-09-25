@@ -925,7 +925,6 @@
           let val = JSON.parse(t.city);
           this.form.community = val;
           this.community_name = val.village_name;
-          this.property_fee = val.property_fee;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
