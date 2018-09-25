@@ -42,6 +42,22 @@
           placeholder="请选择小区地址"
           required>
         </van-field>
+        <van-field
+          v-model="form.community.property_fee"
+          label="物业费单价"
+          type="text"
+          :disabled="form.community.property_fee"
+          placeholder="请填写物业费单价"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.community.property_phone"
+          label="物业联系方式"
+          type="text"
+          :disabled="form.community.property_phone"
+          placeholder="请填写物业联系方式"
+          required>
+        </van-field>
         <div class="fourth">
           <van-field
             label="门牌号"
@@ -445,7 +461,7 @@
           is_draft: 0,
           city_id: '',                  //城市
           city_name: '',                //城市
-          community: {},                //小区id
+          community: {},                //小区
           door_address: ['', '', ''],
           house_type: [1, 1, 1],
           area: '',                     //面积
