@@ -153,14 +153,43 @@
 
       <van-cell-group>
         <van-field
+          v-model="form.front_money"
+          type="text"
+          class="number"
+          label="定金"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.money_sum = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          class="number"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.rent_money"
+          label="租金"
+          type="text"
+          class="number"
+          placeholder="请填写租金"
+          icon="clear"
+          @click-icon="form.rent_money = ''"
+          required>
+        </van-field>
+        <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="已收金额"
           placeholder="请填写已收金额"
           icon="clear"
-          @click-icon="form.money_sum = ''"
-          required>
+          @click-icon="form.money_sum = ''">
         </van-field>
       </van-cell-group>
 
@@ -214,16 +243,6 @@
           placeholder="请填写金额"
           icon="clear"
           @click-icon="form.other_fee = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="text"
-          class="number"
-          placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''"
           required>
         </van-field>
         <van-field
@@ -498,6 +517,9 @@
           pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
 
+          front_money: '',              //定金
+          deposit: '',                  //押金
+          rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -507,7 +529,6 @@
           other_fee: '',
           other_fee_name: '',
 
-          deposit: '',                  //押金
           is_agency: '',                //客户来源    0个人1中介
           agency_name: '',              //中介名
           agency_price: '',             //中介费
@@ -547,6 +568,11 @@
         counts: '',
 
         retry: 0,
+      }
+    },
+    computed: {
+      'form.money_sum'() {
+        return this.form.front_money + this.form.deposit + this.form.rent_money;
       }
     },
     watch: {
