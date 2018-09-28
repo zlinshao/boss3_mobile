@@ -332,7 +332,7 @@
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(4)" class="addInput">
+      <div @click="priceAmount(4)" class="addInput" v-if="!is_receipt">
         +增加收据编号
       </div>
       <van-cell-group>
