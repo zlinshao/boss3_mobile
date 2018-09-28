@@ -226,15 +226,23 @@
                 }
                 if ((type === 'lord' || type === '') && data[i].lords.length !== 0) {
                   this.lord(data[i], type);
+                } else {
+                  this.finish(2);
                 }
                 if ((type === 'renter' || type === 'is_nrcy' || type === 'report') && data[i].renters.length !== 0) {
                   this.renter(data[i], type);
+                } else {
+                  this.finish(2);
                 }
                 if (type === 'lord1' && data[i].lords.length !== 0) {
                   this.agencyLord(data[i], type);
+                } else {
+                  this.finish(2);
                 }
                 if (type === 'renter1' && data[i].renters.length !== 0) {
                   this.agencyRent(data[i], type);
+                } else {
+                  this.finish(2);
                 }
                 if (type === '' && data[i].lords.length === 0 && data[i].renters.length === 0) {
                   let list = {};
