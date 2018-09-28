@@ -675,7 +675,13 @@
         });
       },
       moneyAll() {
-        this.form.money_sum = Number(this.form.front_money) + Number(this.form.deposit) + Number(this.form.rent_money);
+        let sum1 = this.form.front_money;
+        let sum2 = this.form.deposit;
+        let sum3 = this.form.rent_money;
+        sum1 = sum1 ? sum1 : 0;
+        sum2 = sum2 ? sum2 : 0;
+        sum3 = sum3 ? sum3 : 0;
+        this.form.money_sum = sum1 + sum2 + sum3;
       },
       receiptNum() {
         // 收据编号默认城市
