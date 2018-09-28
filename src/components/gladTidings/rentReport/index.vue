@@ -495,9 +495,9 @@
 
         cusFrom: '',                    //是否中介
         corp: true,                     //公司单
-        is_receipt: true,               //电子收据
-        other_fee_status: false,
 
+        other_fee_status: false,
+        is_receipt: true,               //电子收据
         form: {
           address: '',
           id: '',
@@ -1126,12 +1126,12 @@
               this.is_receipt = true;
               this.form.is_receipt = 1;
               if (!this.is_receipt) {
-                this.getReceipt(draft)
+                this.getReceipt(draft);
               }
             } else {
               this.is_receipt = false;
               this.form.is_receipt = 0;
-              this.getReceipt(draft)
+              this.getReceipt(draft);
             }
             this.form.property = draft.property;
             this.form.property_price = draft.property_price;

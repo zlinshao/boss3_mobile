@@ -152,14 +152,45 @@
 
       <van-cell-group>
         <van-field
+          v-model="form.front_money"
+          type="text"
+          class="number"
+          label="定金"
+          @keyup="moneyAll"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.money_sum = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          @keyup="moneyAll"
+          type="text"
+          class="number"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.rent_money"
+          label="租金"
+          @keyup="moneyAll"
+          type="text"
+          class="number"
+          placeholder="请填写租金"
+          icon="clear"
+          @click-icon="form.rent_money = ''"
+          required>
+        </van-field>
+        <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="已收金额"
           placeholder="请填写已收金额"
-          icon="clear"
-          @click-icon="form.money_sum = ''"
-          required>
+          disabled>
         </van-field>
       </van-cell-group>
 
@@ -215,16 +246,6 @@
           required>
         </van-field>
         <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="text"
-          class="number"
-          placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''"
-          required>
-        </van-field>
-        <van-field
           v-model="form.discount"
           label="让价总金额"
           type="text"
@@ -241,9 +262,10 @@
           placeholder="无物业费"
           disabled>
         </van-field>
+        <van-switch-cell v-model="is_receipt" title="电子收据"/>
       </van-cell-group>
 
-      <div class="changes" v-for="(key,index) in amountReceipt">
+      <div class="changes" v-for="(key,index) in amountReceipt" v-if="!is_receipt">
         <div class="paddingTitle">
           <span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,4)">删除</span>
@@ -257,7 +279,7 @@
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(4)" class="addInput">
+      <div @click="priceAmount(4)" class="addInput" v-if="!is_receipt">
         +增加收据编号
       </div>
 
@@ -423,7 +445,7 @@
         receiptDate: '',
 
         other_fee_status: false,
-
+        is_receipt: true,               //电子收据
         form: {
           address: '',
           id: '',
@@ -445,6 +467,9 @@
           pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
 
+          front_money: '',              //定金
+          deposit: '',                  //押金
+          rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -453,7 +478,7 @@
           other_fee: '',
           other_fee_name: '',
 
-          deposit: '',                  //押金
+          is_receipt: 1,                //1是 2不是
           is_corp: 1,
           contract_number: 'LJZF',      //合同编号
           discount: 0,                  //让价金额
@@ -545,7 +570,15 @@
       }
       this.houseInfo();
     },
-
+    watch: {
+      is_receipt() {
+        if (this.form.is_receipt === 1) {
+          this.amountReceipt = 1;
+          this.form.receipt = [];
+          this.form.receipt[0] = this.receiptDate;
+        }
+      }
+    },
     methods: {
       userInfo(val1) {
         if (val1) {
@@ -564,7 +597,7 @@
           this.dictValue6 = res.data;
           for (let i = 0; i < res.data.length; i++) {
             // if (res.data[i].dictionary_name !== '房东承担') {
-              this.value6.push(res.data[i].dictionary_name);
+            this.value6.push(res.data[i].dictionary_name);
             // }
           }
           //支付方式
@@ -579,7 +612,9 @@
 
         });
       },
-
+      moneyAll() {
+        this.form.money_sum = this.countMoney(this.form);
+      },
       receiptNum() {
         // 收据编号默认城市
         this.form.receipt = [];
@@ -839,6 +874,7 @@
               receipt.push(this.form.receipt[i]);
             }
           }
+          this.form.is_receipt = this.is_receipt ? 1 : 0;
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
           this.form.receipt = receipt;
           this.form.draft = val;
@@ -978,6 +1014,9 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
+            this.form.front_money = draft.front_money;
+            this.form.deposit = draft.deposit;
+            this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
@@ -994,22 +1033,16 @@
             this.form.deposit = draft.deposit;
             this.form.discount = draft.discount;
 
-            if (typeof draft.receipt !== "string") {
-              if (draft.receipt.length !== 0) {
-                this.amountReceipt = draft.receipt.length;
-                this.form.receipt = [];
-                for (let i = 0; i < draft.receipt.length; i++) {
-                  this.form.receipt.push(draft.receipt[i]);
-                }
-              } else {
-                this.amountReceipt = 1;
-                this.form.receipt = [];
-                this.form.receipt[0] = this.receiptDate;
+            if (draft.is_receipt) {
+              this.is_receipt = true;
+              this.form.is_receipt = 1;
+              if (!this.is_receipt) {
+                this.getReceipt(draft);
               }
             } else {
-              this.amountReceipt = 1;
-              this.form.receipt = [];
-              this.form.receipt[0] = draft.receipt;
+              this.is_receipt = false;
+              this.form.is_receipt = 0;
+              this.getReceipt(draft);
             }
 
             this.form.property_price = draft.property_price;
@@ -1054,7 +1087,25 @@
           }
         })
       },
-
+      getReceipt(draft) {
+        if (typeof draft.receipt !== "string") {
+          if (draft.receipt.length !== 0) {
+            this.amountReceipt = draft.receipt.length;
+            this.form.receipt = [];
+            for (let i = 0; i < draft.receipt.length; i++) {
+              this.form.receipt.push(draft.receipt[i]);
+            }
+          } else {
+            this.amountReceipt = 1;
+            this.form.receipt = [];
+            this.form.receipt[0] = this.receiptDate;
+          }
+        } else {
+          this.amountReceipt = 1;
+          this.form.receipt = [];
+          this.form.receipt[0] = draft.receipt;
+        }
+      },
       close_() {
         this.isClear = true;
         setTimeout(() => {
@@ -1083,14 +1134,18 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
+        this.form.front_money = '';
+        this.form.deposit = '';
+        this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.moneyNum = [''];
         this.form.money_sep = [''];
         this.form.money_way = [''];
-        this.form.deposit = '';
         this.form.from = 1;
 
+        this.is_receipt = true;
+        this.form.is_receipt = 1;
         this.amountReceipt = 1;
         this.form.receipt = [];
         this.form.receipt[0] = this.receiptDate;

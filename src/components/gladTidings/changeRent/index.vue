@@ -253,15 +253,6 @@
           required>
         </van-field>
         <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="text"
-          placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''"
-          required>
-        </van-field>
-        <van-field
           v-model="form.discount"
           label="让价总金额"
           type="text"
@@ -329,7 +320,7 @@
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
       </van-cell-group>
-      <div class="changes" v-for="(key,index) in amountReceipt">
+      <div class="changes" v-for="(key,index) in amountReceipt" v-if="!is_receipt">
         <div class="paddingTitle">
           <span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,4)">删除</span>
@@ -344,7 +335,7 @@
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(4)" class="addInput">
+      <div @click="priceAmount(4)" class="addInput" v-if="!is_receipt">
         +增加收据编号
       </div>
       <van-cell-group>
@@ -602,8 +593,8 @@
           this.form.agency_phone = '';
         }
       },
-      is_receipt(val) {
-        if (!val) {
+      is_receipt() {
+        if (this.form.is_receipt === 1) {
           this.amountReceipt = 1;
           this.form.receipt = [];
           this.form.receipt[0] = this.receiptDate;
@@ -666,7 +657,6 @@
       }
       this.houseInfo();
     },
-
     methods: {
       userInfo(val1) {
         if (val1) {
@@ -698,7 +688,6 @@
             }
             this.rentDetail(val);
           });
-
         });
       },
       moneyAll() {
@@ -1150,14 +1139,15 @@
             this.corp = draft.is_corp === 1 ? true : false;
 
             if (draft.is_receipt) {
-              this.is_receipt = draft.is_receipt === 1 ? true : false;
-              this.form.is_receipt = draft.is_receipt;
+              this.is_receipt = true;
+              this.form.is_receipt = 1;
               if (!this.is_receipt) {
-                this.getReceipt(draft)
+                this.getReceipt(draft);
               }
             } else {
               this.is_receipt = false;
-              this.getReceipt(draft)
+              this.form.is_receipt = 0;
+              this.getReceipt(draft);
             }
 
             this.form.property_price = draft.property_price;

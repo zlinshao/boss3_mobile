@@ -234,14 +234,45 @@
 
       <van-cell-group>
         <van-field
+          v-model="form.front_money"
+          type="text"
+          class="number"
+          label="定金"
+          @keyup="moneyAll"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.money_sum = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          @keyup="moneyAll"
+          type="text"
+          class="number"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.rent_money"
+          label="租金"
+          @keyup="moneyAll"
+          type="text"
+          class="number"
+          placeholder="请填写租金"
+          icon="clear"
+          @click-icon="form.rent_money = ''"
+          required>
+        </van-field>
+        <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="已收金额"
           placeholder="请填写已收金额"
-          icon="clear"
-          @click-icon="form.money_sum = ''"
-          required>
+          disabled>
         </van-field>
       </van-cell-group>
 
@@ -307,8 +338,9 @@
           required>
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
+        <van-switch-cell v-model="is_receipt" title="电子收据"/>
       </van-cell-group>
-      <div class="changes" v-for="(key,index) in amountReceipt">
+      <div class="changes" v-for="(key,index) in amountReceipt" v-if="!is_receipt">
         <div class="paddingTitle">
           <span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>
           <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,4)">删除</span>
@@ -322,7 +354,7 @@
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(4)" class="addInput">
+      <div @click="priceAmount(4)" class="addInput" v-if="!is_receipt">
         +增加收据编号
       </div>
       <van-cell-group>
@@ -474,7 +506,7 @@
         payStatus: false,
         priceStatus: false,
         other_fee_status: false,
-
+        is_receipt: true,               //电子收据
         form: {
           old_staff_name: '',
           old_pay_way_arr: [''],
@@ -482,10 +514,9 @@
           old_money_sum: '',
           old_house_name: '',
 
-          deposit: '',
-          sign_date:  '',
-          name:  '',
-          phone:  '',
+          sign_date: '',
+          name: '',
+          phone: '',
 
           address: '',
           id: '',
@@ -509,6 +540,9 @@
           pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
 
+          front_money: '',              //定金
+          deposit: '',                  //押金
+          rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -603,7 +637,15 @@
       }
       this.houseInfo();
     },
-
+    watch: {
+      is_receipt() {
+        if (this.form.is_receipt === 1) {
+          this.amountReceipt = 1;
+          this.form.receipt = [];
+          this.form.receipt[0] = this.receiptDate;
+        }
+      }
+    },
     methods: {
       userInfo(val1) {
         if (val1) {
@@ -627,7 +669,9 @@
           this.rentDetail(val);
         });
       },
-
+      moneyAll() {
+        this.form.money_sum = this.countMoney(this.form);
+      },
       receiptNum() {
         // 收据编号默认城市
         this.form.receipt = [];
@@ -635,12 +679,11 @@
           if (res.data.code === '1000120') {
             // 收据编号默认日期
             this.receiptDate = res.data.data.py + res.data.data.year;
-            let receipt =  res.data.data.py + res.data.data.year;
+            let receipt = res.data.data.py + res.data.data.year;
             this.form.receipt.push(receipt);
           }
         });
       },
-
       payWayClick(val) {
         if (val === 1) {
           this.payStatus = !this.payStatus;
@@ -894,61 +937,62 @@
           Toast(this.alertMsg('pic'));
           return;
         }
-          if (this.haveInHand) {
-            this.haveInHand = false;
-            let receipt = [];
-            for (let i = 0; i < this.form.receipt.length; i++) {
-              if (this.form.receipt[i] !== this.receiptDate) {
-                receipt.push(this.form.receipt[i]);
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          let receipt = [];
+          for (let i = 0; i < this.form.receipt.length; i++) {
+            if (this.form.receipt[i] !== this.receiptDate) {
+              receipt.push(this.form.receipt[i]);
+            }
+          }
+          this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
+          this.form.receipt = receipt;
+          this.form.draft = val;
+          this.form.is_corp = this.corp ? 1 : 0;
+          this.form.is_receipt = this.is_receipt ? 1 : 0;
+          this.form.is_other_fee = this.other_fee_status ? 1 : 0;
+          this.form.day = this.form.day === '' ? '0' : this.form.day;
+          this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+          this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
+            this.haveInHand = true;
+            this.retry = 0;
+            if (res.data.code === '50510' || res.data.code === '50530') {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              this.routerDetail(res.data.data.data.id);
+            } else if (res.data.code === '50520') {
+              if (receipt.length === 0) {
+                this.form.receipt = [];
+                this.form.receipt.push(this.receiptDate);
+              }
+              this.form.day = this.form.day === '0' ? '' : this.form.day;
+              this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
+              this.form.id = res.data.data.id;
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.saveCollect(this.form.draft);
+                  }
+                });
               }
             }
-            this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
-            this.form.receipt = receipt;
-            this.form.draft = val;
-            this.form.is_corp = this.corp ? 1 : 0;
-            this.form.is_other_fee = this.other_fee_status ? 1 : 0;
-            this.form.day = this.form.day === '' ? '0' : this.form.day;
-            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
-            this.$http.post(this.urls + 'bulletin/change', this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === '50510' || res.data.code === '50530') {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                this.routerDetail(res.data.data.data.id);
-              } else if (res.data.code === '50520') {
-                if (receipt.length === 0) {
-                  this.form.receipt = [];
-                  this.form.receipt.push(this.receiptDate);
-                }
-                this.form.day = this.form.day === '0' ? '' : this.form.day;
-                this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
-                this.form.id = res.data.data.id;
-                Toast.success(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
-              }
-            })
-          } else {
-            Toast(this.alertMsg('sub'));
-          }
+          })
+        } else {
+          Toast(this.alertMsg('sub'));
+        }
       },
 
       houseInfo() {
@@ -1077,6 +1121,9 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
+            this.form.front_money = draft.front_money;
+            this.form.deposit = draft.deposit;
+            this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
@@ -1090,23 +1137,18 @@
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
 
-            if (typeof draft.receipt !== "string") {
-              if (draft.receipt.length !== 0) {
-                this.amountReceipt = draft.receipt.length;
-                this.form.receipt = [];
-                for (let i = 0; i < draft.receipt.length; i++) {
-                  this.form.receipt.push(draft.receipt[i]);
-                }
-              } else {
-                this.amountReceipt = 1;
-                this.form.receipt = [];
-                this.form.receipt[0] = this.receiptDate;
+            if (draft.is_receipt) {
+              this.is_receipt = true;
+              this.form.is_receipt = 1;
+              if (!this.is_receipt) {
+                this.getReceipt(draft);
               }
             } else {
-              this.amountReceipt = 1;
-              this.form.receipt = [];
-              this.form.receipt[0] = draft.receipt;
+              this.is_receipt = false;
+              this.form.is_receipt = 0;
+              this.getReceipt(draft);
             }
+
             this.form.discount = draft.discount;
             this.form.retainage_date = draft.retainage_date;
 
@@ -1137,7 +1179,25 @@
           }
         })
       },
-
+      getReceipt(draft) {
+        if (typeof draft.receipt !== "string") {
+          if (draft.receipt.length !== 0) {
+            this.amountReceipt = draft.receipt.length;
+            this.form.receipt = [];
+            for (let i = 0; i < draft.receipt.length; i++) {
+              this.form.receipt.push(draft.receipt[i]);
+            }
+          } else {
+            this.amountReceipt = 1;
+            this.form.receipt = [];
+            this.form.receipt[0] = this.receiptDate;
+          }
+        } else {
+          this.amountReceipt = 1;
+          this.form.receipt = [];
+          this.form.receipt[0] = draft.receipt;
+        }
+      },
       close_() {
         this.isClear = true;
         setTimeout(() => {
@@ -1154,7 +1214,6 @@
         this.form.old_price = [''];
         this.form.old_money_sum = '';
 
-        this.form.deposit = '';
         this.form.sign_date = '';
         this.form.name = '';
         this.form.phone = '';
@@ -1187,6 +1246,9 @@
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
 
+        this.form.front_money = '';
+        this.form.deposit = '';
+        this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.moneyNum = [''];
@@ -1197,6 +1259,8 @@
         this.is_corp = 1;
         this.corp = true;
 
+        this.is_receipt = true;
+        this.form.is_receipt = 1;
         this.amountReceipt = 1;
         this.form.receipt = [];
         this.form.receipt[0] = this.receiptDate;
