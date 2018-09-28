@@ -642,11 +642,6 @@
       }
       this.houseInfo();
     },
-    computed: {
-      'form.money_sum'() {
-        return this.form.front_money + this.form.deposit + this.form.rent_money;
-      }
-    },
     methods: {
       userInfo(val1) {
         if (val1) {
@@ -680,7 +675,7 @@
         });
       },
       moneyAll() {
-        this.money_sum = Number(this.front_money) + Number(this.deposit) + Number(this.rent_money);
+        this.form.money_sum = Number(this.form.front_money) + Number(this.form.deposit) + Number(this.form.rent_money);
       },
       receiptNum() {
         // 收据编号默认城市
@@ -1088,6 +1083,9 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
+            this.form.front_money = draft.front_money;
+            this.form.deposit = draft.deposit;
+            this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
@@ -1215,6 +1213,9 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
+        this.form.front_money = '';
+        this.form.deposit = '';
+        this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.moneyNum = [''];
