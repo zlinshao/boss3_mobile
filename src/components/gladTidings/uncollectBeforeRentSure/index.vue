@@ -1061,12 +1061,6 @@
             this.form.address = val.house_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
-            this.form.property_price = val.property_price;
-            if (val.property_price) {
-              this.property_name = val.property_price + '元/月';
-            } else {
-              this.property_name = '无物业费';
-            }
           }
         }
         if (t.staff !== undefined && t.staff !== '') {

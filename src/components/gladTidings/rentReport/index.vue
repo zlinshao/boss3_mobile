@@ -583,8 +583,8 @@
           this.form.agency_phone = '';
         }
       },
-      is_receipt(val) {
-        if (!val) {
+      is_receipt() {
+        if (this.form.is_receipt === 1) {
           this.amountReceipt = 1;
           this.form.receipt = [];
           this.form.receipt[0] = this.receiptDate;
@@ -1123,13 +1123,14 @@
             this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
             if (draft.is_receipt) {
-              this.is_receipt = draft.is_receipt === 1 ? true : false;
-              this.form.is_receipt = draft.is_receipt;
+              this.is_receipt = true;
+              this.form.is_receipt = 1;
               if (!this.is_receipt) {
                 this.getReceipt(draft)
               }
             } else {
               this.is_receipt = false;
+              this.form.is_receipt = 0;
               this.getReceipt(draft)
             }
             this.form.property = draft.property;
