@@ -206,9 +206,13 @@
                   }
                   if (data[i].lords.length !== 0) {
                     this.lord(data[i], type);
+                  } else {
+                    this.finish(2);
                   }
                   if (data[i].renters.length !== 0) {
                     this.renter(data[i], type);
+                  } else {
+                    this.finish(2);
                   }
                 }
                 if (type === 'quality' && data[i].house_res) {
