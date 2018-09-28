@@ -274,6 +274,13 @@
           required>
         </van-field>
         <van-field
+          v-model="property_name"
+          label="物业费"
+          type="text"
+          placeholder="无物业费"
+          disabled>
+        </van-field>
+        <van-field
           v-model="form.discount"
           label="让总价金额"
           type="text"
@@ -501,7 +508,7 @@
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
-
+          property_price: '',
           is_agency: '',                //客户来源    0个人1中介
           agency_name: '',              //中介名
           agency_price: '',             //中介费
@@ -528,6 +535,7 @@
           department_name: '',          //部门name
         },
         screenshots: {},
+        property_name: '',
         photos: {},
         leaders: {},
         receipts: {},
@@ -966,7 +974,6 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          console.log(t.type);
           if (t.type === 'is_nrcy') {
             this.form.oldHouseName = val.house_name;
             this.form.contract_id_rent = val.id;
@@ -1054,6 +1061,12 @@
             this.form.address = val.house_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
+            this.form.property_price = val.property_price;
+            if (val.property_price) {
+              this.property_name = val.property_price + '元/月';
+            } else {
+              this.property_name = '无物业费';
+            }
           }
         }
         if (t.staff !== undefined && t.staff !== '') {
@@ -1162,6 +1175,13 @@
               this.form.receipt[0] = draft.receipt;
             }
 
+            this.form.property_price = draft.property_price;
+            if (val.property_price) {
+              this.property_name = draft.property_price + '元/月';
+            } else {
+              this.property_name = '无物业费';
+            }
+
             this.form.is_agency = draft.is_agency;                           //是否中介
             this.cusFrom = dicts.value8[draft.is_agency];                //是否中介
             this.form.agency_name = draft.agency_name;
@@ -1258,6 +1278,9 @@
         this.form.idtype = '';
         this.form.idcard = '';
         this.cardName = '';
+
+        this.form.property_price = '';
+        this.property_name = '';
 
         this.form.name = '';
         this.form.phone = '';

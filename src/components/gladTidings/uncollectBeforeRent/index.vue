@@ -282,15 +282,15 @@
           </van-field>
         </div>
 
-        <van-field
-          v-model="property_name"
-          label="物业费付款人"
-          type="text"
-          placeholder="请选择物业费付款人"
-          @click="selectShow(1,'')"
-          readonly
-          required>
-        </van-field>
+        <!--<van-field-->
+          <!--v-model="property_name"-->
+          <!--label="物业费付款人"-->
+          <!--type="text"-->
+          <!--placeholder="请选择物业费付款人"-->
+          <!--@click="selectShow(1,'')"-->
+          <!--readonly-->
+          <!--required>-->
+        <!--</van-field>-->
         <van-switch-cell v-model="corp" title="是否公司单"/>
 
       </van-cell-group>
@@ -452,12 +452,12 @@
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        isClear: false,           //删除图片
+        isClear: false,               //删除图片
         picStatus: 'success',
 
         tabs: '',
-        columns: [],              //select值
-        selectHide: false,        //select选择
+        columns: [],                  //select值
+        selectHide: false,            //select选择
         minDate: new Date(2000, 0, 1),
         maxDate: new Date(2200, 12, 31),
         currentDate: '',
@@ -518,7 +518,6 @@
           agency_price: '',             //中介费
           agency_user_name: '',         //中介人
           agency_phone: '',             //中介手机号
-
           is_corp: 1,                   //是否公司单  0个人1公司
           discount: 0,                  //让价金额
           deposit: '',                  //押金
@@ -531,7 +530,7 @@
           screenshot: [],               //凭证截图 数组
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
-          deposit_photo: [],       //押金收条 数组
+          deposit_photo: [],            //押金收条 数组
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
@@ -542,11 +541,11 @@
         photos: {},
         leaders: {},
         receipts: {},
-        property_name: '',              //物业费付款人
+        // property_name: '',              //物业费付款人
 
-        dictValue6: [],         //房东租客
+        dictValue6: [],                 //房东租客
         value6: [],
-        dictValue8: [],         //支付方式
+        dictValue8: [],                 //支付方式
         value8: [],
 
         prove_name: [],
@@ -805,12 +804,12 @@
       onConfirm(value, index) {
         switch (this.tabs) {
           case 1:
-            this.property_name = value;
-            for (let i = 0; i < this.dictValue6.length; i++) {
-              if (this.dictValue6[i].dictionary_name === value) {
-                this.form.property_payer = this.dictValue6[i].id;
-              }
-            }
+            // this.property_name = value;
+            // for (let i = 0; i < this.dictValue6.length; i++) {
+            //   if (this.dictValue6[i].dictionary_name === value) {
+            //     this.form.property_payer = this.dictValue6[i].id;
+            //   }
+            // }
             break;
           case 2:
             this.moneyNum[this.payIndex] = value;
@@ -1086,13 +1085,13 @@
 
             this.form.deposit = draft.deposit;
             this.form.discount = draft.discount;
-
-            this.form.property_payer = draft.property_payer;
-            for (let j = 0; j < this.dictValue6.length; j++) {
-              if (this.dictValue6[j].id === draft.property_payer) {
-                this.property_name = this.dictValue6[j].dictionary_name;
-              }
-            }
+            //
+            // this.form.property_payer = draft.property_payer;
+            // for (let j = 0; j < this.dictValue6.length; j++) {
+            //   if (this.dictValue6[j].id === draft.property_payer) {
+            //     this.property_name = this.dictValue6[j].dictionary_name;
+            //   }
+            // }
 
             this.form.is_agency = draft.is_agency;                           //是否中介
             this.cusFrom = dicts.value8[draft.is_agency];                //是否中介
@@ -1205,8 +1204,8 @@
         this.form.receipt = [];
         this.form.receipt[0] = this.receiptDate;
 
-        this.form.property_payer = '';
-        this.property_name = '';
+        // this.form.property_payer = '';
+        // this.property_name = '';
         this.form.retainage_date = '';
         this.form.name = '';
         this.form.phone = '';

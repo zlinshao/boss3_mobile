@@ -280,15 +280,12 @@
             placeholder="保修期(天)">
           </van-field>
         </div>
-
         <van-field
           v-model="property_name"
-          label="物业费付款人"
+          label="物业费"
           type="text"
-          placeholder="请选择物业费付款人"
-          @click="selectShow(6,'')"
-          readonly
-          required>
+          placeholder="无物业费"
+          disabled>
         </van-field>
         <van-field
           v-model="form.name"
@@ -540,7 +537,7 @@
           warranty_day: '',             //保修期天
           is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
-          property_payer: '',           //物业费付款人
+          property_price: '',           //物业费
           name: '',                     //房东姓名
           phone: '',                    //电话号码
           purchase_way: 509,            //支付方式
@@ -562,7 +559,7 @@
           department_name: '',          //部门name
         },
         vacancy_way_name: '',           //空置期安置方式
-        property_name: '',              //物业费付款人
+        property_name: '',              //物业费
         photos: {},                     //合同照片
         screenshots: {},                //领导截图
         property_photos: {},                //房产证照片
@@ -838,12 +835,12 @@
             }
             break;
           case 6:
-            this.property_name = value;
-            for (let i = 0; i < this.dictValue6.length; i++) {
-              if (this.dictValue6[i].dictionary_name === value) {
-                this.form.property_payer = this.dictValue6[i].id;
-              }
-            }
+            // this.property_name = value;
+            // for (let i = 0; i < this.dictValue6.length; i++) {
+            //   if (this.dictValue6[i].dictionary_name === value) {
+            //     this.form.property_payer = this.dictValue6[i].id;
+            //   }
+            // }
             break;
           case 7:
             this.vacancy_way_name = value;
@@ -1011,6 +1008,12 @@
           this.form.house.name = val.house_name;
           this.form.is_agency = val.is_agency;                           //是否中介
           this.cusFrom = dicts.value8[val.is_agency];                    //是否中介
+          this.form.property_price = val.property_price;
+          if (val.property_price) {
+            this.property_name = val.property_price + '元/月';
+          } else {
+            this.property_name = '无物业费';
+          }
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -1116,12 +1119,19 @@
             this.form.warranty = draft.warranty;
             this.form.warranty_day = draft.warranty_day === '0' ? '' : draft.warranty_day;
 
-            this.form.property_payer = draft.property_payer;
-            for (let j = 0; j < this.dictValue6.length; j++) {
-              if (this.dictValue6[j].id === draft.property_payer) {
-                this.property_name = this.dictValue6[j].dictionary_name;
-              }
+            this.form.property_price = draft.property_price;
+            if (val.property_price) {
+              this.property_name = draft.property_price + '元/月';
+            } else {
+              this.property_name = '无物业费';
             }
+
+            // this.form.property_payer = draft.property_payer;
+            // for (let j = 0; j < this.dictValue6.length; j++) {
+            //   if (this.dictValue6[j].id === draft.property_payer) {
+            //     this.property_name = this.dictValue6[j].dictionary_name;
+            //   }
+            // }
             this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
 
@@ -1209,7 +1219,7 @@
         this.form.vacancy_other = '';
         this.form.warranty = '';
         this.form.warranty_day = '';
-        this.form.property_payer = '';
+        this.form.property_price = '';
         this.property_name = '';
         this.form.sign_date = '';
         this.form.name = '';

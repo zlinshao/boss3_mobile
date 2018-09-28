@@ -290,8 +290,7 @@
           label="物业费"
           type="text"
           placeholder="无物业费"
-          readonly
-          required>
+          disabled>
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
       </van-cell-group>
@@ -976,7 +975,7 @@
           if (val.property_price) {
             this.property_name = val.property_price + '元/月';
           } else {
-            this.property_name = val.property_price;
+            this.property_name = '无物业费';
           }
         }
         if (t.staff !== undefined && t.staff !== '') {
@@ -1106,9 +1105,9 @@
 
             this.form.property_price = draft.property_price;
             if (val.property_price) {
-              this.property_name = val.property_price + '元/月';
+              this.property_name = draft.property_price + '元/月';
             } else {
-              this.property_name = val.property_price;
+              this.property_name = '无物业费';
             }
             // this.form.property_payer = draft.property_payer;
             // for (let j = 0; j < this.dictValue6.length; j++) {
