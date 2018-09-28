@@ -584,6 +584,13 @@
           this.form.agency_user_name = '';
           this.form.agency_phone = '';
         }
+      },
+      is_receipt(val) {
+        if (!val) {
+          this.amountReceipt = 1;
+          this.form.receipt = [];
+          this.form.receipt[0] = this.receiptDate;
+        }
       }
     },
     mounted() {
