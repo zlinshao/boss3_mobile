@@ -191,9 +191,7 @@
           class="number"
           label="已收金额"
           placeholder="请填写已收金额"
-          icon="clear"
-          disabled
-          @click-icon="form.money_sum = ''">
+          disabled>
         </van-field>
       </van-cell-group>
 
@@ -702,7 +700,6 @@
           }
         });
       },
-
       searchSelect(val) {
         switch (val) {
           case 1:
@@ -744,7 +741,6 @@
         let strDate = date.getDate();
         this.currentDate = new Date(year, month, strDate);
       },
-
       // 日期选择
       timeChoose(val, time) {
         if (time) {
@@ -1111,8 +1107,6 @@
             }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
-
-            this.form.deposit = draft.deposit;
             this.form.discount = draft.discount;
 
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
@@ -1234,7 +1228,6 @@
         this.moneyNum = [''];
         this.form.money_sep = [''];
         this.form.money_way = [''];
-        this.form.deposit = '';
         this.is_corp = 1;
         this.corp = true;
         this.is_agency = '';
@@ -1244,10 +1237,10 @@
         this.form.agency_user_name = '';
         this.form.agency_phone = '';
 
-        this.amountReceipt = 1;
-        this.form.receipt = [];
         this.is_receipt = true;
         this.form.is_receipt = 1;
+        this.amountReceipt = 1;
+        this.form.receipt = [];
         this.form.receipt[0] = this.receiptDate;
 
         this.form.other_fee_name = '';

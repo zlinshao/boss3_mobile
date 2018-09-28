@@ -159,14 +159,45 @@
 
       <van-cell-group>
         <van-field
+          v-model="form.front_money"
+          type="text"
+          class="number"
+          label="定金"
+          @keyup="moneyAll"
+          placeholder="请填写金额"
+          icon="clear"
+          @click-icon="form.money_sum = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          @keyup="moneyAll"
+          type="text"
+          class="number"
+          placeholder="请填写押金"
+          icon="clear"
+          @click-icon="form.deposit = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.rent_money"
+          label="租金"
+          @keyup="moneyAll"
+          type="text"
+          class="number"
+          placeholder="请填写租金"
+          icon="clear"
+          @click-icon="form.rent_money = ''"
+          required>
+        </van-field>
+        <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="已收金额"
           placeholder="请填写已收金额"
-          icon="clear"
-          @click-icon="form.money_sum = ''"
-          required>
+          disabled>
         </van-field>
       </van-cell-group>
 
@@ -304,6 +335,7 @@
           <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,4)">删除</span>
         </div>
         <van-cell-group>
+          <van-switch-cell v-model="is_receipt" title="电子收据"/>
           <van-field
             v-model="form.receipt[index]"
             type="text"
@@ -482,7 +514,7 @@
 
         rooms: [],
         roomsName: '',
-
+        is_receipt: true,               //电子收据
         form: {
           address: '',
           id: '',
@@ -509,6 +541,9 @@
           pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
 
+          front_money: '',              //定金
+          deposit: '',                  //押金
+          rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
@@ -516,7 +551,7 @@
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
-
+          is_receipt: 1,                //1是 2不是
           is_agency: '',                //客户来源    0个人1中介
           agency_name: '',              //中介名
           agency_price: '',             //中介费
@@ -524,7 +559,6 @@
           agency_phone: '',             //中介手机号
 
           is_corp: 1,                   //是否公司单  0个人1公司
-          deposit: '',                  //押金
           contract_number: 'LJZF',      //合同编号
           discount: 0,                  //让价金额
           receipt: [],                  //收据编号
@@ -566,6 +600,13 @@
           this.form.agency_price = '';
           this.form.agency_user_name = '';
           this.form.agency_phone = '';
+        }
+      },
+      is_receipt(val) {
+        if (!val) {
+          this.amountReceipt = 1;
+          this.form.receipt = [];
+          this.form.receipt[0] = this.receiptDate;
         }
       }
     },
@@ -660,7 +701,9 @@
 
         });
       },
-
+      moneyAll() {
+        this.form.money_sum = this.countMoney(this.form);
+      },
       receiptNum() {
         // 收据编号默认城市
         this.form.receipt = [];
@@ -944,6 +987,7 @@
           this.form.receipt = receipt;
           this.form.draft = val;
           this.form.is_corp = this.corp ? 1 : 0;
+          this.form.is_receipt = this.is_receipt ? 1 : 0;
           this.form.is_other_fee = this.other_fee_status ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
@@ -1079,6 +1123,9 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
+            this.form.front_money = draft.front_money;
+            this.form.deposit = draft.deposit;
+            this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
             this.form.money_way = draft.money_way;
             this.form.money_sep = draft.money_sep;
@@ -1092,7 +1139,6 @@
             }
 
             this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
-            this.form.deposit = draft.deposit;
             this.form.is_agency = draft.is_agency;                     //是否中介
             this.cusFrom = dicts.value8[draft.is_agency];              //是否中介
             this.form.agency_name = draft.agency_name;
@@ -1102,6 +1148,17 @@
 
             this.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1 ? true : false;
+
+            if (draft.is_receipt) {
+              this.is_receipt = draft.is_receipt === 1 ? true : false;
+              this.form.is_receipt = draft.is_receipt;
+              if (!this.is_receipt) {
+                this.getReceipt(draft)
+              }
+            } else {
+              this.is_receipt = false;
+              this.getReceipt(draft)
+            }
 
             this.form.property_price = draft.property_price;
             if (val.property_price) {
@@ -1164,7 +1221,25 @@
           }
         })
       },
-
+      getReceipt(draft) {
+        if (typeof draft.receipt !== "string") {
+          if (draft.receipt.length !== 0) {
+            this.amountReceipt = draft.receipt.length;
+            this.form.receipt = [];
+            for (let i = 0; i < draft.receipt.length; i++) {
+              this.form.receipt.push(draft.receipt[i]);
+            }
+          } else {
+            this.amountReceipt = 1;
+            this.form.receipt = [];
+            this.form.receipt[0] = this.receiptDate;
+          }
+        } else {
+          this.amountReceipt = 1;
+          this.form.receipt = [];
+          this.form.receipt[0] = draft.receipt;
+        }
+      },
       close_() {
         this.isClear = true;
         setTimeout(() => {
@@ -1193,12 +1268,14 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
+        this.form.front_money = '';
+        this.form.deposit = '';
+        this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.moneyNum = [''];
         this.form.money_sep = [''];
         this.form.money_way = [''];
-        this.form.deposit = '';
         this.form.discount = 0;
         this.is_corp = 1;
         this.corp = true;
@@ -1214,6 +1291,8 @@
         this.form.is_other_fee = 0;
         this.other_fee_status = false;
 
+        this.is_receipt = true;
+        this.form.is_receipt = 1;
         this.amountReceipt = 1;
         this.form.receipt = [];
         this.form.receipt[0] = this.receiptDate;
