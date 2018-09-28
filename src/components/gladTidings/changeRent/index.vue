@@ -165,8 +165,6 @@
           label="定金"
           @keyup="moneyAll"
           placeholder="请填写金额"
-          icon="clear"
-          @click-icon="form.money_sum = ''"
           required>
         </van-field>
         <van-field
@@ -176,8 +174,6 @@
           type="text"
           class="number"
           placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''"
           required>
         </van-field>
         <van-field
@@ -187,8 +183,6 @@
           type="text"
           class="number"
           placeholder="请填写租金"
-          icon="clear"
-          @click-icon="form.rent_money = ''"
           required>
         </van-field>
         <van-field
