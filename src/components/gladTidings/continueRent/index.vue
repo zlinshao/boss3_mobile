@@ -257,10 +257,12 @@
         </van-field>
         <van-field
           v-model="property_name"
-          label="物业费"
+          label="物业费付款人"
           type="text"
-          placeholder="无物业费"
-          disabled>
+          placeholder="请选择物业费付款人"
+          @click="selectShow(1,'')"
+          readonly
+          required>
         </van-field>
         <van-switch-cell v-model="is_receipt" title="电子收据"/>
       </van-cell-group>
@@ -482,7 +484,7 @@
           is_corp: 1,
           contract_number: 'LJZF',      //合同编号
           discount: 0,                  //让价金额
-          property_price: '',           //物业费
+          property_payer: '',           //物业费
           receipt: [],                  //收据编号
           retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
@@ -609,7 +611,6 @@
             }
             this.rentDetail(val);
           });
-
         });
       },
       moneyAll() {
@@ -761,12 +762,12 @@
       onConfirm(value, index) {
         switch (this.tabs) {
           case 1:
-            // this.property_name = value;
-            // for (let i = 0; i < this.dictValue6.length; i++) {
-            //   if (this.dictValue6[i].dictionary_name === value) {
-            //     this.form.property_payer = this.dictValue6[i].id;
-            //   }
-            // }
+            this.property_name = value;
+            for (let i = 0; i < this.dictValue6.length; i++) {
+              if (this.dictValue6[i].dictionary_name === value) {
+                this.form.property_payer = this.dictValue6[i].id;
+              }
+            }
             break;
           case 2:
             this.moneyNum[this.payIndex] = value;
@@ -930,12 +931,6 @@
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
-          this.form.property_price = val.property_price;
-          if (val.property_price) {
-            this.property_name = val.property_price + '元/月';
-          } else {
-            this.property_name = '无物业费';
-          }
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -1045,19 +1040,12 @@
               this.getReceipt(draft);
             }
 
-            this.form.property_price = draft.property_price;
-            if (val.property_price) {
-              this.property_name = draft.property_price + '元/月';
-            } else {
-              this.property_name = '无物业费';
+            this.form.property_payer = draft.property_payer;
+            for (let j = 0; j < this.dictValue6.length; j++) {
+              if (this.dictValue6[j].id === draft.property_payer) {
+                this.property_name = this.dictValue6[j].dictionary_name;
+              }
             }
-
-            // this.form.property_payer = draft.property_payer;
-            // for (let j = 0; j < this.dictValue6.length; j++) {
-            //   if (this.dictValue6[j].id === draft.property_payer) {
-            //     this.property_name = this.dictValue6[j].dictionary_name;
-            //   }
-            // }
 
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = draft.other_fee_name;
@@ -1157,7 +1145,7 @@
 
         this.form.contract_number = 'LJZF';
         this.form.discount = 0;
-        this.form.property_price = '';
+        this.form.property_payer = '';
         this.property_name = '';
         this.form.retainage_date = '';
         this.form.name = '';

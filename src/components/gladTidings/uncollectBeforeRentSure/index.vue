@@ -306,10 +306,12 @@
         </van-field>
         <van-field
           v-model="property_name"
-          label="物业费"
+          label="物业费付款人"
           type="text"
-          placeholder="无物业费"
-          disabled>
+          placeholder="请选择物业费付款人"
+          @click="selectShow(1,'')"
+          readonly
+          required>
         </van-field>
         <van-field
           v-model="form.discount"
@@ -543,7 +545,7 @@
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
-          property_price: '',
+          property_payer: '',
           is_agency: '',                //客户来源    0个人1中介
           agency_name: '',              //中介名
           agency_price: '',             //中介费
@@ -577,6 +579,8 @@
         receipts: {},
         dictValue8: [],                  //支付方式
         value8: [],
+        dictValue6: [],                 //房东租客
+        value6: [],
 
         isValue1: true,
         counts: '',
@@ -688,8 +692,16 @@
             for (let i = 0; i < res.data.length; i++) {
               this.prove_name.push(res.data[i].dictionary_name);
             }
-
-            this.rentDetail(val);
+            this.dictionary(449, 1).then((res) => {
+              this.value6 = [];
+              this.dictValue6 = res.data;
+              for (let i = 0; i < res.data.length; i++) {
+                // if (res.data[i].dictionary_name !== '房东承担') {
+                this.value6.push(res.data[i].dictionary_name);
+                // }
+              }
+              this.rentDetail(val);
+            });
           });
 
         });
@@ -811,6 +823,9 @@
           this.selectHide = true;
         }, 200);
         switch (val) {
+          case 1:
+            this.columns = this.value6;
+            break;
           case 2:
             this.columns = this.value8;
             break;
@@ -831,6 +846,14 @@
       // select选择
       onConfirm(value, index) {
         switch (this.tabs) {
+          case 1:
+            this.property_name = value;
+            for (let i = 0; i < this.dictValue6.length; i++) {
+              if (this.dictValue6[i].dictionary_name === value) {
+                this.form.property_payer = this.dictValue6[i].id;
+              }
+            }
+            break;
           case 2:
             this.moneyNum[this.payIndex] = value;
             for (let i = 0; i < this.dictValue8.length; i++) {
@@ -1050,6 +1073,13 @@
             }
             this.countDate(2, this.form.period_pay_arr);
 
+            this.form.property_payer = draft.property_payer;
+            for (let j = 0; j < this.dictValue6.length; j++) {
+              if (this.dictValue6[j].id === draft.property_payer) {
+                this.property_name = this.dictValue6[j].dictionary_name;
+              }
+            }
+
             this.form.front_money = rent.front_money;
             this.form.deposit = rent.deposit;
             this.form.rent_money = rent.rent_money;
@@ -1205,13 +1235,6 @@
               this.form.is_receipt = 0;
               this.getReceipt(draft);
             }
-            this.form.property_price = draft.property_price;
-            if (val.property_price) {
-              this.property_name = draft.property_price + '元/月';
-            } else {
-              this.property_name = '无物业费';
-            }
-
             this.form.is_agency = draft.is_agency;                           //是否中介
             this.cusFrom = dicts.value8[draft.is_agency];                //是否中介
             this.form.agency_name = draft.agency_name;
@@ -1332,7 +1355,7 @@
         this.form.idcard = '';
         this.cardName = '';
 
-        this.form.property_price = '';
+        this.form.property_payer = '';
         this.property_name = '';
 
         this.form.name = '';

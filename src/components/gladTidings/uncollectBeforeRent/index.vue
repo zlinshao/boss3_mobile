@@ -303,15 +303,15 @@
           </van-field>
         </div>
 
-        <!--<van-field-->
-          <!--v-model="property_name"-->
-          <!--label="物业费付款人"-->
-          <!--type="text"-->
-          <!--placeholder="请选择物业费付款人"-->
-          <!--@click="selectShow(1,'')"-->
-          <!--readonly-->
-          <!--required>-->
-        <!--</van-field>-->
+        <van-field
+          v-model="property_name"
+          label="物业费付款人"
+          type="text"
+          placeholder="请选择物业费付款人"
+          @click="selectShow(1,'')"
+          readonly
+          required>
+        </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-switch-cell v-model="is_receipt" title="电子收据"/>
       </van-cell-group>
@@ -565,7 +565,7 @@
         photos: {},
         leaders: {},
         receipts: {},
-        // property_name: '',              //物业费付款人
+        property_name: '',              //物业费付款人
 
         dictValue6: [],                 //房东租客
         value6: [],
@@ -837,12 +837,12 @@
       onConfirm(value, index) {
         switch (this.tabs) {
           case 1:
-            // this.property_name = value;
-            // for (let i = 0; i < this.dictValue6.length; i++) {
-            //   if (this.dictValue6[i].dictionary_name === value) {
-            //     this.form.property_payer = this.dictValue6[i].id;
-            //   }
-            // }
+            this.property_name = value;
+            for (let i = 0; i < this.dictValue6.length; i++) {
+              if (this.dictValue6[i].dictionary_name === value) {
+                this.form.property_payer = this.dictValue6[i].id;
+              }
+            }
             break;
           case 2:
             this.moneyNum[this.payIndex] = value;
@@ -1122,13 +1122,13 @@
 
             this.form.deposit = draft.deposit;
             this.form.discount = draft.discount;
-            //
-            // this.form.property_payer = draft.property_payer;
-            // for (let j = 0; j < this.dictValue6.length; j++) {
-            //   if (this.dictValue6[j].id === draft.property_payer) {
-            //     this.property_name = this.dictValue6[j].dictionary_name;
-            //   }
-            // }
+
+            this.form.property_payer = draft.property_payer;
+            for (let j = 0; j < this.dictValue6.length; j++) {
+              if (this.dictValue6[j].id === draft.property_payer) {
+                this.property_name = this.dictValue6[j].dictionary_name;
+              }
+            }
 
             this.form.is_agency = draft.is_agency;                           //是否中介
             this.cusFrom = dicts.value8[draft.is_agency];                //是否中介
@@ -1257,8 +1257,8 @@
         this.form.receipt = [];
         this.form.receipt[0] = this.receiptDate;
 
-        // this.form.property_payer = '';
-        // this.property_name = '';
+        this.form.property_payer = '';
+        this.property_name = '';
         this.form.retainage_date = '';
         this.form.name = '';
         this.form.phone = '';
