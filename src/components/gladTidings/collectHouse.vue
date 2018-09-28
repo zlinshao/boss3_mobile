@@ -325,6 +325,11 @@
         if (type === 'report') {
           list.mortgage_price = value.mortgage_price;
         }
+        if (value.property_price) {
+          list.property_price = value.property_price;
+        } else {
+          list.property_price = '';
+        }
         list.start_at = value.start_at;
         list.album = value.album;
         list.status = value.status !== null ? value.status : 0;
