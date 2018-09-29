@@ -310,7 +310,6 @@
       bottom: 0;
       background: #f1f1f1;
     }
-
     .loading {
       top: 50%;
       left: 50%;

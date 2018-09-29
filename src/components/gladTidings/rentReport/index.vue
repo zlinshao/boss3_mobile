@@ -654,6 +654,10 @@
         }
       },
       dicts(val) {
+        let per = JSON.parse(sessionStorage.personal);
+        this.$http.get(this.urls + 'financial/account_alloc/map?org_id=' + per.department_id).then(res => {
+      
+        });
         this.receiptNum();
         //房东租客
         this.dictionary(449, 1).then((res) => {
