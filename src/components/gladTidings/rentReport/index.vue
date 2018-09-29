@@ -134,7 +134,7 @@
             label="周期"
             :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
             @keyup="periodDate(2)"
-            placeholder="请填写付款方式周期"
+            placeholder="other_fee_name"
             required>
           </van-field>
           <van-field
@@ -654,8 +654,8 @@
         }
       },
       dicts(val) {
-        let per = JSON.parse(sessionStorage.personal);
         // 收款帐户
+        let per = JSON.parse(sessionStorage.personal);
         this.$http.get(this.urls + 'financial/account_alloc/map?org_id=' + per.department_id).then(res => {
           if (res.data.code === '20000') {
             this.value8 = [];

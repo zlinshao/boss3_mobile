@@ -588,6 +588,7 @@
       dicts(val) {
         this.receiptNum();
         // 收款帐户
+        let per = JSON.parse(sessionStorage.personal);
         this.$http.get(this.urls + 'financial/account_alloc/map?org_id=' + per.department_id).then(res => {
           if (res.data.code === '20000') {
             this.value8 = [];
