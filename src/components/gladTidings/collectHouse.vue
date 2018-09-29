@@ -272,7 +272,7 @@
       // 中介费收
       agencyLord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
-          if (!val.lords[i].end_type) {
+          if (!val.lords[j].end_type) {
             if (val.lords[j].is_agency === 1) {
               this.contracts(val, type, val.lords[j]);
             } else {
@@ -284,7 +284,7 @@
       // 中介费租
       agencyRent(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
-          if (!val.renters[i].end_type) {
+          if (!val.renters[j].end_type) {
             if (val.renters[j].is_agency === 1) {
               this.contracts(val, type, val.renters[j]);
             } else {
@@ -296,7 +296,7 @@
       // 收房合同
       lord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
-          if (!val.lords[i].end_type) {
+          if (!val.lords[j].end_type) {
             this.contracts(val, type, val.lords[j]);
           }
         }
@@ -305,7 +305,7 @@
       // 租房合同
       renter(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
-          if (!val.renters[i].end_type) {
+          if (!val.renters[j].end_type) {
             this.contracts(val, type, val.renters[j]);
           }
         }
