@@ -659,7 +659,7 @@
           if (res.data.code === '20000') {
             this.value8 = [];
             this.dictValue8 = res.data.data;
-            res.data.forEach(item => {
+            res.data.data.forEach(item => {
               this.value8.push(item.display_name);
             });
           }
