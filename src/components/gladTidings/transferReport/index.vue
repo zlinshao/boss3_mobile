@@ -653,14 +653,16 @@
 
       dicts(val) {
         this.receiptNum();
-        //支付方式
-        this.dictionary(508, 1).then((res) => {
-          this.value8 = [];
-          this.dictValue8 = res.data;
-          for (let i = 0; i < res.data.length; i++) {
-            this.value8.push(res.data[i].dictionary_name);
+        // 收款帐户
+        this.$http.get(this.urls + 'financial/account_alloc/map?org_id=' + per.department_id).then(res => {
+          if (res.data.code === '20000') {
+            this.value8 = [];
+            this.dictValue8 = res.data.data;
+            res.data.data.forEach(item => {
+              this.value8.push(item.display_name);
+            });
+            this.finalDetail(val);
           }
-          this.rentDetail(val);
         });
       },
       moneyAll() {
@@ -824,11 +826,11 @@
         switch (this.tabs) {
           case 2:
             this.moneyNum[this.payIndex] = value;
-            for (let i = 0; i < this.dictValue8.length; i++) {
-              if (this.dictValue8[i].dictionary_name === value) {
-                this.form.money_way[this.payIndex] = this.dictValue8[i].id;
+            this.dictValue8.forEach(res => {
+              if (res.display_name === value) {
+                this.form.money_way[this.payIndex] = res.bank_info;
               }
-            }
+            });
             break;
           case 3:
             this.form.pay_way_bet = value;
@@ -1127,10 +1129,9 @@
             this.form.money_sum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
-              this.form.money_way.push('');
               for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].id === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].dictionary_name;
+                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+                  this.moneyNum[i] = this.dictValue8[j].display_name;
                 }
               }
             }

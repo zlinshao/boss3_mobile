@@ -655,6 +655,7 @@
       },
       dicts(val) {
         let per = JSON.parse(sessionStorage.personal);
+        // 收款帐户
         this.$http.get(this.urls + 'financial/account_alloc/map?org_id=' + per.department_id).then(res => {
           if (res.data.code === '20000') {
             this.value8 = [];
@@ -663,19 +664,19 @@
               this.value8.push(item.display_name);
             });
           }
+          //房东租客
+          this.dictionary(449, 1).then((res) => {
+            this.value6 = [];
+            this.dictValue6 = res.data;
+            for (let i = 0; i < res.data.length; i++) {
+              // if (res.data[i].dictionary_name !== '房东承担') {
+              this.value6.push(res.data[i].dictionary_name);
+              // }
+            }
+            this.rentDetail(val);
+          });
         });
         this.receiptNum();
-        //房东租客
-        this.dictionary(449, 1).then((res) => {
-          this.value6 = [];
-          this.dictValue6 = res.data;
-          for (let i = 0; i < res.data.length; i++) {
-            // if (res.data[i].dictionary_name !== '房东承担') {
-            this.value6.push(res.data[i].dictionary_name);
-            // }
-          }
-          this.rentDetail(val);
-        });
       },
       moneyAll() {
         this.form.money_sum = this.countMoney(this.form);
