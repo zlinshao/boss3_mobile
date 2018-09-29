@@ -4,7 +4,7 @@
       <div class="breadcrumb_box">
         <div class="breadcrumb">
           <div>
-            <span @click="breadcrumbSearch(1)">{{highestDepart}}</span>
+            <span @click="breadcrumbSearch(1,0)">{{highestDepart}}</span>
           </div>
           <div v-for="(item,index) in breadcrumbList" @click="breadcrumbSearch(item,index)">
             <span>&nbsp;&gt;&nbsp;{{item.name}}</span>
@@ -94,7 +94,7 @@
       //面包屑搜索
       breadcrumbSearch(item, index) {
         if (item === 1) {
-          this.getDepartment(1);
+          this.getDepartment(item);
           this.breadcrumbList = [];
         } else {
           this.getDepartment(item.id);
@@ -116,7 +116,7 @@
 
       confirmAdd() {
         if (this.selectId) {
-          if (navigator.userAgent == 'app/ApartMent') {
+          if (navigator.userAgent === 'app/ApartMent') {
             let data = [], value = {};
             value.org_id = this.selectDepart.id;
             value.org_name = this.selectDepart.name;

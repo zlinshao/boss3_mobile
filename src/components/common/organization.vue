@@ -149,7 +149,6 @@
     z-index: 999;
     .breadcrumb_box {
       width: 100%;
-      padding: .15rem 0;
       background: #F8F8F8;
       padding: .25rem;
       .breadcrumb {

@@ -16,14 +16,12 @@
         <van-loading type="spinner" color="black"/>
       </div>
       <div class="searchContent">
-
         <div class="searchList" v-for="key in lists" @click="organizeSure(key)">
           <div>{{key.staff_name}}</div>
           <div>
             <p>{{key.depart_name}}</p>
           </div>
         </div>
-
       </div>
     </div>
   </div>
