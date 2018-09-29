@@ -658,7 +658,7 @@
         this.$http.get(this.urls + 'financial/account_alloc/map?org_id=' + per.department_id).then(res => {
           if (res.data.code === '20000') {
             this.value8 = [];
-            this.dictValue8 = res.data;
+            this.dictValue8 = res.data.data;
             res.data.forEach(item => {
               this.value8.push(item.display_name);
             });
