@@ -224,7 +224,7 @@
           label="押金"
           type="text"
           class="number"
-          placeholder="请填写已收押金"
+          placeholder="请填写押金"
           required>
         </van-field>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>

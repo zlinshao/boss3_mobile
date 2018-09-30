@@ -603,7 +603,7 @@
             this.value8 = [];
             this.dictValue8 = res.data.data;
             res.data.data.forEach(item => {
-              this.value8.push(item.display_name);
+              this.value8.push(item.bank_info);
             });
           }
         });
@@ -783,11 +783,12 @@
             break;
           case 2:
             this.moneyNum[this.payIndex] = value;
-            this.dictValue8.forEach(res => {
-              if (res.display_name === value) {
-                this.form.money_way[this.payIndex] = res.bank_info;
-              }
-            });
+            this.form.money_way[this.payIndex] = value;
+            // this.dictValue8.forEach(res => {
+            //   if (res.display_name === value) {
+            //     this.form.money_way[this.payIndex] = res.bank_info;
+            //   }
+            // });
             break;
           case 3:
             this.form.pay_way_bet = value;
