@@ -170,7 +170,7 @@
           required>
         </van-field>
         <van-field
-          v-model="form.deposit"
+          v-model="form.deposit_payed"
           label="已收押金"
           @keyup="moneyAll"
           type="text"
