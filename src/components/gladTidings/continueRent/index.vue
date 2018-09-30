@@ -1037,6 +1037,7 @@
             }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
+            this.moneyNum = draft.moneyNum;
 
             this.form.discount = draft.discount;
 

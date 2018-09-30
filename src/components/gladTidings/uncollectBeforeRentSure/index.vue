@@ -1231,7 +1231,6 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
-            this.moneyNum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
               // for (let j = 0; j < this.dictValue8.length; j++) {
@@ -1240,6 +1239,10 @@
               //   }
               // }
             }
+            this.form.money_sep = draft.money_sep;
+            this.form.money_way = draft.money_way;
+            this.moneyNum = draft.money_way;
+
             if (draft.is_receipt) {
               this.is_receipt = true;
               this.form.is_receipt = 1;
@@ -1258,8 +1261,6 @@
             this.form.agency_user_name = draft.agency_user_name;
             this.form.agency_phone = draft.agency_phone;
 
-            this.form.money_sep = draft.money_sep;
-            this.form.money_way = draft.money_way;
             this.form.discount = draft.discount;
             this.form.retainage_date = draft.retainage_date;
 
