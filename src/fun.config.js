@@ -29,7 +29,7 @@ export default {
     };
     Vue.prototype.countMoney = function (form) {
       let sum1 = form.front_money;
-      let sum2 = form.deposit;
+      let sum2 = form.deposit_payed;
       let sum3 = form.rent_money;
       sum1 = sum1 ? sum1 : 0;
       sum2 = sum2 ? sum2 : 0;

@@ -162,12 +162,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form.deposit"
-          label="押金"
+          v-model="form.deposit_payed"
+          label="已收押金"
           @keyup="moneyAll"
           type="text"
           class="number"
-          placeholder="请填写押金"
+          placeholder="请填写已收押金"
           required>
         </van-field>
         <van-field
@@ -219,6 +219,14 @@
       </div>
 
       <van-cell-group>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          class="number"
+          placeholder="请填写已收押金"
+          required>
+        </van-field>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -519,6 +527,7 @@
 
           front_money: '',              //定金
           deposit: '',                  //押金
+          deposit_payed: '',            //已收押金
           rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
@@ -1088,6 +1097,7 @@
 
             this.form.front_money = draft.front_money;
             this.form.deposit = draft.deposit;
+            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
 
@@ -1099,9 +1109,9 @@
               //   }
               // }
             }
-            this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             this.moneyNum = draft.money_way;
+            this.form.money_sep = draft.money_sep;
             this.form.discount = draft.discount;
 
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
@@ -1211,6 +1221,7 @@
         this.form.pay_way_arr = [''];
         this.form.front_money = '';
         this.form.deposit = '';
+        this.form.deposit_payed = '';
         this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;

@@ -171,11 +171,11 @@
         </van-field>
         <van-field
           v-model="form.deposit"
-          label="押金"
+          label="已收押金"
           @keyup="moneyAll"
           type="text"
           class="number"
-          placeholder="请填写押金"
+          placeholder="请填写已收押金"
           required>
         </van-field>
         <van-field
@@ -214,10 +214,10 @@
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="支付方式"
+            label="收款帐户"
             type="text"
             readonly
-            placeholder="请选择支付方式"
+            placeholder="请选择收款帐户"
             required>
           </van-field>
         </van-cell-group>
@@ -276,6 +276,14 @@
             required>
           </van-field>
         </div>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          class="number"
+          placeholder="请填写押金"
+          required>
+        </van-field>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -535,6 +543,7 @@
 
           front_money: '',              //定金
           deposit: '',                  //押金
+          deposit_payed: '',            //已收押金
           rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
@@ -679,7 +688,7 @@
             this.value8 = [];
             this.dictValue8 = res.data.data;
             res.data.data.forEach(item => {
-              this.value8.push(item.display_name);
+              this.value8.push(item.bank_info);
             });
           }
           // 证件类型
@@ -859,11 +868,12 @@
             break;
           case 2:
             this.moneyNum[this.payIndex] = value;
-            this.dictValue8.forEach(res => {
-              if (res.display_name === value) {
-                this.form.money_way[this.payIndex] = res.bank_info;
-              }
-            });
+            this.form.money_way[this.payIndex] = value;
+            // this.dictValue8.forEach(res => {
+            //   if (res.display_name === value) {
+            //     this.form.money_way[this.payIndex] = res.bank_info;
+            //   }
+            // });
             break;
           case 3:
             this.form.pay_way_bet = value;
@@ -1082,23 +1092,25 @@
                 this.property_name = this.dictValue6[j].dictionary_name;
               }
             }
-
-            this.form.front_money = rent.front_money;
-            this.form.deposit = rent.deposit;
-            this.form.rent_money = rent.rent_money;
-            this.form.money_sum = rent.money_sum;
+            this.form.front_money = draft.front_money;
+            this.form.deposit = draft.deposit;
+            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
+            this.form.rent_money = draft.rent_money;
+            this.form.money_sum = draft.money_sum;
             this.form.money_sep = [];
             this.form.money_way = [];
             for (let i = 0; i < rent.month_price.length; i++) {
               this.amountMoney = i + 1;
               this.form.money_sep.push(rent.money_table[i].money_sep);
               this.form.money_way.push(rent.money_table[i].money_way);
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].display_name;
-                }
-              }
+              // for (let j = 0; j < this.dictValue8.length; j++) {
+              //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+              //     this.moneyNum[i] = this.dictValue8[j].display_name;
+              //   }
+              // }
             }
+            this.moneyNum = this.form.money_way;
+
             if (rent.is_receipt) {
               this.is_receipt = true;
               this.form.is_receipt = 1;
@@ -1216,16 +1228,17 @@
 
             this.form.front_money = draft.front_money;
             this.form.deposit = draft.deposit;
+            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
+            this.moneyNum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
-              this.form.money_way.push('');
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].display_name;
-                }
-              }
+              // for (let j = 0; j < this.dictValue8.length; j++) {
+              //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+              //     this.moneyNum[i] = this.dictValue8[j].display_name;
+              //   }
+              // }
             }
             if (draft.is_receipt) {
               this.is_receipt = true;
@@ -1328,6 +1341,7 @@
 
         this.form.front_money = '';
         this.form.deposit = '';
+        this.form.deposit_payed = '';
         this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;

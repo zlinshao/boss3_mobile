@@ -56,14 +56,6 @@
           placeholder="原房屋定金已禁用">
         </van-field>
         <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="text"
-          placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''">
-        </van-field>
-        <van-field
           v-model="form.sign_date"
           @click="timeChoose(4, form.sign_date)"
           label="签约日期"
@@ -243,12 +235,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form.deposit"
-          label="押金"
+          v-model="form.deposit_payed"
+          label="已收押金"
           @keyup="moneyAll"
           type="text"
           class="number"
-          placeholder="请填写押金"
+          placeholder="请填写已收押金"
           required>
         </van-field>
         <van-field
@@ -286,10 +278,10 @@
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="支付方式"
+            label="收款帐户"
             type="text"
             readonly
-            placeholder="请选择支付方式"
+            placeholder="请选择收款帐户"
             required>
           </van-field>
         </van-cell-group>
@@ -299,6 +291,14 @@
       </div>
 
       <van-cell-group>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          class="number"
+          placeholder="请填写押金"
+          required>
+        </van-field>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -536,6 +536,7 @@
 
           front_money: '',              //定金
           deposit: '',                  //押金
+          deposit_payed: '',            //已收押金
           rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
@@ -660,7 +661,7 @@
             this.value8 = [];
             this.dictValue8 = res.data.data;
             res.data.data.forEach(item => {
-              this.value8.push(item.display_name);
+              this.value8.push(item.bank_info);
             });
             this.finalDetail(val);
           }
@@ -827,11 +828,12 @@
         switch (this.tabs) {
           case 2:
             this.moneyNum[this.payIndex] = value;
-            this.dictValue8.forEach(res => {
-              if (res.display_name === value) {
-                this.form.money_way[this.payIndex] = res.bank_info;
-              }
-            });
+            this.form.money_way[this.payIndex] = value;
+            // this.dictValue8.forEach(res => {
+            //   if (res.display_name === value) {
+            //     this.form.money_way[this.payIndex] = res.bank_info;
+            //   }
+            // });
             break;
           case 3:
             this.form.pay_way_bet = value;
@@ -1006,7 +1008,7 @@
             this.form.old_house_name = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
-            this.form.deposit = val.mortgage_price;
+            // this.form.deposit = val.mortgage_price;
             this.form.sign_date = val.start_at;
             this.form.name = val.customers;
             this.form.phone = val.cusPhone;
@@ -1092,7 +1094,6 @@
             this.form.old_price = draft.old_price;
             this.form.old_money_sum = draft.old_money_sum;
 
-            this.form.deposit = draft.deposit;
             this.form.sign_date = draft.sign_date;
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -1126,15 +1127,17 @@
 
             this.form.front_money = draft.front_money;
             this.form.deposit = draft.deposit;
+            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
+            this.moneyNum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].display_name;
-                }
-              }
+              // for (let j = 0; j < this.dictValue8.length; j++) {
+              //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+              //     this.moneyNum[i] = this.dictValue8[j].display_name;
+              //   }
+              // }
             }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
@@ -1249,6 +1252,7 @@
         this.form.pay_way_arr = [''];
 
         this.form.front_money = '';
+        this.form.deposit_payed = '';
         this.form.deposit = '';
         this.form.rent_money = '';
         this.form.money_sum = '';

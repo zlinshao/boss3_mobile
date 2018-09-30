@@ -161,12 +161,12 @@
           required>
         </van-field>
         <van-field
-          v-model="form.deposit"
-          label="押金"
+          v-model="form.deposit_payed"
+          label="已收押金"
           @keyup="moneyAll"
           type="text"
           class="number"
-          placeholder="请填写押金"
+          placeholder="请填写已收押金"
           required>
         </van-field>
         <van-field
@@ -204,10 +204,10 @@
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="支付方式"
+            label="收款帐户"
             type="text"
             readonly
-            placeholder="请选择支付方式"
+            placeholder="请选择收款帐户"
             required>
           </van-field>
         </van-cell-group>
@@ -217,6 +217,14 @@
       </div>
 
       <van-cell-group>
+        <van-field
+          v-model="form.deposit"
+          label="押金"
+          type="text"
+          class="number"
+          placeholder="请填写押金"
+          required>
+        </van-field>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -465,6 +473,7 @@
 
           front_money: '',              //定金
           deposit: '',                  //押金
+          deposit_payed: '',            //已收押金
           rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
@@ -1014,20 +1023,20 @@
 
             this.form.front_money = draft.front_money;
             this.form.deposit = draft.deposit;
+            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].display_name;
-                }
-              }
+              // for (let j = 0; j < this.dictValue8.length; j++) {
+              //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+              //     this.moneyNum[i] = this.dictValue8[j].display_name;
+              //   }
+              // }
             }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
 
-            this.form.deposit = draft.deposit;
             this.form.discount = draft.discount;
 
             if (draft.is_receipt) {
@@ -1126,6 +1135,7 @@
         this.form.pay_way_arr = [''];
         this.form.front_money = '';
         this.form.deposit = '';
+        this.form.deposit_payed = '';
         this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
