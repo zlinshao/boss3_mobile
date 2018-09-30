@@ -46,7 +46,7 @@
               <span style="display: block;">{{item.msg}}</span>
               <span style="display: block;">{{item.period}}</span>
             </span>
-            <span v-if="index === '定金和收款方式' || index === '补交定金和收款方式'" v-for="item in key">
+            <span v-if="index === '已收金额和支付方式' || index === '补交定金和收款方式'" v-for="item in key">
               <span style="display: block;">{{item}}</span>
             </span>
             <span v-if="!Array.isArray(key) && index !== '房屋类型'">{{key}}</span>
