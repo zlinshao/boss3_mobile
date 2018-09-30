@@ -84,8 +84,7 @@
           class="number"
           label="定金"
           @keyup="moneyAll"
-          placeholder="请填写金额"
-          required>
+          placeholder="请填写金额">
         </van-field>
         <van-field
           v-model="form.deposit_payed"
@@ -93,8 +92,7 @@
           @keyup="moneyAll"
           type="text"
           class="number"
-          placeholder="请填写押金"
-          required>
+          placeholder="请填写押金">
         </van-field>
         <van-field
           v-model="form.rent_money"
@@ -102,16 +100,14 @@
           @keyup="moneyAll"
           type="text"
           class="number"
-          placeholder="请填写租金"
-          required>
+          placeholder="请填写租金">
         </van-field>
         <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="已收金额"
-          placeholder="请填写已收金额"
-          disabled>
+          placeholder="请填写已收金额">
         </van-field>
       </van-cell-group>
 
@@ -145,14 +141,14 @@
       </div>
 
       <van-cell-group>
-        <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="text"
-          class="number"
-          placeholder="请填写已收押金"
-          required>
-        </van-field>
+        <!--<van-field-->
+          <!--v-model="form.deposit"-->
+          <!--label="押金"-->
+          <!--type="text"-->
+          <!--class="number"-->
+          <!--placeholder="请填写已收押金"-->
+          <!--required>-->
+        <!--</van-field>-->
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"

@@ -34,12 +34,6 @@ export default {
       sum1 = sum1 ? sum1 : 0;
       sum2 = sum2 ? sum2 : 0;
       sum3 = sum3 ? sum3 : 0;
-      console.log(sum1);
-      console.log(typeof sum1);
-      console.log(sum2);
-      console.log(typeof sum2);
-      console.log(sum3);
-      console.log(typeof sum3);
       return Number(sum1) + Number(sum2) + Number(sum3);
     };
     Vue.prototype.ddRent = function (url, house) {
