@@ -661,7 +661,7 @@
             this.value8 = [];
             this.dictValue8 = res.data.data;
             res.data.data.forEach(item => {
-              this.value8.push(item.display_name);
+              this.value8.push(item.bank_info);
             });
           }
           //房东租客
@@ -823,11 +823,12 @@
             break;
           case 2:
             this.moneyNum[this.payIndex] = value;
-            this.dictValue8.forEach(res => {
-              if (res.display_name === value) {
-                this.form.money_way[this.payIndex] = res.bank_info;
-              }
-            });
+            this.form.money_way[this.payIndex] = value;
+            // this.dictValue8.forEach(res => {
+            //   if (res.display_name === value) {
+            //     this.form.money_way[this.payIndex] = res.bank_info;
+            //   }
+            // });
             break;
           case 3:
             this.form.pay_way_bet = value;
@@ -1092,14 +1093,15 @@
 
             for (let i = 0; i < draft.money_sep.length; i++) {
               this.amountMoney = i + 1;
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                  this.moneyNum[i] = this.dictValue8[j].display_name;
-                }
-              }
+              // for (let j = 0; j < this.dictValue8.length; j++) {
+              //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+              //     this.moneyNum[i] = this.dictValue8[j].display_name;
+              //   }
+              // }
             }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
+            this.moneyNum = draft.money_way;
             this.form.discount = draft.discount;
 
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
