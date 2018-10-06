@@ -48,10 +48,12 @@
         required>
       </van-field>
       <van-field
-        v-model="form.lord_pay_way"
+        v-model="formatData.payWay"
+        @click="selectShow()"
         label="收房付款方式"
+        placeholder="请填写选择付款方式"
         type="text"
-        placeholder="请填写月数"
+        readonly
         required>
       </van-field>
     </van-cell-group>
@@ -148,6 +150,15 @@
       </div>
     </div>
 
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="pickerModule" position="bottom"
+               :overlay="true">
+      <van-picker
+        show-toolbar
+        :columns="payValues"
+        @cancel="onCancel"
+        @confirm="onConfirm"/>
+    </van-popup>
+
     <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
   </div>
 </template>
@@ -162,11 +173,23 @@
     data() {
       return {
         url: globalConfig.server,
+
         timeModule: false,              //日期
+        pickerModule: false,            //
+        payValues: [],
+        payKeys: [],
+        payWay: {
+          '1': '月付',
+          '2': '双月付',
+          '3': '季付',
+          '4': '半年付',
+          '5': '年付',
+        },
         formatData: {
           paramsKey: '',                //格式化日期
           dateVal: '',                  //格式化日期
           dataKey: '',                  //字段区分
+          payWay: '',
         },
         form: {
           counter: '',                //总业绩
@@ -250,6 +273,18 @@
           }
         })
       },
+      selectShow() {
+        setTimeout(() => {
+          this.pickerModule = true;
+        }, 200);
+        this.payValues = Object.values(this.payWay);
+        this.payKeys = Object.keys(this.payWay);
+      },
+      onConfirm(value, index) {
+        this.form.lord_pay_way = this.payKeys[index];
+        this.formatData.payWay = value;
+        this.onCancel();
+      },
       // 显示日期
       timeChoose(val, time) {
         setTimeout(() => {
@@ -265,6 +300,7 @@
       },
       // 关闭模态框
       onCancel() {
+        this.pickerModule = false;
         this.timeModule = false;
       },
     },
