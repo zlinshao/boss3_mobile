@@ -28,9 +28,9 @@
       </van-field>
       <van-field
         v-model="form.lord_duration"
-        label="收房时长"
+        label="收房年限(年)"
         type="text"
-        placeholder="请填写收房时长"
+        placeholder="请填写收房年限"
         required>
       </van-field>
       <van-field
@@ -38,6 +38,20 @@
         label="收房中介费"
         type="text"
         placeholder="请填写收房中介费"
+        required>
+      </van-field>
+      <van-field
+        v-model="form.lord_vacancy_date"
+        label="收房空置期"
+        type="text"
+        placeholder="请填写收房空置期"
+        required>
+      </van-field>
+      <van-field
+        v-model="form.lord_pay_way"
+        label="收房付款方式"
+        type="text"
+        placeholder="请填写收房付款方式"
         required>
       </van-field>
     </van-cell-group>
@@ -52,7 +66,7 @@
       </van-field>
       <van-field
         v-model="form.rent_duration"
-        label="租房时长"
+        label="租房时长(天)"
         type="text"
         placeholder="请填写租房时长"
         required>
@@ -62,6 +76,34 @@
         label="租房中介费"
         type="text"
         placeholder="请填写租房中介费"
+        required>
+      </van-field>
+      <van-field
+        v-model="form.rent_pay_way"
+        label="租房付款方式"
+        type="text"
+        placeholder="请填写租房付款方式"
+        required>
+      </van-field>
+      <van-field
+        v-model="form.rent_vacancy_date"
+        label="租房消耗空置期"
+        type="text"
+        placeholder="请填写租房消耗空置期"
+        required>
+      </van-field>
+      <van-field
+        v-model="form.rent_return_day"
+        label="回款时长(天)"
+        type="text"
+        placeholder="请填写回款时长"
+        required>
+      </van-field>
+      <van-field
+        v-model="form.rent_return_money"
+        label="未回款金额"
+        type="text"
+        placeholder="请填写未回款金额"
         required>
       </van-field>
     </van-cell-group>
@@ -106,16 +148,22 @@
           dataKey: '',                  //字段区分
         },
         form: {
-          counter: '',
-          comm_rate: '',
-          lord_month_price: '',
-          lord_duration: '',
-          lord_agency_count: '',
-          rent_month_price: '',
-          rent_duration: '',
-          rent_agency_count: '',
+          counter: '',                //总业绩
+          comm_rate: '',              //提成百分比
+          lord_month_price: '',       //收房价格
+          lord_duration: '',          //收房年限
+          lord_agency_count: '',      //收房中介费
+          lord_vacancy_date: '',      //收房空置期
+          lord_pay_way: '',           //收房付款方式
+          rent_month_price: '',       //租房价格
+          rent_duration: '',          //租房时长
+          rent_agency_count: '',      //租房中介费
+          rent_pay_way: '',           //租房付款方式
+          rent_vacancy_date: '',      //租房消耗空置期
+          rent_return_day: '',        //回款时长/天
+          rent_return_money: '',      //未回款金额
         },
-        allCounter: '',
+        allCounter: '',//总收益
       }
     },
     mounted() {
@@ -131,8 +179,9 @@
         }).then(res => {
           if (res.data.code === '50010') {
             this.allCounter = res.data.data.counter;
+          } else {
+            Toast(res.data.msg);
           }
-          Toast(res.data.msg);
         });
       },
       // 提成百分比
