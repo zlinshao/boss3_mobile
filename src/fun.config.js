@@ -77,7 +77,18 @@ export default {
         }
       });
     };
+    // 格式化日期 yyyy-MM-dd
+    Vue.prototype.formatDate = function (date) {
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
 
+      let mm = month.toString();
+      let dd = day.toString();
+      mm = mm[1] ? mm : '0' + mm;
+      dd = dd[1] ? dd : '0' + dd;
+      return year + '-' + mm + '-' + dd;
+    };
     Vue.prototype.routerDetail = function (val) {
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
