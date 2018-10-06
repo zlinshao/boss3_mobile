@@ -174,7 +174,7 @@
     computed: {},
     methods: {
       countMoney() {
-        this.$http.get(this.url + 'salary/overflowrate/getCounter', {
+        this.$http.get(this.url + 'salary/achievement_counter/getCounter', {
           params: this.form,
         }).then(res => {
           if (res.data.code === '50010') {
