@@ -966,6 +966,11 @@
           this.form.is_other_fee = this.other_fee_status ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+          for (let key in this.form) {
+            if (Array.isArray(this.form[key])) {
+              this.form[key] = this.filter_array(this.form[key])
+            }
+          }
           this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;

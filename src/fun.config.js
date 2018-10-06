@@ -77,6 +77,10 @@ export default {
         }
       });
     };
+    // 数组去空字符串
+    Vue.prototype.filter_array = function (array) {
+      return array.filter(item => item !== '');
+    };
     // 格式化日期 yyyy-MM-dd
     Vue.prototype.formatDate = function (date) {
       let year = date.getFullYear();
