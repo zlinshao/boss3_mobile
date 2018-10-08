@@ -17,7 +17,7 @@
           required>
         </van-field>
         <van-field
-          v-model="form.comm_rate"
+          v-model="form.comm_rate + '%'"
           label="提成百分比"
           type="text"
           placeholder="已禁用"
@@ -243,7 +243,7 @@
           duration: 0,       // 持续展示 toast
           forbidClick: true, // 禁用背景点击
           loadingType: 'spinner',
-          message: 'loading...'
+          message: '正在计算...'
         });
         this.$http.post(this.url + this.address, this.form).then(res => {
           Toast.clear();
