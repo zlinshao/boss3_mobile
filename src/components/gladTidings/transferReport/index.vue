@@ -235,7 +235,7 @@
         </van-field>
         <van-field
           v-model="form.deposit_payed"
-          label="已收押金"
+          label="押金"
           @keyup="moneyAll"
           type="text"
           class="number"
@@ -253,8 +253,8 @@
           v-model="form.money_sum"
           type="text"
           class="number"
-          label="已收金额"
-          placeholder="请填写已收金额"
+          label="总金额"
+          placeholder="请填写总金额"
           disabled>
         </van-field>
       </van-cell-group>
@@ -275,10 +275,10 @@
           <van-field
             @click="selectShow(2,index)"
             v-model="moneyNum[index]"
-            label="收款帐户"
+            label="汇款帐户"
             type="text"
             readonly
-            placeholder="请选择收款帐户"
+            placeholder="请选择汇款帐户"
             required>
           </van-field>
         </van-cell-group>
