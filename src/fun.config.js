@@ -27,6 +27,15 @@ export default {
         this.$router.push({path: path, query: params});
       }
     };
+    Vue.prototype.countMoney = function (form) {
+      let sum1 = form.front_money;
+      let sum2 = form.deposit_payed;
+      let sum3 = form.rent_money;
+      sum1 = sum1 ? sum1 : 0;
+      sum2 = sum2 ? sum2 : 0;
+      sum3 = sum3 ? sum3 : 0;
+      return Number(sum1) + Number(sum2) + Number(sum3);
+    };
     Vue.prototype.ddRent = function (url, house) {
       let that = this;
       dd.biz.navigation.setLeft({
@@ -68,7 +77,22 @@ export default {
         }
       });
     };
+    // 数组去空字符串
+    Vue.prototype.filter_array = function (array) {
+      return array.filter(item => item !== '');
+    };
+    // 格式化日期 yyyy-MM-dd
+    Vue.prototype.formatDate = function (date) {
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
 
+      let mm = month.toString();
+      let dd = day.toString();
+      mm = mm[1] ? mm : '0' + mm;
+      dd = dd[1] ? dd : '0' + dd;
+      return year + '-' + mm + '-' + dd;
+    };
     Vue.prototype.routerDetail = function (val) {
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
@@ -111,7 +135,7 @@ export default {
       })
     };
     Vue.prototype.alertMsg = function (val) {
-      switch (val){
+      switch (val) {
         case 'net':
           alert('网络连接失败,请检查网络是否正常!');
           break;
@@ -183,12 +207,16 @@ export default {
                     message: "读取信息失败，稍后再试！",
                     title: "提示信息",
                     buttonName: "关闭",
-                    onSuccess: function () {},
-                    onFail: function (err) {}
+                    onSuccess: function () {
+                    },
+                    onFail: function (err) {
+                    }
                   });
                   dd.biz.navigation.close({
-                    onSuccess: function (result) {},
-                    onFail: function (err) {  }
+                    onSuccess: function (result) {
+                    },
+                    onFail: function (err) {
+                    }
                   });
                 }
               })
@@ -198,8 +226,10 @@ export default {
                 message: "您不在系统内，请联系管理员添加！！",
                 title: "提示信息",
                 buttonName: "关闭",
-                onSuccess: function () {},
-                onFail: function (err) {}
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
               });
             }
           });
@@ -239,16 +269,20 @@ export default {
                       setTimeout(() => {
                         alert('请求超时请稍后再试');
                         dd.biz.navigation.close({
-                          onSuccess: function (result) {},
-                          onFail: function (err) {}
+                          onSuccess: function (result) {
+                          },
+                          onFail: function (err) {
+                          }
                         });
                       }, 3000);
                     }
                   } else {
                     alert('读取信息失败，稍后再试！');
                     dd.biz.navigation.close({
-                      onSuccess: function (result) {},
-                      onFail: function (err) {}
+                      onSuccess: function (result) {
+                      },
+                      onFail: function (err) {
+                      }
                     });
                   }
                 })
@@ -256,16 +290,20 @@ export default {
               onFail: function (err) {
                 alert('您不在系统内，请联系管理员添加！！');
                 dd.biz.navigation.close({
-                  onSuccess: function (result) {},
-                  onFail: function (err) {}
+                  onSuccess: function (result) {
+                  },
+                  onFail: function (err) {
+                  }
                 });
               }
             });
             // 钉钉头部右侧
             dd.biz.navigation.setRight({
               show: false,
-              onSuccess: function (result) {},
-              onFail: function (err) {}
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
             });
           });
           dd.error(function (err) {

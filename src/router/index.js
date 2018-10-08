@@ -36,6 +36,7 @@ import ContinueCollect from '../components/gladTidings/continueCollect/index.vue
 
 // 数据统计
 import DataStatic from '../components/examine/dataStatic/index.vue'
+import DataCount from '../components/examine/dataCount/index.vue'
 import Statistics from '../components/examine/statistics/index.vue'
 
 import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'           //未收先祖
@@ -551,6 +552,15 @@ export default new Router({
       back: '#F19851',
       meta: {title: '业绩报表'},
       component: DataStatic
+    },
+    {
+      path: '/dataCount',
+      name: '业绩计算器',
+      icon: 'iconfont icon-xushouxibao',
+      hidden: 'dataStatic',
+      back: '#E3705B',
+      meta: {title: '业绩计算'},
+      component: DataCount
     },
     // {
     //   path: '/statistics',
