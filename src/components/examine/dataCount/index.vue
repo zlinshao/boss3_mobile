@@ -125,7 +125,7 @@
     <div class="onBtn" @click="countMoney">计算收益</div>
     <div class="result">
       <div class="result1">
-        <div class="result2">
+        <div class="result2 types">
           <div class="title">类型</div>
           <div v-for="(key,index) in showData">{{key}}</div>
         </div>
@@ -134,7 +134,7 @@
         <div class="result2 collect">
           <div class="title">收房人</div>
           <div v-for="key in Object.keys(showData)">
-            <span v-if="lordData[key]">{{lordData[key]}}={{key}}</span>
+            <span v-if="lordData[key]">{{lordData[key]}}</span>
             <span v-else>/</span>
           </div>
         </div>
@@ -143,7 +143,7 @@
         <div class="result2 renter">
           <div class="title">租房人</div>
           <div v-for="key in Object.keys(showData)">
-            <span v-if="rentData[key]">{{rentData[key]}}={{key}}</span>
+            <span v-if="rentData[key]">{{rentData[key]}}</span>
             <span v-else>/</span>
           </div>
         </div>
@@ -152,7 +152,7 @@
         <div class="result2 all">
           <div class="title">合计</div>
           <div v-for="key in Object.keys(showData)">
-            <span v-if="allData[key]">{{allData[key]}}={{key}}</span>
+            <span v-if="allData[key]">{{allData[key]}}</span>
             <span v-else>/</span>
           </div>
         </div>
@@ -365,31 +365,36 @@
           flex-direction: column;
           div {
             white-space: nowrap;
-            padding: .2rem;
+            height: 1rem;
             border-top: 1px solid #fff;
           }
           .title {
             border: 0;
             background-color: rgba(0, 0, 0, .3);
-            color: #FFF;
+            color: #fff;
+          }
+        }
+        .types {
+
+        }
+        .collect, .renter, .all {
+          div {
+            color: #fff;
           }
         }
         .collect {
           div {
             background: #409EFF;
-            color: #fff;
           }
         }
         .renter {
           div {
             background: #FF8000;
-            color: #fff;
           }
         }
         .all {
           div {
             background: #3DCF52;
-            color: #fff;
           }
         }
       }

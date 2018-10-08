@@ -320,6 +320,7 @@
           required>
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
+        <van-switch-cell v-model="is_receipt" title="电子收据"/>
       </van-cell-group>
       <div class="changes" v-for="(key,index) in amountReceipt" v-if="!is_receipt">
         <div class="paddingTitle">
@@ -327,7 +328,6 @@
           <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,4)">删除</span>
         </div>
         <van-cell-group>
-          <van-switch-cell v-model="is_receipt" title="电子收据"/>
           <van-field
             v-model="form.receipt[index]"
             type="text"
