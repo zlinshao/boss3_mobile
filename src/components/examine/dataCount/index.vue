@@ -420,6 +420,9 @@
       z-index: 1;
     }
     .showResult {
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       left: 0;
     }
   }
