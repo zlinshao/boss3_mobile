@@ -1,11 +1,17 @@
 <template>
   <div id="dataCount">
+    <div class="checks">
+      <div class="checkTitle">出租类型</div>
+      <van-radio-group v-model="rentType">
+        <van-radio name="0">新租</van-radio>
+        <van-radio name="1">二次出租</van-radio>
+      </van-radio-group>
+    </div>
     <van-cell-group>
       <van-field
         v-model="form.counter"
         label="总业绩"
         type="text"
-        @blur="percent(form.counter)"
         placeholder="请填写总业绩"
         required>
       </van-field>
@@ -34,6 +40,7 @@
         required>
       </van-field>
       <van-field
+        v-if="rentType === '0'"
         v-model="form.lord_agency_count"
         label="收房中介费"
         type="text"
@@ -41,6 +48,7 @@
         required>
       </van-field>
       <van-field
+        v-if="rentType === '0'"
         v-model="form.lord_vacancy_date"
         label="收房空置期"
         type="text"
@@ -48,6 +56,7 @@
         required>
       </van-field>
       <van-field
+        v-if="rentType === '0'"
         v-model="formatData.payWay"
         @click="selectShow()"
         label="收房付款方式"
@@ -173,7 +182,8 @@
     data() {
       return {
         url: globalConfig.server,
-
+        address: '',
+        rentType: '0',
         timeModule: false,              //日期
         pickerModule: false,            //
         payValues: [],
@@ -192,49 +202,34 @@
           payWay: '',
         },
         form: {
-          counter: '',                //总业绩
-          comm_rate: '',              //提成百分比
-          lord_month_price: '',       //收房价格
-          lord_duration: '',          //收房年限
-          lord_agency_count: '',      //收房中介费
-          lord_vacancy_date: '',      //收房空置期
-          lord_pay_way: '',           //收房付款方式
-          rent_month_price: '',       //租房价格
-          rent_agency_count: '',      //租房中介费
-          rent_pay_way: '',           //租房付款方式
-          rent_vacancy_date: '',      //租房消耗空置期
-          rent_return_day: '',        //回款时长/天
-          rent_return_money: '',      //未回款金额
+          comm_rate: 100,
         },
-        allCounter: {},//总收益
+
         lordData: {},
         rentData: {},
         allData: {},
-        showData: {
-          basic_achievement: '基本溢出业绩',
-          pay_way: '租房付款方式',
-          real_return_money: '实际回款',
-          spread: '价差',
-          expend: '消耗空置期',
-          pay_way_lord: '收房付款方式',
-          vacancy: '收房空置期',
-          duration: '收房年限',
-          affect_sum: '影响合计',
-          overflow: '溢出业绩',
-          push_rate: '提成比例',
-          push_money: '提成金额',
-          agency_count_lord: '收房中介费',
-          agency_count: '租房中介费',
-          real_money: '实际到手',
-          client_money: '客户维护费',
-        }
+        showData: {}
       }
     },
+    created() {
+      this.resetting();
+    },
     mounted() {
+      this.address = 'salary/achievement_counter/getCounter';
     },
     activated() {
     },
-    watch: {},
+    watch: {
+      rentType(val) {
+        this.resetting();
+        if (val === '0') {
+          this.address = 'salary/achievement_counter/getCounter';
+        } else {
+          this.address = 'salary/overflowrate/getSecondRent';
+          delete this.showData.push_rate;
+        }
+      }
+    },
     computed: {},
     methods: {
       // 计算收益
@@ -245,7 +240,7 @@
           loadingType: 'spinner',
           message: 'loading...'
         });
-        this.$http.post(this.url + 'salary/achievement_counter/getCounter', this.form).then(res => {
+        this.$http.post(this.url + this.address, this.form).then(res => {
           Toast.clear();
           if (res.data.code === '50010') {
             this.handleData(res.data.data);
@@ -253,15 +248,17 @@
             Toast(res.data.msg);
           }
         }).catch(() => {
-          Toast(res.data.msg);
+          Toast.clear();
         });
       },
       handleData(data) {
+        this.rentData = data.rent;
+        this.allData = data.all;
+        if (this.rentType === '1') return;
         this.lordData = data.lord;
         this.lordData.pay_way_lord = data.lord.agency_count;
         this.lordData.agency_count_lord = data.lord.agency_count;
-        this.rentData = data.rent;
-        this.allData = data.all;
+
       },
       // 提成百分比
       percent(val) {
@@ -273,6 +270,7 @@
           }
         })
       },
+      // select
       selectShow() {
         setTimeout(() => {
           this.pickerModule = true;
@@ -280,6 +278,7 @@
         this.payValues = Object.values(this.payWay);
         this.payKeys = Object.keys(this.payWay);
       },
+      // select
       onConfirm(value, index) {
         this.form.lord_pay_way = this.payKeys[index];
         this.formatData.payWay = value;
@@ -303,12 +302,30 @@
         this.pickerModule = false;
         this.timeModule = false;
       },
+      // 重置
+      resetting() {
+        this.form = {};
+        this.lordData = {};
+        this.rentData = {};
+        this.allData = {};
+        this.form.comm_rate = 100;
+        this.showData = JSON.parse(JSON.stringify(rentTitle));
+      },
     },
   }
 </script>
 
 <style lang="scss">
   #dataCount {
+    .checks {
+      display: flex;
+      display: -webkit-flex;
+      padding: 0 15px;
+      background-color: #fff;
+      .checkTitle {
+        max-width: 150px;
+      }
+    }
     .van-cell.van-hairline.van-field {
       .van-cell__title {
         width: 150px;
@@ -317,7 +334,6 @@
       /*padding-left: 150px;*/
       /*}*/
     }
-
     .titles {
       background-color: #e5e5e5;
       height: .7rem;
@@ -325,7 +341,6 @@
       padding: 0 .3rem;
       color: #aaaaaa;
     }
-
     .onBtn {
       width: 100%;
       background: #409EFF;
@@ -335,7 +350,6 @@
       line-height: .82rem;
       margin: .3rem 0;
     }
-
     .result {
       display: flex;
       display: -webkit-flex;
