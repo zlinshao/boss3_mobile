@@ -206,6 +206,7 @@
         },
         form: {
           comm_rate: 100,
+          counter: 300000,
         },
 
         lordData: {},
@@ -221,6 +222,7 @@
       this.address = 'salary/achievement_counter/getCounter';
     },
     activated() {
+      this.stick();
     },
     watch: {
       rentType(val) {
@@ -315,6 +317,7 @@
         this.rentData = {};
         this.allData = {};
         this.form.comm_rate = 100;
+        this.form.counter = 300000;
         this.showData = JSON.parse(JSON.stringify(rentTitle));
       },
     },
