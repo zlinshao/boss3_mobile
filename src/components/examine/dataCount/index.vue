@@ -256,7 +256,7 @@
         this.allData = data.all;
         if (this.rentType === '1') return;
         this.lordData = data.lord;
-        this.lordData.pay_way_lord = data.lord.agency_count;
+        this.lordData.pay_way_lord = data.lord.pay_way;
         this.lordData.agency_count_lord = data.lord.agency_count;
 
       },
