@@ -33,7 +33,7 @@ dicts = {
 // 计算结果
 rentTitle = {
   basic_achievement: '基本溢出业绩',
-  pay_way: '租房付款方式',
+  pay_way_rent: '租房付款方式',
   real_return_money: '实际回款',
   spread: '价差',
   expend: '消耗空置期',
@@ -45,7 +45,7 @@ rentTitle = {
   push_rate: '提成比例',
   push_money: '提成金额',
   agency_count_lord: '收房中介费',
-  agency_count: '租房中介费',
+  agency_count_rent: '租房中介费',
   real_money: '实际到手',
   client_money: '客户维护费',
 };

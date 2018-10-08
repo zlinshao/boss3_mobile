@@ -253,6 +253,8 @@
       },
       handleData(data) {
         this.rentData = data.rent;
+        this.rentData.pay_way_rent = data.rent.pay_way;
+        this.rentData.agency_count_rent = data.rent.agency_count;
         this.allData = data.all;
         if (this.rentType === '1') return;
         this.lordData = data.lord;
