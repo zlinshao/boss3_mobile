@@ -331,9 +331,9 @@
       .van-cell__title {
         width: 150px;
       }
-      /*.van-cell__value {*/
-      /*padding-left: 150px;*/
-      /*}*/
+      .van-cell__value {
+        padding-left: 150px;
+      }
     }
     .titles {
       background-color: #e5e5e5;
@@ -364,9 +364,8 @@
           display: flex;
           flex-direction: column;
           div {
-            height: .6rem;
-            line-height: .6rem;
-            padding: 0 .1rem;
+            white-space: nowrap;
+            height: 1rem;
             border-top: 1px solid #fff;
           }
           .title {
@@ -376,29 +375,24 @@
           }
         }
         .types {
-          div {
-            white-space: nowrap;
-          }
-        }
-        .collect, .renter, .all {
-          div {
-            word-break: break-all;
-            color: #fff;
-          }
+
         }
         .collect {
           div {
             background: #409EFF;
+            color: #fff;
           }
         }
         .renter {
           div {
             background: #FF8000;
+            color: #fff;
           }
         }
         .all {
           div {
             background: #3DCF52;
+            color: #fff;
           }
         }
       }
