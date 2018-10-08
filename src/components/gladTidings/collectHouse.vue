@@ -345,7 +345,7 @@
         list.start_at = value.start_at;
         list.album = value.album;
         list.status = value.status !== null ? value.status : 0;
-        list.font_money = value.font_money ? value.font_money : '';
+        list.front_money = value.front_money ? value.front_money : '';
         list.duration_days = value.duration_days;
         if (value.customers.length !== 0) {
           list.customers = value.customers[0].name;

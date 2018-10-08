@@ -134,7 +134,7 @@
         <div class="result2 collect">
           <div class="title">收房人</div>
           <div v-for="key in Object.keys(showData)">
-            <span v-if="lordData[key]">{{lordData[key]}}</span>
+            <span v-if="lordData[key]">{{lordData[key]}}={{key}}</span>
             <span v-else>/</span>
           </div>
         </div>
@@ -143,7 +143,7 @@
         <div class="result2 renter">
           <div class="title">租房人</div>
           <div v-for="key in Object.keys(showData)">
-            <span v-if="rentData[key]">{{rentData[key]}}</span>
+            <span v-if="rentData[key]">{{rentData[key]}}={{key}}</span>
             <span v-else>/</span>
           </div>
         </div>
@@ -152,7 +152,7 @@
         <div class="result2 all">
           <div class="title">合计</div>
           <div v-for="key in Object.keys(showData)">
-            <span v-if="allData[key]">{{allData[key]}}</span>
+            <span v-if="allData[key]">{{allData[key]}}={{key}}</span>
             <span v-else>/</span>
           </div>
         </div>
@@ -192,8 +192,6 @@
           '1': '月付',
           '2': '双月付',
           '3': '季付',
-          '4': '半年付',
-          '5': '年付',
         },
         formatData: {
           paramsKey: '',                //格式化日期
@@ -319,6 +317,7 @@
 
 <style lang="scss">
   #dataCount {
+    overflow-x: hidden;
     .checks {
       display: flex;
       display: -webkit-flex;

@@ -49,7 +49,7 @@
           <div v-for="(key,index) in form.old_price" v-show="index !== 0">{{key}}</div>
         </div>
         <van-field
-          v-model="form.old_font_money"
+          v-model="form.old_front_money"
           label="定金"
           type="text"
           disabled
@@ -502,7 +502,7 @@
           old_staff_name: '',
           old_pay_way_arr: [''],
           old_price: [''],
-          old_font_money: '',
+          old_front_money: '',
           old_house_name: '',
 
           sign_date: '',
@@ -1007,7 +1007,7 @@
             this.form.house_id_rent = val.house_id;
             this.form.sign_date = val.start_at;
             this.form.name = val.customers;
-            this.form.old_font_money = val.font_money;
+            this.form.old_front_money = val.front_money;
             this.form.phone = val.cusPhone;
 
             this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
