@@ -237,7 +237,6 @@
     methods: {
       // 计算收益
       countMoney() {
-        this.showContent = false;
         Toast.loading({
           duration: 0,       // 持续展示 toast
           forbidClick: true, // 禁用背景点击
@@ -247,6 +246,7 @@
         this.$http.post(this.url + this.address, this.form).then(res => {
           Toast.clear();
           if (res.data.code === '50010') {
+            this.showContent = false;
             this.handleData(res.data.data);
           } else {
             Toast(res.data.msg);
@@ -391,8 +391,20 @@
         }
         .collect, .renter, .all {
           word-break: break-all;
+        }
+        .collect {
           div {
-            color: #969696;
+            color: #409EFF;
+          }
+        }
+        .renter {
+          div {
+            color: #FF8000;
+          }
+        }
+        .all {
+          div {
+            color: #3DCF52;
           }
         }
       }
@@ -405,6 +417,7 @@
       bottom: 0;
       background-color: #fff;
       transition: all .5s;
+      z-index: 1;
     }
     .showResult {
       left: 0;
