@@ -84,7 +84,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = false;
+          this.loading = true;
           this.corp();
           // if (sessionStorage.myData !== undefined) {
           //   let head = JSON.parse(sessionStorage.myData);
@@ -310,6 +310,7 @@
       bottom: 0;
       background: #f1f1f1;
     }
+
     .loading {
       top: 50%;
       left: 50%;
