@@ -1,6 +1,6 @@
 <template>
   <div id="dataCount">
-    <div v-if="showContent">
+    <div v-show="showContent">
       <div class="checks">
         <div class="checkTitle">出租类型</div>
         <van-radio-group v-model="rentType">
@@ -125,7 +125,8 @@
       <!--</van-cell-group>-->
       <div class="onBtn" @click="countMoney">计算收益</div>
     </div>
-      <div class="result" :class="{'showResult': !showContent}">
+    <div class="results" :class="{'showResult': !showContent}">
+      <div class="result">
         <div class="result1">
           <div class="result2 types">
             <div class="title">类型</div>
@@ -161,7 +162,7 @@
         </div>
       </div>
       <div class="onBtn" @click="showContent = true">返回上一步</div>
-
+    </div>
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="pickerModule" position="bottom"
                :overlay="true">
       <van-picker
@@ -354,18 +355,7 @@
       line-height: .82rem;
       margin: .3rem 0;
     }
-    .showResult {
-      position: fixed;
-      left: 0;
-    }
     .result {
-      position: fixed;
-      top: 0;
-      left: 20rem;
-      right: 0;
-      bottom: 0;
-      background-color: #fff;
-      transition: all 1s;
       display: flex;
       display: -webkit-flex;
       justify-content: space-between;
@@ -406,6 +396,18 @@
           }
         }
       }
+    }
+    .results {
+      position: fixed;
+      top: 0;
+      left: 10rem;
+      right: 0;
+      bottom: 0;
+      background-color: #fff;
+      transition: all .5s;
+    }
+    .showResult {
+      left: 0;
     }
   }
 </style>
