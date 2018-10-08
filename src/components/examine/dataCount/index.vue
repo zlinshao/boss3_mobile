@@ -130,13 +130,13 @@
         <div class="result1">
           <div class="result2 types">
             <div class="title">类型</div>
-            <div v-for="(key,index) in showData">{{key}}</div>
+            <div v-for="(key,index) in showData" :class="{'colorRed': index === 'real_money'}">{{key}}</div>
           </div>
         </div>
         <div class="result1">
           <div class="result2 collect">
             <div class="title">收房人</div>
-            <div v-for="key in Object.keys(showData)">
+            <div v-for="key in Object.keys(showData)" :class="{'colorRed': key === 'real_money'}">
               <span v-if="lordData[key]">{{lordData[key]}}</span>
               <span v-else>/</span>
             </div>
@@ -145,7 +145,7 @@
         <div class="result1">
           <div class="result2 renter">
             <div class="title">租房人</div>
-            <div v-for="key in Object.keys(showData)">
+            <div v-for="key in Object.keys(showData)" :class="{'colorRed': key === 'real_money'}">
               <span v-if="rentData[key]">{{rentData[key]}}</span>
               <span v-else>/</span>
             </div>
@@ -154,7 +154,7 @@
         <div class="result1">
           <div class="result2 all">
             <div class="title">合计</div>
-            <div v-for="key in Object.keys(showData)">
+            <div v-for="key in Object.keys(showData)" :class="{'colorRed': key === 'real_money'}">
               <span v-if="allData[key]">{{allData[key]}}</span>
               <span v-else>/</span>
             </div>
@@ -189,8 +189,8 @@
         address: '',
         rentType: '0',
         timeModule: false,              //日期
-        pickerModule: false,            //
-        showContent: true,             //
+        pickerModule: false,
+        showContent: true,
         payValues: [],
         payKeys: [],
         payWay: {
@@ -371,15 +371,13 @@
           display: flex;
           flex-direction: column;
           div {
-            height: .6rem;
-            line-height: .6rem;
+            height: .77rem;
+            line-height: .77rem;
             padding: 0 .15rem;
             border-top: 1px solid #f8f8f8;
           }
           .title {
             border: 0;
-            height: .7rem;
-            line-height: .7rem;
             background-color: #409EFF;
             color: #fff;
           }
@@ -391,9 +389,6 @@
             color: #fff;
           }
 
-        }
-        .collect, .renter, .all {
-          word-break: break-all;
         }
         .collect {
           div {
@@ -408,6 +403,14 @@
         .all {
           div {
             color: #3DCF52;
+          }
+        }
+        .collect, .renter, .all {
+          word-break: break-all;
+          .colorRed {
+            font-weight: bold;
+            background-color: red;
+            color: #fff;
           }
         }
       }
