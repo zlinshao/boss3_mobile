@@ -364,8 +364,9 @@
           display: flex;
           flex-direction: column;
           div {
-            white-space: nowrap;
-            height: 1rem;
+            height: .6rem;
+            line-height: .6rem;
+            padding: 0 .1rem;
             border-top: 1px solid #fff;
           }
           .title {
@@ -375,10 +376,13 @@
           }
         }
         .types {
-
+          div {
+            white-space: nowrap;
+          }
         }
         .collect, .renter, .all {
           div {
+            word-break: break-all;
             color: #fff;
           }
         }
