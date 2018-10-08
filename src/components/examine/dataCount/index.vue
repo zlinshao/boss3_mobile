@@ -337,8 +337,6 @@
     }
     .titles {
       background-color: #e5e5e5;
-      height: .7rem;
-      line-height: .7rem;
       padding: 0 .3rem;
       color: #aaaaaa;
     }
@@ -364,8 +362,8 @@
           display: flex;
           flex-direction: column;
           div {
-            white-space: nowrap;
-            height: 1rem;
+            height: .6rem;
+            line-height: .6rem;
             border-top: 1px solid #fff;
           }
           .title {
@@ -375,24 +373,30 @@
           }
         }
         .types {
+          div {
+            white-space: nowrap;
+          }
 
+        }
+        .collect, .renter, .all {
+          word-break: break-all;
+          div {
+            color: #fff;
+          }
         }
         .collect {
           div {
             background: #409EFF;
-            color: #fff;
           }
         }
         .renter {
           div {
             background: #FF8000;
-            color: #fff;
           }
         }
         .all {
           div {
             background: #3DCF52;
-            color: #fff;
           }
         }
       }
