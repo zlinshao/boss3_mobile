@@ -333,15 +333,15 @@
       padding: 0 15px;
       background-color: #fff;
       .checkTitle {
-        max-width: 150px;
+        max-width: 130px;
       }
     }
     .van-cell.van-hairline.van-field {
       .van-cell__title {
-        width: 150px;
+        width: 130px;
       }
       .van-cell__value {
-        padding-left: 150px;
+        padding-left: 130px;
       }
     }
     .titles {
