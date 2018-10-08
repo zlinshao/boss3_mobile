@@ -49,7 +49,7 @@
           <div v-for="(key,index) in form.old_price" v-show="index !== 0">{{key}}</div>
         </div>
         <van-field
-          v-model="form.old_money_sum"
+          v-model="form.old_font_money"
           label="定金"
           type="text"
           disabled
@@ -502,7 +502,7 @@
           old_staff_name: '',
           old_pay_way_arr: [''],
           old_price: [''],
-          old_money_sum: '',
+          old_font_money: '',
           old_house_name: '',
 
           sign_date: '',
@@ -1005,16 +1005,15 @@
             this.form.old_house_name = val.house_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
-            // this.form.deposit = val.mortgage_price;
             this.form.sign_date = val.start_at;
             this.form.name = val.customers;
+            this.form.old_font_money = val.font_money;
             this.form.phone = val.cusPhone;
 
             this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
               if (res.data.code === '51110') {
                 let pay = res.data.data;
                 this.form.old_staff_name = pay.staff.name;
-                this.form.old_money_sum = pay.money_sum;
                 this.form.old_pay_way_arr = [];
                 this.form.old_price = [];
                 for (let i = 0; i < pay.pay_way.length; i++) {
@@ -1089,7 +1088,7 @@
             this.form.old_staff_name = draft.old_staff_name;
             this.form.old_pay_way_arr = draft.old_pay_way_arr;
             this.form.old_price = draft.old_price;
-            this.form.old_money_sum = draft.old_money_sum;
+            this.form.old_font_money = draft.old_font_money;
 
             this.form.sign_date = draft.sign_date;
             this.form.name = draft.name;
@@ -1214,7 +1213,7 @@
         this.form.old_staff_name = '';
         this.form.old_pay_way_arr = [''];
         this.form.old_price = [''];
-        this.form.old_money_sum = '';
+        this.form.old_font_money = '';
 
         this.form.sign_date = '';
         this.form.name = '';
