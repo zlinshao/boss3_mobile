@@ -210,7 +210,7 @@
           </van-field>
           <van-field
             @click="selectShow(2,index)"
-            v-model="moneyNum[index]"
+            v-model="form.money_way[index]"
             label="汇款帐户"
             type="text"
             readonly
@@ -505,7 +505,6 @@
         payIndex: '',               //付款方式index
 
         amountMoney: 1,
-        moneyNum: [''],             //分金额 付款方式
 
         amountReceipt: 1,                  //收据编号
         receiptDate: '',
@@ -545,7 +544,9 @@
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
-          property_payer: '',
+          account_id: [],               //汇款方式ID
+
+          property_payer: '',           //物业费付款人
           is_agency: '',                //客户来源    0个人1中介
           agency_name: '',              //中介名
           agency_price: '',             //中介费
@@ -864,13 +865,12 @@
             }
             break;
           case 2:
-            this.moneyNum[this.payIndex] = value;
             this.form.money_way[this.payIndex] = value;
-            // this.dictValue8.forEach(res => {
-            //   if (res.display_name === value) {
-            //     this.form.money_way[this.payIndex] = res.bank_info;
-            //   }
-            // });
+            this.dictValue8.forEach(res => {
+              if (res.bank_info === value) {
+                this.form.account_id[this.payIndex] = res.id;
+              }
+            });
             break;
           case 3:
             this.form.pay_way_bet = value;
@@ -914,7 +914,7 @@
           this.amountMoney++;
           this.form.money_sep.push('');
           this.form.money_way.push('');
-          this.moneyNum.push('');
+          this.form.account_id.push('');
         } else {
           this.amountReceipt++;
           this.form.receipt.push(this.receiptDate);
@@ -939,7 +939,7 @@
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
           this.form.money_way.splice(index, 1);
-          this.moneyNum.splice(index, 1);
+          this.form.account_id.splice(index, 1);
         } else {
           this.amountReceipt--;
           this.form.receipt.splice(index, 1);
@@ -1083,30 +1083,27 @@
             }
             this.countDate(2, this.form.period_pay_arr);
 
-            this.form.property_payer = draft.property_payer;
+            this.form.property_payer = rent.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
-              if (this.dictValue6[j].id === draft.property_payer) {
+              if (this.dictValue6[j].id === rent.property_payer) {
                 this.property_name = this.dictValue6[j].dictionary_name;
               }
             }
-            this.form.front_money = draft.front_money;
-            this.form.deposit = draft.deposit;
-            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
-            this.form.rent_money = draft.rent_money;
-            this.form.money_sum = draft.money_sum;
-            this.form.money_sep = [];
-            this.form.money_way = [];
-            for (let i = 0; i < rent.month_price.length; i++) {
+            this.form.front_money = rent.front_money;
+            this.form.deposit = rent.deposit;
+            this.form.deposit_payed = rent.deposit_payed ? rent.deposit_payed : '';
+            this.form.rent_money = rent.rent_money;
+            this.form.money_sum = rent.money_sum;
+            this.form.money_sep = rent.money_sep;
+            this.form.money_way = rent.money_way;
+            for (let i = 0; i < rent.money_way.length; i++) {
               this.amountMoney = i + 1;
-              this.form.money_sep.push(rent.money_table[i].money_sep);
-              this.form.money_way.push(rent.money_table[i].money_way);
-              // for (let j = 0; j < this.dictValue8.length; j++) {
-              //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-              //     this.moneyNum[i] = this.dictValue8[j].display_name;
-              //   }
-              // }
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].bank_info === rent.money_way[i]) {
+                  this.form.account_id[i] = this.dictValue8[j].id;
+                }
+              }
             }
-            this.moneyNum = this.form.money_way;
 
             if (rent.is_receipt) {
               this.is_receipt = true;
@@ -1228,17 +1225,16 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
-            for (let i = 0; i < draft.money_sep.length; i++) {
-              this.amountMoney = i + 1;
-              // for (let j = 0; j < this.dictValue8.length; j++) {
-              //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-              //     this.moneyNum[i] = this.dictValue8[j].display_name;
-              //   }
-              // }
-            }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
-            this.moneyNum = draft.money_way;
+            for (let i = 0; i < draft.money_way.length; i++) {
+              this.amountMoney = i + 1;
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+                  this.form.account_id[i] = this.dictValue8[j].id;
+                }
+              }
+            }
 
             if (draft.is_receipt) {
               this.is_receipt = true;
@@ -1343,7 +1339,7 @@
         this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
-        this.moneyNum = [''];
+        this.form.account_id = [];
         this.form.sign_date = '';
         this.form.begin_date = '';
         this.form.end_date = '';

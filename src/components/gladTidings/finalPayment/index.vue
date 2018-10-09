@@ -127,7 +127,7 @@
           </van-field>
           <van-field
             @click="selectShow(1,index)"
-            v-model="moneyNum[index]"
+            v-model="form.money_way[index]"
             label="汇款帐户"
             type="text"
             readonly
@@ -311,7 +311,6 @@
         priceStatus: false,
 
         amountMoney: 1,
-        moneyNum: [''],               //分金额 付款方式
         payIndex: '',                 //分金额方式index
 
         amountReceipt: 1,                  //收据编号
@@ -344,7 +343,7 @@
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
-          retainage_date: '',
+          retainage_date: '',           //尾款补齐日期
           screenshot_leader: [],        //领导截图 数组
           screenshot: [],               //凭证截图 数组
           screenshot_old: [],           //凭证截图 数组
@@ -547,13 +546,12 @@
       onConfirm(value, index) {
         switch (this.tabs) {
           case 1:
-            this.moneyNum[this.payIndex] = value;
             this.form.money_way[this.payIndex] = value;
-            // this.dictValue8.forEach(res => {
-            //   if (res.display_name === value) {
-            //     this.form.money_way[this.payIndex] = res.bank_info;
-            //   }
-            // });
+            this.dictValue8.forEach(res => {
+              if (res.bank_info === value) {
+                this.form.account_id[this.payIndex] = res.id;
+              }
+            });
             break;
           case 2:
             this.form.terms = value;
@@ -579,7 +577,7 @@
           this.amountMoney++;
           this.form.money_sep.push('');
           this.form.money_way.push('');
-          this.moneyNum.push('');
+          this.form.account_id.push('');
         } else {
           this.amountReceipt++;
           this.form.receipt.push(this.receiptDate);
@@ -592,7 +590,7 @@
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
           this.form.money_way.splice(index, 1);
-          this.moneyNum.splice(index, 1);
+          this.form.account_id.splice(index, 1);
         } else {
           this.amountReceipt--;
           this.form.receipt.splice(index, 1);
@@ -778,30 +776,27 @@
               this.form.is_receipt = 0;
               this.getReceipt(draft);
             }
+            this.form.contract_id = draft.contract_id;
+            this.helperBulletin(draft.contract_id);
+            this.form.house_id = draft.house_id;
+
             this.form.front_money = draft.front_money;
             this.form.deposit = draft.deposit;
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
-
-            this.form.contract_id = draft.contract_id;
-            this.helperBulletin(draft.contract_id);
-            this.form.house_id = draft.house_id;
-            if (draft.money_sep.length > 0) {
-              for (let i = 0; i < draft.money_sep.length; i++) {
-                this.amountMoney = i + 1;
-                // for (let j = 0; j < this.dictValue8.length; j++) {
-                //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                //     this.moneyNum[i] = this.dictValue8[j].display_name;
-                //   }
-                // }
+            this.form.money_sep = draft.money_sep;
+            this.form.money_way = draft.money_way;
+            for (let i = 0; i < draft.money_way.length; i++) {
+              this.amountMoney = i + 1;
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+                  this.form.account_id[i] = this.dictValue8[j].id;
+                }
               }
             }
-            this.form.money_sep = draft.money_sep;
-            this.form.retainage_date = draft.retainage_date;
-            this.form.money_way = draft.money_way;
-            this.moneyNum = draft.money_way;
 
+            this.form.retainage_date = draft.retainage_date;
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
@@ -877,7 +872,7 @@
         this.form.money_sum = '';
         this.form.retainage_date = '';
         this.amountMoney = 1;
-        this.moneyNum = [''];
+        this.form.account_id = [];
         this.form.money_sep = [''];
         this.form.money_way = [''];
         this.form.screenshot = [];

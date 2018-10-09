@@ -553,15 +553,15 @@ export default new Router({
       meta: {title: '业绩报表'},
       component: DataStatic
     },
-    {
-      path: '/dataCount',
-      name: '业绩计算器',
-      icon: 'iconfont icon-xushouxibao',
-      hidden: 'dataStatic',
-      back: '#E3705B',
-      meta: {title: '业绩计算'},
-      component: DataCount
-    },
+    // {
+    //   path: '/dataCount',
+    //   name: '业绩计算器',
+    //   icon: 'iconfont icon-xushouxibao',
+    //   hidden: 'dataStatic',
+    //   back: '#E3705B',
+    //   meta: {title: '业绩计算'},
+    //   component: DataCount
+    // },
     // {
     //   path: '/statistics',
     //   name: '业绩统计',

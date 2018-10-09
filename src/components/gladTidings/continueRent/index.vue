@@ -200,7 +200,7 @@
           </van-field>
           <van-field
             @click="selectShow(2,index)"
-            v-model="moneyNum[index]"
+            v-model="form.money_way[index]"
             label="汇款帐户"
             type="text"
             readonly
@@ -440,7 +440,6 @@
         payIndex: '',                   //付款方式index
 
         amountMoney: 1,
-        moneyNum: [''],                 //分金额 付款方式
 
         amountReceipt: 1,               //收据编号
         receiptDate: '',
@@ -475,6 +474,7 @@
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
+          account_id: [],               //汇款帐户ID
 
           is_other_fee: 0,
           other_fee: '',
@@ -779,13 +779,12 @@
             }
             break;
           case 2:
-            this.moneyNum[this.payIndex] = value;
             this.form.money_way[this.payIndex] = value;
-            // this.dictValue8.forEach(res => {
-            //   if (res.display_name === value) {
-            //     this.form.money_way[this.payIndex] = res.bank_info;
-            //   }
-            // });
+            this.dictValue8.forEach(res => {
+              if (res.bank_info === value) {
+                this.form.account_id[this.payIndex] = res.id;
+              }
+            });
             break;
           case 3:
             this.form.pay_way_bet = value;
@@ -811,7 +810,7 @@
           this.amountMoney++;
           this.form.money_sep.push('');
           this.form.money_way.push('');
-          this.moneyNum.push('');
+          this.form.account_id.push('');
         } else {
           this.amountReceipt++;
           this.form.receipt.push(this.receiptDate);
@@ -835,7 +834,7 @@
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
           this.form.money_way.splice(index, 1);
-          this.moneyNum.splice(index, 1);
+          this.form.account_id.splice(index, 1);
         } else {
           this.amountReceipt--;
           this.form.receipt.splice(index, 1);
@@ -1018,25 +1017,23 @@
             this.form.period_pay_arr = draft.period_pay_arr;
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
+            this.form.discount = draft.discount;
 
             this.form.front_money = draft.front_money;
             this.form.deposit = draft.deposit;
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.rent_money = draft.rent_money;
             this.form.money_sum = draft.money_sum;
-            for (let i = 0; i < draft.money_sep.length; i++) {
-              this.amountMoney = i + 1;
-              // for (let j = 0; j < this.dictValue8.length; j++) {
-              //   if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-              //     this.moneyNum[i] = this.dictValue8[j].display_name;
-              //   }
-              // }
-            }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
-            this.moneyNum = draft.moneyNum;
-
-            this.form.discount = draft.discount;
+            for (let i = 0; i < draft.money_way.length; i++) {
+              this.amountMoney = i + 1;
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+                  this.form.account_id[i] = this.dictValue8[j].id;
+                }
+              }
+            }
 
             if (draft.is_receipt) {
               this.is_receipt = true;
@@ -1138,9 +1135,9 @@
         this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
-        this.moneyNum = [''];
         this.form.money_sep = [''];
         this.form.money_way = [''];
+        this.form.account_id = [];
         this.form.from = 1;
 
         this.is_receipt = true;
