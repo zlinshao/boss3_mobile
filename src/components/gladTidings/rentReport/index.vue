@@ -217,12 +217,12 @@
 
       <van-cell-group>
         <!--<van-field-->
-          <!--v-model="form.deposit"-->
-          <!--label="押金"-->
-          <!--type="text"-->
-          <!--class="number"-->
-          <!--placeholder="请填写押金"-->
-          <!--required>-->
+        <!--v-model="form.deposit"-->
+        <!--label="押金"-->
+        <!--type="text"-->
+        <!--class="number"-->
+        <!--placeholder="请填写押金"-->
+        <!--required>-->
         <!--</van-field>-->
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
@@ -529,6 +529,7 @@
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
+          account_id: [],             //分金额 方式
 
           is_other_fee: 0,
           other_fee: '',
@@ -830,11 +831,11 @@
           case 2:
             this.moneyNum[this.payIndex] = value;
             this.form.money_way[this.payIndex] = value;
-            // this.dictValue8.forEach(res => {
-            //   if (res.display_name === value) {
-            //     this.form.money_way[this.payIndex] = res.bank_info;
-            //   }
-            // });
+            this.dictValue8.forEach(res => {
+              if (res.bank_info === value) {
+                this.form.account_id[this.payIndex] = res.id;
+              }
+            });
             break;
           case 3:
             this.form.pay_way_bet = value;
@@ -868,6 +869,7 @@
           this.amountMoney++;
           this.form.money_sep.push('');
           this.form.money_way.push('');
+          this.form.account_id.push('');
           this.moneyNum.push('');
         } else {
           this.amountReceipt++;
@@ -892,6 +894,7 @@
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
           this.form.money_way.splice(index, 1);
+          this.form.account_id.splice(index, 1);
           this.moneyNum.splice(index, 1);
         } else {
           this.amountReceipt--;
@@ -1112,6 +1115,7 @@
               // }
             }
             this.form.money_way = draft.money_way;
+            this.form.account_id = draft.account_id ? draft.account_id : [];
             this.moneyNum = draft.money_way;
             this.form.money_sep = draft.money_sep;
             this.form.discount = draft.discount;
@@ -1230,6 +1234,7 @@
         this.moneyNum = [''];
         this.form.money_sep = [''];
         this.form.money_way = [''];
+        this.form.account_id = [];
         this.is_corp = 1;
         this.corp = true;
         this.is_agency = '';
