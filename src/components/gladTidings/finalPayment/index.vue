@@ -343,6 +343,7 @@
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
           money_way: [''],              //分金额 方式
+          account_id: [],               //汇款方式ID
           retainage_date: '',           //尾款补齐日期
           screenshot_leader: [],        //领导截图 数组
           screenshot: [],               //凭证截图 数组
