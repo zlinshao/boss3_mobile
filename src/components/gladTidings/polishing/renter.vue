@@ -29,23 +29,23 @@
         </van-field>
       </van-cell-group>
 
-      <div class="changes" v-for="(key,index) in amountReceipt">
-        <div class="paddingTitle">
-          <span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,2)">删除</span>
-        </div>
-        <van-cell-group>
-          <van-field
-            v-model="form.receipt[index]"
-            type="text"
-            label="收据编号"
-            placeholder="请填写收据编号">
-          </van-field>
-        </van-cell-group>
-      </div>
-      <div @click="addAmount(2)" class="addInput">
-        +增加收据编号
-      </div>
+      <!--<div class="changes" v-for="(key,index) in amountReceipt">-->
+        <!--<div class="paddingTitle">-->
+          <!--<span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>-->
+          <!--<span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,2)">删除</span>-->
+        <!--</div>-->
+        <!--<van-cell-group>-->
+          <!--<van-field-->
+            <!--v-model="form.receipt[index]"-->
+            <!--type="text"-->
+            <!--label="收据编号"-->
+            <!--placeholder="请填写收据编号">-->
+          <!--</van-field>-->
+        <!--</van-cell-group>-->
+      <!--</div>-->
+      <!--<div @click="addAmount(2)" class="addInput">-->
+        <!--+增加收据编号-->
+      <!--</div>-->
 
       <div class="changes" v-for="(key,index) in amount">
         <div class="paddingTitle">

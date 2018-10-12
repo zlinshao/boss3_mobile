@@ -660,7 +660,6 @@
             res.data.data.forEach(item => {
               this.value8.push(item.bank_info);
             });
-            this.finalDetail(val);
           }
         });
       },
