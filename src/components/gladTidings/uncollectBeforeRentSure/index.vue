@@ -1098,8 +1098,8 @@
             this.form.money_way = [];
             for (let i = 0; i < rent.money_table.length; i++) {
               this.amountMoney = i + 1;
-              this.form.money_sep.push(rent.money_table.money_sep);
-              this.form.money_way.push(rent.money_table.money_way);
+              this.form.money_sep.push(rent.money_table[i].money_sep);
+              this.form.money_way.push(rent.money_table[i].money_way);
               for (let j = 0; j < this.dictValue8.length; j++) {
                 if (this.dictValue8[j].bank_info === rent.money_table[i].money_way) {
                   this.form.account_id[i] = this.dictValue8[j].id;
@@ -1131,8 +1131,10 @@
             this.form.other_fee = rent.other_fee;
 
             this.form.retainage_date = rent.end_at.substring(0, 10);
-            this.form.name = rent.customers[0].name;
-            this.form.phone = rent.customers[0].phone;
+            if (rent.customers && rent.customers.length > 0) {
+              this.form.name = rent.customers[0].name;
+              this.form.phone = rent.customers[0].phone;
+            }
             this.form.remark = rent.remark;
 
             this.form.staff_id = rent.sign_user.id;
