@@ -661,6 +661,7 @@
               this.value8.push(item.bank_info);
             });
           }
+          this.rentDetail(val);
         });
       },
       moneyAll() {
