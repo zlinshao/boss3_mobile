@@ -1130,7 +1130,7 @@
             this.form.other_fee_name = rent.other_fee_name;
             this.form.other_fee = rent.other_fee;
 
-            this.form.retainage_date = rent.end_at.substring(0, 10);
+            this.form.retainage_date = rent.final_payment_at;
             if (rent.customers && rent.customers.length > 0) {
               this.form.name = rent.customers[0].name;
               this.form.phone = rent.customers[0].phone;
