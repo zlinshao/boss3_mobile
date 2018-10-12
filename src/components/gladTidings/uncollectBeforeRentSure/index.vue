@@ -274,12 +274,12 @@
           </van-field>
         </div>
         <!--<van-field-->
-          <!--v-model="form.deposit"-->
-          <!--label="押金"-->
-          <!--type="text"-->
-          <!--class="number"-->
-          <!--placeholder="请填写押金"-->
-          <!--required>-->
+        <!--v-model="form.deposit"-->
+        <!--label="押金"-->
+        <!--type="text"-->
+        <!--class="number"-->
+        <!--placeholder="请填写押金"-->
+        <!--required>-->
         <!--</van-field>-->
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
@@ -1094,12 +1094,14 @@
             this.form.deposit_payed = rent.deposit_payed ? rent.deposit_payed : '';
             this.form.rent_money = rent.rent_money;
             this.form.money_sum = rent.money_sum;
-            this.form.money_sep = rent.money_sep;
-            this.form.money_way = rent.money_way;
-            for (let i = 0; i < rent.money_way.length; i++) {
+            this.form.money_sep = [];
+            this.form.money_way = [];
+            for (let i = 0; i < rent.money_table.length; i++) {
               this.amountMoney = i + 1;
+              this.form.money_sep.push(rent.money_table.money_sep);
+              this.form.money_way.push(rent.money_table.money_way);
               for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === rent.money_way[i]) {
+                if (this.dictValue8[j].bank_info === rent.money_table[i].money_way) {
                   this.form.account_id[i] = this.dictValue8[j].id;
                 }
               }
