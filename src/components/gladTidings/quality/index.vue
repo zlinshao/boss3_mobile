@@ -1000,7 +1000,7 @@
         if (data.community) {
           this.form.community = data.community;              //小区id
           // this.property_fee = data.community.property_fee;   //小区id
-          // this.community_name = data.community.village_name; //小区id
+          this.community_name = data.community.village_name; //小区id
         }
         this.form.door_address = data.door_address;
 
