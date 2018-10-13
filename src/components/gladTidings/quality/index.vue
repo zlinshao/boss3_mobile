@@ -517,7 +517,7 @@
           staff_name: '',               //开单人name
           department_name: '',          //部门name
         },
-        // community_name: '',
+        community_name: '',
         // property_fee: '',
         photos: [],                     //房屋影像
 
