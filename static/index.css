@@ -1,3 +1,8 @@
+.is_receipt_css {
+  color: red;
+  text-align: center;
+  padding: .2rem 0; }
+
 .showContainer {
   height: 100%;
   overflow: hidden; }
@@ -251,7 +256,7 @@ div .van-field--disabled .van-field__control {
   color: #101010; }
 
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-  color: #CDCDCD; }
+  color: #dddddd; }
 
 input::-moz-placeholder, textarea::-moz-placeholder {
   /* Mozilla Firefox 19+ */
