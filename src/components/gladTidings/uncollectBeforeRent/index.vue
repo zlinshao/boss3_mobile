@@ -506,6 +506,7 @@
         is_receipt: true,               //电子收据
         form: {
           id: '',
+          house_id: '',
           processable_id: '',
           type: 4,
           draft: 0,
@@ -1077,6 +1078,7 @@
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
+            this.form.house_id = data.house_id;
             this.form.rent_without_collect_address = draft.rent_without_collect_address;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
@@ -1189,6 +1191,7 @@
           } else {
             this.receiptNum();
             this.form.id = '';
+            this.form.house_id = '';
           }
         })
       },
