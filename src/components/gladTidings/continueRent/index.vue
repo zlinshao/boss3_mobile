@@ -205,7 +205,7 @@
             class="number"
             @click="showTimeChoose('real_pay_at', form.real_pay_at[index], index)"
             label="实际收款时间"
-            placeholder="实际收款时间"
+            placeholder="付款凭证截图上的时间"
             required>
           </van-field>
           <van-field
