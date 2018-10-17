@@ -313,6 +313,7 @@
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-switch-cell v-model="is_receipt" title="电子收据"/>
+        <div class="is_receipt_css" v-if="!is_receipt">当前为纸质收据，打开使用电子收据</div>
       </van-cell-group>
       <div class="changes" v-for="(key,index) in amountReceipt" v-if="!is_receipt">
         <div class="paddingTitle">
@@ -464,6 +465,7 @@
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import {Toast} from 'vant';
+  import {Dialog} from 'vant';
 
   export default {
     name: "index",
@@ -503,7 +505,7 @@
         cusFrom: '',                  //是否中介
         corp: true,                   //公司单
         other_fee_status: false,
-        is_receipt: true,               //电子收据
+        is_receipt: false,               //电子收据
         form: {
           id: '',
           house_id: '',
@@ -592,7 +594,13 @@
           this.form.agency_phone = '';
         }
       },
-      is_receipt() {
+      is_receipt(val) {
+        if (val) {
+          Dialog.alert({
+            title: this.isReceiptMsg.title,
+            message: this.isReceiptMsg.msg
+          }).then(() => {});
+        }
         if (this.form.is_receipt === 1) {
           this.amountReceipt = 1;
           this.form.receipt = [];
@@ -1261,7 +1269,7 @@
         this.form.agency_user_name = '';
         this.form.agency_phone = '';
 
-        this.is_receipt = true;
+        this.is_receipt = false;
         this.form.is_receipt = 1;
         this.amountReceipt = 1;
         this.form.receipt = [];
