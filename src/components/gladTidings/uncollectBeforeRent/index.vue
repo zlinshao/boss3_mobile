@@ -313,7 +313,7 @@
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-switch-cell v-model="is_receipt" title="电子收据"/>
-        <div class="is_receipt_css" v-if="!is_receipt">当前为纸质收据，打开使用电子收据</div>
+        <div class="is_receipt_css" v-if="!is_receipt">{{isReceiptMsg.content1}}</div>
       </van-cell-group>
       <div class="changes" v-for="(key,index) in amountReceipt" v-if="!is_receipt">
         <div class="paddingTitle">
@@ -390,7 +390,7 @@
       </div>
 
       <div class="aloneModel">
-        <div class="title">押金收条</div>
+        <div class="title">押金收条{{isReceiptMsg.content2}}</div>
         <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
       </div>
 
