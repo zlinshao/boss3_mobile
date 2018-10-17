@@ -467,7 +467,8 @@
         @confirm="onDate"/>
     </van-popup>
 
-    <ChooseTime :module="timeModule" :formatData="formatData" @close="timeModule = false" @onDate="onConTime"></ChooseTime>
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="timeModule = false"
+                @onDate="onConTime"></ChooseTime>
   </div>
 </template>
 
@@ -841,9 +842,6 @@
             break;
           case 4:
             this.form.end_date = this.timeValue;
-            break;
-          case 5:
-            this.form.real_pay_at[this.real_pay_at] = this.timeValue;
             break;
         }
       },

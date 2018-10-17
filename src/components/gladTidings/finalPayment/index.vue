@@ -64,17 +64,17 @@
       </van-cell-group>
 
       <!--<div class="aloneModel">-->
-        <!--<div class="title">历史凭证截图</div>-->
-        <!--<div class="showPics" v-if="certificate_photo.length > 0">-->
-          <!--<img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">-->
-        <!--</div>-->
+      <!--<div class="title">历史凭证截图</div>-->
+      <!--<div class="showPics" v-if="certificate_photo.length > 0">-->
+      <!--<img v-for="(key,index) in certificate_photo" :src="key" @click="bigPic(certificate_photo, index)">-->
+      <!--</div>-->
       <!--</div>-->
 
       <!--<div class="aloneModel">-->
-        <!--<div class="title">历史押金收条</div>-->
-        <!--<div class="showPics" v-if="deposit_photos.length > 0">-->
-          <!--<img v-for="(key,index) in deposit_photos" :src="key" @click="bigPic(deposit_photos, index)">-->
-        <!--</div>-->
+      <!--<div class="title">历史押金收条</div>-->
+      <!--<div class="showPics" v-if="deposit_photos.length > 0">-->
+      <!--<img v-for="(key,index) in deposit_photos" :src="key" @click="bigPic(deposit_photos, index)">-->
+      <!--</div>-->
       <!--</div>-->
 
       <van-cell-group>
@@ -130,7 +130,7 @@
             type="text"
             readonly
             class="number"
-            @click="timeChoose(5, form.real_pay_at[index], index)"
+            @click="showTimeChoose('real_pay_at', form.real_pay_at[index], index)"
             label="实际收款时间"
             placeholder="实际收款时间"
             required>
@@ -152,12 +152,12 @@
 
       <van-cell-group>
         <!--<van-field-->
-          <!--v-model="form.deposit"-->
-          <!--label="押金"-->
-          <!--type="text"-->
-          <!--class="number"-->
-          <!--placeholder="请填写已收押金"-->
-          <!--required>-->
+        <!--v-model="form.deposit"-->
+        <!--label="押金"-->
+        <!--type="text"-->
+        <!--class="number"-->
+        <!--placeholder="请填写已收押金"-->
+        <!--required>-->
         <!--</van-field>-->
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
@@ -286,20 +286,31 @@
         @confirm="onDate"/>
     </van-popup>
 
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="timeModule = false"
+                @onDate="onConTime"></ChooseTime>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import ChooseTime from '../../common/chooseTime.vue'
   import {ImagePreview} from 'vant';
   import {Toast} from 'vant';
   import {Dialog} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, ImagePreview},
+    components: {UpLoad, Toast, ImagePreview, ChooseTime},
     data() {
       return {
+        timeModule: false,              //日期
+        formatData: {
+          paramsKey: '',                //格式化日期
+          dateVal: '',                  //格式化日期
+          dataKey: '',                  //字段区分
+          idx: '',                      //下标
+        },
+
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
@@ -393,7 +404,8 @@
           Dialog.alert({
             title: this.isReceiptMsg.title,
             message: this.isReceiptMsg.msg
-          }).then(() => {});
+          }).then(() => {
+          });
         }
         if (this.form.is_receipt === 1) {
           this.amountReceipt = 1;
@@ -459,6 +471,20 @@
       this.houseInfo();
     },
     methods: {
+      // 显示日期
+      showTimeChoose(val, time, index) {
+        setTimeout(() => {
+          this.timeModule = true;
+        }, 200);
+        this.formatData.dateVal = time;
+        this.formatData.dataKey = val;
+        this.formatData.idx = index;
+      },
+      // 确定日期
+      onConTime(val) {
+        this.form[val.dataKey][this.formatData.idx] = val.dateVal;
+        this.timeModule = false;
+      },
       moneyAll() {
         this.form.money_sum = this.countMoney(this.form);
       },
@@ -534,17 +560,10 @@
       },
 
       // 日期选择
-      timeChoose(val, time, index) {
-        if (time) {
-          this.currentDate = this.chooseTime(time);
-        } else {
-          this.getNowFormatDate();
-        }
+      timeChoose() {
         setTimeout(() => {
           this.timeShow = true;
         }, 200);
-        this.timeIndex = val;
-        this.real_pay_at = index;
       },
       // 日期拼接
       monthDate(peaker) {
@@ -553,14 +572,7 @@
       // 确认日期
       onDate() {
         this.timeShow = false;
-        switch (this.timeIndex) {
-          case 1:
-            this.form.retainage_date = this.timeValue;
-            break;
-          case 5:
-            this.form.real_pay_at[this.real_pay_at] = this.timeValue;
-            break;
-        }
+        this.form.retainage_date = this.timeValue;
       },
       // select 显示
       selectShow(val, index) {

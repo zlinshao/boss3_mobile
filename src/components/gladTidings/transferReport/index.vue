@@ -277,7 +277,7 @@
             type="text"
             readonly
             class="number"
-            @click="timeChoose(5, form.real_pay_at[index], index)"
+            @click="showTimeChoose('real_pay_at', form.real_pay_at[index], index)"
             label="实际收款时间"
             placeholder="实际收款时间"
             required>
@@ -299,12 +299,12 @@
 
       <van-cell-group>
         <!--<van-field-->
-          <!--v-model="form.deposit"-->
-          <!--label="押金"-->
-          <!--type="text"-->
-          <!--class="number"-->
-          <!--placeholder="请填写押金"-->
-          <!--required>-->
+        <!--v-model="form.deposit"-->
+        <!--label="押金"-->
+        <!--type="text"-->
+        <!--class="number"-->
+        <!--placeholder="请填写押金"-->
+        <!--required>-->
         <!--</van-field>-->
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
@@ -462,19 +462,30 @@
         @confirm="onDate"/>
     </van-popup>
 
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="timeModule = false"
+                @onDate="onConTime"></ChooseTime>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import ChooseTime from '../../common/chooseTime.vue'
   import {Toast} from 'vant';
   import {Dialog} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, ChooseTime},
     data() {
       return {
+        timeModule: false,              //日期
+        formatData: {
+          paramsKey: '',                //格式化日期
+          dateVal: '',                  //格式化日期
+          dataKey: '',                  //字段区分
+          idx: '',                      //下标
+        },
+
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
@@ -653,7 +664,8 @@
           Dialog.alert({
             title: this.isReceiptMsg.title,
             message: this.isReceiptMsg.msg
-          }).then(() => {});
+          }).then(() => {
+          });
         }
         if (this.form.is_receipt === 1) {
           this.amountReceipt = 1;
@@ -663,6 +675,20 @@
       }
     },
     methods: {
+      // 显示日期
+      showTimeChoose(val, time, index) {
+        setTimeout(() => {
+          this.timeModule = true;
+        }, 200);
+        this.formatData.dateVal = time;
+        this.formatData.dataKey = val;
+        this.formatData.idx = index;
+      },
+      // 确定日期
+      onConTime(val) {
+        this.form[val.dataKey][this.formatData.idx] = val.dateVal;
+        this.timeModule = false;
+      },
       userInfo(val1) {
         if (val1) {
           let per = JSON.parse(sessionStorage.personal);
@@ -805,9 +831,6 @@
             break;
           case 4:
             this.form.sign_date = this.timeValue;
-            break;
-          case 5:
-            this.form.real_pay_at[this.real_pay_at] = this.timeValue;
             break;
         }
       },
