@@ -517,6 +517,7 @@
         cusFrom: '',                //客户来源
         other_fee_status: false,
         is_receipt: false,               //电子收据
+        isReceiptMsg: {},                //电子收据
         form: {
           id: '',
           processable_id: '',
@@ -622,6 +623,7 @@
       }
     },
     mounted() {
+      this.isReceiptMsg = isReceiptMessage;
       this.getNowFormatDate();
       let count = sessionStorage.count;
       if (count === '11') {

@@ -502,6 +502,7 @@
         priceStatus: false,
         other_fee_status: false,
         is_receipt: false,               //电子收据
+        isReceiptMsg: {},                //电子收据
         form: {
           old_staff_name: '',
           old_pay_way_arr: [''],
@@ -579,6 +580,7 @@
       }
     },
     mounted() {
+      this.isReceiptMsg = isReceiptMessage;
       this.getNowFormatDate();
       let count = sessionStorage.count;
       if (count === '11') {
