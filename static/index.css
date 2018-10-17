@@ -71,6 +71,8 @@
   padding-left: .2rem; }
   .aloneModel.required .title span {
     color: #f44; }
+  .aloneModel.required .title div {
+    margin-top: .1rem; }
 
 div .van-switch.van-switch--on {
   background: #409EFF; }
