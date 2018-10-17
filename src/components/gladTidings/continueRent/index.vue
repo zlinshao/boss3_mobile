@@ -199,6 +199,16 @@
             required>
           </van-field>
           <van-field
+            v-model="form.real_pay_at[index]"
+            type="text"
+            readonly
+            class="number"
+            @click="timeChoose(5, form.real_pay_at[index], index)"
+            label="实际收款时间"
+            placeholder="实际收款时间"
+            required>
+          </van-field>
+          <van-field
             @click="selectShow(2,index)"
             v-model="form.money_way[index]"
             label="汇款帐户"
@@ -215,12 +225,12 @@
 
       <van-cell-group>
         <!--<van-field-->
-          <!--v-model="form.deposit"-->
-          <!--label="押金"-->
-          <!--type="text"-->
-          <!--class="number"-->
-          <!--placeholder="请填写押金"-->
-          <!--required>-->
+        <!--v-model="form.deposit"-->
+        <!--label="押金"-->
+        <!--type="text"-->
+        <!--class="number"-->
+        <!--placeholder="请填写押金"-->
+        <!--required>-->
         <!--</van-field>-->
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
@@ -434,6 +444,7 @@
         timeShow: false,                //日期状态
         timeIndex: '',
         timeValue: '',                  //日期value
+        real_pay_at: '',
 
         first_date: [],                 //日期value
 
@@ -479,6 +490,7 @@
           rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
+          real_pay_at: [''],            //实际收款时间
           money_way: [''],              //分金额 方式
           account_id: [],               //汇款帐户ID
 
@@ -585,7 +597,8 @@
           Dialog.alert({
             title: this.isReceiptMsg.title,
             message: this.isReceiptMsg.msg
-          }).then(() => {});
+          }).then(() => {
+          });
         }
         if (this.form.is_receipt === 1) {
           this.amountReceipt = 1;
@@ -699,7 +712,7 @@
       },
 
       // 日期选择
-      timeChoose(val, time) {
+      timeChoose(val, time, index) {
         if (time) {
           this.currentDate = this.chooseTime(time);
         } else {
@@ -709,6 +722,7 @@
           this.timeShow = true;
         }, 200);
         this.timeIndex = val;
+        this.real_pay_at = index;
       },
       // 日期拼接
       monthDate(peaker) {
@@ -740,6 +754,9 @@
             break;
           case 4:
             this.form.end_date = this.timeValue;
+            break;
+          case 5:
+            this.form.real_pay_at[this.real_pay_at] = this.timeValue;
             break;
         }
       },
@@ -822,6 +839,7 @@
         } else if (val === 3) {
           this.amountMoney++;
           this.form.money_sep.push('');
+          this.form.real_pay_at.push('');
           this.form.money_way.push('');
           this.form.account_id.push('');
         } else {
@@ -846,6 +864,7 @@
         } else if (val === 3) {
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
+          this.form.real_pay_at.splice(index, 1);
           this.form.money_way.splice(index, 1);
           this.form.account_id.splice(index, 1);
         } else {
@@ -1040,6 +1059,11 @@
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
+              if (draft.real_pay_at) {
+                this.form.real_pay_at[i] = draft.real_pay_at[i];
+              } else {
+                this.form.real_pay_at.push('');
+              }
               this.amountMoney = i + 1;
               for (let j = 0; j < this.dictValue8.length; j++) {
                 if (this.dictValue8[j].bank_info === draft.money_way[i]) {
@@ -1149,6 +1173,7 @@
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.form.money_sep = [''];
+        this.form.real_pay_at = [''];
         this.form.money_way = [''];
         this.form.account_id = [];
         this.form.from = 1;

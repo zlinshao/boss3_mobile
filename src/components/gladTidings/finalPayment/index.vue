@@ -126,6 +126,16 @@
             required>
           </van-field>
           <van-field
+            v-model="form.real_pay_at[index]"
+            type="text"
+            readonly
+            class="number"
+            @click="timeChoose(5, form.real_pay_at[index], index)"
+            label="实际收款时间"
+            placeholder="实际收款时间"
+            required>
+          </van-field>
+          <van-field
             @click="selectShow(1,index)"
             v-model="form.money_way[index]"
             label="汇款帐户"
@@ -176,7 +186,7 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose()"
+          @click="timeChoose(1, form.retainage_date)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
@@ -300,6 +310,8 @@
         currentDate: '',
         timeShow: false,          //日期状态
         timeValue: '',            //日期value
+        timeIndex: '',
+        real_pay_at: '',
 
         tabs: '',
         columns: [],              //select值
@@ -522,10 +534,17 @@
       },
 
       // 日期选择
-      timeChoose() {
+      timeChoose(val, time, index) {
+        if (time) {
+          this.currentDate = this.chooseTime(time);
+        } else {
+          this.getNowFormatDate();
+        }
         setTimeout(() => {
           this.timeShow = true;
         }, 200);
+        this.timeIndex = val;
+        this.real_pay_at = index;
       },
       // 日期拼接
       monthDate(peaker) {
@@ -534,9 +553,15 @@
       // 确认日期
       onDate() {
         this.timeShow = false;
-        this.form.retainage_date = this.timeValue;
+        switch (this.timeIndex) {
+          case 1:
+            this.form.retainage_date = this.timeValue;
+            break;
+          case 5:
+            this.form.real_pay_at[this.real_pay_at] = this.timeValue;
+            break;
+        }
       },
-
       // select 显示
       selectShow(val, index) {
         this.tabs = val;
@@ -591,6 +616,7 @@
           this.amountMoney++;
           this.form.money_sep.push('');
           this.form.money_way.push('');
+          this.form.real_pay_at.push('');
           this.form.account_id.push('');
         } else {
           this.amountReceipt++;
@@ -604,6 +630,7 @@
           this.amountMoney--;
           this.form.money_sep.splice(index, 1);
           this.form.money_way.splice(index, 1);
+          this.form.real_pay_at.splice(index, 1);
           this.form.account_id.splice(index, 1);
         } else {
           this.amountReceipt--;
@@ -802,6 +829,11 @@
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
+              if (draft.real_pay_at) {
+                this.form.real_pay_at[i] = draft.real_pay_at[i];
+              } else {
+                this.form.real_pay_at.push('');
+              }
               this.amountMoney = i + 1;
               for (let j = 0; j < this.dictValue8.length; j++) {
                 if (this.dictValue8[j].bank_info === draft.money_way[i]) {
@@ -888,6 +920,7 @@
         this.amountMoney = 1;
         this.form.account_id = [];
         this.form.money_sep = [''];
+        this.form.real_pay_at = [''];
         this.form.money_way = [''];
         this.form.screenshot = [];
         this.form.screenshot_new = [];
