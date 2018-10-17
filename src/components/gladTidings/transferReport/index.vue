@@ -380,7 +380,10 @@
       </div>
 
       <div class="aloneModel">
-        <div class="title">押金收条{{isReceiptMsg.content2}}</div>
+        <div class="title">
+          押金收条
+          <div v-if="is_receipt">{{isReceiptMsg.content2}}</div>
+        </div>
         <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
       </div>
 
