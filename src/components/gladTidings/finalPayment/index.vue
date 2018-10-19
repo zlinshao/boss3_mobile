@@ -76,7 +76,11 @@
       <!--<img v-for="(key,index) in deposit_photos" :src="key" @click="bigPic(deposit_photos, index)">-->
       <!--</div>-->
       <!--</div>-->
-
+      <div class="changes">
+        <div class="paddingTitle">
+          <span>本次已收金额</span>
+        </div>
+      </div>
       <van-cell-group>
         <van-field
           v-model="form.front_money"

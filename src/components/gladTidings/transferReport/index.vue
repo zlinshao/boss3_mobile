@@ -223,7 +223,11 @@
       <div @click="priceAmount(2)" class="addInput">
         +付款方式变化
       </div>
-
+      <div class="changes">
+        <div class="paddingTitle">
+          <span>本次已收金额</span>
+        </div>
+      </div>
       <van-cell-group>
         <van-field
           v-model="form.front_money"
