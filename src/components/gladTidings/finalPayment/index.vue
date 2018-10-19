@@ -111,6 +111,7 @@
           type="text"
           class="number"
           label="总金额"
+          disabled
           placeholder="请填写总金额">
         </van-field>
       </van-cell-group>
