@@ -152,7 +152,7 @@
       },
 
       sureLogin(a, b) {
-        this.$http.post(globalConfig.server_token + 'oauth/token', {
+        this.$http.post(globalConfig.attestation + 'oauth/token', {
           client_secret: globalConfig.client_secret,
           client_id: globalConfig.client_id,
           grant_type: 'password',
