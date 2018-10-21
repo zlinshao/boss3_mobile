@@ -44,7 +44,7 @@
     methods: {
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
-          // if (navigator.userAgent == 'app/ApartMent') {
+          // if (navigator.userAgent == 'app/ApartMent') {  
           let type, token;
           if (navigator.userAgent.indexOf('native-ios') > -1) {
             token = this.$route.query.token;
