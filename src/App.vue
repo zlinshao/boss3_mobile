@@ -37,7 +37,6 @@
     data() {
       return {
         urls: globalConfig.server,
-        address: globalConfig.attestation,
         value: '',
         showKeyboard: false,
         transitionName: '',
@@ -119,7 +118,7 @@
       },
 
       phoneLogin() {
-        this.$http.post(globalConfig.server_token + 'api/v1/sms', {
+        this.$http.post(globalConfig.attestation + 'api/v1/sms', {
           phone: this.phone,
         }).then((res) => {
           let msg = res.data.message;

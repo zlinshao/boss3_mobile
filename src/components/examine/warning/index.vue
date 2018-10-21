@@ -63,7 +63,6 @@
     data() {
       return {
         urls: globalConfig.server,
-        address: globalConfig.attestation,
         myData: {},
         attachment: {},
         ids: '',

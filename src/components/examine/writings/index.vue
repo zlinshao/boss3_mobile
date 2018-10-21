@@ -117,7 +117,6 @@
       return {
         loading: false,
         urls: globalConfig.server,
-        address: globalConfig.attestation,
         assistId: false,
         pitch: '',
         myData: {},

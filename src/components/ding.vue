@@ -13,7 +13,6 @@
     data() {
       return {
         // urls: globalConfig.server,
-        // address: globalConfig.attestation,
         // loading: true,
       }
     },
