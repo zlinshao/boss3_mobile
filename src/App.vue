@@ -78,7 +78,6 @@
           this.loading = true;
           this.personalGet(1).then(res => {
             this.loading = !res;
-            this.$router.push('/index');
           });
         }
         this.$http.interceptors.response.use(function (response) {
