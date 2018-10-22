@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading"></div>
+    <div class="module" v-if="loading">
+      {{token}}
+    </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    {{token}}
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -49,7 +50,6 @@
     methods: {
       staffInfo(val) {
         if (val) {
-          console.log(JSON.parse(val));
           this.token = JSON.parse(val);
         }
       },
