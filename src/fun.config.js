@@ -9,7 +9,12 @@ export default {
         } else if (url !== '' && house !== 'house') {
           that.$router.push({path: url, query: {tops: ''}});
         } else if (house === 'close') {
-
+          dd.biz.navigation.close({
+            onSuccess: function (result) {
+            },
+            onFail: function (err) {
+            }
+          });
         } else {
           that.$router.push({path: '/index'});
         }
@@ -23,12 +28,42 @@ export default {
       }
     };
     Vue.prototype.ddRent = function (url, house) {
+      let that = this;
+      dd.biz.navigation.setLeft({
+        control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+        onSuccess: function (result) {
+          if (url !== '' && house === 'house') {
+            that.$router.push({path: url});
+          } else if (url !== '' && house !== 'house') {
+            that.$router.push({path: url, query: {tops: ''}});
+          } else if (house === 'close') {
+            dd.biz.navigation.close({
+              onSuccess: function (result) {
+              },
+              onFail: function (err) {
+              }
+            });
+          } else {
+            that.$router.push({path: '/index'});
+          }
+        },
+        onFail: function (err) {
+        }
+      });
     };
     Vue.prototype.routerTo = function (url, id, val) {
       let that = this;
       document.addEventListener('backbutton', function (e) {
         e.preventDefault();
         that.$router.push({path: url, query: {ids: id}});
+      });
+      dd.biz.navigation.setLeft({
+        control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+        onSuccess: function () {
+          that.$router.push({path: url, query: {ids: id}});
+        },
+        onFail: function (err) {
+        }
       });
     };
     // 详情页
