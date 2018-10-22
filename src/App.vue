@@ -28,6 +28,9 @@
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
+        if (to.path === '/') {
+          this.closeDD();
+        }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
           //设置动画名称
@@ -56,7 +59,6 @@
           }
           sessionStorage.setItem('queryType', type);
           this.loading = true;
-          // add by cj 2018-05-25
           if (type === 'exam') {
             this.$router.push({path: '/beforeExam'});
           } else if (type === 'questionnaire') {
