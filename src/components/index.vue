@@ -284,32 +284,11 @@
       this.ddRent('', 'close');
       this.disabled = true;
       this.scrollTops();
-      // this.confirmArrival = localStorage.getItem('confirmArrival');
-      // this.getExamNaireRedCircle();
-      // if(this.$route.query.refresh === 'refresh'){
-      //   this.getExamNaireRedCircle();
-      // }
     },
     methods: {
       goBefore(val) {
         this.getExamNaireRedCircle();
         if (val === '/exam') {
-          // if (this.examData.available) {
-          //   if (this.confirmArrival && this.confirmArrival.length > 0 && this.confirmArrival.indexOf(this.examData.id) > -1) {
-          //     this.$router.push({path: val, query: {id: this.examData.id, type: ''}});
-          //   } else {
-          //     this.$http.post(globalConfig.server + 'exam/check_in/' + this.examData.id).then((res) => {
-          //       if (res.data.code === '30000') {
-          //         let arr = [];
-          //         arr.push(this.examData.id);
-          //         localStorage.setItem('confirmArrival', arr);  //保存已到场的考试id
-          //         this.$router.push({path: val, query: {id: this.examData.id, type: ''}});
-          //       }
-          //     });
-          //   }
-          // } else {
-          //   this.$router.push({path: val, query: {id: this.examData.id, type: 'first'}});
-          // }
           this.$router.push({path: '/beforeExam'});
         } else if (val === '/questionnaire') {
           this.$router.push({path: '/beforeNaire'});
