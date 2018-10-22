@@ -45,14 +45,8 @@
     mounted() {
       this.paths = this.$router.options.routes;
       this.responses();
-      this.staffInfo(this.$route.query.userinfo);
     },
     methods: {
-      staffInfo(val) {
-        if (val) {
-          this.token = JSON.parse(val);
-        }
-      },
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           let type, token;
@@ -77,14 +71,23 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-            this.personalData(res, 2);
+            let data = {};
+            data.id = res.data.data.id;
+            data.name = res.data.data.name;
+            data.avatar = res.data.data.avatar;
+            data.phone = res.data.data.phone;
+            data.department_name = res.data.data.org[0].name;
+            data.department_id = res.data.data.org[0].id;
+            sessionStorage.setItem('personal', JSON.stringify(data));
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.personalGet(1).then(res => {
-            this.loading = !res;
-          });
+          let user = this.$route.query.userinfo;
+          if (user) {
+            this.staffInfo(JSON.parse(user));
+            this.loading = false;
+          }
         }
         this.$http.interceptors.response.use(function (response) {
           return response;
@@ -92,24 +95,33 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              DingTalkPC.device.notification.alert({
-                message: "服务器故障,请联系产品经理~",
-                title: "提示信息",
-                buttonName: "关闭",
-                onSuccess: function () {
-                },
-                onFail: function (err) {
-                }
-              });
-              dd.biz.navigation.close({
-                onSuccess: function (result) {
-                },
-                onFail: function (err) {
-                }
-              });
             }
           }
           return Promise.reject(error);
+        });
+      },
+      staffInfo(res) {
+        let data = {};
+        data.id = res.data.id;
+        data.name = res.data.name;
+        data.avatar = res.data.avatar;
+        data.phone = res.data.phone;
+        data.department_name = res.data.org[0].name;
+        data.department_id = res.data.org[0].id;
+        sessionStorage.setItem('personal', JSON.stringify(data));
+        globalConfig.personal = data;
+
+        this.$http.post(globalConfig.attestation + 'oauth/token', {
+          client_secret: globalConfig.client_secret,
+          client_id: globalConfig.client_id,
+          grant_type: 'password',
+          username: res.data.phone,
+          password: '',
+        }).then((data) => {
+          let head = data.data.data;
+          alert(JSON.stringify(head));
+          globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+          this.loading = false;
         });
       },
       onInput(key) {
