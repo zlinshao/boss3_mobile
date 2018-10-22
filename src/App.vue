@@ -24,7 +24,6 @@
         showKeyboard: false,
         transitionName: '',
         loading: true,
-        token: {},
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -75,7 +74,6 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          let user = this.$route.query.userinfo;
           this.personalGet(1).then(res => {
             this.loading = !res;
           });
