@@ -38,10 +38,6 @@
       }
     },
     mounted() {
-      alert(window.location.href);
-      this.$http.get('http://cn53h4.natappfree.cc/organization/wework-test').then(res => {
-        alert(JSON.stringify(res))
-      });
       this.paths = this.$router.options.routes;
       this.responses();
     },
@@ -83,7 +79,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = false;
+          this.loading = true;
           this.personalGet(1).then(res => {
             this.loading = !res;
             this.$router.push('/index');
