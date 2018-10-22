@@ -41,8 +41,6 @@
       }
     },
     mounted() {
-      alert(window.location.href);
-      alert(JSON.stringify(this.$route.query));
       this.paths = this.$router.options.routes;
       this.responses();
     },
