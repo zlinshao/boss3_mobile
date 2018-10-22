@@ -103,12 +103,12 @@
       },
       staffInfo(res) {
         let data = {};
-        data.id = res.data.id;
-        data.name = res.data.name;
-        data.avatar = res.data.avatar;
-        data.phone = res.data.phone;
-        data.department_name = res.data.org[0].name;
-        data.department_id = res.data.org[0].id;
+        data.id = res.id;
+        data.name = res.name;
+        data.avatar = res.avatar;
+        data.phone = res.phone;
+        data.department_name = res.department_name[0].name;
+        data.department_id = res.department_name[0].id;
         sessionStorage.setItem('personal', JSON.stringify(data));
         globalConfig.personal = data;
         alert(JSON.stringify(data));
