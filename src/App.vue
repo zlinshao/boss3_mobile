@@ -86,6 +86,21 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
+              DingTalkPC.device.notification.alert({
+                message: "服务器故障,请联系产品经理~",
+                title: "提示信息",
+                buttonName: "关闭",
+                onSuccess: function () {
+                },
+                onFail: function (err) {
+                }
+              });
+              dd.biz.navigation.close({
+                onSuccess: function (result) {
+                },
+                onFail: function (err) {
+                }
+              });
             }
           }
           return Promise.reject(error);
