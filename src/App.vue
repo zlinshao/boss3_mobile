@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading">
-      {{token}}
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
@@ -117,8 +116,8 @@
           client_secret: globalConfig.client_secret,
           client_id: globalConfig.client_id,
           grant_type: 'password',
-          username: res.data.phone,
-          password: '2314',
+          username: res.phone,
+          password: res.code,
         }).then((data) => {
           let head = data.data.data;
           alert(JSON.stringify(head));
