@@ -118,7 +118,7 @@
           client_id: globalConfig.client_id,
           grant_type: 'password',
           username: res.data.phone,
-          password: '',
+          password: '2314',
         }).then((data) => {
           let head = data.data.data;
           alert(JSON.stringify(head));
