@@ -9,12 +9,7 @@ export default {
         } else if (url !== '' && house !== 'house') {
           that.$router.push({path: url, query: {tops: ''}});
         } else if (house === 'close') {
-          dd.biz.navigation.close({
-            onSuccess: function (result) {
-            },
-            onFail: function (err) {
-            }
-          });
+
         } else {
           that.$router.push({path: '/index'});
         }
@@ -27,6 +22,24 @@ export default {
         this.$router.push({path: path, query: params});
       }
     };
+    Vue.prototype.ddRent = function (url, house) {
+    };
+    Vue.prototype.routerTo = function (url, id, val) {
+      let that = this;
+      document.addEventListener('backbutton', function (e) {
+        e.preventDefault();
+        that.$router.push({path: url, query: {ids: id}});
+      });
+    };
+    // 详情页
+    Vue.prototype.routerDetail = function (val) {
+      this.$router.push({path: '/publishDetail', query: {ids: val}});
+    };
+    // 数组去空字符串
+    Vue.prototype.filter_array = function (array) {
+      return array.filter(item => item !== '');
+    };
+    // 已收金额计算
     Vue.prototype.countMoney = function (form) {
       let sum1 = form.front_money;
       let sum2 = form.deposit_payed;
@@ -35,51 +48,6 @@ export default {
       sum2 = sum2 ? sum2 : 0;
       sum3 = sum3 ? sum3 : 0;
       return Number(sum1) + Number(sum2) + Number(sum3);
-    };
-    Vue.prototype.ddRent = function (url, house) {
-      let that = this;
-      dd.biz.navigation.setLeft({
-        control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
-        onSuccess: function (result) {
-          if (url !== '' && house === 'house') {
-            that.$router.push({path: url});
-          } else if (url !== '' && house !== 'house') {
-            that.$router.push({path: url, query: {tops: ''}});
-          } else if (house === 'close') {
-            dd.biz.navigation.close({
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            });
-          } else {
-            that.$router.push({path: '/index'});
-          }
-        },
-        onFail: function (err) {
-        }
-      });
-    };
-
-    Vue.prototype.routerTo = function (url, id, val) {
-      let that = this;
-      document.addEventListener('backbutton', function (e) {
-        e.preventDefault();
-        that.$router.push({path: url, query: {ids: id}});
-      });
-
-      dd.biz.navigation.setLeft({
-        control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
-        onSuccess: function () {
-          that.$router.push({path: url, query: {ids: id}});
-        },
-        onFail: function (err) {
-        }
-      });
-    };
-    // 数组去空字符串
-    Vue.prototype.filter_array = function (array) {
-      return array.filter(item => item !== '');
     };
     // 格式化日期 yyyy-MM-dd
     Vue.prototype.formatDate = function (date) {
@@ -102,25 +70,22 @@ export default {
       ss = md[1] ? ss : '0' + ss;
       return year + '-' + mm + '-' + dd + ' ' + hh + ':' + md;
     };
-    Vue.prototype.routerDetail = function (val) {
-      this.$router.push({path: '/publishDetail', query: {ids: val}});
-    };
-
+    // 初始化日期
     Vue.prototype.chooseTime = function (val) {
       let time = val.split('-');
       let time1 = Number(time[1]) - 1;
       let time2 = Number(time[2]);
       return new Date(time[0], time1, time2);
     };
-
+    // 底部
     Vue.prototype.stick = function () {
-      document.getElementById('main').scrollTop = document.getElementById('main').scrollHeight;
-      // console.log(document.getElementsByTagName('.main')[0].scrollHeight);
+      window.scrollTo(0, document.getElementById('main').scrollHeight);
     };
+    // input 长度
     Vue.prototype.valueLength = function (item, val) {
       return item.slice(0, val);
     };
-
+    // 字典
     Vue.prototype.dictionary = function (data, flag) {
       return new Promise((resolve, reject) => {
         this.$http.get(globalConfig.server + 'setting/dictionary/' + data, {
@@ -132,6 +97,7 @@ export default {
         })
       })
     };
+
     Vue.prototype.computedDate = function (params) {
       return new Promise((resolve, reject) => {
         this.$http.get(globalConfig.server + 'bulletin/helper/calcdate', {
@@ -156,15 +122,16 @@ export default {
           return '请删除上传失败的文件并重新上传!';
       }
     };
-
-    Vue.prototype.personalGet = function () {
+    // 钉钉认证
+    Vue.prototype.personalGet = function (val) {
       let that = this;
       return new Promise((resolve, reject) => {
         that.$http.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
+          // PC端
           DingTalkPC.runtime.permission.requestAuthCode({
             corpId: _config.corpId,
-            onSuccess: function (info) {
+            onSuccess(info) {
               that.$http.get(globalConfig.server + 'special/special/userInfo', {
                 params: {
                   'code': info.code,
@@ -172,43 +139,15 @@ export default {
               }).then((res) => {
                 if (res.data.status !== 'fail') {
                   if (res.data !== false) {
-                    let data = {};
-                    data.id = res.data.id;
-                    data.name = res.data.name;
-                    data.avatar = res.data.avatar;
-                    data.phone = res.data.phone;
-                    data.department_name = res.data.org[0].name;
-                    data.department_id = res.data.org[0].id;
-                    sessionStorage.setItem('personal', JSON.stringify(data));
-                    globalConfig.personal = data;
-                    that.$http.post(globalConfig.attestation + 'oauth/token', {
-                      client_secret: globalConfig.client_secret,
-                      client_id: globalConfig.client_id,
-                      grant_type: 'password',
-                      username: res.data.phone,
-                      password: res.data.code,
-                    }).then((res) => {
-                      let head = res.data.data;
-                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                      resolve(true);
-                    });
+                    that.personalData(res, val, resolve);
                   } else {
                     setTimeout(() => {
                       DingTalkPC.device.notification.alert({
                         message: "请求超时请稍后再试",
                         title: "提示信息",
                         buttonName: "关闭",
-                        onSuccess: function () {
-                        },
-                        onFail: function (err) {
-                        }
                       });
-                      dd.biz.navigation.close({
-                        onSuccess: function (result) {
-                        },
-                        onFail: function (err) {
-                        }
-                      });
+                      that.closeDD();
                     }, 3000);
                   }
                 } else {
@@ -216,37 +155,24 @@ export default {
                     message: "读取信息失败，稍后再试！",
                     title: "提示信息",
                     buttonName: "关闭",
-                    onSuccess: function () {
-                    },
-                    onFail: function (err) {
-                    }
                   });
-                  dd.biz.navigation.close({
-                    onSuccess: function (result) {
-                    },
-                    onFail: function (err) {
-                    }
-                  });
+                  that.closeDD();
                 }
               })
             },
-            onFail: function (err) {
+            onFail() {
               DingTalkPC.device.notification.alert({
                 message: "您不在系统内，请联系管理员添加！！",
                 title: "提示信息",
                 buttonName: "关闭",
-                onSuccess: function () {
-                },
-                onFail: function (err) {
-                }
               });
             }
           });
-
+          // 移动端
           dd.ready(function () {
             dd.runtime.permission.requestAuthCode({
               corpId: _config.corpId,
-              onSuccess: function (info) {
+              onSuccess(info) {
                 that.$http.get(globalConfig.server + 'special/special/userInfo', {
                   params: {
                     'code': info.code,
@@ -254,66 +180,25 @@ export default {
                 }).then((res) => {
                   if (res.data.status !== 'fail') {
                     if (res.data !== false) {
-                      let data = {};
-                      data.id = res.data.id;
-                      data.name = res.data.name;
-                      data.avatar = res.data.avatar;
-                      data.phone = res.data.phone;
-                      data.department_name = res.data.org[0].name;
-                      data.department_id = res.data.org[0].id;
-                      sessionStorage.setItem('personal', JSON.stringify(data));
-                      globalConfig.personal = data;
-                      that.$http.post(globalConfig.attestation + 'oauth/token', {
-                        client_secret: globalConfig.client_secret,
-                        client_id: globalConfig.client_id,
-                        grant_type: 'password',
-                        username: res.data.phone,
-                        password: res.data.code,
-                      }).then((res) => {
-                        let head = res.data.data;
-                        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                        resolve(true);
-                      });
+                      that.personalData(res, val, resolve);
                     } else {
                       setTimeout(() => {
                         alert('请求超时请稍后再试');
-                        dd.biz.navigation.close({
-                          onSuccess: function (result) {
-                          },
-                          onFail: function (err) {
-                          }
-                        });
+                        that.closeDD();
                       }, 3000);
                     }
                   } else {
                     alert('读取信息失败，稍后再试！');
-                    dd.biz.navigation.close({
-                      onSuccess: function (result) {
-                      },
-                      onFail: function (err) {
-                      }
-                    });
+                    that.closeDD();
                   }
                 })
               },
-              onFail: function (err) {
+              onFail() {
                 alert('您不在系统内，请联系管理员添加！！');
-                dd.biz.navigation.close({
-                  onSuccess: function (result) {
-                  },
-                  onFail: function (err) {
-                  }
-                });
+                that.closeDD();
               }
             });
-            // 钉钉头部右侧
-            dd.biz.navigation.setRight({
-              show: false,
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            });
+            this.closeDD();
           });
           dd.error(function (err) {
             alert('dd error: ' + JSON.stringify(err));
@@ -321,18 +206,38 @@ export default {
         });
       });
     };
+    // 存储个人信息
+    Vue.prototype.personalData = function (res, val, resolve) {
+      let data = {};
+      data.id = res.data.id;
+      data.name = res.data.name;
+      data.avatar = res.data.avatar;
+      data.phone = res.data.phone;
+      data.department_name = res.data.org[0].name;
+      data.department_id = res.data.org[0].id;
+      sessionStorage.setItem('personal', JSON.stringify(data));
+      globalConfig.personal = data;
+      if (val === 2) {
+        resolve(true);
+        return
+      }
+      this.$http.post(globalConfig.attestation + 'oauth/token', {
+        client_secret: globalConfig.client_secret,
+        client_id: globalConfig.client_id,
+        grant_type: 'password',
+        username: res.data.phone,
+        password: res.data.code,
+      }).then((data) => {
+        let head = data.data.data;
+        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+        resolve(true);
+      });
+    };
+    // 关闭钉钉
+    Vue.prototype.closeDD = function () {
+      dd.biz.navigation.close({});
+      // 钉钉头部右侧
+      dd.biz.navigation.setRight({show: false});
+    };
   }
 }
-
-// window.onerror = handleError;
-//
-// function handleError(msg, url, line) {
-//   // let txt = "There was an error on this page.\n\n";
-//   let txt = "";
-//   txt += "Error: " + msg + "\n";
-//   txt += "URL: " + url + "\n";
-//   txt += "Line: " + line + "\n\n";
-//   // txt += "Click OK to continue.\n\n";
-//   // alert(txt);
-//   return true;        //如果返回值为 false，则在控制台 (JavaScript console) 中显示错误消息。反之则不会
-// }
