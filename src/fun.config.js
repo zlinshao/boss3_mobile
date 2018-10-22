@@ -219,7 +219,7 @@ export default {
       globalConfig.personal = data;
       if (val === 2) {
         resolve(true);
-        return
+        return;
       }
       this.$http.post(globalConfig.attestation + 'oauth/token', {
         client_secret: globalConfig.client_secret,

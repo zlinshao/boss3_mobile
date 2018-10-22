@@ -24,7 +24,10 @@ axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
+this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
+  this.loading = false;
 
+});
 
 router.afterEach(route => {
   // 从路由的元信息中获取 title 属性

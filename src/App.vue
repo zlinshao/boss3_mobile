@@ -70,23 +70,15 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-            let data = {};
-            data.id = res.data.data.id;
-            data.name = res.data.data.name;
-            data.avatar = res.data.data.avatar;
-            data.phone = res.data.data.phone;
-            data.department_name = res.data.data.org[0].name;
-            data.department_id = res.data.data.org[0].id;
-            sessionStorage.setItem('personal', JSON.stringify(data));
+            this.personalData(res, 2);
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           let user = this.$route.query.userinfo;
-          if (user) {
-            this.staffInfo(JSON.parse(user));
-            this.loading = false;
-          }
+          this.personalGet(1).then(res => {
+            this.loading = !res;
+          });
         }
         this.$http.interceptors.response.use(function (response) {
           return response;
@@ -97,29 +89,6 @@
             }
           }
           return Promise.reject(error);
-        });
-      },
-      staffInfo(res) {
-        let data = {};
-        data.id = res.id;
-        data.name = res.name;
-        data.avatar = res.avatar;
-        data.phone = res.phone;
-        data.department_name = res.department_name[0].name;
-        data.department_id = res.department_name[0].id;
-        sessionStorage.setItem('personal', JSON.stringify(data));
-        globalConfig.personal = data;
-
-        this.$http.post(globalConfig.attestation + 'oauth/token', {
-          client_secret: globalConfig.client_secret,
-          client_id: globalConfig.client_id,
-          grant_type: 'password',
-          username: res.phone,
-          password: res.code,
-        }).then((data) => {
-          let head = data.data.data;
-          globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-          this.loading = false;
         });
       },
       onInput(key) {
