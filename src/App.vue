@@ -51,7 +51,7 @@
       staffInfo(val) {
         alert(val);
         if (val) {
-          this.token = JSON.parse(val);
+          this.token = val;
         }
       },
       responses() {
