@@ -85,6 +85,7 @@
           this.loading = true;
           let user = this.$route.query.userinfo;
           if (user) {
+            alert(user);
             this.staffInfo(JSON.parse(user));
             this.loading = false;
           }
@@ -110,6 +111,7 @@
         data.department_id = res.data.org[0].id;
         sessionStorage.setItem('personal', JSON.stringify(data));
         globalConfig.personal = data;
+        alert(JSON.stringify(data));
 
         this.$http.post(globalConfig.attestation + 'oauth/token', {
           client_secret: globalConfig.client_secret,
