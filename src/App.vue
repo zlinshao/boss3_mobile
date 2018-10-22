@@ -38,6 +38,8 @@
       }
     },
     mounted() {
+      alert(window.location.href);
+      alert(JSON.stringify(this.$route.query));
       this.paths = this.$router.options.routes;
       this.responses();
     },
@@ -67,15 +69,7 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-
-            let data = {};
-            data.id = res.data.data.id;
-            data.name = res.data.data.name;
-            data.avatar = res.data.data.avatar;
-            data.phone = res.data.data.phone;
-            data.department_name = res.data.data.org[0].name;
-            data.department_id = res.data.data.org[0].id;
-            sessionStorage.setItem('personal', JSON.stringify(data));
+            this.personalData(res, 2);
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
