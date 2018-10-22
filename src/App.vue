@@ -45,13 +45,12 @@
     mounted() {
       this.paths = this.$router.options.routes;
       this.responses();
-      this.staffInfo(this.$route.query);
+      this.staffInfo(this.$route.query.userinfo);
     },
     methods: {
       staffInfo(val) {
-        alert(val);
         if (val) {
-          this.token = val;
+          this.token = JSON.parse(val);
         }
       },
       responses() {
