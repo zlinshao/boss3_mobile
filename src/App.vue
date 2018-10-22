@@ -4,6 +4,7 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
+    {{token}}
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -23,7 +24,7 @@
         showKeyboard: false,
         transitionName: '',
         loading: true,
-        token: '',
+        token: {},
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -47,7 +48,10 @@
     },
     methods: {
       staffInfo(val) {
-        console.log(JSON.parse(val));
+        if (val) {
+          console.log(JSON.parse(val));
+          this.token = JSON.parse(val);
+        }
       },
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
