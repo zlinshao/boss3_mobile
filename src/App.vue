@@ -43,8 +43,12 @@
     mounted() {
       this.paths = this.$router.options.routes;
       this.responses();
+      this.staffInfo(this.$route.query);
     },
     methods: {
+      staffInfo(val) {
+        console.log(JSON.parse(val));
+      },
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           let type, token;
