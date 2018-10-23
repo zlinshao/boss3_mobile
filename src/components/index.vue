@@ -281,7 +281,6 @@
     },
     activated() {
       this.routerIndex('');
-      this.ddRent('', 'close');
       this.disabled = true;
       this.scrollTops();
     },

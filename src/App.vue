@@ -29,9 +29,6 @@
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
-        if (to.path === '/') {
-          this.closeDD();
-        }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
           //设置动画名称
@@ -85,7 +82,6 @@
           let user = this.$route.query.userinfo;
           if (user) {
             this.staffInfo(JSON.parse(user));
-            this.loading = false;
           }
         }
         this.$http.interceptors.response.use(function (response) {
