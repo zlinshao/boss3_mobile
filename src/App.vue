@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading">
-      {{token}}
+      <div>1{{token1}}</div>
+      <div>2{{token2}}</div>
+      <div>3{{token3}}</div>
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
@@ -25,7 +27,9 @@
         showKeyboard: false,
         transitionName: '',
         loading: true,
-        token: {},
+        token1: {},
+        token2: {},
+        token3: {},
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -81,8 +85,7 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           let user = this.$route.query.userinfo;
-          alert(111111111);
-          this.token = user;
+          this.token1 = user;
           if (user) {
             this.staffInfo(JSON.parse(user));
           }
@@ -99,8 +102,7 @@
         });
       },
       staffInfo(res) {
-        alert(222222);
-        alert(JSON.stringify(res));
+        this.token2 = res;
         let data = {};
         data.id = res.id;
         data.name = res.name;
@@ -110,7 +112,7 @@
         data.department_id = res.department_name[0].id;
         sessionStorage.setItem('personal', JSON.stringify(data));
         globalConfig.personal = data;
-        alert(JSON.stringify(data));
+        this.token3 = data;
         this.$http.post(globalConfig.attestation + 'oauth/token', {
           client_secret: globalConfig.client_secret,
           client_id: globalConfig.client_id,
