@@ -123,6 +123,8 @@
           let head = data.data.data;
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
           this.loading = false;
+        }).catch(err => {
+          alert(JSON.stringify(err.response));
         });
       },
       onInput(key) {
