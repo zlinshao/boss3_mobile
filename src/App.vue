@@ -80,6 +80,7 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           let user = this.$route.query.userinfo;
+          alert(user);
           if (user) {
             this.staffInfo(JSON.parse(user));
           }
@@ -96,6 +97,7 @@
         });
       },
       staffInfo(res) {
+        alert(JSON.stringify(res));
         let data = {};
         data.id = res.id;
         data.name = res.name;
@@ -105,7 +107,7 @@
         data.department_id = res.department_name[0].id;
         sessionStorage.setItem('personal', JSON.stringify(data));
         globalConfig.personal = data;
-
+        alert(JSON.stringify(data));
         this.$http.post(globalConfig.attestation + 'oauth/token', {
           client_secret: globalConfig.client_secret,
           client_id: globalConfig.client_id,
