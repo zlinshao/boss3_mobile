@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading"></div>
+    <div class="module" v-if="loading" style="overflow: auto">
+      <div>1{{token1}}</div>
+      <div>2{{token2}}</div>
+      <div>3{{token3}}</div>
+    </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
@@ -126,7 +130,7 @@
           this.loading = false;
         }).catch(err => {
           alert('登录失败，请重新登录或请联系产品经理！');
-          window.close();
+          // window.close();
         });
       },
       onInput(key) {
