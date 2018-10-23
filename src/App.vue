@@ -34,6 +34,9 @@
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
+        if (to.path === '/') {
+          wx.closeWindow();
+        }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
           //设置动画名称
@@ -96,6 +99,7 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
+              wx.closeWindow();
             }
           }
           return Promise.reject(error);
@@ -113,6 +117,7 @@
         sessionStorage.setItem('personal', JSON.stringify(data));
         globalConfig.personal = data;
         this.token3 = data;
+
         this.$http.post(globalConfig.attestation + 'oauth/token', {
           client_secret: globalConfig.client_secret,
           client_id: globalConfig.client_id,
@@ -124,11 +129,8 @@
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
           this.loading = false;
         }).catch(err => {
-          alert(globalConfig.client_secret);
-          alert(globalConfig.client_id);
-          alert(res.phone);
-          alert(res.code);
-          alert(JSON.stringify(err.response));
+          alert('登录失败，请联系产品经理！');
+          wx.closeWindow();
         });
       },
       onInput(key) {
