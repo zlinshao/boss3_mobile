@@ -31,7 +31,7 @@
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
         if (to.path === '/') {
-          wx.closeWindow();
+          window.close();
         }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
@@ -95,7 +95,7 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              wx.closeWindow();
+              window.close();
             }
           }
           return Promise.reject(error);
@@ -126,7 +126,7 @@
           this.loading = false;
         }).catch(err => {
           alert('登录失败，请重新登录或请联系产品经理！');
-          wx.closeWindow();
+          window.close();
         });
       },
       onInput(key) {
