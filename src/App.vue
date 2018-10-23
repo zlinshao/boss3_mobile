@@ -124,6 +124,10 @@
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
           this.loading = false;
         }).catch(err => {
+          alert(globalConfig.client_secret);
+          alert(globalConfig.client_id);
+          alert(res.phone);
+          alert(res.code);
           alert(JSON.stringify(err.response));
         });
       },
