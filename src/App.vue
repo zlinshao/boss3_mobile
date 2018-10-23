@@ -23,9 +23,9 @@
         showKeyboard: false,
         transitionName: '',
         loading: true,
-        token1: {},
-        token2: {},
-        token3: {},
+        token1: '',
+        token2: '',
+        token3: '',
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -126,7 +126,7 @@
           this.loading = false;
         }).catch(err => {
           alert('登录失败，请重新登录或请联系产品经理！');
-          // window.close();
+          window.close();
         });
       },
       onInput(key) {
