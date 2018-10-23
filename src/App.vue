@@ -129,7 +129,7 @@
           globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
           this.loading = false;
         }).catch(err => {
-          alert('登录失败，请联系产品经理！');
+          alert('登录失败，请重新登录或请联系产品经理！');
           wx.closeWindow();
         });
       },
