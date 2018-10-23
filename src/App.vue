@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading">
+      {{token}}
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
@@ -80,7 +81,8 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           let user = this.$route.query.userinfo;
-          alert(user);
+          alert(111111111);
+          this.token = user;
           if (user) {
             this.staffInfo(JSON.parse(user));
           }
@@ -97,6 +99,7 @@
         });
       },
       staffInfo(res) {
+        alert(222222);
         alert(JSON.stringify(res));
         let data = {};
         data.id = res.id;
