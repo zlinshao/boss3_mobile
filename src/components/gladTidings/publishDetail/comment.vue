@@ -105,7 +105,6 @@
     <!--</van-popup>-->
   </div>
 </template>
-<script src="../../../../src/assets/js"></script>
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import {Toast} from 'vant';
@@ -165,10 +164,6 @@
         pdf_loading:true,                     //正在加载电子收据pdf
 
       }
-    },
-    beforeRouteUpdate(to, from, next){
-      console.log(11111);
-      next()
     },
     watch: {
         $route (to, from) {
