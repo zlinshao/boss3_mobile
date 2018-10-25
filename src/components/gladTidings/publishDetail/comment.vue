@@ -62,14 +62,14 @@
 
       <div>
         <div class="contents">
-          <div v-if="isShow" class="pdf-container"> 
+          <!-- <div v-if="isShow" class="pdf-container"> 
               <iframe  width="100%" height="280px" :src="pdfUrl" type="application/pdf"></iframe >
+              <pdf :src="pdfUrl"></pdf >
               <div class="pdf-loading" v-if="pdf_loading">
                 <van-loading type="spinner"/>
                 <div class="loading-tips">电子收据加载中</div>
               </div>
-              
-            </div>
+          </div> -->
           <van-cell-group>
             <van-field
               v-model="form.remark"
@@ -108,6 +108,7 @@
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import {Toast} from 'vant';
+  // import pdfshower  from 'vue-pdf-shower';
 
   export default {
     name: "comment",
@@ -155,13 +156,13 @@
         showContent: false,
 
         retry: 0,
-        electronicReceiptParam:null,          //电子收据参数对象
-        bank:null,                            //参数
-        pdfloading : true,
-        electronicReceiptId :'',              //电子收据id
-        pdfUrl : '',                          //pdf
-        isShow: false,                        //是否需要生成电子收据
-        pdf_loading:true,                     //正在加载电子收据pdf
+        // electronicReceiptParam:null,          //电子收据参数对象
+        // bank:null,                            //参数
+        // pdfloading : true,
+        // electronicReceiptId :'',              //电子收据id
+        // pdfUrl : '',                          //pdf
+        // isShow: false,                        //是否需要生成电子收据
+        // pdf_loading:true,                     //正在加载电子收据pdf
 
       }
     },
@@ -190,13 +191,13 @@
         vm.ddBack(2, from.path);
         if(vm.$route.query.detail === 'to_market-marketing-manager_approved'){
           if(sessionStorage.getItem('showElectronicReceipt')){
-            vm.isShow = true;
-            vm.electronicReceiptParam = JSON.parse(sessionStorage.getItem('electronicReceiptParam'));
-            vm.bank = JSON.parse(sessionStorage.getItem('bank'));
-            vm.createElectronicReceipt(vm);
+            // vm.isShow = true;
+            // vm.electronicReceiptParam = JSON.parse(sessionStorage.getItem('electronicReceiptParam'));
+            // vm.bank = JSON.parse(sessionStorage.getItem('bank'));
+            // vm.createElectronicReceipt(vm);
           }
         }else{
-          vm.isShow = false;
+          // vm.isShow = false;
         }
       })
     },
@@ -285,9 +286,9 @@
             Toast('请填写评论内容');
           }
         }
-        if(this.isShow){
-          this.signatureBtn();
-        }
+        // if(this.isShow){
+        //   this.signatureBtn();
+        // }
       },
       // 评分
       mark() {
@@ -515,7 +516,7 @@
       }
       
       .pdf-container{
-        height: 282px;
+        height: 530px;
         position: relative;
         .pdf-loading{
           height:1.2rem;
@@ -531,6 +532,9 @@
           .loading-tips{
             color:red;
             margin-top: .2rem;
+          }
+          canvas{
+            height: 280px
           }
         }
       }
