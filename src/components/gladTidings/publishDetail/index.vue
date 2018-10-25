@@ -24,13 +24,11 @@
             <i class="iconfont icon-yanqi--"></i>
             <span>{{deal}}</span>
           </span>
-          <!--<span class="placeSpan deal" v-if="placeFalse && marking === 1">-->
-          <!--<span>{{priceRegion}}</span>-->
-          <!--</span>-->
         </div>
       </div>
+      <div v-if="placeFalse && marking === 1" class="priceRange">本小区价格区间：{{priceRegion}}</div>
     </div>
-
+    
     <div class="detailRight">
       <!--收房报备-->
       <div class="topTitle">
@@ -64,6 +62,10 @@
             </span>
           </h1>
         </div>
+        <!-- <div v-if='showElectronicReceipt'>
+          <p>电子收据</p>
+          <iframe v-if="sign_pdfUrl_exist"  width="100%" height="300px" :src="sign_pdfUrl_str" type="application/pdf"></iframe >
+        </div> -->
       </div>
 
       <ul
@@ -201,6 +203,8 @@
     },
     data() {
       return {
+        // priceMin:'2000',
+        // priceMax:'3000',
         urls: globalConfig.server_user,
         personalId: {},
         vLoading: true,
@@ -242,6 +246,14 @@
         approvedStatus: false,
         marking: '',
         priceRegion: '',
+        showElectronicReceipt:true,   //展示电子收据
+        bulletinId : '',              //报单id
+        electronicReceiptParam:{} ,   //电子收据接口参数     
+        is_receipt: '',               //是否电子收据
+        bank :{},                     //银行数据
+        pdfLoading:'',                //加载pdf
+        // sign_pdfUrl_exist:false,      //是否存在已签章电子收据
+        // sign_pdfUrl_str:'',           //已签章电子收据url
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -260,7 +272,7 @@
     },
     activated() {
       sessionStorage.setItem('count', '2');
-      this.personalId = JSON.parse(sessionStorage.personal);
+      // this.personalId = JSON.parse(sessionStorage.personal);
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
@@ -336,10 +348,22 @@
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
-            this.formList = JSON.parse(res.data.data.process.content.show_content_compress);
+            
+            let content = res.data.data.process.content;
+            console.log(res.data.data)
+            this.formList = JSON.parse(content.show_content_compress);
+            
+            // this.formList['开单人'] = content.staff_name;
+            // if(content.collect_or_rent.id === '1'){
+            //   this.formList['租客姓名'] = content.customers;
+            // }else{
+            //   this.formList['房东姓名'] = content.customers;
+            // }
+            
+            // console.log(this.formList['开单人'])
             this.operation = res.data.data.operation;
             this.deal = res.data.data.deal;
-
+            
             let houseName = res.data.data.process.content;
             if (houseName.address) {
               this.address = houseName.address;
@@ -348,14 +372,10 @@
             } else {
               this.address = houseName.house.name;
             }
-            // let price = {};
-            // price.community = houseName.community.id;
-            // price.decorate = houseName.decorate.id;
-            // price.property_type = houseName.property_type.id;
-            // this.priceArea(price);
             let main = res.data.data.process;
             this.process = main;
             this.personal = main.user;
+            this.confirmBulletinType(res.data.data.process);
             this.place = main.place;
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
 
@@ -370,6 +390,17 @@
             } else {
               this.marking = 2;
             }
+            if( this.placeFalse && this.marking === 1){
+              let price = {};
+              console.log(1111111)
+              console.log(res.data.data.process.content)
+              price.community = houseName.community.id;
+            
+              price.decorate = houseName.decorate.id;
+              price.property_type = houseName.property_type.id;
+              this.priceArea(price);
+            }
+            // this.showSignElectronicReceipt();
           } else {
             this.personal.avatar = '';
             this.personal.name = 'XXXX';
@@ -382,7 +413,7 @@
               return;
             }
           }
-        });
+        });       
       },
       // 价格区间
       priceArea(price) {
@@ -390,7 +421,7 @@
           params: price,
         }).then((res) => {
           console.log(res);
-          this.priceRegion = res.data.priceMin + '-' + res.data.priceMax + '元';
+          this.priceRegion = res.data.priceMin + '~' + res.data.priceMax + '元';
         });
       },
       comments(val, page) {
@@ -458,7 +489,64 @@
           query: {detail: val, ids: this.ids, marking: num}
         });
       },
+      //确认订单类型是否需要生成电子收据
+      confirmBulletinType(_process){
+        console.log(_process)
+        if(this.process.place.status === 'review' && this.process.place.display_name === "片区经理审批中" && _process.content.is_receipt.id === 1){
+          //报备类型
+          let _type = this.process.processable_type;
+          //报备类型数组
+          let bulletinArr = ['bulletin_agency','bulletin_rent_basic','bulletin_rent_continued','bulletin_rent_trans','bulletin_change','bulletin_rent_RWC','bulletin_RWC_confirm','bulletin_retainage'];
+          if(bulletinArr.includes(_type)){
+            this.showElectronicReceipt = true;
+            this.bulletinId =_process.id;
+            this.is_receipt = _process.content.is_receipt;
 
+            this.electronicReceiptParam.process_id = _process.id;
+            this.electronicReceiptParam.department_id = _process.content.department_id;
+            this.electronicReceiptParam.account_id = _process.content.account_id || [];
+            this.electronicReceiptParam.deposit = _process.content.front_money;
+            this.electronicReceiptParam.mortgage = _process.content.deposit_payed;
+            this.electronicReceiptParam.rental = _process.content.rent_money;
+            this.electronicReceiptParam.duration = _process.content.show_content["现签约时长"] || _process.content.show_content["签约时长"]
+            this.electronicReceiptParam.money_sep = _process.content.money_sep;
+            this.electronicReceiptParam.address = _process.content.address;
+
+            if(_type === 'bulletin_retainage'){
+              this.electronicReceiptParam.payer = _process.content.customer_name;
+              this.electronicReceiptParam.sign_at = _process.content.retainage_date;
+              this.electronicReceiptParam.price = _process.content.price_arr.map(item => {
+                  return item.split(':')[1];
+                }).join(",");
+              this.electronicReceiptParam.pay_way = _process.content.payWay.join(',')
+            }else{
+              this.electronicReceiptParam.payer = _process.content.name;
+              this.electronicReceiptParam.sign_at = _process.content.sign_date;
+              this.electronicReceiptParam.price = _process.content.price_arr.map(item => {
+                return item + "元"
+              }).join(',');
+              this.electronicReceiptParam.pay_way = _process.content.pay_way_str.map((item) => {
+                return item.msg + " " + item.period;
+              }).join(',');
+            }
+            _process.content.money_way.forEach((item, index) => {
+              this.bank["bank" + (index + 1)] = item;
+            });
+            let _str = JSON.stringify(this.electronicReceiptParam);
+            let _bank = JSON.stringify(this.bank);
+            sessionStorage.setItem('electronicReceiptParam' , _str);
+            sessionStorage.setItem('bank',_bank);
+            sessionStorage.setItem('showElectronicReceipt',true)
+            console.log(1)
+          }else{
+            sessionStorage.setItem('showElectronicReceipt',false)
+          }
+        }else{
+          if(sessionStorage.getItem('showElectronicReceipt')){
+            sessionStorage.setItem('showElectronicReceipt',false)
+          }
+        }
+      },
       // 重新提交
       newly() {
         let proID = this.process.processable_id;
@@ -519,431 +607,445 @@
 </script>
 
 <style lang="scss">
-  #cardDetail {
-    overflow: hidden;
-    @mixin flex {
-      display: flex;
-      display: -webkit-flex;
-    }
+#cardDetail {
+  overflow: hidden;
+  @mixin flex {
+    display: flex;
+    display: -webkit-flex;
+  }
 
-    @mixin border_radius($p) {
-      -webkit-border-radius: $p;
-      -moz-border-radius: $p;
-      border-radius: $p;
-    }
+  @mixin border_radius($p) {
+    -webkit-border-radius: $p;
+    -moz-border-radius: $p;
+    border-radius: $p;
+  }
 
-    @mixin scale($p) {
-      -moz-transform: scale($p, $p);
-      -webkit-transform: scale($p, $p);
-      -o-transform: scale($p, $p);
-      transform: scale($p, $p);
-    }
+  @mixin scale($p) {
+    -moz-transform: scale($p, $p);
+    -webkit-transform: scale($p, $p);
+    -o-transform: scale($p, $p);
+    transform: scale($p, $p);
+  }
 
-    $onColor: #39b1ff;
-    $borColor: #9c9c9c;
+  $onColor: #39b1ff;
+  $borColor: #9c9c9c;
 
-    @keyframes manger {
-      from {
-        @include scale(6);
-      }
-      to {
-        @include scale(1);
-      }
+  @keyframes manger {
+    from {
+      @include scale(6);
     }
+    to {
+      @include scale(1);
+    }
+  }
 
-    @-moz-keyframes manger {
-      from {
-        @include scale(6);
-      }
-      to {
-        @include scale(1);
-      }
+  @-moz-keyframes manger {
+    from {
+      @include scale(6);
     }
+    to {
+      @include scale(1);
+    }
+  }
 
-    @-webkit-keyframes manger {
-      from {
-        @include scale(6);
-      }
-      to {
-        @include scale(1);
-      }
+  @-webkit-keyframes manger {
+    from {
+      @include scale(6);
     }
+    to {
+      @include scale(1);
+    }
+  }
 
-    @-o-keyframes manger {
-      from {
-        @include scale(6);
-      }
-      to {
-        @include scale(1);
-      }
+  @-o-keyframes manger {
+    from {
+      @include scale(6);
     }
+    to {
+      @include scale(1);
+    }
+  }
 
-    .showContentTitle, .showContentFooter {
-      text-align: center;
-      padding: .3rem 0;
-      font-size: .36rem
+  .showContentTitle,
+  .showContentFooter {
+    text-align: center;
+    padding: 0.3rem 0;
+    font-size: 0.36rem;
+  }
+  .showContentTitle {
+    border-bottom: 1px solid #f4f4f4;
+  }
+  .showContentFooter {
+    border-top: 1px solid #f4f4f4;
+    color: #409eff;
+  }
+  .showContent {
+    width: 6.6rem;
+    max-height: 8rem;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    p {
+      color: #6a6a6a;
+      margin: 0.12rem 0;
+      a {
+        color: $onColor;
+      }
     }
-    .showContentTitle {
-      border-bottom: 1px solid #f4f4f4;
-    }
-    .showContentFooter {
+    .showRoleName + .showRoleName {
       border-top: 1px solid #f4f4f4;
-      color: #409EFF;
     }
-    .showContent {
-      width: 6.6rem;
-      max-height: 8rem;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      p {
-        color: #6a6a6a;
-        margin: .12rem 0;
-        a {
-          color: $onColor;
-        }
-      }
-      .showRoleName + .showRoleName {
-        border-top: 1px solid #f4f4f4;
-      }
-      .showRoleName {
-        @include flex;
-        align-items: center;
-        padding: .2rem;
-        .showImg {
-          min-width: .9rem;
-          max-width: .9rem;
-          height: .9rem;
-          margin-right: .2rem;
-          img {
-            width: 100%;
-            height: 100%;
-            @include border_radius(50%);
-          }
-        }
-      }
-    }
-
-    .placeFinish {
+    .showRoleName {
       @include flex;
-      justify-content: center;
-      flex-direction: column;
-      height: 1.4rem;
-
-      .placeSpan {
-        color: #409EFF;
-        @include flex;
-        align-items: center;
-        i {
-          margin-right: .1rem
-        }
-      }
-      .deal {
-        margin-top: .18rem;
-        color: $borColor;
-      }
-    }
-
-    #videoId {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      @include flex;
-      justify-content: center;
       align-items: center;
-      background-color: rgba(0, 0, 0, 1);
-      z-index: 10000;
-      #video {
+      padding: 0.2rem;
+      .showImg {
+        min-width: 0.9rem;
+        max-width: 0.9rem;
+        height: 0.9rem;
+        margin-right: 0.2rem;
+        img {
+          width: 100%;
+          height: 100%;
+          @include border_radius(50%);
+        }
+      }
+    }
+  }
+
+  .placeFinish {
+    @include flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 1.4rem;
+
+    .placeSpan {
+      color: #409eff;
+      @include flex;
+      align-items: center;
+      i {
+        margin-right: 0.1rem;
+      }
+    }
+    .deal {
+      margin-top: 0.18rem;
+      color: $borColor;
+    }
+  }
+
+  #videoId {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    @include flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 1);
+    z-index: 10000;
+    #video {
+      position: absolute;
+      top: 7.5%;
+      left: 5%;
+    }
+    .close {
+      position: absolute;
+      width: 0.8rem;
+      height: 0.8rem;
+      text-align: center;
+      line-height: 0.8rem;
+      @include border_radius(50%);
+      /*background-color: rgba(0, 0, 0, .8);*/
+      bottom: 1rem;
+      /*border: 1px solid rgba(255, 255, 255, .8);*/
+      right: 2%;
+      top: 2%;
+      transform: translate(-50%);
+      i {
+        color: #ffffff;
+        font-size: 0.6rem;
+      }
+    }
+  }
+
+  .bigPhotos {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    text-align: center;
+    @include flex;
+    align-items: center;
+    justify-content: center;
+    div {
+      p {
         position: absolute;
-        top: 7.5%;
-        left: 5%;
+        bottom: 0;
+        width: 50%;
+        height: 1rem;
+        line-height: 1rem;
+        text-align: center;
+        font-weight: bold;
+        color: #ffffff;
+        margin: 0 0.2rem;
+        border-radius: 50%;
+        i {
+          display: inline-block;
+          font-size: 1rem;
+        }
+      }
+      .nextPic,
+      .prePic {
+        height: 100%;
+        @include flex;
+        align-items: center;
+      }
+      .nextPic {
+        left: 0;
+        text-align: left;
+        justify-content: flex-start;
+        i {
+          transform: rotate(180deg);
+        }
+      }
+      .prePic {
+        right: 0;
+        text-align: right;
+        justify-content: flex-end;
       }
       .close {
-        position: absolute;
-        width: .8rem;
-        height: .8rem;
-        text-align: center;
-        line-height: .8rem;
-        @include border_radius(50%);
-        /*background-color: rgba(0, 0, 0, .8);*/
-        bottom: 1rem;
-        /*border: 1px solid rgba(255, 255, 255, .8);*/
-        right: 2%;
-        top: 2%;
+        width: 1rem;
+        bottom: 0.6rem;
+        left: 50%;
         transform: translate(-50%);
         i {
-          color: #FFFFFF;
-          font-size: .6rem;
+          font-size: 0.6rem;
         }
       }
     }
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
 
-    .bigPhotos {
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, .4);
-      z-index: 1000;
-      text-align: center;
+  .photo {
+    p {
+      padding-top: 0.2rem;
+    }
+    h1 {
       @include flex;
-      align-items: center;
-      justify-content: center;
+      flex-wrap: wrap;
+      span {
+        width: 1rem;
+        height: 1rem;
+        margin-top: 0.2rem;
+        margin-right: 0.2rem;
+      }
+    }
+  }
+
+  .detail {
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    @include flex;
+    align-items: center;
+    background: #ffffff;
+    padding: 0.3rem;
+    .detailLeft {
+      min-width: 0.9rem;
+      max-width: 0.9rem;
+      margin-right: 0.3rem;
       div {
-        p {
-          position: absolute;
-          bottom: 0;
-          width: 50%;
-          height: 1rem;
-          line-height: 1rem;
-          text-align: center;
-          font-weight: bold;
-          color: #FFFFFF;
-          margin: 0 .2rem;
-          border-radius: 50%;
-          i {
-            display: inline-block;
-            font-size: 1rem;
-          }
-        }
-        .nextPic, .prePic {
-          height: 100%;
-          @include flex;
-          align-items: center;
-        }
-        .nextPic {
-          left: 0;
-          text-align: left;
-          justify-content: flex-start;
-          i {
-            transform: rotate(180deg);
-          }
-        }
-        .prePic {
-          right: 0;
-          text-align: right;
-          justify-content: flex-end;
-        }
-        .close {
-          width: 1rem;
-          bottom: .6rem;
-          left: 50%;
-          transform: translate(-50%);
-          i {
-            font-size: .6rem;
-          }
-        }
-      }
-      img {
-        max-width: 100%;
-        max-height: 100%
-      }
-    }
-
-    .photo {
-      p {
-        padding-top: .2rem;
-      }
-      h1 {
-        @include flex;
-        flex-wrap: wrap;
-        span {
-          width: 1rem;
-          height: 1rem;
-          margin-top: .2rem;
-          margin-right: .2rem;
-        }
-      }
-    }
-
-    .detail {
-      img {
         width: 100%;
-        height: 100%;
-      }
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      border-top: 1px solid #ebebeb;
-      border-bottom: 1px solid #ebebeb;
-      @include flex;
-      align-items: center;
-      background: #ffffff;
-      padding: .3rem;
-      .detailLeft {
-        min-width: .9rem;
-        max-width: .9rem;
-        margin-right: .3rem;
-        div {
+        height: 0.9rem;
+        overflow: hidden;
+        img {
+          @include border_radius(50%);
           width: 100%;
-          height: .9rem;
-          overflow: hidden;
-          img {
-            @include border_radius(50%);
-            width: 100%;
-            height: 100%;
-          }
+          height: 100%;
         }
       }
-      .topRight {
-        @include flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        .personal {
+    }
+    .priceRange {
+      position: absolute;
+      right: 0.4rem;
+      bottom: 0.1rem;
+      color: orange;
+    }
+    .topRight {
+      @include flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      .personal {
+        min-width: 2.8rem;
+        max-width: 2.8rem;
+        p {
           min-width: 2.8rem;
           max-width: 2.8rem;
-          p {
-            min-width: 2.8rem;
-            max-width: 2.8rem;
-            line-height: .5rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: #9c9c9c;
-          }
-          p:first-of-type {
-            color: #101010;
-          }
-        }
-        .statusSuccess {
-          background: url('../../../assets/tongguo.png') no-repeat;
-        }
-        .statusFail {
-          background: url('../../../assets/shibai.png') no-repeat;
-        }
-        .cancelled {
-          background: url('../../../assets/chexiao.png') no-repeat;
-        }
-        .statusSuccess, .statusFail, .cancelled {
-          width: 1.4rem;
-          height: 1.4rem;
-          background-size: 100% 100%;
-          @include scale(1);
-          -webkit-animation: manger .6s ease-in-out;
-          -o-animation: manger .6s ease-in-out;
-          animation: manger .6s ease-in-out;
-        }
-      }
-    }
-    .detailRight {
-      img {
-        width: 100%;
-        height: 100%;
-      }
-      width: 100%;
-      .topTitle {
-        padding: .3rem;
-        margin-top: 2rem;
-        background: #ffffff;
-        div {
-          margin: .2rem 0;
-          @include flex;
-          word-break: break-all;
-          p {
-            min-width: 1.8rem;
-            max-width: 1.8rem;
-            margin-right: .4rem;
-            line-height: .4rem;
-            color: #9c9c9c;
-            text-align: left;
-          }
-          h1 {
-            color: #101010;
-            line-height: .4rem;
-          }
-        }
-        .load {
-          display: flex;
-          justify-content: center;
-          margin: 3rem auto 0;
-        }
-      }
-
-      .commentArea {
-        margin-top: .3rem;
-        padding-bottom: .36rem;
-        background: #ffffff;
-        color: #101010;
-
-        div, p, span {
+          line-height: 0.5rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           color: #9c9c9c;
         }
-        .headline {
-          color: #444444;
-          font-size: .33rem;
-          padding: .3rem 0 .2rem .3rem;
-          font-weight: bold;
-          border-bottom: 1px solid #dddddd;
-          span {
-            font-size: .33rem;
-            font-weight: bold;
-            color: #444444;;
-            padding-left: .1rem;
-          }
+        p:first-of-type {
+          color: #101010;
         }
-        .commentAreaMain {
-          margin-top: .36rem;
-          padding: 0 .4rem;
-          .commentTitle {
+      }
+      .statusSuccess {
+        background: url("../../../assets/tongguo.png") no-repeat;
+      }
+      .statusFail {
+        background: url("../../../assets/shibai.png") no-repeat;
+      }
+      .cancelled {
+        background: url("../../../assets/chexiao.png") no-repeat;
+      }
+      .statusSuccess,
+      .statusFail,
+      .cancelled {
+        width: 1.4rem;
+        height: 1.4rem;
+        background-size: 100% 100%;
+        @include scale(1);
+        -webkit-animation: manger 0.6s ease-in-out;
+        -o-animation: manger 0.6s ease-in-out;
+        animation: manger 0.6s ease-in-out;
+      }
+    }
+  }
+  .detailRight {
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    width: 100%;
+    .topTitle {
+      padding: 0.3rem;
+      margin-top: 2rem;
+      background: #ffffff;
+      div {
+        margin: 0.2rem 0;
+        @include flex;
+        word-break: break-all;
+        p {
+          min-width: 1.8rem;
+          max-width: 1.8rem;
+          margin-right: 0.4rem;
+          line-height: 0.4rem;
+          color: #9c9c9c;
+          text-align: left;
+        }
+        h1 {
+          color: #101010;
+          line-height: 0.4rem;
+        }
+        .electronicReceipt{
+          color:green
+        }
+      }
+      .load {
+        display: flex;
+        justify-content: center;
+        margin: 3rem auto 0;
+      }
+    }
+
+    .commentArea {
+      margin-top: 0.3rem;
+      padding-bottom: 0.36rem;
+      background: #ffffff;
+      color: #101010;
+
+      div,
+      p,
+      span {
+        color: #9c9c9c;
+      }
+      .headline {
+        color: #444444;
+        font-size: 0.33rem;
+        padding: 0.3rem 0 0.2rem 0.3rem;
+        font-weight: bold;
+        border-bottom: 1px solid #dddddd;
+        span {
+          font-size: 0.33rem;
+          font-weight: bold;
+          color: #444444;
+          padding-left: 0.1rem;
+        }
+      }
+      .commentAreaMain {
+        margin-top: 0.36rem;
+        padding: 0 0.4rem;
+        .commentTitle {
+          @include flex;
+          align-items: center;
+          justify-content: space-between;
+          .staff {
             @include flex;
             align-items: center;
-            justify-content: space-between;
-            .staff {
-              @include flex;
-              align-items: center;
-              p {
-                min-width: .8rem;
-                max-width: .8rem;
-                height: .8rem;
-                margin-right: .12rem;
-                img {
-                  @include border_radius(50%);
-                }
-              }
-              div {
-                width: 100%;
-                overflow: hidden;
-                line-height: .9rem;
-                -ms-text-overflow: ellipsis;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+            p {
+              min-width: 0.8rem;
+              max-width: 0.8rem;
+              height: 0.8rem;
+              margin-right: 0.12rem;
+              img {
+                @include border_radius(50%);
               }
             }
-            .times {
-              min-width: 2rem;
-              max-width: 2rem;
-              text-align: right;
-            }
-          }
-          .contents {
-            margin-left: .9rem;
-            color: #101010;
-            line-height: .6rem;
-          }
-          .pics {
-            @include flex;
-            flex-wrap: wrap;
-            margin-left: .9rem;
             div {
-              width: 1rem;
-              height: 1rem;
-              margin: .2rem .3rem 0 0;
+              width: 100%;
+              overflow: hidden;
+              line-height: 0.9rem;
+              -ms-text-overflow: ellipsis;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
+          }
+          .times {
+            min-width: 2rem;
+            max-width: 2rem;
+            text-align: right;
+          }
+        }
+        .contents {
+          margin-left: 0.9rem;
+          color: #101010;
+          line-height: 0.6rem;
+        }
+        .pics {
+          @include flex;
+          flex-wrap: wrap;
+          margin-left: 0.9rem;
+          div {
+            width: 1rem;
+            height: 1rem;
+            margin: 0.2rem 0.3rem 0 0;
           }
         }
       }
     }
-    .bottom {
-      @include flex;
-      justify-content: center;
-      align-items: center;
-      padding: .4rem 0 1.3rem;
-      color: #DDDDDD;
-    }
-
   }
+  .bottom {
+    @include flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.4rem 0 1.3rem;
+    color: #dddddd;
+  }
+}
 </style>
