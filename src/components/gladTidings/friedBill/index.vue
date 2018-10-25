@@ -215,7 +215,7 @@
         if (val === '0') {
           this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
         } else if (val === '1') {
-          this.$router.push({path: '/collectHouse', query: {type: 'report'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'report', end_type: 'none'}});
         } else {
           Toast('请选择收租标记');
         }
