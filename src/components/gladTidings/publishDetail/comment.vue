@@ -62,13 +62,24 @@
 
       <div>
         <div class="contents">
+          <div v-if="isShow" class="pdf-container"> 
+              <iframe  width="100%" height="280px" :src="pdfUrl" type="application/pdf"></iframe >
+              <div class="pdf-loading" v-if="pdf_loading">
+                <van-loading type="spinner"/>
+                <div class="loading-tips">电子收据加载中</div>
+              </div>
+              
+            </div>
           <van-cell-group>
             <van-field
               v-model="form.remark"
               type="textarea"
               placeholder="说点什么吧！">
+              
             </van-field>
+            
           </van-cell-group>
+          
         </div>
         <div class="pic">
           <div class="title">图片</div>
@@ -94,7 +105,7 @@
     <!--</van-popup>-->
   </div>
 </template>
-
+<script src="../../../../src/assets/js"></script>
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import {Toast} from 'vant';
@@ -145,13 +156,53 @@
         showContent: false,
 
         retry: 0,
+        electronicReceiptParam:null,          //电子收据参数对象
+        bank:null,                            //参数
+        pdfloading : true,
+        electronicReceiptId :'',              //电子收据id
+        pdfUrl : '',                          //pdf
+        isShow: false,                        //是否需要生成电子收据
+        pdf_loading:true,                     //正在加载电子收据pdf
+
       }
+    },
+    beforeRouteUpdate(to, from, next){
+      console.log(11111);
+      next()
+    },
+    watch: {
+        $route (to, from) {
+            if(from.name === "publishDetail" && to.name === 'index') {
+              console.log(1111111111)
+              console.log(sessionStorage.getItem('showElectronicReceipt'))
+                if(sessionStorage.getItem('showElectronicReceipt')){
+                  console.log(1)
+                  sessionStorage.removeItem('showElectronicReceipt');
+                  console.log('done')
+                }
+            }
+            if(from.name === 'comment'){
+              this.isShow = false;
+              this.pdfUrl = '';
+              this.pdf_loading = true;
+            }
+        }
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
         vm.ddBack(1, from.path);
         vm.ddBack(2, from.path);
+        if(vm.$route.query.detail === 'to_market-marketing-manager_approved'){
+          if(sessionStorage.getItem('showElectronicReceipt')){
+            vm.isShow = true;
+            vm.electronicReceiptParam = JSON.parse(sessionStorage.getItem('electronicReceiptParam'));
+            vm.bank = JSON.parse(sessionStorage.getItem('bank'));
+            vm.createElectronicReceipt(vm);
+          }
+        }else{
+          vm.isShow = false;
+        }
       })
     },
     mounted() {
@@ -238,6 +289,9 @@
           } else {
             Toast('请填写评论内容');
           }
+        }
+        if(this.isShow){
+          this.signatureBtn();
         }
       },
       // 评分
@@ -338,7 +392,45 @@
             that.$router.push({path: urls, query: {ids: that.queries.ids}});
           });
         }
-      }
+      },
+      //生成电子收据
+      createElectronicReceipt(vm) {
+        // this.electronicReceiptVisible = true;
+        this.$http.post(globalConfig.server + 'financial/receipt/generate', {...vm.electronicReceiptParam, ...vm.bank}).then((res) => {
+          this.pdfloading = false;
+          if (res.data.code === "20000") {
+            this.electronicReceiptId = res.data.data.id;
+            this.pdfUrl = res.data.data.shorten_uri;
+            this.pdf_loading = false;
+            // this.signature = true
+            sessionStorage.removeItem('showElectronicReceipt');
+          } else {
+            this.$notify.error({
+              title: '错误',
+              message: res.data.msg
+            });
+            // this.electronicReceiptVisible = false
+          }
+        })
+      },
+      //电子收据签章
+      signatureBtn() {
+        this.pdfloading = true;
+        this.$http.post(globalConfig.server + '/financial/receipt/sign/' + this.electronicReceiptId).then((res) => {
+          if (res.data.code === "20000") {
+            this.pdfloading = false;
+            this.pdfUrl = res.data.data.shorten_uri;
+            // this.signature = false
+            // this.isShow = false;
+            // localStorage.setItem('pdfUrl',this.pdfUrl)
+          } else {
+              this.$notify.error({
+              title: '错误',
+              message: res.data.msg
+            });
+          }
+        })
+      },
     },
   }
 </script>
@@ -423,6 +515,27 @@
         .van-field--has-textarea {
           .van-field__control {
             min-height: 150px;
+          }
+        }
+      }
+      
+      .pdf-container{
+        height: 282px;
+        position: relative;
+        .pdf-loading{
+          height:1.2rem;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          margin: auto;
+          .van-loading--spinner{
+            margin: 0 auto;
+          } 
+          .loading-tips{
+            color:red;
+            margin-top: .2rem;
           }
         }
       }
