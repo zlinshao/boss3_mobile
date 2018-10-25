@@ -92,6 +92,7 @@
         last_page: 1,
         params: {},
         searchValue: '',
+        end_type: '',
 
         showInfo: [],
         houseList: [],
@@ -109,6 +110,7 @@
     },
     activated() {
       this.types = this.$route.query.type;
+      this.end_type = this.$route.query.end_type;
       this.resetting();
       this.state = 0;
       this.params = {};
@@ -272,7 +274,7 @@
       // 中介费收
       agencyLord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
-          if (!val.lords[j].end_type) {
+          if (!val.lords[j].end_type || this.end_type === 'none') {
             if (val.lords[j].is_agency === 1) {
               this.contracts(val, type, val.lords[j]);
             } else {
@@ -284,7 +286,7 @@
       // 中介费租
       agencyRent(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
-          if (!val.renters[j].end_type) {
+          if (!val.renters[j].end_type || this.end_type === 'none') {
             if (val.renters[j].is_agency === 1) {
               this.contracts(val, type, val.renters[j]);
             } else {
@@ -296,7 +298,7 @@
       // 收房合同
       lord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
-          if (!val.lords[j].end_type) {
+          if (!val.lords[j].end_type || this.end_type === 'none') {
             this.contracts(val, type, val.lords[j]);
           }
         }
@@ -305,7 +307,7 @@
       // 租房合同
       renter(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
-          if (!val.renters[j].end_type) {
+          if (!val.renters[j].end_type || this.end_type === 'none') {
             this.contracts(val, type, val.renters[j]);
           }
         }
