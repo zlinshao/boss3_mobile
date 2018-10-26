@@ -392,12 +392,9 @@
             }
             if( this.placeFalse && this.marking === 1){
               let price = {};
-              console.log(1111111)
-              console.log(res.data.data.process.content)
               price.community = houseName.community.id;
-            
               price.decorate = houseName.decorate.id;
-              price.property_type = houseName.property_type.id;
+              price.room = houseName.house_type[0];
               this.priceArea(price);
             }
             // this.showSignElectronicReceipt();
