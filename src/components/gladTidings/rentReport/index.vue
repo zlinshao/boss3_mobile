@@ -1168,13 +1168,13 @@
               this.form.deposit = draft.deposit;
               this.form.rent_money = draft.rent_money;
               if (draft.front_money) {
-                this.front_money = 'front_money';
+                this.money_key = 'front_money';
                 this.money_type = this.money_types.front_money;
               } else if (draft.deposit) {
-                this.front_money = 'deposit';
+                this.money_key = 'deposit';
                 this.money_type = this.money_types.deposit;
               } else if (draft.rent_money) {
-                this.front_money = 'rent_money';
+                this.money_key = 'rent_money';
                 this.money_type = this.money_types.rent_money;
               }
             }
