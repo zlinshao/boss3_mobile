@@ -113,7 +113,7 @@
           class="number"
           label="押"
           placeholder="请填写付款方式-押"
-          @click="selectShow(3)"
+          @click="selectShow(3, '')"
           readonly
           required>
         </van-field>
@@ -163,21 +163,36 @@
       </div>
       <van-cell-group>
         <van-field
-          @click="selectShow(7)"
-          v-model="money_type"
-          label="金额类型"
-          type="text"
-          readonly
-          placeholder="请选择类型"
-          required>
-        </van-field>
-        <van-field
-          v-model="form[money_key]"
+          v-model="form.front_money"
           type="text"
           class="number"
-          label="已收金额"
-          placeholder="请填写金额"
-          required>
+          label="定金"
+          @keyup="moneyAll"
+          placeholder="请填写金额">
+        </van-field>
+        <van-field
+          v-model="form.deposit_payed"
+          label="押金"
+          @keyup="moneyAll"
+          type="text"
+          class="number"
+          placeholder="请填写已收押金">
+        </van-field>
+        <van-field
+          v-model="form.rent_money"
+          label="租金"
+          @keyup="moneyAll"
+          type="text"
+          class="number"
+          placeholder="请填写租金">
+        </van-field>
+        <van-field
+          v-model="form.money_sum"
+          type="text"
+          class="number"
+          label="总金额"
+          placeholder="请填写总金额"
+          disabled>
         </van-field>
       </van-cell-group>
 
@@ -262,7 +277,7 @@
         </van-field>
         <van-field
           v-model="cusFrom"
-          @click="selectShow(6)"
+          @click="selectShow(6,'')"
           label="是否中介"
           type="text"
           readonly
@@ -314,7 +329,7 @@
           label="物业费付款人"
           type="text"
           placeholder="请选择物业费付款人"
-          @click="selectShow(1)"
+          @click="selectShow(1,'')"
           readonly
           required>
         </van-field>
@@ -522,8 +537,6 @@
         roomsName: '',
         is_receipt: false,               //电子收据
         isReceiptMsg: {},                //电子收据
-        money_type: '',                 //金额类型
-        money_key: '',                  //金额类型
         form: {
           address: '',
           id: '',
@@ -868,7 +881,7 @@
         }
       },
       // select 显示
-      selectShow(val, index = '') {
+      selectShow(val, index) {
         this.tabs = val;
         this.payIndex = index;
         setTimeout(() => {
@@ -892,9 +905,6 @@
             break;
           case 6:
             this.columns = dicts.value8;
-            break;
-          case 7:
-            this.columns = Object.values(dicts.money_types);
             break;
         }
       },
@@ -934,13 +944,6 @@
           case 6:
             this.form.is_agency = index;
             this.cusFrom = value;
-            break;
-          case 7:
-            this.form.front_money = '';            //定金
-            this.form.deposit = '';                //押金
-            this.form.rent_money = '';             //租金
-            this.money_type = value;
-            this.money_key = Object.keys(dicts.money_types)[index];
             break;
         }
         this.selectHide = false;
@@ -1175,22 +1178,6 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.money_sum = draft.money_sum;
             this.form.rent_money = draft.rent_money;
-            if (draft.money_sum) {
-              this.form.deposit = draft.money_sum;
-              this.money_type = dicts.money_types.deposit;
-            } else {
-              if (draft.front_money) {
-                this.money_key = 'front_money';
-                this.money_type = dicts.money_types.front_money;
-              } else if (draft.deposit) {
-                this.money_key = 'deposit';
-                this.money_type = dicts.money_types.deposit;
-              } else if (draft.rent_money) {
-                this.money_key = 'rent_money';
-                this.money_type = dicts.money_types.rent_money;
-              }
-            }
-
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
@@ -1329,8 +1316,6 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
-        this.money_type = '';
-        this.money_key = '';
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';

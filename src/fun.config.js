@@ -233,7 +233,7 @@ export default {
                 that.closeDD();
               }
             });
-            this.closeDD();
+            that.closeDD();
           });
           dd.error(function (err) {
             alert('dd error: ' + JSON.stringify(err));
