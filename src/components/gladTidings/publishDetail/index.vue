@@ -28,7 +28,7 @@
       </div>
       <div v-if="placeFalse && marking === 1" class="priceRange">本小区价格区间：{{priceRegion}}</div>
     </div>
-    
+
     <div class="detailRight">
       <!--收房报备-->
       <div class="topTitle">
@@ -248,7 +248,7 @@
         priceRegion: '',
         showElectronicReceipt:true,   //展示电子收据
         bulletinId : '',              //报单id
-        electronicReceiptParam:{} ,   //电子收据接口参数     
+        electronicReceiptParam:{} ,   //电子收据接口参数
         is_receipt: '',               //是否电子收据
         bank :{},                     //银行数据
         pdfLoading:'',                //加载pdf
@@ -272,7 +272,7 @@
     },
     activated() {
       sessionStorage.setItem('count', '2');
-      // this.personalId = JSON.parse(sessionStorage.personal);
+      this.personalId = JSON.parse(sessionStorage.personal);
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
@@ -348,22 +348,22 @@
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
-            
+
             let content = res.data.data.process.content;
             console.log(res.data.data)
             this.formList = JSON.parse(content.show_content_compress);
-            
+
             // this.formList['开单人'] = content.staff_name;
             // if(content.collect_or_rent.id === '1'){
             //   this.formList['租客姓名'] = content.customers;
             // }else{
             //   this.formList['房东姓名'] = content.customers;
             // }
-            
+
             // console.log(this.formList['开单人'])
             this.operation = res.data.data.operation;
             this.deal = res.data.data.deal;
-            
+
             let houseName = res.data.data.process.content;
             if (houseName.address) {
               this.address = houseName.address;
@@ -410,7 +410,7 @@
               return;
             }
           }
-        });       
+        });
       },
       // 价格区间
       priceArea(price) {
