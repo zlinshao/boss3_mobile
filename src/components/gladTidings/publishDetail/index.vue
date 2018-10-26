@@ -375,7 +375,7 @@
             let main = res.data.data.process;
             this.process = main;
             this.personal = main.user;
-            this.confirmBulletinType(res.data.data.process);
+            // this.confirmBulletinType(res.data.data.process);
             this.place = main.place;
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
 
