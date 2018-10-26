@@ -68,7 +68,7 @@
         <van-field
           class="disabling"
           :class="{'payWay': priceStatus && form.price_arr.length > 1}"
-          v-model="form.price_arr[0]"
+          v-model="form.finance_money"
           @click="payWayClick(2)"
           :label="paid_token+'金额'"
           type="text"
@@ -141,8 +141,8 @@
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: 'success',
-        name:'',                  //房东or租客
-        paid_token:'',            //已收款or已付款
+        name:'租客',                  //房东or租客
+        paid_token:'已收',            //已收款or已付款
         return_refund:'',         //退还or退款
         money_paid:'',            //已付金额
         money_token:'',           //已收金额
@@ -160,7 +160,7 @@
           payWay: [''],                   //付款方式
           price_arr: [''],                //月单价
           finance_money:'',               //已付已收金额
-          collect_or_rent: '',
+          collect_or_rent: '1',
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
           refund: 0,                    //定金退还
@@ -268,6 +268,8 @@
           this.form.contract_id = '';
           this.form.payWay = [''];
           this.form.price_arr = [''];
+          this.form.return_money = "";
+          this.form.finance_money = '';
           this.numbers = val;
         }
         if(this.numbers == '0'){
@@ -347,9 +349,12 @@
       helperBulletin(id) {
         this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
           if (res.data.code === '51110') {
+            console.log(11111111111)
+            console.log(res)
             let pay = res.data.data;
             this.form.payWay = [];
             this.form.price_arr = [];
+            this.form.finance_money = pay.finance_money;
             for (let i = 0; i < pay.pay_way.length; i++) {
               this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
             }
