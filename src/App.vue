@@ -102,6 +102,9 @@
         });
       },
       staffInfo(res) {
+        wx.ready(function () {
+          wx.hideOptionMenu();
+        });
         this.token2 = res;
         let data = {};
         data.id = res.id;
