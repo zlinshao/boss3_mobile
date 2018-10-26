@@ -314,7 +314,7 @@
           label="物业费付款人"
           type="text"
           placeholder="请选择物业费付款人"
-          @click="selectShow(1,'')"
+          @click="selectShow(1)"
           readonly
           required>
         </van-field>
