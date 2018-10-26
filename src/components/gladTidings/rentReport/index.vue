@@ -1162,17 +1162,16 @@
             if (draft.money_sum) {
               this.form.deposit = draft.money_sum;
               this.money_type = dicts.money_types.deposit;
+              this.money_key = 'deposit';
             } else {
               if (draft.front_money) {
                 this.money_key = 'front_money';
-                this.money_type = dicts.money_types.front_money;
               } else if (draft.deposit) {
                 this.money_key = 'deposit';
-                this.money_type = dicts.money_types.deposit;
               } else if (draft.rent_money) {
                 this.money_key = 'rent_money';
-                this.money_type = dicts.money_types.rent_money;
               }
+              this.money_type = dicts.money_types[this.money_key];
             }
 
             this.form.money_sep = draft.money_sep;
