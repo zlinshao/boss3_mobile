@@ -31,6 +31,16 @@
           required>
         </van-field>
         <van-field
+          v-model="form.customers"
+          class="disabling"
+          @click="payWayClick(1)"
+          :label="name+'姓名'"
+          type="text"
+          readonly
+          icon="arrow"
+          placeholder="已禁用">
+        </van-field>
+        <van-field
           class="disabling"
           :class="{'payWay': payStatus && form.payWay.length > 1}"
           @click="payWayClick(1)"
@@ -39,7 +49,7 @@
           type="text"
           readonly
           icon="arrow"
-          placeholder="付款方式已禁用">
+          placeholder="已禁用">
         </van-field>
         <div class="accordion" v-if="payStatus && form.payWay.length > 1">
           <div v-for="(key,index) in form.payWay" v-show="index !== 0">{{key}}</div>
@@ -53,12 +63,29 @@
           type="text"
           readonly
           icon="arrow"
-          placeholder="月单价已禁用">
+          placeholder="已禁用">
         </van-field>
-        <div class="accordion" v-if="priceStatus && form.price_arr.length > 1">
+        <van-field
+          class="disabling"
+          :class="{'payWay': priceStatus && form.price_arr.length > 1}"
+          v-model="form.finance_money"
+          @click="payWayClick(2)"
+          :label="paid_token+'金额'"
+          type="text"
+          readonly
+          icon="arrow"
+          placeholder="已禁用">
+        </van-field>
+        <van-field
+          v-model="form.return_money"
+          :label="return_refund+'金额'"
+          type="text"
+          placeholder="请填写">
+        </van-field>
+        <!-- <div class="accordion" v-if="priceStatus && form.price_arr.length > 1">
           <div v-for="(key,index) in form.price_arr" v-show="index !== 0">{{key}}</div>
         </div>
-        <van-switch-cell v-model="refundSta" title="定金是否退还"/>
+        <van-switch-cell v-model="refundSta" title="定金是否退还"/> -->
       </van-cell-group>
       <div class="aloneModel required">
         <div class="title"><span>*</span>领导同意截图</div>
@@ -69,20 +96,20 @@
           v-model="form.remark"
           label="备注"
           type="textarea"
-          placeholder="请填写备注">
+          placeholder="请填写">
         </van-field>
         <van-field
           v-model="form.staff_name"
           label="开单人"
           type="text"
-          placeholder="开单人已禁用"
+          placeholder="已禁用"
           disabled>
         </van-field>
         <van-field
           v-model="form.department_name"
           label="部门"
           type="text"
-          placeholder="部门已禁用"
+          placeholder="已禁用"
           disabled>
         </van-field>
       </van-cell-group>
@@ -114,7 +141,11 @@
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: 'success',
-
+        name:'租客',                  //房东or租客
+        paid_token:'已收',            //已收款or已付款
+        return_refund:'',         //退还or退款
+        money_paid:'',            //已付金额
+        money_token:'',           //已收金额
         payStatus: false,
         priceStatus: false,
 
@@ -128,16 +159,19 @@
           draft: 0,
           payWay: [''],                   //付款方式
           price_arr: [''],                //月单价
-          collect_or_rent: '',
+          finance_money:'',               //已付已收金额
+          collect_or_rent: '1',
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
-          refund: 0,                  //定金退还
+          refund: 0,                    //定金退还
           screenshot_leader: [],        //领导同意截图
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
           staff_name: '',                 //开单人name
           department_name: '',            //部门name
+          customers:'',                   //客户姓名
+          return_money:'',                //退还金额
         },
         screenshots: {},                //截图
         numbers: '',
@@ -213,7 +247,7 @@
       },
       searchSelect(val) {
         if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'lord', end_type: 'none'}});
         } else if (val === '1') {
           this.$router.push({path: '/collectHouse', query: {type: 'report', end_type: 'none'}});
         } else {
@@ -229,11 +263,23 @@
       rentChange(val) {
         if (this.numbers !== val) {
           this.form.address = '';
+          this.form.customers = '';
           this.form.house_id = '';
           this.form.contract_id = '';
           this.form.payWay = [''];
           this.form.price_arr = [''];
+          this.form.return_money = "";
+          this.form.finance_money = '';
           this.numbers = val;
+        }
+        if(this.numbers == '0'){
+          this.name = "房东";
+          this.paid_token = '已付';
+          this.return_refund = '退还'
+        }else if(this.numbers == '1'){
+          this.name = "租客";
+          this.paid_token = '已收';
+          this.return_refund = '退款'
         }
       },
       saveCollect(val) {
@@ -288,6 +334,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
+          console.log(val)
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -296,14 +343,18 @@
           this.form.staff_id = val.staff_id;
           this.form.department_id = val.department_id;
           this.helperBulletin(val.id);
+          this.form.customers = val.customers
         }
       },
       helperBulletin(id) {
         this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
           if (res.data.code === '51110') {
+            console.log(11111111111)
+            console.log(res)
             let pay = res.data.data;
             this.form.payWay = [];
             this.form.price_arr = [];
+            this.form.finance_money = pay.finance_money;
             for (let i = 0; i < pay.pay_way.length; i++) {
               this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
             }
@@ -328,6 +379,7 @@
           if (res.data.code === '50720') {
             this.isClear = false;
             let data = res.data.data;
+            console.log(data)
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
@@ -349,6 +401,7 @@
             this.form.department_id = draft.department_id;
             this.form.staff_name = draft.staff_name;
             this.form.department_name = draft.department_name;
+            this.form.customers = draft.customers;
           } else {
             this.form.id = '';
           }
@@ -373,6 +426,7 @@
         this.screenshots = {};
         this.form.remark = '';
         this.form.address = '';
+        this.form.customers = '';
         this.form.staff_name = '';
         this.form.department_name = '';
         this.form.staff_id = '';

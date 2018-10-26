@@ -113,7 +113,7 @@
           class="number"
           label="押"
           placeholder="请填写付款方式-押"
-          @click="selectShow(3, '')"
+          @click="selectShow(3)"
           readonly
           required>
         </van-field>
@@ -277,7 +277,7 @@
         </van-field>
         <van-field
           v-model="cusFrom"
-          @click="selectShow(6,'')"
+          @click="selectShow(6)"
           label="是否中介"
           type="text"
           readonly
@@ -329,7 +329,7 @@
           label="物业费付款人"
           type="text"
           placeholder="请选择物业费付款人"
-          @click="selectShow(1,'')"
+          @click="selectShow(1)"
           readonly
           required>
         </van-field>
@@ -537,6 +537,7 @@
         roomsName: '',
         is_receipt: false,               //电子收据
         isReceiptMsg: {},                //电子收据
+
         form: {
           address: '',
           id: '',
@@ -881,7 +882,7 @@
         }
       },
       // select 显示
-      selectShow(val, index) {
+      selectShow(val, index = '') {
         this.tabs = val;
         this.payIndex = index;
         setTimeout(() => {
@@ -905,6 +906,9 @@
             break;
           case 6:
             this.columns = dicts.value8;
+            break;
+          case 7:
+            this.columns = Object.values(dicts.money_types);
             break;
         }
       },
@@ -944,6 +948,13 @@
           case 6:
             this.form.is_agency = index;
             this.cusFrom = value;
+            break;
+          case 7:
+            this.form.front_money = '';            //定金
+            this.form.deposit = '';                //押金
+            this.form.rent_money = '';             //租金
+            this.money_type = value;
+            this.money_key = Object.keys(dicts.money_types)[index];
             break;
         }
         this.selectHide = false;
@@ -1178,6 +1189,7 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.money_sum = draft.money_sum;
             this.form.rent_money = draft.rent_money;
+
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
@@ -1254,7 +1266,7 @@
             this.form.photo = draft.photo;
             this.photos = data.photo;
             this.form.deposit_photo = draft.deposit_photo;
-            this.receipts = data.deposit_photo;
+            this.receipts = data.deposit_photo ? data.deposit_photo : {};
             this.form.remark = draft.remark;
 
             if (val !== '' && val.type === 2) {
@@ -1316,6 +1328,7 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
+
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';

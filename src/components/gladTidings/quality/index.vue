@@ -865,7 +865,9 @@
           Toast(this.alertMsg('pic'));
           return;
         }
-        if (this.haveInHand) {
+        console.log(this.form.photo);
+        console.log(this.uploader)
+        if (this.haveInHand) {         
           // this.form.community.property_fee = this.property_fee;
           this.haveInHand = false;
           this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
@@ -1068,10 +1070,11 @@
         this.form.staff_name = data.staff_name;
         this.form.department_id = data.department_id;
         this.form.department_name = data.department_name;
-        console.log(this.form);
+        console.log(val);
         if (val === 'draught' && data.photo) {
           this.photos = data.photo;                                       //房屋影像
           this.form.photo = [];
+          console.log(data.photo)
           //房屋影像
           for (let i = 0; i < data.photo.length; i++) {
             this.form.photo.push(data.photo[i].id);                       //房屋影像
