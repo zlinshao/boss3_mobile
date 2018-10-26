@@ -1158,11 +1158,24 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
-            this.form.front_money = draft.front_money;
-            this.form.deposit = draft.deposit;
+            this.form.money_sum = '';
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
-            this.form.rent_money = draft.rent_money;
-            this.form.money_sum = draft.money_sum;
+            if (draft.money_sum) {
+              this.form.deposit = draft.money_sum;
+              this.money_type = this.money_types.deposit;
+            } else {
+              this.form.front_money = draft.front_money;
+              this.form.deposit = draft.deposit;
+              this.form.rent_money = draft.rent_money;
+              if (draft.front_money) {
+                this.money_type = this.money_types.front_money;
+              } else if (draft.deposit) {
+                this.money_type = this.money_types.deposit;
+              } else if (draft.rent_money) {
+                this.money_type = this.money_types.rent_money;
+              }
+            }
+
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
