@@ -516,13 +516,9 @@
         other_fee_status: false,
         is_receipt: false,              //电子收据
         isReceiptMsg: {},               //电子收据
+
         money_type: '',                 //金额类型
         money_key: '',                  //金额类型
-        money_types: {
-          'front_money': '定金',
-          'rent_money': '租金',
-          'deposit': '押金+租金',
-        },
         form: {
           address: '',
           id: '',
@@ -865,7 +861,7 @@
             this.columns = dicts.value8;
             break;
           case 6:
-            this.columns = Object.values(this.money_types);
+            this.columns = Object.values(dicts.money_types);
             break;
         }
       },
@@ -903,7 +899,7 @@
             this.form.deposit = '';                //押金
             this.form.rent_money = '';             //租金
             this.money_type = value;
-            this.money_key = Object.keys(this.money_types)[index];
+            this.money_key = Object.keys(dicts.money_types)[index];
             break;
         }
         this.selectHide = false;
@@ -1158,24 +1154,24 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
-            this.form.money_sum = '';
+            this.form.front_money = draft.front_money;
+            this.form.deposit = draft.deposit;
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
+            this.form.rent_money = draft.rent_money;
+            this.form.money_sum = draft.money_sum;
             if (draft.money_sum) {
               this.form.deposit = draft.money_sum;
-              this.money_type = this.money_types.deposit;
+              this.money_type = dicts.money_types.deposit;
             } else {
-              this.form.front_money = draft.front_money;
-              this.form.deposit = draft.deposit;
-              this.form.rent_money = draft.rent_money;
               if (draft.front_money) {
                 this.money_key = 'front_money';
-                this.money_type = this.money_types.front_money;
+                this.money_type = dicts.money_types.front_money;
               } else if (draft.deposit) {
                 this.money_key = 'deposit';
-                this.money_type = this.money_types.deposit;
+                this.money_type = dicts.money_types.deposit;
               } else if (draft.rent_money) {
                 this.money_key = 'rent_money';
-                this.money_type = this.money_types.rent_money;
+                this.money_type = dicts.money_types.rent_money;
               }
             }
 
@@ -1301,6 +1297,8 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
+        this.money_type = '';
+        this.money_key = '';
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';
