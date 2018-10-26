@@ -34,7 +34,7 @@
           v-model="form.customers"
           class="disabling"
           @click="payWayClick(1)"
-          :label="name+'姓名'" 
+          :label="name+'姓名'"
           type="text"
           readonly
           icon="arrow"
@@ -176,7 +176,7 @@
         screenshots: {},                //截图
         numbers: '',
         counts: '',
-        
+
         retry: 0,
       }
     },
@@ -247,7 +247,7 @@
       },
       searchSelect(val) {
         if (val === '0') {
-          this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+          this.$router.push({path: '/collectHouse', query: {type: 'lord', end_type: 'none'}});
         } else if (val === '1') {
           this.$router.push({path: '/collectHouse', query: {type: 'report', end_type: 'none'}});
         } else {
