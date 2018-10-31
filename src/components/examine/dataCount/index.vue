@@ -332,7 +332,7 @@
     },
     created() {
       this.showData = JSON.parse(JSON.stringify(rentTitle_calculate));
-      // this.goBack('/');
+      this.goBack('/');
     },
     mounted() {
       Array.from(document.getElementsByTagName('input')).forEach(function(item){
