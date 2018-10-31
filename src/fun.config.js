@@ -20,6 +20,21 @@ export default {
         }
       });
     };
+    // 钉钉返回
+    Vue.prototype.goBack = function (url, data) {
+      let that = this;
+      document.addEventListener('backbutton', function (e) {
+        e.preventDefault();
+        that.$router.push({path: url, query: data});
+      });
+
+      dd.biz.navigation.setLeft({
+        control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+        onSuccess() {
+          that.$router.push({path: url, query: data});
+        },
+      });
+    };
     Vue.prototype.routLink = function (path, params) {
       if (path === 'back') {
         this.$router.go(-1);

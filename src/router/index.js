@@ -85,6 +85,10 @@ import ProposeQuestion from '../components/examine/interlocution/components/prop
 import WriteAnswer from '../components/examine/interlocution/components/writeAnswer.vue';  //写回答
 import WriteComment from '../components/examine/interlocution/components/writeComment.vue';  //写评论
 
+
+//计算器
+import SearchHouse from '../components/common/searchHouse.vue';//计算器房屋搜索
+
 Vue.use(Router);
 
 export default new Router({
@@ -562,6 +566,11 @@ export default new Router({
       meta: {title: '业绩计算'},
       component: DataCount
     },
+    {
+      path:'/searchHouse',
+      name:'计算器房屋搜索',
+      component: SearchHouse
+    }
     // {
     //   path: '/dataCount',
     //   name: '业绩计算器',

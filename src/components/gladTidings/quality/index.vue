@@ -355,6 +355,7 @@
       <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
         <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
+        <div class="upload-tips">提示：请上传6张以上房屋照片和1个以上房屋视频哦~</div>
       </div>
 
       <van-cell-group>
@@ -594,13 +595,14 @@
         }
       },
       userInfo(val1) {
-        if (val1 && this.form.quality_up !== '1') {
-          let per = JSON.parse(sessionStorage.personal);
-          this.form.staff_id = per.id;
-          this.form.staff_name = per.name;
-          this.form.department_id = per.department_id;
-          this.form.department_name = per.department_name;
-        }
+        // if (val1 && this.form.quality_up !== '1') {
+        //   console.log(sessionStorage.personal)
+        //   let per = JSON.parse(sessionStorage.personal);
+        //   this.form.staff_id = per.id;
+        //   this.form.staff_name = per.name;
+        //   this.form.department_id = per.department_id;
+        //   this.form.department_name = per.department_name;
+        // }
       },
       dicts(val) {
         // 城市
@@ -1194,6 +1196,12 @@
           }
         }
       }
+    }
+    .upload-tips{
+      color:red;
+      font-size: 14px;
+      text-indent: 1em;
+      margin: .2rem 0 0 0;
     }
   }
 </style>
