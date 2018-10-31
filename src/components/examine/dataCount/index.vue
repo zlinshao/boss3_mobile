@@ -1,228 +1,351 @@
 <template>
   <div id="dataCount">
-    <div v-show="showContent">
-      <div class="checks">
-        <div class="checkTitle">出租类型</div>
-        <van-radio-group v-model="rentType">
-          <van-radio name="0">新租</van-radio>
-          <van-radio name="1">二次出租</van-radio>
-        </van-radio-group>
+    <div class="dataMain">
+      <div v-show="showContent !== 3">
+        <van-cell-group>
+          <van-field
+            v-model="form.house_name"
+            label="房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect('house')"
+            placeholder="请选择房屋地址"
+            required>
+          </van-field>
+        </van-cell-group>
+        <div class="checks">
+          <div class="checkTitle">出租类型</div>
+          <van-radio-group v-model="rentType" class="radioRent">
+            <van-radio name="0">新租</van-radio>
+            <van-radio name="1">二次出租</van-radio>
+          </van-radio-group>
+        </div>
+        <van-cell-group>
+          <van-field
+            v-model="form.counter"
+            label="总业绩"
+            type="number"
+            placeholder="请填写总业绩"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.comm_rate"
+            label="提成百分比"
+            type="text"
+            placeholder="已禁用"
+            disabled>
+          </van-field>
+        </van-cell-group>
+        <div class="titles">收房</div>
+        <van-cell-group>
+          <van-field
+            v-model="form.lord_month_price"
+            label="收房价格"
+            type="number"
+            placeholder="请填写收房价格"
+            required>
+          </van-field>
+          <van-field
+            v-if="rentType === '1'"
+            v-model="form.lord_duration"
+            label="收房年限(年)"
+            type="number"
+            placeholder="请填写收房年限"
+            disabled
+            required>
+          </van-field>
+          <van-field
+            v-if="rentType === '0'"
+            v-model="form.lord_duration"
+            label="收房年限(年)"
+            type="number"
+            placeholder="请填写收房年限"
+            required>
+          </van-field>
+          <van-field
+            v-if="rentType === '0'"
+            v-model="form.lord_vacancy_date"
+            label="收房空置期"
+            type="number"
+            placeholder="请填写天数"
+            required>
+          </van-field>
+          <van-field
+            v-if="rentType === '0'"
+            v-model="form.lord_agency_count"
+            label="收房中介费"
+            type="number"
+            placeholder="请填写收房中介费"
+            required>
+          </van-field>
+          
+          <van-field
+            v-if="rentType === '0'"
+            v-model="formatData.lord_pay_way"
+            @click="selectShow('lord_pay_way')"
+            label="收房付款方式"
+            placeholder="请填写选择付款方式"
+            type="text"
+            readonly
+            required>
+          </van-field>
+          <van-field
+            v-model="form.lord_property_fee"
+            v-if="rentType === '0'"
+            label="物业费"
+            type="number"
+            placeholder="请填写收房物业费"
+            required>
+          </van-field>
+        </van-cell-group>
+        <div class="titles">租房</div>
+        <van-cell-group>
+          <van-field
+            v-model="form.rent_month_price"
+            label="租房价格"
+            type="number"
+            placeholder="请填写租房价格"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.rent_agency_count"
+            label="租房中介费"
+            type="number"
+            placeholder="请填写租房中介费"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.rent_pay_way"
+            label="租房付款方式"
+            type="number"
+            placeholder="请填写月数"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.rent_vacancy_date"
+            label="租房消耗空置期"
+            type="number"
+            placeholder="请填写天数"
+            required>
+          </van-field>
+          <!-- <van-field
+            v-show='false'
+            v-if="rentType === '0'"
+            v-model="form.rent_return_day"
+            label="回款时长"
+            type="number"
+            placeholder="请填写天数"
+            disabled
+            required>
+          </van-field>
+          <van-field
+            v-show='false'
+            v-if="rentType === '0'"
+            v-model="form.rent_return_money"
+            label="未回款金额"
+            type="number"
+            placeholder="请填写未回款金额"
+            disabled
+            required>
+          </van-field> -->
+        </van-cell-group>
+        <!--<van-cell-group>-->
+        <!--<van-field-->
+        <!--v-model="form.sign_date"-->
+        <!--label="签约日期"-->
+        <!--readonly-->
+        <!--type="number"-->
+        <!--@focus="timeChoose('sign_date', form.sign_date)"-->
+        <!--placeholder="请选择签约日期"-->
+        <!--required>-->
+        <!--</van-field>-->
+        <!--</van-cell-group>-->
+        <div class="titles" v-show="showContent === 2">计算结果</div>
       </div>
-      <van-cell-group>
-        <van-field
-          v-model="form.counter"
-          label="总业绩"
-          type="text"
-          placeholder="请填写总业绩"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.comm_rate + '%'"
-          label="提成百分比"
-          type="text"
-          placeholder="已禁用"
-          disabled>
-        </van-field>
-      </van-cell-group>
-      <div class="titles">收房</div>
-      <van-cell-group>
-        <van-field
-          v-model="form.lord_month_price"
-          label="收房价格"
-          type="text"
-          placeholder="请填写收房价格"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.lord_duration"
-          label="收房年限(年)"
-          type="text"
-          placeholder="请填写收房年限"
-          required>
-        </van-field>
-        <van-field
-          v-if="rentType === '0'"
-          v-model="form.lord_agency_count"
-          label="收房中介费"
-          type="text"
-          placeholder="请填写收房中介费"
-          required>
-        </van-field>
-        <van-field
-          v-if="rentType === '0'"
-          v-model="form.lord_vacancy_date"
-          label="收房空置期"
-          type="text"
-          placeholder="请填写天数"
-          required>
-        </van-field>
-        <van-field
-          v-if="rentType === '0'"
-          v-model="formatData.payWay"
-          @click="selectShow()"
-          label="收房付款方式"
-          placeholder="请填写选择付款方式"
-          type="text"
-          readonly
-          required>
-        </van-field>
-      </van-cell-group>
-      <div class="titles">租房</div>
-      <van-cell-group>
-        <van-field
-          v-model="form.rent_month_price"
-          label="租房价格"
-          type="text"
-          placeholder="请填写租房价格"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.rent_agency_count"
-          label="租房中介费"
-          type="text"
-          placeholder="请填写租房中介费"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.rent_pay_way"
-          label="租房付款方式"
-          type="text"
-          placeholder="请填写月数"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.rent_vacancy_date"
-          label="租房消耗空置期"
-          type="text"
-          placeholder="请填写天数"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.rent_return_day"
-          label="回款时长"
-          type="text"
-          placeholder="请填写天数"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.rent_return_money"
-          label="未回款金额"
-          type="text"
-          placeholder="请填写未回款金额"
-          required>
-        </van-field>
-      </van-cell-group>
-      <!--<van-cell-group>-->
-      <!--<van-field-->
-      <!--v-model="form.sign_date"-->
-      <!--label="签约日期"-->
-      <!--readonly-->
-      <!--type="text"-->
-      <!--@focus="timeChoose('sign_date', form.sign_date)"-->
-      <!--placeholder="请选择签约日期"-->
-      <!--required>-->
-      <!--</van-field>-->
-      <!--</van-cell-group>-->
-      <div class="onBtn" @click="countMoney">计算收益</div>
-    </div>
-    <div class="results" :class="{'showResult': !showContent}">
-      <div class="result">
-        <div class="result1">
-          <div class="result2 types">
-            <div class="title">类型</div>
-            <div v-for="(key,index) in showData" :class="{'colorRed': index === 'real_money'}">{{key}}</div>
+      <!--v-show="showContent === 2"-->
+      <div class="results" v-show="showContent === 2">
+        <div class="result">
+          <div class="result1">
+            <div class="result2 types">
+              <div class="title">类型</div>
+              <div v-for="(key,index) in showData" :class="{'colorRed': index === 'real_money'}">{{key}}</div>
+            </div>
           </div>
-        </div>
-        <div class="result1">
-          <div class="result2 collect">
-            <div class="title">收房人</div>
-            <div v-for="key in Object.keys(showData)" :class="{'colorRed': key === 'real_money'}">
-              <span v-if="lordData[key]">{{lordData[key]}}</span>
-              <span v-else>/</span>
+          <div class="result1">
+            <div class="result2 collect">
+              <div class="title">收房人</div>
+              <div v-for="key in Object.keys(showData)"
+                   :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
+                <span v-if="lordData[key]">{{lordData[key]}}</span>
+                <span v-else>/</span>
+              </div>
+            </div>
+          </div>
+          <div class="result1">
+            <div class="result2 renter">
+              <div class="title">租房人</div>
+              <div v-for="key in Object.keys(showData)"
+                   :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
+                <span v-if="rentData[key]">{{rentData[key]}}</span>
+                <span v-else>/</span>
+              </div>
+            </div>
+          </div>
+          <div class="result1">
+            <div class="result2 all">
+              <div class="title">合计</div>
+              <div v-for="key in Object.keys(showData)"
+                   :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
+                <span v-if="allData[key]">{{allData[key]}}</span>
+                <span v-else>/</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="result1">
-          <div class="result2 renter">
-            <div class="title">租房人</div>
-            <div v-for="key in Object.keys(showData)" :class="{'colorRed': key === 'real_money'}">
-              <span v-if="rentData[key]">{{rentData[key]}}</span>
-              <span v-else>/</span>
+        <div class="managerData">
+          <div class="manager title">
+            <div>&nbsp;</div>
+            <div>区域经理</div>
+            <div>片区经理</div>
+          </div>
+          <div class="manager nums">
+            <div class="title">
+              业绩
+            </div>
+            <div>
+              {{warden.ach}}
+            </div>
+            <div>
+              {{manager.ach}}
             </div>
           </div>
-        </div>
-        <div class="result1">
-          <div class="result2 all">
-            <div class="title">合计</div>
-            <div v-for="key in Object.keys(showData)" :class="{'colorRed': key === 'real_money'}">
-              <span v-if="allData[key]">{{allData[key]}}</span>
-              <span v-else>/</span>
+          <div class="manager nums">
+            <div class="title">
+              收房空置期认责
+            </div>
+            <div>
+              {{warden.duty}}
+            </div>
+            <div>
+              {{manager.duty}}
             </div>
           </div>
         </div>
       </div>
-      <div class="onBtn" @click="showContent = true">返回上一步</div>
+      <div v-show="showContent === 3">
+        <van-cell-group>
+          <van-field
+            v-for="(item,index) in setData"
+            :key="index"
+            v-model="params[item.setting_key]"
+            :label="item.setting_desc"
+            type="number"
+            placeholder="请填写数字"
+            required>
+          </van-field>
+        </van-cell-group>
+      </div>
     </div>
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="pickerModule" position="bottom"
-               :overlay="true">
-      <van-picker
-        show-toolbar
-        :columns="payValues"
-        @cancel="onCancel"
-        @confirm="onConfirm"/>
-    </van-popup>
 
-    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
+    <div class="footerReport" v-if="showContent === 3">
+      <div @click="showContent = 1">返回上一步</div>
+      <div @click="setScale()">确认设置</div>
+    </div>
+    <div class="footerReport" v-if="showContent !== 3">
+      <div @click="emptyForm">清空</div>
+      <div v-show="noPower" @click="getScale(2)">设置影响比例</div>
+      <div @click="countMoney">计算收益</div>
+    </div>
+    <Picker :module="pickerModule" :pickers="pickers" :form="form" :formData="formatData" @close="onCancel"
+            @succeed="onConPicker"></Picker>
+
+    <!--日期筛选-->
+    <!--<ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>-->
   </div>
 </template>
 
 <script>
-  import ChooseTime from './chooseTime.vue'
+  import ChooseTime from '../../common/chooseTime.vue'
+  import Picker from '../../common/picker.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {ChooseTime, Toast},
+    components: {ChooseTime, Toast, Picker},
     data() {
       return {
         url: globalConfig.server,
         address: '',
         rentType: '0',
         timeModule: false,              //日期
-        pickerModule: false,
-        showContent: true,
+        pickerModule: false,            //下拉框
+        showContent: 1,                 //显示模块
+        //显示模块
+        noPower: false,
         payValues: [],
         payKeys: [],
-        payWay: {
-          '1': '月付',
-          '2': '双月付',
-          '3': '季付',
+        // 下拉相关
+        pickers: {
+          id: '',
+          ids: [],
+          index: '',
+          columns: [],                    //下拉数据
         },
         formatData: {
           paramsKey: '',                //格式化日期
           dateVal: '',                  //格式化日期
           dataKey: '',                  //字段区分
-          payWay: '',
+          lord_pay_way: '',             //收房付款方式
         },
         form: {
-          comm_rate: 100,
-          counter: 300000,
-        },
 
+        },
+        manager: {},
+        warden: {},
         lordData: {},
         rentData: {},
         allData: {},
-        showData: {}
+        showData: {},
+
+        setData: [],
+        params: {},
       }
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        let detail = vm.$store.state.app.searchDetail;
+        console.log(detail)
+        if (Object.keys(detail).length > 0) {
+          switch (from.path) {
+            case '/searchHouse':
+              vm.searchInfo(detail, 'house');
+              break;
+            case '/searchStaff':
+              vm.searchInfo(detail, 'staff');
+              break;
+            case '/searchDepart':
+              vm.searchInfo(detail, 'depart');
+              break;
+          }
+        }
+      })
+    },
     created() {
-      this.resetting();
+      this.showData = JSON.parse(JSON.stringify(rentTitle_calculate));
+      this.goBack('/');
     },
     mounted() {
+      Array.from(document.getElementsByTagName('input')).forEach(function(item){
+        item.removeEventListener('keypress', function(){
+          console.log(111)
+        }, false);
+        console.log('done')
+      })
+      this.emptyForm()
       this.address = 'salary/achievement_counter/getCounter';
+      this.getScale(1);
     },
     activated() {
-      this.stick();
     },
     watch: {
       rentType(val) {
@@ -230,6 +353,7 @@
         if (val === '0') {
           this.address = 'salary/achievement_counter/getCounter';
         } else {
+          this.form.lord_duration = 3;
           this.address = 'salary/overflowrate/getSecondRent';
           delete this.showData.push_rate;
         }
@@ -237,19 +361,86 @@
     },
     computed: {},
     methods: {
-      // 计算收益
-      countMoney() {
-        Toast.loading({
-          duration: 0,       // 持续展示 toast
-          forbidClick: true, // 禁用背景点击
-          loadingType: 'spinner',
-          message: '正在计算...'
+      searchInfo(data, val) {
+        switch (val) {
+          case 'house':
+            this.form.house_id = data.house_id;
+            this.form.house_name = data.house_name;
+            this.form.comm_rate = '';
+            this.form.counter = 400000;
+
+            this.form.lord_month_price = data.archievementdata.lord_month_price;
+            // this.form.lord_duration = data.archievementdata.lord_duration;
+            // this.form.lord_duration = 3;
+            this.form.lord_agency_count = data.archievementdata.lord_agency_count;
+            this.form.lord_vacancy_date = data.archievementdata.lord_vacancy_date;
+            // this.formatData.lord_pay_way = data.archievementdata.lord_pay_way;
+            this.form.lord_property_fee = data.archievementdata.lord_property_fee;
+
+            this.form.rent_month_price = '';
+            this.form.rent_agency_count = '';
+            this.form.rent_pay_way = '';
+            this.form.rent_vacancy_date = '';
+            this.form.rent_return_day = 0;
+            this.form.rent_return_money = 0;
+            console.log("-----form");
+            console.log(this.form);
+            this.form = Object.assign({}, this.form);
+            // this.$set(this.form,Object.keys(this.form), Object.values(this.form))
+
+            break;
+          case 'staff':
+            this.form.staff_id = data.staff_id;
+            this.form.staff_name = data.staff_name;
+            break;
+          case 'depart':
+            this.form.department_id = data.id;
+            this.form.department_name = data.name;
+            break;
+        }
+      },
+      // 获取设置比例 参数
+      getScale(val) {
+        this.$http.get(this.url + 'salary/achievement_counter/getSettings').then(res => {
+          if (res.data.code === '50030') {
+            if (val !== 1) {
+              this.showContentVal(3);
+            }
+            this.noPower = true;
+            this.setData = res.data.data;
+            for (let item of res.data.data) {
+              this.params[item.setting_key] = item.setting_value;
+            }
+          } else {
+            if (res.data.code !== '50099') {
+              Toast(res.data.msg);
+            }
+          }
         });
-        this.$http.post(this.url + this.address, this.form).then(res => {
+      },
+      //跳到搜索框
+      searchSelect(val) {
+        console.log(this.$router)
+        switch (val) {
+          case 'house':
+            this.routLink('/searchHouse', {type: 'lord'});
+            break;
+          case 'staff':
+            this.routLink('/searchStaff');
+            break;
+          case 'depart':
+            this.routLink('/searchDepart');
+            break;
+        }
+      },
+      // 设置影响比列
+      setScale() {
+        this.showLoad('正在设置...');
+        this.$http.post(this.url + 'salary/achievement_counter/saveSettings', this.params).then(res => {
           Toast.clear();
-          if (res.data.code === '50010') {
-            this.showContent = false;
-            this.handleData(res.data.data);
+          if (res.data.code === '50040') {
+            this.showContentVal(1);
+            Toast.success(res.data.msg);
           } else {
             Toast(res.data.msg);
           }
@@ -257,12 +448,33 @@
           Toast.clear();
         });
       },
+      // 计算收益
+      countMoney() {
+        this.showLoad('正在计算...');
+        this.$http.post(this.url + this.address, this.form).then(res => {
+          Toast.clear();
+          if (res.data.code === '50010') {
+            this.showContentVal(2);
+            this.handleData(res.data.data);
+            this.manager = res.data.data.manager;
+            this.warden = res.data.data.warden;
+            setTimeout(() => {
+              window.scrollTo(0, document.body.clientHeight);
+            }, 500)
+          } else {
+            Toast(res.data.msg);
+          }
+        }).catch(() => {
+          Toast.clear();
+        });
+      },
+      // 变更数据
       handleData(data) {
         this.rentData = data.rent;
         this.rentData.pay_way_rent = data.rent.pay_way;
         this.rentData.agency_count_rent = data.rent.agency_count;
         this.allData = data.all;
-        if (this.rentType === '1') return;
+        // if (this.rentType === '1') return;
         this.lordData = data.lord;
         this.lordData.pay_way_lord = data.lord.pay_way;
         this.lordData.agency_count_lord = data.lord.agency_count;
@@ -278,18 +490,26 @@
           }
         })
       },
-      // select
-      selectShow() {
+      // 显示下拉
+      selectShow(val, index) {
         setTimeout(() => {
           this.pickerModule = true;
         }, 200);
-        this.payValues = Object.values(this.payWay);
-        this.payKeys = Object.keys(this.payWay);
+        let dict;
+        if (typeof val === 'string') {
+          dict = dicties[val];
+        } else {
+          dict = this.dictData[val];
+        }
+        this.pickers.columns = Object.values(dict);
+        this.pickers.ids = Object.keys(dict);
+        this.pickers.id = val;
+        this.pickers.index = index;
       },
-      // select
-      onConfirm(value, index) {
-        this.form.lord_pay_way = this.payKeys[index];
-        this.formatData.payWay = value;
+      // 下拉选择结果
+      onConPicker(value, index) {
+        this.form = value;
+        this.formatData = index;
         this.onCancel();
       },
       // 显示日期
@@ -312,51 +532,76 @@
       },
       // 重置
       resetting() {
-        this.form = {};
         this.lordData = {};
         this.rentData = {};
         this.allData = {};
-        this.form.comm_rate = 100;
-        this.form.counter = 300000;
-        this.showData = JSON.parse(JSON.stringify(rentTitle));
+        this.emptyForm();
+        this.showData = JSON.parse(JSON.stringify(rentTitle_calculate));
       },
+      // 清空表单
+      emptyForm() {
+        window.scrollTo(0, 0);
+        this.showContentVal(1);
+        this.formatData.lord_pay_way = '';
+        this.form = {};
+         this.form.counter = 400000;
+        this.form.comm_rate = 100;
+        this.form.rent_return_day = 0;
+        this.form.rent_return_money = 0;
+        // this.form.lord_duration = 3;
+      },
+      showContentVal(val) {
+        this.showContent = val;
+      },
+      showLoad(msg) {
+        Toast.loading({
+          duration: 0,       // 持续展示 toast
+          forbidClick: true, // 禁用背景点击
+          loadingType: 'spinner',
+          message: msg
+        });
+      }
     },
   }
 </script>
 
 <style lang="scss">
+  @import "../../../../static/common.scss";
+
   #dataCount {
     overflow-x: hidden;
+    .dataMain {
+      padding-bottom: 1.2rem;
+    }
     .checks {
       display: flex;
       display: -webkit-flex;
-      padding: 0 15px;
+      align-items: center;
+      padding: 10px 15px;
       background-color: #fff;
       .checkTitle {
+        min-width: 130px;
         max-width: 130px;
       }
-    }
-    .van-cell.van-hairline.van-field {
-      .van-cell__title {
-        width: 130px;
+      .radioRent {
+        display: flex;
+        display: -webkit-flex;
+        margin-left:-.42rem;
+        div + div {
+          margin-left: .6rem;
+        }
       }
-      .van-cell__value {
-        padding-left: 130px;
+    }
+    .van-field {
+      .van-cell__title {
+        min-width: 130px;
+        max-width: 130px;
       }
     }
     .titles {
       background-color: #e5e5e5;
-      padding: .2rem .3rem;
-      color: #aaaaaa;
-    }
-    .onBtn {
-      width: 100%;
-      background: #409EFF;
-      color: #FFFFFF;
-      text-align: center;
-      height: .8rem;
-      line-height: .82rem;
-      margin: .3rem 0;
+      padding: .3rem;
+      color: #aaa;
     }
     .result {
       display: flex;
@@ -388,7 +633,6 @@
             white-space: nowrap;
             color: #fff;
           }
-
         }
         .collect {
           div {
@@ -415,21 +659,49 @@
         }
       }
     }
-    .results {
-      position: fixed;
-      top: 0;
-      left: 10rem;
-      right: 0;
-      bottom: 0;
-      background-color: #fff;
-      transition: all .5s;
-      z-index: 1;
-    }
-    .showResult {
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      left: 0;
+    /*.results {*/
+    /*position: fixed;*/
+    /*top: 0;*/
+    /*left: 10rem;*/
+    /*right: 0;*/
+    /*bottom: 1rem;*/
+    /*padding-bottom: .2rem;*/
+    /*background-color: #fff;*/
+    /*transition: all .5s;*/
+    /*z-index: 1;*/
+    /*}*/
+    /*.showResult {*/
+    /*overflow-x: hidden;*/
+    /*overflow-y: auto;*/
+    /*-webkit-overflow-scrolling: touch;*/
+    /*left: 0;*/
+    /*}*/
+    .managerData {
+      border-top: 1px solid #f8f8f8;
+      .manager {
+        display: flex;
+        display: -webkit-flex;
+        border-bottom: 1px solid $bodyBg;
+        background-color: $color;
+        div + div {
+          border-left: 1px solid $bodyBg;
+        }
+        div {
+          width: 100%;
+          text-align: center;
+          color: #fff;
+          padding: .2rem;
+        }
+      }
+      .manager.nums {
+        background-color: #fff;
+        div {
+          color: red;
+        }
+        .title{
+          color: #616161;
+        }
+      }
     }
   }
 </style>
