@@ -1,0 +1,194 @@
+.notData {
+  text-align: center;
+  font-size: .33rem;
+  color: #b3afaf;
+  line-height: .46rem;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-justify-content: center; }
+
+#houseSearch input {
+  border: none; }
+#houseSearch .contract {
+  padding: .1rem 0 .2rem;
+  border-bottom: 1px solid #eaeaea;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  flex-wrap: wrap; }
+  #houseSearch .contract div {
+    display: flex;
+    display: -webkit-flex;
+    width: 100%; }
+    #houseSearch .contract div span:first-of-type {
+      color: #9c9c9c; }
+  #houseSearch .contract .contractB p {
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center; }
+    #houseSearch .contract .contractB p span:first-of-type {
+      min-width: 1.6rem; }
+  #houseSearch .contract .departB p {
+    width: 50%; }
+#houseSearch .searchCustom {
+  background-color: #f8f8f8;
+  padding: .2rem .3rem;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: space-between;
+  -webkit-justify-content: space-between; }
+  #houseSearch .searchCustom i {
+    padding-right: .18rem; }
+  #houseSearch .searchCustom div {
+    background-color: #fff;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    padding: .06rem .2rem;
+    width: 100%; }
+    #houseSearch .searchCustom div input {
+      width: 100%; }
+  #houseSearch .searchCustom p {
+    text-align: right;
+    min-width: .88rem; }
+  #houseSearch .searchCustom .searchP {
+    color: #666666; }
+  #houseSearch .searchCustom .cancelP {
+    color: #06bf04; }
+#houseSearch .mainContent {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: #fff; }
+  #houseSearch .mainContent .mainList {
+    padding: .2rem 0 0 .32rem; }
+    #houseSearch .mainContent .mainList .contract {
+      color: #555555; }
+      #houseSearch .mainContent .mainList .contract div {
+        padding-top: .15rem; }
+    #houseSearch .mainContent .mainList .staffDepart {
+      padding: .18rem .3rem .18rem 0;
+      display: flex;
+      display: -webkit-flex;
+      justify-content: space-between;
+      -webkit-justify-content: space-between; }
+#houseSearch .notData {
+  padding: .2rem; }
+#houseSearch .bgColor {
+  padding: .33rem;
+  background-color: #f8f8f8; }
+
+.searchClass {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  z-index: 999; }
+  .searchClass .searchCustom {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    padding: .1rem 0 .1rem .3rem;
+    background-color: #f2f2f2; }
+    .searchClass .searchCustom div {
+      display: flex;
+      display: -webkit-flex;
+      align-items: center;
+      -webkit-align-items: center;
+      height: 34px;
+      width: 100%;
+      padding: 9px 0 7px;
+      border: 1px solid #dddddd;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      background-color: #FFFFFF; }
+      .searchClass .searchCustom div input {
+        width: 98%;
+        border: 0;
+        height: 22px; }
+      .searchClass .searchCustom div i {
+        color: #666666;
+        font-size: .4rem;
+        padding: .1rem .24rem;
+        margin-top: -.03rem; }
+    .searchClass .searchCustom p {
+      min-width: 50px;
+      text-align: center;
+      color: #06bf04; }
+  .searchClass .searchContent {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 80%; }
+    .searchClass .searchContent .searchList {
+      display: flex;
+      display: -webkit-flex;
+      justify-content: space-between;
+      -webkit-justify-content: space-between;
+      padding: .3rem; }
+      .searchClass .searchContent .searchList:hover {
+        background: #DDDDDD; }
+      .searchClass .searchContent .searchList div:first-child {
+        width: 48%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap; }
+      .searchClass .searchContent .searchList div:last-of-type {
+        text-align: right; }
+        .searchClass .searchContent .searchList div:last-of-type p {
+          margin-bottom: .1rem; }
+        .searchClass .searchContent .searchList div:last-of-type span {
+          color: #aaaaaa; }
+    .searchClass .searchContent .searchList.city {
+      align-items: center; }
+      .searchClass .searchContent .searchList.city div:first-child {
+        line-height: .5rem; }
+      .searchClass .searchContent .searchList.city p {
+        margin-bottom: 0; }
+  .searchClass .notData {
+    padding: 24px 0; }
+  .searchClass .van-search__input-wrap {
+    padding-top: 5px; }
+    .searchClass .van-search__input-wrap .van-search__input {
+      height: 22px; }
+
+.footerReport {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  height: 1rem;
+  background-color: #FFF;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -webkit-box-shadow: 0 0 0.6rem 0.01rem rgba(189, 189, 189, 0.3);
+  -moz-box-shadow: 0 0 0.6rem 0.01rem rgba(189, 189, 189, 0.3);
+  box-shadow: 0 0 0.6rem 0.01rem rgba(189, 189, 189, 0.3); }
+  .footerReport div + div {
+    border-left: .01rem solid #ebebeb; }
+  .footerReport div {
+    width: 100%;
+    color: #409EFF;
+    text-align: center;
+    padding: .1rem 0; }
+
+/*# sourceMappingURL=common.css.map */
