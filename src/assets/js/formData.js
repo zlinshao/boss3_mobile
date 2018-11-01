@@ -78,6 +78,6 @@
     agency_count_rent: '租房中介费',
     real_money: '实际到手',
     // client_money: '客户维护费',
-    extra_award: '额外奖励',
+    // extra_award: '额外奖励',
   };
   
