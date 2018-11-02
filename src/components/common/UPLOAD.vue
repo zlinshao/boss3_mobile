@@ -24,7 +24,8 @@
 </template>
 
 <script>
-  import fileImage from '../../assets/video.jpg'
+  import fileImage from '../../assets/video.jpg';
+  import {md5} from '../../assets/js/MD5.js';
   import {Dialog} from 'vant';
   import {Toast} from 'vant';
   import {ImagePreview} from 'vant';
@@ -50,7 +51,6 @@
     },
     mounted() {
       this.active();
-      // this.fileLength = this.editImg.length;
     },
     watch: {
       editImage: {
@@ -221,11 +221,6 @@
                 }
               }
             },
-            // 'FilesRemoved': function (uploader, files) {
-            //   console.log(uploader.files.length);
-            //   console.log(_this.editImg.length);
-            //   _this.fileLength = _this.editImg.length + uploader.files.length;
-            // },
             'BeforeUpload': function (up, file) {
               // 每个文件上传前，处理相关的事情
               _this.isUploading = 'lose';
@@ -268,15 +263,14 @@
             },
             'UploadComplete': function () {
               //队列文件处理完毕后，处理相关的事情
-              // _this.isUploading = false;
-              // _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
+              _this.isUploading = false;
+              _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
             },
             'Error': function (up, err, errTip) {// 每个文件上传失败后,处理相关的事情
               if (err.file && err.file.size !== undefined && err.file.size > 104857600) {
                 Dialog.alert({
                   message: '文件最大不能超过100MB'
                 }).then(() => {
-                  // on close
                 });
               } else {
                 Toast(errTip);
@@ -293,7 +287,7 @@
               // 该配置必须要在unique_names: false，save_key: false时才生效
               let key = "";
               // do something with key here
-              return key
+              return key;
             }
           }
         });

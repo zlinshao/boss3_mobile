@@ -17,7 +17,7 @@ import {Cell, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard, Ro
 Vue.use(Row).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(CellSwipe).use(SwitchCell).use(Picker).use(Popup).use(AddressList);
 Vue.use(require('vue-wechat-title'));
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(Boss);
 Vue.use(Fun);
@@ -56,12 +56,10 @@ router.beforeEach((to, from, next) => {
                 message: "读取信息失败，稍后再试！",
                 title: "提示信息",
                 buttonName: "关闭",
-                onSuccess: function () {},
-                onFail: function (err) {}
               });
               dd.biz.navigation.close({
                 onSuccess: function (result) {},
-                onFail: function (err) {  }
+                onFail: function (err) {}
               });
             }
           })

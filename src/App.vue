@@ -39,6 +39,7 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
+      console.log(this.$route.query);
       this.responses();
     },
     methods: {
@@ -79,10 +80,11 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.personalGet(1).then(res => {
-            this.loading = !res;
-            this.$router.push('/index');
-          });
+          this.prevent();
+          // this.personalGet(1).then(res => {
+          //   this.loading = !res;
+          //   this.$router.push('/index');
+          // });
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
@@ -101,6 +103,9 @@
           }
           return Promise.reject(error);
         });
+      },
+      prevent() {
+
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
