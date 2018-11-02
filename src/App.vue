@@ -97,12 +97,10 @@
         });
       },
       prevent() {
-        alert(11111111)
         this.$http.get('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=f7B6EMEeyXI_z7v7IbmWD-5zzO6HZyEKuOYz16kNoJY').then(res => {
-          alert(222222222)
           this.token = res.data;
         }).catch(err => {
-          alert(3333333333)
+          alert(JSON.stringify(err.response))
         })
       },
       onInput(key) {
