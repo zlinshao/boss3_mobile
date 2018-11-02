@@ -100,7 +100,7 @@
         this.$http.get('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=f7B6EMEeyXI_z7v7IbmWD-5zzO6HZyEKuOYz16kNoJY').then(res => {
           this.token = res.data;
         }).catch(err => {
-          alert(JSON.stringify(err.response))
+          alert(JSON.stringify(err))
         })
       },
       onInput(key) {
