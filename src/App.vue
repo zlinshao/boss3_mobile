@@ -41,7 +41,6 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
-      console.log(this.$route.query);
       this.responses();
     },
     methods: {
@@ -97,11 +96,11 @@
         });
       },
       prevent() {
+        let query = this.$route.query;
         this.$http.get('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=f7B6EMEeyXI_z7v7IbmWD-5zzO6HZyEKuOYz16kNoJY').then(res => {
           this.token = res;
         }).catch(err => {
-          alert(JSON.stringify(err));
-          console.log(JSON.stringify(err))
+          this.token = JSON.stringify(err);
         })
       },
       onInput(key) {
