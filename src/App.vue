@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading"></div>
+    <div class="module" v-if="loading">
+      {{token}}
+    </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
@@ -81,10 +83,6 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           this.prevent();
-          this.personalGet(1).then(res => {
-            this.loading = !res;
-            this.$router.push('/index');
-          });
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
@@ -105,7 +103,9 @@
         });
       },
       prevent() {
-
+        this.$http.get('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=LtqwOmAtRIAwHSWZ9jWgduzhd5vnfv5Ia9Yf1fOniGc').then(res => {
+          this.token = res.data;
+        })
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
