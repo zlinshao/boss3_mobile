@@ -35,6 +35,7 @@
     props: ['ID', 'editImage', 'isClear', 'dis'],
     data() {
       return {
+        url: globalConfig.server,
         imgArray: [],
         imgId: [],
         errorId: [],
@@ -132,7 +133,7 @@
       },
       getToken() {
         this.$http.defaults.timeout = 5000;
-        this.$http.get(globalConfig.server_user + 'files').then((res) => {
+        this.$http.get(this.url + 'api/v1/token').then((res) => {
           this.token = res.data.data;
           this.$http.defaults.timeout = null;
           if (!this.uploader) {
@@ -149,10 +150,9 @@
         this.imgId.splice(key, 1);
         this.editImg.splice(key, 1);
       },
-
       // 获取token
       getTokenMessage() {
-        this.$http.get(globalConfig.server_user + 'files').then((res) => {
+        this.$http.get(this.url + 'api/v1/token').then((res) => {
           this.token = res.data.data;
           this.uploaderReady(res.data.data);
         })
@@ -162,22 +162,20 @@
         this.token = token;
         let _this = this;
         _this.uploader = Qiniu.uploader({
-          runtimes: 'html5,flash,html4',      // 上传模式，依次退化
-          browse_button: _this.ID,     //上传按钮的ID
-          uptoken: _this.token,                  // uptoken是上传凭证，由其他程序生成
-
-          get_new_uptoken: true,             // 设置上传文件的时候是否每次都重新获取新的uptoken
-          unique_names: true,                 // 默认false，key为文件
-          domain: globalConfig.domain,  // bucket域名，下载资源时用到，必需
-
-          max_file_size: '100mb',               // 最大文件体积限制
+          runtimes: 'html5,flash,html4',                // 上传模式，依次退化
+          browse_button: _this.ID,                      //上传按钮的ID
+          uptoken: _this.token,                         // uptoken是上传凭证，由其他程序生成
+          get_new_uptoken: true,                        // 设置上传文件的时候是否每次都重新获取新的uptoken
+          unique_names: false,                          // 默认false，key为文件
+          save_key: false,                              // 默认false，key为文件
+          domain: globalConfig.domain,                  // bucket域名，下载资源时用到，必需
+          max_file_size: '100mb',                       // 最大文件体积限制
           flash_swf_url: 'path/of/plupload/Moxie.swf',  //引入flash，相对路径
-          max_retries: 1,                     // 上传失败最大重试次数
-          dragdrop: true,                     // 开启可拖曳上传
-          drop_element: 'pickfiles' + _this.ID, // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
-          chunk_size: '4mb',                  // 分块上传时，每块的体积
-          auto_start: true,                   // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
-
+          max_retries: 1,                               // 上传失败最大重试次数
+          dragdrop: true,                               // 开启可拖曳上传
+          drop_element: 'pickfiles' + _this.ID,         // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
+          chunk_size: '4mb',                            // 分块上传时，每块的体积
+          auto_start: true,                             // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
           init: {
             'FilesAdded': function (up, files) {
               _this.fileLength = _this.imgId.length + files.length;
@@ -197,7 +195,6 @@
                    `);
                 } else {
                   let fr = new mOxie.FileReader();
-
                   fr.onload = function () {
 //                     文件添加进队列后，处理相关的事情
                     $('#pickfiles' + _this.ID).prepend(`
@@ -241,7 +238,7 @@
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
               _this.$http.defaults.timeout = 5000;
-              _this.$http.post(globalConfig.server_user + 'files', {
+              _this.$http.post(this.url + 'api/v1/token', {
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,
@@ -284,14 +281,20 @@
               } else {
                 Toast(errTip);
               }
+            },
+            'Key': function (up, file) {
+              let fileName = file.name.lastIndexOf(".");//取到文件名开始到最后一个点的长度z
+              let fileNameLength = file.name.length;//取到文件名长度
+              let name = file.name.substring(0, fileName);//取到文件名长度
+              let fileFormat = file.name.substring(fileName + 1, fileNameLength);//截
+              file.name = md5(name + new Date().getTime()).toLowerCase() + '.' + fileFormat;
+              console.log(file.name);
+              // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+              // 该配置必须要在unique_names: false，save_key: false时才生效
+              let key = "";
+              // do something with key here
+              return key
             }
-//            'Key': function (up, file) {
-//              // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
-//              // 该配置必须要在unique_names: false，save_key: false时才生效
-//              let key = "";
-//              // do something with key here
-//              return key
-//            }
           }
         });
       },
