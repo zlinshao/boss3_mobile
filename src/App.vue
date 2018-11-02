@@ -101,7 +101,7 @@
           this.token = res;
         }).catch(err => {
           alert(JSON.stringify(err));
-          console.log(err)
+          console.log(JSON.stringify(err))
         })
       },
       onInput(key) {
