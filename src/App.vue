@@ -81,10 +81,10 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           this.prevent();
-          // this.personalGet(1).then(res => {
-          //   this.loading = !res;
-          //   this.$router.push('/index');
-          // });
+          this.personalGet(1).then(res => {
+            this.loading = !res;
+            this.$router.push('/index');
+          });
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
