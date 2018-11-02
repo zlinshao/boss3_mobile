@@ -355,6 +355,7 @@
       <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
         <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
+        <div class="upload-tips">提示：请上传6张以上房屋照片和1个以上房屋视频哦~</div>
       </div>
 
       <van-cell-group>
@@ -594,13 +595,14 @@
         }
       },
       userInfo(val1) {
-        if (val1 && this.form.quality_up !== '1') {
-          let per = JSON.parse(sessionStorage.personal);
-          this.form.staff_id = per.id;
-          this.form.staff_name = per.name;
-          this.form.department_id = per.department_id;
-          this.form.department_name = per.department_name;
-        }
+        // if (val1 && this.form.quality_up !== '1') {
+        //   console.log(sessionStorage.personal)
+        //   let per = JSON.parse(sessionStorage.personal);
+        //   this.form.staff_id = per.id;
+        //   this.form.staff_name = per.name;
+        //   this.form.department_id = per.department_id;
+        //   this.form.department_name = per.department_name;
+        // }
       },
       dicts(val) {
         // 城市
@@ -865,7 +867,9 @@
           Toast(this.alertMsg('pic'));
           return;
         }
-        if (this.haveInHand) {
+        console.log(this.form.photo);
+        console.log(this.uploader)
+        if (this.haveInHand) {         
           // this.form.community.property_fee = this.property_fee;
           this.haveInHand = false;
           this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
@@ -1068,10 +1072,11 @@
         this.form.staff_name = data.staff_name;
         this.form.department_id = data.department_id;
         this.form.department_name = data.department_name;
-        console.log(this.form);
+        console.log(val);
         if (val === 'draught' && data.photo) {
           this.photos = data.photo;                                       //房屋影像
           this.form.photo = [];
+          console.log(data.photo)
           //房屋影像
           for (let i = 0; i < data.photo.length; i++) {
             this.form.photo.push(data.photo[i].id);                       //房屋影像
@@ -1191,6 +1196,12 @@
           }
         }
       }
+    }
+    .upload-tips{
+      color:red;
+      font-size: 14px;
+      text-indent: 1em;
+      margin: .2rem 0 0 0;
     }
   }
 </style>

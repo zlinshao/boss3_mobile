@@ -280,6 +280,7 @@
       this.toDone();
     },
     activated() {
+      this.personalGet(2);
       this.routerIndex('');
       this.disabled = true;
       this.scrollTops();

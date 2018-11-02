@@ -180,7 +180,7 @@
           class="number"
           label="押"
           placeholder="请填写付款方式-押"
-          @click="selectShow(3, '')"
+          @click="selectShow(3)"
           readonly
           required>
         </van-field>
@@ -873,6 +873,9 @@
           case 5:
             this.columns = this.cities;
             break;
+          case 6:
+            this.columns = Object.values(dicts.money_types);
+            break;
         }
       },
       // select选择
@@ -899,6 +902,13 @@
             break;
           case 5:
             this.form.receipt[this.payIndex].city = value;
+            break;
+          case 6:
+            this.form.front_money = '';            //定金
+            this.form.deposit = '';                //押金
+            this.form.rent_money = '';             //租金
+            this.money_type = value;
+            this.money_key = Object.keys(dicts.money_types)[index];
             break;
         }
         this.selectHide = false;
@@ -1182,6 +1192,7 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             this.form.money_sum = draft.money_sum;
             this.form.rent_money = draft.rent_money;
+
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {

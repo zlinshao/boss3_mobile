@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading"></div>
+    <div class="module" v-if="loading">
+      {{token}}
+    </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
@@ -23,16 +25,11 @@
         showKeyboard: false,
         transitionName: '',
         loading: true,
-        token1: '',
-        token2: '',
-        token3: '',
+        token: '',
       };
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
-        if (to.path === '/') {
-          window.close();
-        }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
           //设置动画名称
@@ -44,6 +41,7 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
+      console.log(this.$route.query);
       this.responses();
     },
     methods: {
@@ -71,6 +69,7 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
+
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -83,51 +82,30 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          let user = this.$route.query.userinfo;
-          this.token1 = user;
-          if (user) {
-            this.staffInfo(JSON.parse(user));
-          }
+          this.prevent();
         }
+        let that = this;
         this.$http.interceptors.response.use(function (response) {
           return response;
         }, function (error) {
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              window.close();
+              DingTalkPC.device.notification.alert({
+                message: "服务器故障,请联系产品经理~",
+                title: "提示信息",
+                buttonName: "关闭",
+              });
+              that.closeDD();
             }
           }
           return Promise.reject(error);
         });
       },
-      staffInfo(res) {
-        this.token2 = res;
-        let data = {};
-        data.id = res.id;
-        data.name = res.name;
-        data.avatar = res.avatar;
-        data.phone = res.phone;
-        data.department_name = res.department_name[0].name;
-        data.department_id = res.department_name[0].id;
-        sessionStorage.setItem('personal', JSON.stringify(data));
-        globalConfig.personal = data;
-        this.token3 = data;
-
-        this.$http.post(globalConfig.attestation + 'oauth/token', {
-          client_secret: globalConfig.client_secret,
-          client_id: globalConfig.client_id,
-          grant_type: 'password',
-          username: res.phone,
-          password: res.code,
-        }).then((data) => {
-          let head = data.data.data;
-          globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-          this.loading = false;
-        }).catch(err => {
-          alert('登录失败，请重新登录或请联系产品经理！');
-          window.close();
-        });
+      prevent() {
+        this.$http.get('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=LtqwOmAtRIAwHSWZ9jWgduzhd5vnfv5Ia9Yf1fOniGc').then(res => {
+          this.token = res.data;
+        })
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
