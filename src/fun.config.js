@@ -1,3 +1,5 @@
+import {md5} from './assets/js/MD5.js'
+
 export default {
   install(Vue, options) {
     Vue.prototype.routerIndex = function (url, house, id) {
@@ -172,6 +174,32 @@ export default {
           return '请删除上传失败的文件并重新上传!';
       }
     };
+    // 企业微信
+    Vue.prototype.weiChatAuth = function (val) {
+      return new Promise((resolve, reject) => {
+        this.$http.get(this.urls + 'organization/wework-bulletin', {
+          params: val,
+        }).then(res => {
+          let appId = val.corpid;
+          let token = res.data.data;
+          let time = new Date().getTime();
+          let nonceStr = md5(appId + token + time);
+          wx.config({
+            beta: true,// 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: appId, // 必填，企业微信的corpID
+            timestamp: time, // 必填，生成签名的时间戳
+            nonceStr: nonceStr, // 必填，生成签名的随机串
+            signature: token,// 必填，签名，见附录1
+            jsApiList: ['getCurExternalContact','selectExternalContact'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          });
+          resolve(true);
+        }).catch(err => {
+          console.log(JSON.stringify(err))
+        })
+      })
+    };
+
     // 钉钉认证
     Vue.prototype.personalGet = function (val) {
       let that = this;

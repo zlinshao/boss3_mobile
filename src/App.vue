@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading">
-      {{token}}
-    </div>
+    <div class="module" v-if="loading">{{token}}</div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
@@ -15,7 +13,6 @@
 </template>
 
 <script>
-
   export default {
     data() {
       return {
@@ -96,11 +93,28 @@
         });
       },
       prevent() {
-        let query = this.$route.query;
-        this.$http.get('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=f7B6EMEeyXI_z7v7IbmWD-5zzO6HZyEKuOYz16kNoJY').then(res => {
-          this.token = res;
+        this.$http.get('http://884jrp.natappfree.cc/organization/wework-bulletin?corpid=ww469e1dbe19ea6189&corpsecret=f7B6EMEeyXI_z7v7IbmWD-5zzO6HZyEKuOYz16kNoJY').then(res => {
+          this.token = JSON.stringify(res);
+          alert(1)
         }).catch(err => {
           this.token = JSON.stringify(err);
+          alert(2)
+        });
+        let query = this.$route.query;
+        query = {
+          corpid: 'ww469e1dbe19ea6189',
+          corpsecret: 'ww469e1dbe19ea6189',
+        };
+        this.weiChatAuth(query).then(res => {
+          wx.ready(function () {
+            wx.invoke('getCurExternalContact', {}, function (res) {
+              console.log(res);
+            });
+          });
+          wx.error((res) => {
+            console.log(res);
+            // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+          });
         })
       },
       onInput(key) {
