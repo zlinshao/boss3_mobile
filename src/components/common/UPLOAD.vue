@@ -36,7 +36,7 @@
     props: ['ID', 'editImage', 'isClear', 'dis'],
     data() {
       return {
-        url: globalConfig.server,
+        url: globalConfig.server_user,
         imgArray: [],
         imgId: [],
         errorId: [],
@@ -133,7 +133,7 @@
       },
       getToken() {
         this.$http.defaults.timeout = 5000;
-        this.$http.get(this.url + 'api/v1/token').then((res) => {
+        this.$http.get(this.url + 'files').then((res) => {
           this.token = res.data.data;
           this.$http.defaults.timeout = null;
           if (!this.uploader) {
@@ -152,7 +152,7 @@
       },
       // 获取token
       getTokenMessage() {
-        this.$http.get(this.url + 'api/v1/token').then((res) => {
+        this.$http.get(this.url + 'files').then((res) => {
           this.token = res.data.data;
           this.uploaderReady(res.data.data);
         })
@@ -233,7 +233,7 @@
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
               _this.$http.defaults.timeout = 5000;
-              _this.$http.post(_this.url + 'api/v1/token', {
+              _this.$http.post(_this.url + 'files', {
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,
