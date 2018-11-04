@@ -233,7 +233,7 @@
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
               _this.$http.defaults.timeout = 5000;
-              _this.$http.post(this.url + 'api/v1/token', {
+              _this.$http.post(_this.url + 'api/v1/token', {
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,
