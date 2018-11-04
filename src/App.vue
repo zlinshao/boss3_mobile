@@ -93,12 +93,11 @@
         });
       },
       prevent() {
+        'https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww469e1dbe19ea6189&redirect_uri=http://wx.area.lejias.cn/#/&response_type=code&scope=snsapi_base&agentid=AGENTID&state=STATE#wechat_redirect'
         this.$http.get('http://884jrp.natappfree.cc/organization/wework-bulletin?corpid=ww469e1dbe19ea6189&corpsecret=f7B6EMEeyXI_z7v7IbmWD-5zzO6HZyEKuOYz16kNoJY').then(res => {
           this.token = JSON.stringify(res);
-          alert(1)
         }).catch(err => {
           this.token = JSON.stringify(err);
-          alert(2)
         });
         let query = this.$route.query;
         query = {
