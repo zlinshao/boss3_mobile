@@ -133,6 +133,13 @@
               placeholder="请填写天数"
               required>
             </van-field>
+            <van-field
+              v-model="form.rent_sign_month"
+              label="签约时长(月)"
+              type="number"
+              placeholder="请填写"
+              required>
+            </van-field>
             <!-- <van-field
               v-show='false'
               v-if="rentType === '0'"
@@ -394,6 +401,7 @@
             this.form.rent_agency_count = '';
             this.form.rent_pay_way = '';
             this.form.rent_vacancy_date = '';
+            this.form.rent_sign_month = 0;  //签约时长
             this.form.rent_return_day = 0;
             this.form.rent_return_money = 0;
             console.log("-----form");

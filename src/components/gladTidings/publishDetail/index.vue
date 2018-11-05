@@ -40,12 +40,12 @@
              v-if="printscreen.indexOf(index) === -1">
           <p>{{index}}</p>
           <h1>
-            <span v-if="Array.isArray(key)" v-for="item in key">
-              <span style="display: block;">{{item.msg}}</span>
-              <span style="display: block;">{{item.period}}</span>
+            <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length" >
+              <span style="display: block;">{{key[idx].msg}}</span>
+              <span style="display: block;">{{key[idx].period}}</span>
             </span>
-            <span v-if="index === '已收金额和汇款账户' || index === '补交定金和收款方式'" v-for="item in key">
-              <span style="display: block;">{{item}}</span>
+            <span v-if="index === '已收金额和汇款账户' || index === '补交定金和收款方式'" v-for="(item,idx) in key.length">
+              <span style="display: block;">{{key[idx]}}</span>
             </span>
             <span v-if="!Array.isArray(key) && index !== '房屋类型'">{{key}}</span>
             <span v-if="!Array.isArray(key) && index === '房屋类型'">
@@ -272,7 +272,9 @@
     },
     activated() {
       sessionStorage.setItem('count', '2');
-      this.personalId = JSON.parse(sessionStorage.personal);
+      if(sessionStorage.personal){
+        this.personalId = JSON.parse(sessionStorage.personal);
+      }
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
@@ -345,14 +347,16 @@
       },
 
       formDetail(val) {
+        // let res = {};
+        // res.data = {"status":"success","status_code":200,"message":"\u64cd\u4f5c\u6210\u529f","data":{"operation":{"to_cancelled":"\u64a4\u9500","to_comment":"\u8bc4\u8bba"},"deal":"\u8017\u65f62349\u5206\u949f","process":{"id":124285,"user_id":1016,"house_id":8278,"user":{"id":1016,"name":"\u9b4f\u826f\u4ed8","phone":"13912794460","ding_user_id":"015251510439263704","avatar":"https:\/\/static.dingtalk.com\/media\/lADPDgQ9qR_-y2TNA7jNArM_691_952.jpg","is_enable":null,"is_on_job":null,"org":[{"id":289,"name":"\u82cf\u5dde\u6e56\u897f\u4e8c\u7ec4","order":0,"parent_id":18,"depth":5,"leader_id":643,"is_leaf":true,"users":19,"ancestors":{"level-third":{"id":18,"name":"\u82cf\u5dde\u4e00\u533a","ding_department_id":42561601,"order":3,"is_enable":1,"parent_id":68,"leader_id":18,"lft":57,"rgt":82,"depth":4,"py":"szyq","pinyin":"suzhouyiqu","created_at":"2017-06-23 12:21:36","updated_at":"2018-10-21 08:19:18","deleted_at":null},"level-second":{"id":68,"name":"\u82cf\u5dde\u5206\u90e8","ding_department_id":30374670,"order":1,"is_enable":1,"parent_id":331,"leader_id":70,"lft":56,"rgt":133,"depth":3,"py":"szfb","pinyin":"suzhoufenbu","created_at":"2017-07-03 22:37:22","updated_at":"2018-10-21 08:19:18","deleted_at":null}},"created_at":"2018-07-03 14:46:25","updated_at":"2018-11-03 12:53:04","deleted_at":null}],"role":[{"id":246,"position_id":54,"name":"market-marketing-officer","display_name":"\u5e02\u573a\u4e13\u5458","description":"\u5e02\u573a\u4e13\u5458","created_at":"2018-04-19 13:16:48","updated_at":"2018-04-19 13:16:48"}],"py":"wlf","pinyin":"weiliangfu","created_at":"2018-04-11 17:26:05","updated_at":"2018-11-05 10:58:55"},"content":{"id":"1638","type":{"id":"0","name":"\u70b8\u5355"},"draft":{"id":0,"name":"\u53d1\u5e03"},"payWay":["2018-11-03~2019-11-02:\u62bc1\u4ed812"],"refund":{"id":0,"name":"\u5426"},"remark":"\u91cc\u6cb3\u65b0\u6751117-208\u5ba4\uff0c\u79df\u5ba2\u5c3e\u6b3e\u672a\u8865\u9f50\uff0c\u6ca1\u6709\u8fc7\u6765\u7b7e\u5408\u540c\u3002\u5b9a\u91d1\u4e0d\u9000\uff0c\u62a5\u70b8\u5355\uff0c\u671b\u5ba1\u6279\uff5e","address":"\u91cc\u6cb3\u65b0\u6751117-208","dataFrom":null,"house_id":8278,"is_draft":0,"staff_id":1016,"customers":"\u8521\u6587\u9759","price_arr":["2018-11-03~2019-11-02:2000\u5143"],"staff_name":"\u9b4f\u826f\u4ed8","contract_id":36434,"bulletindate":"2018-11-03 19:50:40","return_money":"0","show_content":{"\u5730\u5740":"\u91cc\u6cb3\u65b0\u6751117-208","\u5907\u6ce8":"\u91cc\u6cb3\u65b0\u6751117-208\u5ba4\uff0c\u79df\u5ba2\u5c3e\u6b3e\u672a\u8865\u9f50\uff0c\u6ca1\u6709\u8fc7\u6765\u7b7e\u5408\u540c\u3002\u5b9a\u91d1\u4e0d\u9000\uff0c\u62a5\u70b8\u5355\uff0c\u671b\u5ba1\u6279\uff5e","\u90e8\u95e8":"\u82cf\u5dde\u6e56\u897f\u4e8c\u7ec4","\u5f00\u5355\u4eba":"\u9b4f\u826f\u4ed8","\u6708\u5355\u4ef7":[{"msg":"2000\u5143","period":"2018.11.03-2019.11.02"}],"\u4ed8\u6b3e\u65b9\u5f0f":[{"msg":"\u62bc1\u4ed812","period":"2018.11.03-2019.11.02"}],"\u5df2\u6536\u91d1\u989d":199.8,"\u62a5\u5907\u7c7b\u578b":"\u79df\u623f\u70b8\u5355\u62a5\u5907","\u79df\u5ba2\u59d3\u540d":"\u8521\u6587\u9759","\u9000\u6b3e\u91d1\u989d":"0","\u9886\u5bfc\u540c\u610f\u622a\u56fe":[{"id":3965091,"ext":"image\/jpeg","uri":"http:\/\/s.lejias.cn\/FgTN1n3b2SgF_re-ummDrTz3lM4L","host":"http:\/\/s.lejias.cn\/","mime":"image\/jpeg","name":"FgTN1n3b2SgF_re-ummDrTz3lM4L","size":309952,"bucket":"lejia-prod","user_id":1016,"is_video":false,"raw_name":"Screenshot_20181103_194858.jpg","created_at":"2018-11-03 19:50:20","updated_at":"2018-11-03 19:50:20","display_name":"Screenshot_20181103_194858.jpg"}]},"bulletin_name":"\u79df\u623f\u70b8\u5355\u62a5\u5907","bulletin_type":"bulletin_lose","department_id":289,"draft_content":{"id":"","type":"0","draft":0,"payWay":["2018-11-03~2019-11-02:\u62bc1\u4ed812"],"refund":0,"remark":"\u91cc\u6cb3\u65b0\u6751117-208\u5ba4\uff0c\u79df\u5ba2\u5c3e\u6b3e\u672a\u8865\u9f50\uff0c\u6ca1\u6709\u8fc7\u6765\u7b7e\u5408\u540c\u3002\u5b9a\u91d1\u4e0d\u9000\uff0c\u62a5\u70b8\u5355\uff0c\u671b\u5ba1\u6279\uff5e","address":"\u91cc\u6cb3\u65b0\u6751117-208","house_id":8278,"staff_id":1016,"customers":"\u8521\u6587\u9759","price_arr":["2018-11-03~2019-11-02:2000\u5143"],"staff_name":"\u9b4f\u826f\u4ed8","contract_id":36434,"return_money":"0","bulletin_name":"\u79df\u623f\u70b8\u5355\u62a5\u5907","department_id":289,"finance_money":199.8,"collect_or_rent":"1","department_name":"\u82cf\u5dde\u6e56\u897f2\u7ec4","bulletin_staff_id":1016,"screenshot_leader":[3965091]},"finance_money":199.8,"house_address":"\u91cc\u6cb3\u65b0\u6751117-208","collect_or_rent":{"id":"1","name":"\u79df\u623f"},"department_name":"\u82cf\u5dde\u6e56\u897f2\u7ec4","bulletin_staff_id":1016,"screenshot_leader":{"pic_ids":[3965091],"pic_addresses":[{"id":3965091,"uri":"http:\/\/s.lejias.cn\/FgTN1n3b2SgF_re-ummDrTz3lM4L","info":{"ext":"image\/jpeg","host":"http:\/\/s.lejias.cn\/","mime":"image\/jpeg","size":309952,"bucket":"lejia-prod"},"name":"FgTN1n3b2SgF_re-ummDrTz3lM4L","user_id":1016,"raw_name":"Screenshot_20181103_194858.jpg","created_at":"2018-11-03 19:50:20","updated_at":"2018-11-03 19:50:20","display_name":"Screenshot_20181103_194858.jpg"}]},"show_content_compress":"{\"\u62a5\u5907\u7c7b\u578b\":\"\u79df\u623f\u70b8\u5355\u62a5\u5907\",\"\u5730\u5740\":\"\u91cc\u6cb3\u65b0\u6751117-208\",\"\u79df\u5ba2\u59d3\u540d\":\"\u8521\u6587\u9759\",\"\u4ed8\u6b3e\u65b9\u5f0f\":[{\"msg\":\"\u62bc1\u4ed812\",\"period\":\"2018.11.03-2019.11.02\"}],\"\u6708\u5355\u4ef7\":[{\"msg\":\"2000\u5143\",\"period\":\"2018.11.03-2019.11.02\"}],\"\u5df2\u6536\u91d1\u989d\":199.8,\"\u9000\u6b3e\u91d1\u989d\":\"0\",\"\u9886\u5bfc\u540c\u610f\u622a\u56fe\":[{\"id\":3965091,\"name\":\"FgTN1n3b2SgF_re-ummDrTz3lM4L\",\"raw_name\":\"Screenshot_20181103_194858.jpg\",\"display_name\":\"Screenshot_20181103_194858.jpg\",\"user_id\":1016,\"uri\":\"http:\/\/s.lejias.cn\/FgTN1n3b2SgF_re-ummDrTz3lM4L\",\"created_at\":\"2018-11-03 19:50:20\",\"updated_at\":\"2018-11-03 19:50:20\",\"ext\":\"image\/jpeg\",\"host\":\"http:\/\/s.lejias.cn\/\",\"mime\":\"image\/jpeg\",\"size\":309952,\"bucket\":\"lejia-prod\",\"is_video\":false}],\"\u5907\u6ce8\":\"\u91cc\u6cb3\u65b0\u6751117-208\u5ba4\uff0c\u79df\u5ba2\u5c3e\u6b3e\u672a\u8865\u9f50\uff0c\u6ca1\u6709\u8fc7\u6765\u7b7e\u5408\u540c\u3002\u5b9a\u91d1\u4e0d\u9000\uff0c\u62a5\u70b8\u5355\uff0c\u671b\u5ba1\u6279\uff5e\",\"\u5f00\u5355\u4eba\":\"\u9b4f\u826f\u4ed8\",\"\u90e8\u95e8\":\"\u82cf\u5dde\u6e56\u897f\u4e8c\u7ec4\"}"},"processable_id":1638,"processable_type":"bulletin_lose","place":{"name":"market-marketing-manager_review","status":"review","display_name":"\u7247\u533a\u7ecf\u7406\u5ba1\u6279\u4e2d","auditors":[{"id":643,"name":"\u961a\u6ce2","avatar":"https:\/\/static.dingtalk.com\/media\/lADPDgQ9qRV3BDnNBIDNA18_863_1152.jpg","phone":"13814803240","phone_check_code_ttl":"2018-11-04 20:11:08","email":null,"ding_user_id":"02621810651219080","is_on_job":null,"is_enable":null,"py":"hb","pinyin":"hanbo","created_at":"2018-02-22 21:13:28","updated_at":"2018-11-04 19:56:08","deleted_at":null}]},"finish_at":null,"created_at":"11-03 19:50","updated_at":"2018-11-03 19:50:40"}}}
         this.$http.get(this.urls + 'process/' + val).then((res) => {
           this.message = '';
           if (res.data.status === 'success' && res.data.data.length !== 0) {
-
+            
             let content = res.data.data.process.content;
             console.log(res.data.data)
             this.formList = JSON.parse(content.show_content_compress);
-
+            console.log(this.formList)
             // this.formList['开单人'] = content.staff_name;
             // if(content.collect_or_rent.id === '1'){
             //   this.formList['租客姓名'] = content.customers;
@@ -379,9 +383,16 @@
             this.place = main.place;
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
 
-            this.$http.get(globalConfig.server + 'manager/staff/' + main.user.org[0].leader_id).then((res) => {
-              if (res.data.code === '10020') {
-                this.bull_name = res.data.data;
+            // this.$http.get(globalConfig.server + 'manager/staff/' + main.user.org[0].leader_id).then((res) => {
+            //   if (res.data.code === '10020') {
+            //     this.bull_name = res.data.data;
+            //   }
+            // });
+            let user_id = [];
+            user_id.push(main.user.org[0].leader_id);
+            this.$http.post(globalConfig.server + 'special/special/userInfos', {id: user_id}).then((res) => {
+              if (res.data.code === '10080') {
+                this.bull_name = res.data.data[0];
               }
             });
 
