@@ -2,7 +2,7 @@
   <div id="dataCount">
     <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
-      <img src="../../../assets/loding1.gif">
+      <img src="../../../assets/data_count.jpg">
     </div>
     <div v-if="!loading">
       <div class="dataMain">
@@ -326,7 +326,7 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        setTimeout(() => vm.loading = false,600)
+        setTimeout(() => vm.loading = false,2000)
         let detail = vm.$store.state.app.searchDetail;
         console.log(detail)
         if (Object.keys(detail).length > 0) {
@@ -603,12 +603,14 @@
     //   background: #f1f1f1;
     // }
 
-    // .loading {
-    //   top: 50%;
-    //   left: 50%;
-    //   transform: translate(-50%, -50%);
-    //   z-index: 1;
-    // }
+    .loading {
+      height: 100%;
+      width: 100%;
+      img{
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
     .dataMain {
       padding-bottom: 1.2rem;
     }
