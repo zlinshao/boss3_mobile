@@ -94,14 +94,14 @@
               readonly
               required>
             </van-field>
-            <van-field
+            <!-- <van-field
               v-model="form.lord_property_fee"
               v-if="rentType === '0'"
               label="物业费"
               type="number"
               placeholder="请填写收房物业费"
               required>
-            </van-field>
+            </van-field> -->
           </van-cell-group>
           <div class="titles">租房</div>
           <van-cell-group>
@@ -110,13 +110,6 @@
               label="租房价格"
               type="number"
               placeholder="请填写租房价格"
-              required>
-            </van-field>
-            <van-field
-              v-model="form.rent_agency_count"
-              label="租房中介费"
-              type="number"
-              placeholder="请填写租房中介费"
               required>
             </van-field>
             <van-field
@@ -131,6 +124,13 @@
               label="租房消耗空置期"
               type="number"
               placeholder="请填写天数"
+              required>
+            </van-field>
+            <van-field
+              v-model="form.rent_agency_count"
+              label="租房中介费"
+              type="number"
+              placeholder="请填写租房中介费"
               required>
             </van-field>
             <van-field
