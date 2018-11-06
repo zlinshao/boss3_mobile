@@ -107,10 +107,12 @@
         redirectUrl = encodeURIComponent(redirectUrl);
         const appId = query.appid;
         const secret = query.corpsecret;
-        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        if (!query.code) {
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        }
         this.$http.get(this.urls + 'organization/wework-bulletin?corpid=' + appId + '&corpsecret=' + secret).then(res => {
           // window.location.href = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=' + res.data.data.token + '&code=' + query.code;
-          let url = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=' + res.data.data.token + '&code=' + query.code + '&lang=zh_CN';
+          let url = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=' + res.data.data.token + '&code=' + query.code;
           $.ajax("get", url, '', function (data) {
             alert(JSON.stringify(data))
           })
