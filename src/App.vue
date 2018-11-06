@@ -105,19 +105,19 @@
         let query = this.$route.query;
         let redirectUrl = window.location.href;
         redirectUrl = encodeURIComponent(redirectUrl);
-        const appId = query.appid;
-        const secret = query.corpsecret;
         if (!query.code) {
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         }
-        this.$http.get(this.urls + 'organization/wework-bulletin?corpid=' + appId + '&corpsecret=' + secret).then(res => {
-          // window.location.href = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=' + res.data.data.token + '&code=' + query.code;
-          let url = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=' + res.data.data.token + '&code=' + query.code;
-          $.ajax("get", url, '', function (data) {
-            alert(JSON.stringify(data))
-          })
+        this.authorize(query);
+      },
+      async authorize(val) {
+        await this.getUserId(val);
+      },
+      // 获取uid
+      getUserId(val) {
+        this.$http.get(this.urls + 'organization/user/getWeworkUser?appid=' + val.appid + '&code=' + val.code).then(res => {
+          alert(JSON.stringify(res.data))
         })
-
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
