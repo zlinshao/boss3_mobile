@@ -69,7 +69,6 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -102,14 +101,14 @@
           return Promise.reject(error);
         });
       },
-      prevent() {
-        let url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=LtqwOmAtRIAwHSWZ9jWgduzhd5vnfv5Ia9Yf1fOniGc";
-        this.$http.get(url).then(res => {
-          this.token = res.data;
-        }).catch(err => {
-          this.token = JSON.stringify(err);
-        })
-      },
+      // prevent() {
+      //   let url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + 'ww469e1dbe19ea6189' + "&secret=" + 'f7B6EMEeyXI_z7v7IbmWD-5zzO6HZyEKuOYz16kNoJY' + "&code=code" + "&grant_type=authorization_code";
+      //   this.$http.get(url).then(res => {
+      //     this.token = res.data;
+      //   }).catch(err => {
+      //     this.token = JSON.stringify(err);
+      //   })
+      // },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
       },
