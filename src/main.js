@@ -29,7 +29,7 @@ Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
   if (from.path === '/') {
-    alert(window.location.href);
+    alert(1);
     alert(JSON.stringify(from.query));
     let redirectUrl = window.location.href;
     redirectUrl = encodeURIComponent(redirectUrl);
