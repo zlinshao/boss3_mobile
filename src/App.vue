@@ -102,11 +102,20 @@
         });
       },
       prevent() {
-        alert(JSON.stringify(this.$route.query));
+        let query = this.$route.query;
         let redirectUrl = window.location.href;
         redirectUrl = encodeURIComponent(redirectUrl);
-        const appId = 'ww469e1dbe19ea6189';
+        const appId = query.appid;
+        const secret = query.corpsecret;
         window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        this.$http.get(this.urls + 'organization/wework-bulletin?corpid=' + appId + '&corpsecret=' + secret).then(res => {
+          // window.location.href = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=' + res.data.data.token + '&code=' + query.code;
+          let url = 'https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=' + res.data.data.token + '&code=' + query.code + '&lang=zh_CN';
+          $.ajax("get", url, '', function (data) {
+            alert(JSON.stringify(data))
+          })
+        })
+
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
