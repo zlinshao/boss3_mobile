@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading">{{token}}</div>
+    <div class="module" v-if="loading">
+      {{token}}
+    </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
@@ -13,6 +15,7 @@
 </template>
 
 <script>
+
   export default {
     data() {
       return {
@@ -38,6 +41,7 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
+      console.log(this.$route.query);
       this.responses();
     },
     methods: {
@@ -87,33 +91,23 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
+              DingTalkPC.device.notification.alert({
+                message: "服务器故障,请联系产品经理~",
+                title: "提示信息",
+                buttonName: "关闭",
+              });
+              that.closeDD();
             }
           }
           return Promise.reject(error);
         });
       },
       prevent() {
-        'https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww469e1dbe19ea6189&redirect_uri=http://wx.area.lejias.cn/#/&response_type=code&scope=snsapi_base&agentid=AGENTID&state=STATE#wechat_redirect'
-        this.$http.get('http://884jrp.natappfree.cc/organization/wework-bulletin?corpid=ww469e1dbe19ea6189&corpsecret=f7B6EMEeyXI_z7v7IbmWD-5zzO6HZyEKuOYz16kNoJY').then(res => {
-          this.token = JSON.stringify(res);
+        let url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + 'ww469e1dbe19ea6189' + "&secret=" + 'LtqwOmAtRIAwHSWZ9jWgduzhd5vnfv5Ia9Yf1fOniGc' + "&code=code" + "&grant_type=authorization_code";
+        this.$http.get(url).then(res => {
+          this.token = res.data;
         }).catch(err => {
           this.token = JSON.stringify(err);
-        });
-        let query = this.$route.query;
-        query = {
-          corpid: 'ww469e1dbe19ea6189',
-          corpsecret: 'ww469e1dbe19ea6189',
-        };
-        this.weiChatAuth(query).then(res => {
-          wx.ready(function () {
-            wx.invoke('getCurExternalContact', {}, function (res) {
-              console.log(res);
-            });
-          });
-          wx.error((res) => {
-            console.log(res);
-            // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-          });
         })
       },
       onInput(key) {
