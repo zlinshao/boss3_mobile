@@ -107,15 +107,17 @@
         redirectUrl = encodeURIComponent(redirectUrl);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        } else {
+          this.authorize(query);
         }
-        this.authorize(query);
       },
       async authorize(val) {
         await this.getUserId(val);
       },
       // 获取uid
       getUserId(val) {
-        this.$http.get(this.urls + 'organization/user/getWeworkUser?appid=' + val.appid + '&code=' + val.code).then(res => {
+        alert(JSON.stringify(val));
+        this.$http.get(this.urls + 'organization/user/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           alert(JSON.stringify(res.data))
         })
       },
