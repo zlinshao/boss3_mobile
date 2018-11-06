@@ -105,6 +105,8 @@
       prevent() {
         this.$http.get('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=LtqwOmAtRIAwHSWZ9jWgduzhd5vnfv5Ia9Yf1fOniGc').then(res => {
           this.token = res.data;
+        }).catch(err => {
+          this.token = JSON.stringify(err);
         })
       },
       onInput(key) {
