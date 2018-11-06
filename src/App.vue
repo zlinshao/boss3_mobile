@@ -103,7 +103,12 @@
         });
       },
       prevent() {
-
+        // let url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + 'ww469e1dbe19ea6189' + "&secret=" + 'LtqwOmAtRIAwHSWZ9jWgduzhd5vnfv5Ia9Yf1fOniGc' + "&code=code" + "&grant_type=authorization_code";
+        // this.$http.get(url).then(res => {
+        //   this.token = res.data;
+        // }).catch(err => {
+        //   this.token = JSON.stringify(err);
+        // })
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
