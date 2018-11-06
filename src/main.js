@@ -27,18 +27,6 @@ axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
-router.beforeEach((to, from, next) => {
-  if (from.path === '/') {
-    alert(1);
-    alert(JSON.stringify(from.query));
-    let redirectUrl = window.location.href;
-    redirectUrl = encodeURIComponent(redirectUrl);
-    const appId = 'ww469e1dbe19ea6189';
-    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
-  }
-  next();
-});
-
 router.afterEach(route => {
   // 从路由的元信息中获取 title 属性
   if (route.meta.title) {
