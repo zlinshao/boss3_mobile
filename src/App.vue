@@ -103,7 +103,7 @@
         });
       },
       prevent() {
-        let url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + 'ww469e1dbe19ea6189' + "&secret=" + 'LtqwOmAtRIAwHSWZ9jWgduzhd5vnfv5Ia9Yf1fOniGc' + "&code=code" + "&grant_type=authorization_code";
+        let url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww469e1dbe19ea6189&corpsecret=LtqwOmAtRIAwHSWZ9jWgduzhd5vnfv5Ia9Yf1fOniGc";
         this.$http.get(url).then(res => {
           this.token = res.data;
         }).catch(err => {
