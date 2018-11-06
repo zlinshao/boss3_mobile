@@ -350,7 +350,6 @@
           if (res.data.status === 'success' && res.data.data.length !== 0) {
 
             let content = res.data.data.process.content;
-            console.log(res.data.data)
             this.formList = JSON.parse(content.show_content_compress);
 
             // this.formList['开单人'] = content.staff_name;
@@ -359,7 +358,6 @@
             // }else{
             //   this.formList['房东姓名'] = content.customers;
             // }
-
             // console.log(this.formList['开单人'])
             this.operation = res.data.data.operation;
             this.deal = res.data.data.deal;
