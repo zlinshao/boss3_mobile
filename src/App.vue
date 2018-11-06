@@ -103,11 +103,7 @@
         });
       },
       prevent() {
-        this.$http.get(url).then(res => {
-          this.token = res.data;
-        }).catch(err => {
-          this.token = JSON.stringify(err);
-        })
+
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
