@@ -108,18 +108,17 @@
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
-          this.authorize(query);
+          this.getUserId(query);
         }
-      },
-      async authorize(val) {
-        await this.getUserId(val);
       },
       // 获取uid
       getUserId(val) {
+        alert(JSON.stringify(val));
+        alert('http://test.v3.api.boss.lejias.cn/organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code);
         this.$http.get('http://test.v3.api.boss.lejias.cn/organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
-          this.token = JSON.stringify(res.data)
+          this.token = JSON.stringify(res.data);
         }).catch(err => {
-          this.token = JSON.stringify(err)
+          this.token = JSON.stringify(err);
         })
       },
       onInput(key) {
