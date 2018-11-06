@@ -67,13 +67,10 @@ axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
-router = new VueRouter({
-  mode: 'history',
-});
-
 router.beforeEach((to, from, next) => {
   if (from.path === '/') {
     alert(window.location.href);
+    alert(router.query);
     let redirectUrl = window.location.href;
     redirectUrl = encodeURIComponent(redirectUrl);
     alert(redirectUrl);
