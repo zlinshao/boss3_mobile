@@ -67,6 +67,10 @@ axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
+router = new VueRouter({
+  mode: 'history',
+});
+
 router.beforeEach((to, from, next) => {
   if (from.path === '/') {
     alert(window.location.href);
@@ -74,7 +78,7 @@ router.beforeEach((to, from, next) => {
     redirectUrl = encodeURIComponent(redirectUrl);
     alert(redirectUrl);
     const appId = 'ww469e1dbe19ea6189';
-    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`;
+    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
   }
   next();
 });
