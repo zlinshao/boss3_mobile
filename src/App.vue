@@ -117,7 +117,9 @@
       // 获取uid
       getUserId(val) {
         this.$http.get('http://test.v3.api.boss.lejias.cn/organization/user/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
-          alert(JSON.stringify(res.data))
+          this.token = JSON.stringify(res.data)
+        }).catch(err => {
+          this.token = JSON.stringify(err)
         })
       },
       onInput(key) {
@@ -143,6 +145,7 @@
       top: 0;
       bottom: 0;
       background: #f1f1f1;
+      overflow: auto;
     }
 
     .loading {
