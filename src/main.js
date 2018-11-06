@@ -70,12 +70,11 @@ Vue.config.productionTip = false;
 router.beforeEach((to, from, next) => {
   if (from.path === '/') {
     alert(window.location.href);
-    alert(router.query);
+    alert(JSON.stringify(from.query));
     let redirectUrl = window.location.href;
     redirectUrl = encodeURIComponent(redirectUrl);
-    alert(redirectUrl);
     const appId = 'ww469e1dbe19ea6189';
-    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+    // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
   }
   next();
 });

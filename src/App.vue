@@ -41,7 +41,6 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
-      console.log(this.$route.query);
       this.responses();
     },
     methods: {
