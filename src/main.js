@@ -11,7 +11,46 @@ import '@/assets/js/api.js'
 import '@/assets/js/formData.js'
 import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 
-import {Cell, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard, Row, Col, Badge, Button, Loading, NavBar, Panel, Stepper, Step, Steps, Swipe, SwipeItem, Tab, Tabs, Tabbar, TabbarItem, Tag, Checkbox, CheckboxGroup, Field, RadioGroup, Radio, Search, Switch, Uploader, Actionsheet, Dialog, Picker, PullRefresh, CellSwipe, Popup, SwitchCell, AddressList
+import {
+  Cell,
+  CellGroup,
+  Icon,
+  DatetimePicker,
+  PasswordInput,
+  NumberKeyboard,
+  Row,
+  Col,
+  Badge,
+  Button,
+  Loading,
+  NavBar,
+  Panel,
+  Stepper,
+  Step,
+  Steps,
+  Swipe,
+  SwipeItem,
+  Tab,
+  Tabs,
+  Tabbar,
+  TabbarItem,
+  Tag,
+  Checkbox,
+  CheckboxGroup,
+  Field,
+  RadioGroup,
+  Radio,
+  Search,
+  Switch,
+  Uploader,
+  Actionsheet,
+  Dialog,
+  Picker,
+  PullRefresh,
+  CellSwipe,
+  Popup,
+  SwitchCell,
+  AddressList
 } from 'vant';
 
 Vue.use(Row).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(CellSwipe).use(SwitchCell).use(Picker).use(Popup).use(AddressList);
@@ -29,10 +68,13 @@ axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
-  if (from.path !== '/' && to.path === '/index') {
-    // axios.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
-    //
-    // });
+  if (from.path === '/') {
+    alert(window.location.href);
+    let redirectUrl = window.location.href;
+    redirectUrl = encodeURIComponent(redirectUrl);
+    alert(redirectUrl);
+    const appId = 'ww469e1dbe19ea6189';
+    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`;
   }
   next();
 });
