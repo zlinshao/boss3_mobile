@@ -117,6 +117,7 @@
       // 获取uid
       getUserId(val) {
         alert(JSON.stringify(val));
+        alert(this.urls + 'organization/user/getWeworkUser?appId=' + val.appid + '&code=' + val.code);
         this.$http.get(this.urls + 'organization/user/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           alert(JSON.stringify(res.data))
         })
