@@ -80,7 +80,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = true;
+          this.loading = false;
           this.prevent();
         }
         let that = this;
