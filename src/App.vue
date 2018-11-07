@@ -39,7 +39,6 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
-      console.log(this.$route.query);
       this.responses();
     },
     methods: {
@@ -80,7 +79,7 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.personalGet().then(res => {
+          this.personalGet(2).then(res => {
             this.loading = !res;
             this.$router.push('/index');
           });
