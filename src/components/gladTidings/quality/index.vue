@@ -43,23 +43,23 @@
           required>
         </van-field>
         <!--<div class="month">-->
-          <!--<van-field-->
-            <!--v-model="property_fee"-->
-            <!--label="物业费单价"-->
-            <!--type="text"-->
-            <!--:disabled="followUp"-->
-            <!--:placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"-->
-            <!--required>-->
-          <!--</van-field>-->
+        <!--<van-field-->
+        <!--v-model="property_fee"-->
+        <!--label="物业费单价"-->
+        <!--type="text"-->
+        <!--:disabled="followUp"-->
+        <!--:placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"-->
+        <!--required>-->
+        <!--</van-field>-->
         <!--</div>-->
         <!--<div class="titleRed">单位：元/平米/月</div>-->
         <!--<van-field-->
-          <!--v-model="form.community.property_phone"-->
-          <!--label="物业联系方式"-->
-          <!--type="text"-->
-          <!--:disabled="followUp"-->
-          <!--placeholder="请填写物业联系方式"-->
-          <!--required>-->
+        <!--v-model="form.community.property_phone"-->
+        <!--label="物业联系方式"-->
+        <!--type="text"-->
+        <!--:disabled="followUp"-->
+        <!--placeholder="请填写物业联系方式"-->
+        <!--required>-->
         <!--</van-field>-->
         <div class="fourth">
           <van-field
@@ -595,14 +595,13 @@
         }
       },
       userInfo(val1) {
-        // if (val1 && this.form.quality_up !== '1') {
-        //   console.log(sessionStorage.personal)
-        //   let per = JSON.parse(sessionStorage.personal);
-        //   this.form.staff_id = per.id;
-        //   this.form.staff_name = per.name;
-        //   this.form.department_id = per.department_id;
-        //   this.form.department_name = per.department_name;
-        // }
+        if (val1 && this.form.quality_up !== '1') {
+          let per = JSON.parse(sessionStorage.personal);
+          this.form.staff_id = per.id;
+          this.form.staff_name = per.name;
+          this.form.department_id = per.department_id;
+          this.form.department_name = per.department_name;
+        }
       },
       dicts(val) {
         // 城市
@@ -869,7 +868,7 @@
         }
         console.log(this.form.photo);
         console.log(this.uploader)
-        if (this.haveInHand) {         
+        if (this.haveInHand) {
           // this.form.community.property_fee = this.property_fee;
           this.haveInHand = false;
           this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
@@ -1197,8 +1196,8 @@
         }
       }
     }
-    .upload-tips{
-      color:red;
+    .upload-tips {
+      color: red;
       font-size: 14px;
       text-indent: 1em;
       margin: .2rem 0 0 0;
