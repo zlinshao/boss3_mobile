@@ -2,7 +2,7 @@
   <div id="dataCount">
     <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
-      <img src="../../../assets/loding1.gif">
+      <img src="../../../assets/data_count.jpg">
     </div>
     <div v-if="!loading">
       <div class="dataMain">
@@ -94,14 +94,14 @@
               readonly
               required>
             </van-field>
-            <van-field
+            <!-- <van-field
               v-model="form.lord_property_fee"
               v-if="rentType === '0'"
               label="物业费"
               type="number"
               placeholder="请填写收房物业费"
               required>
-            </van-field>
+            </van-field> -->
           </van-cell-group>
           <div class="titles">租房</div>
           <van-cell-group>
@@ -110,13 +110,6 @@
               label="租房价格"
               type="number"
               placeholder="请填写租房价格"
-              required>
-            </van-field>
-            <van-field
-              v-model="form.rent_agency_count"
-              label="租房中介费"
-              type="number"
-              placeholder="请填写租房中介费"
               required>
             </van-field>
             <van-field
@@ -131,6 +124,20 @@
               label="租房消耗空置期"
               type="number"
               placeholder="请填写天数"
+              required>
+            </van-field>
+            <van-field
+              v-model="form.rent_agency_count"
+              label="租房中介费"
+              type="number"
+              placeholder="请填写租房中介费"
+              required>
+            </van-field>
+            <van-field
+              v-model="form.rent_sign_month"
+              label="签约时长(月)"
+              type="number"
+              placeholder="请填写"
               required>
             </van-field>
             <!-- <van-field
@@ -319,7 +326,7 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        setTimeout(() => vm.loading = false,600)
+        setTimeout(() => vm.loading = false,2000)
         let detail = vm.$store.state.app.searchDetail;
         console.log(detail)
         if (Object.keys(detail).length > 0) {
@@ -394,6 +401,7 @@
             this.form.rent_agency_count = '';
             this.form.rent_pay_way = '';
             this.form.rent_vacancy_date = '';
+            this.form.rent_sign_month = 0;  //签约时长
             this.form.rent_return_day = 0;
             this.form.rent_return_money = 0;
             console.log("-----form");
@@ -595,12 +603,14 @@
     //   background: #f1f1f1;
     // }
 
-    // .loading {
-    //   top: 50%;
-    //   left: 50%;
-    //   transform: translate(-50%, -50%);
-    //   z-index: 1;
-    // }
+    .loading {
+      height: 100%;
+      width: 100%;
+      img{
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
     .dataMain {
       padding-bottom: 1.2rem;
     }
