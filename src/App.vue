@@ -80,8 +80,7 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.prevent();
-          this.personalGet(1).then(res => {
+          this.personalGet().then(res => {
             this.loading = !res;
             this.$router.push('/index');
           });
@@ -103,9 +102,6 @@
           }
           return Promise.reject(error);
         });
-      },
-      prevent() {
-
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);

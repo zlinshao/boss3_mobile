@@ -172,6 +172,7 @@ export default {
           return '请删除上传失败的文件并重新上传!';
       }
     };
+
     // 钉钉认证
     Vue.prototype.personalGet = function (val) {
       let that = this;
@@ -266,21 +267,22 @@ export default {
       data.department_id = res.data.org[0].id;
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;
-      if (val === 2) {
-        resolve(true);
-        return;
-      }
-      this.$http.post(globalConfig.attestation + 'oauth/token', {
-        client_secret: globalConfig.client_secret,
-        client_id: globalConfig.client_id,
-        grant_type: 'password',
-        username: res.data.phone,
-        password: res.data.code,
-      }).then((data) => {
-        let head = data.data.data;
-        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-        resolve(true);
-      });
+      resolve(true);
+      // if (val === 2) {
+      //   resolve(true);
+      //   return;
+      // }
+      // this.$http.post(globalConfig.attestation + 'oauth/token', {
+      //   client_secret: globalConfig.client_secret,
+      //   client_id: globalConfig.client_id,
+      //   grant_type: 'password',
+      //   username: res.data.phone,
+      //   password: res.data.code,
+      // }).then((data) => {
+      //   let head = data.data.data;
+      //   globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+      //   resolve(true);
+      // });
     };
     // 关闭钉钉
     Vue.prototype.closeDD = function () {
