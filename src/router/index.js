@@ -85,14 +85,13 @@ import ProposeQuestion from '../components/examine/interlocution/components/prop
 import WriteAnswer from '../components/examine/interlocution/components/writeAnswer.vue';  //写回答
 import WriteComment from '../components/examine/interlocution/components/writeComment.vue';  //写评论
 
-
 //计算器
 import SearchHouse from '../components/common/searchHouse.vue';//计算器房屋搜索
 
 Vue.use(Router);
 
 export default new Router({
-  // mode: 'history',
+  mode: 'history',
   routes: [
     {
       path: '/',
