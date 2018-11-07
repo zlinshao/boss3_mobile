@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading">
-      <div v-html="token"></div>
+      <div>{{token}}</div>
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
@@ -71,7 +71,6 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -132,7 +131,7 @@
             this.loading = false;
           }
         }).catch(err => {
-          this.token = JSON.stringify(err);
+          this.token = JSON.stringify(err.response);
         });
       },
       onInput(key) {
