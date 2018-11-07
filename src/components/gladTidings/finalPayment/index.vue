@@ -735,13 +735,18 @@
         }
       },
       emptyPic(val, key) {
+        console.log(val);
+        console.log(key);
         let data = [];
-        if (!val.length) {
+        if (val.length !== 0) {
           val.forEach(item => {
+            console.log(item);
             if (item && item !== 'null') {
+              console.log(item);
               data.push(item);
             }
           });
+          console.log(data);
           this.form[key] = data;
         }
       },
