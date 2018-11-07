@@ -91,7 +91,7 @@ import SearchHouse from '../components/common/searchHouse.vue';//计算器房屋
 Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/',
