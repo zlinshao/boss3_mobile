@@ -267,7 +267,6 @@ export default {
       data.department_id = res.data.org[0].id;
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;
-      // resolve(true);
       if (val === 2) {
         resolve(true);
         return;
