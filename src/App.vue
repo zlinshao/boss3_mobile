@@ -41,6 +41,7 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
+      alert(this.$router.options.mode);
       this.responses();
     },
     methods: {
