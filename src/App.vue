@@ -131,7 +131,7 @@
             this.loading = false;
           }
         }).catch(err => {
-          this.token = JSON.stringify(err.response);
+          this.token = JSON.stringify(err);
         });
       },
       onInput(key) {
