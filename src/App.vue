@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading">
-      {{token}}
+      <div v-html="token"></div>
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
