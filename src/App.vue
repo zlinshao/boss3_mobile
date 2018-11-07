@@ -79,7 +79,7 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.personalGet(2).then(res => {
+          this.personalGet(1).then(res => {
             this.loading = !res;
             this.$router.push('/index');
           });
