@@ -117,7 +117,17 @@
       // 获取uid
       getUserId(val) {
         this.$http.get('http://test.v3.api.boss.lejias.cn/organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
-          this.loading = false;
+          this.token = res.data;
+          // let data = {};
+          // data.id = res.data.id;
+          // data.name = res.data.name;
+          // data.avatar = res.data.avatar;
+          // data.phone = res.data.phone;
+          // data.department_name = res.data.org[0].name;
+          // data.department_id = res.data.org[0].id;
+          // sessionStorage.setItem('personal', JSON.stringify(data));
+          // globalConfig.personal = data;
+          // this.loading = false;
         }).catch(err => {
         });
       },
