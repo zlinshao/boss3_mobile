@@ -110,6 +110,8 @@
         } else {
           this.getUserId(query);
         }
+        alert(redirectUrl);
+        alert(JSON.stringify(query));
       },
       // 获取uid
       getUserId(val) {
