@@ -11,7 +11,7 @@
         <p>
           <i class="iconfont icon-faqiyingyong"></i>
         </p>
-        <h1>我发起的</h1>
+        <h1 @click="routeDetail(34)">我发起的</h1>
       </div>
       <div @click="tabTag(4,0)" :class="{'onDiv': active === 4}">
         <p>
@@ -162,7 +162,7 @@
           waterfall-disabled="disabled"
           waterfall-offset="300">
         <li class="started">
-          <div class="startedMain" v-for="item in list" @click="routerDetail(item.id)">
+          <div class="startedMain" v-for="item in list" @click="routeDetail(item.id)">
             <div class="leftPic">
               <img :src="item.avatar" v-if="item.avatar !== '' && item.avatar !== null">
               <img src="../assets/head.png" v-else>
@@ -322,7 +322,7 @@
         })
       },
       // 详情页
-      routerDetail(id) {
+      routeDetail(id) {
         this.disabled = true;
         this.$router.push({path: '/publishDetail', query: {ids: id}});
       },

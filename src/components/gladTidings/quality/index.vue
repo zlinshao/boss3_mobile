@@ -866,8 +866,6 @@
           Toast(this.alertMsg('pic'));
           return;
         }
-        console.log(this.form.photo);
-        console.log(this.uploader)
         if (this.haveInHand) {
           // this.form.community.property_fee = this.property_fee;
           this.haveInHand = false;
@@ -887,7 +885,7 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
+              this.routerDetail(res.data.data.id);
             } else if (res.data.code === "51420") {
               this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
@@ -898,7 +896,6 @@
             this.haveInHand = true;
             if (error.response === undefined) {
               this.alertMsg('net');
-
             } else {
               if (error.response.status === 401) {
                 this.personalGet().then((data) => {

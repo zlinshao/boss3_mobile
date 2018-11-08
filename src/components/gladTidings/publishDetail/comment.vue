@@ -251,12 +251,12 @@
         }
         if (this.haveInHand) {
           this.haveInHand = false;
-          this.$http.post(this.urls + 'workflow/process/comment/' + this.queries.ids, {
+          this.$http.post(this.urls + 'workflow/process/comment', {
             content: this.form.content,
-            obj_id: this.queries.detail,
+            obj_id: this.queries.ids,
             parent_id: this.form.parent_id,
             video_file: this.form.video_file,
-            image_file: this.form.image_file,
+            image_pic: this.form.image_file,
           }).then((res) => {
             this.retry = 0;
             if (res.data.code === '20000') {

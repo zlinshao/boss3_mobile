@@ -31,7 +31,6 @@
     <div class="detailRight">
       <!--收房报备-->
       <div class="topTitle">
-        {{vLoading}}
         <div class="load" v-if="vLoading">
           <van-loading type="spinner" color="black"/>
         </div>
@@ -96,8 +95,8 @@
               <div class="contents">
                 {{key.content}}
               </div>
-              <div class="pics">
-                <div v-for="(pic,num) in key.album">
+              <div class="pics" v-if="key.album">
+                <div v-for="(pic,num) in key.album.image_pic">
                   <img v-if="pic.info.ext.indexOf('video') > -1" @click="checkTv(pic.uri)"
                        src="../../../assets/video.jpg">
                   <img v-else @click="pics(key.album, num, pic.info.ext)" :src="pic.uri">
@@ -363,14 +362,9 @@
             // this.confirmBulletinType(res.data.data.process);
             this.place = main.place;
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1;
-            let user_id = [];
-            console.log(main.user)
-            // user_id.push(main.user.org[0].leader_id);
-            // this.$http.post(this.urls + 'special/special/userInfos', {id: user_id}).then((res) => {
-            //   if (res.data.code === '10080') {
-            //     this.bull_name = res.data.data[0];
-            //   }
-            // });
+            if (main.leader) {
+              this.bull_name = main.leader;
+            }
             if (content.quality_up && main.place.name === 'appraiser-officer_review') {
               this.marking = 1;
             } else {

@@ -398,7 +398,7 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
+              this.routerDetail(res.data.data.id);
             } else if (res.data.code === '50320') {
               Toast.success(res.data.msg);
             } else {

@@ -83,6 +83,7 @@ export default {
     };
     // 详情页
     Vue.prototype.routerDetail = function (val) {
+      console.log(val);
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
     // 数组去空字符串
