@@ -36,7 +36,7 @@
     props: ['ID', 'editImage', 'isClear', 'dis'],
     data() {
       return {
-        url: globalConfig.server_user,
+        url: globalConfig.server,
         imgArray: [],
         imgId: [],
         errorId: [],
@@ -89,7 +89,7 @@
           let span = $(this).prev().children('b').children('span').attr('class');
           let close = false;
           if (span !== undefined) {
-            close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1 ? true : false;
+            close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1;
           }
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
@@ -133,7 +133,7 @@
       },
       getToken() {
         this.$http.defaults.timeout = 5000;
-        this.$http.get(this.url + 'files').then((res) => {
+        this.$http.get(this.url + 'api/v1/token').then((res) => {
           this.token = res.data.data;
           this.$http.defaults.timeout = null;
           if (!this.uploader) {
@@ -152,7 +152,7 @@
       },
       // 获取token
       getTokenMessage() {
-        this.$http.get(this.url + 'files').then((res) => {
+        this.$http.get(this.url + 'api/v1/token').then((res) => {
           this.token = res.data.data;
           this.uploaderReady(res.data.data);
         })
@@ -233,7 +233,7 @@
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
               _this.$http.defaults.timeout = 5000;
-              _this.$http.post(_this.url + 'files', {
+              _this.$http.post(_this.url + 'api/v1/upload-direct', {
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,
@@ -241,7 +241,7 @@
                 size: file.size
               }).then((res) => {
                 _this.$http.defaults.timeout = null;
-                if (res.data.status === "success") {
+                if (res.data.code === "110100") {
                   _this.imgId.push(res.data.data.id);
                   let object = {};
                   object.id = res.data.data.id;

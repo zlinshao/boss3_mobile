@@ -4,7 +4,7 @@
       <div class="breadcrumb_box">
         <div class="breadcrumb">
           <div>
-            <span @click="breadcrumbSearch(1)">{{highestDepart}}</span>
+            <span @click="breadcrumbSearch()">{{highestDepart}}</span>
           </div>
           <div v-for="(item,index) in breadcrumbList" @click="breadcrumbSearch(item,index)">
             <span>&nbsp;&gt;&nbsp;{{item.name}}</span>
@@ -24,8 +24,6 @@
           </li>
         </ul>
       </div>
-
-
       <div class="footer">
         <div @click="confirmAdd" :class="{'isGray':!selectId}">确定</div>
       </div>
@@ -50,23 +48,17 @@
         path: '',
       }
     },
-    mounted() {
-      this.getDepartment(1);
-    },
     activated() {
-      this.getDepartment(1);
+      this.getDepartment();
     },
     methods: {
-      getDepartment(id) {
-        //获取顶级部门名称
-        this.$http.get(globalConfig.server_user + 'organizations/1').then((res) => {
-          if (res.data.status === 'success') {
-            this.highestDepart = res.data.data.name;
-          }
-        });
-        this.$http.get(globalConfig.server_user + 'organizations?parent_id=' + id).then((res) => {
-          if (res.data.status === 'success') {
-            this.organizeList = res.data.data;
+      getDepartment(id = 1) {
+        this.$http.get(globalConfig.server + 'organization/other/org-tree?id=' + id).then((res) => {
+          if (res.data.code === '70050') {
+            this.organizeList = res.data.data.children;
+            if (id === 1) {
+              this.highestDepart = res.data.data.name;
+            }
           }
         });
       },
@@ -84,9 +76,9 @@
         }
       },
       //面包屑搜索
-      breadcrumbSearch(item, index) {
+      breadcrumbSearch(item = 1, index = '') {
         if (item === 1) {
-          this.getDepartment(1);
+          this.getDepartment();
           this.breadcrumbList = [];
         } else {
           this.getDepartment(item.id);
@@ -100,12 +92,10 @@
         this.$emit('organization', this.form, this.type);
         this.onClose();
       },
-
       selectItem(item) {
         this.selectDepart.id = item.id;
         this.selectDepart.name = item.name;
       },
-
       confirmAdd() {
         if (this.selectId) {
          console.log(this.selectDepart)
@@ -122,7 +112,6 @@
             that.$router.replace({path: urls, query: {tops: ''}});
             that.ddRent(false);
           },
-          onFail : function(err) {}
         });
       }
     },

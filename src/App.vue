@@ -28,6 +28,9 @@
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
+        if (to === '/') {
+          this.closeDD();
+        }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
           //设置动画名称
@@ -66,7 +69,6 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -79,7 +81,7 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.personalGet(1).then(res => {
+          this.personalGet().then(res => {
             this.loading = !res;
             this.$router.push('/index');
           });
