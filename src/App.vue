@@ -30,8 +30,10 @@
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
+        alert(window.location.href);
         this.path = from.path;
         this.query = this.$route.query;
+        alert(JSON.stringify(this.$route.query));
         if (to === '/') {
           this.closeDD();
         }
