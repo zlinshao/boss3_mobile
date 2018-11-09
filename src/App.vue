@@ -44,7 +44,6 @@
     },
     methods: {
       responses() {
-        alert(navigator.userAgent);
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           let type, token;
           if (navigator.userAgent.indexOf('native-ios') > -1) {
@@ -81,10 +80,13 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.personalGet().then(res => {
-            this.loading = !res;
-          });
-          // this.prevent();
+          if (navigator.userAgent.indexOf('wxwork') > -1) {
+            this.prevent();
+          } else {
+            this.personalGet().then(res => {
+              this.loading = !res;
+            });
+          }
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
