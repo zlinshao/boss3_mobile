@@ -97,7 +97,7 @@
                 title: "提示信息",
                 buttonName: "关闭",
               });
-              window.close();
+              that.closeDD();
             }
           }
           return Promise.reject(error);
