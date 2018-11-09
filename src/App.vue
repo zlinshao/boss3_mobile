@@ -83,7 +83,6 @@
           this.loading = true;
           this.personalGet().then(res => {
             this.loading = !res;
-            this.$router.push('/index');
           });
         }
         let that = this;
