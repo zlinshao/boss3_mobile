@@ -28,6 +28,13 @@
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
+        if (to.path === '/') {
+          if (navigator.userAgent.indexOf('wxwork') > -1) {
+            window.close();
+          } else {
+            this.closeDD();
+          }
+        }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
           //设置动画名称
