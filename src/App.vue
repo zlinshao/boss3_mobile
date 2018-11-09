@@ -122,6 +122,7 @@
           this.token = res.data.data;
           if (res.data.success) {
             let info = res.data.data;
+            this.token = JSON.stringify(info);
             let data = {};
             data.id = info.id;
             data.name = info.name;
@@ -131,7 +132,7 @@
             data.department_id = info.department_id[0].id;
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
-            this.loading = false;
+            // this.loading = false;
           }
         }).catch(err => {
           this.token = JSON.stringify(err);
