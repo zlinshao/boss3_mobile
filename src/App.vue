@@ -46,11 +46,6 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
-      DingTalkPC.device.notification.alert({
-        message: window.location.href,
-        title: "提示信息",
-        buttonName: "关闭",
-      });
       this.responses();
     },
     methods: {
@@ -106,12 +101,16 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              DingTalkPC.device.notification.alert({
-                message: "服务器故障,请联系产品经理~",
-                title: "提示信息",
-                buttonName: "关闭",
-              });
-              that.closeDD();
+              if (navigator.userAgent.indexOf('wxwork') > -1) {
+                window.close();
+              } else {
+                DingTalkPC.device.notification.alert({
+                  message: "服务器故障,请联系产品经理~",
+                  title: "提示信息",
+                  buttonName: "关闭",
+                });
+                that.closeDD();
+              }
             }
           }
           return Promise.reject(error);
