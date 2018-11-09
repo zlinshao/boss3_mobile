@@ -4,6 +4,7 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
+    {{hhhhhhh}}
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -24,6 +25,7 @@
         transitionName: '',
         loading: true,
         token: '',
+        hhhhhhh: '',
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -87,6 +89,7 @@
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
+          that.hhhhhhh = JSON.stringify(response)
           return response;
         }, function (error) {
           if (error && error.response) {

@@ -70,14 +70,7 @@ Vue.config.productionTip = false;
 router.beforeEach((to, from, next) => {
   next();
 });
-axios.interceptors.response.use(function (response) {
-  // Do something with response data
-  alert(JSON.stringify(response));
-  return response;
-}, function (error) {
-  // Do something with response error
-  return Promise.reject(error);
-});
+
 router.afterEach(route => {
   // 从路由的元信息中获取 title 属性
   if (route.meta.title) {
