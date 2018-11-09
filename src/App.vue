@@ -24,16 +24,10 @@
         transitionName: '',
         loading: true,
         token: '',
-        path: '',
-        query: '',
       };
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
-        alert(window.location.href);
-        this.path = from.path;
-        this.query = this.$route.query;
-        alert(JSON.stringify(this.$route.query));
         if (to === '/') {
           this.closeDD();
         }
@@ -89,7 +83,7 @@
           this.loading = true;
           this.personalGet().then(res => {
             this.loading = !res;
-            this.$router.push({path: this.path, query: this.query});
+            this.$router.push('/index');
           });
         }
         let that = this;
