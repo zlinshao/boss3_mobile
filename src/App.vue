@@ -46,7 +46,11 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
-      console.log(this.$route.query);
+      DingTalkPC.device.notification.alert({
+        message: window.location.href,
+        title: "提示信息",
+        buttonName: "关闭",
+      });
       this.responses();
     },
     methods: {
@@ -125,7 +129,7 @@
       },
       // 获取uid
       getUserId(val) {
-        this.$http.get('http://test.v3.api.boss.lejias.cn/organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
+        this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           if (res.data.success) {
             let info = res.data.data;
             let data = {};
