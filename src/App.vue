@@ -44,6 +44,7 @@
     },
     methods: {
       responses() {
+        alert(navigator.userAgent);
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           let type, token;
           if (navigator.userAgent.indexOf('native-ios') > -1) {
@@ -80,10 +81,10 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          // this.prevent();
           this.personalGet().then(res => {
             this.loading = !res;
           });
+          // this.prevent();
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
