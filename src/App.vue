@@ -28,9 +28,6 @@
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
-        if (to === '/') {
-          this.closeDD();
-        }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
           //设置动画名称
@@ -42,6 +39,7 @@
     },
     mounted() {
       this.paths = this.$router.options.routes;
+      console.log(this.$route.query);
       this.responses();
     },
     methods: {
@@ -69,6 +67,7 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
+
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -82,6 +81,10 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           this.prevent();
+          this.personalGet(1).then(res => {
+            this.loading = !res;
+            this.$router.push('/index');
+          });
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
@@ -90,6 +93,12 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
+              DingTalkPC.device.notification.alert({
+                message: "服务器故障,请联系产品经理~",
+                title: "提示信息",
+                buttonName: "关闭",
+              });
+              window.close();
             }
           }
           return Promise.reject(error);
@@ -107,7 +116,7 @@
       },
       // 获取uid
       getUserId(val) {
-        this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
+        this.$http.get('http://test.v3.api.boss.lejias.cn/organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           this.token = res.data.data;
           if (res.data.success) {
             let info = res.data.data;
