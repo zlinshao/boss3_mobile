@@ -613,7 +613,6 @@
           for (let i = 0; i < res.data.length; i++) {
             this.cities.push(res.data[i].dictionary_name);
           }
-
           this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
             if (res.data.code === '1000120') {
               this.form.province_id = '';
@@ -634,7 +633,6 @@
               }
             }
           });
-
           // 装修
           this.dictionary(404, 1).then((res) => {
             this.decorate_name = [];
@@ -651,12 +649,8 @@
               }
               this.qualityDetail(val);
             });
-
           });
-
-        }).catch(err => {
-          this.hhhhhh = JSON.stringify(err);
-        });
+        })
       },
 
       // select关闭
@@ -897,6 +891,7 @@
               Toast(res.data.msg);
             }
           }).catch((error) => {
+            this.hhhhhh = JSON.stringify(error);
             this.haveInHand = true;
             if (error.response === undefined) {
               this.alertMsg('net');

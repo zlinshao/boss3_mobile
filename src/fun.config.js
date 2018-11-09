@@ -148,6 +148,8 @@ export default {
             resolve(res.data)
           }
         })
+      }).catch(err => {
+        alert(JSON.stringify(err));
       })
     };
     Vue.prototype.computedDate = function (params) {
