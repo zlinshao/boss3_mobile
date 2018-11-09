@@ -84,9 +84,9 @@
               let list = {};
               list.staff_id = key.id;
               list.staff_name = key.name;
-              if (key.organizations.length !== 0) {
-                list.depart_id = key.organizations[0].id;
-                list.depart_name = key.organizations[0].name;
+              if (key.org.length !== 0) {
+                list.depart_id = key.org[0].id;
+                list.depart_name = key.org[0].name;
               } else {
                 list.depart_name = '---';
                 list.depart_id = '';
