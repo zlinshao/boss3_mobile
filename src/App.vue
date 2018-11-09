@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading">
-      {{token}}
-    </div>
+    <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
@@ -121,20 +119,18 @@
       // 获取uid
       getUserId(val) {
         this.$http.get('http://test.v3.api.boss.lejias.cn/organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
-          this.token = res.data.data;
           if (res.data.success) {
             let info = res.data.data;
-            this.token = JSON.stringify(info);
             let data = {};
             data.id = info.id;
             data.name = info.name;
             data.avatar = info.avatar;
             data.phone = info.phone;
-            data.department_name = info.department_name[0].name;
-            data.department_id = info.department_id[0].id;
+            data.department_name = info.department_name[0];
+            data.department_id = info.department_id[0];
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
-            // this.loading = false;
+            this.loading = false;
           }
         }).catch(err => {
           this.token = JSON.stringify(err);

@@ -1,6 +1,5 @@
 <template>
   <div id="quality">
-    {{hhhhhh}}
     <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
@@ -530,12 +529,10 @@
         counts: '',
 
         retry: 0,
-        hhhhhh: '',
       }
     },
     mounted() {
       let count = sessionStorage.count;
-      this.hhhhhh = sessionStorage.personal;
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
