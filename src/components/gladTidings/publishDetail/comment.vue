@@ -146,8 +146,6 @@
 
       this.forms.is_electric_appliance = 1;
       this.forms.is_clean = 1;
-      this.forms.process_id = this.queries.process;
-      this.forms.processable_id = this.queries.able;
       this.is_electric_status = true;
       this.is_clean_status = true;
     },
@@ -235,7 +233,7 @@
       mark() {
         this.forms.is_electric_appliance = this.is_electric_status ? 1 : 0;
         this.forms.is_clean = this.is_clean_status ? 1 : 0;
-        this.$http.put(this.urls + 'bulletin/helper/score/' + this.queries.ids, this.forms).then((res) => {
+        this.$http.put(this.urls + 'bulletin/helper/score/' + this.queries.able, this.forms).then((res) => {
           if (res.data.code === '51110') {
             this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
             this.close_();
