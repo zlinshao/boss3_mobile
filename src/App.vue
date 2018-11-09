@@ -24,11 +24,12 @@
         transitionName: '',
         loading: true,
         token: '',
+        path: '',
       };
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
-        alert(from.path);
+        this.path = from.path;
         if (to === '/') {
           this.closeDD();
         }
@@ -84,7 +85,7 @@
           this.loading = true;
           this.personalGet().then(res => {
             this.loading = !res;
-            this.$router.push('/index');
+            this.$router.push({path: this.path});
           });
         }
         let that = this;
