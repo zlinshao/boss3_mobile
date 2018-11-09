@@ -81,9 +81,7 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.personalGet().then(res => {
-            this.loading = !res;
-          });
+          this.prevent();
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
@@ -92,15 +90,40 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              DingTalkPC.device.notification.alert({
-                message: "服务器故障,请联系产品经理~",
-                title: "提示信息",
-                buttonName: "关闭",
-              });
-              that.closeDD();
             }
           }
           return Promise.reject(error);
+        });
+      },
+      prevent() {
+        let query = this.$route.query;
+        let redirectUrl = window.location.href;
+        redirectUrl = encodeURIComponent(redirectUrl);
+        if (!query.code) {
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        } else {
+          this.getUserId(query);
+        }
+      },
+      // 获取uid
+      getUserId(val) {
+        this.$http.get('http://test.v3.api.boss.lejias.cn/organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
+          this.token = res.data.data;
+          if (res.data.success) {
+            let info = res.data.data;
+            let data = {};
+            data.id = info.id;
+            data.name = info.name;
+            data.avatar = info.avatar;
+            data.phone = info.phone;
+            data.department_name = info.department_name[0].name;
+            data.department_id = info.department_id[0].id;
+            sessionStorage.setItem('personal', JSON.stringify(data));
+            globalConfig.personal = data;
+            this.loading = false;
+          }
+        }).catch(err => {
+          this.token = JSON.stringify(err);
         });
       },
       onInput(key) {
