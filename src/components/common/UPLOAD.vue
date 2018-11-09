@@ -89,7 +89,7 @@
           let span = $(this).prev().children('b').children('span').attr('class');
           let close = false;
           if (span !== undefined) {
-            close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1 ? true : false;
+            close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1;
           }
           for (let i in _this.uploader.files) {
             if (_this.uploader.files[i].id === id) {
@@ -233,7 +233,7 @@
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
               _this.$http.defaults.timeout = 5000;
-              _this.$http.post(this.url + 'api/v1/token', {
+              _this.$http.post(_this.url + 'api/v1/upload-direct', {
                 url: sourceLink,
                 name: url.key,
                 raw_name: file.name,
@@ -241,7 +241,7 @@
                 size: file.size
               }).then((res) => {
                 _this.$http.defaults.timeout = null;
-                if (res.data.status === "success") {
+                if (res.data.code === "110100") {
                   _this.imgId.push(res.data.data.id);
                   let object = {};
                   object.id = res.data.data.id;

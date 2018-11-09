@@ -38,9 +38,6 @@
       </div>
     </div>
     <div class="staffList">
-      <!--<div class="checkedClass" v-if="staffList.length > 0">-->
-      <!--<van-checkbox v-model="checked">全选</van-checkbox>-->
-      <!--</div>-->
       <ul
         v-waterfall-lower="loadMore"
         waterfall-disabled="disabled"
@@ -49,7 +46,6 @@
           <div class="depart_detail">
             <div>{{item.name}}&nbsp;<span style="color: #757575;">({{item.users}}人)</span></div>
             <div class="iconPng" @click="getNextLevel(item)">
-              <!--<img src="../../assets/nextdisabled.png">-->
               <img src="../../assets/nextleve.png">
             </div>
           </div>
@@ -128,7 +124,7 @@
         duration: 0,
         message: '加载中...'
       });
-      this.getDepartment(1, 1);
+      this.getDepartment();
       // 获取顶级部门名称
       this.$http.get(globalConfig.server_user + 'organizations/1').then((res) => {
         if (res.data.status === 'success') {
@@ -173,7 +169,7 @@
         this.onCancel();
         this.searchValue = '';
       },
-      getDepartment(id, page) {
+      getDepartment(id = 1, page = 1) {
         this.$http.get(globalConfig.server_user + 'organizations?parent_id=' + id + '&per_page_number=50').then((res) => {
           Toast.clear();
           if (res.data.status === 'success' && res.data.data.length > 0) {
@@ -215,10 +211,10 @@
         this.close_();
         this.params.org_id = item.id;
         if (item === 1) {
-          this.getDepartment(1, 1);
+          this.getDepartment();
           this.breadcrumbList = [];
         } else {
-          this.getDepartment(item.id, 1);
+          this.getDepartment(item.id);
           this.breadcrumbList.splice(index + 1, this.breadcrumbList.length);
         }
       },
@@ -226,7 +222,7 @@
       getNextLevel(item) {
         this.close_();
         this.params.org_id = item.id;
-        this.getDepartment(item.id, 1);
+        this.getDepartment(item.id);
         let isExist = false;
         this.breadcrumbList.forEach((x) => {
           if (item.id === x.id) {
@@ -267,7 +263,7 @@
       staffId(val) {
         android.staffIds(JSON.stringify(val));
         this.selectId = [];
-        this.getDepartment(1, 1);
+        this.getDepartment();
       }
     },
   }

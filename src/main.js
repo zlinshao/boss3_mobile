@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import App from './App'
 import Boss from './boss.config.js'
+import router from './router/index.js'
 import axios from 'axios'
 import VueRouter from 'vue-router'
-import router from './router/index.js'
 import Fun from './fun.config.js'
 import Vuex from 'vuex'
 import store from './store/index.js'
 import '@/assets/js/api.js'
 import '@/assets/js/formData.js'
 import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
-import CollectReport from './components/gladTidings/collectReport/index.vue'
+
 import {
   Cell,
   CellGroup,
@@ -67,7 +67,7 @@ axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
-router.beforeEach((to, form, next) => {
+router.beforeEach((to, from, next) => {
   next();
 });
 

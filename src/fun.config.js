@@ -1,5 +1,4 @@
 import {md5} from './assets/js/MD5.js'
-
 export default {
   install(Vue, options) {
     Vue.prototype.routerIndex = function (url, house, id) {
@@ -68,6 +67,7 @@ export default {
         }
       });
     };
+
     Vue.prototype.routerTo = function (url, id, val) {
       let that = this;
       document.addEventListener('backbutton', function (e) {
@@ -85,6 +85,7 @@ export default {
     };
     // 详情页
     Vue.prototype.routerDetail = function (val) {
+      console.log(val);
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
     // 数组去空字符串
@@ -149,7 +150,6 @@ export default {
         })
       })
     };
-
     Vue.prototype.computedDate = function (params) {
       return new Promise((resolve, reject) => {
         this.$http.get(globalConfig.server + 'bulletin/helper/calcdate', {
@@ -199,7 +199,6 @@ export default {
         })
       })
     };
-
     // 钉钉认证
     Vue.prototype.personalGet = function (val) {
       let that = this;
@@ -294,21 +293,7 @@ export default {
       data.department_id = res.data.org[0].id;
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;
-      if (val === 2) {
-        resolve(true);
-        return;
-      }
-      this.$http.post(globalConfig.attestation + 'oauth/token', {
-        client_secret: globalConfig.client_secret,
-        client_id: globalConfig.client_id,
-        grant_type: 'password',
-        username: res.data.phone,
-        password: res.data.code,
-      }).then((data) => {
-        let head = data.data.data;
-        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-        resolve(true);
-      });
+      resolve(true);
     };
     // 关闭钉钉
     Vue.prototype.closeDD = function () {

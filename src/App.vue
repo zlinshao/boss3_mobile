@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading">
-      <div>{{token}}</div>
-    </div>
+    <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
@@ -30,8 +28,8 @@
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
-        if (to.path === '/') {
-          window.close();
+        if (to === '/') {
+          this.closeDD();
         }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
         if (to.meta.index > from.meta.index) {
@@ -109,7 +107,7 @@
       },
       // 获取uid
       getUserId(val) {
-        this.$http.get('http://test.v3.api.boss.lejias.cn/organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
+        this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           this.token = res.data.data;
           if (res.data.success) {
             let info = res.data.data;
@@ -151,7 +149,6 @@
       top: 0;
       bottom: 0;
       background: #f1f1f1;
-      overflow: auto;
     }
 
     .loading {

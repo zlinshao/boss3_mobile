@@ -19,13 +19,11 @@
             </div>
             <div class="depart_detail" @click="getNextLevel(item)">
               <div>{{item.name}}</div>
-              <div>{{item.users}}</div>
+              <div>{{item.users.length}}</div>
             </div>
           </li>
         </ul>
       </div>
-
-
       <div class="footerIndex">
         <div @click="clearData">清空</div>
         <div @click="confirmAdd" :class="{'isGray':!selectId}">确定</div>
@@ -58,23 +56,17 @@
         vm.ddRent(from.path, 'depart');
       })
     },
-    mounted() {
-      this.getDepartment(1);
-    },
     activated() {
-      this.getDepartment(1);
+      this.getDepartment();
     },
     methods: {
-      getDepartment(id) {
-        //获取顶级部门名称
-        this.$http.get(globalConfig.server_user + 'organizations/1').then((res) => {
-          if (res.data.status === 'success') {
-            this.highestDepart = res.data.data.name;
-          }
-        });
-        this.$http.get(globalConfig.server_user + 'organizations?parent_id=' + id).then((res) => {
-          if (res.data.status === 'success') {
-            this.organizeList = res.data.data;
+      getDepartment(id = 1) {
+        this.$http.get(globalConfig.server + 'organization/other/org-tree?id=' + id).then((res) => {
+          if (res.data.code === '70050') {
+            this.organizeList = res.data.data.children;
+            if (id === 1) {
+              this.highestDepart = res.data.data.name;
+            }
           }
         });
       },
@@ -143,8 +135,6 @@
             that.$router.replace({path: urls, query: {tops: ''}});
             that.ddRent(false);
           },
-          onFail: function (err) {
-          }
         });
       }
     },
