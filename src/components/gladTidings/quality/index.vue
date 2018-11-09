@@ -1,5 +1,6 @@
 <template>
   <div id="quality">
+    {{hhhhhh}}
     <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
@@ -529,6 +530,7 @@
         counts: '',
 
         retry: 0,
+        hhhhhh: '',
       }
     },
     mounted() {
@@ -591,7 +593,7 @@
         if (this.numbers !== val) {
           this.close_();
           this.numbers = val;
-          this.followUp = val === '0' ? false : true;
+          this.followUp = val === '1';
         }
       },
       userInfo(val1) {
@@ -652,6 +654,8 @@
 
           });
 
+        }).catch(err => {
+          this.hhhhhh = JSON.stringify(err);
         });
       },
 
