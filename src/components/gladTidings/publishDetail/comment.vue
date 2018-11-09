@@ -215,9 +215,12 @@
       manager(val) {
         if (this.queries.detail !== 'to_comment') {
           this.sure(val);
+          if (this.form.content !== '' || this.form.image_pic.length !== 0) {
+            this.comment(val);
+          }
         } else {
-          if (this.form.content !== '' || this.form.image_file.length !== 0) {
-            this.sure(val);
+          if (this.form.content !== '' || this.form.image_pic.length !== 0) {
+            this.comment(val);
           } else {
             Toast('请填写评论内容');
           }
@@ -251,6 +254,58 @@
         }
         if (this.haveInHand) {
           this.haveInHand = false;
+          this.passThrough(val);
+        } else {
+          Toast(this.alertMsg('sub'));
+        }
+      },
+      passThrough(val) {
+        this.$http.post(this.urls + 'workflow/process/trans/' + this.queries.ids, {
+          operation: this.queries.detail,
+        }).then((res) => {
+          this.retry = 0;
+          if (res.data.code === '20000') {
+            if (val === 1) {
+              this.mark();
+            } else {
+              this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
+              this.close_();
+              $('.imgItem').remove();
+            }
+            Toast.success(res.data.msg);
+            this.haveInHand = true;
+          } else {
+            Toast(res.data.msg);
+            this.haveInHand = true;
+          }
+        }).catch((error) => {
+          this.haveInHand = true;
+          if (error.response === undefined) {
+            this.alertMsg('net');
+
+          } else {
+            if (error.response.status === 401) {
+              this.personalGet().then((data) => {
+                if (data && this.retry === 0) {
+                  this.retry++;
+
+                  this.passThrough();
+                }
+              });
+            }
+          }
+        })
+      },
+      comment() {
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
+          Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
           this.$http.post(this.urls + 'workflow/process/comment', {
             content: this.form.content,
             obj_id: this.queries.ids,
@@ -260,14 +315,12 @@
           }).then((res) => {
             this.retry = 0;
             if (res.data.code === '20000') {
-              if (val === 1) {
-                this.mark();
-              } else {
+              if (this.queries.detail === 'to_comment') {
                 this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
-                this.close_();
-                $('.imgItem').remove();
+                Toast.success(res.data.msg);
               }
-              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
               this.haveInHand = true;
             } else {
               Toast(res.data.msg);
@@ -284,7 +337,7 @@
                   if (data && this.retry === 0) {
                     this.retry++;
 
-                    this.sure();
+                    this.comment();
                   }
                 });
               }
@@ -294,7 +347,6 @@
           Toast(this.alertMsg('sub'));
         }
       },
-
       getImgData(val) {
         this.picStatus = val[2];
         this.form.image_file = val[1];
