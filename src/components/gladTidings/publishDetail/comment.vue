@@ -146,6 +146,8 @@
 
       this.forms.is_electric_appliance = 1;
       this.forms.is_clean = 1;
+      this.forms.process_id = this.queries.process;
+      this.forms.processable_id = this.queries.able;
       this.is_electric_status = true;
       this.is_clean_status = true;
     },
@@ -309,6 +311,8 @@
           this.$http.post(this.urls + 'workflow/process/comment', {
             content: this.form.content,
             obj_id: this.queries.ids,
+            process_id: this.queries.process,
+            processable_id: this.queries.able,
             parent_id: this.form.parent_id,
             video_file: this.form.video_file,
             image_pic: this.form.image_file,
