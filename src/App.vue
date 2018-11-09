@@ -25,11 +25,13 @@
         loading: true,
         token: '',
         path: '',
+        query: '',
       };
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
         this.path = from.path;
+        this.query = this.$route.query;
         if (to === '/') {
           this.closeDD();
         }
@@ -85,7 +87,7 @@
           this.loading = true;
           this.personalGet().then(res => {
             this.loading = !res;
-            this.$router.push({path: this.path});
+            this.$router.push({path: this.path, query: this.query});
           });
         }
         let that = this;
