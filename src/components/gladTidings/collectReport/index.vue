@@ -1,6 +1,7 @@
 <template>
   <div id="collectReport">
     <div class="main" id="main">
+      {{hhhhhh}}
       <van-cell-group>
         <van-field
           v-model="form.house.name"
@@ -505,7 +506,7 @@
 
         corp: true,                    //公司单
         cusFrom: '',           //是否中介
-
+        hhhhhh: '',
         form: {
           id: '',
           processable_id: '',
@@ -966,6 +967,7 @@
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+            this.hhhhhh = res.data;
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50110' || res.data.code === '50130') {
@@ -982,6 +984,7 @@
               Toast(res.data.msg);
             }
           }).catch((error) => {
+            this.hhhhhh = JSON.stringify(error);
             this.haveInHand = true;
             if (error.response === undefined) {
               this.alertMsg('net');
