@@ -78,12 +78,12 @@
               <div class="commentTitle">
                 <div class="staff">
                   <p>
-                    <img :src="key.users.avatar" v-if="key.users.avatar">
+                    <img :src="key.user.avatar" v-if="key.user.avatar">
                     <img src="../../../assets/head.png" v-else>
                   </p>
                   <div>
-                    {{key.users.name}}
-                    <span class="a" v-for="(item,index) in key.users.org" v-if="index === 0">
+                    {{key.user.name}}
+                    <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
                       -{{item.name}}
                     </span>
                   </div>

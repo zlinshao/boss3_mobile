@@ -397,7 +397,12 @@
                 if (data[i].content.house) {
                   user.house_name = data[i].content.house.name;
                 } else {
-                  user.house_name = '/';
+                  if (data[i].content.house_address) {
+                    user.house_name = data[i].content.house_address;
+                  } else {
+                    user.house_name = '/';
+                  }
+
                 }
                 if (data[i].content.money_sum) {
                   user.money_sum = data[i].content.money_sum;
