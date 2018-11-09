@@ -535,6 +535,7 @@
     },
     mounted() {
       let count = sessionStorage.count;
+      this.hhhhhh = sessionStorage.personal;
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
@@ -891,7 +892,6 @@
               Toast(res.data.msg);
             }
           }).catch((error) => {
-            this.hhhhhh = JSON.stringify(error);
             this.haveInHand = true;
             if (error.response === undefined) {
               this.alertMsg('net');
