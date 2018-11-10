@@ -214,14 +214,7 @@
       // 确认评论
       manager(val) {
         if (this.queries.detail !== 'to_comment') {
-          console.log(1)
           this.sure(val);
-          console.log(2)
-          if (this.form.content !== '' || this.form.image_pic.length !== 0) {
-            console.log(3)
-            this.comment(val);
-            console.log(4)
-          }
         } else {
           if (this.form.content !== '' || this.form.image_pic.length !== 0) {
             this.comment(val);
@@ -267,6 +260,8 @@
         this.$http.post(this.urls + 'workflow/process/trans/' + this.queries.ids, {
           operation: this.queries.detail,
         }).then((res) => {
+          this.haveInHand = true;
+          this.flowPath(val);
           this.retry = 0;
           if (res.data.code === '20000') {
             if (val === 1) {
@@ -277,16 +272,14 @@
               $('.imgItem').remove();
             }
             Toast.success(res.data.msg);
-            this.haveInHand = true;
           } else {
             Toast(res.data.msg);
-            this.haveInHand = true;
           }
         }).catch((error) => {
           this.haveInHand = true;
+          this.flowPath(val);
           if (error.response === undefined) {
             this.alertMsg('net');
-
           } else {
             if (error.response.status === 401) {
               this.personalGet().then((data) => {
@@ -300,18 +293,19 @@
           }
         })
       },
+      flowPath(val) {
+        if (this.form.content !== '' || this.form.image_pic.length !== 0) {
+          this.comment(val);
+        }
+      },
       comment() {
-        console.log(5)
         if (this.picStatus === 'err') {
-          console.log(6)
           Toast(this.alertMsg('errPic'));
           return;
         } else if (this.picStatus === 'lose') {
-          console.log(7)
           Toast(this.alertMsg('pic'));
           return;
         }
-        console.log(8)
         if (this.haveInHand) {
           this.haveInHand = false;
           this.$http.post(this.urls + 'workflow/process/comment', {
@@ -324,13 +318,9 @@
             image_pic: this.form.image_file,
           }).then((res) => {
             this.retry = 0;
-            console.log(9)
             if (res.data.code === '20000') {
-              console.log(10)
               if (this.queries.detail === 'to_comment') {
-                console.log(11)
                 this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
-                console.log(12)
                 Toast.success(res.data.msg);
               }
               this.close_();
