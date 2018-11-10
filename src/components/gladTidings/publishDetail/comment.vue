@@ -80,7 +80,7 @@
           obj_id: '',
           content: '',
           video_file: [],
-          image_file: [],
+          image_pic: [],
         },
         forms: {
           is_electric_appliance: 1,     //家电是否齐全
@@ -315,7 +315,7 @@
             processable_id: this.queries.able,
             parent_id: this.form.parent_id,
             video_file: this.form.video_file,
-            image_pic: this.form.image_file,
+            image_pic: this.form.image_pic,
           }).then((res) => {
             this.retry = 0;
             if (res.data.code === '20000') {
