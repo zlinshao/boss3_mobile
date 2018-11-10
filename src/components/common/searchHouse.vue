@@ -128,7 +128,7 @@
       },
     },
     computed: {
-      
+
     },
     methods: {
       // 滚动条
@@ -172,7 +172,7 @@
       },
       // 取消
       onCancel() {
-        this.routerLink(this.path)
+        this.routLink(this.path);
       },
       // 确定
       sureRouter(path, key) {

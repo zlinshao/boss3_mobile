@@ -1,7 +1,6 @@
 <template>
   <div id="dataCount">
-    <div class="module" v-if="loading"></div>
-    <div class="loading" v-if="loading">
+    <div class="module" v-if="loading">
       <img src="../../../assets/data_count.jpg">
     </div>
     <div v-if="!loading">
@@ -83,7 +82,7 @@
               placeholder="请填写收房中介费"
               required>
             </van-field>
-            
+
             <van-field
               v-if="rentType === '0'"
               v-model="formatData.lord_pay_way"
@@ -187,7 +186,7 @@
               <div class="result2 collect">
                 <div class="title">收房人</div>
                 <div v-for="key in Object.keys(showData)"
-                    :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
+                     :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
                   <span v-if="lordData[key]">{{lordData[key]}}</span>
                   <span v-else>/</span>
                 </div>
@@ -197,7 +196,7 @@
               <div class="result2 renter">
                 <div class="title">租房人</div>
                 <div v-for="key in Object.keys(showData)"
-                    :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
+                     :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
                   <span v-if="rentData[key]">{{rentData[key]}}</span>
                   <span v-else>/</span>
                 </div>
@@ -207,7 +206,7 @@
               <div class="result2 all">
                 <div class="title">合计</div>
                 <div v-for="key in Object.keys(showData)"
-                    :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
+                     :class="{'colorRed': key === 'real_money' || key === 'extra_award'}">
                   <span v-if="allData[key]">{{allData[key]}}</span>
                   <span v-else>/</span>
                 </div>
@@ -309,9 +308,7 @@
           dataKey: '',                  //字段区分
           lord_pay_way: '',             //收房付款方式
         },
-        form: {
-
-        },
+        form: {},
         manager: {},
         warden: {},
         lordData: {},
@@ -326,9 +323,11 @@
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        setTimeout(() => vm.loading = false,2000)
+        if (from.path === '/index') {
+          vm.loading = true;
+        }
+        setTimeout(() => vm.loading = false, 1500);
         let detail = vm.$store.state.app.searchDetail;
-        console.log(detail)
         if (Object.keys(detail).length > 0) {
           switch (from.path) {
             case '/searchHouse':
@@ -344,28 +343,16 @@
         }
       })
     },
-    beforeRouteLeave(to, form ,next){
-      if(to.name === 'index'){
-        this.loading = true;
-      }
-      next();
-    },
     created() {
       this.showData = JSON.parse(JSON.stringify(rentTitle_calculate));
-      this.goBack('/');
     },
     mounted() {
-      Array.from(document.getElementsByTagName('input')).forEach(function(item){
-        item.removeEventListener('keypress', function(){
-          console.log(111)
-        }, false);
-        console.log('done')
-      })
-      this.emptyForm()
+      this.emptyForm();
       this.address = 'salary/achievement_counter/getCounter';
       this.getScale(1);
     },
     activated() {
+      this.goBack('/index');
     },
     watch: {
       rentType(val) {
@@ -441,7 +428,6 @@
       },
       //跳到搜索框
       searchSelect(val) {
-        console.log(this.$router)
         switch (val) {
           case 'house':
             this.routLink('/searchHouse', {type: 'lord'});
@@ -565,7 +551,7 @@
         this.showContentVal(1);
         this.formatData.lord_pay_way = '';
         this.form = {};
-         this.form.counter = 400000;
+        this.form.counter = 400000;
         this.form.comm_rate = 100;
         this.form.rent_return_day = 0;
         this.form.rent_return_money = 0;
@@ -591,26 +577,27 @@
 
   #dataCount {
     overflow-x: hidden;
-    // .module, .loading {
-    //   position: fixed;
-    // }
-
-    // .module {
-    //   left: 0;
-    //   right: 0;
-    //   top: 0;
-    //   bottom: 0;
-    //   background: #f1f1f1;
-    // }
-
-    .loading {
-      height: 100%;
-      width: 100%;
-      img{
+    .module {
+      position: fixed;
+      display: flex;
+      display: -webkit-flex;
+      align-items: flex-end;
+      img {
+        min-width: 100%;
         max-width: 100%;
-        max-height: 100%;
+        min-height: 100%;
       }
     }
+
+    .module {
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: #f1f1f1;
+      overflow: hidden;
+    }
+
     .dataMain {
       padding-bottom: 1.2rem;
     }
@@ -627,9 +614,9 @@
       .radioRent {
         display: flex;
         display: -webkit-flex;
-        margin-left:-.42rem;
+        margin-left: -.42rem;
         div + div {
-          margin-left: .6rem;
+          margin-left: .3rem;
         }
       }
     }
@@ -739,7 +726,7 @@
         div {
           color: red;
         }
-        .title{
+        .title {
           color: #616161;
         }
       }
