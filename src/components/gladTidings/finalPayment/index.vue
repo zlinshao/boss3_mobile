@@ -692,6 +692,9 @@
           this.form.receipt = receipt;
           this.form.draft = val;
           this.form.is_other_fee = this.other_fee_status ? 1 : 0;
+          this.emptyPic(this.form.screenshot, 'screenshot');
+          this.emptyPic(this.form.screenshot_leader, 'screenshot_leader');
+          this.emptyPic(this.form.deposit_photo, 'deposit_photo');
           this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -731,7 +734,22 @@
           Toast(this.alertMsg('sub'));
         }
       },
-
+      emptyPic(val, key) {
+        console.log(val);
+        console.log(key);
+        let data = [];
+        if (val.length !== 0) {
+          val.forEach(item => {
+            console.log(item);
+            if (item && item !== 'null') {
+              console.log(item);
+              data.push(item);
+            }
+          });
+          console.log(data);
+          this.form[key] = data;
+        }
+      },
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
