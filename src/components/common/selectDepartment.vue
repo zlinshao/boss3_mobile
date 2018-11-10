@@ -4,7 +4,7 @@
       <div class="breadcrumb_box">
         <div class="breadcrumb">
           <div>
-            <span @click="breadcrumbSearch(1,0)">{{highestDepart}}</span>
+            <span @click="breadcrumbSearch(ids, 0)">{{highestDepart}}</span>
           </div>
           <div v-for="(item,index) in breadcrumbList" @click="breadcrumbSearch(item,index)">
             <span>&nbsp;&gt;&nbsp;{{item.name}}</span>
@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="departList">
-        <ul>
+        <ul v-if="organizeList.length !== 0">
           <li v-for="item in organizeList">
             <div class="radio">
               <van-radio :name="item.id" v-model="selectId" @click="selectItem(item)"></van-radio>
@@ -23,6 +23,7 @@
             </div>
           </li>
         </ul>
+        <div v-else class="noDepart">暂无相关部门</div>
       </div>
       <div class="footerIndex">
         <div @click="clearData">清空</div>
@@ -47,6 +48,7 @@
         selectId: '',
         selectDepart: {},
         path: '',
+        ids: '',
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -57,15 +59,17 @@
       })
     },
     activated() {
-      alert(localStorage.personal);
-      this.getDepartment();
+      this.ids = '';
+      // this.ids = JSON.parse(sessionStorage.personal).department_id;
+      this.getDepartment(this.ids);
     },
     methods: {
       getDepartment(id = 1) {
         this.$http.get(globalConfig.server + 'organization/other/org-tree?id=' + id).then((res) => {
           if (res.data.code === '70050') {
+            console.log(res.data.data);
             this.organizeList = res.data.data.children;
-            if (id === 1) {
+            if (id === this.ids || id === 1) {
               this.highestDepart = res.data.data.name;
             }
           }
@@ -86,7 +90,7 @@
       },
       //面包屑搜索
       breadcrumbSearch(item, index) {
-        if (item === 1) {
+        if (item === this.ids) {
           this.getDepartment(item);
           this.breadcrumbList = [];
         } else {
@@ -177,6 +181,12 @@
           }
         }
       }
+    }
+    .noDepart {
+      color: #aaa;
+      border: none;
+      text-align: center;
+      padding: .3rem;
     }
     .departList {
       height: 77%;
