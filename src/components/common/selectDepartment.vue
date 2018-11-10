@@ -59,7 +59,7 @@
       })
     },
     activated() {
-      this.ids = '';
+      this.ids = 1;
       // this.ids = JSON.parse(sessionStorage.personal).department_id;
       this.getDepartment(this.ids);
     },
