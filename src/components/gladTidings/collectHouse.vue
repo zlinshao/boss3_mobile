@@ -375,9 +375,7 @@
           list.department_id = '';
           list.department_name = '---';
         }
-        console.log(val);
-        console.log(type);
-        if (val.house_res) {
+        if (val.house_res && type === 'allHouse') {
           sessionStorage.setItem('house_res', JSON.stringify(val.house_res));
         } else {
           list.house_res = {};

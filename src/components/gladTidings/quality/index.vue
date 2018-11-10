@@ -915,7 +915,10 @@
           let val = JSON.parse(t.house);
           this.house_name = val.house_name;
           this.form.house_id = val.house_id;
-          this.prefill(val.house_res, 'house');
+          if (val.type === 'allHouse') {
+            let house_res = JSON.parse(sessionStorage.getItem('house_res'));
+            this.prefill(house_res, 'house');
+          }
         }
         if (t.city !== undefined && t.city !== '') {
           let val = JSON.parse(t.city);
