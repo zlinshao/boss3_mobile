@@ -293,6 +293,7 @@ export default {
       data.phone = res.data.phone;
       data.department_name = res.data.org[0].name;
       data.department_id = res.data.org[0].id;
+      data.isCompany = '';
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;
       resolve(true);

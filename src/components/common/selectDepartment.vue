@@ -23,7 +23,8 @@
             </div>
           </li>
         </ul>
-        <div v-else class="noDepart">暂无相关部门</div>
+        <div class="noDepart" v-else-if="noDepart">暂无相关部门</div>
+        <div class="noDepart" v-else><van-loading type="spinner" color="black"/></div>
       </div>
       <div class="footerIndex">
         <div @click="clearData">清空</div>
@@ -48,7 +49,8 @@
         selectId: '',
         selectDepart: {},
         path: '',
-        ids: '',
+        ids: 1,
+        noDepart: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -59,20 +61,27 @@
       })
     },
     activated() {
-      this.ids = 1;
-      // this.ids = JSON.parse(sessionStorage.personal).department_id;
+      let id = JSON.parse(sessionStorage.personal).isCompany;
+      if (id) {
+        Object.values(id).forEach((item) => {
+          if (item > 1) {
+            this.ids = item;
+          }
+        })
+      }
       this.getDepartment(this.ids);
     },
     methods: {
       getDepartment(id = 1) {
+        this.noDepart = false;
         this.$http.get(globalConfig.server + 'organization/other/org-tree?id=' + id).then((res) => {
           if (res.data.code === '70050') {
-            console.log(res.data.data);
             this.organizeList = res.data.data.children;
             if (id === this.ids || id === 1) {
               this.highestDepart = res.data.data.name;
             }
           }
+          this.noDepart = true;
         });
       },
       //搜索下级部门
@@ -187,6 +196,9 @@
       border: none;
       text-align: center;
       padding: .3rem;
+      display: -webkit-flex;
+      display: flex;
+      justify-content: center;
     }
     .departList {
       height: 77%;

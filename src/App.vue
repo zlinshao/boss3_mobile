@@ -4,7 +4,6 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    <div style="margin-top: 2rem;">{{token}}</div>
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -19,7 +18,6 @@
     data() {
       return {
         urls: globalConfig.server,
-        address: globalConfig.attestation,
         value: '',
         showKeyboard: false,
         transitionName: '',
@@ -37,12 +35,12 @@
           }
         }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
-        if (to.meta.index > from.meta.index) {
-          //设置动画名称
-          this.transitionName = 'slide-left';
-        } else {
-          this.transitionName = 'slide-right';
-        }
+        // if (to.meta.index > from.meta.index) {
+        //   //设置动画名称
+        //   this.transitionName = 'slide-left';
+        // } else {
+        //   this.transitionName = 'slide-right';
+        // }
       }
     },
     mounted() {
@@ -146,6 +144,7 @@
             data.phone = info.phone;
             data.department_name = info.department_name[0];
             data.department_id = info.department_id[0];
+            data.isCompany = info.isCompany;
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
             this.loading = false;
