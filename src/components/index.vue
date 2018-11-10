@@ -418,8 +418,8 @@
                   user.staff = '';
                 }
                 user.id = data[i].id;
-                user.place = data[i].place.display_name;
-                user.status = data[i].place.status;
+                user.place = data[i].places.display_name;
+                user.status = data[i].places.status;
                 user.bulletin = data[i].content.bulletin_name;
 
                 this.list.push(user);
