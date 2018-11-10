@@ -287,6 +287,7 @@ export default {
     // 存储个人信息
     Vue.prototype.personalData = function (res, val, resolve) {
       let data = {};
+      alert(JSON.stringify(res.data));
       data.id = res.data.id;
       data.name = res.data.name;
       data.avatar = res.data.avatar;

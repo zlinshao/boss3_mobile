@@ -57,6 +57,7 @@
       })
     },
     activated() {
+      alert(localStorage.personal);
       this.getDepartment();
     },
     methods: {
