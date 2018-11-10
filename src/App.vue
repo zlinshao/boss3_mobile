@@ -29,7 +29,7 @@
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
         if (to.path === '/') {
-          if (navigator.userAgent.indexOf('wxwork') > -1) {
+          if (this.isWeiXin()) {
             window.close();
           } else {
             this.closeDD();
@@ -47,14 +47,11 @@
     mounted() {
       this.paths = this.$router.options.routes;
       this.responses();
-      this.isWeiXin();
-      alert(this.isWeiXin());
     },
     methods: {
       isWeiXin() {
         //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
         let ua = navigator.userAgent.toLowerCase();
-        alert(ua);
         //通过正则表达式匹配ua中是否含有MicroMessenger字符串
         return ua.includes('micromessenger');
       },
@@ -95,7 +92,7 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          if (navigator.userAgent.indexOf('wxwork') > -1) {
+          if (this.isWeiXin()) {
             this.prevent();
           } else {
             this.personalGet().then(res => {
@@ -110,7 +107,7 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              if (navigator.userAgent.indexOf('wxwork') > -1) {
+              if (this.isWeiXin()) {
                 window.close();
               } else {
                 DingTalkPC.device.notification.alert({
