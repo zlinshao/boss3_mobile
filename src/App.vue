@@ -48,6 +48,7 @@
       this.paths = this.$router.options.routes;
       this.responses();
       this.isWeiXin();
+      alert(this.isWeiXin());
     },
     methods: {
       isWeiXin() {
