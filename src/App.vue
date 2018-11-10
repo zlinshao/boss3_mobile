@@ -54,8 +54,9 @@
       isWeiXin() {
         //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
         let ua = navigator.userAgent.toLowerCase();
+        alert(ua);
         //通过正则表达式匹配ua中是否含有MicroMessenger字符串
-        return ua.match(/micromessenger/i) === 'micromessenger';
+        return ua.includes('micromessenger');
       },
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
