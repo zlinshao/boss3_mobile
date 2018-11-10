@@ -4,7 +4,7 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    {{token}}
+    <div style="margin-top: 2rem;">{{token}}</div>
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
