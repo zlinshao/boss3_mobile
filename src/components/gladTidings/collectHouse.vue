@@ -375,11 +375,12 @@
           list.department_id = '';
           list.department_name = '---';
         }
-        if (val.house_res) {
-          list.house_res = val.house_res;
-        } else {
-          list.house_res = {};
-        }
+        console.log(val)
+        // if (val.house_res) {
+        //   list.house_res = val.house_res;
+        // } else {
+        //   list.house_res = {};
+        // }
         this.houseList.push(list);
         this.finish(4);
       },
