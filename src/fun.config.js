@@ -1,4 +1,5 @@
 import {md5} from './assets/js/MD5.js'
+
 export default {
   install(Vue, options) {
     Vue.prototype.routerIndex = function (url, house, id) {
@@ -181,6 +182,7 @@ export default {
       return new Promise((resolve, reject) => {
         val.timestamp = new Date().getTime();
         val.nonceStr = md5(val.corpid + val.timestamp);
+        alert(JSON.stringify(val));
         this.$http.get(globalConfig.server + 'organization/wework-bulletin', {
           params: val,
         }).then(res => {
@@ -192,7 +194,7 @@ export default {
             timestamp: val.timestamp, // 必填，生成签名的时间戳
             nonceStr: val.nonceStr, // 必填，生成签名的随机串
             signature: res.data.data.signature,// 必填，签名，见附录1
-            jsApiList: ['onHistoryBack','hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            jsApiList: ['onHistoryBack', 'hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
           alert(JSON.stringify({
             beta: true,// 必须这么写，否则wx.invoke调用形式的jsapi会有问题
@@ -201,8 +203,8 @@ export default {
             timestamp: val.timestamp, // 必填，生成签名的时间戳
             nonceStr: val.nonceStr, // 必填，生成签名的随机串
             signature: res.data.data.signature,// 必填，签名，见附录1
-            jsApiList: ['onHistoryBack','hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-          }));
+            jsApiList: ['onHistoryBack', 'hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          }), 1, JSON.stringify(val));
           resolve(true);
         }).catch(err => {
           resolve(false);
