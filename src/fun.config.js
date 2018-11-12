@@ -186,7 +186,7 @@ export default {
           let appId = val.corpid;
           let ticket = res.data.data.ticket;
           let time = new Date().getTime();
-          let nonceStr = md5(appId + token + time);
+          let nonceStr = md5(appId + ticket + time);
           alert(appId);
           alert(ticket);
           alert(time);
