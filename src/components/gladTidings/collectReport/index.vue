@@ -595,8 +595,8 @@
       this.getNowFormatDate();
       let count = sessionStorage.count;
       if (count === '11') {
-        this.routerIndex('');
-        this.ddRent('');
+        this.goBack('/index');
+
         this.close_();
         this.dicts('');
       }
@@ -606,12 +606,12 @@
       this.counts = count;
 
       if (count === '11') {
-        this.routerIndex('');
-        this.ddRent('');
+        this.goBack('/index');
+
       }
       if (count === '1') {
-        this.routerIndex('');
-        this.ddRent('');
+        this.goBack('/index');
+
         this.close_();
         this.dicts('');
         count = count + '1';
@@ -624,8 +624,8 @@
           this.routerTo('/publishDetail', newID.ids);
         } else {
           this.counts = '1';
-          this.routerIndex('');
-          this.ddRent('');
+          this.goBack('/index');
+
         }
       }
       if (count === '2') {
@@ -637,8 +637,8 @@
         } else {
           this.counts = '1';
           this.close_();
-          this.routerIndex('');
-          this.ddRent('');
+          this.goBack('/index');
+
         }
         this.close_();
         this.dicts(newID);
