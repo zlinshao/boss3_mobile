@@ -126,11 +126,15 @@
         let query = this.$route.query;
         let ojb = {};
         ojb.corpid = query.appid;
-        ojb.corpsecret = query.secret ;
+        ojb.corpsecret = query.secret;
         this.weiChatAuth(ojb).then(res => {
           this.token = res;
           wx.ready(function () {
             wx.hideOptionMenu();
+          });
+          wx.error(function (res) {
+            alert(1);
+            alert(JSON.stringify(res))
           });
         });
         let redirectUrl = window.location.href;
