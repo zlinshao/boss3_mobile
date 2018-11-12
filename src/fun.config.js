@@ -184,11 +184,11 @@ export default {
           params: val,
         }).then(res => {
           let appId = val.corpid;
-          let token = res.data.data.token;
+          let ticket = res.data.data.ticket;
           let time = new Date().getTime();
           let nonceStr = md5(appId + token + time);
           alert(appId);
-          alert(token);
+          alert(ticket);
           alert(time);
           alert(nonceStr);
           wx.config({
@@ -197,7 +197,7 @@ export default {
             appId: appId, // 必填，企业微信的corpID
             timestamp: time, // 必填，生成签名的时间戳
             nonceStr: nonceStr, // 必填，生成签名的随机串
-            signature: token,// 必填，签名，见附录1
+            signature: ticket,// 必填，签名，见附录1
             jsApiList: ['onHistoryBack','hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
           resolve(true);
