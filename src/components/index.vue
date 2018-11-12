@@ -363,6 +363,7 @@
         this.params = {};
         this.params.page = val;
         this.params.type = active;
+        this.params.limit = 12;
         switch (active) {
           case 1:
           case 2:
@@ -401,7 +402,6 @@
                   } else {
                     user.house_name = '/';
                   }
-
                 }
                 if (data[i].content.money_sum) {
                   user.money_sum = data[i].content.money_sum;
@@ -421,14 +421,16 @@
                 user.place = data[i].places.display_name;
                 user.status = data[i].places.status;
                 user.bulletin = data[i].content.bulletin_name;
-
                 this.list.push(user);
               }
             } else {
               this.disabled = true;
             }
           } else {
-            this.paging = 0;
+            this.disabled = true;
+            if (this.params.page !== 1) {
+              this.paging = 0;
+            }
           }
         })
       },
