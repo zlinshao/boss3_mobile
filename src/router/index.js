@@ -193,23 +193,23 @@ export default new Router({
       meta: {title: '租房报备'},
       component: RentReport
     },
-    // {
-    //   path: '/changeRent',                 //转租报备
-    //   name: '转租报备',
-    //   hidden: 'glad',
-    //   back: '#E3705B',
-    //   icon: 'iconfont icon-zhuanzubaobei',
-    //   meta: {title: '转租报备'},
-    //   component: ChangeRent
-    // },
-    // {
-    //   path: '/transferReport',              //调房报备
-    //   name: '调房报备',
-    //   hidden: 'glad',
-    //   icon: 'iconfont icon-tiaofang',
-    //   meta: {title: '调房报备'},
-    //   component: TransferReport
-    // },
+    {
+      path: '/changeRent',                 //转租报备
+      name: '转租报备',
+      hidden: 'glad',
+      back: '#E3705B',
+      icon: 'iconfont icon-zhuanzubaobei',
+      meta: {title: '转租报备'},
+      component: ChangeRent
+    },
+    {
+      path: '/transferReport',              //调房报备
+      name: '调房报备',
+      hidden: 'glad',
+      icon: 'iconfont icon-tiaofang',
+      meta: {title: '调房报备'},
+      component: TransferReport
+    },
     {
       path: '/continueCollect',              //续收报备
       name: '续收报备',
