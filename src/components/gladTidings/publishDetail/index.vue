@@ -457,7 +457,7 @@
         num = val.indexOf('approved') > -1 ? index : 2;
         this.$router.push({
           path: '/comment',
-          query: {detail: val, process: this.process.id, ids: this.ids, marking: num}
+          query: {detail: val, process: this.process.id, able: this.process.processable_id, ids: this.ids, marking: num}
         });
       },
       //确认订单类型是否需要生成电子收据
