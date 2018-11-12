@@ -130,9 +130,7 @@
         this.weiChatAuth(ojb).then(res => {
           this.token = res;
           wx.ready(function () {
-            alert(2)
             wx.hideOptionMenu();
-            alert(3)
           });
         });
         let redirectUrl = window.location.href;
