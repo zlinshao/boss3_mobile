@@ -316,9 +316,9 @@
       },
       // 待办事项
       toDone() {
-        // this.$http.get(this.urls + 'process?type=2&count=1').then((res) => {
-        //   this.processType2 = res.data.data;
-        // })
+        this.$http.get(this.urls + 'workflow/process?type=2&only_count=1').then((res) => {
+          this.processType2 = res.data.data.count;
+        })
       },
       // 详情页
       routeDetail(id) {

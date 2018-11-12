@@ -21,7 +21,7 @@
         </div>
         <div class="pic">
           <div class="title">图片</div>
-          <UpLoad :ID="'image_file'" @getImg="getImgData" :isClear="isClear"></UpLoad>
+          <UpLoad :ID="'image_pic'" @getImg="getImgData" :isClear="isClear"></UpLoad>
         </div>
         <div v-if="queries.marking === 1">
           <van-cell-group>
@@ -353,7 +353,7 @@
       },
       getImgData(val) {
         this.picStatus = val[2];
-        this.form.image_file = val[1];
+        this.form.image_pic = val[1];
       },
 
       close_() {
@@ -362,7 +362,7 @@
           this.isClear = false;
         });
         this.form.content = '';
-        this.form.image_file = [];
+        this.form.image_pic = [];
       },
 
       ddBack(val, urls) {
