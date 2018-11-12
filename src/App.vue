@@ -123,6 +123,14 @@
       },
       prevent() {
         let query = this.$route.query;
+        this.weiChatAuth(query.appid).then(res => {
+          alert(1)
+          wx.ready(function () {
+            alert(2)
+            wx.hideOptionMenu();
+            alert(3)
+          });
+        });
         let redirectUrl = window.location.href;
         redirectUrl = encodeURIComponent(redirectUrl);
         if (!query.code) {
@@ -151,11 +159,6 @@
           }
         }).catch(err => {
           this.token = JSON.stringify(err);
-        });
-        this.weiChatAuth(val.appid).then(res => {
-          wx.ready(function () {
-            wx.hideOptionMenu();
-          });
         });
       },
       onInput(key) {
