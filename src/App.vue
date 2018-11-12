@@ -124,9 +124,9 @@
       },
       prevent() {
         let query = this.$route.query;
-        let redirectUrl = window.location.href;
-        redirectUrl = encodeURIComponent(redirectUrl);
-        alert(redirectUrl.split('#')[0]);
+        let url = window.location.href;
+        let redirectUrl = encodeURIComponent(url);
+        let objUrl = encodeURIComponent(url.split('#')[0]);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
@@ -134,7 +134,7 @@
           let ojb = {};
           ojb.corpid = query.appid;
           ojb.corpsecret = query.secret;
-          ojb.url = redirectUrl;
+          ojb.url = objUrl;
           this.weiChatAuth(ojb).then(res => {
             this.token = res;
             wx.ready(function () {
