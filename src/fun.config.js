@@ -180,7 +180,7 @@ export default {
     Vue.prototype.weiChatAuth = function (val) {
       return new Promise((resolve, reject) => {
         alert(123)
-        this.$http.get(this.urls + 'organization/wework-bulletin', {
+        this.$http.get(globalConfig.server + 'organization/wework-bulletin', {
           params: val,
         }).then(res => {
           alert(456)
