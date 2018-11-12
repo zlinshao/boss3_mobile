@@ -184,11 +184,11 @@ export default {
           params: val,
         }).then(res => {
           let appId = val.corpid;
-          let token = res.data.data;
+          let token = res.data.data.token;
           let time = new Date().getTime();
           let nonceStr = md5(appId + token + time);
           alert(appId);
-          alert(JSON.stringify(token));
+          alert(token);
           alert(time);
           alert(nonceStr);
           wx.config({
