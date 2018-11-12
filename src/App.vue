@@ -123,7 +123,7 @@
       },
       prevent() {
         let query = this.$route.query;
-        this.weiChatAuth(query.appid).then(res => {
+        this.weiChatAuth(query).then(res => {
           alert(1)
           wx.ready(function () {
             alert(2)
