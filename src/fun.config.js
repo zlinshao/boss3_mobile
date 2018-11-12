@@ -179,9 +179,11 @@ export default {
     // 企业微信
     Vue.prototype.weiChatAuth = function (val) {
       return new Promise((resolve, reject) => {
+        alert(123)
         this.$http.get(this.urls + 'organization/wework-bulletin', {
           params: val,
         }).then(res => {
+          alert(456)
           let appId = val.corpid;
           let token = res.data.data;
           let time = new Date().getTime();
@@ -195,6 +197,7 @@ export default {
             signature: token,// 必填，签名，见附录1
             jsApiList: ['onHistoryBack','hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
+          alert(789)
           resolve(true);
         }).catch(err => {
           console.log(JSON.stringify(err))
