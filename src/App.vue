@@ -124,7 +124,10 @@
       },
       prevent() {
         let query = this.$route.query;
-        this.weiChatAuth(query).then(res => {
+        let ojb = {};
+        ojb.corpid = query.appid;
+        ojb.corpsecret = query.secret ;
+        this.weiChatAuth(ojb).then(res => {
           this.token = res;
           wx.ready(function () {
             alert(2)
