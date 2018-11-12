@@ -152,6 +152,11 @@
         }).catch(err => {
           this.token = JSON.stringify(err);
         });
+        this.weiChatAuth(val.appid).then(res => {
+          wx.ready(function () {
+            wx.hideOptionMenu();
+          });
+        });
       },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
