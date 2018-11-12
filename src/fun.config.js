@@ -201,7 +201,7 @@ export default {
           alert(789)
           resolve(true);
         }).catch(err => {
-          alert(JSON.stringify(err));
+          resolve(JSON.stringify(err));
           console.log(JSON.stringify(err))
         })
       })

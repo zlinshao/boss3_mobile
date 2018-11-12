@@ -4,6 +4,7 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
+    {{token}}
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -124,7 +125,7 @@
       prevent() {
         let query = this.$route.query;
         this.weiChatAuth(query).then(res => {
-          alert(1)
+          this.token = res;
           wx.ready(function () {
             alert(2)
             wx.hideOptionMenu();
@@ -144,7 +145,7 @@
         this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           if (res.data.success) {
             let info = res.data.data;
-            this.token = JSON.stringify(info);
+            // this.token = JSON.stringify(info);
             let data = {};
             data.id = info.id;
             data.name = info.name;
@@ -158,7 +159,7 @@
             this.loading = false;
           }
         }).catch(err => {
-          this.token = JSON.stringify(err);
+          // this.token = JSON.stringify(err);
         });
       },
       onInput(key) {
