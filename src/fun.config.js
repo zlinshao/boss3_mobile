@@ -188,7 +188,7 @@ export default {
           let time = new Date().getTime();
           let nonceStr = md5(appId + token + time);
           alert(appId);
-          alert(token);
+          alert(JSON.stringify(token));
           alert(time);
           alert(nonceStr);
           wx.config({
