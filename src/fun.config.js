@@ -181,7 +181,6 @@ export default {
       return new Promise((resolve, reject) => {
         val.timestamp = new Date().getTime();
         val.nonceStr = md5(val.corpid + val.timestamp);
-        val.url = window.location.href;
         this.$http.get(globalConfig.server + 'organization/wework-bulletin', {
           params: val,
         }).then(res => {

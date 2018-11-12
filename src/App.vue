@@ -124,21 +124,22 @@
       },
       prevent() {
         let query = this.$route.query;
-        let ojb = {};
-        ojb.corpid = query.appid;
-        ojb.corpsecret = query.secret;
-        this.weiChatAuth(ojb).then(res => {
-          this.token = res;
-          wx.ready(function () {
-            wx.hideOptionMenu();
-          });
-        });
         let redirectUrl = window.location.href;
         redirectUrl = encodeURIComponent(redirectUrl);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
           this.getUserId(query);
+          let ojb = {};
+          ojb.corpid = query.appid;
+          ojb.corpsecret = query.secret;
+          ojb.url = redirectUrl;
+          this.weiChatAuth(ojb).then(res => {
+            this.token = res;
+            wx.ready(function () {
+              wx.hideOptionMenu();
+            });
+          });
         }
       },
       // 获取uid
