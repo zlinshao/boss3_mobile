@@ -132,13 +132,9 @@
           wx.ready(function () {
             wx.hideOptionMenu();
           });
-          wx.error(function (res) {
-            alert(1);
-            alert(JSON.stringify(res))
-          });
         });
         let redirectUrl = window.location.href;
-        alert(redirectUrl)
+        alert(redirectUrl);
         redirectUrl = encodeURIComponent(redirectUrl);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
