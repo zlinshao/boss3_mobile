@@ -234,7 +234,7 @@
             this.dercarriage = false;
           }
         }).catch(_ => {
-          alert(111)
+
         })
       },
       assist(id) {
@@ -247,7 +247,7 @@
             }
           }
         }).catch(_ => {
-          alert(222)
+
         })
       },
       comment(val) {
@@ -279,7 +279,7 @@
             this.commentList = [];
           }
         }).catch(_ => {
-          alert(333)
+
         })
       },
       pics(val, index) {
