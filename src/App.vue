@@ -147,7 +147,7 @@
           //     wx.hideOptionMenu();
           //   });
           // });
-        }
+        // }
       },
       // 获取uid
       getUserId(val) {
