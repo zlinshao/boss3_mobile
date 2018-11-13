@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading"></div>
+    <div class="module" v-if="loading" style="overflow: auto">
+      <div>{{token}}</div><div>{{token1}}</div>
+    </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
+    <div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -13,47 +16,48 @@
 </template>
 
 <script>
-
+  // import {md5} from './assets/js/MD5.js'
   export default {
     data() {
       return {
         urls: globalConfig.server,
-        address: globalConfig.attestation,
         value: '',
         showKeyboard: false,
         transitionName: '',
         loading: true,
         token: '',
+        token1: '',
       };
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
         if (to.path === '/') {
-          if (navigator.userAgent.indexOf('wxwork') > -1) {
+          if (this.isWeiXin()) {
             window.close();
           } else {
             this.closeDD();
           }
         }
         //如果to索引大于from索引,判断为前进状态,反之则为后退状态
-        if (to.meta.index > from.meta.index) {
-          //设置动画名称
-          this.transitionName = 'slide-left';
-        } else {
-          this.transitionName = 'slide-right';
-        }
+        // if (to.meta.index > from.meta.index) {
+        //   //设置动画名称
+        //   this.transitionName = 'slide-left';
+        // } else {
+        //   this.transitionName = 'slide-right';
+        // }
       }
     },
     mounted() {
       this.paths = this.$router.options.routes;
-      DingTalkPC.device.notification.alert({
-        message: window.location.href,
-        title: "提示信息",
-        buttonName: "关闭",
-      });
       this.responses();
     },
     methods: {
+      isWeiXin() {
+        //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
+        let ua = navigator.userAgent.toLowerCase();
+        //通过正则表达式匹配ua中是否含有MicroMessenger字符串
+        return ua.includes('micromessenger');
+      },
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           let type, token;
@@ -78,7 +82,6 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -91,7 +94,7 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          if (navigator.userAgent.indexOf('wxwork') > -1) {
+          if (this.isWeiXin()) {
             this.prevent();
           } else {
             this.personalGet().then(res => {
@@ -106,12 +109,16 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              DingTalkPC.device.notification.alert({
-                message: "服务器故障,请联系产品经理~",
-                title: "提示信息",
-                buttonName: "关闭",
-              });
-              that.closeDD();
+              if (this.isWeiXin()) {
+                window.close();
+              } else {
+                DingTalkPC.device.notification.alert({
+                  message: "服务器故障,请联系产品经理~",
+                  title: "提示信息",
+                  buttonName: "关闭",
+                });
+                that.closeDD();
+              }
             }
           }
           return Promise.reject(error);
@@ -119,19 +126,35 @@
       },
       prevent() {
         let query = this.$route.query;
-        let redirectUrl = window.location.href;
-        redirectUrl = encodeURIComponent(redirectUrl);
+        let url = window.location.href;
+        let redirectUrl = encodeURIComponent(url);
+        let objUrl = encodeURIComponent(url.split('#')[0]);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
           this.getUserId(query);
+          // let obj = {};
+          // obj.corpid = query.appid;
+          // obj.corpsecret = query.secret;
+          // obj.url = objUrl;
+          // obj.timestamp = Math.round(new Date().getTime()/1000).toString();
+          // obj.nonceStr = md5(obj.corpid + obj.timestamp);
+          // this.weiChatAuth().then(_ => {
+          //   this.token1 = _;
+          //   wx.ready(function () {
+          //     wx.hideOptionMenu();
+          //   });
+          // });
         }
+        this.token = window.location.href;
       },
       // 获取uid
       getUserId(val) {
+        this.token1 = val;
         this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           if (res.data.success) {
             let info = res.data.data;
+            // this.token = info;
             let data = {};
             data.id = info.id;
             data.name = info.name;
@@ -139,12 +162,13 @@
             data.phone = info.phone;
             data.department_name = info.department_name[0];
             data.department_id = info.department_id[0];
+            data.isCompany = info.isCompany;
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
             this.loading = false;
           }
         }).catch(err => {
-          this.token = JSON.stringify(err);
+          // this.token = JSON.stringify(err);
         });
       },
       onInput(key) {
