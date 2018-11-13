@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading">
-      <div>{{token}}</div><div>{{token1}}</div>
+      <!--<div>{{token}}</div><div>{{token1}}</div>-->
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    <div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>
+    <!--<div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>-->
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -108,7 +108,6 @@
         }, function (error) {
           if (error && error.response) {
             if (error.response.status > 499) {
-              that.token = JSON.stringify(error);
               alert('服务器故障,请联系产品经理~');
               if (this.isWeiXin()) {
                 window.close();

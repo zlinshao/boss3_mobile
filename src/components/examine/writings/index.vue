@@ -165,6 +165,7 @@
       this.assistId = false;
       this.commentsShow = true;
       this.pitch = this.$route.query.id;
+      alert(this.pitch);
       this.contentDetail(this.pitch);
       this.commentList = [];
       this.loadComments();
