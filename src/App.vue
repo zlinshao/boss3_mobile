@@ -95,7 +95,6 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           if (this.isWeiXin()) {
-            alert(2)
             alert(window.location.href);
             this.prevent();
           } else {

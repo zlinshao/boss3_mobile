@@ -68,8 +68,6 @@ axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
-  alert(1)
-  alert(window.location.href);
   next();
 });
 
