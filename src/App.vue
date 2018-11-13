@@ -129,19 +129,18 @@
       },
       prevent() {
         let query = this.$route.query;
-        let url = window.location.href;
-        let redirectUrl = encodeURIComponent(url);
-        let objUrl = encodeURIComponent(url.split('#')[0]);
+        let redirectUrl = encodeURIComponent(window.location.href);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
+          let objUrl = encodeURIComponent(window.location.href.split('#')[0]);
           this.getUserId(query);
           let obj = {};
-          obj.corpid = 'wwbe1135335baca3f5';
-          obj.corpsecret = 'aVwFqutTU_ACJdYFCJmzuSfdbH_QgdubwrLKk09jdSw';
-          obj.url = 'http%3A%2F%2Ftest.v3.mobile.boss.lejias.cn%2F%3Fappid%3Dwwbe1135335baca3f5%26secret%3DaVwFqutTU_ACJdYFCJmzuSfdbH_QgdubwrLKk09jdSw%26code%3D5PsyLJ9bxOiS1aKVmxV_fqb9hNyqua8oz49U-bqUjxg%26state%3Dlejia';
-          obj.timestamp = '1542111904082';
-          obj.nonceStr = 'DDE04FA5AF4E76D52491568E23562555';
+          obj.corpid = query.appid;
+          obj.corpsecret = query.secret;
+          obj.url = objUrl;
+          obj.timestamp = new Date().getTime();
+          obj.nonceStr = md5(obj.corpid + obj.timestamp);
           this.token = obj;
           this.weiChatAuth(obj).then(_ => {
             this.token1 = _;
