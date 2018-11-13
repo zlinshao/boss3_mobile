@@ -6,7 +6,7 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    <!--<div style="margin-top: 3rem;"><div>{{token1}}</div></div>-->
+    <div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -126,14 +126,15 @@
       },
       prevent() {
         let query = this.$route.query;
-        alert(JSON.stringify(query));
+        this.token = window.location.href;
+        this.token1 = query;
         let url = window.location.href;
         let redirectUrl = encodeURIComponent(url);
         let objUrl = encodeURIComponent(url.split('#')[0]);
-        if (!query.code) {
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
-        } else {
-          this.getUserId(query);
+        // if (!query.code) {
+        //   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        // } else {
+        //   this.getUserId(query);
           // let obj = {};
           // obj.corpid = query.appid;
           // obj.corpsecret = query.secret;
