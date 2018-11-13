@@ -7,6 +7,10 @@
       <img src="./assets/loding1.gif">
     </div>
     <div v-if="!loading">
+      <div style="margin-top: 3rem;">
+        <div>{{token}}</div>
+        <div>{{token1}}</div>
+      </div>
       <keep-alive>
         <router-view/>
       </keep-alive>
@@ -25,6 +29,7 @@
         transitionName: '',
         loading: true,
         token: '',
+        token1: '',
       };
     },
     watch: {//使用watch 监听$router的变化
@@ -80,7 +85,6 @@
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -140,6 +144,7 @@
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
           this.token = obj;
           this.weiChatAuth(obj).then(_ => {
+            this.token1 = _;
             wx.ready(function () {
               wx.hideOptionMenu();
             });
