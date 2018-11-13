@@ -126,15 +126,14 @@
       },
       prevent() {
         let query = this.$route.query;
-        this.token = window.location.href;
-        this.token1 = query;
         let url = window.location.href;
+        this.token = url;
         let redirectUrl = url;
         let objUrl = encodeURIComponent(url.split('#')[0]);
-        if (!query.code) {
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
-        } else {
-          this.getUserId(query);
+        // if (!query.code) {
+        //   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        // } else {
+        //   this.getUserId(query);
           // let obj = {};
           // obj.corpid = query.appid;
           // obj.corpsecret = query.secret;
@@ -147,7 +146,7 @@
           //     wx.hideOptionMenu();
           //   });
           // });
-        }
+        // }
       },
       // 获取uid
       getUserId(val) {
