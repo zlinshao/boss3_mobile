@@ -6,8 +6,8 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    <div style="margin-top: 3rem;">{{token}}</div>
     <div v-if="!loading">
+      <div style="margin-top: 3rem;">{{token}}</div>
       <keep-alive>
         <router-view/>
       </keep-alive>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-
+  import {md5} from './assets/js/MD5.js'
   export default {
     data() {
       return {
@@ -132,8 +132,8 @@
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
-          alert(objUrl);
-          this.getUserId(query);
+          // alert(objUrl);
+          // this.getUserId(query);
           let obj = {};
           obj.corpid = query.appid;
           obj.corpsecret = query.secret;
@@ -142,7 +142,7 @@
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
           alert(JSON.stringify(obj));
           this.token = obj;
-          this.weiChatAuth(ojb).then(_ => {
+          this.weiChatAuth(obj).then(_ => {
             wx.ready(function () {
               wx.hideOptionMenu();
             });

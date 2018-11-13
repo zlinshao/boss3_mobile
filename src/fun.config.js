@@ -180,8 +180,8 @@ export default {
     // 企业微信
     Vue.prototype.weiChatAuth = function (val) {
       return new Promise((resolve, reject) => {
-        val.timestamp = new Date().getTime();
-        val.nonceStr = md5(val.corpid + val.timestamp);
+        // val.timestamp = new Date().getTime();
+        // val.nonceStr = md5(val.corpid + val.timestamp);
         this.$http.get(globalConfig.server + 'organization/wework-bulletin', {
           params: val,
         }).then(res => {
