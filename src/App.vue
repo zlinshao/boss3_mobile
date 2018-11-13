@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import {md5} from './assets/js/MD5.js'
+  // import {md5} from './assets/js/MD5.js'
   export default {
     data() {
       return {
@@ -126,6 +126,7 @@
       },
       prevent() {
         let query = this.$route.query;
+        alert(JSON.stringify(query));
         let url = window.location.href;
         let redirectUrl = encodeURIComponent(url);
         let objUrl = encodeURIComponent(url.split('#')[0]);
