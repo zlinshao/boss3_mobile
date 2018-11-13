@@ -417,7 +417,8 @@
           }
         })
       },
-      pics(val, index, video) {
+      pics(value, index, video) {
+        let val = value.image_pic;
         let arr = [];
         for (let i = 0; i < val.length; i++) {
           arr.push(val[i].uri);
