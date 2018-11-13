@@ -196,6 +196,7 @@ export default {
             jsApiList: ['onHistoryBack', 'hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
           let hhhh = {};
+          hhhh.datas = res.data.data;
           hhhh.vvv = val;
           hhhh.ccc ={
             beta: true,// 必须这么写，否则wx.invoke调用形式的jsapi会有问题
