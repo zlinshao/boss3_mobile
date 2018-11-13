@@ -348,8 +348,8 @@
       getPic() {
         let update = {show: []};
         update.show = this.albumArray;
-        this.$http.post(globalConfig.server_user + 'files/batch', {'batch': JSON.stringify(update)}).then((res) => {
-          if (res.data.status === 'success') {
+        this.$http.post(globalConfig.server + 'api/v1/batch', {'batch': JSON.stringify(update)}).then((res) => {
+          if (res.data.code === '110100') {
             let imgArray = {};
             res.data.data.forEach((item) => {
               if (item.status === 'success') {
