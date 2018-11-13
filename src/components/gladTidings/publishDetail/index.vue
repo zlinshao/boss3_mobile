@@ -99,7 +99,7 @@
                 <div v-for="(pic,num) in key.album.image_pic">
                   <img v-if="pic.info.ext.indexOf('video') > -1" @click="checkTv(pic.uri)"
                        src="../../../assets/video.jpg">
-                  <img v-else @click="pics(key.album, num, pic.info.ext)" :src="pic.uri">
+                  <img v-else @click="commentPic(key.album, num, pic.info.ext)" :src="pic.uri">
                 </div>
               </div>
             </div>
@@ -417,8 +417,23 @@
           }
         })
       },
-      pics(value, index, video) {
+      commentPic(value, index, video) {
         let val = value.image_pic;
+        let arr = [];
+        for (let i = 0; i < val.length; i++) {
+          arr.push(val[i].uri);
+        }
+        if (this.IsPC()) {
+          this.photo = arr;
+          this.onIndex = index;
+          this.bigPic = arr[index];
+          this.bigPicShow = true;
+          document.getElementsByTagName('body')[0].className = 'showContainer';
+        } else {
+          ImagePreview(arr, index);
+        }
+      },
+      pics(val, index, video) {
         let arr = [];
         for (let i = 0; i < val.length; i++) {
           arr.push(val[i].uri);
