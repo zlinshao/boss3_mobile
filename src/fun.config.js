@@ -209,9 +209,8 @@ export default {
           // };
           resolve(hhhh);
         }).catch(err => {
-          alert(11111)
+          alert(JSON.stringify(err));
           resolve(JSON.stringify(err));
-          console.log(JSON.stringify(err))
         })
       })
     };
