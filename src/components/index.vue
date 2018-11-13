@@ -317,7 +317,11 @@
       // 待办事项
       toDone() {
         this.$http.get(this.urls + 'workflow/process?type=2&only_count=1').then((res) => {
-          this.processType2 = res.data.data.count;
+          if (res.data.code === '20000') {
+            this.processType2 = res.data.data.count;
+          } else {
+            this.processType2 = 0;
+          }
         })
       },
       // 详情页
