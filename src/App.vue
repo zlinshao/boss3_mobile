@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading" style="overflow: auto">
-      <div>{{token}}</div><div>{{token1}}</div>
+    <div class="module" v-if="loading">
+      <!--<div>{{token}}</div><div>{{token1}}</div>-->
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    <div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>
+    <!--<div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>-->
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -95,7 +95,6 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           if (this.isWeiXin()) {
-            alert(window.location.href);
             this.prevent();
           } else {
             this.personalGet().then(res => {
