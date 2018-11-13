@@ -209,7 +209,7 @@ export default {
           // };
           resolve(hhhh);
         }).catch(err => {
-          alert(JSON.stringify(err));
+          alert(err.response.status);
           resolve(JSON.stringify(err));
         })
       })
