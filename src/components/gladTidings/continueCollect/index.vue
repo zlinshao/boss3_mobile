@@ -820,7 +820,7 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              this.routerDetail(res.data.data.id);
+              this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50120') {
               this.form.day = this.form.day === '0' ? '' : this.form.day;
               this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;

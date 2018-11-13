@@ -1065,7 +1065,7 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              this.routerDetail(res.data.data.id);
+              this.routerDetail(res.data.data.data.id);
             } else if (res.data.code === '50220') {
               if (receipt.length === 0) {
                 this.form.receipt = [];
