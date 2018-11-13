@@ -404,7 +404,6 @@
       //字典匹配
       getDictionary() {
         this.$http.get(globalConfig.server + 'setting/dictionary/all').then((res) => {
-          this.all_dic = res.data.data;
           res.data.data.forEach((item) => {
             this.all_dic[item.id] = item.dictionary_name;
           });
