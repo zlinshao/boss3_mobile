@@ -146,15 +146,16 @@
           //   });
           // });
         }
-        this.token = window.location.href;
+        // this.token = window.location.href;
       },
       // 获取uid
       getUserId(val) {
+        alert(JSON.stringify(val));
         this.token1 = val;
         this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           if (res.data.success) {
             let info = res.data.data;
-            // this.token = info;
+            this.token = info;
             let data = {};
             data.id = info.id;
             data.name = info.name;
@@ -165,10 +166,10 @@
             data.isCompany = info.isCompany;
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
-            // this.loading = false;
+            this.loading = false;
           }
         }).catch(err => {
-          // this.token = JSON.stringify(err);
+          this.token = JSON.stringify(err);
         });
       },
       onInput(key) {

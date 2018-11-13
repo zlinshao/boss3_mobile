@@ -29,7 +29,7 @@ axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
-  // next();
+  next();
 });
 
 router.afterEach(route => {
