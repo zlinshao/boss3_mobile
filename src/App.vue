@@ -127,6 +127,7 @@
       prevent() {
         let query = this.$route.query;
         let url = window.location.href;
+        alert(url);
         let redirectUrl = encodeURIComponent(url);
         let objUrl = encodeURIComponent(url.split('#')[0]);
         if (!query.code) {
