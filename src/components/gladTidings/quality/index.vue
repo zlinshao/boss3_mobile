@@ -882,7 +882,11 @@
               this.close_();
               $('.imgItem').remove();
               console.log(res.data.id);
-              this.routerDetail(res.data.data.data.id);
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id);
+              } else {
+                if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              }
             } else if (res.data.code === "51420") {
               this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
