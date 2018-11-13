@@ -168,6 +168,7 @@
       alert(this.pitch);
       this.contentDetail(this.pitch);
       this.commentList = [];
+      alert(this.pitch);
       this.loadComments();
     },
     watch: {},
