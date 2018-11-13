@@ -165,10 +165,8 @@
       this.assistId = false;
       this.commentsShow = true;
       this.pitch = this.$route.query.id;
-      alert(this.pitch);
       this.contentDetail(this.pitch);
       this.commentList = [];
-      alert(this.pitch);
       this.loadComments();
     },
     watch: {},
@@ -235,6 +233,8 @@
             this.undercarriage = true;
             this.dercarriage = false;
           }
+        }).catch(_ => {
+          alert(111)
         })
       },
       assist(id) {
@@ -246,6 +246,8 @@
               this.myData.favor_num++;
             }
           }
+        }).catch(_ => {
+          alert(222)
         })
       },
       comment(val) {
@@ -276,6 +278,8 @@
           } else {
             this.commentList = [];
           }
+        }).catch(_ => {
+          alert(333)
         })
       },
       pics(val, index) {
