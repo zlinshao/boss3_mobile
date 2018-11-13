@@ -129,21 +129,22 @@
       },
       prevent() {
         let query = this.$route.query;
-        let redirectUrl = encodeURIComponent(window.location.href);
+        let url = window.location.href;
+        let redirectUrl = encodeURIComponent(url);
+        let objUrl = encodeURIComponent(url.split('#')[0]);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
-          let objUrl = encodeURIComponent(window.location.href.split('#')[0]);
           this.getUserId(query);
-          let obj = {};
-          obj.corpid = query.appid;
-          obj.corpsecret = query.secret;
-          obj.url = objUrl;
-          obj.timestamp = new Date().getTime();
-          obj.nonceStr = md5(obj.corpid + obj.timestamp);
-          this.token = obj;
-          this.weiChatAuth(obj).then(_ => {
-            this.token1 = _;
+          // let obj = {};
+          // obj.corpid = query.appid;
+          // obj.corpsecret = query.secret;
+          // obj.url = objUrl;
+          // obj.timestamp = new Date().getTime();
+          // obj.nonceStr = md5(obj.corpid + obj.timestamp);
+          // this.token = obj;
+          this.weiChatAuth().then(_ => {
+            // this.token1 = _;
             wx.ready(function () {
               wx.hideOptionMenu();
             });
