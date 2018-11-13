@@ -7,7 +7,7 @@
       <img src="./assets/loding1.gif">
     </div>
     <div style="margin-top: 3rem;">
-      <div>{{token}}</div>
+      <!--<div>{{token}}</div>-->
       <div>{{token1}}</div>
     </div>
     <div v-if="!loading">
