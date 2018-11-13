@@ -139,7 +139,7 @@
           let obj = {};
           obj.corpid = 'wwbe1135335baca3f5';
           obj.corpsecret = 'aVwFqutTU_ACJdYFCJmzuSfdbH_QgdubwrLKk09jdSw';
-          obj.url = '"http%3A%2F%2Ftest.v3.mobile.boss.lejias.cn%2F%3Fappid%3Dwwbe1135335baca3f5%26secret%3DaVwFqutTU_ACJdYFCJmzuSfdbH_QgdubwrLKk09jdSw%26code%3D5PsyLJ9bxOiS1aKVmxV_fqb9hNyqua8oz49U-bqUjxg%26state%3Dlejia';
+          obj.url = 'http%3A%2F%2Ftest.v3.mobile.boss.lejias.cn%2F%3Fappid%3Dwwbe1135335baca3f5%26secret%3DaVwFqutTU_ACJdYFCJmzuSfdbH_QgdubwrLKk09jdSw%26code%3D5PsyLJ9bxOiS1aKVmxV_fqb9hNyqua8oz49U-bqUjxg%26state%3Dlejia';
           obj.timestamp = '1542111904082';
           obj.nonceStr = 'DDE04FA5AF4E76D52491568E23562555';
           this.token = obj;
