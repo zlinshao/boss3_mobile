@@ -7,6 +7,7 @@
       <img src="./assets/loding1.gif">
     </div>
     <div v-if="!loading">
+      <div style="margin-top: 3rem;">{{token}}</div>
       <keep-alive>
         <router-view/>
       </keep-alive>
@@ -137,6 +138,10 @@
           ojb.corpid = query.appid;
           ojb.corpsecret = query.secret;
           ojb.url = objUrl;
+          ojb.timestamp = new Date().getTime();
+          ojb.nonceStr = md5(ojb.corpid + ojb.timestamp);
+          this.token = ojb;
+          return;
           this.weiChatAuth(ojb).then(_ => {
             wx.ready(function () {
               wx.hideOptionMenu();
