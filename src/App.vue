@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading" style="overflow: auto">
-      {{token}}
+      <div>{{token}}</div><div>{{token1}}</div>
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    <!--<div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>-->
+    <div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -128,12 +128,12 @@
         let query = this.$route.query;
         let url = window.location.href;
         this.token = url;
-        let redirectUrl = url;
+        let redirectUrl = encodeURIComponent(url);
         let objUrl = encodeURIComponent(url.split('#')[0]);
-        // if (!query.code) {
-        //   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
-        // } else {
-        //   this.getUserId(query);
+        if (!query.code) {
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        } else {
+          this.getUserId(query);
           // let obj = {};
           // obj.corpid = query.appid;
           // obj.corpsecret = query.secret;
@@ -146,10 +146,11 @@
           //     wx.hideOptionMenu();
           //   });
           // });
-        // }
+        }
       },
       // 获取uid
       getUserId(val) {
+        this.token1 = val;
         this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           if (res.data.success) {
             let info = res.data.data;
@@ -164,7 +165,7 @@
             data.isCompany = info.isCompany;
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
-            // this.loading = false;
+            this.loading = false;
           }
         }).catch(err => {
           // this.token = JSON.stringify(err);
