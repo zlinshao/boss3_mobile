@@ -164,7 +164,7 @@
             data.isCompany = info.isCompany;
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
-            this.loading = false;
+            // this.loading = false;
           }
         }).catch(err => {
           // this.token = JSON.stringify(err);
