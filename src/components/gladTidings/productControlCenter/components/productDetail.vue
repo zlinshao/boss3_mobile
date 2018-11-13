@@ -36,7 +36,7 @@
               <span v-if="detailData.community">{{detailData.community.name}}</span>
               <span>{{detailData.door_address}}</span>
             </h3>
-            <div style="font-size: .2rem;color: #777"  v-if="detailData.community">
+            <div style="font-size: .2rem;color: #777" v-if="detailData.community">
               {{detailData.community.detailed_address}}
             </div>
             <div>
@@ -48,7 +48,7 @@
               <span v-else="">首次出租</span>
             </span>
               <span class="otherInfo" v-if="detailData.house_feature">
-              {{matchDictionary(detailData.house_feature)}}
+              {{all_dic[detailData.house_feature]}}
             </span>
             </div>
           </div>
@@ -70,7 +70,9 @@
         <div class="content_other">
           <div>{{detailData.area}}</div>
           <div v-if="detailData.floor">{{detailData.floor.this}}/{{detailData.floor.all}}层</div>
-          <div v-if="detailData.house_type">{{detailData.house_type[0]}}室{{detailData.house_type[1]}}厅{{detailData.house_type[2]}}卫</div>
+          <div v-if="detailData.house_type">
+            {{detailData.house_type[0]}}室{{detailData.house_type[1]}}厅{{detailData.house_type[2]}}卫
+          </div>
           <div v-if="detailData.direction">{{detailData.direction.name}}</div>
         </div>
 
@@ -93,7 +95,8 @@
             <van-col span="10">
               <van-row>
                 <van-col span="8" class="key">装修 :</van-col>
-                <van-col span="16" class="value" v-if="detailData.decorate">{{matchDictionary(detailData.decorate)}}</van-col>
+                <van-col span="16" class="value" v-if="detailData.decorate">{{all_dic[detailData.decorate]}}
+                </van-col>
               </van-row>
             </van-col>
             <van-col span="14">
@@ -107,7 +110,8 @@
             <van-col span="10">
               <van-row>
                 <van-col span="8" class="key">类型 :</van-col>
-                <van-col span="16" class="value" v-if="detailData.property_type">{{detailData.property_type.name}}</van-col>
+                <van-col span="16" class="value" v-if="detailData.property_type">{{detailData.property_type.name}}
+                </van-col>
               </van-row>
             </van-col>
             <van-col span="14">
@@ -121,7 +125,9 @@
             <van-col span="10">
               <van-row>
                 <van-col span="8" class="key">特色 :</van-col>
-                <van-col span="16" class="value" v-if="detailData.house_feature">{{matchDictionary(detailData.house_feature)}}</van-col>
+                <van-col span="16" class="value" v-if="detailData.house_feature">
+                  {{all_dic[detailData.house_feature]}}
+                </van-col>
               </van-row>
             </van-col>
             <van-col span="14">
@@ -187,7 +193,8 @@
             </div>
             <div class="imgItem" v-if="albumData.length<4 && detailData.house_goods"
                  @click="showLargePic(detailData.house_goods.photo,0)">
-              <div v-if="detailData.house_goods.photo[0].info.mime&&detailData.house_goods.photo[0].info.mime.indexOf('image')>-1">
+              <div
+                v-if="detailData.house_goods.photo[0].info.mime&&detailData.house_goods.photo[0].info.mime.indexOf('image')>-1">
                 <img :src="detailData.house_goods.photo[0].uri" style="width: 1.2rem;height: 1.2rem" alt="">
                 <div style="font-size: .24rem;color: #777">{{detailData.create_time.split(' ')[0]}}</div>
               </div>
@@ -200,13 +207,15 @@
           </div>
           <div class="imgContent">
             <div class="imgItem" v-for="(item,index) in videoArray">
-              <img src="../../../../assets/video.jpg" @click="checkTv(item.uri)" style="width: 1.2rem;height: 1.2rem" alt="">
+              <img src="../../../../assets/video.jpg" @click="checkTv(item.uri)" style="width: 1.2rem;height: 1.2rem"
+                   alt="">
             </div>
           </div>
         </div>
 
         <div id="videoId" v-if="videoSrc !== ''">
-          <video style="position: absolute; top: 6%;left: 5%;" :src="videoSrc" muted controls autoplay width="90%" height="100%"></video>
+          <video style="position: absolute; top: 6%;left: 5%;" :src="videoSrc" muted controls autoplay width="90%"
+                 height="100%"></video>
           <p class="close" @click="checkTv('')"><i class="iconfont icon-cuowutishi"></i></p>
         </div>
 
@@ -363,10 +372,11 @@
         albumData: [],
         lords: [],
         renters: [],
-        videoArray : [],
+        videoArray: [],
 
         videoSrc: '',
-        largePic : null,
+        all_dic: {},
+        largePic: null,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -375,9 +385,9 @@
         vm.ddRent('productControlCenter', 'house');
       })
     },
-    beforeRouteLeave(to, from, next){
+    beforeRouteLeave(to, from, next) {
       Toast.clear();
-      if(this.largePic){
+      if (this.largePic) {
         this.largePic.close();
       }
       next();
@@ -385,8 +395,8 @@
     mounted() {
       this.getDictionary();
     },
-    activated(){
-      if(this.$route.query.id){
+    activated() {
+      if (this.$route.query.id) {
         this.getData();
       }
     },
@@ -394,19 +404,23 @@
       //字典匹配
       getDictionary() {
         this.$http.get(globalConfig.server + 'setting/dictionary/all').then((res) => {
-          this.all_dic = res.data.data;
+          res.data.data.forEach((item) => {
+            this.all_dic[item.id] = item.dictionary_name;
+          });
+          console.log(this.all_dic);
         })
       },
-
-      matchDictionary(id) {
-        let dictionary_name = null;
-        this.all_dic.map((item) => {
-          if (item.id == id) {
-            dictionary_name = item.dictionary_name;
-          }
-        });
-        return dictionary_name;
-      },
+      // matchDictionary(id) {
+      //   let dictionary_name = null;
+      //   console.log(2);
+      //   console.log(this.all_dic);
+      //   this.all_dic.map((item) => {
+      //     if (item.id == id) {
+      //       dictionary_name = item.dictionary_name;
+      //     }
+      //   });
+      //   return dictionary_name;
+      // },
       checkTv(val) {
         this.videoSrc = val;
       },
@@ -433,30 +447,30 @@
           } else {
 
           }
-        }).catch((error)=>{
+        }).catch((error) => {
           Toast.fail("详情获取失败！");
         })
       },
       //筛选视频
-      getVideo(data){
+      getVideo(data) {
         let videoArray = [];
-        if(data.album.length>0){
+        if (data.album.length > 0) {
           data.album.forEach((item) => {
-            if(item.album.album_file.length>0){
+            if (item.album.album_file.length > 0) {
               let album = item.album.album_file;
-              album.forEach((image)=>{
-                if(image.info.mime.indexOf('video')>-1){
+              album.forEach((image) => {
+                if (image.info.mime.indexOf('video') > -1) {
                   videoArray.push(image);
                 }
               })
             }
           })
         }
-        if(data.detail&&data.detail.house_goods){
+        if (data.detail && data.detail.house_goods) {
           let houseGoods = data.detail.house_goods;
-          if(houseGoods.photo.length>0){
-            houseGoods.photo.forEach((image)=>{
-              if(image.info.mime.indexOf('video')>-1){
+          if (houseGoods.photo.length > 0) {
+            houseGoods.photo.forEach((image) => {
+              if (image.info.mime.indexOf('video') > -1) {
                 videoArray.push(image);
               }
             })
@@ -477,16 +491,16 @@
         }
       },
 
-      searchCollectDetail(id){
-        this.$router.push({path: '/collectDetail', query: {id: id,from:'productDetail'}});
+      searchCollectDetail(id) {
+        this.$router.push({path: '/collectDetail', query: {id: id, from: 'productDetail'}});
       },
-      searchRentDetail(id){
-        this.$router.push({path: '/rentDetail', query: {id: id,from:'productDetail'}});
+      searchRentDetail(id) {
+        this.$router.push({path: '/rentDetail', query: {id: id, from: 'productDetail'}});
       },
       showLargePic(images, index) {
         let imgArray = [];
         images.forEach((item) => {
-          if(item.info.mime.indexOf('image')>-1){
+          if (item.info.mime.indexOf('image') > -1) {
             imgArray.push(item.uri);
           }
         });
@@ -528,7 +542,7 @@
     position: relative;
     box-sizing: border-box;
     .img {
-      img , video{
+      img, video {
         width: 100%;
         height: 4.2rem;
       }
@@ -732,7 +746,6 @@
       }
     }
   }
-
 
 
 </style>
