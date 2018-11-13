@@ -43,23 +43,23 @@
           required>
         </van-field>
         <!--<div class="month">-->
-          <!--<van-field-->
-            <!--v-model="property_fee"-->
-            <!--label="物业费单价"-->
-            <!--type="text"-->
-            <!--:disabled="followUp"-->
-            <!--:placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"-->
-            <!--required>-->
-          <!--</van-field>-->
+        <!--<van-field-->
+        <!--v-model="property_fee"-->
+        <!--label="物业费单价"-->
+        <!--type="text"-->
+        <!--:disabled="followUp"-->
+        <!--:placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"-->
+        <!--required>-->
+        <!--</van-field>-->
         <!--</div>-->
         <!--<div class="titleRed">单位：元/平米/月</div>-->
         <!--<van-field-->
-          <!--v-model="form.community.property_phone"-->
-          <!--label="物业联系方式"-->
-          <!--type="text"-->
-          <!--:disabled="followUp"-->
-          <!--placeholder="请填写物业联系方式"-->
-          <!--required>-->
+        <!--v-model="form.community.property_phone"-->
+        <!--label="物业联系方式"-->
+        <!--type="text"-->
+        <!--:disabled="followUp"-->
+        <!--placeholder="请填写物业联系方式"-->
+        <!--required>-->
         <!--</van-field>-->
         <div class="fourth">
           <van-field
@@ -355,6 +355,7 @@
       <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
         <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
+        <div class="upload-tips">提示：请上传6张以上房屋照片和1个以上房屋视频哦~</div>
       </div>
 
       <van-cell-group>
@@ -590,7 +591,7 @@
         if (this.numbers !== val) {
           this.close_();
           this.numbers = val;
-          this.followUp = val === '0' ? false : true;
+          this.followUp = val === '1';
         }
       },
       userInfo(val1) {
@@ -610,7 +611,6 @@
           for (let i = 0; i < res.data.length; i++) {
             this.cities.push(res.data[i].dictionary_name);
           }
-
           this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
             if (res.data.code === '1000120') {
               this.form.province_id = '';
@@ -631,7 +631,6 @@
               }
             }
           });
-
           // 装修
           this.dictionary(404, 1).then((res) => {
             this.decorate_name = [];
@@ -648,10 +647,8 @@
               }
               this.qualityDetail(val);
             });
-
           });
-
-        });
+        })
       },
 
       // select关闭
@@ -865,9 +862,7 @@
           Toast(this.alertMsg('pic'));
           return;
         }
-        console.log(this.form.photo);
-        console.log(this.uploader)
-        if (this.haveInHand) {         
+        if (this.haveInHand) {
           // this.form.community.property_fee = this.property_fee;
           this.haveInHand = false;
           this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
@@ -886,7 +881,12 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              this.routerDetail(res.data.data.data.id);
+              console.log(res.data.id);
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id);
+              } else {
+                if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              }
             } else if (res.data.code === "51420") {
               this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
@@ -897,7 +897,6 @@
             this.haveInHand = true;
             if (error.response === undefined) {
               this.alertMsg('net');
-
             } else {
               if (error.response.status === 401) {
                 this.personalGet().then((data) => {
@@ -921,7 +920,10 @@
           let val = JSON.parse(t.house);
           this.house_name = val.house_name;
           this.form.house_id = val.house_id;
-          this.prefill(val.house_res, 'house');
+          if (val.type === 'allHouse') {
+            let house_res = JSON.parse(sessionStorage.getItem('house_res'));
+            this.prefill(house_res, 'house');
+          }
         }
         if (t.city !== undefined && t.city !== '') {
           let val = JSON.parse(t.city);
@@ -1194,6 +1196,12 @@
           }
         }
       }
+    }
+    .upload-tips {
+      color: red;
+      font-size: 14px;
+      text-indent: 1em;
+      margin: .2rem 0 0 0;
     }
   }
 </style>

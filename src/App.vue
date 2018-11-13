@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <div class="module" v-if="loading"></div>
+    <div class="module" v-if="loading">
+      <!--<div>{{token}}</div><div>{{token1}}</div>-->
+    </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
+    <!--<div style="margin-top: 3rem;"><div>{{token}}</div><div>{{token1}}</div></div>-->
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -13,28 +16,35 @@
 </template>
 
 <script>
-
+  // import {md5} from './assets/js/MD5.js'
   export default {
     data() {
       return {
         urls: globalConfig.server,
-        address: globalConfig.attestation,
         value: '',
         showKeyboard: false,
         transitionName: '',
         loading: true,
         token: '',
+        token1: '',
       };
     },
     watch: {//使用watch 监听$router的变化
       $route(to, from) {
-        //如果to索引大于from索引,判断为前进状态,反之则为后退状态
-        if (to.meta.index > from.meta.index) {
-          //设置动画名称
-          this.transitionName = 'slide-left';
-        } else {
-          this.transitionName = 'slide-right';
+        if (to.path === '/') {
+          if (this.isWeiXin()) {
+            window.close();
+          } else {
+            this.closeDD();
+          }
         }
+        //如果to索引大于from索引,判断为前进状态,反之则为后退状态
+        // if (to.meta.index > from.meta.index) {
+        //   //设置动画名称
+        //   this.transitionName = 'slide-left';
+        // } else {
+        //   this.transitionName = 'slide-right';
+        // }
       }
     },
     mounted() {
@@ -42,9 +52,14 @@
       this.responses();
     },
     methods: {
+      isWeiXin() {
+        //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
+        let ua = navigator.userAgent.toLowerCase();
+        //通过正则表达式匹配ua中是否含有MicroMessenger字符串
+        return ua.includes('micromessenger');
+      },
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
-          // if (navigator.userAgent == 'app/ApartMent') {
           let type, token;
           if (navigator.userAgent.indexOf('native-ios') > -1) {
             token = this.$route.query.token;
@@ -55,7 +70,6 @@
           }
           sessionStorage.setItem('queryType', type);
           this.loading = true;
-          // add by cj 2018-05-25
           if (type === 'exam') {
             this.$router.push({path: '/beforeExam'});
           } else if (type === 'questionnaire') {
@@ -65,14 +79,9 @@
           } else if (type === 'staffSquare') {
             this.$router.push({path: '/staffSquare'});
           }
-          // let head = {};
-          // head.token_type = "Bearer";
-          // head.access_token = android.queryToken();
-          // sessionStorage.setItem('myData', JSON.stringify(head));
           globalConfig.header.Authorization = "Bearer" + ' ' + token;
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             this.loading = false;
-
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -85,210 +94,85 @@
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          this.corp();
-          // if (sessionStorage.myData !== undefined) {
-          //   let head = JSON.parse(sessionStorage.myData);
-          //   globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-          // } else {
-          //   this.loading = true;
-          //   this.corp();
-          // }
+          if (this.isWeiXin()) {
+            this.prevent();
+          } else {
+            this.personalGet().then(res => {
+              this.loading = !res;
+            });
+          }
         }
+        let that = this;
         this.$http.interceptors.response.use(function (response) {
           return response;
         }, function (error) {
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              DingTalkPC.device.notification.alert({
-                message: "服务器故障,请联系产品经理~",
-                title: "提示信息",
-                buttonName: "关闭",
-                onSuccess: function () {
-                },
-                onFail: function (err) {
-                }
-              });
-              dd.biz.navigation.close({
-                onSuccess: function (result) {
-                },
-                onFail: function (err) {
-                }
-              });
+              if (this.isWeiXin()) {
+                window.close();
+              } else {
+                DingTalkPC.device.notification.alert({
+                  message: "服务器故障,请联系产品经理~",
+                  title: "提示信息",
+                  buttonName: "关闭",
+                });
+                that.closeDD();
+              }
             }
           }
           return Promise.reject(error);
         });
       },
-
-      // 认证
-      corp() {
-        let that = this;
-        this.$http.get(this.urls + 'special/special/dingConfig').then((res) => {
-          let _config = res.data;
-          DingTalkPC.runtime.permission.requestAuthCode({
-            corpId: _config.corpId,
-            onSuccess: function (info) {
-              that.$http.get(that.urls + 'special/special/userInfo', {
-                params: {
-                  'code': info.code,
-                }
-              }).then((res) => {
-                if (res.data.status !== 'fail') {
-                  if (res.data !== false) {
-                    let data = {};
-                    data.id = res.data.id;
-                    data.name = res.data.name;
-                    data.avatar = res.data.avatar;
-                    data.phone = res.data.phone;
-                    data.department_name = res.data.org[0].name;
-                    data.department_id = res.data.org[0].id;
-                    sessionStorage.setItem('personal', JSON.stringify(data));
-                    globalConfig.personal = data;
-                    that.$http.post(that.address + 'oauth/token', {
-                      client_secret: globalConfig.client_secret,
-                      client_id: globalConfig.client_id,
-                      grant_type: 'password',
-                      username: res.data.phone,
-                      password: res.data.code,
-                    }).then((res) => {
-                      let head = res.data.data;
-                      globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                      that.loading = false;
-                    });
-                  } else {
-                    setTimeout(() => {
-                      DingTalkPC.device.notification.alert({
-                        message: "请求超时请稍后再试",
-                        title: "提示信息",
-                        buttonName: "关闭",
-                        onSuccess: function () {
-                        },
-                        onFail: function (err) {
-                        }
-                      });
-                      dd.biz.navigation.close({
-                        onSuccess: function (result) {
-                        },
-                        onFail: function (err) {
-                        }
-                      });
-                    }, 3000);
-                  }
-                } else {
-                  DingTalkPC.device.notification.alert({
-                    message: "读取信息失败，稍后再试！",
-                    title: "提示信息",
-                    buttonName: "关闭",
-                    onSuccess: function () {
-                    },
-                    onFail: function (err) {
-                    }
-                  });
-                  dd.biz.navigation.close({
-                    onSuccess: function (result) {
-                    },
-                    onFail: function (err) {
-                    }
-                  });
-                }
-              })
-            },
-            onFail: function (err) {
-              DingTalkPC.device.notification.alert({
-                message: "您不在系统内，请联系管理员添加！！",
-                title: "提示信息",
-                buttonName: "关闭",
-                onSuccess: function () {
-                },
-                onFail: function (err) {
-                }
-              });
-            }
-          });
-
-          dd.ready(function () {
-            dd.runtime.permission.requestAuthCode({
-              corpId: _config.corpId,
-              onSuccess: function (info) {
-                that.$http.get(that.urls + 'special/special/userInfo', {
-                  params: {
-                    'code': info.code,
-                  }
-                }).then((res) => {
-                  if (res.data.status !== 'fail') {
-                    if (res.data !== false) {
-                      let data = {};
-                      data.id = res.data.id;
-                      data.name = res.data.name;
-                      data.avatar = res.data.avatar;
-                      data.phone = res.data.phone;
-                      data.department_name = res.data.org[0].name;
-                      data.department_id = res.data.org[0].id;
-                      sessionStorage.setItem('personal', JSON.stringify(data));
-                      globalConfig.personal = data;
-                      that.$http.post(that.address + 'oauth/token', {
-                        client_secret: globalConfig.client_secret,
-                        client_id: globalConfig.client_id,
-                        grant_type: 'password',
-                        username: res.data.phone,
-                        password: res.data.code,
-                      }).then((res) => {
-                        let head = res.data.data;
-                        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-                        that.loading = false;
-                      });
-                    } else {
-                      setTimeout(() => {
-                        alert('请求超时请稍后再试');
-                        dd.biz.navigation.close({
-                          onSuccess: function (result) {
-                          },
-                          onFail: function (err) {
-                          }
-                        });
-                      }, 3000);
-                    }
-                  } else {
-                    alert('读取信息失败，稍后再试！');
-                    dd.biz.navigation.close({
-                      onSuccess: function (result) {
-                      },
-                      onFail: function (err) {
-                      }
-                    });
-                  }
-                })
-              },
-              onFail: function (err) {
-                alert('您不在系统内，请联系管理员添加！！');
-                dd.biz.navigation.close({
-                  onSuccess: function (result) {
-                  },
-                  onFail: function (err) {
-                  }
-                });
-              }
-            });
-            // 钉钉头部右侧
-            dd.biz.navigation.setRight({
-              show: false,
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            });
-          });
-          dd.error(function (err) {
-            alert('dd error: ' + JSON.stringify(err));
-          });
-        })
+      prevent() {
+        let query = this.$route.query;
+        let url = window.location.href;
+        let redirectUrl = encodeURIComponent(url);
+        let objUrl = encodeURIComponent(url.split('#')[0]);
+        if (!query.code) {
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
+        } else {
+          this.getUserId(query);
+          // let obj = {};
+          // obj.corpid = query.appid;
+          // obj.corpsecret = query.secret;
+          // obj.url = objUrl;
+          // obj.timestamp = Math.round(new Date().getTime()/1000).toString();
+          // obj.nonceStr = md5(obj.corpid + obj.timestamp);
+          // this.weiChatAuth().then(_ => {
+          //   this.token1 = _;
+          //   wx.ready(function () {
+          //     wx.hideOptionMenu();
+          //   });
+          // });
+        }
+        // this.token = window.location.href;
       },
-
+      // 获取uid
+      getUserId(val) {
+        this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
+          if (res.data.success) {
+            let info = res.data.data;
+            this.token = info;
+            let data = {};
+            data.id = info.id;
+            data.name = info.name;
+            data.avatar = info.avatar;
+            data.phone = info.phone;
+            data.department_name = info.department_name[0];
+            data.department_id = info.department_id[0];
+            data.isCompany = info.isCompany;
+            sessionStorage.setItem('personal', JSON.stringify(data));
+            globalConfig.personal = data;
+            this.loading = false;
+          }
+        }).catch(err => {
+          this.token = JSON.stringify(err);
+        });
+      },
       onInput(key) {
         this.value = (this.value + key).slice(0, 6);
       },
-
       onDelete() {
         this.value = this.value.slice(0, this.value.length - 1);
       }

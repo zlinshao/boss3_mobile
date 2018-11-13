@@ -1,3 +1,5 @@
+import {md5} from './assets/js/MD5.js'
+
 export default {
   install(Vue, options) {
     Vue.prototype.routerIndex = function (url, house, id) {
@@ -18,6 +20,21 @@ export default {
         } else {
           that.$router.push({path: '/index'});
         }
+      });
+    };
+    // 钉钉返回
+    Vue.prototype.goBack = function (url, data) {
+      let that = this;
+      document.addEventListener('backbutton', function (e) {
+        e.preventDefault();
+        that.$router.push({path: url, query: data});
+      });
+
+      dd.biz.navigation.setLeft({
+        control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+        onSuccess() {
+          that.$router.push({path: url, query: data});
+        },
       });
     };
     Vue.prototype.routLink = function (path, params) {
@@ -51,6 +68,7 @@ export default {
         }
       });
     };
+
     Vue.prototype.routerTo = function (url, id, val) {
       let that = this;
       document.addEventListener('backbutton', function (e) {
@@ -68,6 +86,7 @@ export default {
     };
     // 详情页
     Vue.prototype.routerDetail = function (val) {
+      console.log(val);
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
     // 数组去空字符串
@@ -130,9 +149,10 @@ export default {
             resolve(res.data)
           }
         })
+      }).catch(err => {
+        alert(JSON.stringify(err));
       })
     };
-
     Vue.prototype.computedDate = function (params) {
       return new Promise((resolve, reject) => {
         this.$http.get(globalConfig.server + 'bulletin/helper/calcdate', {
@@ -156,6 +176,27 @@ export default {
         case 'errPic':
           return '请删除上传失败的文件并重新上传!';
       }
+    };
+    // 企业微信
+    Vue.prototype.weiChatAuth = function (val) {
+      return new Promise((resolve, reject) => {
+        this.$http.get(globalConfig.server + 'organization/wework-bulletin', {
+          params: val,
+        }).then(res => {
+          wx.config({
+            beta: true,// 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: val.corpid, // 必填，企业微信的corpID
+            timestamp: val.timestamp, // 必填，生成签名的时间戳
+            nonceStr: val.nonceStr, // 必填，生成签名的随机串
+            signature: res.data.data.signature2,// 必填，签名，见附录1
+            jsApiList: ['onHistoryBack', 'hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          });
+          resolve(true);
+        }).catch(err => {
+          resolve(false);
+        })
+      })
     };
     // 钉钉认证
     Vue.prototype.personalGet = function (val) {
@@ -249,23 +290,10 @@ export default {
       data.phone = res.data.phone;
       data.department_name = res.data.org[0].name;
       data.department_id = res.data.org[0].id;
+      data.isCompany = '';
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;
-      if (val === 2) {
-        resolve(true);
-        return;
-      }
-      this.$http.post(globalConfig.attestation + 'oauth/token', {
-        client_secret: globalConfig.client_secret,
-        client_id: globalConfig.client_id,
-        grant_type: 'password',
-        username: res.data.phone,
-        password: res.data.code,
-      }).then((data) => {
-        let head = data.data.data;
-        globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
-        resolve(true);
-      });
+      resolve(true);
     };
     // 关闭钉钉
     Vue.prototype.closeDD = function () {

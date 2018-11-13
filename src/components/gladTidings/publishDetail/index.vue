@@ -15,7 +15,6 @@
 
         <div class="placeFinish"
              :class="{'statusSuccess': place.status === 'published', 'statusFail':place.status === 'rejected', 'cancelled':place.status === 'cancelled'}">
-
           <span class="placeSpan" v-if="placeFalse" @click="approvePersonal(1)">
             <i class="iconfont icon-shenpi1"></i>
             <span>{{place.display_name}}</span>
@@ -40,12 +39,12 @@
              v-if="printscreen.indexOf(index) === -1">
           <p>{{index}}</p>
           <h1>
-            <span v-if="Array.isArray(key)" v-for="item in key">
-              <span style="display: block;">{{item.msg}}</span>
-              <span style="display: block;">{{item.period}}</span>
+            <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length">
+              <span style="display: block;">{{key[idx].msg}}</span>
+              <span style="display: block;">{{key[idx].period}}</span>
             </span>
-            <span v-if="index === '已收金额和汇款账户' || index === '补交定金和收款方式'" v-for="item in key">
-              <span style="display: block;">{{item}}</span>
+            <span v-if="index === '已收金额和汇款账户' || index === '补交定金和收款方式'" v-for="(item,idx) in key.length">
+              <span style="display: block;">{{key[idx]}}</span>
             </span>
             <span v-if="!Array.isArray(key) && index !== '房屋类型'">{{key}}</span>
             <span v-if="!Array.isArray(key) && index === '房屋类型'">
@@ -67,7 +66,6 @@
           <iframe v-if="sign_pdfUrl_exist"  width="100%" height="300px" :src="sign_pdfUrl_str" type="application/pdf"></iframe >
         </div> -->
       </div>
-
       <ul
         v-waterfall-lower="loadMore"
         waterfall-disabled="disabled"
@@ -84,21 +82,24 @@
                     <img src="../../../assets/head.png" v-else>
                   </p>
                   <div>
-                    {{key.user.name}}<span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">-{{item.name}}</span>
+                    {{key.user.name}}
+                    <span class="a" v-for="(item,index) in key.user.org" v-if="index === 0">
+                      -{{item.name}}
+                    </span>
                   </div>
                 </div>
                 <div class="times">
-                  {{key.created_at}}
+                  {{key.create_time.substring(0,10)}}
                 </div>
               </div>
               <div class="contents">
-                {{key.body}}
+                {{key.content}}
               </div>
-              <div class="pics">
-                <div v-for="(pic,num) in key.album">
+              <div class="pics" v-if="key.album">
+                <div v-for="(pic,num) in key.album.image_pic">
                   <img v-if="pic.info.ext.indexOf('video') > -1" @click="checkTv(pic.uri)"
                        src="../../../assets/video.jpg">
-                  <img v-else @click="pics(key.album, num, pic.info.ext)" :src="pic.uri">
+                  <img v-else @click="commentPic(key.album, num, pic.info.ext)" :src="pic.uri">
                 </div>
               </div>
             </div>
@@ -203,9 +204,7 @@
     },
     data() {
       return {
-        // priceMin:'2000',
-        // priceMax:'3000',
-        urls: globalConfig.server_user,
+        urls: globalConfig.server,
         personalId: {},
         vLoading: true,
         disabled: false,
@@ -246,12 +245,12 @@
         approvedStatus: false,
         marking: '',
         priceRegion: '',
-        showElectronicReceipt:true,   //展示电子收据
-        bulletinId : '',              //报单id
-        electronicReceiptParam:{} ,   //电子收据接口参数
+        showElectronicReceipt: true,   //展示电子收据
+        bulletinId: '',              //报单id
+        electronicReceiptParam: {},   //电子收据接口参数
         is_receipt: '',               //是否电子收据
-        bank :{},                     //银行数据
-        pdfLoading:'',                //加载pdf
+        bank: {},                     //银行数据
+        pdfLoading: '',                //加载pdf
         // sign_pdfUrl_exist:false,      //是否存在已签章电子收据
         // sign_pdfUrl_str:'',           //已签章电子收据url
       }
@@ -272,7 +271,9 @@
     },
     activated() {
       sessionStorage.setItem('count', '2');
-      this.personalId = JSON.parse(sessionStorage.personal);
+      if (sessionStorage.personal) {
+        this.personalId = JSON.parse(sessionStorage.personal);
+      }
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
@@ -317,7 +318,6 @@
       checkTv(val) {
         this.videoSrc = val;
       },
-
       close_() {
         this.showContent = false;
         this.answerFor = false;
@@ -332,72 +332,51 @@
         this.place = {};
         this.commentList = [];
       },
-
       loadMore() {
         if (!this.disabled) {
           this.comments(this.ids, this.page);
           this.page++;
         }
       },
-
       search() {
         this.formDetail(this.ids);
       },
-
       formDetail(val) {
-        this.$http.get(this.urls + 'process/' + val).then((res) => {
+        this.$http.get(this.urls + 'workflow/process/' + val).then((res) => {
           this.message = '';
-          if (res.data.status === 'success' && res.data.data.length !== 0) {
-
+          if (res.data.code === '20020' && res.data.data.length !== 0) {
             let content = res.data.data.process.content;
-            console.log(res.data.data)
+            let main = res.data.data.process;
             this.formList = JSON.parse(content.show_content_compress);
-
-            // this.formList['开单人'] = content.staff_name;
-            // if(content.collect_or_rent.id === '1'){
-            //   this.formList['租客姓名'] = content.customers;
-            // }else{
-            //   this.formList['房东姓名'] = content.customers;
-            // }
-
-            // console.log(this.formList['开单人'])
             this.operation = res.data.data.operation;
             this.deal = res.data.data.deal;
-
-            let houseName = res.data.data.process.content;
-            if (houseName.address) {
-              this.address = houseName.address;
-            } else if (houseName.rent_without_collect_address) {
-              this.address = houseName.rent_without_collect_address;
+            if (content.address) {
+              this.address = content.address;
+            } else if (content.rent_without_collect_address) {
+              this.address = content.rent_without_collect_address;
             } else {
-              this.address = houseName.house.name;
+              this.address = content.house.name;
             }
-            let main = res.data.data.process;
             this.process = main;
             this.personal = main.user;
             // this.confirmBulletinType(res.data.data.process);
             this.place = main.place;
-            this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1 ? true : false;
-
-            this.$http.get(globalConfig.server + 'manager/staff/' + main.user.org[0].leader_id).then((res) => {
-              if (res.data.code === '10020') {
-                this.bull_name = res.data.data;
-              }
-            });
-
-            if (houseName.quality_up && main.place.name === 'appraiser-officer_review') {
+            this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1;
+            if (main.leader) {
+              this.bull_name = main.leader;
+            }
+            if (content.quality_up && main.place.name === 'appraiser-officer_review') {
               this.marking = 1;
             } else {
               this.marking = 2;
             }
-            if( this.placeFalse && this.marking === 1){
+            if (this.placeFalse && this.marking === 1) {
               let price = {};
-              price.community = houseName.community.id;
-              price.decorate = houseName.decorate.id;
-              price.room = houseName.house_type[0];
+              price.community = content.community.id;
+              price.decorate = content.decorate.id;
+              price.room = content.house_type[0];
               this.priceArea(price);
             }
-            // this.showSignElectronicReceipt();
           } else {
             this.personal.avatar = '';
             this.personal.name = 'XXXX';
@@ -414,31 +393,46 @@
       },
       // 价格区间
       priceArea(price) {
-        this.$http.get(globalConfig.server + 'bulletin/quality/range', {
+        this.$http.get(this.urls + 'bulletin/quality/range', {
           params: price,
         }).then((res) => {
-          console.log(res);
           this.priceRegion = res.data.priceMin + '~' + res.data.priceMax + '元';
         });
       },
       comments(val, page) {
-        this.$http.get(this.urls + 'comments?id=' + val, {
+        this.$http.get(this.urls + 'workflow/process/comment/' + val, {
           params: {
             page: page,
           }
         }).then((res) => {
-          let data = res.data.data;
-          this.paging = res.data.meta.total;
-          if (res.data.status === 'success' && data.length !== 0) {
+          if (res.data.code === '20000') {
+            let data = res.data.data.data;
+            this.paging = res.data.data.count;
             for (let i = 0; i < data.length; i++) {
               this.commentList.push(data[i]);
             }
+            console.log(this.commentList)
           } else {
             this.disabled = true;
           }
         })
       },
-
+      commentPic(value, index, video) {
+        let val = value.image_pic;
+        let arr = [];
+        for (let i = 0; i < val.length; i++) {
+          arr.push(val[i].uri);
+        }
+        if (this.IsPC()) {
+          this.photo = arr;
+          this.onIndex = index;
+          this.bigPic = arr[index];
+          this.bigPicShow = true;
+          document.getElementsByTagName('body')[0].className = 'showContainer';
+        } else {
+          ImagePreview(arr, index);
+        }
+      },
       pics(val, index, video) {
         let arr = [];
         for (let i = 0; i < val.length; i++) {
@@ -454,7 +448,6 @@
           ImagePreview(arr, index);
         }
       },
-
       next(val) {
         this.onIndex++;
         if (this.onIndex === val.length) {
@@ -462,7 +455,6 @@
         }
         this.bigPic = val[this.onIndex];
       },
-
       pre(val) {
         this.onIndex--;
         if (this.onIndex < 0) {
@@ -470,12 +462,10 @@
         }
         this.bigPic = val[this.onIndex];
       },
-
       closePic() {
         this.bigPicShow = false;
         document.getElementsByTagName('body')[0].className = '';
       },
-
       // 评论
       commentOn(val, index) {
         this.close_();
@@ -483,20 +473,19 @@
         num = val.indexOf('approved') > -1 ? index : 2;
         this.$router.push({
           path: '/comment',
-          query: {detail: val, ids: this.ids, marking: num}
+          query: {detail: val, process: this.process.id, able: this.process.processable_id, ids: this.ids, marking: num}
         });
       },
       //确认订单类型是否需要生成电子收据
-      confirmBulletinType(_process){
-        console.log(_process)
-        if(this.process.place.status === 'review' && this.process.place.display_name === "片区经理审批中" && _process.content.is_receipt.id === 1){
+      confirmBulletinType(_process) {
+        if (this.process.place.status === 'review' && this.process.place.display_name === "片区经理审批中" && _process.content.is_receipt.id === 1) {
           //报备类型
           let _type = this.process.processable_type;
           //报备类型数组
-          let bulletinArr = ['bulletin_agency','bulletin_rent_basic','bulletin_rent_continued','bulletin_rent_trans','bulletin_change','bulletin_rent_RWC','bulletin_RWC_confirm','bulletin_retainage'];
-          if(bulletinArr.includes(_type)){
+          let bulletinArr = ['bulletin_agency', 'bulletin_rent_basic', 'bulletin_rent_continued', 'bulletin_rent_trans', 'bulletin_change', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_retainage'];
+          if (bulletinArr.includes(_type)) {
             this.showElectronicReceipt = true;
-            this.bulletinId =_process.id;
+            this.bulletinId = _process.id;
             this.is_receipt = _process.content.is_receipt;
 
             this.electronicReceiptParam.process_id = _process.id;
@@ -505,18 +494,17 @@
             this.electronicReceiptParam.deposit = _process.content.front_money;
             this.electronicReceiptParam.mortgage = _process.content.deposit_payed;
             this.electronicReceiptParam.rental = _process.content.rent_money;
-            this.electronicReceiptParam.duration = _process.content.show_content["现签约时长"] || _process.content.show_content["签约时长"]
+            this.electronicReceiptParam.duration = _process.content.show_content["现签约时长"] || _process.content.show_content["签约时长"];
             this.electronicReceiptParam.money_sep = _process.content.money_sep;
             this.electronicReceiptParam.address = _process.content.address;
-
-            if(_type === 'bulletin_retainage'){
+            if (_type === 'bulletin_retainage') {
               this.electronicReceiptParam.payer = _process.content.customer_name;
               this.electronicReceiptParam.sign_at = _process.content.retainage_date;
               this.electronicReceiptParam.price = _process.content.price_arr.map(item => {
-                  return item.split(':')[1];
-                }).join(",");
+                return item.split(':')[1];
+              }).join(",");
               this.electronicReceiptParam.pay_way = _process.content.payWay.join(',')
-            }else{
+            } else {
               this.electronicReceiptParam.payer = _process.content.name;
               this.electronicReceiptParam.sign_at = _process.content.sign_date;
               this.electronicReceiptParam.price = _process.content.price_arr.map(item => {
@@ -531,16 +519,16 @@
             });
             let _str = JSON.stringify(this.electronicReceiptParam);
             let _bank = JSON.stringify(this.bank);
-            sessionStorage.setItem('electronicReceiptParam' , _str);
-            sessionStorage.setItem('bank',_bank);
-            sessionStorage.setItem('showElectronicReceipt',true)
+            sessionStorage.setItem('electronicReceiptParam', _str);
+            sessionStorage.setItem('bank', _bank);
+            sessionStorage.setItem('showElectronicReceipt', true);
             console.log(1)
-          }else{
-            sessionStorage.setItem('showElectronicReceipt',false)
+          } else {
+            sessionStorage.setItem('showElectronicReceipt', false)
           }
-        }else{
-          if(sessionStorage.getItem('showElectronicReceipt')){
-            sessionStorage.setItem('showElectronicReceipt',false)
+        } else {
+          if (sessionStorage.getItem('showElectronicReceipt')) {
+            sessionStorage.setItem('showElectronicReceipt', false)
           }
         }
       },
@@ -604,445 +592,445 @@
 </script>
 
 <style lang="scss">
-#cardDetail {
-  overflow: hidden;
-  @mixin flex {
-    display: flex;
-    display: -webkit-flex;
-  }
-
-  @mixin border_radius($p) {
-    -webkit-border-radius: $p;
-    -moz-border-radius: $p;
-    border-radius: $p;
-  }
-
-  @mixin scale($p) {
-    -moz-transform: scale($p, $p);
-    -webkit-transform: scale($p, $p);
-    -o-transform: scale($p, $p);
-    transform: scale($p, $p);
-  }
-
-  $onColor: #39b1ff;
-  $borColor: #9c9c9c;
-
-  @keyframes manger {
-    from {
-      @include scale(6);
+  #cardDetail {
+    overflow: hidden;
+    @mixin flex {
+      display: flex;
+      display: -webkit-flex;
     }
-    to {
-      @include scale(1);
-    }
-  }
 
-  @-moz-keyframes manger {
-    from {
-      @include scale(6);
+    @mixin border_radius($p) {
+      -webkit-border-radius: $p;
+      -moz-border-radius: $p;
+      border-radius: $p;
     }
-    to {
-      @include scale(1);
-    }
-  }
 
-  @-webkit-keyframes manger {
-    from {
-      @include scale(6);
+    @mixin scale($p) {
+      -moz-transform: scale($p, $p);
+      -webkit-transform: scale($p, $p);
+      -o-transform: scale($p, $p);
+      transform: scale($p, $p);
     }
-    to {
-      @include scale(1);
-    }
-  }
 
-  @-o-keyframes manger {
-    from {
-      @include scale(6);
-    }
-    to {
-      @include scale(1);
-    }
-  }
+    $onColor: #39b1ff;
+    $borColor: #9c9c9c;
 
-  .showContentTitle,
-  .showContentFooter {
-    text-align: center;
-    padding: 0.3rem 0;
-    font-size: 0.36rem;
-  }
-  .showContentTitle {
-    border-bottom: 1px solid #f4f4f4;
-  }
-  .showContentFooter {
-    border-top: 1px solid #f4f4f4;
-    color: #409eff;
-  }
-  .showContent {
-    width: 6.6rem;
-    max-height: 8rem;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    p {
-      color: #6a6a6a;
-      margin: 0.12rem 0;
-      a {
-        color: $onColor;
+    @keyframes manger {
+      from {
+        @include scale(6);
+      }
+      to {
+        @include scale(1);
       }
     }
-    .showRoleName + .showRoleName {
-      border-top: 1px solid #f4f4f4;
-    }
-    .showRoleName {
-      @include flex;
-      align-items: center;
-      padding: 0.2rem;
-      .showImg {
-        min-width: 0.9rem;
-        max-width: 0.9rem;
-        height: 0.9rem;
-        margin-right: 0.2rem;
-        img {
-          width: 100%;
-          height: 100%;
-          @include border_radius(50%);
-        }
+
+    @-moz-keyframes manger {
+      from {
+        @include scale(6);
+      }
+      to {
+        @include scale(1);
       }
     }
-  }
 
-  .placeFinish {
-    @include flex;
-    justify-content: center;
-    flex-direction: column;
-    height: 1.4rem;
-
-    .placeSpan {
-      color: #409eff;
-      @include flex;
-      align-items: center;
-      i {
-        margin-right: 0.1rem;
+    @-webkit-keyframes manger {
+      from {
+        @include scale(6);
+      }
+      to {
+        @include scale(1);
       }
     }
-    .deal {
-      margin-top: 0.18rem;
-      color: $borColor;
-    }
-  }
 
-  #videoId {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    @include flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 1);
-    z-index: 10000;
-    #video {
-      position: absolute;
-      top: 7.5%;
-      left: 5%;
+    @-o-keyframes manger {
+      from {
+        @include scale(6);
+      }
+      to {
+        @include scale(1);
+      }
     }
-    .close {
-      position: absolute;
-      width: 0.8rem;
-      height: 0.8rem;
+
+    .showContentTitle,
+    .showContentFooter {
       text-align: center;
-      line-height: 0.8rem;
-      @include border_radius(50%);
-      /*background-color: rgba(0, 0, 0, .8);*/
-      bottom: 1rem;
-      /*border: 1px solid rgba(255, 255, 255, .8);*/
-      right: 2%;
-      top: 2%;
-      transform: translate(-50%);
-      i {
-        color: #ffffff;
-        font-size: 0.6rem;
-      }
+      padding: 0.3rem 0;
+      font-size: 0.36rem;
     }
-  }
-
-  .bigPhotos {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 1000;
-    text-align: center;
-    @include flex;
-    align-items: center;
-    justify-content: center;
-    div {
+    .showContentTitle {
+      border-bottom: 1px solid #f4f4f4;
+    }
+    .showContentFooter {
+      border-top: 1px solid #f4f4f4;
+      color: #409eff;
+    }
+    .showContent {
+      width: 6.6rem;
+      max-height: 8rem;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
       p {
-        position: absolute;
-        bottom: 0;
-        width: 50%;
-        height: 1rem;
-        line-height: 1rem;
-        text-align: center;
-        font-weight: bold;
-        color: #ffffff;
-        margin: 0 0.2rem;
-        border-radius: 50%;
-        i {
-          display: inline-block;
-          font-size: 1rem;
+        color: #6a6a6a;
+        margin: 0.12rem 0;
+        a {
+          color: $onColor;
         }
       }
-      .nextPic,
-      .prePic {
-        height: 100%;
+      .showRoleName + .showRoleName {
+        border-top: 1px solid #f4f4f4;
+      }
+      .showRoleName {
         @include flex;
         align-items: center;
-      }
-      .nextPic {
-        left: 0;
-        text-align: left;
-        justify-content: flex-start;
-        i {
-          transform: rotate(180deg);
+        padding: 0.2rem;
+        .showImg {
+          min-width: 0.9rem;
+          max-width: 0.9rem;
+          height: 0.9rem;
+          margin-right: 0.2rem;
+          img {
+            width: 100%;
+            height: 100%;
+            @include border_radius(50%);
+          }
         }
       }
-      .prePic {
-        right: 0;
-        text-align: right;
-        justify-content: flex-end;
+    }
+
+    .placeFinish {
+      @include flex;
+      justify-content: center;
+      flex-direction: column;
+      height: 1.4rem;
+
+      .placeSpan {
+        color: #409eff;
+        @include flex;
+        align-items: center;
+        i {
+          margin-right: 0.1rem;
+        }
+      }
+      .deal {
+        margin-top: 0.18rem;
+        color: $borColor;
+      }
+    }
+
+    #videoId {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      @include flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 1);
+      z-index: 10000;
+      #video {
+        position: absolute;
+        top: 7.5%;
+        left: 5%;
       }
       .close {
-        width: 1rem;
-        bottom: 0.6rem;
-        left: 50%;
+        position: absolute;
+        width: 0.8rem;
+        height: 0.8rem;
+        text-align: center;
+        line-height: 0.8rem;
+        @include border_radius(50%);
+        /*background-color: rgba(0, 0, 0, .8);*/
+        bottom: 1rem;
+        /*border: 1px solid rgba(255, 255, 255, .8);*/
+        right: 2%;
+        top: 2%;
         transform: translate(-50%);
         i {
+          color: #ffffff;
           font-size: 0.6rem;
         }
       }
     }
-    img {
-      max-width: 100%;
-      max-height: 100%;
-    }
-  }
 
-  .photo {
-    p {
-      padding-top: 0.2rem;
-    }
-    h1 {
+    .bigPhotos {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      text-align: center;
       @include flex;
-      flex-wrap: wrap;
-      span {
-        width: 1rem;
-        height: 1rem;
-        margin-top: 0.2rem;
-        margin-right: 0.2rem;
-      }
-    }
-  }
-
-  .detail {
-    img {
-      width: 100%;
-      height: 100%;
-    }
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    border-top: 1px solid #ebebeb;
-    border-bottom: 1px solid #ebebeb;
-    @include flex;
-    align-items: center;
-    background: #ffffff;
-    padding: 0.3rem;
-    .detailLeft {
-      min-width: 0.9rem;
-      max-width: 0.9rem;
-      margin-right: 0.3rem;
-      div {
-        width: 100%;
-        height: 0.9rem;
-        overflow: hidden;
-        img {
-          @include border_radius(50%);
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
-    .priceRange {
-      position: absolute;
-      right: 0.4rem;
-      bottom: 0.1rem;
-      color: orange;
-    }
-    .topRight {
-      @include flex;
-      justify-content: space-between;
       align-items: center;
-      width: 100%;
-      .personal {
-        min-width: 2.8rem;
-        max-width: 2.8rem;
-        p {
-          min-width: 2.8rem;
-          max-width: 2.8rem;
-          line-height: 0.5rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          color: #9c9c9c;
-        }
-        p:first-of-type {
-          color: #101010;
-        }
-      }
-      .statusSuccess {
-        background: url("../../../assets/tongguo.png") no-repeat;
-      }
-      .statusFail {
-        background: url("../../../assets/shibai.png") no-repeat;
-      }
-      .cancelled {
-        background: url("../../../assets/chexiao.png") no-repeat;
-      }
-      .statusSuccess,
-      .statusFail,
-      .cancelled {
-        width: 1.4rem;
-        height: 1.4rem;
-        background-size: 100% 100%;
-        @include scale(1);
-        -webkit-animation: manger 0.6s ease-in-out;
-        -o-animation: manger 0.6s ease-in-out;
-        animation: manger 0.6s ease-in-out;
-      }
-    }
-  }
-  .detailRight {
-    img {
-      width: 100%;
-      height: 100%;
-    }
-    width: 100%;
-    .topTitle {
-      padding: 0.3rem;
-      margin-top: 2rem;
-      background: #ffffff;
+      justify-content: center;
       div {
-        margin: 0.2rem 0;
-        @include flex;
-        word-break: break-all;
         p {
-          min-width: 1.8rem;
-          max-width: 1.8rem;
-          margin-right: 0.4rem;
-          line-height: 0.4rem;
-          color: #9c9c9c;
-          text-align: left;
-        }
-        h1 {
-          color: #101010;
-          line-height: 0.4rem;
-        }
-        .electronicReceipt{
-          color:green
-        }
-      }
-      .load {
-        display: flex;
-        justify-content: center;
-        margin: 3rem auto 0;
-      }
-    }
-
-    .commentArea {
-      margin-top: 0.3rem;
-      padding-bottom: 0.36rem;
-      background: #ffffff;
-      color: #101010;
-
-      div,
-      p,
-      span {
-        color: #9c9c9c;
-      }
-      .headline {
-        color: #444444;
-        font-size: 0.33rem;
-        padding: 0.3rem 0 0.2rem 0.3rem;
-        font-weight: bold;
-        border-bottom: 1px solid #dddddd;
-        span {
-          font-size: 0.33rem;
+          position: absolute;
+          bottom: 0;
+          width: 50%;
+          height: 1rem;
+          line-height: 1rem;
+          text-align: center;
           font-weight: bold;
-          color: #444444;
-          padding-left: 0.1rem;
+          color: #ffffff;
+          margin: 0 0.2rem;
+          border-radius: 50%;
+          i {
+            display: inline-block;
+            font-size: 1rem;
+          }
         }
-      }
-      .commentAreaMain {
-        margin-top: 0.36rem;
-        padding: 0 0.4rem;
-        .commentTitle {
+        .nextPic,
+        .prePic {
+          height: 100%;
           @include flex;
           align-items: center;
-          justify-content: space-between;
-          .staff {
+        }
+        .nextPic {
+          left: 0;
+          text-align: left;
+          justify-content: flex-start;
+          i {
+            transform: rotate(180deg);
+          }
+        }
+        .prePic {
+          right: 0;
+          text-align: right;
+          justify-content: flex-end;
+        }
+        .close {
+          width: 1rem;
+          bottom: 0.6rem;
+          left: 50%;
+          transform: translate(-50%);
+          i {
+            font-size: 0.6rem;
+          }
+        }
+      }
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    .photo {
+      p {
+        padding-top: 0.2rem;
+      }
+      h1 {
+        @include flex;
+        flex-wrap: wrap;
+        span {
+          width: 1rem;
+          height: 1rem;
+          margin-top: 0.2rem;
+          margin-right: 0.2rem;
+        }
+      }
+    }
+
+    .detail {
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid #ebebeb;
+      border-bottom: 1px solid #ebebeb;
+      @include flex;
+      align-items: center;
+      background: #ffffff;
+      padding: 0.3rem;
+      .detailLeft {
+        min-width: 0.9rem;
+        max-width: 0.9rem;
+        margin-right: 0.3rem;
+        div {
+          width: 100%;
+          height: 0.9rem;
+          overflow: hidden;
+          img {
+            @include border_radius(50%);
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+      .priceRange {
+        position: absolute;
+        right: 0.4rem;
+        bottom: 0.1rem;
+        color: orange;
+      }
+      .topRight {
+        @include flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        .personal {
+          min-width: 2.8rem;
+          max-width: 2.8rem;
+          p {
+            min-width: 2.8rem;
+            max-width: 2.8rem;
+            line-height: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #9c9c9c;
+          }
+          p:first-of-type {
+            color: #101010;
+          }
+        }
+        .statusSuccess {
+          background: url("../../../assets/tongguo.png") no-repeat;
+        }
+        .statusFail {
+          background: url("../../../assets/shibai.png") no-repeat;
+        }
+        .cancelled {
+          background: url("../../../assets/chexiao.png") no-repeat;
+        }
+        .statusSuccess,
+        .statusFail,
+        .cancelled {
+          width: 1.4rem;
+          height: 1.4rem;
+          background-size: 100% 100%;
+          @include scale(1);
+          -webkit-animation: manger 0.6s ease-in-out;
+          -o-animation: manger 0.6s ease-in-out;
+          animation: manger 0.6s ease-in-out;
+        }
+      }
+    }
+    .detailRight {
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      width: 100%;
+      .topTitle {
+        padding: 0.3rem;
+        margin-top: 2rem;
+        background: #ffffff;
+        div {
+          margin: 0.2rem 0;
+          @include flex;
+          word-break: break-all;
+          p {
+            min-width: 1.8rem;
+            max-width: 1.8rem;
+            margin-right: 0.4rem;
+            line-height: 0.4rem;
+            color: #9c9c9c;
+            text-align: left;
+          }
+          h1 {
+            color: #101010;
+            line-height: 0.4rem;
+          }
+          .electronicReceipt {
+            color: green
+          }
+        }
+        .load {
+          display: flex;
+          justify-content: center;
+          margin: 3rem auto 0;
+        }
+      }
+
+      .commentArea {
+        margin-top: 0.3rem;
+        padding-bottom: 0.36rem;
+        background: #ffffff;
+        color: #101010;
+
+        div,
+        p,
+        span {
+          color: #9c9c9c;
+        }
+        .headline {
+          color: #444444;
+          font-size: 0.33rem;
+          padding: 0.3rem 0 0.2rem 0.3rem;
+          font-weight: bold;
+          border-bottom: 1px solid #dddddd;
+          span {
+            font-size: 0.33rem;
+            font-weight: bold;
+            color: #444444;
+            padding-left: 0.1rem;
+          }
+        }
+        .commentAreaMain {
+          margin-top: 0.36rem;
+          padding: 0 0.4rem;
+          .commentTitle {
             @include flex;
             align-items: center;
-            p {
-              min-width: 0.8rem;
-              max-width: 0.8rem;
-              height: 0.8rem;
-              margin-right: 0.12rem;
-              img {
-                @include border_radius(50%);
+            justify-content: space-between;
+            .staff {
+              @include flex;
+              align-items: center;
+              p {
+                min-width: 0.8rem;
+                max-width: 0.8rem;
+                height: 0.8rem;
+                margin-right: 0.12rem;
+                img {
+                  @include border_radius(50%);
+                }
+              }
+              div {
+                width: 100%;
+                overflow: hidden;
+                line-height: 0.9rem;
+                -ms-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
             }
-            div {
-              width: 100%;
-              overflow: hidden;
-              line-height: 0.9rem;
-              -ms-text-overflow: ellipsis;
-              text-overflow: ellipsis;
-              white-space: nowrap;
+            .times {
+              min-width: 2rem;
+              max-width: 2rem;
+              text-align: right;
             }
           }
-          .times {
-            min-width: 2rem;
-            max-width: 2rem;
-            text-align: right;
+          .contents {
+            margin-left: 0.9rem;
+            color: #101010;
+            line-height: 0.6rem;
           }
-        }
-        .contents {
-          margin-left: 0.9rem;
-          color: #101010;
-          line-height: 0.6rem;
-        }
-        .pics {
-          @include flex;
-          flex-wrap: wrap;
-          margin-left: 0.9rem;
-          div {
-            width: 1rem;
-            height: 1rem;
-            margin: 0.2rem 0.3rem 0 0;
+          .pics {
+            @include flex;
+            flex-wrap: wrap;
+            margin-left: 0.9rem;
+            div {
+              width: 1rem;
+              height: 1rem;
+              margin: 0.2rem 0.3rem 0 0;
+            }
           }
         }
       }
     }
+    .bottom {
+      @include flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.4rem 0 1.3rem;
+      color: #dddddd;
+    }
   }
-  .bottom {
-    @include flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.4rem 0 1.3rem;
-    color: #dddddd;
-  }
-}
 </style>

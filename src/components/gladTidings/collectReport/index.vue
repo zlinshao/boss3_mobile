@@ -966,11 +966,12 @@
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50110' || res.data.code === '50130') {
               Toast.success(res.data.msg);
-              this.routerDetail(res.data.data.data.id);
+              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
               this.close_();
               $('.imgItem').remove();
             } else if (res.data.code === '50120' || res.data.code === '50130') {

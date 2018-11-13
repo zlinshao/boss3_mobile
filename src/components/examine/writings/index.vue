@@ -117,7 +117,6 @@
       return {
         loading: false,
         urls: globalConfig.server,
-        address: globalConfig.attestation,
         assistId: false,
         pitch: '',
         myData: {},
@@ -234,6 +233,8 @@
             this.undercarriage = true;
             this.dercarriage = false;
           }
+        }).catch(_ => {
+
         })
       },
       assist(id) {
@@ -245,6 +246,8 @@
               this.myData.favor_num++;
             }
           }
+        }).catch(_ => {
+
         })
       },
       comment(val) {
@@ -275,6 +278,8 @@
           } else {
             this.commentList = [];
           }
+        }).catch(_ => {
+
         })
       },
       pics(val, index) {

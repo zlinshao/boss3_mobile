@@ -452,12 +452,12 @@
         this.videoArray = [];
         this.$http.get(globalConfig.server + 'house/album/' + this.$route.query.id).then((res) => {
           if (res.data.code === '30070') {
-            Toast.clear();
-            this.detailData = res.data.data.detail;
-            this.albumData = res.data.data.album;
-            this.lords = res.data.data.detail.lords;
-            this.renters = res.data.data.detail.renters;
-            this.videoArray = this.getVideo(res.data.data);
+        Toast.clear();
+        this.detailData = res.data.data.detail;
+        this.albumData = res.data.data.album;
+        this.lords = res.data.data.detail.lords;
+        this.renters = res.data.data.detail.renters;
+        this.videoArray = this.getVideo(res.data.data);
           } else {
           }
         }).catch((error) => {
@@ -489,7 +489,6 @@
             })
           }
         }
-
         return videoArray;
       },
       //**********************

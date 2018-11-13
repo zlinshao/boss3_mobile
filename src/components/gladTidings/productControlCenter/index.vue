@@ -41,7 +41,7 @@
       <div id="houseItem">
         <div class="houseItem" v-for="(item,index) in tableData" @click="searchDetail(item)">
           <div class="image">
-            <img v-if="item.album&&item.album.length>0&&imgArray[item.id]" :src="imgArray[item.id]" alt="">
+            <img v-if="item.album && item.album.length > 0 && imgArray[item.id]" :src="imgArray[item.id]">
             <img src="../../../assets/noPic.png" alt="" v-else>
           </div>
           <div class="houseItemDescribe">
@@ -348,20 +348,18 @@
       getPic() {
         let update = {show: []};
         update.show = this.albumArray;
-        this.$http.post(globalConfig.server_user + 'files/batch', {'batch': JSON.stringify(update)}).then((res) => {
-          if (res.data.status === 'success') {
+        this.$http.post(globalConfig.server + 'api/v1/batch', {'batch': JSON.stringify(update)}).then((res) => {
+          if (res.data.code === '110100') {
             let imgArray = {};
-            res.data.data.forEach((item) => {
-              if (item.status === 'success') {
-                if (item.data.info.mime.indexOf('image') > -1) {
-                  this.tableData.forEach((list) => {
-                    if (!imgArray[list.id]) {
-                      if (list.album && list.album.indexOf(item.data.id) > -1) {
-                        imgArray[list.id] = item.data.uri;
-                      }
+            res.data.data.forEach((item, index) => {
+              if (item.info.mime.indexOf('image') > -1) {
+                this.tableData.forEach((list) => {
+                  if (!imgArray[list.id]) {
+                    if (list.album && list.album.indexOf(item.id) > -1) {
+                      imgArray[list.id] = item.uri;
                     }
-                  })
-                }
+                  }
+                })
               }
             });
             this.imgArray = imgArray;
@@ -371,7 +369,7 @@
       //字典匹配
       getDictionary() {
         this.$http.get(globalConfig.server + 'setting/dictionary/all').then((res) => {
-          if(res.data.code === '"30010"'){
+          if (res.data.code === '"30010"') {
             res.data.data.forEach((item) => {
               this.all_dic[item.id] = item.dictionary_name;
             });

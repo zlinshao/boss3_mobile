@@ -32,7 +32,7 @@
     name: "organize",
     data() {
       return {
-        address: globalConfig.server_user,
+        urls: globalConfig.server,
         searchValue: '',
         lists: [],
         path: '',
@@ -50,6 +50,7 @@
       this.close_();
     },
     watch: {
+
       searchValue(val) {
         let value = val.replace(/\s+/g, '');
         this.searchValue = value;
@@ -68,32 +69,29 @@
       },
       organize(val) {
         this.showDetail = false;
-        this.$http.get(this.address + 'users', {
+        this.$http.get(this.urls + 'organization/other/staff-list', {
           params: {
-            q: val,
+            keywords: val,
             page: 1,
-            per_page_number: 15,
+            limit: 15,
             org_id: 1,
-            is_recursion: 1,
           }
         }).then((res) => {
           if (this.searchValue !== '') {
-            let data = res.data.data;
+            let data = res.data.data.data;
             this.lists = [];
-            for (let i = 0; i < data.length; i++) {
-              if (data[i].name !== null) {
-                let list = {};
-                list.staff_id = data[i].id;
-                list.staff_name = data[i].name;
-                if (data[i].org.length !== 0) {
-                  list.depart_id = data[i].org[0].id;
-                  list.depart_name = data[i].org[0].name;
-                } else {
-                  list.depart_name = '---';
-                  list.depart_id = '';
-                }
-                this.lists.push(list);
+            for (let key of data) {
+              let list = {};
+              list.staff_id = key.id;
+              list.staff_name = key.name;
+              if (key.org.length !== 0) {
+                list.depart_id = key.org[0].id;
+                list.depart_name = key.org[0].name;
+              } else {
+                list.depart_name = '---';
+                list.depart_id = '';
               }
+              this.lists.push(list);
             }
             this.showDetail = true;
           } else {

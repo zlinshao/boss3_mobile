@@ -150,7 +150,7 @@
             <!--if (res.data.code === '50610') {-->
               <!--Toast.success(res.data.msg);-->
               <!--this.close_();-->
-              <!--this.routerDetail(res.data.data.data.id);-->
+              <!--if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }-->
             <!--} else if (res.data.code === '50620') {-->
               <!--this.form.id = res.data.data.id;-->
               <!--Toast.success(res.data.msg);-->

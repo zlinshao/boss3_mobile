@@ -1,68 +1,9 @@
 <template>
   <div>
     <div id="commentOn">
-      <!--<header v-if="marking === 1">-->
-      <!--<div class="address">-->
-      <!--{{this.address}}-->
-      <!--</div>-->
-      <!--<div>-->
-      <!--<p>{{status[forms.house_grade - 1]}}</p>-->
-      <!--</div>-->
-      <!--<div>-->
-      <!--<p>卫生状况：</p>-->
-      <!--<p v-for="key in 5" @click="forms.house_grade1 = onClick(key)">-->
-      <!--<i v-if="key > forms.house_grade1" class="iconfont icon-favorite"></i>-->
-      <!--<i v-if="key <= forms.house_grade1" class="iconfont icon-favoritesfilling"></i>-->
-      <!--</p>-->
-      <!--</div>-->
-      <!--<van-cell-group>-->
-      <!--<van-switch-cell v-model="houseStatus1" title="家电是否齐全"/>-->
-      <!--<van-switch-cell v-model="houseStatus2" title="卫生是否干净"/>-->
-      <!--</van-cell-group>-->
-      <!--<div class="marking">-->
-      <!--<div>-->
-      <!--<p>{{status[forms.house_grade - 1]}}</p>-->
-      <!--</div>-->
-      <!--<div>-->
-      <!--<p>卫生状况：</p>-->
-      <!--<p v-for="key in 5" @click="forms.house_grade1 = onClick(key)">-->
-      <!--<i v-if="key > forms.house_grade1" class="iconfont icon-favorite"></i>-->
-      <!--<i v-if="key <= forms.house_grade1" class="iconfont icon-favoritesfilling"></i>-->
-      <!--</p>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--<van-cell-group>-->
-      <!--<van-field-->
-      <!--@click="selectShow(1)"-->
-      <!--v-model="decorationOn"-->
-      <!--label="装修"-->
-      <!--type="text"-->
-      <!--readonly-->
-      <!--placeholder="请选择装修">-->
-      <!--</van-field>-->
-      <!--<van-field-->
-      <!--@click="selectShow(2)"-->
-      <!--v-model="propertyOn"-->
-      <!--type="text"-->
-      <!--readonly-->
-      <!--label="房屋特色"-->
-      <!--placeholder="请选择房屋特色">-->
-      <!--</van-field>-->
-      <!--<van-field-->
-      <!--v-model="forms.suggest_price"-->
-      <!--label="价格"-->
-      <!--type="text"          class="number"-->
-      <!--placeholder="请填写金额">-->
-      <!--</van-field>-->
-      <!--</van-cell-group>-->
-      <!--<div class="footer">-->
-      <!--<div @click="mark()">确认</div>-->
-      <!--</div>-->
-      <!--</header>-->
-
       <div>
         <div class="contents">
-          <!-- <div v-if="isShow" class="pdf-container"> 
+          <!-- <div v-if="isShow" class="pdf-container">
               <iframe  width="100%" height="280px" :src="pdfUrl" type="application/pdf"></iframe >
               <pdf :src="pdfUrl"></pdf >
               <div class="pdf-loading" v-if="pdf_loading">
@@ -72,18 +13,15 @@
           </div> -->
           <van-cell-group>
             <van-field
-              v-model="form.remark"
+              v-model="form.content"
               type="textarea"
               placeholder="说点什么吧！">
-              
             </van-field>
-            
           </van-cell-group>
-          
         </div>
         <div class="pic">
           <div class="title">图片</div>
-          <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear"></UpLoad>
+          <UpLoad :ID="'image_pic'" @getImg="getImgData" :isClear="isClear"></UpLoad>
         </div>
         <div v-if="queries.marking === 1">
           <van-cell-group>
@@ -115,7 +53,6 @@
     components: {Toast, UpLoad},
     data() {
       return {
-        address: globalConfig.server_user,
         urls: globalConfig.server,
         haveInHand: true,
         isClear: false,
@@ -139,8 +76,11 @@
         is_clean_status: true,            //卫生是否干净
 
         form: {
-          remark: '',
-          photo: [],
+          parent_id: 0,
+          obj_id: '',
+          content: '',
+          video_file: [],
+          image_pic: [],
         },
         forms: {
           is_electric_appliance: 1,     //家电是否齐全
@@ -167,36 +107,32 @@
       }
     },
     watch: {
-        $route (to, from) {
-            if(from.name === "publishDetail" && to.name === 'index') {
-              console.log(1111111111)
-              console.log(sessionStorage.getItem('showElectronicReceipt'))
-                if(sessionStorage.getItem('showElectronicReceipt')){
-                  console.log(1)
-                  sessionStorage.removeItem('showElectronicReceipt');
-                  console.log('done')
-                }
-            }
-            if(from.name === 'comment'){
-              this.isShow = false;
-              this.pdfUrl = '';
-              this.pdf_loading = true;
-            }
+      $route(to, from) {
+        if (from.name === "publishDetail" && to.name === 'index') {
+          if (sessionStorage.getItem('showElectronicReceipt')) {
+            sessionStorage.removeItem('showElectronicReceipt');
+          }
         }
+        if (from.name === 'comment') {
+          this.isShow = false;
+          // this.pdfUrl = '';
+          // this.pdf_loading = true;
+        }
+      }
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.path = from.path;
         vm.ddBack(1, from.path);
         vm.ddBack(2, from.path);
-        if(vm.$route.query.detail === 'to_market-marketing-manager_approved'){
-          if(sessionStorage.getItem('showElectronicReceipt')){
+        if (vm.$route.query.detail === 'to_market-marketing-manager_approved') {
+          if (sessionStorage.getItem('showElectronicReceipt')) {
             // vm.isShow = true;
             // vm.electronicReceiptParam = JSON.parse(sessionStorage.getItem('electronicReceiptParam'));
             // vm.bank = JSON.parse(sessionStorage.getItem('bank'));
             // vm.createElectronicReceipt(vm);
           }
-        }else{
+        } else {
           // vm.isShow = false;
         }
       })
@@ -280,8 +216,8 @@
         if (this.queries.detail !== 'to_comment') {
           this.sure(val);
         } else {
-          if (this.form.remark !== '' || this.form.photo.length !== 0) {
-            this.sure(val);
+          if (this.form.content !== '' || this.form.image_pic.length !== 0) {
+            this.comment(val);
           } else {
             Toast('请填写评论内容');
           }
@@ -294,7 +230,7 @@
       mark() {
         this.forms.is_electric_appliance = this.is_electric_status ? 1 : 0;
         this.forms.is_clean = this.is_clean_status ? 1 : 0;
-        this.$http.put(this.urls + 'bulletin/helper/score/' + this.queries.ids, this.forms).then((res) => {
+        this.$http.put(this.urls + 'bulletin/helper/score/' + this.queries.able, this.forms).then((res) => {
           if (res.data.code === '51110') {
             this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
             this.close_();
@@ -315,24 +251,83 @@
         }
         if (this.haveInHand) {
           this.haveInHand = false;
-          this.$http.put(this.address + 'process/' + this.queries.ids, {
-            operation: this.queries.detail,
-            comment: this.form.remark,
-            album: this.form.photo,
+          this.passThrough(val);
+        } else {
+          Toast(this.alertMsg('sub'));
+        }
+      },
+      passThrough(val) {
+        this.$http.post(this.urls + 'workflow/process/trans/' + this.queries.ids, {
+          operation: this.queries.detail,
+        }).then((res) => {
+          this.haveInHand = true;
+          this.flowPath(val);
+          this.retry = 0;
+          if (res.data.code === '20000') {
+            if (val === 1) {
+              this.mark();
+            } else {
+              this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
+              this.close_();
+              $('.imgItem').remove();
+            }
+            Toast.success(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
+        }).catch((error) => {
+          this.haveInHand = true;
+          this.flowPath(val);
+          if (error.response === undefined) {
+            this.alertMsg('net');
+          } else {
+            if (error.response.status === 401) {
+              this.personalGet().then((data) => {
+                if (data && this.retry === 0) {
+                  this.retry++;
+
+                  this.passThrough();
+                }
+              });
+            }
+          }
+        })
+      },
+      flowPath(val) {
+        if (this.form.content !== '' || this.form.image_pic.length !== 0) {
+          this.comment(val);
+        }
+      },
+      comment() {
+        if (this.picStatus === 'err') {
+          Toast(this.alertMsg('errPic'));
+          return;
+        } else if (this.picStatus === 'lose') {
+          Toast(this.alertMsg('pic'));
+          return;
+        }
+        if (this.haveInHand) {
+          this.haveInHand = false;
+          this.$http.post(this.urls + 'workflow/process/comment', {
+            content: this.form.content,
+            obj_id: this.queries.ids,
+            process_id: this.queries.process,
+            processable_id: this.queries.able,
+            parent_id: this.form.parent_id,
+            video_file: this.form.video_file,
+            image_pic: this.form.image_pic,
           }).then((res) => {
             this.retry = 0;
-            if (res.data.status === 'success') {
-              if (val === 1) {
-                this.mark();
-              } else {
+            if (res.data.code === '20000') {
+              if (this.queries.detail === 'to_comment') {
                 this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
-                this.close_();
-                $('.imgItem').remove();
+                Toast.success(res.data.msg);
               }
-              Toast.success(res.data.message);
+              this.close_();
+              $('.imgItem').remove();
               this.haveInHand = true;
             } else {
-              Toast(res.data.message);
+              Toast(res.data.msg);
               this.haveInHand = true;
             }
           }).catch((error) => {
@@ -346,7 +341,7 @@
                   if (data && this.retry === 0) {
                     this.retry++;
 
-                    this.sure();
+                    this.comment();
                   }
                 });
               }
@@ -356,10 +351,9 @@
           Toast(this.alertMsg('sub'));
         }
       },
-
       getImgData(val) {
         this.picStatus = val[2];
-        this.form.photo = val[1];
+        this.form.image_pic = val[1];
       },
 
       close_() {
@@ -367,8 +361,8 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        this.form.remark = '';
-        this.form.photo = [];
+        this.form.content = '';
+        this.form.image_pic = [];
       },
 
       ddBack(val, urls) {
@@ -393,11 +387,11 @@
       createElectronicReceipt(vm) {
         // this.electronicReceiptVisible = true;
         this.$http.post(globalConfig.server + 'financial/receipt/generate', {...vm.electronicReceiptParam, ...vm.bank}).then((res) => {
-          this.pdfloading = false;
+          // this.pdfloading = false;
           if (res.data.code === "20000") {
             this.electronicReceiptId = res.data.data.id;
-            this.pdfUrl = res.data.data.shorten_uri;
-            this.pdf_loading = false;
+            // this.pdfUrl = res.data.data.shorten_uri;
+            // this.pdf_loading = false;
             // this.signature = true
             sessionStorage.removeItem('showElectronicReceipt');
           } else {
@@ -411,16 +405,16 @@
       },
       //电子收据签章
       signatureBtn() {
-        this.pdfloading = true;
+        // this.pdfloading = true;
         this.$http.post(globalConfig.server + '/financial/receipt/sign/' + this.electronicReceiptId).then((res) => {
           if (res.data.code === "20000") {
-            this.pdfloading = false;
-            this.pdfUrl = res.data.data.shorten_uri;
+            // this.pdfloading = false;
+            // this.pdfUrl = res.data.data.shorten_uri;
             // this.signature = false
             // this.isShow = false;
             // localStorage.setItem('pdfUrl',this.pdfUrl)
           } else {
-              this.$notify.error({
+            this.$notify.error({
               title: '错误',
               message: res.data.msg
             });
@@ -514,26 +508,26 @@
           }
         }
       }
-      
-      .pdf-container{
+
+      .pdf-container {
         height: 530px;
         position: relative;
-        .pdf-loading{
-          height:1.2rem;
+        .pdf-loading {
+          height: 1.2rem;
           position: absolute;
           top: 0;
           right: 0;
           bottom: 0;
           left: 0;
           margin: auto;
-          .van-loading--spinner{
+          .van-loading--spinner {
             margin: 0 auto;
-          } 
-          .loading-tips{
-            color:red;
+          }
+          .loading-tips {
+            color: red;
             margin-top: .2rem;
           }
-          canvas{
+          canvas {
             height: 280px
           }
         }

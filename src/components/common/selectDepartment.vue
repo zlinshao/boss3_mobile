@@ -4,7 +4,7 @@
       <div class="breadcrumb_box">
         <div class="breadcrumb">
           <div>
-            <span @click="breadcrumbSearch(1,0)">{{highestDepart}}</span>
+            <span @click="breadcrumbSearch(ids, 0)">{{highestDepart}}</span>
           </div>
           <div v-for="(item,index) in breadcrumbList" @click="breadcrumbSearch(item,index)">
             <span>&nbsp;&gt;&nbsp;{{item.name}}</span>
@@ -12,20 +12,20 @@
         </div>
       </div>
       <div class="departList">
-        <ul>
+        <ul v-if="organizeList.length !== 0">
           <li v-for="item in organizeList">
             <div class="radio">
               <van-radio :name="item.id" v-model="selectId" @click="selectItem(item)"></van-radio>
             </div>
             <div class="depart_detail" @click="getNextLevel(item)">
               <div>{{item.name}}</div>
-              <div>{{item.users}}</div>
+              <div>{{item.users.length}}</div>
             </div>
           </li>
         </ul>
+        <div class="noDepart" v-else-if="noDepart">暂无相关部门</div>
+        <div class="noDepart" v-else><van-loading type="spinner" color="black"/></div>
       </div>
-
-
       <div class="footerIndex">
         <div @click="clearData">清空</div>
         <div @click="confirmAdd" :class="{'isGray':!selectId}">确定</div>
@@ -49,6 +49,8 @@
         selectId: '',
         selectDepart: {},
         path: '',
+        ids: 1,
+        noDepart: false,
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -58,24 +60,28 @@
         vm.ddRent(from.path, 'depart');
       })
     },
-    mounted() {
-      this.getDepartment(1);
-    },
     activated() {
-      this.getDepartment(1);
+      let id = JSON.parse(sessionStorage.personal).isCompany;
+      if (id) {
+        Object.values(id).forEach((item) => {
+          if (item > 1) {
+            this.ids = item;
+          }
+        })
+      }
+      this.getDepartment(this.ids);
     },
     methods: {
-      getDepartment(id) {
-        //获取顶级部门名称
-        this.$http.get(globalConfig.server_user + 'organizations/1').then((res) => {
-          if (res.data.status === 'success') {
-            this.highestDepart = res.data.data.name;
+      getDepartment(id = 1) {
+        this.noDepart = false;
+        this.$http.get(globalConfig.server + 'organization/other/org-tree?id=' + id).then((res) => {
+          if (res.data.code === '70050') {
+            this.organizeList = res.data.data.children;
+            if (id === this.ids || id === 1) {
+              this.highestDepart = res.data.data.name;
+            }
           }
-        });
-        this.$http.get(globalConfig.server_user + 'organizations?parent_id=' + id).then((res) => {
-          if (res.data.status === 'success') {
-            this.organizeList = res.data.data;
-          }
+          this.noDepart = true;
         });
       },
       //搜索下级部门
@@ -93,7 +99,7 @@
       },
       //面包屑搜索
       breadcrumbSearch(item, index) {
-        if (item === 1) {
+        if (item === this.ids) {
           this.getDepartment(item);
           this.breadcrumbList = [];
         } else {
@@ -143,8 +149,6 @@
             that.$router.replace({path: urls, query: {tops: ''}});
             that.ddRent(false);
           },
-          onFail: function (err) {
-          }
         });
       }
     },
@@ -186,6 +190,15 @@
           }
         }
       }
+    }
+    .noDepart {
+      color: #aaa;
+      border: none;
+      text-align: center;
+      padding: .3rem;
+      display: -webkit-flex;
+      display: flex;
+      justify-content: center;
     }
     .departList {
       height: 77%;

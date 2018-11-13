@@ -162,7 +162,7 @@
           waterfall-disabled="disabled"
           waterfall-offset="300">
         <li class="started">
-          <div class="startedMain" v-for="item in list" @click="routerDetail(item.id)">
+          <div class="startedMain" v-for="item in list" @click="routeDetail(item.id)">
             <div class="leftPic">
               <img :src="item.avatar" v-if="item.avatar !== '' && item.avatar !== null">
               <img src="../assets/head.png" v-else>
@@ -246,7 +246,7 @@
     components: {Toast},
     data() {
       return {
-        urls: globalConfig.server_user,
+        urls: globalConfig.server,
         list: [],
         page: 1,
         disabled: false,
@@ -282,7 +282,6 @@
     activated() {
       this.personalGet(2);
       this.routerIndex('');
-      this.ddRent('', 'close');
       this.disabled = true;
       this.scrollTops();
     },
@@ -317,12 +316,16 @@
       },
       // 待办事项
       toDone() {
-        this.$http.get(this.urls + 'process?type=2&count=1').then((res) => {
-          this.processType2 = res.data.data;
+        this.$http.get(this.urls + 'workflow/process?type=2&only_count=1').then((res) => {
+          if (res.data.code === '20000') {
+            this.processType2 = res.data.data.count;
+          } else {
+            this.processType2 = 0;
+          }
         })
       },
       // 详情页
-      routerDetail(id) {
+      routeDetail(id) {
         this.disabled = true;
         this.$router.push({path: '/publishDetail', query: {ids: id}});
       },
@@ -364,6 +367,7 @@
         this.params = {};
         this.params.page = val;
         this.params.type = active;
+        this.params.limit = 12;
         switch (active) {
           case 1:
           case 2:
@@ -380,86 +384,57 @@
         }
       },
       processList(val) {
-        this.$http.get(this.urls + 'process', {
+        this.$http.get(this.urls + 'workflow/process', {
           params: val,
         }).then((res) => {
-          if (res.data.status === 'success') {
+          if (res.data.code === '20000') {
             if ((val.published === 0 && val.type === 3) || (val.read_at === 0 && val.type === 4)) {
-              this.paging = res.data.meta.total;
+              this.paging = res.data.data.count;
             }
-            let data = res.data.data;
-            if (res.data.status === 'success' && data.length !== 0) {
+            let data = res.data.data.data;
+            console.log(data);
+            if (data.length !== 0) {
               for (let i = 0; i < data.length; i++) {
                 let user = {};
                 user.title = data[i].title;
-                user.created_at = data[i].created_at;
-                if (val.type === 3) {
-                  if (data[i].content.house) {
-                    user.house_name = data[i].content.house.name;
+                user.created_at = data[i].created_at.substring(0, 10);
+                if (data[i].content.house) {
+                  user.house_name = data[i].content.house.name;
+                } else {
+                  if (data[i].content.house_address) {
+                    user.house_name = data[i].content.house_address;
                   } else {
                     user.house_name = '/';
                   }
-                  if (data[i].content.money_sum) {
-                    user.money_sum = data[i].content.money_sum;
-                  } else {
-                    user.money_sum = '/';
-                  }
-                  if (data[i].user) {
-                    user.avatar = data[i].user.avatar;
-                    user.name = data[i].user.name;
-                    user.depart = data[i].user.org[0].name;
-                  } else {
-                    user.avatar = '';
-                    user.name = '';
-                    user.staff = '';
-                  }
-                  user.id = data[i].id;
-                  user.place = data[i].place.display_name;
-                  user.status = data[i].place.status;
-                  user.bulletin = data[i].content.bulletin_name;
                 }
-                if (val.type === 1 || val.type === 2 || val.type === 4) {
-                  if (data[i].flow) {
-                    if (user.house_name = data[i].flow.content.house) {
-                      user.house_name = data[i].flow.content.house.name;
-                    } else {
-                      user.house_name = '/';
-                    }
-                    if (data[i].user) {
-                      user.avatar = data[i].flow.user.avatar;
-                      user.name = data[i].flow.user.name;
-                      user.depart = data[i].flow.user.org[0].name;
-                    } else {
-                      user.avatar = '';
-                      user.name = '';
-                      user.staff = '';
-                    }
-                    if (data[i].flow.content.money_sum) {
-                      user.money_sum = data[i].flow.content.money_sum;
-                    } else {
-                      user.money_sum = '/';
-                    }
-                    user.id = data[i].flow.id;
-                    user.place = data[i].flow.place.display_name;
-                    user.status = data[i].flow.place.status;
-                    if (data[i].flow.content.type) {
-                      user.bulletin = data[i].flow.content.type.name;
-                    } else {
-                      user.bulletin = '';
-                    }
-                  } else {
-                    user.place = '';
-                    user.status = '';
-                    user.bulletin = '';
-                  }
+                if (data[i].content.money_sum) {
+                  user.money_sum = data[i].content.money_sum;
+                } else {
+                  user.money_sum = '/';
                 }
+                if (data[i].user) {
+                  user.avatar = data[i].user.avatar;
+                  user.name = data[i].user.name;
+                  user.depart = data[i].user.org[0].name;
+                } else {
+                  user.avatar = '';
+                  user.name = '';
+                  user.staff = '';
+                }
+                user.id = data[i].id;
+                user.place = data[i].places.display_name;
+                user.status = data[i].places.status;
+                user.bulletin = data[i].content.bulletin_name;
                 this.list.push(user);
               }
             } else {
               this.disabled = true;
             }
           } else {
-            this.paging = 0;
+            this.disabled = true;
+            if (this.params.page !== 1) {
+              this.paging = 0;
+            }
           }
         })
       },
