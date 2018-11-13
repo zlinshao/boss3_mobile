@@ -259,7 +259,14 @@
               <van-col span="12">
                 <van-row>
                   <van-col class="itemWord" span="10">开单人 :</van-col>
-                  <van-col class="itemWord" span="14">{{lords[0].sign_user.name}}</van-col>
+                  <van-col class="itemWord" span="14">
+                    <span v-if="lords[0].sign_user">
+                       {{lords[0].sign_user.name}}
+                    </span>
+                    <span v-else>
+                      暂无
+                    </span>
+                  </van-col>
                 </van-row>
               </van-col>
               <van-col span="12">
@@ -323,7 +330,14 @@
               <van-col span="12">
                 <van-row>
                   <van-col class="itemWord" span="10">开单人 :</van-col>
-                  <van-col class="itemWord" span="14">{{renters[0].sign_user.name}}</van-col>
+                  <van-col class="itemWord" span="14">
+                    <span v-if="renters[0].sign_user">
+                       {{renters[0].sign_user.name}}
+                    </span>
+                    <span v-else>
+                      暂无
+                    </span>
+                  </van-col>
                 </van-row>
               </van-col>
               <van-col span="12">
@@ -445,7 +459,6 @@
             this.renters = res.data.data.detail.renters;
             this.videoArray = this.getVideo(res.data.data);
           } else {
-
           }
         }).catch((error) => {
           Toast.fail("详情获取失败！");
