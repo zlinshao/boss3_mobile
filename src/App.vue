@@ -132,21 +132,19 @@
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
-          // alert(objUrl);
-          // this.getUserId(query);
-          let obj = {};
-          obj.corpid = query.appid;
-          obj.corpsecret = query.secret;
-          obj.url = objUrl;
-          obj.timestamp = new Date().getTime();
-          obj.nonceStr = md5(obj.corpid + obj.timestamp);
-          alert(JSON.stringify(obj));
-          this.token = obj;
-          this.weiChatAuth(obj).then(_ => {
-            wx.ready(function () {
-              wx.hideOptionMenu();
-            });
-          });
+          this.getUserId(query);
+          // let obj = {};
+          // obj.corpid = query.appid;
+          // obj.corpsecret = query.secret;
+          // obj.url = objUrl;
+          // obj.timestamp = new Date().getTime();
+          // obj.nonceStr = md5(obj.corpid + obj.timestamp);
+          // this.token = obj;
+          // this.weiChatAuth(obj).then(_ => {
+          //   wx.ready(function () {
+          //     wx.hideOptionMenu();
+          //   });
+          // });
         }
       },
       // 获取uid
