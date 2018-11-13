@@ -54,7 +54,7 @@
                  style="font-size: 0.2rem;color: #DDDDDD;" v-for="item in 5-Number(item.house_grade)">
               </i>
               <span style="font-size: 0.2rem;margin-left: .2rem" v-if="item.decoration && item.house_identity">
-              {{matchDictionary(item.decoration)}}/{{matchDictionary(item.house_identity)}}
+              {{all_dic[item.decoration]}}/{{all_dic[item.house_identity]}}
             </span>
               <span style="color: #ff3f77;font-weight: bold;float: right">
               <span style="color: #1ecb4e" v-if="item.status==1">已出租</span>
@@ -92,7 +92,7 @@
 
               <span v-if="item.house_res&&item.house_res.direction">{{item.house_res.direction.name}}</span>
 
-              <span v-if="item.house_feature">{{matchDictionary(item.house_feature)}}</span>
+              <span v-if="item.house_feature">{{all_dic[item.house_feature]}}</span>
             </div>
           </div>
         </div>
@@ -226,7 +226,7 @@
           // is_mobile: 1,
         },
         tableData: [],
-        all_dic: [],
+        all_dic: {},
         dicts: {
           room: ['', '1室', '2室', '3室', '4室', '5室', '6室', '7室', '8室'],
           hall: ['无', '1厅', '2厅', '3厅', '4厅', '5厅'],
@@ -372,18 +372,22 @@
       getDictionary() {
         this.$http.get(globalConfig.server + 'setting/dictionary/all').then((res) => {
           this.all_dic = res.data.data;
+          res.data.data.forEach((item) => {
+            this.all_dic[item.id] = item.dictionary_name;
+          });
+          console.log(this.all_dic);
         })
       },
-
-      matchDictionary(id) {
-        let dictionary_name = null;
-        this.all_dic.map((item) => {
-          if (item.id == id) {
-            dictionary_name = item.dictionary_name;
-          }
-        });
-        return dictionary_name;
-      },
+      //
+      // matchDictionary(id) {
+      //   let dictionary_name = null;
+      //   this.all_dic.map((item) => {
+      //     if (item.id == id) {
+      //       dictionary_name = item.dictionary_name;
+      //     }
+      //   });
+      //   return dictionary_name;
+      // },
 
       //搜索项搜索
       onSearch() {

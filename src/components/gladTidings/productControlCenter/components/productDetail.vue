@@ -408,6 +408,7 @@
           res.data.data.forEach((item) => {
             this.all_dic[item.id] = item.dictionary_name;
           });
+          console.log(this.all_dic);
         })
       },
       // matchDictionary(id) {
