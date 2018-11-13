@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading">
-      {{token}}
+      1{{token}}
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
@@ -137,7 +137,6 @@
           // ojb.corpsecret = query.secret;
           // ojb.url = objUrl;
           // this.weiChatAuth(ojb).then(res => {
-          //   this.token = res;
           //   wx.ready(function () {
           //     wx.hideOptionMenu();
           //   });
@@ -146,6 +145,7 @@
       },
       // 获取uid
       getUserId(val) {
+        this.token = 222222222;
         this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           this.token = res.data.data;
           if (res.data.success) {
