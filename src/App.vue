@@ -6,10 +6,7 @@
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
     </div>
-    <div style="margin-top: 3rem;">
-      <!--<div>{{token}}</div>-->
-      <div>{{token1}}</div>
-    </div>
+    <!--<div style="margin-top: 3rem;"><div>{{token1}}</div></div>-->
     <div v-if="!loading">
       <keep-alive>
         <router-view/>
@@ -136,18 +133,18 @@
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
           this.getUserId(query);
-          let obj = {};
-          obj.corpid = query.appid;
-          obj.corpsecret = query.secret;
-          obj.url = objUrl;
-          obj.timestamp = Math.round(new Date().getTime()/1000).toString();
-          obj.nonceStr = md5(obj.corpid + obj.timestamp);
-          this.weiChatAuth().then(_ => {
-            this.token1 = _;
-            wx.ready(function () {
-              wx.hideOptionMenu();
-            });
-          });
+          // let obj = {};
+          // obj.corpid = query.appid;
+          // obj.corpsecret = query.secret;
+          // obj.url = objUrl;
+          // obj.timestamp = Math.round(new Date().getTime()/1000).toString();
+          // obj.nonceStr = md5(obj.corpid + obj.timestamp);
+          // this.weiChatAuth().then(_ => {
+          //   this.token1 = _;
+          //   wx.ready(function () {
+          //     wx.hideOptionMenu();
+          //   });
+          // });
         }
       },
       // 获取uid
