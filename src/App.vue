@@ -127,7 +127,7 @@
         let query = this.$route.query;
         let url = window.location.href;
         let redirectUrl = encodeURIComponent(url);
-        let objUrl = encodeURIComponent(url.split('#')[0]);
+        // let objUrl = encodeURIComponent(url.split('#')[0]);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
@@ -147,6 +147,7 @@
       // 获取uid
       getUserId(val) {
         this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
+          this.token = res.data.data;
           if (res.data.success) {
             let info = res.data.data;
             this.token = JSON.stringify(info);
