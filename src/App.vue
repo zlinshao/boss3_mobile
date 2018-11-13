@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="module" v-if="loading" style="overflow: auto">
-      1{{token}}
+      {{token}}
     </div>
     <div class="loading" v-if="loading">
       <img src="./assets/loding1.gif">
@@ -146,10 +146,9 @@
       // 获取uid
       getUserId(val) {
         this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
-          this.token = res.data.data;
           if (res.data.success) {
             let info = res.data.data;
-            this.token = JSON.stringify(info);
+            // this.token = info;
             let data = {};
             data.id = info.id;
             data.name = info.name;
@@ -163,7 +162,7 @@
             this.loading = false;
           }
         }).catch(err => {
-          this.token = JSON.stringify(err);
+          // this.token = JSON.stringify(err);
         });
       },
       onInput(key) {
