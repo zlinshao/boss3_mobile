@@ -95,6 +95,8 @@
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           if (this.isWeiXin()) {
+            alert(2)
+            alert(window.location.href);
             this.prevent();
           } else {
             this.personalGet().then(res => {
@@ -127,7 +129,6 @@
       prevent() {
         let query = this.$route.query;
         let url = window.location.href;
-        alert(url);
         let redirectUrl = encodeURIComponent(url);
         let objUrl = encodeURIComponent(url.split('#')[0]);
         if (!query.code) {
@@ -151,8 +152,6 @@
       },
       // 获取uid
       getUserId(val) {
-        alert(JSON.stringify(val));
-        this.token1 = val;
         this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
           if (res.data.success) {
             let info = res.data.data;
