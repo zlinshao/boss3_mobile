@@ -204,7 +204,7 @@
     },
     data() {
       return {
-        urls: globalConfig.server,
+        urls: globalConfig.server,  
         personalId: {},
         vLoading: true,
         disabled: false,
@@ -216,7 +216,7 @@
         message: '',
         ids: '',
 
-        personal: {},  
+        personal: {},
         place: {},
         formList: {},
         operation: {},
