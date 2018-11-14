@@ -75,26 +75,29 @@
             page: 1,
             limit: 15,
             org_id: 1,
-            infinite: 20,
           }
         }).then((res) => {
           if (this.searchValue !== '') {
-            let data = res.data.data.data;
-            this.lists = [];
-            for (let key of data) {
-              let list = {};
-              list.staff_id = key.id;
-              list.staff_name = key.name;
-              if (key.org.length !== 0) {
-                list.depart_id = key.org[0].id;
-                list.depart_name = key.org[0].name;
-              } else {
-                list.depart_name = '---';
-                list.depart_id = '';
+            if (res.data.code === '70010') {
+              let data = res.data.data.data;
+              this.lists = [];
+              for (let key of data) {
+                let list = {};
+                list.staff_id = key.id;
+                list.staff_name = key.name;
+                if (key.org.length !== 0) {
+                  list.depart_id = key.org[0].id;
+                  list.depart_name = key.org[0].name;
+                } else {
+                  list.depart_name = '---';
+                  list.depart_id = '';
+                }
+                this.lists.push(list);
               }
-              this.lists.push(list);
+              this.showDetail = true;
+            } else {
+              this.close_();
             }
-            this.showDetail = true;
           } else {
             this.close_();
           }
