@@ -74,7 +74,7 @@
     methods: {
       getDepartment(id = 1) {
         this.noDepart = false;
-        this.$http.get(globalConfig.server + 'organization/other/org-tree?id=' + id).then((res) => {
+        this.$http.get(globalConfig.server + 'organization/other/org-tree?id=' + id + '&infinite=20').then((res) => {
           if (res.data.code === '70050') {
             this.organizeList = res.data.data.children;
             if (id === this.ids || id === 1) {

@@ -75,6 +75,7 @@
             page: 1,
             limit: 15,
             org_id: 1,
+            infinite: 20,
           }
         }).then((res) => {
           if (this.searchValue !== '') {
