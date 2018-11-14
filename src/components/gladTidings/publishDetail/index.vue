@@ -216,7 +216,7 @@
         message: '',
         ids: '',
 
-        personal: {},
+        personal: {},  
         place: {},
         formList: {},
         operation: {},
