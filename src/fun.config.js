@@ -293,6 +293,7 @@ export default {
       data.isCompany = '';
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;
+      dd.biz.navigation.setRight({show: false});
       resolve(true);
     };
     // 关闭钉钉
