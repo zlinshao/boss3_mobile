@@ -25,8 +25,8 @@
         <ul>
           <li v-for="(item, index) in commentList.list" :key="index">
             <p class="commentName">
-              <span>{{item.user.name}}</span>
-              <span>{{item.create_time}}</span>
+              <span style="font-size: 12px;height: 13px;">{{item.user.name}}</span>
+              <span style="font-size: 12px;height: 13px;">{{item.create_time}}</span>
             </p>
             <div class="commentConent">{{item.content}}</div>
           </li>
@@ -262,6 +262,7 @@ export default {
           overflow: hidden;
           margin-bottom: 10px;
           color: #969696;
+          font-size: 12px;
           span:first-of-type {
             float: left;
           }
@@ -280,9 +281,7 @@ export default {
       height: 40px;
       line-height: 40px;
       text-align: center;
-      border: 1px solid #409eff;
-      background-color: #409eff;
-      color: #fff;
+      color: #409eff;
       border-radius: 5px;
     }
     .publishComment {
