@@ -37,7 +37,7 @@ import ContinueCollect from '../components/gladTidings/continueCollect/index.vue
 // 数据统计
 import DataStatic from '../components/examine/dataStatic/index.vue'
 import DataCount from '../components/examine/dataCount/index.vue'
-import Statistics from '../components/examine/statistics/index.vue'
+// import Statistics from '../components/examine/statistics/index.vue'
 
 import UncollectBeforeRent from '../components/gladTidings/uncollectBeforeRent/index.vue'           //未收先祖
 import UncollectBeforeRentSure from '../components/gladTidings/uncollectBeforeRentSure/index.vue'   //未收先祖确定
