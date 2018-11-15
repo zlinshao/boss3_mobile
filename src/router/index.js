@@ -548,15 +548,15 @@ export default new Router({
       meta: {title: '员工广场'},
       component: StaffSquare
     },
-    {
-      path: '/dataStatic',
-      name: '业绩报表',
-      icon: 'iconfont icon-shujutu',
-      hidden: 'dataStatic',
-      back: '#F19851',
-      meta: {title: '业绩报表'},
-      component: DataStatic
-    },
+    // {
+    //   path: '/dataStatic',
+    //   name: '业绩报表',
+    //   icon: 'iconfont icon-shujutu',
+    //   hidden: 'dataStatic',
+    //   back: '#F19851',
+    //   meta: {title: '业绩报表'},
+    //   component: DataStatic
+    // },
     {
       path: '/dataCount',
       name: '业绩计算器',
