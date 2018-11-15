@@ -69,7 +69,12 @@
             type = android.queryType();
           }
           sessionStorage.setItem('queryType', type);
+<<<<<<< HEAD
           this.loading = true;
+=======
+          this.loading = false;
+          // add by cj 2018-05-25
+>>>>>>> master
           if (type === 'exam') {
             this.$router.push({path: '/beforeExam'});
           } else if (type === 'questionnaire') {
@@ -93,6 +98,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
+<<<<<<< HEAD
           this.loading = true;
           if (this.isWeiXin()) {
             this.prevent();
@@ -101,6 +107,17 @@
               this.loading = !res;
             });
           }
+=======
+          this.loading = false;
+          this.corp();
+          // if (sessionStorage.myData !== undefined) {
+          //   let head = JSON.parse(sessionStorage.myData);
+          //   globalConfig.header.Authorization = head.token_type + ' ' + head.access_token;
+          // } else {
+          //   this.loading = true;
+          //   this.corp();
+          // }
+>>>>>>> master
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {

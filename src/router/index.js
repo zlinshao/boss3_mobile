@@ -88,6 +88,10 @@ import WriteComment from '../components/examine/interlocution/components/writeCo
 //计算器
 import SearchHouse from '../components/common/searchHouse.vue';//计算器房屋搜索
 
+// 乐伽大学
+import LejiaUniversity from '../components/lejiaUniversity/LejiaUniversity.vue'
+import LejiaAlub from '../components/lejiaUniversity/LejiaAlub.vue'
+
 Vue.use(Router);
 
 export default new Router({
@@ -556,6 +560,28 @@ export default new Router({
       back: '#F19851',
       meta: {title: '业绩报表'},
       component: DataStatic
+    },
+    {
+      path: '/LejiaAlub',
+      name: '教学视频',
+      icon: 'iconfont icon-daxue', 
+      hidden: 'other',
+      back: '#F19851',
+      meta: {
+        title: '教学视频',
+        // keepAlive: true
+      },
+      component: LejiaAlub
+    },
+    {
+      path: '/LejiaUniversity',
+      name: '教学列表',
+      hidden: false,
+      meta: {
+        title: '教学列表',
+        // keepAlive: true
+      },
+      component: LejiaUniversity
     },
     // {
     //   path: '/dataCount',
