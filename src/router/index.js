@@ -548,24 +548,24 @@ export default new Router({
       meta: {title: '员工广场'},
       component: StaffSquare
     },
-    // {
-    //   path: '/dataStatic',
-    //   name: '业绩报表',
-    //   icon: 'iconfont icon-shujutu',
-    //   hidden: 'dataStatic',
-    //   back: '#F19851',
-    //   meta: {title: '业绩报表'},
-    //   component: DataStatic
-    // },
     {
-      path: '/dataCount',
-      name: '业绩计算器',
-      icon: 'iconfont icon-xushouxibao',
+      path: '/dataStatic',
+      name: '业绩报表',
+      icon: 'iconfont icon-shujutu',
       hidden: 'dataStatic',
-      back: '#E3705B',
-      meta: {title: '业绩计算'},
-      component: DataCount
+      back: '#F19851',
+      meta: {title: '业绩报表'},
+      component: DataStatic
     },
+    // {
+    //   path: '/dataCount',
+    //   name: '业绩计算器',
+    //   icon: 'iconfont icon-xushouxibao',
+    //   hidden: 'dataStatic',
+    //   back: '#E3705B',
+    //   meta: {title: '业绩计算'},
+    //   component: DataCount
+    // },
     {
       path:'/searchHouse',
       name:'计算器房屋搜索',
