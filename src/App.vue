@@ -54,7 +54,7 @@
             type = android.queryType();
           }
           sessionStorage.setItem('queryType', type);
-          this.loading = true;
+          this.loading = false;
           // add by cj 2018-05-25
           if (type === 'exam') {
             this.$router.push({path: '/beforeExam'});
@@ -84,7 +84,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = true;
+          this.loading = false;
           this.corp();
           // if (sessionStorage.myData !== undefined) {
           //   let head = JSON.parse(sessionStorage.myData);
