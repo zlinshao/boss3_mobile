@@ -169,13 +169,15 @@
           unique_names: false,                          // 默认false，key为文件
           save_key: false,                              // 默认false，key为文件
           domain: globalConfig.domain,                  // bucket域名，下载资源时用到，必需
+          // multi_selection: _this.noMulti,
+          // pictureContainer: 'pictureContainer',       // 上传区域DOM ID，默认是browser_button的父元素
           max_file_size: '100mb',                       // 最大文件体积限制
           flash_swf_url: 'path/of/plupload/Moxie.swf',  //引入flash，相对路径
           max_retries: 1,                               // 上传失败最大重试次数
           dragdrop: true,                               // 开启可拖曳上传
           drop_element: 'pickfiles' + _this.ID,         // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
           chunk_size: '4mb',                            // 分块上传时，每块的体积
-          auto_start: true,                             // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
+          auto_start: true,                                    // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
           init: {
             'FilesAdded': function (up, files) {
               _this.fileLength = _this.imgId.length + files.length;
@@ -226,6 +228,7 @@
               _this.isUploading = 'lose';
               up.setOption('multipart_params', {
                 token: _this.token,               // 上传凭证
+                'key': file.name,
               });
             },
             'FileUploaded': function (up, file, info) {
