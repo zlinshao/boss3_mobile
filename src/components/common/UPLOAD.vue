@@ -235,7 +235,6 @@
               let domain = up.getOption('domain');
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
-              alert(info)
               _this.$http.defaults.timeout = 5000;
               _this.$http.post(_this.url + 'api/v1/upload-direct', {
                 url: sourceLink,
