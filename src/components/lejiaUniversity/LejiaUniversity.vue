@@ -4,7 +4,7 @@
       <van-nav-bar :title="titleName"  left-arrow left-text="返回"  @click-left="goBack"  />
     <div class="videoList">
       <div class="video" v-for="(item, index) in videoList" :key="index">
-        <video :src="item.file" width="100%" height="100%" @click.stop="palyVideo(item.id, index)"></video>
+        <video :src="item.file" width="100%" height="100%" @click.stop="palyVideo(item.id, index)" poster="../../assets/bofang.jpg"></video>
         <p class="videoName">{{item.video_name}}</p>
         <p class="count">
           <span>人数：{{item.play_user}}</span>
@@ -111,7 +111,7 @@ export default {
       this.show = true;
       var mobileWidth = document.body.clientWidth;
       var mobileHeight = document.body.clientHeight;
-      var video = $("<video id='videoRecording' controlsList='nodownload'></video>");
+      var video = $("<video id='videoRecording' controlsList='nodownload' preload='auto'></video>");
       video.css({
         width: mobileWidth + "px"
       });
@@ -187,6 +187,7 @@ export default {
     bottom: 0;
     right: 0;
     color: #666;
+    z-index: 999;
   }
   .back {
     padding-left: 20px;
@@ -202,8 +203,9 @@ export default {
     }
   }
   .video {
-    width: 32%;
+    width: 49%;
     height: 100px;
+    object-fit: fill;
     margin: 0.33%;
     display: inline-block;
     // border: 1px solid #666;

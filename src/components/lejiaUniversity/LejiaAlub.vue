@@ -7,7 +7,7 @@
     <van-nav-bar title="教学视频"  left-arrow left-text="返回"  @click-left="goBack"  />
     <div class="videoAlbum">
       <van-row gutter="20">
-        <van-col span="8" v-for="(item, index) in videoAlbumlist" :key="index">
+        <van-col span="12" v-for="(item, index) in videoAlbumlist" :key="index">
           <div class="videoAlbumList">
             <img :src="item.cover" @click="toVideoDetail(item.id,item.name)" v-if="item.cover" >
             <img src="../../assets/default1.png" @click="toVideoDetail(item.id,item.name)" v-else >
@@ -98,7 +98,7 @@ export default {
     height: 120px;
     img {
       width: 100%;
-      max-height: 60%;
+      height: 60%;
     }
     span {
       margin-top: 10px;
