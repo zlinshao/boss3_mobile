@@ -9,10 +9,12 @@ import Vuex from 'vuex'
 import store from './store/index.js'
 import '@/assets/js/api.js'
 import '@/assets/js/formData.js'
-import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
+import 'vant/lib/vant-css/index.css'
+// import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 
 import {
   Cell,
+  Collapse, CollapseItem,
   CellGroup,
   Icon,
   DatetimePicker,
@@ -53,7 +55,7 @@ import {
   AddressList
 } from 'vant';
 
-Vue.use(Row).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(CellSwipe).use(SwitchCell).use(Picker).use(Popup).use(AddressList);
+Vue.use(Row).Vue.use(Collapse).Vue.use(CollapseItem).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(CellSwipe).use(SwitchCell).use(Picker).use(Popup).use(AddressList);
 Vue.use(require('vue-wechat-title'));
 
 Vue.use(Vuex);
