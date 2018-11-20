@@ -1003,7 +1003,6 @@
           Toast(this.alertMsg('sub'));
         }
       },
-
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
