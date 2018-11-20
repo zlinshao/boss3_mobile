@@ -309,7 +309,7 @@
         for (let j = 0; j < val.renters.length; j++) {
           // if (!val.renters[j].end_type || this.end_type === 'none') {
             this.contracts(val, type, val.renters[j]);
-          // }
+          }
         }
       },
       contracts(val, type, value) {
