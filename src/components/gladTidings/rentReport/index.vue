@@ -156,31 +156,39 @@
           <span>本次已收金额</span>
         </div>
       </div>
+
       <van-cell-group>
-        <van-field
-          v-model="form.front_money"
-          type="text"
-          class="number"
-          label="定金"
-          @keyup="moneyAll"
-          placeholder="请填写金额">
-        </van-field>
-        <van-field
-          v-model="form.deposit_payed"
-          label="押金"
-          @keyup="moneyAll"
-          type="text"
-          class="number"
-          placeholder="请填写已收押金">
-        </van-field>
-        <van-field
-          v-model="form.rent_money"
-          label="租金"
-          @keyup="moneyAll"
-          type="text"
-          class="number"
-          placeholder="请填写租金">
-        </van-field>
+        <div class="checks">
+          <div style="min-width: 110px;">收租标记</div>
+          <van-radio-group @change="radioChange">
+            <van-radio name="0">定金</van-radio>
+            <van-radio name="1">租金+押金</van-radio>
+          </van-radio-group>
+        </div>
+        <!--<van-field-->
+        <!--v-model="form.front_money"-->
+        <!--type="text"-->
+        <!--class="number"-->
+        <!--label="定金"-->
+        <!--@keyup="moneyAll"-->
+        <!--placeholder="请填写金额">-->
+        <!--</van-field>-->
+        <!--<van-field-->
+        <!--v-model="form.deposit_payed"-->
+        <!--label="押金"-->
+        <!--@keyup="moneyAll"-->
+        <!--type="text"-->
+        <!--class="number"-->
+        <!--placeholder="请填写已收押金">-->
+        <!--</van-field>-->
+        <!--<van-field-->
+        <!--v-model="form.rent_money"-->
+        <!--label="租金"-->
+        <!--@keyup="moneyAll"-->
+        <!--type="text"-->
+        <!--class="number"-->
+        <!--placeholder="请填写租金">-->
+        <!--</van-field>-->
         <van-field
           v-model="form.money_sum"
           type="text"
@@ -231,14 +239,6 @@
       </div>
 
       <van-cell-group>
-        <!--<van-field-->
-        <!--v-model="form.deposit"-->
-        <!--label="押金"-->
-        <!--type="text"-->
-        <!--class="number"-->
-        <!--placeholder="请填写押金"-->
-        <!--required>-->
-        <!--</van-field>-->
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -742,6 +742,10 @@
         });
         this.receiptNum();
       },
+      // 电子收据
+      radioChange() {
+
+      },
       moneyAll() {
         this.form.money_sum = this.countMoney(this.form);
       },
@@ -1048,7 +1052,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50220') {
               this.form.id = res.data.data.id;
               if (receipt.length === 0) {
@@ -1348,5 +1356,8 @@
 <style lang="scss">
   #rentReport {
     overflow: hidden;
+    .checks {
+      border-bottom: .5px solid #f8f8f8;
+    }
   }
 </style>
