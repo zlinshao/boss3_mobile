@@ -30,12 +30,7 @@
           required>
         </van-field>
         <div class="first_date">
-          <van-field
-            style="width: 110px;"
-            class="title"
-            label="签约时长"
-            required>
-          </van-field>
+          <div class="titles required">签约时长</div>
           <van-field
             v-model="form.month"
             type="text"

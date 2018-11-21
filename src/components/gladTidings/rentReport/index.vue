@@ -21,12 +21,7 @@
           required>
         </van-field>
         <div class="first_date">
-          <van-field
-            style="width: 110px;"
-            class="title"
-            label="签约时长"
-            required>
-          </van-field>
+          <div class="titles required">签约时长</div>
           <van-field
             v-model="form.month"
             type="text"
@@ -159,7 +154,7 @@
 
       <van-cell-group>
         <div class="checks">
-          <div style="min-width: 110px;">本次金额为</div>
+          <div class="titles required">本次金额为</div>
           <van-radio-group @change="radioChange">
             <van-radio name="0">定金</van-radio>
             <van-radio name="1">租金+押金</van-radio>

@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
-          <div style="min-width: 110px;margin-left: -7px"><span style="color: red;">*</span>报备类型</div>
+          <div class="titles required">报备类型</div>
           <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.quality_up"
                            @change="qualityChange">
             <van-radio name="0">新增</van-radio>
@@ -62,12 +62,8 @@
         <!--required>-->
         <!--</van-field>-->
         <div class="fourth">
+          <div class="titles required">门牌号</div>
           <van-field
-            label="门牌号"
-            required>
-          </van-field>
-          <van-field
-            style="width: 22%"
             v-model="form.door_address[0]"
             type="text"
             :disabled="followUp"
@@ -75,7 +71,6 @@
           </van-field>
           <span class="cut">-</span>
           <van-field
-            style="width: 22%"
             v-model="form.door_address[1]"
             type="text"
             :disabled="followUp"
@@ -141,12 +136,7 @@
           placeholder="请选择朝向">
         </van-field>
         <div class="first_date">
-          <van-field
-            style="width: 110px;"
-            class="title"
-            label="楼层"
-            required>
-          </van-field>
+          <div class="titles required">楼层</div>
           <van-field
             v-model="form.floor"
             type="text"

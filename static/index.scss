@@ -70,6 +70,24 @@ $color: #409EFF;
   }
 }
 
+.first_date, .checks {
+  .titles {
+    min-width: 95px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+  }
+  .titles.required {
+    &:after {
+      content: '*';
+      position: absolute;
+      left: 7px;
+      font-size: 14px;
+      color: #f44;
+    }
+  }
+}
+
 .titleRed {
   padding-left: 110px;
   padding-bottom: .1rem;

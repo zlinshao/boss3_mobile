@@ -21,12 +21,7 @@
           required>
         </van-field>
         <div class="first_date month">
-          <van-field
-            style="width: 110px;"
-            class="title"
-            label="签约时长"
-            required>
-          </van-field>
+          <div class="titles required">签约时长</div>
           <van-field
             v-model="form.month"
             type="text"
@@ -99,13 +94,8 @@
           required>
         </van-field>
         <div class="first_date">
+          <div class="titles required">打房租日期</div>
           <van-field
-            class="title"
-            label="打房租日期"
-            required>
-          </van-field>
-          <van-field
-            style="width: 30%;"
             v-model="form.pay_first_date"
             readonly
             type="text"
@@ -261,12 +251,7 @@
           required>
         </van-field>
         <div class="first_date">
-          <van-field
-            style="width: 110px;"
-            class="title"
-            label="保修期"
-            required>
-          </van-field>
+          <div class="titles required">保修期</div>
           <van-field
             v-model="form.warranty"
             type="text"

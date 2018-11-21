@@ -93,7 +93,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = true;
+          this.loading = false;
           if (this.isWeiXin()) {
             this.prevent();
           } else {
