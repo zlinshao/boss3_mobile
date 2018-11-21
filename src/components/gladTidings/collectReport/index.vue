@@ -2,17 +2,6 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-collapse v-model="activeNames">
-          <van-collapse-item title="有赞微商城" name="1">
-            提供多样店铺模板，快速搭建网上商城
-          </van-collapse-item>
-          <van-collapse-item title="有赞零售" name="2">
-            网店吸粉获客、会员分层营销、一机多种收款，告别经营低效和客户流失
-          </van-collapse-item>
-          <van-collapse-item title="有赞美业" name="3" disabled>
-            线上拓客，随时预约，贴心顺手的开单收银
-          </van-collapse-item>
-        </van-collapse>
         <van-field
           v-model="form.house.name"
           label="房屋地址"
@@ -479,11 +468,11 @@
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
-  import {Toast, Collapse, CollapseItem} from 'vant';
+  import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, Collapse, CollapseItem},
+    components: {UpLoad, Toast},
     data() {
       return {
         haveInHand: true,
@@ -590,7 +579,6 @@
         counts: '',
 
         retry: 0,
-        activeNames: ['1']
       }
     },
     watch: {
