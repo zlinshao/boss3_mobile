@@ -67,9 +67,8 @@
             label="联系方式"
             placeholder="请填写联系方式">
           </van-field>
-          <div class="checks radio">
-            <span class="req">*</span>
-            <div class="checkTitle">性别</div>
+          <div class="checks">
+            <div class="titles required">性别</div>
             <van-radio-group v-model="sexs[index]">
               <van-radio name="1">男</van-radio>
               <van-radio name="2">女</van-radio>
@@ -107,10 +106,7 @@
           @click-icon="form.water = ''">
         </van-field>
         <div class="first_date">
-          <van-field
-            style="width: 110px;"
-            label="电表底数">
-          </van-field>
+          <div class="titles">电表底数</div>
           <van-field
             v-model="form.electricity_peak"
             type="text"

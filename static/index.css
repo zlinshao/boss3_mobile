@@ -109,6 +109,8 @@ div .payWay.van-cell.van-hairline.van-field i {
 .checkCss {
   background-color: #FFFFFF;
   padding: .15rem .3rem; }
+  .checkCss .van-checkbox {
+    margin: .12rem; }
 
 .checkCss .van-checkbox.van-checkbox--round, .checkCss .van-radio, .subjectB .van-checkbox.van-checkbox--round, .subjectB .van-radio {
   margin: .2rem 0; }

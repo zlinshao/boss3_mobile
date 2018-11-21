@@ -7,7 +7,7 @@
           <input type="text" v-model="searchValue" @keyup.enter="search">
           <i v-if="searchValue" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
         </div>
-        <button @click="search" :disabled="!searchValue" class="button">搜索</button>
+        <button @click="search" :disabled="!searchValue" class="button" style="background-color: transparent;">搜索</button>
       </div>
       <div class="notData" v-if="lists.length<1 && noData">暂无相关信息</div>
 
