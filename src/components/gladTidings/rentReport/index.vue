@@ -159,7 +159,7 @@
 
       <van-cell-group>
         <div class="checks">
-          <div style="min-width: 110px;">收租标记</div>
+          <div style="min-width: 110px;">本次金额为</div>
           <van-radio-group @change="radioChange">
             <van-radio name="0">定金</van-radio>
             <van-radio name="1">租金+押金</van-radio>
