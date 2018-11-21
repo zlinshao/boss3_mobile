@@ -902,9 +902,6 @@
           case 6:
             this.columns = dicts.value8;
             break;
-          case 7:
-            this.columns = Object.values(dicts.money_types);
-            break;
         }
       },
       // select选择
@@ -943,13 +940,6 @@
           case 6:
             this.form.is_agency = index;
             this.cusFrom = value;
-            break;
-          case 7:
-            this.form.front_money = '';            //定金
-            this.form.deposit = '';                //押金
-            this.form.rent_money = '';             //租金
-            this.money_type = value;
-            this.money_key = Object.keys(dicts.money_types)[index];
             break;
         }
         this.selectHide = false;

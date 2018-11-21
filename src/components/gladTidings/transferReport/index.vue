@@ -868,9 +868,6 @@
           case 5:
             this.columns = this.cities;
             break;
-          case 6:
-            this.columns = Object.values(dicts.money_types);
-            break;
         }
       },
       // select选择
@@ -897,13 +894,6 @@
             break;
           case 5:
             this.form.receipt[this.payIndex].city = value;
-            break;
-          case 6:
-            this.form.front_money = '';            //定金
-            this.form.deposit = '';                //押金
-            this.form.rent_money = '';             //租金
-            this.money_type = value;
-            this.money_key = Object.keys(dicts.money_types)[index];
             break;
         }
         this.selectHide = false;

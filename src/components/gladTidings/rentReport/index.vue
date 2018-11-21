@@ -155,42 +155,19 @@
       <van-cell-group>
         <div class="checks">
           <div class="titles required">本次金额为</div>
-          <van-radio-group @change="radioChange">
-            <van-radio name="0">定金</van-radio>
-            <van-radio name="1">租金+押金</van-radio>
+          <van-radio-group v-model="receivedPrice" @change="radioChange">
+            <van-radio name="front_money">定金</van-radio>
+            <van-radio name="deposit_payed">租金+押金</van-radio>
           </van-radio-group>
         </div>
-        <!--<van-field-->
-        <!--v-model="form.front_money"-->
-        <!--type="text"-->
-        <!--class="number"-->
-        <!--label="定金"-->
-        <!--@keyup="moneyAll"-->
-        <!--placeholder="请填写金额">-->
-        <!--</van-field>-->
-        <!--<van-field-->
-        <!--v-model="form.deposit_payed"-->
-        <!--label="押金"-->
-        <!--@keyup="moneyAll"-->
-        <!--type="text"-->
-        <!--class="number"-->
-        <!--placeholder="请填写已收押金">-->
-        <!--</van-field>-->
-        <!--<van-field-->
-        <!--v-model="form.rent_money"-->
-        <!--label="租金"-->
-        <!--@keyup="moneyAll"-->
-        <!--type="text"-->
-        <!--class="number"-->
-        <!--placeholder="请填写租金">-->
-        <!--</van-field>-->
         <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="总金额"
           placeholder="请填写总金额"
-          disabled>
+          @click-icon="form.money_sum = ''"
+          required>
         </van-field>
       </van-cell-group>
 
@@ -234,6 +211,15 @@
       </div>
 
       <van-cell-group>
+        <van-field
+          v-model="form.memo"
+          label="收款备注"
+          type="textarea"
+          placeholder="请填写备注"
+          icon="clear"
+          @click-icon="form.memo = ''">
+        </van-field>
+        <div class="addInput" @click="previewReceipt(form)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -520,7 +506,7 @@
         payIndex: '',                   //付款方式index
 
         amountMoney: 1,
-
+        receivedPrice: 'front_money',   //本次金额为
         cusFrom: '',                    //是否中介
         corp: true,                     //公司单
         other_fee_status: false,
@@ -559,6 +545,7 @@
           real_pay_at: [''],            //实际收款时间
           money_way: [''],              //汇款帐户
           account_id: [],               //汇款帐户ID
+          memo: '',                     //收款备注
 
           is_other_fee: 0,
           other_fee: '',
@@ -688,6 +675,28 @@
       this.houseInfo();
     },
     methods: {
+      previewReceipt(val) {
+        console.log(val);
+
+        let data = {
+          process_id: "0",
+          department_id: 93,
+          date: "2018-11-21",
+          payer: "徐航",
+          address: "百水芊城怡水坊5-103",
+          price: "1850元",
+          sign_at: "2018-11-11",
+          duration: "12月0天",
+          pay_way: "押1付6",
+          payment: "定金",//押金   押金+租金
+          amount: "2000",
+          sum: 2000,
+          sum_uc: "3000",
+          memo: "备注",//collect_remark
+          bank1: "浦发银行 6217920475525080 吕繁",
+          account_id: 2531
+        }
+      },
       // 显示日期
       showTimeChoose(val, time, index) {
         setTimeout(() => {
@@ -699,7 +708,6 @@
       },
       // 确定日期
       onConTime(val) {
-        console.log(val);
         this.form[val.dataKey][this.formatData.idx] = val.dateVal;
         this.timeModule = false;
       },
@@ -739,7 +747,7 @@
       },
       // 电子收据
       radioChange() {
-
+        this.form.money_sum = '';
       },
       moneyAll() {
         this.form.money_sum = this.countMoney(this.form);
@@ -872,9 +880,6 @@
           case 5:
             this.columns = dicts.value8;
             break;
-          case 6:
-            this.columns = Object.values(dicts.money_types);
-            break;
         }
       },
       // select选择
@@ -905,13 +910,6 @@
           case 5:
             this.form.is_agency = index;
             this.cusFrom = value;
-            break;
-          case 6:
-            this.form.front_money = '';            //定金
-            this.form.deposit = '';                //押金
-            this.form.rent_money = '';             //租金
-            this.money_type = value;
-            this.money_key = Object.keys(dicts.money_types)[index];
             break;
         }
         this.selectHide = false;
@@ -1027,6 +1025,7 @@
               receipt.push(this.form.receipt[i]);
             }
           }
+          this.form[this.receivedPrice] = this.form.money_sum;
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
           this.form.receipt = receipt;
           this.form.draft = val;
@@ -1170,12 +1169,17 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
-            this.form.front_money = draft.front_money;
-            this.form.deposit = draft.deposit;
-            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
-            this.form.rent_money = draft.rent_money;
-            this.form.money_sum = draft.money_sum;
 
+            this.form.deposit = draft.deposit;
+            this.form.rent_money = draft.rent_money;
+            this.form.front_money = draft.front_money;
+            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
+            this.form.money_sum = draft.money_sum;
+            if (this.form.deposit_payed) {
+              this.receivedPrice = 'deposit_payed';
+            } else {
+              this.receivedPrice = 'front_money';
+            }
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
@@ -1298,11 +1302,13 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
+        this.receivedPrice = 'front_money';
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';
         this.form.rent_money = '';
         this.form.money_sum = '';
+        this.form.memo = '';
         this.amountMoney = 1;
         this.form.money_sep = [''];
         this.form.real_pay_at = [''];
