@@ -118,7 +118,11 @@ div {
   .van-switch.van-switch--on {
     background: $color;
   }
-
+  .van-switch {
+    .van-switch__node {
+      font-size: 26px;
+    }
+  }
   .van-icon.van-icon-checked {
     color: $color;
   }

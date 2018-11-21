@@ -377,7 +377,6 @@
                 width: 4.3rem;
                 height: 26px;
                 margin-top: 3px;
-                height: 26px;
                 line-height: 26px;
                 overflow: hidden;
                 white-space: nowrap;

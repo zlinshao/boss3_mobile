@@ -76,6 +76,8 @@
 
 div .van-switch.van-switch--on {
   background: #409EFF; }
+div .van-switch .van-switch__node {
+  font-size: 26px; }
 div .van-icon.van-icon-checked {
   color: #409EFF; }
 div .van-checkbox.van-checkbox--round .van-checkbox__control:checked + .van-icon-success {
