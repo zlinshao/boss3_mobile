@@ -1,8 +1,5 @@
 <template>
   <div id="rentReport">
-    <div>
-      <pdfsss :src="pdfUrls"></pdfsss>
-    </div>
     <div class="main" id="main">
       <van-cell-group>
         <van-field
@@ -466,11 +463,10 @@
   import ChooseTime from '../../common/chooseTime.vue'
   import {Toast} from 'vant';
   import {Dialog} from 'vant';
-  import pdfsss from 'vue-pdf'
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, ChooseTime, pdfsss},
+    components: {UpLoad, Toast, ChooseTime},
     data() {
       return {
         pdfUrls: '',
