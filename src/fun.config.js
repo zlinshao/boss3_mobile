@@ -1,4 +1,4 @@
-import {md5} from './assets/js/MD5.js'
+import {Toast} from 'vant';
 
 export default {
   install(Vue, options) {
@@ -29,7 +29,6 @@ export default {
         e.preventDefault();
         that.$router.push({path: url, query: data});
       });
-
       dd.biz.navigation.setLeft({
         control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
         onSuccess() {
@@ -155,6 +154,31 @@ export default {
       }).catch(err => {
         alert(JSON.stringify(err));
       })
+    };
+    // loading
+    Vue.prototype.prompt = function (type, msg) {
+      switch (type) {
+        case 'send':
+          Toast.loading({
+            duration: 0,            // 持续展示 toast
+            forbidClick: true,      // 禁用背景点击
+            loadingType: 'spinner',
+            message: msg
+          });
+          break;
+        case 'succeed':
+          Toast.success(msg);
+          break;
+        case 'fail':
+          Toast.fail(msg);
+          break;
+        case 'close':
+          Toast.clear();
+          break;
+        default:
+          Toast(msg);
+          break;
+      }
     };
     Vue.prototype.computedDate = function (params) {
       return new Promise((resolve, reject) => {

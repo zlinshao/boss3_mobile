@@ -238,7 +238,7 @@
           icon="clear"
           @click-icon="form.memo = ''">
         </van-field>
-        <div class="addInput" @click="previewReceipt(form)">预览电子收据</div>
+        <div class="addInput" @click="previewReceipt(form)">生成电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -469,9 +469,6 @@
     components: {UpLoad, Toast, ChooseTime},
     data() {
       return {
-        pdfUrls: '',
-        // 缩放 默认为1
-        scale: 1.2,
         timeModule: false,              //日期
         formatData: {
           paramsKey: '',                //格式化日期
@@ -479,7 +476,7 @@
           dataKey: '',                  //字段区分
           idx: '',                      //下标
         },
-
+        path: '',
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,                 //删除图片
@@ -680,6 +677,11 @@
       }
       this.houseInfo();
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.path = to.path;
+      })
+    },
     methods: {
       logContent() {
         this.$refs.myPdfComponent.pdf.forEachPage(function (page) {
@@ -689,6 +691,7 @@
           })
         });
       },
+      // 生成电子收据
       previewReceipt(val) {
         let data = {};
         data.process_id = '0';
@@ -719,13 +722,22 @@
           data['bank' + (index + 1)] = item;
         });
         data.account_id = val.account_id;
-        this.$http.post(this.urls + 'financial/receipt/generate', data).then(res => {
-          if (res.data.code === '20000') {
-            this.pdfUrls = res.data.data.shorten_uri;
-          } else {
-            Toast(res.data.msg);
-          }
-
+        this.prompt('send', '正在生成电子收据！');
+        new Promise((resolve, reject) => {
+          this.$http.post(this.urls + 'financial/receipt/generate', data).then(res => {
+            this.prompt('close');
+            if (res.data.code === '20000') {
+              let pdfUrls = res.data.data.shorten_uri;
+              this.goBack(this.path);
+              resolve(pdfUrls);
+            } else {
+              this.prompt('fail', res.data.msg);
+            }
+          }).catch(_ => {
+            this.prompt('close');
+          })
+        }).then(data => {
+          window.location.href = data;
         })
       },
       // 显示日期
