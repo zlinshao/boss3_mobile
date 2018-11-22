@@ -59,7 +59,6 @@
         return ua.includes('micromessenger');
       },
       responses() {
-        alert(navigator.userAgent);
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
           let type;
           sessionStorage.setItem('queryType', type);
@@ -73,10 +72,8 @@
           // } else if (type === 'staffSquare') {
           //   this.$router.push({path: '/staffSquare'});
           // }
-          alert(type);
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             let data = {};
-            alert(JSON.stringify(res.data));
             data.id = res.data.data.id;
             data.name = res.data.data.name;
             data.avatar = res.data.data.avatar;
@@ -85,9 +82,7 @@
             data.department_id = res.data.data.org[0].id;
             this.loading = false;
             sessionStorage.setItem('personal', JSON.stringify(data));
-          }).catch(_ => {
-            alert(JSON.stringify(_));
-          });
+          }).catch(_ => {});
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
