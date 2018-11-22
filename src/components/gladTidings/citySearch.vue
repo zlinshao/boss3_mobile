@@ -18,22 +18,19 @@
         <van-loading type="spinner" color="black"/>
       </div>
       <div class="searchContent">
-        <ul
-          v-waterfall-lower="loadMore"
-          waterfall-disabled="disabled"
-          waterfall-offset="300">
-          <li>
-            <div class="searchList city" v-for="key in lists" @click="village(key)">
-              <div>{{key.village_name}}</div>
-              <div>
-                <p>{{key.province.province_name}}-{{key.city.city_name}}</p>
-              </div>
+        <van-list
+          :finished="finished"
+          @load="onLoad">
+          <div class="searchList city" v-for="key in lists" @click="village(key)">
+            <div>{{key.village_name}}</div>
+            <div>
+              <p>{{key.province.province_name}}-{{key.city.city_name}}</p>
             </div>
-          </li>
-        </ul>
+          </div>
+        </van-list>
         <div class="bottom">
-          <div class="abc" v-if="disabled && this.lists.length > 8">没有更多了</div>
-          <div class="abc" v-if="!disabled && this.lists.length !== 0">
+          <div class="abc" v-if="loading && this.lists.length > 8">没有更多了</div>
+          <div class="abc" v-if="!loading && this.lists.length !== 0">
             <van-loading type="spinner" color="black"/>
           </div>
         </div>
@@ -43,16 +40,13 @@
 </template>
 
 <script>
-  import {Waterfall} from 'vant';
 
   export default {
     name: "city-search",
-    directives: {
-      WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper'),
-    },
     data() {
       return {
+        loading: true,
+        finished: true,
         urls: globalConfig.server,
         searchValue: '',          //搜索
         city_id: '',
@@ -60,13 +54,11 @@
         lists: [],
         path: '',
         page: 1,
-        disabled: true,
         showDetail: 0,
         params: {},
         type: '',
       }
     },
-
     activated() {
       this.type = this.$route.query.type;
       this.city_id = this.$route.query.city;
@@ -94,18 +86,28 @@
       }
     },
     methods: {
+      onLoad() {
+        // 异步更新数据
+        setTimeout(() => {
+          // 加载状态结束
+          this.loading = false;
+          // 数据全部加载完成
+          if (!this.finished) {
+            this.onSearch(this.searchValue, this.page);
+            this.page++;
+          }
+        }, 500);
+      },
       search() {
-        this.disabled = false;
+        this.finished = false;
         this.page = 1;
         this.lists = [];
-      },
-      loadMore() {
-        if (!this.disabled) {
-          this.onSearch(this.searchValue, this.page);
-          this.page++;
-        }
+        this.onLoad();
       },
       onSearch(val, page) {
+        this.finished = true;
+        console.log(val);
+        console.log(page);
         this.params = {};
         this.params.num = 20;
         this.params.keywords = val;
@@ -125,14 +127,14 @@
                 let data = res.data.data.list;
                 data.forEach((data) => {
                   this.lists.push(data);
-                  this.showDetail = 2;
                 });
+                this.finished = false;
               } else {
-                this.disabled = true;
+                this.loading = true;
                 this.showDetail = 2;
               }
             } else {
-              this.disabled = true;
+              this.loading = true;
               this.close_();
             }
           });
@@ -146,6 +148,8 @@
         this.$router.replace({path: this.path});
       },
       close_() {
+        this.loading = true;
+        this.finished = true;
         this.page = 1;
         this.showDetail = 0;
         this.searchValue = '';

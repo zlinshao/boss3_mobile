@@ -11,18 +11,16 @@
         <p v-if="searchValue.length > 0" @click="onSearch">搜索</p>
         <p v-else @click="onCancel" style="color: #666666;">取消</p>
       </div>
-      <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
+      <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮
+      </div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 2">暂无相关信息</div>
       <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 1">
         <van-loading type="spinner" color="black"/>
       </div>
       <div class="searchContent">
-        <ul
-          v-waterfall-lower="loadMore"
-          waterfall-disabled="false"
-          waterfall-offset="300">
+        <ul>
           <li v-for="item in lists" @click="selectVillage(item)">
-            <div class="searchList city" >
+            <div class="searchList city">
               <div>{{item.name}}</div>
               <div>
                 <p>{{item.district}}</p>
@@ -78,17 +76,13 @@
 </template>
 
 <script>
-  import {Waterfall} from 'vant';
   import {Toast} from 'vant';
+
   let addr = "//restapi.amap.com/v3/assistant/inputtips?key=2cafb0027aa13d1c6b13542462b3c94f&datatype=poi&types=120300";
 
   export default {
     name: "city-search",
     components: {Toast},
-    directives: {
-      WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper'),
-    },
     data() {
       return {
         urls: globalConfig.server,
@@ -98,11 +92,11 @@
         path: '',
         page: 1,
         showDetail: 0,
-        isManual : false,         //手动添加
+        isManual: false,         //手动添加
 
-        manualData:{
-          name:'',
-          district:'',
+        manualData: {
+          name: '',
+          district: '',
           location: '',
         }
       }
@@ -111,7 +105,7 @@
     activated() {
       this.city_name = this.$route.query.city;
       this.close_();
-      if(this.$route.query.coordinate){
+      if (this.$route.query.coordinate) {
         this.getCoordinate();
       }
     },
@@ -121,22 +115,20 @@
         vm.ddRent('/addVillage', 'house');
       })
     },
-    watch: {
-
-    },
+    watch: {},
     methods: {
       onSearch() {
         this.showDetail = 1;
         this.$http.defaults.withCredentials = false;
         this.$http.defaults.headers = {};
-        this.$http.get(addr + '&keywords=' + this.searchValue + '&city='+this.city_name).then((res) => {
+        this.$http.get(addr + '&keywords=' + this.searchValue + '&city=' + this.city_name).then((res) => {
           if (res.data.tips.length > 0) {
             //过滤掉没有地址的数据
             this.lists = res.data.tips.filter((x) => {
               return typeof x.address === 'string'
             });
             this.showDetail = 2;
-          }else {
+          } else {
             this.lists = [];
             this.showDetail = 2;
           }
@@ -160,27 +152,27 @@
         this.searchValue = '';
         this.lists = [];
       },
-      addNewAddress(){
+      addNewAddress() {
         this.isManual = !this.isManual;
       },
-      selectCoord(){
+      selectCoord() {
         this.$router.push({path: '/addNewAddress'});
       },
-      getCoordinate(){
+      getCoordinate() {
         this.manualData.location = this.$route.query.coordinate;
       },
-      manualAdd(){
-        if(!this.manualData.name){
+      manualAdd() {
+        if (!this.manualData.name) {
           Toast.fail('请输入小区名称！')
-        }else if(!this.manualData.district){
+        } else if (!this.manualData.district) {
           Toast.fail('请输入小区地址！')
-        }else if(!this.manualData.location){
+        } else if (!this.manualData.location) {
           Toast.fail('请选择小区坐标！')
-        }else {
+        } else {
           this.$router.push({path: '/addVillage', query: {village: JSON.stringify(this.manualData)}});
           this.manualData = {
-            name:'',
-            district:'',
+            name: '',
+            district: '',
             location: '',
           }
         }
@@ -241,7 +233,7 @@
       }
     }
 
-    .isManual{
+    .isManual {
       div {
         width: 50%;
       }

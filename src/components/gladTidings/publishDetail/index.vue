@@ -66,11 +66,10 @@
           <iframe v-if="sign_pdfUrl_exist"  width="100%" height="300px" :src="sign_pdfUrl_str" type="application/pdf"></iframe >
         </div> -->
       </div>
-      <ul
-        v-waterfall-lower="loadMore"
-        waterfall-disabled="disabled"
-        waterfall-offset="300">
-        <li class="started">
+      <van-list
+        :finished="finished"
+        @load="onLoad">
+        <div class="started">
           <!--评论-->
           <div class="commentArea">
             <div class="headline">评论<span>{{paging}}</span></div>
@@ -103,17 +102,16 @@
                 </div>
               </div>
             </div>
-            <div v-if="commentList.length === 0 && disabled" style="text-align: center;padding: .3rem 0 0;">
+            <div v-if="commentList.length === 0 && loading" style="text-align: center;padding: .3rem 0 0;">
               暂无评论
             </div>
           </div>
-        </li>
-      </ul>
+        </div>
+      </van-list>
       <div class="bottom">
-        <span v-show="disabled && commentList.length > 6">我是有底线的</span>
-        <van-loading v-show="!disabled" type="spinner" color="black"/>
+        <span v-show="loading && commentList.length > 6">我是有底线的</span>
+        <van-loading v-show="!loading" type="spinner" color="black"/>
       </div>
-
     </div>
     <div class="footer">
       <div @click="newly()"
@@ -207,7 +205,8 @@
         urls: globalConfig.server,
         personalId: {},
         vLoading: true,
-        disabled: false,
+        loading: true,
+        finished: true,
         printscreen: ['新凭证截图', '证件照片', '房产证照片', '旧凭证截图', '新押金收条', '旧押金收条', '押金收条', '款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '组长同意截图', '房屋影像', '房屋照片', '退租交接单'],
         placeStatus: ['published', 'rejected', 'cancelled'],
 
@@ -277,7 +276,7 @@
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
-      this.disabled = false;
+      this.finished = false;
       this.search();
     },
     watch: {
@@ -332,11 +331,18 @@
         this.place = {};
         this.commentList = [];
       },
-      loadMore() {
-        if (!this.disabled) {
-          this.comments(this.ids, this.page);
-          this.page++;
-        }
+      // 更多评论
+      onLoad() {
+        // 异步更新数据
+        setTimeout(() => {
+          // 加载状态结束
+          this.loading = false;
+          // 数据全部加载完成
+          if (!this.finished) {
+            this.comments(this.ids, this.page);
+            this.page++;
+          }
+        }, 500);
       },
       search() {
         this.formDetail(this.ids);
@@ -400,6 +406,7 @@
         });
       },
       comments(val, page) {
+        this.finished = true;
         this.$http.get(this.urls + 'workflow/process/comment/' + val, {
           params: {
             page: page,
@@ -411,8 +418,9 @@
             for (let i = 0; i < data.length; i++) {
               this.commentList.push(data[i]);
             }
+            this.finished = false;
           } else {
-            this.disabled = true;
+            this.loading = true;
           }
         })
       },
