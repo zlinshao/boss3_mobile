@@ -676,7 +676,6 @@
             color: $colorTitle;
             line-height: .36rem;
           }
-
           .interFooter2 {
             @include flex;
             justify-content: space-between;
@@ -702,18 +701,16 @@
             div:last-of-type {
               color: #FF4081;
             }
-
           }
         }
         .contents3 {
           .article {
             width: 84%;
             margin-left: 59px;
-            padding-right: 0%;
+            padding-right: 0;
             padding-bottom: .2rem;
             border-bottom: $bottom;
           }
-
         }
         .interFooter {
           @include flex;
@@ -742,7 +739,6 @@
             border-radius: 50%;
             margin-top: -45px;
           }
-
         }
         .padNone {
           padding: 0;
@@ -758,7 +754,6 @@
             margin: 0 .3rem;
           }
         }
-
       }
     }
     .mainTop {
@@ -781,7 +776,6 @@
             width: 4.3rem;
             height: 26px;
             margin-top: 3px;
-            height: 26px;
             line-height: 26px;
             overflow: hidden;
             white-space: nowrap;
@@ -805,7 +799,6 @@
     .topNone {
       background-color: $bgColor;
     }
-
     .interModule {
       position: fixed;
       background-color: rgba(0, 0, 0, .4);

@@ -40,6 +40,21 @@
 .first_date.month .van-cell:not(:last-child):after {
   border: none; }
 
+.first_date .titles, .checks .titles, .fourth .titles {
+  min-width: 105px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-left: 15px; }
+.first_date .titles.required:after, .checks .titles.required:after, .fourth .titles.required:after {
+  content: '*';
+  position: absolute;
+  left: 7px;
+  font-size: 14px;
+  color: #f44; }
+.first_date .van-cell.van-field, .checks .van-cell.van-field, .fourth .van-cell.van-field {
+  padding-left: 0; }
+
 .titleRed {
   padding-left: 110px;
   padding-bottom: .1rem;
@@ -76,6 +91,8 @@
 
 div .van-switch.van-switch--on {
   background: #409EFF; }
+div .van-switch .van-switch__node {
+  font-size: 26px; }
 div .van-icon.van-icon-checked {
   color: #409EFF; }
 div .van-checkbox.van-checkbox--round .van-checkbox__control:checked + .van-icon-success {
@@ -95,6 +112,8 @@ div .payWay.van-cell.van-hairline.van-field i {
 .checkCss {
   background-color: #FFFFFF;
   padding: .15rem .3rem; }
+  .checkCss .van-checkbox {
+    margin: .12rem; }
 
 .checkCss .van-checkbox.van-checkbox--round, .checkCss .van-radio, .subjectB .van-checkbox.van-checkbox--round, .subjectB .van-radio {
   margin: .2rem 0; }
@@ -134,7 +153,8 @@ div .payWay.van-cell.van-hairline.van-field i {
   text-align: center;
   color: #409EFF;
   background: #ffffff;
-  margin-bottom: .2rem; }
+  margin-bottom: .2rem;
+  border-bottom: 1px solid #f8f8f8; }
 
 .addInput.bottom {
   margin-bottom: .2rem; }

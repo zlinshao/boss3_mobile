@@ -157,11 +157,10 @@
         <div @click="finish(0)" :class="{'readStatus': readActive === 0}"><span>未读({{paging}})</span></div>
         <div @click="finish(1)" :class="{'readStatus': readActive === 1}"><span>已读</span></div>
       </div>
-      <ul v-show="list.length !== 0"
-          v-waterfall-lower="loadMore"
-          waterfall-disabled="disabled"
-          waterfall-offset="300">
-        <li class="started">
+      <van-list
+        :finished="finished"
+        @load="onLoad">
+        <div class="started">
           <div class="startedMain" v-for="item in list" @click="routeDetail(item.id)">
             <div class="leftPic">
               <img :src="item.avatar" v-if="item.avatar !== '' && item.avatar !== null">
@@ -202,14 +201,14 @@
               </div>
             </div>
           </div>
-        </li>
-      </ul>
-      <div class="bottom" v-if="list.length === 0 && disabled" style="background: #FFFFFF;">
+        </div>
+      </van-list>
+      <div class="bottom" v-if="list.length === 0 && loading" style="background: #FFFFFF;">
         <span>暂无数据...</span>
       </div>
       <div class="bottom" v-else>
-        <span v-show="disabled && list.length > 6">我是有底线的</span>
-        <van-loading v-show="!disabled" type="spinner" color="black"/>
+        <span v-show="loading && list.length > 6">我是有底线的</span>
+        <van-loading v-show="!loading" type="spinner" color="black"/>
       </div>
     </div>
 
@@ -234,22 +233,18 @@
 </template>
 
 <script>
-  import {Waterfall} from 'vant';
   import {Toast} from 'vant';
 
   export default {
     name: 'HelloWorld',
-    directives: {
-      WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper')
-    },
     components: {Toast},
     data() {
       return {
         urls: globalConfig.server,
         list: [],
         page: 1,
-        disabled: false,
+        loading: true,
+        finished: true,
 
         paths: [],
         active: 0,
@@ -269,23 +264,33 @@
       if ((count && (count === '2')) || from.path === '/') {
         sessionStorage.setItem('count', '1');
       }
-      next(vm => {
-        vm.toDone();
-      })
+      next();
     },
     mounted() {
       this.paths = this.$router.options.routes;
       this.queryType = sessionStorage.getItem('queryType');
       this.scrollTops();
-      this.toDone();
     },
     activated() {
       this.personalGet(2);
       this.routerIndex('');
-      this.disabled = true;
+      this.finished = true;
       this.scrollTops();
+      this.toDone();
     },
     methods: {
+      onLoad() {
+        // 异步更新数据
+        setTimeout(() => {
+          // 加载状态结束
+          this.loading = false;
+          // 数据全部加载完成
+          if (!this.finished) {
+            this.lists(this.page, this.active, this.readActive);
+            this.page++;
+          }
+        }, 500);
+      },
       goBefore(val) {
         this.getExamNaireRedCircle();
         if (val === '/exam') {
@@ -326,7 +331,7 @@
       },
       // 详情页
       routeDetail(id) {
-        this.disabled = true;
+        this.finished = true;
         this.$router.push({path: '/publishDetail', query: {ids: id}});
       },
       // 返回顶部
@@ -339,14 +344,9 @@
         this.active = val;
         this.readActive = red;
         this.page = 1;
-        this.disabled = false;
+        this.finished = false;
         this.scrollTops();
-      },
-      loadMore() {
-        if (!this.disabled) {
-          this.lists(this.page, this.active, this.readActive);
-          this.page++;
-        }
+        this.onLoad();
       },
       routerLink(val) {
         this.scrollTops();
@@ -354,13 +354,13 @@
           this.footActive = 1;
         }
         this.active = 0;
-        this.disabled = false;
+        this.finished = false;
       },
       finish(read) {
         this.list = [];
         this.page = 1;
         this.readActive = read;
-        this.disabled = false;
+        this.finished = false;
         this.scrollTops();
       },
       lists(val, active, read) {
@@ -369,21 +369,17 @@
         this.params.type = active;
         this.params.limit = 12;
         switch (active) {
-          case 1:
-          case 2:
-            this.processList(this.params);
-            break;
           case 3:
             this.params.published = read;
-            this.processList(this.params);
             break;
           case 4:
             this.params.read_at = read;
-            this.processList(this.params);
             break;
         }
+        this.processList(this.params);
       },
       processList(val) {
+        this.finished = true;
         this.$http.get(this.urls + 'workflow/process', {
           params: val,
         }).then((res) => {
@@ -392,7 +388,6 @@
               this.paging = res.data.data.count;
             }
             let data = res.data.data.data;
-            console.log(data);
             if (data.length !== 0) {
               for (let i = 0; i < data.length; i++) {
                 let user = {};
@@ -427,11 +422,12 @@
                 user.bulletin = data[i].content.bulletin_name;
                 this.list.push(user);
               }
+              this.finished = false;
             } else {
-              this.disabled = true;
+              this.loading = true;
             }
           } else {
-            this.disabled = true;
+            this.loading = true;
             if (this.params.page !== 1) {
               this.paging = 0;
             }

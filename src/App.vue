@@ -60,28 +60,18 @@
       },
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
-          let type, token;
-          if (navigator.userAgent.indexOf('native-ios') > -1) {
-            token = this.$route.query.token;
-            type = this.$route.query.type;
-          } else {
-            token = android.queryToken();
-            type = android.queryType();
-          }
-          sessionStorage.setItem('queryType', type);
+          sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
-          if (type === 'exam') {
-            this.$router.push({path: '/beforeExam'});
-          } else if (type === 'questionnaire') {
-            this.$router.push({path: '/beforeNaire'});
-          } else if (type === 'interlocution') {
-            this.$router.push({path: '/interlocution'});
-          } else if (type === 'staffSquare') {
-            this.$router.push({path: '/staffSquare'});
-          }
-          globalConfig.header.Authorization = "Bearer" + ' ' + token;
+          // if (type === 'exam') {
+          //   this.$router.push({path: '/beforeExam'});
+          // } else if (type === 'questionnaire') {
+          //   this.$router.push({path: '/beforeNaire'});
+          // } else if (type === 'interlocution') {
+          //   this.$router.push({path: '/interlocution'});
+          // } else if (type === 'staffSquare') {
+          //   this.$router.push({path: '/staffSquare'});
+          // }
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
-            this.loading = false;
             let data = {};
             data.id = res.data.data.id;
             data.name = res.data.data.name;
@@ -89,8 +79,9 @@
             data.phone = res.data.data.phone;
             data.department_name = res.data.data.org[0].name;
             data.department_id = res.data.data.org[0].id;
+            this.loading = false;
             sessionStorage.setItem('personal', JSON.stringify(data));
-          });
+          }).catch(_ => {});
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = false;
@@ -104,6 +95,7 @@
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
+          console.log(response.data);
           return response;
         }, function (error) {
           if (error && error.response) {

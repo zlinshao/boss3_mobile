@@ -4,7 +4,8 @@
       <van-nav-bar :title="titleName"  left-arrow left-text="返回"  @click-left="goBack"  />
     <div class="videoList">
       <div class="video" v-for="(item, index) in videoList" :key="index">
-        <video :src="item.file" width="100%" height="100%" @click.stop="palyVideo(item.id, index)"></video>
+        <!-- <video :src="item.file" width="100%" height="100%" @click.stop="palyVideo(item.id, index)"  poster="../../assets/bofang1.jpg"></video> -->
+        <img src="../../assets/bofang1.jpg" alt="" @click.stop="palyVideo(item.id, index)">
         <p class="videoName">{{item.video_name}}</p>
         <p class="count">
           <span>人数：{{item.play_user}}</span>
@@ -17,20 +18,22 @@
     <van-popup v-model="show" position="right" :overlay="false" class="popup">
       <van-nav-bar :title="videoTitle" left-text="返回"  left-arrow @click-left="onClickLeft"  />
       <div style="position: relative">
-        <div class="videoDetail"></div>
+        <div class="videoDetail"><img src='../../assets/bofang1.jpg' id='imgRecording' style="width: 100%; position: fixed;top: 46px; z-index: 999;" /></div>
         <div id="quan" @click="fullScreen">全屏</div>
       </div>
-      <div class="comment">评论</div>
-      <div class="commentList">
-        <ul>
-          <li v-for="(item, index) in commentList.list" :key="index">
-            <p class="commentName">
-              <span style="font-size: 12px;height: 13px;">{{item.user.name}}</span>
-              <span style="font-size: 12px;height: 13px;">{{item.create_time}}</span>
-            </p>
-            <div class="commentConent">{{item.content}}</div>
-          </li>
-        </ul>
+      <div class="comment">
+        <p class="commentText">评论</p>    
+        <div class="commentList">
+          <ul>
+            <li v-for="(item, index) in commentList.list" :key="index">
+              <p class="commentName">
+                <span style="font-size: 12px;height: 13px;">{{item.user.name}}</span>
+                <span style="font-size: 12px;height: 13px;">{{item.create_time}}</span>
+              </p>
+              <div class="commentConent">{{item.content}}</div>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="publishComment">
         <textarea v-model="params.content" placeholder="请输入评论..." style="resize:none"></textarea>
@@ -111,9 +114,12 @@ export default {
       this.show = true;
       var mobileWidth = document.body.clientWidth;
       var mobileHeight = document.body.clientHeight;
-      var video = $("<video id='videoRecording' controlsList='nodownload'></video>");
+      var video = $("<video id='videoRecording' controlsList='nodownload' poster='../../assets/bofang1.jpg' controls></video>");
+      // var video = $("<img src='../../assets/bofang1.jpg' id='videoRecording' />");
       video.css({
-        width: mobileWidth + "px"
+        width: mobileWidth + "px",
+         position: 'fixed',
+         top: "46px",
       });
       this.videoList.forEach((item, index) => {
         if (index == id) {
@@ -122,12 +128,18 @@ export default {
           this.videoTitle = item.video_name
         }
       });
-      this.params.video_id = videoId;
+      var img = document.getElementById("imgRecording");
       var video = document.getElementById("videoRecording");
       let _this = this
-      video.onclick = function() {
+      this.params.video_id = videoId;
+      img.onclick = function() {
+        img.style.display = "none";
         video.play();
-        _this.getCount(videoId);
+         _this.getCount(videoId);
+      }
+      video.onclick = function() {
+        
+       
       }
       this.getComment(videoId);
     },
@@ -157,9 +169,11 @@ export default {
       video.webkitRequestFullScreen()
     },
     onClickLeft() {
-      this.show = false;
-      $(".videoDetail").children().remove();
+      var img = document.getElementById("imgRecording")
+      img.style.display = "block";
+      $(".videoDetail").find("video").remove();
       this.getVideoList();
+      this.show = false;
     },
     goBack() {
       window.history.go(-1);
@@ -179,6 +193,11 @@ export default {
   font-size: 12px !important;
   .videoDetail {
     position: relative;
+    height: 212px;
+    // #videoRecording {
+    //   // position: fixed;
+    //   // top: 0;
+    // }
   }
   #quan {
     width: 33px;
@@ -187,6 +206,7 @@ export default {
     bottom: 0;
     right: 0;
     color: #666;
+    z-index: 999;
   }
   .back {
     padding-left: 20px;
@@ -202,8 +222,9 @@ export default {
     }
   }
   .video {
-    width: 32%;
+    width: 49%;
     height: 100px;
+    object-fit: fill;
     margin: 0.33%;
     display: inline-block;
     // border: 1px solid #666;
@@ -276,13 +297,15 @@ export default {
       }
     }
     .comment {
-      margin: 10px auto 20px;
-      width: 80%;
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-      color: #409eff;
-      border-radius: 5px;
+      .commentText {
+        margin: 10px auto 20px;
+        width: 80%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        color: #409eff;
+        border-radius: 5px;
+      }
     }
     .publishComment {
       position: fixed;

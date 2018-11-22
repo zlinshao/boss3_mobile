@@ -70,6 +70,28 @@ $color: #409EFF;
   }
 }
 
+.first_date, .checks, .fourth  {
+  .titles {
+    min-width: 105px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+  }
+  .titles.required {
+    &:after {
+      content: '*';
+      position: absolute;
+      left: 7px;
+      font-size: 14px;
+      color: #f44;
+    }
+  }
+  .van-cell.van-field {
+    padding-left: 0;
+  }
+}
+
 .titleRed {
   padding-left: 110px;
   padding-bottom: .1rem;
@@ -118,7 +140,11 @@ div {
   .van-switch.van-switch--on {
     background: $color;
   }
-
+  .van-switch {
+    .van-switch__node {
+      font-size: 26px;
+    }
+  }
   .van-icon.van-icon-checked {
     color: $color;
   }
@@ -152,6 +178,9 @@ div {
 .checkCss {
   background-color: #FFFFFF;
   padding: .15rem .3rem;
+  .van-checkbox {
+    margin: .12rem;
+  }
 }
 
 .checkCss, .subjectB {
@@ -201,6 +230,7 @@ div {
   color: $color;
   background: #ffffff;
   margin-bottom: .2rem;
+  border-bottom: 1px solid #f8f8f8;
 }
 
 .addInput.bottom {

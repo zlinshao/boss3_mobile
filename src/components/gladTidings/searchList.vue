@@ -11,11 +11,10 @@
         <p v-else @click="onCancel">取消</p>
       </div>
       <div class="searchContent">
-        <ul
-          v-waterfall-lower="loadMore"
-          waterfall-disabled="disabled"
-          waterfall-offset="300">
-          <li class="started">
+        <van-list
+          :finished="finished"
+          @load="onLoad">
+          <div class="started">
             <div class="startedMain" v-for="item in lists" @click="bulletinList(item)">
 
               <div class="leftPic">
@@ -53,18 +52,18 @@
                 </div>
               </div>
             </div>
-          </li>
-        </ul>
-        <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮</div>
+          </div>
+        </van-list>
+        <div class="notData" style="line-height: .46rem" v-if="lists.length === 0 && showDetail === 0">输入搜索内容结束后<br>请点击「回车」或搜索按钮
+        </div>
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 2">暂无相关信息</div>
         <div class="notData" v-if="lists.length === 0 && this.searchValue.length > 0 && showDetail === 1">
           <van-loading type="spinner" color="black"/>
         </div>
 
         <div class="bottom">
-          <div class="abc" v-if="disabled && this.lists.length > 5">没有更多了</div>
-
-          <div class="abc" v-if="!disabled && this.lists.length !== 0">
+          <div class="abc" v-if="loading && this.lists.length > 5">没有更多了</div>
+          <div class="abc" v-if="!loading && this.lists.length !== 0">
             <van-loading type="spinner" color="black"/>
           </div>
         </div>
@@ -75,19 +74,14 @@
 </template>
 
 <script>
-  import {Waterfall} from 'vant';
-
   export default {
     name: "collect-house",
-    directives: {
-      WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper'),
-    },
     data() {
       return {
-        address: globalConfig.server_user,
+        urls: globalConfig.server,
         showDetail: 0,
-        disabled: true,
+        loading: true,
+        finished: true,
         page: 1,
 
         searchValue: '',          //搜索
@@ -125,15 +119,22 @@
     },
     methods: {
       search() {
-        this.disabled = false;
+        this.finished = false;
         this.page = 1;
         this.lists = [];
+        this.onLoad();
       },
-      loadMore() {
-        if (!this.disabled) {
-          this.onSearch(this.params, this.searchValue);
-          this.page++;
-        }
+      onLoad() {
+        // 异步更新数据
+        setTimeout(() => {
+          // 加载状态结束
+          this.loading = false;
+          // 数据全部加载完成
+          if (!this.finished) {
+            this.onSearch(this.params, this.searchValue);
+            this.page++;
+          }
+        }, 500);
       },
       // 搜索
       onSearch(params, val) {
@@ -145,70 +146,76 @@
         }
       },
       myData(val) {
-        this.$http.get(this.address + 'process', {
+        this.finished = true;
+        this.$http.get(this.urls + 'workflow/process', {
           params: val,
         }).then((res) => {
           if (this.searchValue !== '') {
-            if (res.data.data.length !== 0 && res.data.status === 'success') {
-              let data = res.data.data;
-              for (let i = 0; i < data.length; i++) {
-                let user = {};
-                user.title = data[i].title;
-                user.created_at = data[i].created_at;
-                if (val.type === 3) {
-                  if (data[i].content.house) {
-                    user.house_name = data[i].content.house.name;
-                  } else {
-                    user.house_name = '/';
-                  }
-                  if (data[i].user) {
-                    user.avatar = data[i].user.avatar;
-                    user.name = data[i].user.name;
-                    user.depart = data[i].user.org[0].name;
-                  } else {
-                    user.avatar = '';
-                    user.name = '';
-                    user.staff = '';
-                  }
-                  user.id = data[i].id;
-                  user.place = data[i].place.display_name;
-                  user.status = data[i].place.status;
-                  user.bulletin = data[i].content.bulletin_name;
-                }
-                if (val.type === 1 || val.type === 2 || val.type === 4) {
-                  if (data[i].flow) {
-                    if (user.house_name = data[i].flow.content.house) {
-                      user.house_name = data[i].flow.content.house.name;
+            if (res.data.code === '20000') {
+              let data = res.data.data.data;
+              if (data.length !== 0) {
+                for (let i = 0; i < data.length; i++) {
+                  let user = {};
+                  user.title = data[i].title;
+                  user.created_at = data[i].created_at;
+                  if (val.type === 3) {
+                    if (data[i].content.house) {
+                      user.house_name = data[i].content.house.name;
                     } else {
                       user.house_name = '/';
                     }
                     if (data[i].user) {
-                      user.avatar = data[i].flow.user.avatar;
-                      user.name = data[i].flow.user.name;
-                      user.depart = data[i].flow.user.org[0].name;
+                      user.avatar = data[i].user.avatar;
+                      user.name = data[i].user.name;
+                      user.depart = data[i].user.org[0].name;
                     } else {
                       user.avatar = '';
                       user.name = '';
                       user.staff = '';
                     }
-                    user.id = data[i].flow.id;
-                    user.place = data[i].flow.place.display_name;
-                    user.status = data[i].flow.place.status;
-                    if (data[i].flow.content.type) {
-                      user.bulletin = data[i].flow.content.type.name;
+                    user.id = data[i].id;
+                    user.place = data[i].place.display_name;
+                    user.status = data[i].place.status;
+                    user.bulletin = data[i].content.bulletin_name;
+                  }
+                  if (val.type === 1 || val.type === 2 || val.type === 4) {
+                    if (data[i].flow) {
+                      if (user.house_name = data[i].flow.content.house) {
+                        user.house_name = data[i].flow.content.house.name;
+                      } else {
+                        user.house_name = '/';
+                      }
+                      if (data[i].user) {
+                        user.avatar = data[i].flow.user.avatar;
+                        user.name = data[i].flow.user.name;
+                        user.depart = data[i].flow.user.org[0].name;
+                      } else {
+                        user.avatar = '';
+                        user.name = '';
+                        user.staff = '';
+                      }
+                      user.id = data[i].flow.id;
+                      user.place = data[i].flow.place.display_name;
+                      user.status = data[i].flow.place.status;
+                      if (data[i].flow.content.type) {
+                        user.bulletin = data[i].flow.content.type.name;
+                      } else {
+                        user.bulletin = '';
+                      }
                     } else {
+                      user.place = '';
+                      user.status = '';
                       user.bulletin = '';
                     }
-                  } else {
-                    user.place = '';
-                    user.status = '';
-                    user.bulletin = '';
                   }
+                  this.lists.push(user);
                 }
-                this.lists.push(user);
+                this.finished = false;
+              } else {
+                this.loading = true;
               }
             } else {
-              this.disabled = true;
+              this.loading = true;
             }
             if (res.data.data.length === 0 && res.data.status === 'success') {
               this.showDetail = 2;
@@ -217,7 +224,7 @@
               this.showDetail = 2;
             }
           } else {
-            this.disabled = true;
+            this.loading = true;
             this.close_();
           }
         })

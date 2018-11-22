@@ -327,7 +327,7 @@
         timeShow: false,          //日期状态
         timeValue: '',            //日期value
         timeIndex: '',
-        real_pay_at: '',
+        
 
         tabs: '',
         columns: [],              //select值
@@ -376,6 +376,7 @@
           rent_money: '',               //租金
           money_sum: '',                //总金额
           money_sep: [''],              //分金额
+          real_pay_at: [''],
           money_way: [''],              //分金额 方式
           account_id: [],               //汇款方式ID
           retainage_date: '',           //尾款补齐日期
@@ -412,6 +413,7 @@
           }).then(() => {
           });
         }
+        console.log(this.form.is_receipt)
         if (this.form.is_receipt === 1) {
           this.amountReceipt = 1;
           this.form.receipt = [];
@@ -505,8 +507,10 @@
               this.value8.push(item.bank_info);
             });
             this.finalDetail(val);
+            console.log(this.value8)
           }
         });
+        
       },
 
       receiptNum() {
@@ -545,6 +549,7 @@
       },
       // 截图
       getImgData(val) {
+        console.log(val)
         this.picStatus = val[2];
         if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
@@ -688,14 +693,19 @@
           depositPics = this.form.deposit_photo_new.concat(this.form.deposit_photo_old);
           this.form.deposit_photo = this.noRepeat(depositPics);
           this.form.is_receipt = this.is_receipt ? 1 : 0;
+          if(this.form.is_receipt === 1){
+            this.form.receipt = [];
+          }else{
+            this.form.receipt = receipt;
+          }
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
-          this.form.receipt = receipt;
           this.form.draft = val;
           this.form.is_other_fee = this.other_fee_status ? 1 : 0;
           this.emptyPic(this.form.screenshot, 'screenshot');
           this.emptyPic(this.form.screenshot_leader, 'screenshot_leader');
           this.emptyPic(this.form.deposit_photo, 'deposit_photo');
           this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
+            console.log(this.form.receipt)
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50910' || res.data.code === '50930') {
@@ -752,8 +762,10 @@
       },
       houseInfo() {
         let t = this.$route.query;
+        console.log(t)
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
+          console.log(val)
           this.form.customer_name = val.customers;
           this.form.address = val.house_name;
           this.form.month = val.month;
@@ -775,23 +787,23 @@
         }
       },
 
-      getPic(album, val) {
-        this.$http.post(this.urls + 'special/special/picUrl', {
-          id: album,
-        }).then((res) => {
-          if (res.data.code === '10000') {
-            if (val === 1) {
-              res.data.data.forEach((arr) => {
-                this.deposit_photos.push(arr.uri);
-              });
-            } else {
-              res.data.data.forEach((arr) => {
-                this.certificate_photo.push(arr.uri);
-              });
-            }
-          }
-        })
-      },
+      // getPic(album, val) {
+      //   this.$http.post(this.urls + 'special/special/picUrl', {
+      //     id: album,
+      //   }).then((res) => {
+      //     if (res.data.code === '10000') {
+      //       if (val === 1) {
+      //         res.data.data.forEach((arr) => {
+      //           this.deposit_photos.push(arr.uri);
+      //         });
+      //       } else {
+      //         res.data.data.forEach((arr) => {
+      //           this.certificate_photo.push(arr.uri);
+      //         });
+      //       }
+      //     }
+      //   })
+      // },
       bigPic(arr, index) {
         ImagePreview(arr, index);
       },
@@ -884,15 +896,19 @@
             this.form.customer_name = draft.customer_name;
 
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.screenshot_leader;
+            this.leaders = data.screenshot_leader !== null ? data.screenshot_leader : {};
+
+
+
             this.form.screenshot = draft.screenshot;
             this.form.screenshot_new = draft.screenshot_new;
             this.form.screenshot_old = draft.screenshot_old;
-            this.screenshots = data.screenshot_new;
+            this.screenshots = data.screenshot_new !== null ? data.screenshot_new : {};
+
             this.form.deposit_photo = draft.deposit_photo;
             this.form.deposit_photo_new = draft.deposit_photo_new;
             this.form.deposit_photo_old = draft.deposit_photo_old;
-            this.receipts = data.deposit_photo_new;
+            this.receipts = data.deposit_photo_new !== null ? data.deposit_photo_new : {};
             // this.getPic(draft.deposit_photo_old, 1);
             // this.getPic(draft.screenshot_old, 2);
             this.form.remark = draft.remark;

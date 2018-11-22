@@ -37,7 +37,7 @@
         <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message">{{message}}</p>
         <div v-for="(key,index) in formList"
              v-if="printscreen.indexOf(index) === -1">
-          <p>{{index}}</p>
+          <p v-if="index !== 'receiptUri'">{{index}}</p>
           <h1>
             <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx].msg}}</span>
@@ -66,11 +66,10 @@
           <iframe v-if="sign_pdfUrl_exist"  width="100%" height="300px" :src="sign_pdfUrl_str" type="application/pdf"></iframe >
         </div> -->
       </div>
-      <ul
-        v-waterfall-lower="loadMore"
-        waterfall-disabled="disabled"
-        waterfall-offset="300">
-        <li class="started">
+      <van-list
+        :finished="finished"
+        @load="onLoad">
+        <div class="started">
           <!--评论-->
           <div class="commentArea">
             <div class="headline">评论<span>{{paging}}</span></div>
@@ -103,17 +102,16 @@
                 </div>
               </div>
             </div>
-            <div v-if="commentList.length === 0 && disabled" style="text-align: center;padding: .3rem 0 0;">
+            <div v-if="commentList.length === 0 && loading" style="text-align: center;padding: .3rem 0 0;">
               暂无评论
             </div>
           </div>
-        </li>
-      </ul>
+        </div>
+      </van-list>
       <div class="bottom">
-        <span v-show="disabled && commentList.length > 6">我是有底线的</span>
-        <van-loading v-show="!disabled" type="spinner" color="black"/>
+        <span v-show="loading && commentList.length > 6">我是有底线的</span>
+        <van-loading v-show="!loading" type="spinner" color="black"/>
       </div>
-
     </div>
     <div class="footer">
       <div @click="newly()"
@@ -207,12 +205,14 @@
         urls: globalConfig.server,
         personalId: {},
         vLoading: true,
-        disabled: false,
+        loading: true,
+        finished: true,
         printscreen: ['新凭证截图', '证件照片', '房产证照片', '旧凭证截图', '新押金收条', '旧押金收条', '押金收条', '款项结清截图', '特殊情况领导截图', '特殊情况截图', '特殊情况同意截图', '领导报备截图', '凭证截图', '合同照片', '截图', '领导同意截图', '组长同意截图', '房屋影像', '房屋照片', '退租交接单'],
         placeStatus: ['published', 'rejected', 'cancelled'],
 
-        routerLinks: ['bulletin_quality', 'bulletin_collect_basic', 'bulletin_collect_continued', 'bulletin_rent_basic', 'bulletin_rent_continued', 'bulletin_rent_trans', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change',],
-        // address: '',
+        routerLinks: ['bulletin_quality', 'bulletin_collect_basic', 'bulletin_collect_continued', 'bulletin_rent_basic', 'bulletin_rent_continued', 'bulletin_rent_trans', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change', 'bulletin_retainage'],
+        // 电子收据
+        rentReport: ['bulletin_rent_basic', 'bulletin_rent_trans', 'bulletin_rent_continued', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change', 'bulletin_retainage'],
         message: '',
         ids: '',
 
@@ -277,7 +277,7 @@
       this.ids = this.$route.query.ids;
       this.page = 1;
       this.close_();
-      this.disabled = false;
+      this.finished = false;
       this.search();
     },
     watch: {
@@ -332,11 +332,18 @@
         this.place = {};
         this.commentList = [];
       },
-      loadMore() {
-        if (!this.disabled) {
-          this.comments(this.ids, this.page);
-          this.page++;
-        }
+      // 更多评论
+      onLoad() {
+        // 异步更新数据
+        setTimeout(() => {
+          // 加载状态结束
+          this.loading = false;
+          // 数据全部加载完成
+          if (!this.finished) {
+            this.comments(this.ids, this.page);
+            this.page++;
+          }
+        }, 500);
       },
       search() {
         this.formDetail(this.ids);
@@ -347,7 +354,6 @@
           if (res.data.code === '20020' && res.data.data.length !== 0) {
             let content = res.data.data.process.content;
             let main = res.data.data.process;
-            this.formList = JSON.parse(content.show_content_compress);
             this.operation = res.data.data.operation;
             this.deal = res.data.data.deal;
             if (content.address) {
@@ -358,6 +364,14 @@
               this.address = content.house.name;
             }
             this.process = main;
+            if (this.rentReport.indexOf(main.processable_type) > -1) {
+              this.$http.get(this.urls + 'workflow/process/get/' + val).then(item => {
+                let content1 = item.data.data.content;
+                this.formList = JSON.parse(content1.show_content_compress);
+              })
+            } else {
+              this.formList = JSON.parse(content.show_content_compress);
+            }
             this.personal = main.user;
             // this.confirmBulletinType(res.data.data.process);
             this.place = main.place;
@@ -400,6 +414,7 @@
         });
       },
       comments(val, page) {
+        this.finished = true;
         this.$http.get(this.urls + 'workflow/process/comment/' + val, {
           params: {
             page: page,
@@ -411,9 +426,9 @@
             for (let i = 0; i < data.length; i++) {
               this.commentList.push(data[i]);
             }
-            console.log(this.commentList)
+            this.finished = false;
           } else {
-            this.disabled = true;
+            this.loading = true;
           }
         })
       },

@@ -1,4 +1,4 @@
-import {md5} from './assets/js/MD5.js'
+import {Toast} from 'vant';
 
 export default {
   install(Vue, options) {
@@ -29,7 +29,6 @@ export default {
         e.preventDefault();
         that.$router.push({path: url, query: data});
       });
-
       dd.biz.navigation.setLeft({
         control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
         onSuccess() {
@@ -104,7 +103,7 @@ export default {
       return Number(sum1) + Number(sum2) + Number(sum3);
     };
     // 格式化日期 yyyy-MM-dd
-    Vue.prototype.formatDate = function (date) {
+    Vue.prototype.formatDate = function (date, type) {
       let year = date.getFullYear();
       let month = date.getMonth() + 1;
       let day = date.getDate();
@@ -122,9 +121,12 @@ export default {
       hh = hh[1] ? hh : '0' + hh;
       md = md[1] ? md : '0' + md;
       ss = md[1] ? ss : '0' + ss;
+      if (type === 'day') {
+        return year + '-' + mm + '-' + dd;
+      }
       return year + '-' + mm + '-' + dd + ' ' + hh + ':' + md;
     };
-    // 初始化日期
+    // 初始化日期组件
     Vue.prototype.chooseTime = function (val) {
       let time = val.split('-');
       let time1 = Number(time[1]) - 1;
@@ -152,6 +154,31 @@ export default {
       }).catch(err => {
         alert(JSON.stringify(err));
       })
+    };
+    // loading
+    Vue.prototype.prompt = function (type, msg) {
+      switch (type) {
+        case 'send':
+          Toast.loading({
+            duration: 0,            // 持续展示 toast
+            forbidClick: true,      // 禁用背景点击
+            loadingType: 'spinner',
+            message: msg
+          });
+          break;
+        case 'succeed':
+          Toast.success(msg);
+          break;
+        case 'fail':
+          Toast.fail(msg);
+          break;
+        case 'close':
+          Toast.clear();
+          break;
+        default:
+          Toast(msg);
+          break;
+      }
     };
     Vue.prototype.computedDate = function (params) {
       return new Promise((resolve, reject) => {

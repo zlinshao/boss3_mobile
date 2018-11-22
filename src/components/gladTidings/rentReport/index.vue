@@ -21,12 +21,7 @@
           required>
         </van-field>
         <div class="first_date">
-          <van-field
-            style="width: 110px;"
-            class="title"
-            label="签约时长"
-            required>
-          </van-field>
+          <div class="titles required">签约时长</div>
           <van-field
             v-model="form.month"
             type="text"
@@ -156,38 +151,23 @@
           <span>本次已收金额</span>
         </div>
       </div>
+
       <van-cell-group>
-        <van-field
-          v-model="form.front_money"
-          type="text"
-          class="number"
-          label="定金"
-          @keyup="moneyAll"
-          placeholder="请填写金额">
-        </van-field>
-        <van-field
-          v-model="form.deposit_payed"
-          label="押金"
-          @keyup="moneyAll"
-          type="text"
-          class="number"
-          placeholder="请填写已收押金">
-        </van-field>
-        <van-field
-          v-model="form.rent_money"
-          label="租金"
-          @keyup="moneyAll"
-          type="text"
-          class="number"
-          placeholder="请填写租金">
-        </van-field>
+        <div class="checks">
+          <div class="titles required">本次金额为</div>
+          <van-radio-group v-model="receivedPrice">
+            <van-radio name="front_money">定金</van-radio>
+            <van-radio name="deposit_payed">租金+押金</van-radio>
+          </van-radio-group>
+        </div>
         <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="总金额"
           placeholder="请填写总金额"
-          disabled>
+          @click-icon="form.money_sum = ''"
+          required>
         </van-field>
       </van-cell-group>
 
@@ -231,14 +211,34 @@
       </div>
 
       <van-cell-group>
-        <!--<van-field-->
-        <!--v-model="form.deposit"-->
-        <!--label="押金"-->
-        <!--type="text"-->
-        <!--class="number"-->
-        <!--placeholder="请填写押金"-->
-        <!--required>-->
-        <!--</van-field>-->
+        <van-field
+          v-model="form.name"
+          label="客户姓名"
+          type="text"
+          placeholder="请填写客户姓名"
+          icon="clear"
+          @click-icon="form.name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.phone"
+          label="联系方式"
+          type="text"
+          class="number"
+          placeholder="请填写联系方式"
+          icon="clear"
+          @click-icon="form.phone = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.memo"
+          label="收款备注"
+          type="textarea"
+          placeholder="请填写备注"
+          icon="clear"
+          @click-icon="form.memo = ''">
+        </van-field>
+        <div class="addInput" @click="previewReceipt(form)">生成电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -361,25 +361,6 @@
           required>
         </van-field>
         <van-field
-          v-model="form.name"
-          label="客户姓名"
-          type="text"
-          placeholder="请填写客户姓名"
-          icon="clear"
-          @click-icon="form.name = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.phone"
-          label="联系方式"
-          type="text"
-          class="number"
-          placeholder="请填写联系方式"
-          icon="clear"
-          @click-icon="form.phone = ''"
-          required>
-        </van-field>
-        <van-field
           v-model="form.contract_number"
           label="合同编号"
           type="text"
@@ -495,7 +476,7 @@
           dataKey: '',                  //字段区分
           idx: '',                      //下标
         },
-
+        path: '',
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,                 //删除图片
@@ -525,7 +506,7 @@
         payIndex: '',                   //付款方式index
 
         amountMoney: 1,
-
+        receivedPrice: 'front_money',   //本次金额为
         cusFrom: '',                    //是否中介
         corp: true,                     //公司单
         other_fee_status: false,
@@ -552,8 +533,8 @@
 
           pay_way_bet: '',              //付款方式 押
 
-          pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
+          pay_way_arr: [''],            //付款方式 付
 
           front_money: '',              //定金
           deposit: '',                  //押金
@@ -564,6 +545,7 @@
           real_pay_at: [''],            //实际收款时间
           money_way: [''],              //汇款帐户
           account_id: [],               //汇款帐户ID
+          memo: '',                     //收款备注
 
           is_other_fee: 0,
           other_fee: '',
@@ -612,6 +594,9 @@
       }
     },
     watch: {
+      receivedPrice() {
+        this.form.money_sum = '';
+      },
       cusFrom() {
         if (this.form.is_agency === 0) {
           this.form.agency_name = '';
@@ -692,7 +677,69 @@
       }
       this.houseInfo();
     },
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.path = to.path;
+      })
+    },
     methods: {
+      logContent() {
+        this.$refs.myPdfComponent.pdf.forEachPage(function (page) {
+          return page.getTextContent().then(function (content) {
+            let text = content.items.map(item => item.str);
+            console.log(text);
+          })
+        });
+      },
+      // 生成电子收据
+      previewReceipt(val) {
+        let data = {};
+        data.process_id = '0';
+        data.department_id = this.form.department_id;
+        data.date = this.formatDate(new Date, 'day');
+        data.payer = val.name;
+        data.address = val.address;
+        data.price = '';
+        for (let item of val.price_arr) {
+          if (item) {
+            data.price = data.price + item + '元 ; '
+          }
+        }
+        data.sign_at = val.sign_date;
+        data.duration = val.month + '个月' + (val.day ? val.day : 0) + '天';
+        data.pay_way = '';
+        for (let item of val.pay_way_arr) {
+          if (item) {
+            let str = '押' + val.pay_way_bet + '付' + item + ' ; ';
+            data.pay_way = data.pay_way + str;
+          }
+        }
+        data.payment = this.receivedPrice === 'front_money' ? '定金' : '押金+租金';
+        data.amount = val.money_sum;
+        data.sum = val.money_sum;
+        data.memo = val.memo;
+        val.money_way.forEach((item, index) => {
+          data['bank' + (index + 1)] = item;
+        });
+        data.account_id = val.account_id;
+        this.prompt('send', '正在生成电子收据！');
+        new Promise((resolve, reject) => {
+          this.$http.post(this.urls + 'financial/receipt/generate', data).then(res => {
+            this.prompt('close');
+            if (res.data.code === '20000') {
+              let pdfUrls = res.data.data.shorten_uri;
+              this.goBack(this.path);
+              resolve(pdfUrls);
+            } else {
+              this.prompt('fail', res.data.msg);
+            }
+          }).catch(_ => {
+            this.prompt('close');
+          })
+        }).then(data => {
+          window.location.href = data;
+        })
+      },
       // 显示日期
       showTimeChoose(val, time, index) {
         setTimeout(() => {
@@ -704,7 +751,6 @@
       },
       // 确定日期
       onConTime(val) {
-        console.log(val);
         this.form[val.dataKey][this.formatData.idx] = val.dateVal;
         this.timeModule = false;
       },
@@ -742,9 +788,7 @@
         });
         this.receiptNum();
       },
-      moneyAll() {
-        this.form.money_sum = this.countMoney(this.form);
-      },
+      // 电子收据
       receiptNum() {
         // 收据编号默认城市
         this.form.receipt = [];
@@ -873,9 +917,6 @@
           case 5:
             this.columns = dicts.value8;
             break;
-          case 6:
-            this.columns = Object.values(dicts.money_types);
-            break;
         }
       },
       // select选择
@@ -906,13 +947,6 @@
           case 5:
             this.form.is_agency = index;
             this.cusFrom = value;
-            break;
-          case 6:
-            this.form.front_money = '';            //定金
-            this.form.deposit = '';                //押金
-            this.form.rent_money = '';             //租金
-            this.money_type = value;
-            this.money_key = Object.keys(dicts.money_types)[index];
             break;
         }
         this.selectHide = false;
@@ -1028,6 +1062,7 @@
               receipt.push(this.form.receipt[i]);
             }
           }
+          this.form[this.receivedPrice] = this.form.money_sum;
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
           this.form.receipt = receipt;
           this.form.draft = val;
@@ -1048,7 +1083,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50220') {
               this.form.id = res.data.data.id;
               if (receipt.length === 0) {
@@ -1085,6 +1124,7 @@
 
       houseInfo() {
         let t = this.$route.query;
+        console.log(t);
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.address = val.house_name;
@@ -1167,12 +1207,20 @@
             this.countDate(2, draft.period_pay_arr);
             this.form.pay_way_arr = draft.pay_way_arr;
 
-            this.form.front_money = draft.front_money;
-            this.form.deposit = draft.deposit;
-            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
-            this.form.rent_money = draft.rent_money;
-            this.form.money_sum = draft.money_sum;
 
+            this.form.deposit = draft.deposit;
+            this.form.rent_money = draft.rent_money;
+            this.form.front_money = draft.front_money;
+            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
+            if (this.form.deposit_payed) {
+              this.receivedPrice = 'deposit_payed';
+            } else {
+              this.receivedPrice = 'front_money';
+            }
+            this.$nextTick(function () {
+              this.form.money_sum = draft.money_sum;
+            });
+            this.form.memo = draft.memo ? draft.memo : '';
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
@@ -1295,11 +1343,13 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
+        this.receivedPrice = 'front_money';
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';
         this.form.rent_money = '';
         this.form.money_sum = '';
+        this.form.memo = '';
         this.amountMoney = 1;
         this.form.money_sep = [''];
         this.form.real_pay_at = [''];
@@ -1348,5 +1398,8 @@
 <style lang="scss">
   #rentReport {
     overflow: hidden;
+    .checks {
+      border-bottom: .5px solid #f8f8f8;
+    }
   }
 </style>

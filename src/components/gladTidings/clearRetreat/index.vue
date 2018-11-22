@@ -3,7 +3,7 @@
     <div class="main" id="main">
       <van-cell-group>
         <div class="checks">
-          <div style="min-width: 110px;">报备性质</div>
+          <div class="titles">报备性质</div>
           <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.type">
             <van-radio name="0">清退报备</van-radio>
             <van-radio name="1">取消报备</van-radio>
