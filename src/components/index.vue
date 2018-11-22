@@ -272,7 +272,6 @@
       this.scrollTops();
     },
     activated() {
-      this.personalGet(2);
       this.routerIndex('');
       this.finished = true;
       this.scrollTops();

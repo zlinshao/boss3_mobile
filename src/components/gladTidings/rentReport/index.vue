@@ -736,8 +736,32 @@
           }).catch(_ => {
             this.prompt('close');
           })
-        }).then(data => {
-          window.location.href = data;
+        }).then(pdf => {
+          dd.biz.cspace.saveFile({
+            corpId: sessionStorage.getItem('cropID'),
+            url: pdf,  // 文件在第三方服务器地址， 也可为通过服务端接口上传文件得到的media_id，详见参数说明
+            name: "electronicReceipt.pdf",
+            onSuccess: function (data) {
+              dd.biz.cspace.preview({
+                corpId: sessionStorage.getItem('cropID'),
+                spaceId: data.data[0].spaceId,
+                fileId: data.data[0].fileId,
+                fileName: data.data[0].fileName,
+                fileSize: data.data[0].fileSize,
+                fileType: "pdf",
+                onSuccess: function () {
+                  //无，直接在native显示文件详细信息
+                },
+                onFail: function (err) {
+                  // 无，直接在native页面显示具体的错误
+                }
+              });
+            },
+            onFail: function (err) {
+              console.log(err);
+            }
+          });
+          // window.location.href = pdf;
         })
       },
       // 显示日期

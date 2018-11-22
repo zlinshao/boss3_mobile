@@ -85,7 +85,6 @@ export default {
     };
     // 详情页
     Vue.prototype.routerDetail = function (val) {
-      console.log(val);
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
     // 数组去空字符串
@@ -231,6 +230,15 @@ export default {
       return new Promise((resolve, reject) => {
         that.$http.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
+          dd.config({
+            agentId: _config.agentId, // 必填，微应用ID
+            corpId: _config.corpId,//必填，企业ID
+            timeStamp: _config.timeStamp, // 必填，生成签名的时间戳
+            nonceStr: _config.nonceStr, // 必填，生成签名的随机串
+            signature: _config.signature, // 必填，签名
+            jsApiList: ['biz.cspace.saveFile', 'biz.cspace.preview'] // 必填，需要使用的jsapi列表，注意：不要带dd。
+          });
+          sessionStorage.setItem('cropID', _config.corpId);
           // PC端
           DingTalkPC.runtime.permission.requestAuthCode({
             corpId: _config.corpId,

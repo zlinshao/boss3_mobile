@@ -95,7 +95,6 @@
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
-          console.log(response.data);
           return response;
         }, function (error) {
           if (error && error.response) {
