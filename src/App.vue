@@ -60,8 +60,7 @@
       },
       responses() {
         if (navigator.userAgent == 'app/ApartMent' || navigator.userAgent.indexOf('native-ios') > -1) {
-          let type;
-          sessionStorage.setItem('queryType', type);
+          sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
           // if (type === 'exam') {
           //   this.$router.push({path: '/beforeExam'});
