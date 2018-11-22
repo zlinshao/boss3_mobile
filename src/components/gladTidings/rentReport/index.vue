@@ -695,7 +695,7 @@
       previewReceipt(val) {
         let data = {};
         data.process_id = '0';
-        data.department_id = 93;
+        data.department_id = this.form.department_id;
         data.date = this.formatDate(new Date, 'day');
         data.payer = val.name;
         data.address = val.address;

@@ -37,7 +37,7 @@
         <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message">{{message}}</p>
         <div v-for="(key,index) in formList"
              v-if="printscreen.indexOf(index) === -1">
-          <p>{{index}}</p>
+          <p v-if="index !== 'receiptUri'">{{index}}</p>
           <h1>
             <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx].msg}}</span>
@@ -211,7 +211,8 @@
         placeStatus: ['published', 'rejected', 'cancelled'],
 
         routerLinks: ['bulletin_quality', 'bulletin_collect_basic', 'bulletin_collect_continued', 'bulletin_rent_basic', 'bulletin_rent_continued', 'bulletin_rent_trans', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change', 'bulletin_retainage'],
-        // address: '',
+        // 电子收据
+        rentReport: ['bulletin_rent_basic', 'bulletin_rent_trans', 'bulletin_rent_continued', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change', 'bulletin_retainage'],
         message: '',
         ids: '',
 
@@ -353,7 +354,6 @@
           if (res.data.code === '20020' && res.data.data.length !== 0) {
             let content = res.data.data.process.content;
             let main = res.data.data.process;
-            this.formList = JSON.parse(content.show_content_compress);
             this.operation = res.data.data.operation;
             this.deal = res.data.data.deal;
             if (content.address) {
@@ -364,6 +364,14 @@
               this.address = content.house.name;
             }
             this.process = main;
+            if (this.rentReport.indexOf(main.processable_type) > -1) {
+              this.$http.get(this.urls + 'workflow/process/get/' + val).then(item => {
+                let content1 = item.data.data.content;
+                this.formList = JSON.parse(content1.show_content_compress);
+              })
+            } else {
+              this.formList = JSON.parse(content.show_content_compress);
+            }
             this.personal = main.user;
             // this.confirmBulletinType(res.data.data.process);
             this.place = main.place;
