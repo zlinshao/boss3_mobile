@@ -92,6 +92,9 @@ import SearchHouse from '../components/common/searchHouse.vue';//计算器房屋
 import LejiaUniversity from '../components/lejiaUniversity/LejiaUniversity.vue'
 import LejiaAlub from '../components/lejiaUniversity/LejiaAlub.vue'
 
+// 考勤记录
+import Attendance from '../components/attendance/index.vue'
+
 Vue.use(Router);
 
 export default new Router({
@@ -596,7 +599,7 @@ export default new Router({
       path:'/searchHouse',
       name:'计算器房屋搜索',
       component: SearchHouse
-    }
+    },
     // {
     //   path: '/statistics',
     //   name: '业绩统计',
@@ -620,5 +623,17 @@ export default new Router({
     //   meta: {title: '研发补卡申请'},
     //   component: CreditCard
     // },
+    {
+      path: '/Attendance',
+      name: '考勤记录',
+      icon: 'iconfont icon-buqia',
+      hidden: 'other',
+      back: '#F19851',
+      meta: {
+        title: '考勤记录',
+        // keepAlive: true
+      },
+      component: Attendance
+    },
   ]
 })
