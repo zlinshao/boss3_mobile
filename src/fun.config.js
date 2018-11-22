@@ -104,7 +104,7 @@ export default {
       return Number(sum1) + Number(sum2) + Number(sum3);
     };
     // 格式化日期 yyyy-MM-dd
-    Vue.prototype.formatDate = function (date) {
+    Vue.prototype.formatDate = function (date, type) {
       let year = date.getFullYear();
       let month = date.getMonth() + 1;
       let day = date.getDate();
@@ -122,9 +122,12 @@ export default {
       hh = hh[1] ? hh : '0' + hh;
       md = md[1] ? md : '0' + md;
       ss = md[1] ? ss : '0' + ss;
+      if (type === 'day') {
+        return year + '-' + mm + '-' + dd;
+      }
       return year + '-' + mm + '-' + dd + ' ' + hh + ':' + md;
     };
-    // 初始化日期
+    // 初始化日期组件
     Vue.prototype.chooseTime = function (val) {
       let time = val.split('-');
       let time1 = Number(time[1]) - 1;

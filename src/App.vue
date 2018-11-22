@@ -93,7 +93,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = true;
+          this.loading = false;
           if (this.isWeiXin()) {
             this.prevent();
           } else {
@@ -104,6 +104,7 @@
         }
         let that = this;
         this.$http.interceptors.response.use(function (response) {
+          console.log(response.data);
           return response;
         }, function (error) {
           if (error && error.response) {

@@ -41,23 +41,23 @@
           </div>
         </div>
       </div>
-      <!--<div class="inRough" v-if="queryType == 0 || queryType === 'ding'">-->
-        <!--<div class="mainIndex">-->
-          <!--<div class="mainTop">-->
-            <!--<div>-->
-              <!--<span>数据统计</span>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="mainMain">-->
-            <!--<router-link v-for="(key,index) in paths" v-if="key.hidden === 'dataStatic'" :to="key.path" :key="index">-->
-              <!--<p :style="{'background': key.back}">-->
-                <!--<i :class="key.icon"></i>-->
-              <!--</p>-->
-              <!--<h1>{{key.name}}</h1>-->
-            <!--</router-link>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
+      <div class="inRough" v-if="queryType == 0 || queryType === 'ding'">
+        <div class="mainIndex">
+          <div class="mainTop">
+            <div>
+              <span>数据统计</span>
+            </div>
+          </div>
+          <div class="mainMain">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'dataStatic'" :to="key.path" :key="index">
+              <p :style="{'background': key.back}">
+                <i :class="key.icon"></i>
+              </p>
+              <h1>{{key.name}}</h1>
+            </router-link>
+          </div>
+        </div>
+      </div>
       <div class="inRough" v-if="queryType == 1 || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
@@ -269,21 +269,18 @@
       if ((count && (count === '2')) || from.path === '/') {
         sessionStorage.setItem('count', '1');
       }
-      next(vm => {
-        vm.toDone();
-      })
     },
     mounted() {
       this.paths = this.$router.options.routes;
       this.queryType = sessionStorage.getItem('queryType');
       this.scrollTops();
-      this.toDone();
     },
     activated() {
       this.personalGet(2);
       this.routerIndex('');
       this.disabled = true;
       this.scrollTops();
+      this.toDone();
     },
     methods: {
       goBefore(val) {

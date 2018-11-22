@@ -20,6 +20,7 @@
     "vant": "^1.4.4",
     "vue": "^2.5.0",
     "vue-axios": "^2.0.2",
+    "vue-pdf": "^3.3.1",
     "vue-pdf-shower": "^1.0.8",
     "vue-router": "^3.0.0",
     "vue-wechat-title": "^2.0.4",

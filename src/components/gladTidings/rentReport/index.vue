@@ -1,5 +1,8 @@
 <template>
   <div id="rentReport">
+    <div>
+      <pdfsss :src="pdfUrls"></pdfsss>
+    </div>
     <div class="main" id="main">
       <van-cell-group>
         <van-field
@@ -155,7 +158,7 @@
       <van-cell-group>
         <div class="checks">
           <div class="titles required">本次金额为</div>
-          <van-radio-group v-model="receivedPrice" @change="radioChange">
+          <van-radio-group v-model="receivedPrice">
             <van-radio name="front_money">定金</van-radio>
             <van-radio name="deposit_payed">租金+押金</van-radio>
           </van-radio-group>
@@ -211,6 +214,25 @@
       </div>
 
       <van-cell-group>
+        <van-field
+          v-model="form.name"
+          label="客户姓名"
+          type="text"
+          placeholder="请填写客户姓名"
+          icon="clear"
+          @click-icon="form.name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.phone"
+          label="联系方式"
+          type="text"
+          class="number"
+          placeholder="请填写联系方式"
+          icon="clear"
+          @click-icon="form.phone = ''"
+          required>
+        </van-field>
         <van-field
           v-model="form.memo"
           label="收款备注"
@@ -342,25 +364,6 @@
           required>
         </van-field>
         <van-field
-          v-model="form.name"
-          label="客户姓名"
-          type="text"
-          placeholder="请填写客户姓名"
-          icon="clear"
-          @click-icon="form.name = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.phone"
-          label="联系方式"
-          type="text"
-          class="number"
-          placeholder="请填写联系方式"
-          icon="clear"
-          @click-icon="form.phone = ''"
-          required>
-        </van-field>
-        <van-field
           v-model="form.contract_number"
           label="合同编号"
           type="text"
@@ -463,12 +466,16 @@
   import ChooseTime from '../../common/chooseTime.vue'
   import {Toast} from 'vant';
   import {Dialog} from 'vant';
+  import pdfsss from 'vue-pdf'
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, ChooseTime},
+    components: {UpLoad, Toast, ChooseTime, pdfsss},
     data() {
       return {
+        pdfUrls: '',
+        // 缩放 默认为1
+        scale: 1.2,
         timeModule: false,              //日期
         formatData: {
           paramsKey: '',                //格式化日期
@@ -533,8 +540,8 @@
 
           pay_way_bet: '',              //付款方式 押
 
-          pay_way_arr: [''],            //付款方式 付
           period_pay_arr: [''],         //付款方式周期
+          pay_way_arr: [''],            //付款方式 付
 
           front_money: '',              //定金
           deposit: '',                  //押金
@@ -594,6 +601,9 @@
       }
     },
     watch: {
+      receivedPrice() {
+        this.form.money_sum = '';
+      },
       cusFrom() {
         if (this.form.is_agency === 0) {
           this.form.agency_name = '';
@@ -675,27 +685,52 @@
       this.houseInfo();
     },
     methods: {
+      logContent() {
+        this.$refs.myPdfComponent.pdf.forEachPage(function (page) {
+          return page.getTextContent().then(function (content) {
+            let text = content.items.map(item => item.str);
+            console.log(text);
+          })
+        });
+      },
       previewReceipt(val) {
-        console.log(val);
-
-        let data = {
-          process_id: "0",
-          department_id: 93,
-          date: "2018-11-21",
-          payer: "徐航",
-          address: "百水芊城怡水坊5-103",
-          price: "1850元",
-          sign_at: "2018-11-11",
-          duration: "12月0天",
-          pay_way: "押1付6",
-          payment: "定金",//押金   押金+租金
-          amount: "2000",
-          sum: 2000,
-          sum_uc: "3000",
-          memo: "备注",//collect_remark
-          bank1: "浦发银行 6217920475525080 吕繁",
-          account_id: 2531
+        let data = {};
+        data.process_id = '0';
+        data.department_id = 93;
+        data.date = this.formatDate(new Date, 'day');
+        data.payer = val.name;
+        data.address = val.address;
+        data.price = '';
+        for (let item of val.price_arr) {
+          if (item) {
+            data.price = data.price + item + '元 ; '
+          }
         }
+        data.sign_at = val.sign_date;
+        data.duration = val.month + '个月' + (val.day ? val.day : 0) + '天';
+        data.pay_way = '';
+        for (let item of val.pay_way_arr) {
+          if (item) {
+            let str = '押' + val.pay_way_bet + '付' + item + ' ; ';
+            data.pay_way = data.pay_way + str;
+          }
+        }
+        data.payment = this.receivedPrice === 'front_money' ? '定金' : '押金+租金';
+        data.amount = val.money_sum;
+        data.sum = val.money_sum;
+        data.memo = val.memo;
+        val.money_way.forEach((item, index) => {
+          data['bank' + (index + 1)] = item;
+        });
+        data.account_id = val.account_id;
+        this.$http.post(this.urls + 'financial/receipt/generate', data).then(res => {
+          if (res.data.code === '20000') {
+            this.pdfUrls = res.data.data.shorten_uri;
+          } else {
+            Toast(res.data.msg);
+          }
+
+        })
       },
       // 显示日期
       showTimeChoose(val, time, index) {
@@ -746,12 +781,6 @@
         this.receiptNum();
       },
       // 电子收据
-      radioChange() {
-        this.form.money_sum = '';
-      },
-      moneyAll() {
-        this.form.money_sum = this.countMoney(this.form);
-      },
       receiptNum() {
         // 收据编号默认城市
         this.form.receipt = [];
@@ -1087,6 +1116,7 @@
 
       houseInfo() {
         let t = this.$route.query;
+        console.log(t);
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.address = val.house_name;
@@ -1174,12 +1204,15 @@
             this.form.rent_money = draft.rent_money;
             this.form.front_money = draft.front_money;
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
-            this.form.money_sum = draft.money_sum;
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
             } else {
               this.receivedPrice = 'front_money';
             }
+            this.$nextTick(function () {
+              this.form.money_sum = draft.money_sum;
+            });
+            this.form.memo = draft.memo ? draft.memo : '';
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {

@@ -40,19 +40,19 @@
 .first_date.month .van-cell:not(:last-child):after {
   border: none; }
 
-.first_date .titles, .checks .titles {
+.first_date .titles, .checks .titles, .fourth .titles {
   min-width: 105px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   padding-left: 15px; }
-.first_date .titles.required:after, .checks .titles.required:after {
+.first_date .titles.required:after, .checks .titles.required:after, .fourth .titles.required:after {
   content: '*';
   position: absolute;
   left: 7px;
   font-size: 14px;
   color: #f44; }
-.first_date .van-cell.van-field, .checks .van-cell.van-field {
+.first_date .van-cell.van-field, .checks .van-cell.van-field, .fourth .van-cell.van-field {
   padding-left: 0; }
 
 .titleRed {
