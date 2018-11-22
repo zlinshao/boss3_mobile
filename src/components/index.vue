@@ -269,6 +269,7 @@
       if ((count && (count === '2')) || from.path === '/') {
         sessionStorage.setItem('count', '1');
       }
+      next();
     },
     mounted() {
       this.paths = this.$router.options.routes;
