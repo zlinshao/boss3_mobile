@@ -49,7 +49,7 @@
             label="联系方式"
             placeholder="请填写联系方式">
           </van-field>
-          <div class="checks">
+          <div class="checks noBorder">
             <div class="titles required">性别</div>
             <van-radio-group v-model="sexs[index]">
               <van-radio name="1">男</van-radio>
@@ -87,7 +87,7 @@
           icon="clear"
           @click-icon="form.water = ''">
         </van-field>
-        <div class="first_date">
+        <div class="first_date noBorder">
           <div class="titles">电表底数</div>
           <van-field
             v-model="form.electricity_peak"

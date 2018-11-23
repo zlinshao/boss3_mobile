@@ -379,7 +379,7 @@
             this.params.read_at = read;
             break;
         }
-        this.processList(this.par);
+        this.processList(this.params);
       },
       processList(val) {
         this.finished = true;

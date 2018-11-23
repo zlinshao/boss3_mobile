@@ -3,7 +3,7 @@
 
     <div class="main" id="main">
       <van-cell-group>
-        <div class="checks">
+        <div class="checks noBorder">
           <div class="titles">收租标记</div>
           <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.collect_or_rent"
                            @change="rentChange">

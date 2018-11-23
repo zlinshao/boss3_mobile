@@ -14,11 +14,11 @@
           label="签约日期"
           readonly
           type="text"
-          @click="timeChoose(1, form.sign_date)"
+          @click="timeChoose('sign_date', form.sign_date)"
           placeholder="请选择签约日期"
           required>
         </van-field>
-        <div class="first_date">
+        <div class="first_date noBorder">
           <div class="titles required">签约时长</div>
           <van-field
             v-model="form.month"
@@ -40,7 +40,7 @@
           label="合同开始日期"
           readonly
           type="text"
-          @click="timeChoose(3, form.begin_date)"
+          @click="timeChoose('begin_date', form.begin_date)"
           placeholder="请选择合同开始日期"
           required>
         </van-field>
@@ -49,7 +49,7 @@
           label="合同结束日期"
           readonly
           type="text"
-          @click="timeChoose(4, form.end_date)"
+          @click="timeChoose('end_date', form.end_date)"
           placeholder="请选择合同结束日期"
           required>
         </van-field>
@@ -147,38 +147,23 @@
           <span>本次已收金额</span>
         </div>
       </div>
+
       <van-cell-group>
-        <van-field
-          v-model="form.front_money"
-          type="text"
-          class="number"
-          label="定金"
-          @keyup="moneyAll"
-          placeholder="请填写金额">
-        </van-field>
-        <van-field
-          v-model="form.deposit_payed"
-          label="押金"
-          @keyup="moneyAll"
-          type="text"
-          class="number"
-          placeholder="请填写已收押金">
-        </van-field>
-        <van-field
-          v-model="form.rent_money"
-          label="租金"
-          @keyup="moneyAll"
-          type="text"
-          class="number"
-          placeholder="请填写租金">
-        </van-field>
+        <div class="checks">
+          <div class="titles required">本次金额为</div>
+          <van-radio-group v-model="receivedPrice">
+            <van-radio name="front_money">定金</van-radio>
+            <van-radio name="deposit_payed">租金+押金</van-radio>
+          </van-radio-group>
+        </div>
         <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="总金额"
           placeholder="请填写总金额"
-          disabled>
+          @click-icon="form.money_sum = ''"
+          required>
         </van-field>
       </van-cell-group>
 
@@ -201,7 +186,7 @@
             type="text"
             readonly
             class="number"
-            @click="showTimeChoose('real_pay_at', form.real_pay_at[index], index)"
+            @click="timeChoose('real_pay_at', form.real_pay_at[index], index)"
             label="实际收款时间"
             placeholder="付款凭证截图上的时间"
             required>
@@ -221,14 +206,34 @@
         +支付方式变化
       </div>
       <van-cell-group>
-        <!--<van-field-->
-        <!--v-model="form.deposit"-->
-        <!--label="押金"-->
-        <!--type="text"-->
-        <!--class="number"-->
-        <!--placeholder="请填写押金"-->
-        <!--required>-->
-        <!--</van-field>-->
+        <van-field
+          v-model="form.name"
+          label="客户姓名"
+          type="text"
+          placeholder="请填写客户姓名"
+          icon="clear"
+          @click-icon="form.name = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.phone"
+          label="联系方式"
+          type="text"
+          class="number"
+          placeholder="请填写联系方式"
+          icon="clear"
+          @click-icon="form.phone = ''"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.memo"
+          label="收款备注"
+          type="textarea"
+          placeholder="请填写备注"
+          icon="clear"
+          @click-icon="form.memo = ''">
+        </van-field>
+        <div class="addInput" @click="previewReceipt(form)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -347,27 +352,8 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(2, form.retainage_date)"
+          @click="timeChoose('retainage_date', form.retainage_date)"
           placeholder="请选择尾款补齐日期"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.name"
-          label="客户姓名"
-          type="text"
-          placeholder="请填写客户姓名"
-          icon="clear"
-          @click-icon="form.name = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.phone"
-          label="客户手机"
-          type="text"
-          class="number"
-          placeholder="请填写客户手机号"
-          icon="clear"
-          @click-icon="form.phone = ''"
           required>
         </van-field>
         <van-field
@@ -459,19 +445,7 @@
         @confirm="onConfirm"/>
     </van-popup>
 
-    <!--日期-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="date"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @change="monthDate"
-        @cancel="onCancel"
-        @confirm="onDate"/>
-    </van-popup>
-
-    <ChooseTime :module="timeModule" :formatData="formatData" @close="timeModule = false"
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel"
                 @onDate="onConTime"></ChooseTime>
   </div>
 </template>
@@ -489,28 +463,22 @@
       return {
         timeModule: false,              //日期
         formatData: {
-          paramsKey: '',                //格式化日期
           dateVal: '',                  //格式化日期
           dataKey: '',                  //字段区分
+          dateType: '',                 //日期类型
           idx: '',                      //下标
         },
-
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,               //删除图片
         picStatus: 'success',
 
         tabs: '',
-        columns: [],                  //select值
-        selectHide: false,            //select选择
-        minDate: new Date(2000, 0, 1),
-        maxDate: new Date(2200, 12, 31),
-        currentDate: '',
-        timeShow: false,              //日期状态
-        timeIndex: '',
-        timeValue: '',                //日期value
-        real_pay_at: '',
-        first_date: [],               //日期value
+        columns: [],                    //select值
+        selectHide: false,              //select选择
+        timeShow: false,                //日期状态
+        first_date: '',                 //日期value
+        receivedPrice: 'front_money',   //本次金额为
 
         amountPrice: 1,
         datePrice: [],
@@ -560,6 +528,7 @@
           real_pay_at: [''],            //实际收款时间
           money_way: [''],              //分金额 方式
           account_id: [],               //汇款帐户ID
+          memo: '',                     //收款备注
 
           is_other_fee: 0,
           other_fee: '',
@@ -611,7 +580,12 @@
       }
     },
     watch: {
-      cusFrom(val) {
+      receivedPrice() {
+        this.form.money_sum = '';
+        this.form.front_money = '';
+        this.form.deposit_payed = '';
+      },
+      cusFrom() {
         if (this.form.is_agency === 0) {
           this.form.agency_name = '';
           this.form.agency_price = '';
@@ -636,7 +610,6 @@
     },
     mounted() {
       this.isReceiptMsg = isReceiptMessage;
-      this.getNowFormatDate();
       let count = sessionStorage.count;
       if (count === '11') {
         this.routerIndex('');
@@ -693,21 +666,6 @@
     },
 
     methods: {
-      // 显示日期
-      showTimeChoose(val, time, index) {
-        setTimeout(() => {
-          this.timeModule = true;
-        }, 200);
-        this.formatData.dateVal = time;
-        this.formatData.dataKey = val;
-        this.formatData.idx = index;
-      },
-      // 确定日期
-      onConTime(val) {
-        console.log(val);
-        this.form[val.dataKey][this.formatData.idx] = val.dateVal;
-        this.timeModule = false;
-      },
       userInfo(val1) {
         if (val1) {
           let per = JSON.parse(sessionStorage.personal);
@@ -790,11 +748,6 @@
             break;
         }
       },
-      // select关闭
-      onCancel() {
-        this.selectHide = false;
-        this.timeShow = false;
-      },
       // 截图
       getImgData(val) {
         this.picStatus = val[2];
@@ -808,61 +761,50 @@
           this.form.photo = val[1];
         }
       },
-
-      // 获取当前时间
-      getNowFormatDate() {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let strDate = date.getDate();
-        this.currentDate = new Date(year, month, strDate);
-      },
-
-      // 日期选择
-      timeChoose(val, time, index) {
-        if (time) {
-          this.currentDate = this.chooseTime(time);
-        } else {
-          this.getNowFormatDate();
-        }
+      // 显示日期
+      timeChoose(val, time, index = '') {
         setTimeout(() => {
-          this.timeShow = true;
+          this.timeModule = true;
         }, 200);
-        this.timeIndex = val;
-        this.real_pay_at = index;
+        this.formatData.dateVal = time;
+        this.formatData.dataKey = val;
+        if (val === 'real_pay_at') {
+          this.formatData.dateType = 'datetime';
+          this.formatData.idx = index;
+        } else {
+          this.formatData.dateType = 'date';
+        }
       },
-      // 日期拼接
-      monthDate(peaker) {
-        this.timeValue = peaker.getValues().join('-');
-      },
-      // 确认日期
-      onDate(val) {
-        this.timeShow = false;
-        switch (this.timeIndex) {
-          case 1:
-            this.form.sign_date = this.timeValue;
-            break;
-          case 2:
-            this.form.retainage_date = this.timeValue;
-            break;
-          case 3:
-            this.form.begin_date = this.timeValue;
-            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
+      // 确定日期
+      onConTime(val) {
+        switch (val.dataKey) {
+          case 'begin_date':
+            this.form[val.dataKey] = val.dateVal;
+            this.endDate(val.dateVal, this.form.month, this.form.day, 2);
             this.form.period_price_arr[0] = this.form.month;
             this.form.period_pay_arr[0] = this.form.month;
             this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
-            this.first_date.push(this.timeValue);
-            this.datePrice.push(this.timeValue);
-            this.datePay.push(this.timeValue);
+            this.first_date.push(val.dateVal);
+            this.datePrice.push(val.dateVal);
+            this.datePay.push(val.dateVal);
             this.countDate(1, this.form.period_price_arr);
             this.countDate(2, this.form.period_pay_arr);
             break;
-          case 4:
-            this.form.end_date = this.timeValue;
+          case 'real_pay_at':
+            this.form[val.dataKey][this.formatData.idx] = val.dateVal;
+            break;
+          default:
+            this.form[val.dataKey] = val.dateVal;
             break;
         }
+        this.onCancel();
+      },
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeModule = false;
       },
       // select 显示
       selectShow(val, index) {
@@ -1039,6 +981,7 @@
               receipt.push(this.form.receipt[i]);
             }
           }
+          this.form[this.receivedPrice] = this.form.money_sum;
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
           this.form.receipt = receipt;
           this.form.draft = val;
@@ -1053,7 +996,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50220') {
               if (receipt.length === 0) {
                 this.form.receipt = [];
@@ -1165,8 +1112,15 @@
             this.form.front_money = draft.front_money;
             this.form.deposit = draft.deposit;
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
-            this.form.rent_money = draft.rent_money;
-            this.form.money_sum = draft.money_sum;
+            if (this.form.deposit_payed) {
+              this.receivedPrice = 'deposit_payed';
+            } else {
+              this.receivedPrice = 'front_money';
+            }
+            this.$nextTick(function () {
+              this.form.money_sum = draft.money_sum;
+            });
+            this.form.memo = draft.memo ? draft.memo : '';
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
@@ -1231,13 +1185,13 @@
             }
 
             this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot;
+            this.screenshots = data.screenshot ? data.screenshot : {};
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.screenshot_leader;
+            this.leaders = data.screenshot_leader ? data.screenshot_leader : {};
             this.form.photo = draft.photo;
-            this.photos = data.photo;
+            this.photos = data.photo ? data.photo : {};
             this.form.deposit_photo = draft.deposit_photo;
-            this.receipts = data.deposit_photo;
+            this.receipts = data.deposit_photo ? data.deposit_photo : {};
             this.form.remark = draft.remark;
 
             if (val !== '' && val.type === 2) {
@@ -1280,7 +1234,6 @@
         this.userInfo(true);
         $('.imgItem').remove();
         this.picStatus = 'success';
-        this.form.id = '';
         this.form.processable_id = '';
         this.form.rent_without_collect_address = '';
         this.form.contract_id = '';
@@ -1300,6 +1253,7 @@
         this.amountPay = 1;
         this.form.period_pay_arr = [''];
         this.form.pay_way_arr = [''];
+        this.receivedPrice = 'front_money';
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';

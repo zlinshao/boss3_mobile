@@ -3,7 +3,7 @@
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
       <van-datetime-picker
         v-model="currentDate"
-        type="datetime"
+        :type="dateType"
         :min-date="minDate"
         :max-date="maxDate"
         @cancel="onCancel"
@@ -25,6 +25,7 @@
         currentDate: '',
         timeShow: false,          //日期状态
         timeValue: '',            //日期value
+        dateType: '',             //日期value
       }
     },
     mounted() {
@@ -34,6 +35,7 @@
     watch: {
       module(val) {
         this.timeShow = val;
+        this.dateType = this.formatData.dateType;
         this.chooseTime(this.formatData.dateVal);
       },
       timeShow(val) {
@@ -44,6 +46,7 @@
     },
     computed: {},
     methods: {
+      // 获取当前日期
       getNowTime() {
         this.timeValue = '';
         let date = new Date();
@@ -52,8 +55,13 @@
         let strDate = date.getDate();
         let hh = date.getHours();
         let mm = date.getMinutes();
+        if (this.dateType === 'date') {
+          this.currentDate = new Date(year, month, strDate);
+          return;
+        }
         this.currentDate = new Date(year, month, strDate, hh, mm);
       },
+      // 日期初始化
       chooseTime(val) {
         if (!val) {
           this.getNowTime();
@@ -64,12 +72,16 @@
         let date1 = Number(date[1]) - 1;
         let date2 = date[2];
         let time = date2.split(' ');
+        if (this.dateType === 'date') {
+          this.currentDate = new Date(date[0], date1, Number(time[0]));
+          return;
+        }
         let mm = time[1].split(':');
         this.currentDate = new Date(date[0], date1, Number(time[0]), Number(mm[0]), Number(mm[1]));
       },
       // 确认日期
       onDate(val) {
-        this.timeValue = this.formatDate(val);
+        this.timeValue = this.formatDate(val, this.dateType);
         this.timeShow = false;
         let data = {};
         data.dateVal = this.timeValue;

@@ -172,7 +172,7 @@
           @click-icon="form.deposit = ''"
           required>
         </van-field>
-        <div class="first_date">
+        <div class="first_date noBorder">
           <div class="titles required">保修期</div>
           <van-field
             v-model="form.warranty"

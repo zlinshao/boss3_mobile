@@ -120,7 +120,7 @@ export default {
       hh = hh[1] ? hh : '0' + hh;
       md = md[1] ? md : '0' + md;
       ss = md[1] ? ss : '0' + ss;
-      if (type === 'day') {
+      if (type === 'date') {
         return year + '-' + mm + '-' + dd;
       }
       return year + '-' + mm + '-' + dd + ' ' + hh + ':' + md;
@@ -340,12 +340,17 @@ export default {
     };
     // 生成电子收据
     Vue.prototype.previewReceipt = function (val) {
+      console.log(val);
       let data = {};
       data.process_id = '0';
       data.department_id = this.form.department_id;
-      data.date = this.formatDate(new Date, 'day');
+      data.date = this.formatDate(new Date, 'date');
       data.payer = val.name;
-      data.address = val.address;
+      if (val.rent_without_collect_address) {
+        data.address = val.rent_without_collect_address;
+      } else {
+        data.address = val.address;
+      }
       data.price = '';
       for (let item of val.price_arr) {
         if (item) {
@@ -355,10 +360,16 @@ export default {
       data.sign_at = val.sign_date;
       data.duration = val.month + '个月' + (val.day ? val.day : 0) + '天';
       data.pay_way = '';
-      for (let item of val.pay_way_arr) {
-        if (item) {
-          let str = '押' + val.pay_way_bet + '付' + item + ' ; ';
-          data.pay_way = data.pay_way + str;
+      if (val.pay_way_arr) {
+        for (let item of val.pay_way_arr) {
+          if (item) {
+            let str = '押' + val.pay_way_bet + '付' + item + ' ; ';
+            data.pay_way = data.pay_way + str;
+          }
+        }
+      } else {
+        for (let item of val.pay_way) {
+          data.pay_way = data.pay_way + item.pay_way_str;
         }
       }
       data.payment = this.receivedPrice === 'front_money' ? '定金' : '押金+租金';
@@ -401,7 +412,7 @@ export default {
             });
           });
         } else {
-          this.prompt('fail', res.data.msg);
+          this.prompt('', res.data.msg);
         }
       }).catch(_ => {
         this.prompt('close');
