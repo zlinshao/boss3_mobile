@@ -346,6 +346,7 @@
         this.finished = false;
         this.loading = false;
         this.scrollTops();
+        this.onLoad();
       },
       routerLink(val) {
         this.scrollTops();
@@ -362,6 +363,7 @@
         this.finished = false;
         this.loading = false;
         this.scrollTops();
+        this.onLoad();
       },
       lists(val, active, read) {
         this.params = {};
