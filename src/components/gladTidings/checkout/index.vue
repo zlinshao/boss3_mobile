@@ -62,7 +62,7 @@
           v-model="form.checkout_date"
           type="text"
           label="退租日期"
-          @click="timeChoose()"
+          @click="timeChoose('checkout_date',form.checkout_date)"
           placeholder="请选择退租日期"
           readonly
           required>
@@ -162,27 +162,20 @@
     </van-popup>
 
     <!--日期-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="date"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @change="monthDate"
-        @cancel="onCancel"
-        @confirm="onDate"/>
-    </van-popup>
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel"
+                @onDate="onConTime"></ChooseTime>
 
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import ChooseTime from '../../common/chooseTime.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, ChooseTime},
     data() {
       return {
         haveInHand: true,
@@ -192,12 +185,12 @@
         selectHide: false,
         columns: [],
 
-        minDate: new Date(2000, 0, 1),
-        maxDate: new Date(2200, 12, 31),
-        currentDate: '',
-        timeShow: false,          //日期状态
-        timeIndex: '',
-        timeValue: '',            //日期value
+        timeModule: false,              //日期
+        formatData: {
+          dateVal: '',                  //格式化日期
+          dataKey: '',                  //字段区分
+          dateType: '',                 //日期类型
+        },
 
         payStatus: false,
         priceStatus: false,
@@ -356,20 +349,25 @@
             break;
         }
       },
-      // 日期选择
-      timeChoose() {
-        this.timeShow = true;
+      // 显示日期
+      timeChoose(val, time) {
+        setTimeout(() => {
+          this.timeModule = true;
+        }, 200);
+        this.formatData.dateVal = time;
+        this.formatData.dataKey = val;
+        this.formatData.dateType = 'date';
       },
-      // 日期拼接
-      monthDate(peaker) {
-        this.timeValue = peaker.getValues().join('-');
-      },
-      // 确认日期
-      onDate() {
-        this.form.checkout_date = this.timeValue;
+      // 确定日期
+      onConTime(val) {
+        this.form[val.dataKey] = val.dateVal;
         this.onCancel();
       },
-
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeModule = false;
+      },
       // select 显示
       selectShow(val) {
         this.tabs = val;
@@ -393,13 +391,7 @@
           this.cleanup = value;
           this.form.is_cleanup = index;
         }
-
-        this.selectHide = false;
-      },
-      // select关闭
-      onCancel() {
-        this.selectHide = false;
-        this.timeShow = false;
+        this.onCancel();
       },
 
       // 截图
@@ -439,7 +431,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '51220') {
               this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
@@ -582,7 +578,6 @@
         this.form.check_type.name = '';
         this.form.payWay = [''];
         this.form.price_arr = [''];
-        this.form.id = '';
         this.form.checkout_photo = [];
         this.checkouts = {};
         this.form.photo = [];

@@ -429,7 +429,7 @@
     </div>
 
     <!--日期-->
-    <ChooseTime :module="timeShow" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
       <van-picker
@@ -462,8 +462,8 @@
         columns: [],              //select值
         selectHide: false,
         joint: false,             //是否合租
-        timeShow: false,          //日期状态
         first_date: [],
+        timeModule: false,          //日期状态
         formatData: {
           dateVal: '',            //格式化日期
           dataKey: '',            //字段区分
@@ -568,7 +568,6 @@
       }
     },
     mounted() {
-      this.getNowFormatDate();
       let count = sessionStorage.count;
       if (count === '11') {
         this.routerIndex('');
@@ -708,19 +707,10 @@
         }
 
       },
-
-      // 获取当前时间
-      getNowFormatDate() {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let strDate = date.getDate();
-        this.currentDate = new Date(year, month, strDate);
-      },
       // 显示日期
       timeChoose(val, time) {
         setTimeout(() => {
-          this.timeShow = true;
+          this.timeModule = true;
         }, 200);
         this.formatData.dateVal = time;
         this.formatData.dataKey = val;
@@ -755,7 +745,7 @@
       // select关闭
       onCancel() {
         this.selectHide = false;
-        this.timeShow = false;
+        this.timeModule = false;
       },
       // select 显示
       selectShow(val, index) {

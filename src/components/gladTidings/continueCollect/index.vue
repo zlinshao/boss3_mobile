@@ -23,7 +23,7 @@
           label="签约日期"
           readonly
           type="text"
-          @click="timeChoose(4, form.sign_date)"
+          @click="timeChoose('sign_date', form.sign_date)"
           placeholder="请选择签约日期"
           required>
         </van-field>
@@ -51,7 +51,7 @@
           label="合同开始时间"
           placeholder="请选择合同开始时间"
           readonly
-          @click="timeChoose(1, form.begin_date)"
+          @click="timeChoose('begin_date', form.begin_date)"
           required>
         </van-field>
         <van-field
@@ -59,7 +59,7 @@
           label="合同结束日期"
           readonly
           type="text"
-          @click="timeChoose(5, form.end_date)"
+          @click="timeChoose('end_date', form.end_date)"
           placeholder="请选择合同结束日期"
           required>
         </van-field>
@@ -69,7 +69,7 @@
             v-model="form.pay_first_date"
             readonly
             type="text"
-            @click="timeChoose(2, form.pay_first_date)"
+            @click="timeChoose('pay_first_date', form.pay_first_date)"
             placeholder="第一次打款日期">
           </van-field>
           <span class="cut">-</span>
@@ -78,7 +78,7 @@
             v-model="form.pay_second_date"
             readonly
             type="text"
-            @click="timeChoose(3, form.pay_second_date)"
+            @click="timeChoose('pay_second_date', form.pay_second_date)"
             placeholder="第二次打款日期">
           </van-field>
         </div>
@@ -359,45 +359,36 @@
     </van-popup>
 
     <!--日期-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="date"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @change="monthDate"
-        @cancel="onCancel"
-        @confirm="onDate"/>
-    </van-popup>
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
 
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import ChooseTime from '../../common/chooseTime.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, ChooseTime},
     data() {
       return {
         haveInHand: true,
         urls: globalConfig.server,
-        isClear: false,           //删除图片
+        isClear: false,                 //删除图片
         picStatus: 'success',
 
         tabs: '',
-        columns: [],              //select值
-        selectHide: false,        //房型
+        columns: [],                    //select值
+        selectHide: false,              //房型
 
-        minDate: new Date(2000, 0, 1),
-        maxDate: new Date(2200, 12, 31),
-        currentDate: '',
-        timeShow: false,                //日期状态
-        timeIndex: '',
-        timeValue: '',                  //日期value
-
+        timeModule: false,              //日期状态
+        formatData: {
+          dateVal: '',                  //格式化日期
+          dataKey: '',                  //字段区分
+          dateType: '',
+        },
         first_date: [],
 
         amountPrice: 1,
@@ -408,14 +399,14 @@
         payTypeNum: [''],               //付款方式
         payIndex: '',                   //付款方式index
 
-        corp: true,                    //公司单
+        corp: true,                     //公司单
 
         form: {
           id: '',
           processable_id: '',
           type: 2,
           draft: 0,
-          contract_id: '',    //合同
+          contract_id: '',              //合同
           house_type: '',
           house: {
             id: '',
@@ -478,7 +469,6 @@
       }
     },
     mounted() {
-      this.getNowFormatDate();
       let count = sessionStorage.count;
       if (count === '11') {
         this.routerIndex('');
@@ -587,12 +577,6 @@
             break;
         }
       },
-
-      // select关闭
-      onCancel() {
-        this.selectHide = false;
-        this.timeShow = false;
-      },
       // 图片
       getImgData(val) {
         this.picStatus = val[2];
@@ -627,63 +611,42 @@
           this.form.end_date = '';
         }
       },
-      // 获取当前时间
-      getNowFormatDate() {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let strDate = date.getDate();
-        this.currentDate = new Date(year, month, strDate);
-      },
-
-      // 日期选择
+      // 显示日期
       timeChoose(val, time) {
-        if (time) {
-          this.currentDate = this.chooseTime(time);
-        } else {
-          this.getNowFormatDate();
-        }
         setTimeout(() => {
-          this.timeShow = true;
+          this.timeModule = true;
         }, 200);
-        this.timeIndex = val;
+        this.formatData.dateVal = time;
+        this.formatData.dataKey = val;
+        this.formatData.dateType = 'date';
       },
-      // 日期拼接
-      monthDate(peaker) {
-        this.timeValue = peaker.getValues().join('-');
-      },
-      // 确认日期
-      onDate(val) {
-        console.log(val);
-        this.timeShow = false;
-        switch (this.timeIndex) {
-          case 1:
-            this.form.begin_date = this.timeValue;
-            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
+      // 确定日期
+      onConTime(val) {
+        this.form[val.dataKey] = val.dateVal;
+        switch (val.dataKey) {
+          case 'begin_date':
+            this.endDate(val.dateVal, '', this.form.vacancy, 1);
             break;
-          case 2:
-            this.form.pay_first_date = this.timeValue;
+          case 'pay_first_date':
+            this.form.pay_first_date = val.dateVal;
             this.form.period_price_arr[0] = this.form.month;
             this.form.period_pay_arr[0] = this.form.month;
             this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
-            this.first_date.push(this.timeValue);
-            this.datePrice.push(this.timeValue);
-            this.datePay.push(this.timeValue);
+            this.first_date.push(val.dateVal);
+            this.datePrice.push(val.dateVal);
+            this.datePay.push(val.dateVal);
             this.countDate(1, this.form.period_price_arr);
             this.countDate(2, this.form.period_pay_arr);
             break;
-          case 3:
-            this.form.pay_second_date = this.timeValue;
-            break;
-          case 4:
-            this.form.sign_date = this.timeValue;
-            break;
-          case 5:
-            this.form.end_date = this.timeValue;
-            break;
         }
+        this.onCancel();
+      },
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeModule = false;
       },
       // select 显示
       selectShow(val, index) {
@@ -806,7 +769,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50120') {
               this.form.day = this.form.day === '0' ? '' : this.form.day;
               this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
@@ -982,7 +949,6 @@
         this.userInfo(true);
         $('.imgItem').remove();
         this.picStatus = 'success';
-        this.form.id = '';
         this.form.processable_id = '';
         this.form.contract_id = '';
         this.form.house.id = '';

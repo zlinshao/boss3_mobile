@@ -325,7 +325,6 @@
         this.picStatus = 'success';
         this.form.payWay = [''];
         this.form.price_arr = [''];
-        this.form.id = '';
         this.form.processable_id = '';
         this.form.type = '0';
         this.form.screenshot_leader = [];

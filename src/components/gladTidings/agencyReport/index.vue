@@ -560,7 +560,6 @@
         this.form.payWay = [''];
         this.form.price_arr = [''];
         this.form.address = '';
-        this.form.id = '';
         this.form.processable_id = '';
         this.form.contract_id = '';
         this.form.house_id = '';
