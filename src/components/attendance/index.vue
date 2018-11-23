@@ -1,5 +1,5 @@
 <template>
-  <div id="attendance"  @touchmove="handleTouchMove" @touchstart="handleTouchStart" @touchend="hanfleTouchEnd">
+  <div id="attendance">
     <div class="headTop">
       <div class="topLeft">
         <div class="avatarImg">
@@ -8,13 +8,36 @@
         </div>
         <span class="name">{{name}}</span>
       </div>
-      <div class="date">
+      <div class="date" @click="showTime = true">
         <span>{{currentDate}}</span>
         <span>{{currentWeek}}</span>
       </div>
+      <!-- 时间选择器 -->
+      <van-popup v-model="showTime" position="bottom" :overlay="true">
+        <van-datetime-picker v-model="selectTime" type="year-month" :min-date="minDate" @confirm="confirmTime"/>
+      </van-popup>
     </div>
-    <div class="calendar" >
-      <calendar :typesetting="typesetting"  :currentYM="currentYM"  @myclick="changeattendance" ></calendar>
+    <!-- <div class="calendar"  @touchmove="handleTouchMove" @touchstart="handleTouchStart" @touchend="hanfleTouchEnd"> -->
+    <div class="calendar">
+      <table class="bgtable">
+      <thead>
+          <tr>
+          <!--汉字表头-->
+          <th v-for="(item,index) in daynamearr" :key="index">{{item}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(week, index) in arr" :key="index">
+          <td v-for="(item, index) in week" :key="index" :class="{'gray': item.prevmonth || item.nextmonth}" @click.stop="viewattendance(item.day)">
+            {{item.day}}
+            <div class="dot" :class="{ 'colorA': item.typesetting == 'A', 'colorB': item.typesetting == 'B','colorC': item.typesetting == 'C','colorD': item.typesetting == '休' }">
+            <!-- <div class="dot" v-text="{{ 'A' ? item.typesetting == 'A' : 'B' ? item.typesetting == 'B' : 'C': item.typesetting == 'C' :'休'}}"> -->
+              <!-- {{text}} -->
+              </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     </div>
     <div class="info">
       <p>
@@ -31,7 +54,7 @@
       <van-icon name="clock" style="color: #409eff;" />
       <span>今日打卡{{punchNum}}次，工时共计{{timeTotal}}</span>
     </div>
-    <div class="steps">
+    <div class="steps" v-if="recode.length>0">
       <van-steps direction="vertical" :active-color="'#409eff'">
         <van-step>
           <span>打卡时间</span>
@@ -50,28 +73,27 @@
           </p>
         </van-step>
       </van-steps>
-      <!-- <div class="noData">{{msg}}</div> -->
     </div>
+      <div class="noData" v-else>无打卡时间</div>
   </div>
 </template>
 
 <script>
-import calendar from "./calendar";
 export default {
-  components: { calendar },
   data() {
     return {
-      // active: 0,
+      minDate: new Date(2017, 1, 1),
+      selectTime: new Date(),
+      showTime: false,
       name: "",
-      currentDate: "",
+      avatar: "", // 头像
+      currentDate: "",   //
       currentWeek: "",
       position: "",
       role: "",
       typesetting: {}, // 排班
-      currentYear: "", // 年
-      currentMonth: "", // 当前月
-      currentYM: [],
-      avatar: "", // 头像
+      currentYear: "", // 返回年份
+      currentMonth: "", // 返回月份
       resultWork: "", //上班打卡正常
       resultOffWork: "", // 下班打卡正常
       goWork: "", //上班时间
@@ -83,56 +105,80 @@ export default {
       workOff: "", // 下班
       countGoWorkTime: "", // 上班打卡时间
       counttGoOffWorkTime: "", // 下班打卡时间
-      viewDate: "", // 子组件日期
-      currentTime: "",
-      noData: true,
-      msg: "",
       startX: "", // 手指开始坐标
       moverX: "", //手指滑动坐标
       endX: "",
-      yearMonth: "",
-      // isClear: false,
+      daynamearr: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], //本月的本期构成
+      dayarr: [],
+      arr: [],
+      // text: "",
+      recode: ""
     };
   },
-  watch: {},
+  computed: {
+    // deep: true,
+    text(val) {
+      console.log(val, "9999")
+      val.arr.forEach((item, index) => {
+        item.forEach((val, key) => {
+          if(val.currentmonth) {
+             return   'A' ? val.typesetting == 'A' : 
+                          'B' ? val.typesetting == 'B' :
+                          'C' ? val.typesetting == 'C' :
+                          '休' 
+          }
+        })
+      })
+     
+    }
+  },
   methods: {
     // 获取当前排班记录
     getAttendance(date) {
-      console.log(date, "66666");
-      this.$http.get(globalConfig.server + "attendance/sort/sort?arrange_month=" + date).then(res => {
-          console.log(res, "7777");
-           this.position = "";
-            this.role = "";
+      this.$http.get(globalConfig.server + "attendance/sort/sort?user_id=289&arrange_month=" + date).then(res => {   // 测试数据
+      // this.$http.get(globalConfig.server + "attendance/sort/sort?arrange_month=" + date).then(res => {
+          this.typesetting = {};
           if (res.data.code == "20000") {
-            this.name = res.data.data.data.users.name;
-            this.avatar = res.data.data.data.users.avatar;
-            res.data.data.data.users.org.forEach((item, index) => {
-              this.position += item.name + " ";
-            });
-            res.data.data.data.users.role.forEach((item, index) => {
-              this.role += item.display_name + " ";
-            });
             this.typesetting = res.data.data.data.arrange;
             this.currentMonth = res.data.data.month;
             this.currentYear = res.data.data.year;
-            this.currentYM = [this.currentMonth,  this.currentYear, this.isClear];
-            console.log(this.typesetting, "33333");
-            
+            this.getCalendar(this.currentYear, this.currentMonth, true)
           } else {
-            Toast(res.msg);
-            this.typesetting = {}
+            this.typesetting = {};
+            this.currentMonth = res.data.data.month;
+            this.currentYear = res.data.data.year;
+            this.getCalendar(this.currentYear, this.currentMonth, true)
           }
         });
     },
-    // 获取登陆的打卡以及审批记录
+    // 获取每天的打卡记录
     getPunch(date) {
-      this.$http.get(globalConfig.server +"attendance/summary/self?sign_date=" + date).then(res => {
-          // this.$http.get(globalConfig.server + "attendance/summary/self?user_id=289").then(res => {
+      // this.$http.get(globalConfig.server +"attendance/summary/self?sign_date=" + date).then(res => {
+      this.$http.get(globalConfig.server + "attendance/summary/self?user_id=289&sign_date=" + date).then(res => { // 测试数据
+          this.position = "";
+          this.role = "";
+          this.recode = [];
+          this.goWork = "";
+          this.goOffWork = "";
+          this.resultWork = "";
+          this.resultOffWork = "";
           if (res.data.code == "20000") {
-            let recode = res.data.data.sort_dimension;
+
+            this.avatar = res.data.data.avatar;
+            this.name = res.data.data.name;
+            res.data.data.role.forEach((item, index) => {
+              this.position += item.display_name + " "
+            })
+            res.data.data.org.forEach((item, index) => {
+              this.role += item.name + ""
+            })
+            this.recode = res.data.data.sort_dimension;
+            if(this.recode.length==0) {
+              this.punchNum = 0
+            }
             let attendanceObj = {};
             let attendanceArr = [];
-            recode.forEach((item, index) => {
+            this.recode.forEach((item, index) => {
               if (item.event_attribute == 1) {
                 if (item.status == 0) {
                   this.resultWork = "正常";
@@ -143,14 +189,10 @@ export default {
                 } else if (item.status == 4) {
                   this.resultWork = "外勤";
                 }
-                // attendanceArr.push(this.resultWork)
                 this.punchNum = 1;
                 this.timeTotal = 0;
-                this.goWork =
-                  item.dimensions.hour + ":" + item.dimensions.minute; // 上班时间
-                this.countGoWorkTime = new Date(
-                  item.dimensions.time.replace(/-/g, "/")
-                ).getTime();
+                this.goWork = item.dimensions.hour + ":" + item.dimensions.minute; // 上班时间
+                this.countGoWorkTime = new Date(item.dimensions.time.replace(/-/g, "/")).getTime();
               } else if (item.event_attribute == 2) {
                 if (item.status == 2) {
                   this.resultOffWork = "早退";
@@ -161,21 +203,12 @@ export default {
                 } else if (item.status == 4) {
                   this.resultWork = "外勤";
                 }
-                // attendanceArr.push(this.resultWork)
                 this.punchNum = 2;
                 this.workOff = true;
-                // this.active = 1;
-                this.goOffWork =
-                  item.dimensions.hour + ":" + item.dimensions.minute; // 下班时间
-                this.counttGoOffWorkTime = new Date(
-                  item.dimensions.time.replace(/-/g, "/")
-                ).getTime();
-                this.timeTotal =
-                  this.counttGoOffWorkTime - this.countGoWorkTime;
-                this.timeTotal = this.getWorkTime(
-                  this.counttGoOffWorkTime,
-                  this.countGoWorkTime
-                );
+                this.goOffWork = item.dimensions.hour + ":" + item.dimensions.minute; // 下班时间
+                this.counttGoOffWorkTime = new Date(item.dimensions.time.replace(/-/g, "/")).getTime();
+                this.timeTotal = this.counttGoOffWorkTime - this.countGoWorkTime;
+                this.timeTotal = this.getWorkTime(this.counttGoOffWorkTime,this.countGoWorkTime);
               } else if (item.event_attribute == 3) {
                 this.workShift =
                   item.dimensions.hour + ":" + item.dimensions.minute; // 上班排班时间
@@ -184,117 +217,44 @@ export default {
                   item.dimensions.hour + ":" + item.dimensions.minute; // 下班排班时间
               } else {
                 this.workOff = false;
+                 this.punchNum = 0;
               }
             });
-            // console.log(attendanceArr, "000000");
-            
-          } else {
-            this.timeTotal = 0;
-            this.punchNum = 0;
-            // this.noData = false;
-            this.msg = res.data.msg;
           }
         });
     },
-    // 接受子组件的日期
-    changeattendance(val) {
-      console.log(val, "2222");
-      let date = new Date();
-      let y = date.getFullYear();
-      let m = date.getMonth() + 1;
-      this.viewDate = y + "-" + m + "-" + val;
-      this.getPunch(this.viewDate);
-      this.currentDate = this.viewDate;
-      this.getCurrentWeek(new Date(this.viewDate).getDay());
+    // 选择时间
+    confirmTime(value) {
+      this.currentYear = new Date(value).getFullYear();
+      this.currentMonth = new Date(value).getMonth() + 1;
+      let ym = this.currentYear + "-" + this.currentMonth
+      this.currentDate = new Date(value).getFullYear() + "-" + (new Date(value).getMonth() + 1) + "-1";
+      this.getAttendance(ym);
+      this.getPunch(this.currentDate);
+      this.getCalendar(this.currentYear, this.currentMonth, true);
     },
-    // 计算上班时间
-    getWorkTime(time1, time2) {
-      let dateDiff = time1 - time2;
-      let dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000)); //计算出相差天数
-      let leave1 = dateDiff % (24 * 3600 * 1000); //计算天数后剩余的毫秒数
-      let hours = Math.floor(leave1 / (3600 * 1000)); //计算出小时数
-      //计算相差分钟数
-      let leave2 = leave1 % (3600 * 1000); //计算小时数后剩余的毫秒数
-      let minutes = Math.floor(leave2 / (60 * 1000)); //计算相差分钟数
-      //计算相差秒数
-      let leave3 = leave2 % (60 * 1000); //计算分钟数后剩余的毫秒数
-      let seconds = Math.round(leave3 / 1000);
-      return hours + "小时" + minutes + "分钟";
+    // 点击日历获取排班
+    viewattendance(val) {
+      this.currentDate = this.currentYear + "-" + this.currentMonth + "-" + val;
+      this.getCurrentWeek((new Date(this.currentDate)).getDay());
+      this.getPunch(this.currentDate);
+      $(document).on("pagecreate","td", function() {
+      alert(dianji)
+    })
     },
-    // 获取日期
-    getCurrentDate() {
-      let date = new Date();
-      let y = date.getFullYear();
-      let m = date.getMonth() + 1;
-      let d = date.getDate();
-      this.yearMonth = y + "-" + m;
-      this.currentDate = y + "-" + m + "-" + d;
-      this.currentTime = new Date(this.currentDate).getDay();
-    },
-    // 获取周几
-    getCurrentWeek(aa) {
-      let date = new Date();
-      let w = date.getDay();
-      if (aa == undefined) {
-        aa = w;
-      }
-      switch (aa) {
-        case 0:
-          {
-            this.currentWeek = "星期日";
-          }
-          break;
-        case 1:
-          {
-            this.currentWeek = "星期一";
-          }
-          break;
-        case 2:
-          {
-            this.currentWeek = "星期二";
-          }
-          break;
-        case 3:
-          {
-            this.currentWeek = "星期三";
-          }
-          break;
-        case 4:
-          {
-            this.currentWeek = "星期四";
-          }
-          break;
-        case 5:
-          {
-            this.currentWeek = "星期五";
-          }
-          break;
-        case 6:
-          {
-            this.currentWeek = "星期六";
-          }
-          break;
-        case 7:
-          {
-            this.currentWeek = "星期日";
-          }
-          break;
-      }
-    },
-    // 手机点击事件
+    
+    // 日历滑动
     handleTouchStart(e) {
       // e.preventDefault();
       this.startX = e.changedTouches[0].pageX;
     },
-    // 手机 滑动事件
     handleTouchMove(e) {
-      // e.preventDefault();
+      //  e.preventDefault();
       this.moverX = e.changedTouches[0].pageX;
       this.endX = this.moverX - this.startX;
     },
-    // 手机滑动结束事件
-    hanfleTouchEnd(e) {
-       let windowWidth = document.body.clientWidth / 3;
+     hanfleTouchEnd(e) {
+       let windowWidth = document.body.clientWidth / 2;
       //  e.preventDefault();
       //  向左滑动
       if (this.endX > 0 && Math.abs(this.endX) > windowWidth) {
@@ -305,6 +265,11 @@ export default {
           this.currentMonth = Number(this.currentMonth) - 1;
         }
         this.typesetting = {}
+        let ym = this.currentYear + "-" +  this.currentMonth;
+      this.currentDate = this.currentYear + "-" +  this.currentMonth + "-" + "1";
+      this.getCurrentWeek((new Date(this.currentDate).getDay()));
+      this.getAttendance(ym);
+      this.getCalendar(this.currentYear, this.currentMonth, true);
       } 
       // 向右滑动
       if(this.endX < 0 && Math.abs(this.endX) > windowWidth) {
@@ -315,19 +280,133 @@ export default {
           this.currentMonth = Number(this.currentMonth) + 1;
         }
         this.typesetting = {}
+        let ym = this.currentYear + "-" +  this.currentMonth;
+      this.currentDate = this.currentYear + "-" +  this.currentMonth + "-" + "1";
+      this.getCurrentWeek((new Date(this.currentDate).getDay()));
+      this.getAttendance(ym)
+      this.getCalendar(this.currentYear, this.currentMonth, true);
       }
-      this.isClear = true;
-      this.currentYM = [this.currentMonth, this.currentYear, this.isClear]
-      let yM = this.currentYear + "-" + this.currentMonth;
-      this.currentDate = yM + "-" + "1";
-      this.getCurrentWeek(new Date(this.currentDate).getDay())
-      this.getAttendance(yM);
-    }
+      
+    },
+    // 计算上班时间
+    getWorkTime(time1, time2) {
+      let dateDiff = time1 - time2;
+      let dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000)); 
+      let leave1 = dateDiff % (24 * 3600 * 1000); 
+      let hours = Math.floor(leave1 / (3600 * 1000)); 
+      let leave2 = leave1 % (3600 * 1000); 
+      let minutes = Math.floor(leave2 / (60 * 1000)); 
+      let leave3 = leave2 % (60 * 1000); 
+      let seconds = Math.round(leave3 / 1000);
+      return hours + "小时" + minutes + "分钟";
+    },
+    // 获取当天日期
+    getCurrentDay() {
+      let date = new Date();
+      let y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      let d = date.getDate();
+      let ym = y + "-" + m;
+      this.currentDate = y + "-" + m +"-" + d;
+      this.getAttendance(ym);
+      this.getPunch(this.currentDate)
+       this.getCalendar(y, m);
+    },
+    // 获取当天星期几
+    getCurrentWeek(w) {
+      let date = new Date();
+      if(w == undefined) {
+        w =date.getDay();
+      }
+     switch(w) {
+       case 0: {
+         this.currentWeek = "星期日";
+       } break;
+       case 1: {
+          this.currentWeek = "星期一";
+       } break;
+       case 2: {
+         this.currentWeek = "星期二";
+       } break;
+       case 3: {
+         this.currentWeek = "星期三";
+       } break;
+       case 4: {
+         this.currentWeek = "星期四";
+       } break;
+       case 5: {
+         this.currentWeek = "星期五";
+       } break;
+       case 6: {
+         this.currentWeek = "星期六";
+       } break;
+     }
+    },
+    // 获取日历
+    getCalendar(year, month, isClear) {
+      if (isClear) {
+        this.dayarr = [];
+      }
+      var themonth1stday = new Date(year, month - 1, 1).getDay(); 
+      // console.log(themonth1stday, "本月第一天星期几");
+      var y = month == 12 ? year + 1 : year;
+      var m = month == 12 ? 1 : month;
+      var themonthdaysamount = new Date(new Date(y, m, 1) - 1).getDate();
+      // console.log(themonthdaysamount, "这个月多少天");
+      var prevmonthlastday = new Date(
+        new Date(year, month - 1, 1) - 1
+      ).getDate();
+      // console.log(prevmonthlastday, "上个月多少天");
+      while (themonth1stday-- > 0) {
+        this.dayarr.unshift({
+          day: prevmonthlastday--,
+          prevmonth: true,
+          currentmonth: false
+        });
+      } //本月的日期
+      var count = 0;
+      while (themonthdaysamount--) {
+        this.dayarr.push({
+          day: ++count,
+          currentmonth: true
+        });
+      }
+      var c = 42 - this.dayarr.length;
+      var count2 = 1;
+      while (c-- > 0) {
+        this.dayarr.push({
+          day: count2++,
+          nextmonth: true,
+          currentmonth: false
+        });
+      }
+      var _arr = [];
+      for (var i = 0; i < 6; i++) {
+        var _week = [];
+        for (var j = 0; j < 7; j++) {
+          _week.push(this.dayarr[i * 7 + j]);
+        }
+        _arr.push(_week);
+      }
+      let _this = this;
+      let settingObj = Object.values(this.typesetting);
+      _arr.forEach((item, index) => {
+          item.forEach((val, key) => {
+            // if (val.nextmonth || val.prevmonth) {
+            if (val.currentmonth) {
+              settingObj.forEach((a, b) => {
+                if (_arr[index][key].day == b + 1) {
+                  _arr[index][key]["typesetting"] = a;
+                }
+              });
+            }
+          });
+      });
+      this.arr = _arr
+    },
   },
-  created() {
-    this.getAttendance(this.yearMonth);
-    this.getPunch();
-    this.getCurrentDate();
+  mounted() {
+    this.getCurrentDay();
     this.getCurrentWeek();
   }
 };
@@ -368,11 +447,16 @@ export default {
     margin-top: 20px;
   }
   .calendar {
-    position: relative;
-    z-index: 999;
+    // position: relative;
+    // z-index: 999;
     width: 100%;
     text-align: center;
     background: rgba(235, 235, 235, 0.2);
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 10px 20px;
+    }
   }
   .info {
     line-height: 30px;
@@ -390,8 +474,30 @@ export default {
   .van-step--vertical {
     padding: 20px 10px 20px 0;
   }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 auto;
+  }
+  .gray {
+    color: gray;
+    // visibility: hidden;
+  }
   .warning {
     background-color: #f90;
+  }
+  .colorA {
+    background-color: #f56c6c;
+  }
+  .colorB {
+    background-color: #e6a23c;
+  }
+  .colorC {
+    background-color: #67c23a;
+  }
+  .colorD {
+    background-color: #c4c4c4;
   }
   .noData {
     width: 100%;
