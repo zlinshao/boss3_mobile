@@ -422,7 +422,7 @@
 
   export default {
     name: "index",
-    components: {UpLoad, Toast,ChooseTime},
+    components: {UpLoad, Toast, ChooseTime},
     data() {
       return {
         timeModule: false,              //日期
@@ -911,7 +911,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50220') {
               if (receipt.length === 0) {
                 this.form.receipt = [];
@@ -1004,7 +1008,7 @@
             this.form.address = draft.address;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
-            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+            this.form.contract_number = draft.contract_number === 'LJZF' ? '' : draft.contract_number;
             this.form.sign_date = draft.sign_date;
             this.form.begin_date = draft.begin_date;
             this.form.end_date = draft.end_date;
@@ -1087,13 +1091,13 @@
             this.form.name = draft.name;
             this.form.phone = draft.phone;
             this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot ? data.screenshot: {};
+            this.screenshots = data.screenshot ? data.screenshot : {};
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.screenshot_leader ? data.screenshot_leader: {};
+            this.leaders = data.screenshot_leader ? data.screenshot_leader : {};
             this.form.photo = draft.photo;
-            this.photos = data.photo ? data.photo: {};
+            this.photos = data.photo ? data.photo : {};
             this.form.deposit_photo = draft.deposit_photo;
-            this.receipts = data.deposit_photo ? data.deposit_photo: {};
+            this.receipts = data.deposit_photo ? data.deposit_photo : {};
             this.form.remark = draft.remark;
             if (val !== '' && val.type === 2) {
               this.form.staff_id = draft.staff_id;

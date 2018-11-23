@@ -1136,7 +1136,7 @@
               }
             }
 
-            this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+            this.form.contract_number = draft.contract_number === 'LJZF' ? '' : draft.contract_number;
             this.form.is_agency = draft.is_agency;                     //是否中介
             this.cusFrom = dicts.value8[draft.is_agency];              //是否中介
             this.form.agency_name = draft.agency_name;
