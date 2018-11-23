@@ -61,7 +61,7 @@
         <!--placeholder="请填写物业联系方式"-->
         <!--required>-->
         <!--</van-field>-->
-        <div class="fourth">
+        <div class="fourth noBorder">
           <div class="titles required">门牌号</div>
           <van-field
             v-model="form.door_address[0]"
@@ -135,7 +135,7 @@
           type="text"
           placeholder="请选择朝向">
         </van-field>
-        <div class="first_date">
+        <div class="first_date noBorder">
           <div class="titles required">楼层</div>
           <van-field
             v-model="form.floor"

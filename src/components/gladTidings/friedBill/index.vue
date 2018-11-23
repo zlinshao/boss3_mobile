@@ -416,7 +416,6 @@
         this.picStatus = 'success';
         this.form.payWay = [''];
         this.form.price_arr = [''];
-        this.form.id = '';
         this.form.processable_id = '';
         this.form.collect_or_rent = '';
         this.form.refund = 0;

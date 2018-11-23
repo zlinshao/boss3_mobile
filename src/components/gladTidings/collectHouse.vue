@@ -361,6 +361,7 @@
             list.cusPhone = '';
           }
         }
+        list.sign_at = value.sign_at;
         if (value.sign_user !== null) {
           list.staff_id = value.sign_user.id;
           list.staff_name = value.sign_user.name;

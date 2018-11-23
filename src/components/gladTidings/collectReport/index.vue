@@ -16,7 +16,7 @@
           label="签约日期"
           readonly
           type="text"
-          @click="timeChoose(4, form.sign_date)"
+          @click="timeChoose('sign_date', form.sign_date)"
           placeholder="请选择签约日期日期"
           required>
         </van-field>
@@ -44,7 +44,7 @@
           label="空置期开始"
           placeholder="请选择空置期开始日期"
           readonly
-          @click="timeChoose(1, form.begin_date)"
+          @click="timeChoose('begin_date', form.begin_date)"
           required>
         </van-field>
         <van-field
@@ -64,7 +64,7 @@
           label="空置期结束"
           placeholder="请选择空置期结束日期"
           readonly
-          @click="timeChoose(6, form.end_date_vacant)"
+          @click="timeChoose('end_date_vacant', form.end_date_vacant)"
           required>
         </van-field>
         <van-field
@@ -89,17 +89,17 @@
           label="合同结束日期"
           readonly
           type="text"
-          @click="timeChoose(7, form.end_date)"
+          @click="timeChoose('end_date', form.end_date)"
           placeholder="请选择合同结束日期"
           required>
         </van-field>
-        <div class="first_date">
+        <div class="first_date noBorder">
           <div class="titles required">打房租日期</div>
           <van-field
             v-model="form.pay_first_date"
             readonly
             type="text"
-            @click="timeChoose(2, form.pay_first_date)"
+            @click="timeChoose('pay_first_date', form.pay_first_date)"
             placeholder="第一次打款日期">
           </van-field>
           <span class="cut" style="padding-right: 20px;">-</span>
@@ -107,7 +107,7 @@
             v-model="form.pay_second_date"
             readonly
             type="text"
-            @click="timeChoose(3, form.pay_second_date)"
+            @click="timeChoose('pay_second_date', form.pay_second_date)"
             placeholder="第二次打款日期">
           </van-field>
         </div>
@@ -250,7 +250,7 @@
           @click-icon="form.deposit = ''"
           required>
         </van-field>
-        <div class="first_date">
+        <div class="first_date noBorder">
           <div class="titles required">保修期</div>
           <van-field
             v-model="form.warranty"
@@ -428,6 +428,9 @@
       <div @click="saveCollect(0)">发布</div>
     </div>
 
+    <!--日期-->
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
+
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
       <van-picker
         show-toolbar
@@ -436,28 +439,17 @@
         @confirm="onConfirm"/>
     </van-popup>
 
-    <!--日期-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="date"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @change="monthDate"
-        @cancel="onCancel"
-        @confirm="onDate"/>
-    </van-popup>
-
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import ChooseTime from '../../common/chooseTime.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "index",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, ChooseTime},
     data() {
       return {
         haveInHand: true,
@@ -470,14 +462,13 @@
         columns: [],              //select值
         selectHide: false,
         joint: false,             //是否合租
-        minDate: new Date(2000, 0, 1),
-        maxDate: new Date(2200, 12, 31),
-        currentDate: '',
-        timeShow: false,          //日期状态
-        timeIndex: '',
-        timeValue: '',            //日期value
-
         first_date: [],
+        timeModule: false,          //日期状态
+        formatData: {
+          dateVal: '',            //格式化日期
+          dataKey: '',            //字段区分
+          dateType: '',
+        },
 
         amountPrice: 1,
         datePrice: [],
@@ -488,8 +479,8 @@
         payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
-        corp: true,                    //公司单
-        cusFrom: '',           //是否中介
+        corp: true,                 //公司单
+        cusFrom: '',                //是否中介
 
         form: {
           id: '',
@@ -567,7 +558,7 @@
       }
     },
     watch: {
-      cusFrom(val) {
+      cusFrom() {
         if (this.form.is_agency === 0) {
           this.form.agency_name = '';
           this.form.agency_price = '';
@@ -577,7 +568,6 @@
       }
     },
     mounted() {
-      this.getNowFormatDate();
       let count = sessionStorage.count;
       if (count === '11') {
         this.routerIndex('');
@@ -698,12 +688,6 @@
         }
       },
 
-      // select关闭
-      onCancel() {
-        this.selectHide = false;
-        this.timeShow = false;
-      },
-
       // 图片
       getImgData(val) {
         this.picStatus = val[2];
@@ -723,67 +707,45 @@
         }
 
       },
-
-      // 获取当前时间
-      getNowFormatDate() {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let strDate = date.getDate();
-        this.currentDate = new Date(year, month, strDate);
-      },
-
-      // 日期选择
+      // 显示日期
       timeChoose(val, time) {
-        if (time) {
-          this.currentDate = this.chooseTime(time);
-        } else {
-          this.getNowFormatDate();
-        }
         setTimeout(() => {
-          this.timeShow = true;
+          this.timeModule = true;
         }, 200);
-        this.timeIndex = val;
+        this.formatData.dateVal = time;
+        this.formatData.dataKey = val;
+        this.formatData.dateType = 'date';
       },
-      // 日期拼接
-      monthDate(peaker) {
-        this.timeValue = peaker.getValues().join('-');
-      },
-      // 确认日期
-      onDate() {
-        this.timeShow = false;
-        switch (this.timeIndex) {
-          case 1:
-            this.form.begin_date = this.timeValue;
-            this.endDate(this.timeValue, '', this.form.vacancy, 1);
+      // 确定日期
+      onConTime(val) {
+        this.form[val.dataKey] = val.dateVal;
+        switch (val.dataKey) {
+          case 'begin_date':
+            this.endDate(val.dateVal, '', this.form.vacancy, 1);
             break;
-          case 2:
-            this.form.pay_first_date = this.timeValue;
+          case 'end_date_vacant':
+            this.endDate(val.dateVal, this.form.month, this.form.day, 2);
+            break;
+          case 'pay_first_date':
+            this.form.pay_first_date = val.dateVal;
             this.form.period_price_arr[0] = this.form.month;
             this.form.period_pay_arr[0] = this.form.month;
             this.first_date = [];
             this.datePrice = [];
             this.datePay = [];
-            this.first_date.push(this.timeValue);
-            this.datePrice.push(this.timeValue);
-            this.datePay.push(this.timeValue);
+            this.first_date.push(val.dateVal);
+            this.datePrice.push(val.dateVal);
+            this.datePay.push(val.dateVal);
             this.countDate(1, this.form.period_price_arr);
             this.countDate(2, this.form.period_pay_arr);
             break;
-          case 3:
-            this.form.pay_second_date = this.timeValue;
-            break;
-          case 4:
-            this.form.sign_date = this.timeValue;
-            break;
-          case 6:
-            this.form.end_date_vacant = this.timeValue;
-            this.endDate(this.timeValue, this.form.month, this.form.day, 2);
-            break;
-          case 7:
-            this.form.end_date = this.timeValue;
-            break;
         }
+        this.onCancel();
+      },
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeModule = false;
       },
       // select 显示
       selectShow(val, index) {
@@ -1157,7 +1119,6 @@
         this.userInfo(true);
         this.picStatus = 'success';
         this.joint = false;
-        this.form.id = '';
         this.form.processable_id = '';
         this.form.house.id = '';
         this.form.house.name = '';

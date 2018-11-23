@@ -455,26 +455,6 @@
           Toast.clear();
         });
       },
-      // 计算收益
-      countMoney() {
-        this.showLoad('正在计算...');
-        this.$http.post(this.url + this.address, this.form).then(res => {
-          Toast.clear();
-          if (res.data.code === '50010') {
-            this.showContentVal(2);
-            this.handleData(res.data.data);
-            this.manager = res.data.data.manager;
-            this.warden = res.data.data.warden;
-            setTimeout(() => {
-              window.scrollTo(0, document.body.clientHeight);
-            }, 500)
-          } else {
-            Toast(res.data.msg);
-          }
-        }).catch(() => {
-          Toast.clear();
-        });
-      },
       // 变更数据
       handleData(data) {
         this.rentData = data.rent;

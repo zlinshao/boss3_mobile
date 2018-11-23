@@ -64,13 +64,29 @@ $color: #409EFF;
   }
 }
 
-.first_date.month {
-  .van-cell:not(:last-child):after {
-    border: none;
+.titleRed {
+  padding-left: 110px;
+  padding-bottom: .1rem;
+  font-size: .24rem;
+  color: #e4393c;
+  border-bottom: 1px solid #f4f4f4;
+}
+
+.fourth, .first_date {
+  span.cut {
+    padding-right: 10px;
+    line-height: 39px;
+    color: #969696;
+    border-bottom: 1px solid #F4F4F4;
+  }
+  @include flex;
+  .twoBorder {
+    border-bottom: 1px solid #F4F4F4;
+    padding-bottom: 9px;
   }
 }
 
-.first_date, .checks, .fourth  {
+.first_date, .checks, .fourth {
   .titles {
     min-width: 105px;
     box-sizing: border-box;
@@ -92,25 +108,16 @@ $color: #409EFF;
   }
 }
 
-.titleRed {
-  padding-left: 110px;
-  padding-bottom: .1rem;
-  font-size: .24rem;
-  color: #e4393c;
-  border-bottom: 1px solid #f4f4f4;
+.first_date.month, .first_date.noBorder, .checks.noBorder, .fourth.noBorder {
+  .van-cell:not(:last-child):after {
+    border: none;
+  }
 }
 
-.fourth, .first_date {
-  span.cut {
-    padding-right: 10px;
-    line-height: 39px;
-    color: #969696;
-    border-bottom: 1px solid #F4F4F4;
-  }
-  @include flex;
-  .twoBorder {
-    border-bottom: 1px solid #F4F4F4;
-    padding-bottom: 9px;
+.first_date.noBorder, .checks.noBorder, .fourth.noBorder {
+  border-bottom: 1px solid #F4F4F4;
+  .twoBorder, span.cut {
+    border-bottom: none;
   }
 }
 

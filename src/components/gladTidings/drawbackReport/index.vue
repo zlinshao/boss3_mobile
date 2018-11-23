@@ -406,7 +406,6 @@
         this.form.payWay = [''];
         this.form.price_arr = [''];
         this.form.money_sum = '';
-        this.form.id = '';
         this.form.amount = '';
         this.form.account = '';
         this.form.bank = '';

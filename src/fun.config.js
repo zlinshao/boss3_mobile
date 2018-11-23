@@ -85,7 +85,6 @@ export default {
     };
     // 详情页
     Vue.prototype.routerDetail = function (val) {
-      console.log(val);
       this.$router.push({path: '/publishDetail', query: {ids: val}});
     };
     // 数组去空字符串
@@ -121,7 +120,7 @@ export default {
       hh = hh[1] ? hh : '0' + hh;
       md = md[1] ? md : '0' + md;
       ss = md[1] ? ss : '0' + ss;
-      if (type === 'day') {
+      if (type === 'date') {
         return year + '-' + mm + '-' + dd;
       }
       return year + '-' + mm + '-' + dd + ' ' + hh + ':' + md;
@@ -231,6 +230,15 @@ export default {
       return new Promise((resolve, reject) => {
         that.$http.get(globalConfig.server + 'special/special/dingConfig').then((res) => {
           let _config = res.data;
+          dd.config({
+            agentId: _config.agentId, // 必填，微应用ID
+            corpId: _config.corpId,//必填，企业ID
+            timeStamp: _config.timeStamp, // 必填，生成签名的时间戳
+            nonceStr: _config.nonceStr, // 必填，生成签名的随机串
+            signature: _config.signature, // 必填，签名
+            jsApiList: ['biz.cspace.saveFile', 'biz.cspace.preview'] // 必填，需要使用的jsapi列表，注意：不要带dd。
+          });
+          sessionStorage.setItem('cropID', _config.corpId);
           // PC端
           DingTalkPC.runtime.permission.requestAuthCode({
             corpId: _config.corpId,
@@ -303,7 +311,8 @@ export default {
             });
           });
           dd.error(function (err) {
-            alert('dd error: ' + JSON.stringify(err));
+            window.location.reload();
+            // alert('dd error: ' + JSON.stringify(err));
           });
         });
       });
@@ -328,6 +337,92 @@ export default {
       dd.biz.navigation.close({});
       // 钉钉头部右侧
       dd.biz.navigation.setRight({show: false});
+    };
+    // 生成电子收据
+    Vue.prototype.previewReceipt = function (val) {
+      console.log(val);
+      let data = {};
+      data.process_id = '0';
+      data.department_id = this.form.department_id;
+      data.date = this.formatDate(new Date, 'date');
+      data.payer = val.name;
+      if (val.rent_without_collect_address) {
+        data.address = val.rent_without_collect_address;
+      } else {
+        data.address = val.address;
+      }
+      data.price = '';
+      let pay = [];
+      if (val.payPrice) {
+        pay = val.payPrice;
+      } else {
+        pay = val.price_arr;
+      }
+      for (let item of pay) {
+        if (item) {
+          data.price = data.price + item + '元 ; '
+        }
+      }
+      data.sign_at = val.sign_date;
+      data.duration = val.month + '个月' + (val.day ? val.day : 0) + '天';
+      data.pay_way = '';
+      if (val.pay_way_arr) {
+        for (let item of val.pay_way_arr) {
+          if (item) {
+            let str = '押' + val.pay_way_bet + '付' + item + ' ; ';
+            data.pay_way = data.pay_way + str;
+          }
+        }
+      } else {
+        for (let item of val.pay_way) {
+          data.pay_way = data.pay_way + item.pay_way_str;
+        }
+      }
+      data.payment = this.receivedPrice === 'front_money' ? '定金' : '押金+租金';
+      data.amount = val.money_sum;
+      data.sum = val.money_sum;
+      data.memo = val.memo;
+      val.money_way.forEach((item, index) => {
+        data['bank' + (index + 1)] = item;
+      });
+      data.account_id = val.account_id;
+      this.prompt('send', '正在生成电子收据！');
+      this.$http.post(this.urls + 'financial/receipt/generate', data).then(res => {
+        this.prompt('close');
+        if (res.data.code === '20000') {
+          let pdfUrls = res.data.data.shorten_uri;
+          dd.ready(function () {
+            dd.biz.cspace.saveFile({
+              corpId: sessionStorage.getItem('cropID'),
+              url: pdfUrls,  // 文件在第三方服务器地址， 也可为通过服务端接口上传文件得到的media_id，详见参数说明
+              name: "electronicReceipt.pdf",
+              onSuccess: function (data) {
+                dd.biz.cspace.preview({
+                  corpId: sessionStorage.getItem('cropID'),
+                  spaceId: data.data[0].spaceId,
+                  fileId: data.data[0].fileId,
+                  fileName: data.data[0].fileName,
+                  fileSize: data.data[0].fileSize,
+                  fileType: "pdf",
+                  onSuccess: function () {
+                    //无，直接在native显示文件详细信息
+                  },
+                  onFail: function (err) {
+                    // 无，直接在native页面显示具体的错误
+                  }
+                });
+              },
+              onFail: function (err) {
+                console.log(err);
+              }
+            });
+          });
+        } else {
+          this.prompt('', res.data.msg);
+        }
+      }).catch(_ => {
+        this.prompt('close');
+      })
     };
   }
 }

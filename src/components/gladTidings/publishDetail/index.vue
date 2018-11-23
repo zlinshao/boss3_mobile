@@ -36,14 +36,14 @@
         </div>
         <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message">{{message}}</p>
         <div v-for="(key,index) in formList"
-             v-if="printscreen.indexOf(index) === -1">
-          <p v-if="index !== 'receiptUri'">{{index}}</p>
+             v-if="printscreen.indexOf(index) === -1 && index !== 'receiptUri'">
+          <p>{{index}}</p>
           <h1>
             <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx].msg}}</span>
               <span style="display: block;">{{key[idx].period}}</span>
             </span>
-            <span v-if="index === '已收金额和汇款账户' || index === '补交定金和收款方式'" v-for="(item,idx) in key.length">
+            <span v-if="index === '已收金额和汇款账户' || index === '实际收款时间' || index === '补交定金和收款方式'" v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx]}}</span>
             </span>
             <span v-if="!Array.isArray(key) && index !== '房屋类型'">{{key}}</span>

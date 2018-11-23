@@ -233,10 +233,15 @@
 </template>
 
 <script>
+  import {Waterfall} from 'vant';
   import {Toast} from 'vant';
 
   export default {
     name: 'HelloWorld',
+    directives: {
+      WaterfallLower: Waterfall('lower'),
+      WaterfallUpper: Waterfall('upper')
+    },
     components: {Toast},
     data() {
       return {
@@ -272,7 +277,6 @@
       this.scrollTops();
     },
     activated() {
-      this.personalGet(2);
       this.routerIndex('');
       this.finished = true;
       this.scrollTops();
@@ -346,7 +350,6 @@
         this.page = 1;
         this.finished = false;
         this.scrollTops();
-        this.onLoad();
       },
       routerLink(val) {
         this.scrollTops();

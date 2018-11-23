@@ -81,38 +81,23 @@
           <span>本次已收金额</span>
         </div>
       </div>
+
       <van-cell-group>
-        <van-field
-          v-model="form.front_money"
-          type="text"
-          class="number"
-          label="定金"
-          @keyup="moneyAll"
-          placeholder="请填写金额">
-        </van-field>
-        <van-field
-          v-model="form.deposit_payed"
-          label="押金"
-          @keyup="moneyAll"
-          type="text"
-          class="number"
-          placeholder="请填写押金">
-        </van-field>
-        <van-field
-          v-model="form.rent_money"
-          label="租金"
-          @keyup="moneyAll"
-          type="text"
-          class="number"
-          placeholder="请填写租金">
-        </van-field>
+        <div class="checks">
+          <div class="titles required">本次金额为</div>
+          <van-radio-group v-model="receivedPrice">
+            <van-radio name="front_money">定金</van-radio>
+            <van-radio name="deposit_payed">租金+押金</van-radio>
+          </van-radio-group>
+        </div>
         <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
           label="总金额"
-          disabled
-          placeholder="请填写总金额">
+          placeholder="请填写总金额"
+          @click-icon="form.money_sum = ''"
+          required>
         </van-field>
       </van-cell-group>
 
@@ -135,7 +120,7 @@
             type="text"
             readonly
             class="number"
-            @click="showTimeChoose('real_pay_at', form.real_pay_at[index], index)"
+            @click="timeChoose('real_pay_at', form.real_pay_at[index], index)"
             label="实际收款时间"
             placeholder="付款凭证截图上的时间"
             required>
@@ -156,14 +141,15 @@
       </div>
 
       <van-cell-group>
-        <!--<van-field-->
-        <!--v-model="form.deposit"-->
-        <!--label="押金"-->
-        <!--type="text"-->
-        <!--class="number"-->
-        <!--placeholder="请填写已收押金"-->
-        <!--required>-->
-        <!--</van-field>-->
+        <van-field
+          v-model="form.memo"
+          label="收款备注"
+          type="textarea"
+          placeholder="请填写备注"
+          icon="clear"
+          @click-icon="form.memo = ''">
+        </van-field>
+        <div class="addInput" @click="previewReceipt(form)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -191,7 +177,7 @@
           label="尾款补齐日期"
           readonly
           type="text"
-          @click="timeChoose(1, form.retainage_date)"
+          @click="timeChoose('retainage_date', form.retainage_date)"
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
@@ -279,19 +265,7 @@
         @confirm="onConfirm"/>
     </van-popup>
 
-    <!--日期-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="date"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @change="monthDate"
-        @cancel="onCancel"
-        @confirm="onDate"/>
-    </van-popup>
-
-    <ChooseTime :module="timeModule" :formatData="formatData" @close="timeModule = false"
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel"
                 @onDate="onConTime"></ChooseTime>
   </div>
 </template>
@@ -299,9 +273,7 @@
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import ChooseTime from '../../common/chooseTime.vue'
-  import {ImagePreview} from 'vant';
-  import {Toast} from 'vant';
-  import {Dialog} from 'vant';
+  import {ImagePreview, Toast, Dialog} from 'vant';
 
   export default {
     name: "index",
@@ -310,28 +282,22 @@
       return {
         timeModule: false,              //日期
         formatData: {
-          paramsKey: '',                //格式化日期
           dateVal: '',                  //格式化日期
           dataKey: '',                  //字段区分
+          dateType: '',                 //日期类型
           idx: '',                      //下标
         },
-
         haveInHand: true,
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: 'success',
 
-        minDate: new Date(2000, 0, 1),
-        maxDate: new Date(2200, 12, 31),
-        currentDate: '',
-        timeShow: false,          //日期状态
-        timeValue: '',            //日期value
-        timeIndex: '',
-        
-
         tabs: '',
-        columns: [],              //select值
-        selectHide: false,        //select选择
+        columns: [],                    //select值
+        selectHide: false,              //select选择
+        timeShow: false,                //日期状态
+        first_date: '',                 //日期value
+        receivedPrice: 'front_money',   //本次金额为
 
         certificate_photo: [],    //凭证截图
         // certificate_id: [],       //凭证截图
@@ -363,6 +329,11 @@
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
           payWay: [''],                 //付款方式
+          pay_way: [],                  //付款方式
+          sign_date: '',                //签约日期
+          name: '',                     //客户姓名
+          phone: '',                    //联系方式
+          payPrice: [''],                 //月单价
           price_arr: [''],              //月单价
           is_other_fee: 0,
           other_fee: '',
@@ -405,6 +376,11 @@
       }
     },
     watch: {
+      receivedPrice() {
+        this.form.money_sum = '';
+        this.form.front_money = '';
+        this.form.deposit_payed = '';
+      },
       is_receipt(val) {
         if (val) {
           Dialog.alert({
@@ -413,7 +389,6 @@
           }).then(() => {
           });
         }
-        console.log(this.form.is_receipt)
         if (this.form.is_receipt === 1) {
           this.amountReceipt = 1;
           this.form.receipt = [];
@@ -423,7 +398,6 @@
     },
     mounted() {
       this.isReceiptMsg = isReceiptMessage;
-      this.getNowFormatDate();
       let count = sessionStorage.count;
       if (count === '11') {
         this.routerIndex('');
@@ -478,23 +452,6 @@
       this.houseInfo();
     },
     methods: {
-      // 显示日期
-      showTimeChoose(val, time, index) {
-        setTimeout(() => {
-          this.timeModule = true;
-        }, 200);
-        this.formatData.dateVal = time;
-        this.formatData.dataKey = val;
-        this.formatData.idx = index;
-      },
-      // 确定日期
-      onConTime(val) {
-        this.form[val.dataKey][this.formatData.idx] = val.dateVal;
-        this.timeModule = false;
-      },
-      moneyAll() {
-        this.form.money_sum = this.countMoney(this.form);
-      },
       dicts(val) {
         this.receiptNum();
         // 收款帐户
@@ -507,12 +464,9 @@
               this.value8.push(item.bank_info);
             });
             this.finalDetail(val);
-            console.log(this.value8)
           }
         });
-        
       },
-
       receiptNum() {
         // 收据编号默认城市
         this.form.receipt = [];
@@ -549,7 +503,6 @@
       },
       // 截图
       getImgData(val) {
-        console.log(val)
         this.picStatus = val[2];
         if (val[0] === 'leader') {
           this.form.screenshot_leader = val[1];
@@ -559,30 +512,36 @@
           this.form.screenshot_new = val[1];
         }
       },
-
-      // 获取当前时间
-      getNowFormatDate() {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let strDate = date.getDate();
-        this.currentDate = new Date(year, month, strDate);
-      },
-
-      // 日期选择
-      timeChoose() {
+      // 显示日期
+      timeChoose(val, time, index = '') {
         setTimeout(() => {
-          this.timeShow = true;
+          this.timeModule = true;
         }, 200);
+        this.formatData.dateVal = time;
+        this.formatData.dataKey = val;
+        if (val === 'real_pay_at') {
+          this.formatData.dateType = 'datetime';
+          this.formatData.idx = index;
+        } else {
+          this.formatData.dateType = 'date';
+        }
       },
-      // 日期拼接
-      monthDate(peaker) {
-        this.timeValue = peaker.getValues().join('-');
+      // 确定日期
+      onConTime(val) {
+        switch (val.dataKey) {
+          case 'real_pay_at':
+            this.form[val.dataKey][this.formatData.idx] = val.dateVal;
+            break;
+          default:
+            this.form[val.dataKey] = val.dateVal;
+            break;
+        }
+        this.onCancel();
       },
-      // 确认日期
-      onDate() {
-        this.timeShow = false;
-        this.form.retainage_date = this.timeValue;
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeModule = false;
       },
       // select 显示
       selectShow(val, index) {
@@ -625,12 +584,6 @@
       },
       searchSelect() {
         this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
-      },
-
-      // select关闭
-      onCancel() {
-        this.selectHide = false;
-        this.timeShow = false;
       },
       // 增加 定金
       priceAmount(val) {
@@ -686,6 +639,7 @@
               receipt.push(this.form.receipt[i]);
             }
           }
+          this.form[this.receivedPrice] = this.form.money_sum;
           let certificatePics = [];
           let depositPics = [];
           certificatePics = this.form.screenshot_new.concat(this.form.screenshot_old);
@@ -693,9 +647,9 @@
           depositPics = this.form.deposit_photo_new.concat(this.form.deposit_photo_old);
           this.form.deposit_photo = this.noRepeat(depositPics);
           this.form.is_receipt = this.is_receipt ? 1 : 0;
-          if(this.form.is_receipt === 1){
+          if (this.form.is_receipt === 1) {
             this.form.receipt = [];
-          }else{
+          } else {
             this.form.receipt = receipt;
           }
           this.amountReceipt = receipt.length === 0 ? 1 : receipt.length;
@@ -705,14 +659,17 @@
           this.emptyPic(this.form.screenshot_leader, 'screenshot_leader');
           this.emptyPic(this.form.deposit_photo, 'deposit_photo');
           this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
-            console.log(this.form.receipt)
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50910' || res.data.code === '50930') {
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50920') {
               if (receipt.length === 0) {
                 this.form.receipt = [];
@@ -745,30 +702,26 @@
         }
       },
       emptyPic(val, key) {
-        console.log(val);
-        console.log(key);
         let data = [];
         if (val.length !== 0) {
           val.forEach(item => {
-            console.log(item);
             if (item && item !== 'null') {
-              console.log(item);
               data.push(item);
             }
           });
-          console.log(data);
           this.form[key] = data;
         }
       },
       houseInfo() {
         let t = this.$route.query;
-        console.log(t)
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          console.log(val)
           this.form.customer_name = val.customers;
+          this.form.name = val.customers;
+          this.form.phone = val.cusPhone;
           this.form.address = val.house_name;
           this.form.month = val.month;
+          this.form.sign_date = val.sign_at;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.form.staff_name = val.staff_name;
@@ -786,7 +739,6 @@
           this.form.screenshot_old = val.album.certificate_photo;
         }
       },
-
       // getPic(album, val) {
       //   this.$http.post(this.urls + 'special/special/picUrl', {
       //     id: album,
@@ -816,19 +768,20 @@
             for (let i = 0; i < pay.terms; i++) {
               this.periods.push(i + 1);
             }
+            this.form.pay_way = pay.pay_way;
             this.form.payWay = [];
             this.form.price_arr = [];
+            this.form.payPrice = [];
             for (let i = 0; i < pay.pay_way.length; i++) {
               this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
             }
             for (let i = 0; i < pay.price.length; i++) {
               this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
+              this.form.payPrice.push(pay.price[i].price);
             }
-
           }
         })
       },
-
       finalDetail(val) {
         this.form.processable_id = '';
         let type;
@@ -850,7 +803,9 @@
             this.form.address = draft.address;
             this.form.month = draft.month;
             this.form.price_arr = draft.price_arr;
+            this.form.payPrice = draft.payPrice;
             this.form.payWay = draft.payWay;
+            this.form.pay_way = draft.pay_way;
             this.form.terms = draft.terms;
 
             if (draft.is_receipt) {
@@ -871,8 +826,16 @@
             this.form.front_money = draft.front_money;
             this.form.deposit = draft.deposit;
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
-            this.form.rent_money = draft.rent_money;
-            this.form.money_sum = draft.money_sum;
+            if (this.form.deposit_payed) {
+              this.receivedPrice = 'deposit_payed';
+            } else {
+              this.receivedPrice = 'front_money';
+            }
+            this.$nextTick(function () {
+              this.form.money_sum = draft.money_sum;
+            });
+            this.form.memo = draft.memo ? draft.memo : '';
+            this.form.sign_date = draft.sign_date ? draft.sign_date : '';
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
             for (let i = 0; i < draft.money_way.length; i++) {
@@ -888,16 +851,19 @@
                 }
               }
             }
-
             this.form.retainage_date = draft.retainage_date;
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
             this.form.customer_name = draft.customer_name;
-
+            this.form.name = draft.customers;
+            if (draft.cusPhone) {
+              this.form.phone = draft.phone;
+            } else {
+              this.form.phone = '';
+            }
             this.form.screenshot_leader = draft.screenshot_leader;
             this.leaders = data.screenshot_leader !== null ? data.screenshot_leader : {};
-
 
 
             this.form.screenshot = draft.screenshot;
@@ -948,15 +914,15 @@
         });
         $('.imgItem').remove();
         this.picStatus = 'success';
-        this.form.id = '';
         this.form.processable_id = '';
         this.form.address = '';
         this.form.month = '';
         this.certificate_photo = [];
-
+        this.form.sign_date = '';
         this.deposit_photos = [];
 
         this.form.price_arr = [''];
+        this.form.payPrice = [''];
         this.form.payWay = [''];
         this.form.terms = '';
         this.periods = [];
@@ -967,6 +933,7 @@
         this.form.deposit_payed = '';
         this.form.rent_money = '';
         this.form.money_sum = '';
+        this.receivedPrice = 'front_money';
         this.form.retainage_date = '';
         this.amountMoney = 1;
         this.form.account_id = [];
@@ -991,6 +958,8 @@
         this.form.other_fee_name = '';
         this.form.other_fee = '';
         this.form.customer_name = '';
+        this.form.name = '';
+        this.form.phone = '';
         this.form.is_other_fee = 0;
         this.other_fee_status = false;
 

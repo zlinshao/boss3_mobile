@@ -30,21 +30,21 @@
       </van-cell-group>
 
       <!--<div class="changes" v-for="(key,index) in amountReceipt">-->
-        <!--<div class="paddingTitle">-->
-          <!--<span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>-->
-          <!--<span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,2)">删除</span>-->
-        <!--</div>-->
-        <!--<van-cell-group>-->
-          <!--<van-field-->
-            <!--v-model="form.receipt[index]"-->
-            <!--type="text"-->
-            <!--label="收据编号"-->
-            <!--placeholder="请填写收据编号">-->
-          <!--</van-field>-->
-        <!--</van-cell-group>-->
+      <!--<div class="paddingTitle">-->
+      <!--<span>收据编号<span v-if="amountReceipt > 1">({{index + 1}})</span></span>-->
+      <!--<span class="colors" v-if="amountReceipt > 1" @click="deleteAmount(index,2)">删除</span>-->
+      <!--</div>-->
+      <!--<van-cell-group>-->
+      <!--<van-field-->
+      <!--v-model="form.receipt[index]"-->
+      <!--type="text"-->
+      <!--label="收据编号"-->
+      <!--placeholder="请填写收据编号">-->
+      <!--</van-field>-->
+      <!--</van-cell-group>-->
       <!--</div>-->
       <!--<div @click="addAmount(2)" class="addInput">-->
-        <!--+增加收据编号-->
+      <!--+增加收据编号-->
       <!--</div>-->
 
       <div class="changes" v-for="(key,index) in amount">
@@ -67,7 +67,7 @@
             label="联系方式"
             placeholder="请填写联系方式">
           </van-field>
-          <div class="checks">
+          <div class="checks noBorder">
             <div class="titles required">性别</div>
             <van-radio-group v-model="sexs[index]">
               <van-radio name="1">男</van-radio>
@@ -105,7 +105,7 @@
           icon="clear"
           @click-icon="form.water = ''">
         </van-field>
-        <div class="first_date">
+        <div class="first_date noBorder">
           <div class="titles">电表底数</div>
           <van-field
             v-model="form.electricity_peak"
@@ -153,7 +153,7 @@
         </van-field>
         <van-field
           v-model="form.data_date"
-          @click="timeChoose(form.data_date)"
+          @click="timeChoose('data_date', form.data_date)"
           label="资料补齐时间"
           type="text"
           readonly
@@ -249,26 +249,18 @@
     </van-popup>
 
     <!--日期-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="timeShow" position="bottom" :overlay="true">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="date"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @change="monthDate"
-        @cancel="onCancel"
-        @confirm="onDate"/>
-    </van-popup>
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
   </div>
 </template>
 
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
+  import ChooseTime from '../../common/chooseTime.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "collect",
-    components: {UpLoad, Toast},
+    components: {UpLoad, Toast, ChooseTime},
     data() {
       return {
         haveInHand: true,
@@ -277,11 +269,13 @@
         isClear: false,           //删除图片
         picStatus: 'success',
 
-        minDate: new Date(2000, 0, 1),
-        maxDate: new Date(2200, 12, 31),
-        currentDate: '',
-        timeShow: false,          //日期状态
-        timeValue: '',            //日期value
+        timeModule: false,          //日期状态
+        formatData: {
+          dateVal: '',            //格式化日期
+          dataKey: '',            //字段区分
+          dateType: '',
+        },
+
         amount: 1,
         tabs: '',
         tabIndex: '',
@@ -353,7 +347,6 @@
       }
     },
     mounted() {
-      this.getNowFormatDate();
       this.dicts();
     },
     activated() {
@@ -436,7 +429,6 @@
           this.form.receipt.splice(index, 1);
         }
       },
-
       searchSelect(val) {
         switch (val) {
           case 1:
@@ -450,66 +442,24 @@
             break;
         }
       },
-      // 获取当前时间
-      getNowFormatDate() {
-        let date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth();
-        let strDate = date.getDate();
-        this.currentDate = new Date(year, month, strDate);
-      },
-      // 日期选择
-      timeChoose(time) {
-        if (time) {
-          this.currentDate = this.chooseTime(time);
-        } else {
-          this.getNowFormatDate();
-        }
+      // 显示日期
+      timeChoose(val, time) {
         setTimeout(() => {
-          this.timeShow = true;
+          this.timeModule = true;
         }, 200);
+        this.formatData.dateVal = time;
+        this.formatData.dataKey = val;
+        this.formatData.dateType = 'date';
       },
-      // 日期拼接
-      monthDate(peaker) {
-        this.timeValue = peaker.getValues().join('-');
+      // 确定日期
+      onConTime(val) {
+        this.form[val.dataKey] = val.dateVal;
+        this.onCancel();
       },
-      // 确认日期
-      onDate() {
-        this.form.data_date = this.timeValue;
-        this.timeShow = false;
-      },
-      // 截图
-      getImgData(val) {
-        this.picStatus = val[2];
-        switch (val[0]) {
-          case 'photo1'://证件照片
-            this.form.album.identity_photo = val[1];
-            break;
-          case 'photo2'://合同照片
-            this.form.album.photo = val[1];
-            break;
-          case 'photo3'://水表照片
-            this.form.album.water_photo = val[1];
-            break;
-          case 'photo4'://电表照片
-            this.form.album.electricity_photo = val[1];
-            break;
-          case 'photo5'://气表照片
-            this.form.album.gas_photo = val[1];
-            break;
-          case 'photo6'://交接单照片
-            this.form.album.checkin_photo = val[1];
-            break;
-          case 'photo7'://凭证截图
-            this.form.album.certificate_photo = val[1];
-            break;
-          case 'photo8'://押金收条
-            this.form.album.deposit_photo = val[1];
-            break;
-          case 'photo9'://其他照片
-            this.form.album.other_photo = val[1];
-            break;
-        }
+      // select关闭
+      onCancel() {
+        this.selectHide = false;
+        this.timeModule = false;
       },
       // select 显示
       selectShow(val, index) {
@@ -544,12 +494,39 @@
         }
         this.onCancel();
       },
-      // select关闭
-      onCancel() {
-        this.selectHide = false;
-        this.timeShow = false;
+      // 截图
+      getImgData(val) {
+        this.picStatus = val[2];
+        switch (val[0]) {
+          case 'photo1'://证件照片
+            this.form.album.identity_photo = val[1];
+            break;
+          case 'photo2'://合同照片
+            this.form.album.photo = val[1];
+            break;
+          case 'photo3'://水表照片
+            this.form.album.water_photo = val[1];
+            break;
+          case 'photo4'://电表照片
+            this.form.album.electricity_photo = val[1];
+            break;
+          case 'photo5'://气表照片
+            this.form.album.gas_photo = val[1];
+            break;
+          case 'photo6'://交接单照片
+            this.form.album.checkin_photo = val[1];
+            break;
+          case 'photo7'://凭证截图
+            this.form.album.certificate_photo = val[1];
+            break;
+          case 'photo8'://押金收条
+            this.form.album.deposit_photo = val[1];
+            break;
+          case 'photo9'://其他照片
+            this.form.album.other_photo = val[1];
+            break;
+        }
       },
-
       saveCollect(val) {
         if (this.contract_id !== '') {
           if (this.picStatus === 'err') {

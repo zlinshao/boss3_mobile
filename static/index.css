@@ -37,24 +37,6 @@
   color: #969696;
   border-bottom: 1px solid #F4F4F4; }
 
-.first_date.month .van-cell:not(:last-child):after {
-  border: none; }
-
-.first_date .titles, .checks .titles, .fourth .titles {
-  min-width: 105px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  padding-left: 15px; }
-.first_date .titles.required:after, .checks .titles.required:after, .fourth .titles.required:after {
-  content: '*';
-  position: absolute;
-  left: 7px;
-  font-size: 14px;
-  color: #f44; }
-.first_date .van-cell.van-field, .checks .van-cell.van-field, .fourth .van-cell.van-field {
-  padding-left: 0; }
-
 .titleRed {
   padding-left: 110px;
   padding-bottom: .1rem;
@@ -73,6 +55,29 @@
   .fourth .twoBorder, .first_date .twoBorder {
     border-bottom: 1px solid #F4F4F4;
     padding-bottom: 9px; }
+
+.first_date .titles, .checks .titles, .fourth .titles {
+  min-width: 105px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-left: 15px; }
+.first_date .titles.required:after, .checks .titles.required:after, .fourth .titles.required:after {
+  content: '*';
+  position: absolute;
+  left: 7px;
+  font-size: 14px;
+  color: #f44; }
+.first_date .van-cell.van-field, .checks .van-cell.van-field, .fourth .van-cell.van-field {
+  padding-left: 0; }
+
+.first_date.month .van-cell:not(:last-child):after, .first_date.noBorder .van-cell:not(:last-child):after, .checks.noBorder .van-cell:not(:last-child):after, .fourth.noBorder .van-cell:not(:last-child):after {
+  border: none; }
+
+.first_date.noBorder, .checks.noBorder, .fourth.noBorder {
+  border-bottom: 1px solid #F4F4F4; }
+  .first_date.noBorder .twoBorder, .first_date.noBorder span.cut, .checks.noBorder .twoBorder, .checks.noBorder span.cut, .fourth.noBorder .twoBorder, .fourth.noBorder span.cut {
+    border-bottom: none; }
 
 .aloneModel {
   background: #fff;
