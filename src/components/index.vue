@@ -233,15 +233,10 @@
 </template>
 
 <script>
-  import {Waterfall} from 'vant';
   import {Toast} from 'vant';
 
   export default {
     name: 'HelloWorld',
-    directives: {
-      WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper')
-    },
     components: {Toast},
     data() {
       return {
