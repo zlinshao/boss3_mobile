@@ -463,12 +463,9 @@
               this.value8.push(item.bank_info);
             });
             this.finalDetail(val);
-            console.log(this.value8)
           }
         });
-
       },
-
       receiptNum() {
         // 收据编号默认城市
         this.form.receipt = [];
@@ -704,18 +701,13 @@
         }
       },
       emptyPic(val, key) {
-        console.log(val);
-        console.log(key);
         let data = [];
         if (val.length !== 0) {
           val.forEach(item => {
-            console.log(item);
             if (item && item !== 'null') {
-              console.log(item);
               data.push(item);
             }
           });
-          console.log(data);
           this.form[key] = data;
         }
       },
@@ -723,7 +715,6 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
-          console.log(val);
           this.form.customer_name = val.customers;
           this.form.name = val.customers;
           this.form.phone = val.cusPhone;
@@ -747,7 +738,6 @@
           this.form.screenshot_old = val.album.certificate_photo;
         }
       },
-
       // getPic(album, val) {
       //   this.$http.post(this.urls + 'special/special/picUrl', {
       //     id: album,
@@ -786,11 +776,9 @@
             for (let i = 0; i < pay.price.length; i++) {
               this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
             }
-            console.log(this.form.price_arr)
           }
         })
       },
-
       finalDetail(val) {
         this.form.processable_id = '';
         let type;
