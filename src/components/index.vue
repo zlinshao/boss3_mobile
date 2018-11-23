@@ -160,7 +160,7 @@
       <van-list
         :finished="finished"
         @load="onLoad">
-        <div class="started">
+        <div class="started" v-if="list.length > 0">
           <div class="startedMain" v-for="item in list" @click="routeDetail(item.id)">
             <div class="leftPic">
               <img :src="item.avatar" v-if="item.avatar !== '' && item.avatar !== null">
@@ -349,6 +349,7 @@
         this.readActive = red;
         this.page = 1;
         this.finished = false;
+        this.loading = false;
         this.scrollTops();
       },
       routerLink(val) {
@@ -364,6 +365,7 @@
         this.page = 1;
         this.readActive = read;
         this.finished = false;
+        this.loading = false;
         this.scrollTops();
       },
       lists(val, active, read) {
@@ -431,9 +433,6 @@
             }
           } else {
             this.loading = true;
-            if (this.params.page !== 1) {
-              this.paging = 0;
-            }
           }
         })
       },
