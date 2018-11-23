@@ -331,13 +331,14 @@
           payWay: [''],                 //付款方式
           pay_way: [],                  //付款方式
           sign_date: '',                //签约日期
+          name: '',                     //客户姓名
+          phone: '',                    //联系方式
+          payPrice: [''],                 //月单价
           price_arr: [''],              //月单价
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
           customer_name: '',            //客户姓名
-          name: '',                     //客户姓名
-          phone: '',                    //联系方式
           is_receipt: 1,                //1是 2不是
           receipt: [],                  //收据编号
           front_money: '',              //定金
@@ -770,11 +771,13 @@
             this.form.pay_way = pay.pay_way;
             this.form.payWay = [];
             this.form.price_arr = [];
+            this.form.payPrice = [];
             for (let i = 0; i < pay.pay_way.length; i++) {
               this.form.payWay.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
             }
             for (let i = 0; i < pay.price.length; i++) {
               this.form.price_arr.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
+              this.form.payPrice.push(pay.price[i].price);
             }
           }
         })
@@ -800,6 +803,7 @@
             this.form.address = draft.address;
             this.form.month = draft.month;
             this.form.price_arr = draft.price_arr;
+            this.form.payPrice = draft.payPrice;
             this.form.payWay = draft.payWay;
             this.form.pay_way = draft.pay_way;
             this.form.terms = draft.terms;
@@ -918,6 +922,7 @@
         this.deposit_photos = [];
 
         this.form.price_arr = [''];
+        this.form.payPrice = [''];
         this.form.payWay = [''];
         this.form.terms = '';
         this.periods = [];

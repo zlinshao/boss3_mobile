@@ -352,7 +352,13 @@ export default {
         data.address = val.address;
       }
       data.price = '';
-      for (let item of val.price_arr) {
+      let pay = [];
+      if (val.payPrice) {
+        pay = val.payPrice;
+      } else {
+        pay = val.price_arr;
+      }
+      for (let item of pay) {
         if (item) {
           data.price = data.price + item + '元 ; '
         }
