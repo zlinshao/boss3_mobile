@@ -1000,7 +1000,6 @@
                 }
               }
             })
-
           } else {
             this.form.address = val.house_name;
             this.form.contract_id = val.id;
