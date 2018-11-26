@@ -126,13 +126,11 @@
           obj.timestamp = Math.round(new Date().getTime() / 1000).toString();
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
           this.weiChatAuth().then(_ => {
-            alert(_);
             wx.ready(function () {
               wx.hideOptionMenu();
             });
           });
         }
-        // this.token = window.location.href;
       },
       // 获取uid
       getUserId(val) {
