@@ -125,8 +125,7 @@
           obj.url = objUrl;
           obj.timestamp = Math.round(new Date().getTime() / 1000).toString();
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
-          this.weiChatAuth().then(_ => {
-            alert(_)
+          this.weiChatAuth(obj).then(_ => {
             wx.ready(function () {
               wx.hideOptionMenu();
             });
