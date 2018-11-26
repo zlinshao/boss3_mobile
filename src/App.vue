@@ -130,6 +130,8 @@
           this.weiChatAuth(obj).then(_ => {
             alert(url);
             alert(url.split('#')[0]);
+            alert(url == url.split('#')[0])
+            alert(url === url.split('#')[0])
             wx.ready(function () {
               wx.hideOptionMenu();
             });
