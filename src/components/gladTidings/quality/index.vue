@@ -342,7 +342,7 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel required">
+      <div class="aloneModel required" @click="fffffff">
         <div class="title"><span>*</span>房屋影像</div>
         <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
         <div class="upload-tips">提示：请上传6张以上房屋照片和1个以上房屋视频哦~</div>
@@ -577,6 +577,10 @@
     },
 
     methods: {
+      fffffff() {
+        console.log(this.community_name);
+        sessionStorage.setItem('hhhhhh', this.community_name + JSON.parse(sessionStorage.personal).name + 'quality');
+      },
       qualityChange(val) {
         if (this.numbers !== val) {
           this.close_();
@@ -875,7 +879,11 @@
               if (res.data.data.id) {
                 this.routerDetail(res.data.data.id);
               } else {
-                if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+                if (res.data.data.id) {
+                  this.routerDetail(res.data.data.id)
+                } else {
+                  this.routerDetail(res.data.data.data.id)
+                }
               }
             } else if (res.data.code === "51420") {
               this.form.id = res.data.data.id;
