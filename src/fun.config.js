@@ -339,7 +339,7 @@ export default {
       dd.biz.navigation.setRight({show: false});
     };
     // 生成电子收据
-    Vue.prototype.previewReceipt = function (val) {
+    Vue.prototype.previewReceipt = function (val, money_key) {
       console.log(val);
       let data = {};
       data.process_id = '0';
@@ -388,7 +388,17 @@ export default {
           data.pay_way = data.pay_way + item.pay_way_str;
         }
       }
-      data.payment = this.receivedPrice === 'front_money' ? '定金' : '押金+租金';
+      switch (money_key){
+        case 'front_money':
+          data.payment = '定金';
+          break;
+        case 'rent_money':
+          data.payment = '租金';
+          break;
+        default:
+          data.payment = '押金+租金';
+          break;
+      }
       data.amount = val.money_sum;
       data.sum = val.money_sum;
       data.memo = val.memo;

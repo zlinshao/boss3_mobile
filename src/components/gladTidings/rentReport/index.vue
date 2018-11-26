@@ -161,7 +161,6 @@
           <div class="titles required">本次金额为</div>
           <van-radio-group v-model="receivedPrice">
             <van-radio name="front_money">定金</van-radio>
-            <van-radio name="rent_money">租金</van-radio>
             <van-radio name="deposit_payed">租金+押金</van-radio>
           </van-radio-group>
         </div>
@@ -243,7 +242,7 @@
           icon="clear"
           @click-icon="form.memo = ''">
         </van-field>
-        <div class="addInput" @click="previewReceipt(form)">预览电子收据</div>
+        <div class="addInput" @click="previewReceipt(form, receivedPrice)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -583,7 +582,6 @@
       receivedPrice() {
         this.form.money_sum = '';
         this.form.front_money = '';
-        this.form.rent_money = '';
         this.form.deposit_payed = '';
       },
       cusFrom() {
@@ -1247,7 +1245,6 @@
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';
-        this.form.rent_money = '';
         this.form.money_sum = '';
         this.form.memo = '';
         this.amountMoney = 1;

@@ -141,6 +141,8 @@ div .payWay.van-cell.van-hairline.van-field i {
     display: -webkit-flex; }
     .checks .van-radio-group .van-radio {
       margin-right: .1rem; }
+  .checks .van-radio__label {
+    margin-left: 6px; }
 
 .checks.radio {
   margin-left: -6px;

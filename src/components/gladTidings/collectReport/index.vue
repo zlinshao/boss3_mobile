@@ -1014,7 +1014,7 @@
             this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.house = draft.house;
-            this.form.corp_name = draft.corp_name;
+            this.form.corp_name = draft.house;
 
             this.form.sign_date = draft.sign_date;
             this.form.month = draft.month;
