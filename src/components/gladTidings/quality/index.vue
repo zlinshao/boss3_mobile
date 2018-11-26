@@ -607,9 +607,18 @@
           }
           this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
             if (res.data.code === '1000120') {
+              // 320100
               this.form.province_id = '';
               this.form.city_id = '';
-              let address = res.data.data.data[2] + '市';
+              let address;
+              if (res.data.data.data[2]) {
+                address = res.data.data.data[2] + '市';
+              } else {
+                this.form.city_id = '320100';
+                this.beforeCityId = '320100';
+                this.form.city_name = '南京市';
+                return;
+              }
               this.form.city_name = address;
               this.beforeCity = address;
               for (let i = 0; i < this.allCity.length; i++) {
