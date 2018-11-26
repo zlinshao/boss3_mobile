@@ -1,11 +1,11 @@
 <template>
-  <div id="video">
+  <div id="video1">
     <!-- <div class="back"><van-icon name="arrow-left" @click="goBack" />{{titleName}}</div> -->
       <van-nav-bar :title="titleName"  left-arrow left-text="返回"  @click-left="goBack"  />
     <div class="videoList">
       <div class="video" v-for="(item, index) in videoList" :key="index">
         <!-- <video :src="item.file" width="100%" height="100%" @click.stop="palyVideo(item.id, index)"  poster="../../assets/bofang1.jpg"></video> -->
-        <img src="../../assets/bofang1.jpg" alt="" @click.stop="palyVideo(item.id, index)">
+        <img src="../../assets/bofang1.jpg" alt="" @click="palyVideo(item.id, index)">
         <p class="videoName">{{item.video_name}}</p>
         <p class="count">
           <span>人数：{{item.play_user}}</span>
@@ -18,7 +18,7 @@
     <van-popup v-model="show" position="right" :overlay="false" class="popup">
       <van-nav-bar :title="videoTitle" left-text="返回"  left-arrow @click-left="onClickLeft"  />
       <div style="position: relative">
-        <div class="videoDetail"><img src='../../assets/bofang1.jpg' id='imgRecording' style="width: 100%; position: fixed;top: 46px; z-index: 999;" /></div>
+        <div class="videoDetail"><img src='../../assets/bofang1.jpg' id='imgRecording' style="width: 100%; position: fixed;top: 46px; z-index: 999;"  /></div>
         <div id="quan" @click="fullScreen">全屏</div>
       </div>
       <div class="comment">
@@ -46,7 +46,7 @@
 <script>
 import { Toast } from "vant";
 export default {
-  name: "video",
+  name: "video1",
   components: { Toast },
   data() {
     return {
@@ -120,6 +120,7 @@ export default {
         width: mobileWidth + "px",
          position: 'fixed',
          top: "46px",
+         height: "212px"
       });
       this.videoList.forEach((item, index) => {
         if (index == id) {
@@ -189,7 +190,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#video {
+#video1 {
   font-size: 12px !important;
   .videoDetail {
     position: relative;
