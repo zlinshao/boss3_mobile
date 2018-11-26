@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  // import {md5} from './assets/js/MD5.js'
+  import {md5} from './assets/js/MD5.js'
   export default {
     data() {
       return {
@@ -120,18 +120,13 @@
         } else {
           // this.getUserId(query);
           let obj = {};
-          alert(1)
           obj.corpid = query.appid;
-           alert(2)
           obj.corpsecret = query.secret;
-           alert(3)
           obj.url = objUrl;
-           alert(4)
           obj.timestamp = Math.round(new Date().getTime() / 1000).toString();
-           alert(5)
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
-           alert(6)
           this.weiChatAuth().then(_ => {
+            alert(_)
             wx.ready(function () {
               wx.hideOptionMenu();
             });
