@@ -215,11 +215,12 @@ export default {
             appId: val.corpid, // 必填，企业微信的corpID
             timestamp: val.timestamp, // 必填，生成签名的时间戳
             nonceStr: val.nonceStr, // 必填，生成签名的随机串
-            signature: res.data.data.signature2,// 必填，签名，见附录1
+            signature: res.data.data.signature1,// 必填，签名，见附录1
             jsApiList: ['onHistoryBack', 'hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
           resolve(true);
         }).catch(err => {
+          window.location.reload();
           resolve(false);
         })
       })
