@@ -220,6 +220,7 @@ export default {
           });
           resolve(true);
         }).catch(err => {
+          alert(22222222222222);
           resolve(false);
         })
       })
