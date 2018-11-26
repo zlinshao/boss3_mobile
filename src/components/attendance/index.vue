@@ -509,7 +509,7 @@ export default {
   }
   .gray {
     color: gray;
-    // visibility: hidden;
+    visibility: hidden;
   }
   .warning {
     background-color: #f90;
