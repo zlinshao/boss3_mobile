@@ -126,9 +126,10 @@
           obj.timestamp = Math.round(new Date().getTime() / 1000).toString();
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
           this.weiChatAuth(obj).then(_ => {
-            alert(_);
             wx.ready(function () {
-              alert(1111111111)
+              alert(1111111);
+              wx.hideOptionMenu();
+              alert(3333333);
             });
           });
         }
