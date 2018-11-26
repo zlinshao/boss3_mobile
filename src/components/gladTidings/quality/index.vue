@@ -948,7 +948,6 @@
           this.stick();
         }
         this.userInfo(this.isValue1);
-        console.log(1)
       },
 
       qualityDetail(val) {
@@ -995,6 +994,8 @@
       },
 
       prefill(data, val) {
+        console.log(data);
+        console.log(val);
         this.isClear = false;
         this.form.city_id = data.city_id;                     //城市
         this.form.province_id = data.province_id;             //城市
@@ -1070,11 +1071,9 @@
         this.form.staff_name = data.staff_name;
         this.form.department_id = data.department_id;
         this.form.department_name = data.department_name;
-        console.log(val);
         if (val === 'draught' && data.photo) {
           this.photos = data.photo;                                       //房屋影像
           this.form.photo = [];
-          console.log(data.photo)
           //房屋影像
           for (let i = 0; i < data.photo.length; i++) {
             this.form.photo.push(data.photo[i].id);                       //房屋影像
