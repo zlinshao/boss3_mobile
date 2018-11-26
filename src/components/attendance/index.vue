@@ -75,6 +75,10 @@
       </van-steps>
     </div>
       <div class="noData" v-else>无打卡时间</div>
+      <!-- 加载 -->
+      <div class="loading">
+        <!-- <van-loading type="spinner" color="#409eff" v-if="loading"/> -->
+      </div>
   </div>
 </template>
 
@@ -82,6 +86,7 @@
 export default {
   data() {
     return {
+      loading: false,
       minDate: new Date(2017, 1, 1),
       selectTime: new Date(),
       showTime: false,
@@ -162,8 +167,8 @@ export default {
           this.goOffWork = "";
           this.resultWork = "";
           this.resultOffWork = "";
+          this.loading = true;
           if (res.data.code == "20000") {
-
             this.avatar = res.data.data.avatar;
             this.name = res.data.data.name;
             res.data.data.role.forEach((item, index) => {
@@ -192,6 +197,7 @@ export default {
                 this.punchNum = 1;
                 this.timeTotal = 0;
                 this.goWork = item.dimensions.hour + ":" + item.dimensions.minute; // 上班时间
+                this.loading = false;
                 this.countGoWorkTime = new Date(item.dimensions.time.replace(/-/g, "/")).getTime();
               } else if (item.event_attribute == 2) {
                 if (item.status == 2) {
@@ -505,6 +511,12 @@ export default {
     text-align: center;
     line-height: 40px;
     color: #999;
+  }
+  .loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
   }
 }
 </style>
