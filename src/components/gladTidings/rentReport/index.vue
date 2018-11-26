@@ -161,6 +161,7 @@
           <div class="titles required">本次金额为</div>
           <van-radio-group v-model="receivedPrice">
             <van-radio name="front_money">定金</van-radio>
+            <van-radio name="rent_money">租金</van-radio>
             <van-radio name="deposit_payed">租金+押金</van-radio>
           </van-radio-group>
         </div>
@@ -582,6 +583,7 @@
       receivedPrice() {
         this.form.money_sum = '';
         this.form.front_money = '';
+        this.form.rent_money = '';
         this.form.deposit_payed = '';
       },
       cusFrom() {
@@ -1110,8 +1112,10 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
-            } else {
+            } else if (this.form.front_money) {
               this.receivedPrice = 'front_money';
+            } else {
+              this.receivedPrice = 'rent_money';
             }
             this.$nextTick(function () {
               this.form.money_sum = draft.money_sum;
