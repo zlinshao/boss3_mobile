@@ -920,6 +920,7 @@
           this.form.house_id = val.house_id;
           if (val.type === 'allHouse') {
             let house_res = JSON.parse(sessionStorage.getItem('house_res'));
+            console.log(house_res);
             this.prefill(house_res, 'house');
           }
         }
@@ -987,6 +988,7 @@
               this.form.quality_up = '0';
             }
             this.prefill(data, 'draught');
+            console.log(data);
           } else {
             this.form.id = '';
           }
@@ -994,7 +996,6 @@
       },
 
       prefill(data, val) {
-        console.log(data);
         console.log(val);
         this.isClear = false;
         this.form.city_id = data.city_id;                     //城市
@@ -1002,7 +1003,6 @@
         this.form.city_name = data.city_name;                 //城市
         if (data.community) {
           this.form.community = data.community;              //小区id
-          // this.property_fee = data.community.property_fee;   //小区id
           this.community_name = data.community.village_name; //小区id
         }
         this.form.door_address = data.door_address;
