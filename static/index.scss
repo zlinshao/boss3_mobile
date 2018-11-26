@@ -69,7 +69,17 @@ $color: #409EFF;
   padding-bottom: .1rem;
   font-size: .24rem;
   color: #e4393c;
+  line-height: .3rem;
   border-bottom: 1px solid #f4f4f4;
+}
+
+.crop_name {
+  .titleRed {
+    color: #ff976a;
+  }
+  .showBorder {
+    border-bottom: 1px solid #f8f8f8;
+  }
 }
 
 .fourth, .first_date {
@@ -108,7 +118,7 @@ $color: #409EFF;
   }
 }
 
-.first_date.month, .first_date.noBorder, .checks.noBorder, .fourth.noBorder {
+.first_date.month, .first_date.noBorder, .checks.noBorder, .fourth.noBorder, .crop_name.noBorder {
   .van-cell:not(:last-child):after {
     border: none;
   }
@@ -206,8 +216,11 @@ div {
   .van-radio-group {
     @include flex;
     .van-radio {
-      margin-right: .3rem;
+      margin-right: .1rem;
     }
+  }
+  .van-radio__label {
+    margin-left: 6px;
   }
 }
 

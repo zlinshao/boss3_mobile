@@ -21,15 +21,19 @@
         </div>
       </van-cell-group>
       <van-cell-group>
-        <van-field
-          v-model="form.address"
-          label="房屋地址"
-          type="text"
-          @click="searchSelect(form.collect_or_rent)"
-          readonly
-          placeholder="选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="房屋地址"
+            type="text"
+            @click="searchSelect(form.collect_or_rent)"
+            readonly
+            placeholder="选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.customers"
           class="disabling"
@@ -141,11 +145,11 @@
         urls: globalConfig.server,
         isClear: false,           //删除图片
         picStatus: 'success',
-        name:'租客',                  //房东or租客
-        paid_token:'已收',            //已收款or已付款
-        return_refund:'',         //退还or退款
-        money_paid:'',            //已付金额
-        money_token:'',           //已收金额
+        name: '租客',                  //房东or租客
+        paid_token: '已收',            //已收款or已付款
+        return_refund: '',         //退还or退款
+        money_paid: '',            //已付金额
+        money_token: '',           //已收金额
         payStatus: false,
         priceStatus: false,
 
@@ -159,7 +163,7 @@
           draft: 0,
           payWay: [''],                   //付款方式
           price_arr: [''],                //月单价
-          finance_money:'',               //已付已收金额
+          finance_money: '',               //已付已收金额
           collect_or_rent: '1',
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
@@ -170,8 +174,8 @@
           department_id: '',            //部门id
           staff_name: '',                 //开单人name
           department_name: '',            //部门name
-          customers:'',                   //客户姓名
-          return_money:'',                //退还金额
+          customers: '',                   //客户姓名
+          return_money: '',                //退还金额
         },
         screenshots: {},                //截图
         numbers: '',
@@ -263,6 +267,7 @@
       rentChange(val) {
         if (this.numbers !== val) {
           this.form.address = '';
+          this.form.corp_name = '';
           this.form.customers = '';
           this.form.house_id = '';
           this.form.contract_id = '';
@@ -272,11 +277,11 @@
           this.form.finance_money = '';
           this.numbers = val;
         }
-        if(this.numbers == '0'){
+        if (this.numbers == '0') {
           this.name = "房东";
           this.paid_token = '已付';
           this.return_refund = '退还'
-        }else if(this.numbers == '1'){
+        } else if (this.numbers == '1') {
           this.name = "租客";
           this.paid_token = '已收';
           this.return_refund = '退款'
@@ -301,7 +306,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50720') {
               this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
@@ -378,11 +387,11 @@
           if (res.data.code === '50720') {
             this.isClear = false;
             let data = res.data.data;
-            console.log(data)
             let draft = res.data.data.draft_content;
 
             this.form.id = data.id;
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
             this.form.refund = draft.refund;
@@ -424,6 +433,7 @@
         this.screenshots = {};
         this.form.remark = '';
         this.form.address = '';
+        this.form.corp_name = '';
         this.form.customers = '';
         this.form.staff_name = '';
         this.form.department_name = '';

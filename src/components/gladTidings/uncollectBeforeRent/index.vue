@@ -233,7 +233,7 @@
           icon="clear"
           @click-icon="form.memo = ''">
         </van-field>
-        <div class="addInput" @click="previewReceipt(form)">预览电子收据</div>
+        <div class="addInput" @click="previewReceipt(form, receivedPrice)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -1114,8 +1114,10 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
-            } else {
+            } else if (this.form.front_money) {
               this.receivedPrice = 'front_money';
+            } else {
+              this.receivedPrice = 'rent_money';
             }
             this.$nextTick(function () {
               this.form.money_sum = draft.money_sum;
@@ -1257,7 +1259,6 @@
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';
-        this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.form.account_id = [];

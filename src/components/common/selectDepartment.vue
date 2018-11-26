@@ -122,14 +122,6 @@
 
       confirmAdd() {
         if (this.selectId) {
-          if (navigator.userAgent === 'app/ApartMent') {
-            let data = [], value = {};
-            value.org_id = this.selectDepart.id;
-            value.org_name = this.selectDepart.name;
-            data.push(value);
-            android.staffIds(JSON.stringify(data));
-            return;
-          }
           this.$router.replace({path: this.path, query: {depart: JSON.stringify(this.selectDepart)}});
         } else {
           Toast.fail('请选择部门');

@@ -81,7 +81,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = false;
+          this.loading = true;
           if (this.isWeiXin()) {
             this.prevent();
           } else {
@@ -128,7 +128,6 @@
           obj.timestamp = Math.round(new Date().getTime() / 1000).toString();
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
           this.weiChatAuth(obj).then(_ => {
-            alert(JSON.stringify(obj));
             wx.ready(function () {
               wx.hideOptionMenu();
             });
