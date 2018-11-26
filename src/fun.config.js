@@ -311,7 +311,7 @@ export default {
             });
           });
           dd.error(function (err) {
-            // window.location.reload();
+            window.location.reload();
             // alert('dd error: ' + JSON.stringify(err));
           });
         });
