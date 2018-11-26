@@ -128,7 +128,6 @@
           this.weiChatAuth().then(_ => {
             alert(_);
             wx.ready(function () {
-              alert(1111);
               wx.hideOptionMenu();
             });
           });

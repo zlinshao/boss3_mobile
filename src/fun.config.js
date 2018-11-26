@@ -209,6 +209,7 @@ export default {
         this.$http.get(globalConfig.server + 'organization/wework-bulletin', {
           params: val,
         }).then(res => {
+          alert(JSON.stringify(res.data.data));
           wx.config({
             beta: true,// 必须这么写，否则wx.invoke调用形式的jsapi会有问题
             debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -220,8 +221,9 @@ export default {
           });
           resolve(true);
         }).catch(err => {
-          window.location.reload();
+          alert(JSON.stringify(err));
           resolve(false);
+          window.location.reload();
         })
       })
     };
