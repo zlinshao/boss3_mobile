@@ -2,14 +2,18 @@
   <div id="collectPolishing ">
     <div class="main" id="main">
       <van-cell-group>
-        <van-field
-          v-model="address"
-          label="房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect(1)"
-          placeholder="请选择房屋地址">
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="address"
+            label="房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择房屋地址">
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.mound_number"
           label="丘号"
@@ -351,6 +355,7 @@
         cardName: [],
 
         address: '',
+        corp_name: '',
         contract_id: '',                  //合同id
         sexs: [''],
         form: {
@@ -663,6 +668,7 @@
           this.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.address = val.house_name;
+          this.corp_name = val.corp_name;
           this.form.staff_name = val.staff_name;
           this.form.department_name = val.department_name;
           this.form.staff_id = val.staff_id;
@@ -762,6 +768,7 @@
         this.cardName = [];
         this.result = [];
         this.address = '';
+        this.corp_name = '';
         this.contract_id = '';
         this.sexs = [''];
         this.form.customers = [{

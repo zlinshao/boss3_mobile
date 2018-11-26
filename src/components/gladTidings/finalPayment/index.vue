@@ -2,15 +2,19 @@
   <div id="finalReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-field
-          v-model="form.address"
-          label="房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect()"
-          placeholder="请选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect()"
+            placeholder="请选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.customer_name"
           label="客户姓名"
@@ -321,6 +325,7 @@
         isReceiptMsg: {},                //电子收据
         form: {
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           draft: 0,
@@ -720,6 +725,7 @@
           this.form.name = val.customers;
           this.form.phone = val.cusPhone;
           this.form.address = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.month = val.month;
           this.form.sign_date = val.sign_at;
           this.form.contract_id = val.id;

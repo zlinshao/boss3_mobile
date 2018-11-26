@@ -13,15 +13,19 @@
         </div>
       </van-cell-group>
       <van-cell-group>
-        <van-field
-          v-model="form.address"
-          label="房屋地址"
-          type="text"
-          @click="searchSelect(form.collect_or_rent)"
-          readonly
-          placeholder="选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="房屋地址"
+            type="text"
+            @click="searchSelect(form.collect_or_rent)"
+            readonly
+            placeholder="选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.customer_name"
           label="客户姓名"
@@ -226,6 +230,7 @@
 
         form: {
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           draft: 0,
@@ -398,7 +403,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50320') {
               Toast.success(res.data.msg);
             } else {
@@ -468,6 +477,7 @@
             this.agency4 = false;
           }
           this.form.address = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.form.staff_name = val.staff_name;
@@ -513,6 +523,7 @@
             let draft = res.data.data.draft_content;
             this.form.purchase_way = 509;
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.helperBulletin(draft.contract_id);
@@ -560,6 +571,7 @@
         this.form.payWay = [''];
         this.form.price_arr = [''];
         this.form.address = '';
+        this.form.corp_name = '';
         this.form.processable_id = '';
         this.form.contract_id = '';
         this.form.house_id = '';

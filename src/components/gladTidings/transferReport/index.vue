@@ -2,15 +2,19 @@
   <div id="transferReport">
     <div class="main" id="main">
       <van-cell-group style="margin-bottom: 12px;">
-        <van-field
-          v-model="form.old_house_name"
-          label="原房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect(1)"
-          placeholder="请选择原房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.old_house_name"
+            label="原房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择原房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.old_corp_name">{{form.old_corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.old_staff_name"
           label="原开单人"
@@ -58,15 +62,19 @@
 
       </van-cell-group>
       <van-cell-group>
-        <van-field
-          v-model="form.address"
-          label="现房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect(2)"
-          placeholder="请选择房现房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="现房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(2)"
+            placeholder="请选择房现房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.sign_date"
           @click="timeChoose('sign_date', form.sign_date)"
@@ -495,12 +503,14 @@
           old_price: [''],
           old_front_money: '',
           old_house_name: '',
+          old_corp_name: '',
 
           sign_date: '',
           name: '',
           phone: '',
 
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           draft: 0,
@@ -938,7 +948,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50520') {
               if (receipt.length === 0) {
                 this.form.receipt = [];
@@ -979,6 +993,7 @@
           let val = JSON.parse(t.house);
           if (t.type === 'report') {
             this.form.old_house_name = val.house_name;
+            this.form.old_corp_name = val.corp_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
             this.form.sign_date = val.start_at;
@@ -1002,6 +1017,7 @@
             })
           } else {
             this.form.address = val.house_name;
+            this.form.corp_name = val.corp_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
           }
@@ -1054,12 +1070,14 @@
             this.form.contract_number = draft.contract_number === 'LJZF' ? '' : draft.contract_number;
 
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.contract_id_rent = draft.contract_id_rent;
             this.form.house_id_rent = draft.house_id_rent;
 
             this.form.old_house_name = draft.old_house_name;
+            this.form.old_corp_name = draft.old_corp_name;
             this.form.old_staff_name = draft.old_staff_name;
             this.form.old_pay_way_arr = draft.old_pay_way_arr;
             this.form.old_price = draft.old_price;
@@ -1144,13 +1162,13 @@
             this.form.other_fee = draft.other_fee;
 
             this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot ? data.screenshot: {};
+            this.screenshots = data.screenshot ? data.screenshot : {};
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.screenshot_leader ? data.screenshot_leader: {};
+            this.leaders = data.screenshot_leader ? data.screenshot_leader : {};
             this.form.photo = draft.photo;
-            this.photos = data.photo ? data.photo: {};
+            this.photos = data.photo ? data.photo : {};
             this.form.deposit_photo = draft.deposit_photo;
-            this.receipts = data.deposit_photo ? data.deposit_photo: {};
+            this.receipts = data.deposit_photo ? data.deposit_photo : {};
 
             this.form.remark = draft.remark;
 
@@ -1194,8 +1212,10 @@
         $('.imgItem').remove();
         this.picStatus = 'success';
         this.form.address = '';
+        this.form.corp_name = '';
 
         this.form.old_house_name = '';
+        this.form.old_corp_name = '';
         this.form.old_staff_name = '';
         this.form.old_pay_way_arr = [''];
         this.form.old_price = [''];

@@ -2,15 +2,19 @@
   <div id="rentReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-field
-          v-model="form.address"
-          label="房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect(1)"
-          placeholder="请选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.sign_date"
           label="签约日期"
@@ -495,6 +499,7 @@
 
         form: {
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           type: 1,
@@ -1018,6 +1023,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.address = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
         }
@@ -1068,6 +1074,7 @@
             this.form.house_id = draft.house_id;
 
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.contract_number = draft.contract_number === '' ? 'LJZF' : draft.contract_number;
@@ -1215,6 +1222,7 @@
         this.form.house_id = '';
 
         this.form.address = '';
+        this.form.corp_name = '';
         this.form.month = '';
         this.form.day = '';
         this.form.discount = 0;

@@ -2,24 +2,32 @@
   <div id="uncollectBeforeRentSure">
     <div class="main" id="main">
       <van-cell-group>
-        <van-field
-          v-model="form.oldHouseName"
-          label="原喜报地址"
-          type="text"
-          readonly
-          @click="searchSelect(1)"
-          placeholder="请选择原喜报地址"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.address"
-          label="现房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect(2)"
-          placeholder="请选择房现房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.oldHouseName"
+            label="原喜报地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择原喜报地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.old_corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="现房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(2)"
+            placeholder="请选择房现房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.sign_date"
           label="签约日期"
@@ -513,7 +521,9 @@
           type: 0,
           draft: 0,
           oldHouseName: '',
+          old_corp_name: '',
           address: '',
+          corp_name: '',
           contract_id_rent: '',         //原租房合同id
           contract_id: '',              //现房屋合同id
           house_id_rent: '',
@@ -1051,11 +1061,11 @@
           let val = JSON.parse(t.house);
           if (t.type === 'is_nrcy') {
             this.form.oldHouseName = val.house_name;
+            this.form.old_corp_name = val.old_corp_name;
             this.form.contract_id_rent = val.id;
             this.form.house_id_rent = val.house_id;
 
             let rent = val.renters;
-            console.log(rent);
             let rentDate = rent.start_at.substring(0, 10);
             this.form.begin_date = rentDate;
             this.first_date = [];
@@ -1160,6 +1170,7 @@
             this.form.department_name = rent.sign_org.name;
           } else {
             this.form.address = val.house_name;
+            this.form.corp_name = val.corp_name;
             this.form.contract_id = val.id;
             this.form.house_id = val.house_id;
           }
@@ -1210,7 +1221,9 @@
             this.form.day = draft.day === '0' ? '' : draft.day;
 
             this.form.oldHouseName = draft.oldHouseName;
+            this.form.old_corp_name = draft.old_corp_name;
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.contract_id_rent = draft.contract_id_rent;
             this.form.contract_id = draft.contract_id;
             this.form.house_id_rent = draft.house_id_rent;
@@ -1363,7 +1376,9 @@
         this.form.house_id_rent = '';
         this.form.house_id = '';
         this.form.oldHouseName = '';
+        this.form.old_corp_name = '';
         this.form.address = '';
+        this.form.corp_name = '';
 
         this.amountPrice = 1;
 
