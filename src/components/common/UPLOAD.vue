@@ -239,7 +239,7 @@
               _this.$http.defaults.timeout = 5000;
               if (sessionStorage.hhhhhh.indexOf('quality') > -1) {
                 _this.picData.url = url;
-                _this.picData.raw_name = raw_name;
+                _this.picData.raw_name = file.name;
                 _this.picData.type = file.type;
                 _this.picData.sourceLink = sourceLink;
                 _this.picData.key_name = sessionStorage.hhhhhh;
