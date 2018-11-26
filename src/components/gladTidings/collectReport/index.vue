@@ -2,15 +2,19 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-field
-          v-model="form.house.name"
-          label="房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect(1)"
-          placeholder="请选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.house.name"
+            label="房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.sign_date"
           label="签约日期"
@@ -491,6 +495,7 @@
             id: '',
             name: '',
           },
+          corp_name: '',                //公司名称
           sign_date: '',                //签约日期
           month: '',                    //收房月数
           day: '',                      //收房天数
@@ -960,6 +965,7 @@
           let val = JSON.parse(t.house);
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.is_agency = val.is_agency;                           //是否中介
           this.cusFrom = dicts.value8[val.is_agency];                    //是否中介
         }
@@ -1008,6 +1014,7 @@
             this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.house = draft.house;
+            this.form.corp_name = draft.corp_name;
 
             this.form.sign_date = draft.sign_date;
             this.form.month = draft.month;
@@ -1122,6 +1129,7 @@
         this.form.processable_id = '';
         this.form.house.id = '';
         this.form.house.name = '';
+        this.form.corp_name = '';
         this.form.month = '';
         this.form.day = '';
 

@@ -332,6 +332,7 @@
         }
         list.house_id = val.id;
         list.house_name = val.name;
+        list.corp_name = val.corp_name;
         list.house_type = val.room + '室' + val.hall + '厅' + val.toilet + '卫';
         list.created_at = val.created_at.substring(0, 10);
         if (type === 'lord' || type === 'lord1') {
