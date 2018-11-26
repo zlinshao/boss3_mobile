@@ -210,7 +210,7 @@
                     list.house_id = data[i].id;
                     list.house_name = data[i].name;
                     if (data[i].house_res) {
-                      sessionStorage.setItem('house_res', JSON.stringify(data[i].house_res));
+                      list.house_res = data[i].house_res;
                     } else {
                       list.house_res = {};
                     }
@@ -233,7 +233,7 @@
                   this.showInfo.push(data[i].id);
                   list.house_id = data[i].id;
                   list.house_name = data[i].name;
-                  sessionStorage.setItem('house_res', JSON.stringify(data[i].house_res));
+                  list.house_res = data[i].house_res;
                   this.houseList.push(list);
                   this.finish(4);
                 }
