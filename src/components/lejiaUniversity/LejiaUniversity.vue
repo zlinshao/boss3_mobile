@@ -185,9 +185,6 @@ export default {
     if (this.$route.query.classify_id) {
       this.getVideoList();
     }
-  },
-  mounted() {
-    this.getComment(this.$route.query.classify_id)
   }
 };
 </script>
