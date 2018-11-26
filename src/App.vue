@@ -127,9 +127,9 @@
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
           this.weiChatAuth(obj).then(_ => {
             wx.ready(function () {
-              alert(1111111);
+              alert(url);
               wx.hideOptionMenu();
-              alert(3333333);
+              alert(url);
             });
           });
         }
