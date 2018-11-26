@@ -2,15 +2,19 @@
   <div id="finalReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-field
-          v-model="form.address"
-          label="房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect()"
-          placeholder="请选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect()"
+            placeholder="请选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.customer_name"
           label="客户姓名"
@@ -87,6 +91,7 @@
           <div class="titles required">本次金额为</div>
           <van-radio-group v-model="receivedPrice">
             <van-radio name="front_money">定金</van-radio>
+            <van-radio name="rent_money">租金</van-radio>
             <van-radio name="deposit_payed">租金+押金</van-radio>
           </van-radio-group>
         </div>
@@ -149,7 +154,7 @@
           icon="clear"
           @click-icon="form.memo = ''">
         </van-field>
-        <div class="addInput" @click="previewReceipt(form)">预览电子收据</div>
+        <div class="addInput" @click="previewReceipt(form, receivedPrice)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -321,6 +326,7 @@
         isReceiptMsg: {},                //电子收据
         form: {
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           draft: 0,
@@ -379,6 +385,7 @@
       receivedPrice() {
         this.form.money_sum = '';
         this.form.front_money = '';
+        this.form.rent_money = '';
         this.form.deposit_payed = '';
       },
       is_receipt(val) {
@@ -720,6 +727,7 @@
           this.form.name = val.customers;
           this.form.phone = val.cusPhone;
           this.form.address = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.month = val.month;
           this.form.sign_date = val.sign_at;
           this.form.contract_id = val.id;
@@ -828,8 +836,10 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
-            } else {
+            } else if (this.form.front_money) {
               this.receivedPrice = 'front_money';
+            } else {
+              this.receivedPrice = 'rent_money';
             }
             this.$nextTick(function () {
               this.form.money_sum = draft.money_sum;

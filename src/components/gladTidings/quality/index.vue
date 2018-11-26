@@ -342,7 +342,7 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel required">
+      <div class="aloneModel required" @click="fffffff">
         <div class="title"><span>*</span>房屋影像</div>
         <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
         <div class="upload-tips">提示：请上传6张以上房屋照片和1个以上房屋视频哦~</div>
@@ -577,6 +577,10 @@
     },
 
     methods: {
+      fffffff() {
+        console.log(this.community_name);
+        sessionStorage.setItem('hhhhhh', this.community_name + JSON.parse(sessionStorage.personal).name + 'quality');
+      },
       qualityChange(val) {
         if (this.numbers !== val) {
           this.close_();
@@ -603,9 +607,18 @@
           }
           this.$http.get(this.urls + 'setting/others/ip_address').then((res) => {
             if (res.data.code === '1000120') {
+              // 320100
               this.form.province_id = '';
               this.form.city_id = '';
-              let address = res.data.data.data[2] + '市';
+              let address;
+              if (res.data.data.data[2]) {
+                address = res.data.data.data[2] + '市';
+              } else {
+                this.form.city_id = '320100';
+                this.beforeCityId = '320100';
+                this.form.city_name = '南京市';
+                return;
+              }
               this.form.city_name = address;
               this.beforeCity = address;
               for (let i = 0; i < this.allCity.length; i++) {
@@ -875,7 +888,11 @@
               if (res.data.data.id) {
                 this.routerDetail(res.data.data.id);
               } else {
-                if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+                if (res.data.data.id) {
+                  this.routerDetail(res.data.data.id)
+                } else {
+                  this.routerDetail(res.data.data.data.id)
+                }
               }
             } else if (res.data.code === "51420") {
               this.form.id = res.data.data.id;
@@ -912,6 +929,7 @@
           this.form.house_id = val.house_id;
           if (val.type === 'allHouse') {
             let house_res = JSON.parse(sessionStorage.getItem('house_res'));
+            console.log(house_res);
             this.prefill(house_res, 'house');
           }
         }
@@ -940,7 +958,6 @@
           this.stick();
         }
         this.userInfo(this.isValue1);
-        console.log(1)
       },
 
       qualityDetail(val) {
@@ -980,6 +997,7 @@
               this.form.quality_up = '0';
             }
             this.prefill(data, 'draught');
+            console.log(data);
           } else {
             this.form.id = '';
           }
@@ -987,13 +1005,13 @@
       },
 
       prefill(data, val) {
+        console.log(val);
         this.isClear = false;
         this.form.city_id = data.city_id;                     //城市
         this.form.province_id = data.province_id;             //城市
         this.form.city_name = data.city_name;                 //城市
         if (data.community) {
           this.form.community = data.community;              //小区id
-          // this.property_fee = data.community.property_fee;   //小区id
           this.community_name = data.community.village_name; //小区id
         }
         this.form.door_address = data.door_address;
@@ -1062,11 +1080,9 @@
         this.form.staff_name = data.staff_name;
         this.form.department_id = data.department_id;
         this.form.department_name = data.department_name;
-        console.log(val);
         if (val === 'draught' && data.photo) {
           this.photos = data.photo;                                       //房屋影像
           this.form.photo = [];
-          console.log(data.photo)
           //房屋影像
           for (let i = 0; i < data.photo.length; i++) {
             this.form.photo.push(data.photo[i].id);                       //房屋影像

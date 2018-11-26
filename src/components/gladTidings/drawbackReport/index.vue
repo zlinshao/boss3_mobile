@@ -162,6 +162,7 @@
 
         form: {
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           draft: 0,
@@ -327,6 +328,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.address = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.form.staff_name = val.staff_name;
@@ -372,6 +374,7 @@
             this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.contract_id = draft.contract_id;
             this.contractID(draft.contract_id);
             this.form.house_id = draft.house_id;
@@ -415,6 +418,7 @@
         this.form.screenshot_leader = [];
         this.screenshots = {};
         this.form.address = '';
+        this.form.corp_name = '';
         this.form.staff_name = '';
         this.form.department_name = '';
         this.form.staff_id = '';

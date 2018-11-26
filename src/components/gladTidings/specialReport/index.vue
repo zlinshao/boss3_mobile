@@ -12,15 +12,19 @@
         </div>
       </van-cell-group>
       <van-cell-group>
-        <van-field
-          v-model="form.address"
-          label="房屋地址"
-          type="text"
-          @click="searchSelect(form.collect_or_rent)"
-          readonly
-          placeholder="选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="房屋地址"
+            type="text"
+            @click="searchSelect(form.collect_or_rent)"
+            readonly
+            placeholder="选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.content"
           label="报备内容"
@@ -88,6 +92,7 @@
 
         form: {
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           draft: 0,
@@ -188,6 +193,7 @@
       rentChange(val) {
         if (this.numbers !== val) {
           this.form.address = '';
+          this.form.corp_name = '';
           this.form.house_id = '';
           this.form.contract_id = '';
           this.numbers = val;
@@ -212,7 +218,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '51020') {
               this.form.id = res.data.data.id;
               Toast.success(res.data.msg);
@@ -246,6 +256,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.address = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.form.staff_name = val.staff_name;
@@ -274,6 +285,7 @@
 
             this.form.id = data.id;
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
             this.form.house_id = draft.house_id;
@@ -309,6 +321,7 @@
         this.form.id = '';
         this.form.processable_id = '';
         this.form.address = '';
+        this.form.corp_name = '';
         this.form.collect_or_rent = '';
         this.form.house_id = '';
         this.form.contract_id = '';

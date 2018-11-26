@@ -171,7 +171,18 @@
       },
       sureRouter(path, key) {
         key.type = this.types;
-        key.house = JSON.stringify(key);
+        let houseData = {};
+        for (let item of Object.keys(key)) {
+          switch (item) {
+            case 'house_res':
+              sessionStorage.setItem('house_res', JSON.stringify(key.house_res));
+              break;
+            default:
+              houseData[item] = key[item];
+              break;
+          }
+        }
+        key.house = JSON.stringify(houseData);
         this.routLink(path, key);
       },
       onSearch() {
@@ -199,7 +210,7 @@
                     list.house_id = data[i].id;
                     list.house_name = data[i].name;
                     if (data[i].house_res) {
-                      sessionStorage.setItem('house_res', JSON.stringify(data[i].house_res));
+                      list.house_res = data[i].house_res;
                     } else {
                       list.house_res = {};
                     }
@@ -222,7 +233,7 @@
                   this.showInfo.push(data[i].id);
                   list.house_id = data[i].id;
                   list.house_name = data[i].name;
-                  sessionStorage.setItem('house_res', JSON.stringify(data[i].house_res));
+                  list.house_res = data[i].house_res;
                   this.houseList.push(list);
                   this.finish(4);
                 }
@@ -275,11 +286,11 @@
       agencyLord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
           // if (!val.lords[j].end_type || this.end_type === 'none') {
-            if (val.lords[j].is_agency === 1) {
-              this.contracts(val, type, val.lords[j]);
-            } else {
-              this.finish(2);
-            }
+          if (val.lords[j].is_agency === 1) {
+            this.contracts(val, type, val.lords[j]);
+          } else {
+            this.finish(2);
+          }
           // }
         }
       },
@@ -287,11 +298,11 @@
       agencyRent(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
           // if (!val.renters[j].end_type || this.end_type === 'none') {
-            if (val.renters[j].is_agency === 1) {
-              this.contracts(val, type, val.renters[j]);
-            } else {
-              this.finish(2);
-            }
+          if (val.renters[j].is_agency === 1) {
+            this.contracts(val, type, val.renters[j]);
+          } else {
+            this.finish(2);
+          }
           // }
         }
       },
@@ -299,7 +310,7 @@
       lord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
           // if (!val.lords[j].end_type || this.end_type === 'none') {
-            this.contracts(val, type, val.lords[j]);
+          this.contracts(val, type, val.lords[j]);
           // }
         }
       },
@@ -308,7 +319,7 @@
       renter(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
           // if (!val.renters[j].end_type || this.end_type === 'none') {
-            this.contracts(val, type, val.renters[j]);
+          this.contracts(val, type, val.renters[j]);
           // }
         }
       },
@@ -321,6 +332,7 @@
         }
         list.house_id = val.id;
         list.house_name = val.name;
+        list.corp_name = val.corp_name;
         list.house_type = val.room + '室' + val.hall + '厅' + val.toilet + '卫';
         list.created_at = val.created_at.substring(0, 10);
         if (type === 'lord' || type === 'lord1') {
@@ -376,8 +388,8 @@
           list.department_id = '';
           list.department_name = '---';
         }
-        if (val.house_res && type === 'allHouse') {
-          sessionStorage.setItem('house_res', JSON.stringify(val.house_res));
+        if (val.house_res) {
+          list.house_res = val.house_res;
         } else {
           list.house_res = {};
         }

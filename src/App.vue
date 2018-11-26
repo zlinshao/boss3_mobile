@@ -13,7 +13,8 @@
 </template>
 
 <script>
-  // import {md5} from './assets/js/MD5.js'
+  import {md5} from './assets/js/MD5.js'
+
   export default {
     data() {
       return {
@@ -76,7 +77,8 @@
             data.department_id = res.data.data.org[0].id;
             this.loading = false;
             sessionStorage.setItem('personal', JSON.stringify(data));
-          }).catch(_ => {});
+          }).catch(_ => {
+          });
         } else {
           sessionStorage.setItem('queryType', 'ding');
           this.loading = true;
@@ -118,22 +120,19 @@
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
-          this.getUserId(query);
+          // this.getUserId(query);
           let obj = {};
           obj.corpid = query.appid;
           obj.corpsecret = query.secret;
           obj.url = objUrl;
           obj.timestamp = Math.round(new Date().getTime() / 1000).toString();
           obj.nonceStr = md5(obj.corpid + obj.timestamp);
-          this.weiChatAuth().then(_ => {
-            alert(_);
+          this.weiChatAuth(obj).then(_ => {
             wx.ready(function () {
-              alert(1111);
               wx.hideOptionMenu();
             });
           });
         }
-        // this.token = window.location.href;
       },
       // 获取uid
       getUserId(val) {

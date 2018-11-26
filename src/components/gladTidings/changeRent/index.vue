@@ -9,15 +9,19 @@
         </div>
       </van-cell-group>
       <van-cell-group>
-        <van-field
-          v-model="form.address"
-          label="房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect(1)"
-          placeholder="请选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           v-model="form.sign_date"
           label="签约日期"
@@ -242,7 +246,7 @@
           icon="clear"
           @click-icon="form.memo = ''">
         </van-field>
-        <div class="addInput" @click="previewReceipt(form)">预览电子收据</div>
+        <div class="addInput" @click="previewReceipt(form, receivedPrice)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
           v-if="other_fee_status"
@@ -502,6 +506,7 @@
 
         form: {
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           type: 2,
@@ -989,7 +994,11 @@
               Toast.success(res.data.msg);
               this.close_();
               $('.imgItem').remove();
-              if (res.data.data.id) { this.routerDetail(res.data.data.id) } else { this.routerDetail(res.data.data.data.id) }
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
             } else if (res.data.code === '50220') {
               if (receipt.length === 0) {
                 this.form.receipt = [];
@@ -1029,6 +1038,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.address = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
         }
@@ -1079,6 +1089,7 @@
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.month = draft.month;
             this.form.discount = draft.discount;
             this.form.day = draft.day === '0' ? '' : draft.day;
@@ -1113,8 +1124,10 @@
             this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
-            } else {
+            } else if (this.form.front_money) {
               this.receivedPrice = 'front_money';
+            } else {
+              this.receivedPrice = 'rent_money';
             }
             this.$nextTick(function () {
               this.form.money_sum = draft.money_sum;
@@ -1243,6 +1256,7 @@
         this.form.contract_id = '';
         this.form.house_id = '';
         this.form.address = '';
+        this.form.corp_name = '';
         this.form.month = '';
         this.form.day = '';
         this.form.begin_date = '';
@@ -1261,7 +1275,6 @@
         this.form.front_money = '';
         this.form.deposit = '';
         this.form.deposit_payed = '';
-        this.form.rent_money = '';
         this.form.money_sum = '';
         this.amountMoney = 1;
         this.form.money_sep = [''];

@@ -42,7 +42,13 @@
   padding-bottom: .1rem;
   font-size: .24rem;
   color: #e4393c;
+  line-height: .3rem;
   border-bottom: 1px solid #f4f4f4; }
+
+.crop_name .titleRed {
+  color: #ff976a; }
+.crop_name .showBorder {
+  border-bottom: 1px solid #f8f8f8; }
 
 .fourth, .first_date {
   display: flex;
@@ -71,7 +77,7 @@
 .first_date .van-cell.van-field, .checks .van-cell.van-field, .fourth .van-cell.van-field {
   padding-left: 0; }
 
-.first_date.month .van-cell:not(:last-child):after, .first_date.noBorder .van-cell:not(:last-child):after, .checks.noBorder .van-cell:not(:last-child):after, .fourth.noBorder .van-cell:not(:last-child):after {
+.first_date.month .van-cell:not(:last-child):after, .first_date.noBorder .van-cell:not(:last-child):after, .checks.noBorder .van-cell:not(:last-child):after, .fourth.noBorder .van-cell:not(:last-child):after, .crop_name.noBorder .van-cell:not(:last-child):after {
   border: none; }
 
 .first_date.noBorder, .checks.noBorder, .fourth.noBorder {
@@ -134,7 +140,9 @@ div .payWay.van-cell.van-hairline.van-field i {
     display: flex;
     display: -webkit-flex; }
     .checks .van-radio-group .van-radio {
-      margin-right: .3rem; }
+      margin-right: .1rem; }
+  .checks .van-radio__label {
+    margin-left: 6px; }
 
 .checks.radio {
   margin-left: -6px;

@@ -623,17 +623,17 @@ export default new Router({
     //   meta: {title: '研发补卡申请'},
     //   component: CreditCard
     // },
-    // {
-    //   path: '/Attendance',
-    //   name: '考勤记录',
-    //   icon: 'iconfont icon-buqia',
-    //   hidden: 'other',
-    //   back: '#F19851',
-    //   meta: {
-    //     title: '考勤记录',
-    //     // keepAlive: true
-    //   },
-    //   component: Attendance
-    // },
+    {
+      path: '/Attendance',
+      name: '考勤记录',
+      icon: 'iconfont icon-buqia',
+      hidden: 'other',
+      back: '#F19851',
+      meta: {
+        title: '考勤记录',
+        // keepAlive: true
+      },
+      component: Attendance
+    },
   ]
 })

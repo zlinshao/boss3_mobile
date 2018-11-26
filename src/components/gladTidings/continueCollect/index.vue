@@ -2,15 +2,15 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-field
-          v-model="form.house.name"
-          label="房屋地址"
-          type="text"
-          readonly
-          @click="searchSelect(1)"
-          placeholder="请选择房屋地址"
-          required>
-        </van-field>
+          <van-field
+            v-model="form.house.name"
+            label="房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择房屋地址"
+            required>
+          </van-field>
         <van-field
           v-model="form.house_type"
           type="text"
@@ -616,8 +616,8 @@
         setTimeout(() => {
           this.timeModule = true;
         }, 200);
-        this.formatData.dateVal = time;
         this.formatData.dataKey = val;
+        this.formatData.dateVal = time;
         this.formatData.dateType = 'date';
       },
       // 确定日期
@@ -625,7 +625,7 @@
         this.form[val.dataKey] = val.dateVal;
         switch (val.dataKey) {
           case 'begin_date':
-            this.endDate(val.dateVal, '', this.form.vacancy, 1);
+            this.endDate(val.dateVal, this.form.month, this.form.day, 2);
             break;
           case 'pay_first_date':
             this.form.pay_first_date = val.dateVal;

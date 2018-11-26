@@ -215,12 +215,11 @@ export default {
             appId: val.corpid, // 必填，企业微信的corpID
             timestamp: val.timestamp, // 必填，生成签名的时间戳
             nonceStr: val.nonceStr, // 必填，生成签名的随机串
-            signature: res.data.data.signature1,// 必填，签名，见附录1
+            signature: res.data.data.signature2,// 必填，签名，见附录1
             jsApiList: ['onHistoryBack', 'hideOptionMenu'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
           });
           resolve(true);
         }).catch(err => {
-          window.location.reload();
           resolve(false);
         })
       })
@@ -340,7 +339,7 @@ export default {
       dd.biz.navigation.setRight({show: false});
     };
     // 生成电子收据
-    Vue.prototype.previewReceipt = function (val) {
+    Vue.prototype.previewReceipt = function (val, money_key) {
       console.log(val);
       let data = {};
       data.process_id = '0';
@@ -389,7 +388,17 @@ export default {
           data.pay_way = data.pay_way + item.pay_way_str;
         }
       }
-      data.payment = this.receivedPrice === 'front_money' ? '定金' : '押金+租金';
+      switch (money_key){
+        case 'front_money':
+          data.payment = '定金';
+          break;
+        case 'rent_money':
+          data.payment = '租金';
+          break;
+        default:
+          data.payment = '押金+租金';
+          break;
+      }
       data.amount = val.money_sum;
       data.sum = val.money_sum;
       data.memo = val.memo;

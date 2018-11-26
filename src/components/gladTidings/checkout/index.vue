@@ -21,15 +21,19 @@
           placeholder="请选择退房性质"
           required>
         </van-field>
-        <van-field
-          v-model="form.address"
-          label="房屋地址"
-          type="text"
-          @click="searchSelect(form.collect_or_rent, 1)"
-          readonly
-          placeholder="请选择房屋地址"
-          required>
-        </van-field>
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.address"
+            label="房屋地址"
+            type="text"
+            @click="searchSelect(form.collect_or_rent, 1)"
+            readonly
+            placeholder="请选择房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
         <van-field
           class="disabling"
           :class="{'payWay': payStatus && form.payWay.length > 1}"
@@ -203,6 +207,7 @@
 
         form: {
           address: '',
+          corp_name: '',
           id: '',
           processable_id: '',
           draft: 0,
@@ -469,6 +474,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.address = val.house_name;
+          this.form.corp_name = val.corp_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
           this.form.staff_name = val.staff_name;
@@ -532,6 +538,7 @@
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
             this.form.address = draft.address;
+            this.form.corp_name = draft.corp_name;
             this.form.photo = draft.photo;
             this.photos = data.photo;
             this.form.checkout_photo = draft.checkout_photo;
@@ -571,6 +578,8 @@
         this.cleanup = '';
         this.form.is_cleanup = '';
         this.picStatus = 'success';
+        this.form.address = '';
+        this.form.corp_name = '';
         this.form.house_id = '';
         this.form.processable_id = '';
         this.form.collect_or_rent = '';
@@ -584,7 +593,6 @@
         this.photos = {};
         this.form.remark = '';
         this.form.checkout_date = '';
-        this.form.address = '';
         this.form.staff_name = '';
         this.form.department_name = '';
         this.form.staff_id = '';
