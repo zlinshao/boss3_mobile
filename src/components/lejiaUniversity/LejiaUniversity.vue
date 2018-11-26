@@ -114,9 +114,8 @@ export default {
       this.show = true;
       var mobileWidth = document.body.clientWidth;
       var mobileHeight = document.body.clientHeight;
-      var video = $("<video id='videoRecording' controlsList='nodownload' poster='../../assets/bofang1.jpg' controls></video>");
-      // var video = $("<img src='../../assets/bofang1.jpg' id='videoRecording' />");
-      video.css({
+      var newvideo = $("<video id='videoRecording' controlsList='nodownload' poster='../../assets/bofang1.jpg' controls></video>");
+      newvideo.css({
         width: mobileWidth + "px",
          position: 'fixed',
          top: "46px",
@@ -124,23 +123,19 @@ export default {
       });
       this.videoList.forEach((item, index) => {
         if (index == id) {
-          $(".videoDetail").append(video);
-          video.attr("src", item.file);
+          $(".videoDetail").append(newvideo);
+          newvideo.attr("src", item.file);
           this.videoTitle = item.video_name
         }
       });
-      var img = document.getElementById("imgRecording");
-      var video = document.getElementById("videoRecording");
+      var img1 = document.getElementById("imgRecording");
+      var creatvideo = document.getElementById("videoRecording");
       let _this = this
       this.params.video_id = videoId;
-      img.onclick = function() {
-        img.style.display = "none";
-        video.play();
+      img1.onclick = function() {
+        img1.style.display = "none";
+        creatvideo.play();
          _this.getCount(videoId);
-      }
-      video.onclick = function() {
-        
-       
       }
       this.getComment(videoId);
     },

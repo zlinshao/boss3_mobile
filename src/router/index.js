@@ -564,28 +564,28 @@ export default new Router({
     //   meta: {title: '业绩报表'},
     //   component: DataStatic
     // },
-    {
-      path: '/LejiaAlub',
-      name: '教学视频',
-      icon: 'iconfont icon-daxue',
-      hidden: 'other',
-      back: '#F19851',
-      meta: {
-        title: '教学视频',
-        // keepAlive: true
-      },
-      component: LejiaAlub
-    },
-    {
-      path: '/LejiaUniversity',
-      name: '教学列表',
-      hidden: false,
-      meta: {
-        title: '教学列表',
-        // keepAlive: true
-      },
-      component: LejiaUniversity
-    },
+    // {
+    //   path: '/LejiaAlub',
+    //   name: '教学视频',
+    //   icon: 'iconfont icon-daxue',
+    //   hidden: 'other',
+    //   back: '#F19851',
+    //   meta: {
+    //     title: '教学视频',
+    //     // keepAlive: true
+    //   },
+    //   component: LejiaAlub
+    // },
+    // {
+    //   path: '/LejiaUniversity',
+    //   name: '教学列表',
+    //   hidden: false,
+    //   meta: {
+    //     title: '教学列表',
+    //     // keepAlive: true
+    //   },
+    //   component: LejiaUniversity
+    // },
     // {
     //   path: '/dataCount',
     //   name: '业绩计算器',
