@@ -116,7 +116,7 @@
         let query = this.$route.query;
         let url = window.location.href;
         let redirectUrl = encodeURIComponent(url);
-        let objUrl = encodeURIComponent(url.split('/?')[0]);
+        let objUrl = encodeURIComponent(url.split('#')[0]);
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
