@@ -47,6 +47,7 @@
         token: '',
         bigPic: '',
         fileLength: 0,
+        picData: {},
       }
     },
     mounted() {
@@ -236,6 +237,17 @@
               let url = JSON.parse(info);
               let sourceLink = domain + "/" + url.key;
               _this.$http.defaults.timeout = 5000;
+              if (sessionStorage.hhhhhh.indexOf('quality') > -1) {
+                _this.picData.url = url ? url: '';
+                _this.picData.raw_name = file.name ? file.name: '';
+                _this.picData.type = file.type ? file.type: '';
+                _this.picData.sourceLink = sourceLink ? sourceLink: '';
+                _this.picData.key_name = sessionStorage.hhhhhh ? sessionStorage.hhhhhh: '';
+                console.log(_this.picData);
+                // _this.$http.post(_this.url + 'save/picData', _this.picData).then(res => {
+                //
+                // })
+              }
               _this.$http.post(_this.url + 'api/v1/upload-direct', {
                 url: sourceLink,
                 name: url.key,
@@ -281,15 +293,16 @@
             },
             'Key': function (up, file) {
               let fileName = file.name.lastIndexOf(".");//取到文件名开始到最后一个点的长度z
+              _this.picData.old_name = file.name ? file.name: '';
               let fileNameLength = file.name.length;//取到文件名长度
               let name = file.name.substring(0, fileName);//取到文件名长度
               let fileFormat = file.name.substring(fileName + 1, fileNameLength);//截
+              _this.picData.suffix = fileFormat ? fileFormat: '';
               file.name = md5(name + new Date().getTime()).toLowerCase() + '.' + fileFormat;
+              _this.picData.new_name = file.name ? file.name: '';
               // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
               // 该配置必须要在unique_names: false，save_key: false时才生效
-              let key = "";
-              // do something with key here
-              return key;
+              return file.name;
             }
           }
         });

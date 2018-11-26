@@ -41,23 +41,23 @@
           </div>
         </div>
       </div>
-      <div class="inRough" v-if="queryType == 0 || queryType === 'ding'">
-        <div class="mainIndex">
-          <div class="mainTop">
-            <div>
-              <span>数据统计</span>
-            </div>
-          </div>
-          <div class="mainMain">
-            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'dataStatic'" :to="key.path" :key="index">
-              <p :style="{'background': key.back}">
-                <i :class="key.icon"></i>
-              </p>
-              <h1>{{key.name}}</h1>
-            </router-link>
-          </div>
-        </div>
-      </div>
+      <!--<div class="inRough" v-if="queryType == 0 || queryType === 'ding'">-->
+        <!--<div class="mainIndex">-->
+          <!--<div class="mainTop">-->
+            <!--<div>-->
+              <!--<span>数据统计</span>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="mainMain">-->
+            <!--<router-link v-for="(key,index) in paths" v-if="key.hidden === 'dataStatic'" :to="key.path" :key="index">-->
+              <!--<p :style="{'background': key.back}">-->
+                <!--<i :class="key.icon"></i>-->
+              <!--</p>-->
+              <!--<h1>{{key.name}}</h1>-->
+            <!--</router-link>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
       <div class="inRough" v-if="queryType == 1 || queryType === 'ding'">
         <div class="mainIndex">
           <div class="mainTop">
@@ -160,7 +160,7 @@
       <van-list
         :finished="finished"
         @load="onLoad">
-        <div class="started">
+        <div class="started" v-if="list.length > 0">
           <div class="startedMain" v-for="item in list" @click="routeDetail(item.id)">
             <div class="leftPic">
               <img :src="item.avatar" v-if="item.avatar !== '' && item.avatar !== null">
@@ -233,15 +233,10 @@
 </template>
 
 <script>
-  import {Waterfall} from 'vant';
   import {Toast} from 'vant';
 
   export default {
     name: 'HelloWorld',
-    directives: {
-      WaterfallLower: Waterfall('lower'),
-      WaterfallUpper: Waterfall('upper')
-    },
     components: {Toast},
     data() {
       return {
@@ -265,6 +260,7 @@
       }
     },
     beforeRouteEnter(to, from, next) {
+      sessionStorage.setItem('hhhhhh', null);
       let count = sessionStorage.count;
       if ((count && (count === '2')) || from.path === '/') {
         sessionStorage.setItem('count', '1');
@@ -349,7 +345,9 @@
         this.readActive = red;
         this.page = 1;
         this.finished = false;
+        this.loading = false;
         this.scrollTops();
+        this.onLoad();
       },
       routerLink(val) {
         this.scrollTops();
@@ -364,7 +362,9 @@
         this.page = 1;
         this.readActive = read;
         this.finished = false;
+        this.loading = false;
         this.scrollTops();
+        this.onLoad();
       },
       lists(val, active, read) {
         this.params = {};
@@ -431,9 +431,6 @@
             }
           } else {
             this.loading = true;
-            if (this.params.page !== 1) {
-              this.paging = 0;
-            }
           }
         })
       },

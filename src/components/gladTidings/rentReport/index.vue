@@ -1015,7 +1015,6 @@
 
       houseInfo() {
         let t = this.$route.query;
-        console.log(t);
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.address = val.house_name;

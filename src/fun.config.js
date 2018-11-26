@@ -343,6 +343,16 @@ export default {
       console.log(val);
       let data = {};
       data.process_id = '0';
+
+      if (data.house_id_rent) {
+        data.house_id = val.house_id_rent;
+      } else {
+        if (val.house_id) {
+          data.house_id = val.house_id;
+        } else {
+          data.house_id = '';
+        }
+      }
       data.department_id = this.form.department_id;
       data.date = this.formatDate(new Date, 'date');
       data.payer = val.name;

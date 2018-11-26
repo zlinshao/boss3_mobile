@@ -555,37 +555,37 @@ export default new Router({
       meta: {title: '员工广场'},
       component: StaffSquare
     },
-    {
-      path: '/dataStatic',
-      name: '业绩报表',
-      icon: 'iconfont icon-shujutu',
-      hidden: 'dataStatic',
-      back: '#F19851',
-      meta: {title: '业绩报表'},
-      component: DataStatic
-    },
-    {
-      path: '/LejiaAlub',
-      name: '教学视频',
-      icon: 'iconfont icon-daxue', 
-      hidden: 'other',
-      back: '#F19851',
-      meta: {
-        title: '教学视频',
-        // keepAlive: true
-      },
-      component: LejiaAlub
-    },
-    {
-      path: '/LejiaUniversity',
-      name: '教学列表',
-      hidden: false,
-      meta: {
-        title: '教学列表',
-        // keepAlive: true
-      },
-      component: LejiaUniversity
-    },
+    // {
+    //   path: '/dataStatic',
+    //   name: '业绩报表',
+    //   icon: 'iconfont icon-shujutu',
+    //   hidden: 'dataStatic',
+    //   back: '#F19851',
+    //   meta: {title: '业绩报表'},
+    //   component: DataStatic
+    // },
+    // {
+    //   path: '/LejiaAlub',
+    //   name: '教学视频',
+    //   icon: 'iconfont icon-daxue',
+    //   hidden: 'other',
+    //   back: '#F19851',
+    //   meta: {
+    //     title: '教学视频',
+    //     // keepAlive: true
+    //   },
+    //   component: LejiaAlub
+    // },
+    // {
+    //   path: '/LejiaUniversity',
+    //   name: '教学列表',
+    //   hidden: false,
+    //   meta: {
+    //     title: '教学列表',
+    //     // keepAlive: true
+    //   },
+    //   component: LejiaUniversity
+    // },
     // {
     //   path: '/dataCount',
     //   name: '业绩计算器',
@@ -623,17 +623,17 @@ export default new Router({
     //   meta: {title: '研发补卡申请'},
     //   component: CreditCard
     // },
-    {
-      path: '/Attendance',
-      name: '考勤记录',
-      icon: 'iconfont icon-buqia',
-      hidden: 'other',
-      back: '#F19851',
-      meta: {
-        title: '考勤记录',
-        // keepAlive: true
-      },
-      component: Attendance
-    },
+    // {
+    //   path: '/Attendance',
+    //   name: '考勤记录',
+    //   icon: 'iconfont icon-buqia',
+    //   hidden: 'other',
+    //   back: '#F19851',
+    //   meta: {
+    //     title: '考勤记录',
+    //     // keepAlive: true
+    //   },
+    //   component: Attendance
+    // },
   ]
 })

@@ -36,8 +36,8 @@
         </div>
         <p style="text-align: center;color: #9c9c9c;" v-if="!vLoading && message">{{message}}</p>
         <div v-for="(key,index) in formList"
-             v-if="printscreen.indexOf(index) === -1 && index !== 'receiptUri'">
-          <p>{{index}}</p>
+             v-if="printscreen.indexOf(index) === -1">
+          <p v-if="index !== 'receiptUri'">{{index}}</p>
           <h1>
             <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx].msg}}</span>
@@ -314,7 +314,6 @@
         }
         return flag;
       },
-
       checkTv(val) {
         this.videoSrc = val;
       },
