@@ -118,7 +118,7 @@
         if (!query.code) {
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${query.appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=lejia#wechat_redirect`;
         } else {
-          this.getUserId(query);
+          // this.getUserId(query);
           let obj = {};
           obj.corpid = query.appid;
           obj.corpsecret = query.secret;
