@@ -14,7 +14,7 @@
       </div>
       <!-- 时间选择器 -->
       <van-popup v-model="showTime" position="bottom" :overlay="true">
-        <van-datetime-picker v-model="selectTime" type="year-month" :min-date="minDate" @confirm="confirmTime"/>
+        <van-datetime-picker v-model="selectTime" type="year-month" :min-date="minDate" @confirm="confirmTime" @cancel="cancelTime" />
       </van-popup>
     </div>
     <!-- <div class="calendar"  @touchmove="handleTouchMove" @touchstart="handleTouchStart" @touchend="hanfleTouchEnd"> -->
@@ -30,9 +30,9 @@
         <tr v-for="(week, index) in arr" :key="index">
           <td v-for="(item, index) in week" :key="index" :class="{'gray': item.prevmonth || item.nextmonth}" @click.stop="viewattendance(item.day)">
             {{item.day}}
-            <div class="dot" :class="{ 'colorA': item.typesetting == 'A', 'colorB': item.typesetting == 'B','colorC': item.typesetting == 'C','colorD': item.typesetting == '休' }">
-            <!-- <div class="dot" v-text="{{ 'A' ? item.typesetting == 'A' : 'B' ? item.typesetting == 'B' : 'C': item.typesetting == 'C' :'休'}}"> -->
-              <!-- {{text}} -->
+            <!-- <div class="dot" :class="{ 'colorA': item.typesetting == 'A', 'colorB': item.typesetting == 'B','colorC': item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}} -->
+            <div class="dot" :class="{ 'success': item.typesetting == 'A' || item.typesetting == 'B'|| item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}}
+              <!-- <div class="dot" :class="[item.correct ? 'success' : 'warning']"> -->
               </div>
           </td>
         </tr>
@@ -86,6 +86,9 @@
 export default {
   data() {
     return {
+      typesettingDate: [],
+      isNormal: "",
+      isAbnormal: "",
       loading: false,
       minDate: new Date(2017, 1, 1),
       selectTime: new Date(),
@@ -116,38 +119,45 @@ export default {
       daynamearr: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], //本月的本期构成
       dayarr: [],
       arr: [],
-      // text: "",
       recode: ""
     };
   },
-  computed: {
-    // deep: true,
-    text(val) {
-      console.log(val, "9999")
-      val.arr.forEach((item, index) => {
-        item.forEach((val, key) => {
-          if(val.currentmonth) {
-             return   'A' ? val.typesetting == 'A' : 
-                          'B' ? val.typesetting == 'B' :
-                          'C' ? val.typesetting == 'C' :
-                          '休' 
-          }
-        })
-      })
-     
-    }
-  },
+  computed: {},
   methods: {
     // 获取当前排班记录
     getAttendance(date) {
       // this.$http.get(globalConfig.server + "attendance/sort/sort?user_id=289&arrange_month=" + date).then(res => {   // 测试数据
       this.$http.get(globalConfig.server + "attendance/sort/sort?arrange_month=" + date).then(res => {
           this.typesetting = {};
+          console.log(res, "11111");
           if (res.data.code == "20000") {
             this.typesetting = res.data.data.data.arrange;
             this.currentMonth = res.data.data.month;
             this.currentYear = res.data.data.year;
-            this.getCalendar(this.currentYear, this.currentMonth, true)
+            this.getCalendar(this.currentYear, this.currentMonth, true);
+            // let arr = [];
+            // let userdimension = res.data.data.data.users.sort_dimension
+            // userdimension.forEach((item, index) => {
+            // let obj = {};
+            //   item.forEach((val, kay) => {
+            //     if(val.event_attribute == 1 && val.status == 0) {
+            //       obj["a"] = true;
+            //     } else if(val.event_attribute == 2 && val.status == 0) {
+            //       obj["b"] = true;
+            //     } else {
+
+            //     }
+            //   })
+            //     arr.push(obj)
+            // })
+            // arr.forEach((item, index) => {
+            //   if(item.a && item.b) {
+            //     this.typesettingDate[index] = true
+            //   } else {
+            //     this.typesettingDate[index] = false;
+            //   }
+            // })
+            // console.log(this.typesettingDate)
           } else {
             this.typesetting = {};
             this.currentMonth = res.data.data.month;
@@ -167,6 +177,7 @@ export default {
           this.goOffWork = "";
           this.resultWork = "";
           this.resultOffWork = "";
+          this.timeTotal = 0;
           this.loading = true;
           if (res.data.code == "20000") {
             this.avatar = res.data.data.avatar;
@@ -235,18 +246,19 @@ export default {
       this.currentMonth = new Date(value).getMonth() + 1;
       let ym = this.currentYear + "-" + this.currentMonth
       this.currentDate = new Date(value).getFullYear() + "-" + (new Date(value).getMonth() + 1) + "-1";
+      this.showTime = false;
       this.getAttendance(ym);
       this.getPunch(this.currentDate);
       this.getCalendar(this.currentYear, this.currentMonth, true);
+    },
+    cancelTime() {
+      this.showTime = false;
     },
     // 点击日历获取排班
     viewattendance(val) {
       this.currentDate = this.currentYear + "-" + this.currentMonth + "-" + val;
       this.getCurrentWeek((new Date(this.currentDate)).getDay());
       this.getPunch(this.currentDate);
-      $(document).on("pagecreate","td", function() {
-      alert(dianji)
-    })
     },
     
     // 日历滑动
@@ -396,6 +408,9 @@ export default {
       }
       let _this = this;
       let settingObj = Object.values(this.typesetting);
+        console.log(this.typesettingDate);
+      let typeArr = Object.values(this.typesettingDate);
+      console.log(typeArr);
       _arr.forEach((item, index) => {
           item.forEach((val, key) => {
             // if (val.nextmonth || val.prevmonth) {
@@ -405,9 +420,15 @@ export default {
                   _arr[index][key]["typesetting"] = a;
                 }
               });
+              // typeArr.forEach((c, d) => {
+              //   if(_arr[index][key].day == d + 1) {
+              //     _arr[index][key]["correct"] = c
+              //   }
+              // })
             }
           });
       });
+      // console.log(_arr)
       this.arr = _arr
     },
   },
@@ -461,7 +482,7 @@ export default {
     table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 10px 20px;
+      border-spacing: 10px 15px;
     }
   }
   .info {
@@ -481,17 +502,20 @@ export default {
     padding: 20px 10px 20px 0;
   }
   .dot {
-    width: 10px;
-    height: 10px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     margin: 0 auto;
   }
   .gray {
     color: gray;
-    // visibility: hidden;
+    visibility: hidden;
   }
   .warning {
     background-color: #f90;
+  }
+  .success {
+    background-color: #4d90fe;
   }
   .colorA {
     background-color: #f56c6c;
