@@ -126,8 +126,8 @@ export default {
   methods: {
     // 获取当前排班记录
     getAttendance(date) {
-      this.$http.get(globalConfig.server + "attendance/sort/sort?user_id=289&arrange_month=" + date).then(res => {   // 测试数据
-      // this.$http.get(globalConfig.server + "attendance/sort/sort?arrange_month=" + date).then(res => {
+      // this.$http.get(globalConfig.server + "attendance/sort/sort?user_id=289&arrange_month=" + date).then(res => {   // 测试数据
+      this.$http.get(globalConfig.server + "attendance/sort/sort?arrange_month=" + date).then(res => {
           this.typesetting = {};
           console.log(res, "11111");
           if (res.data.code == "20000") {
@@ -168,8 +168,8 @@ export default {
     },
     // 获取每天的打卡记录
     getPunch(date) {
-      // this.$http.get(globalConfig.server +"attendance/summary/self?sign_date=" + date).then(res => {
-      this.$http.get(globalConfig.server + "attendance/summary/self?user_id=289&sign_date=" + date).then(res => { // 测试数据
+      this.$http.get(globalConfig.server +"attendance/summary/self?sign_date=" + date).then(res => {
+      // this.$http.get(globalConfig.server + "attendance/summary/self?user_id=289&sign_date=" + date).then(res => { // 测试数据
           this.position = "";
           this.role = "";
           this.recode = [];
