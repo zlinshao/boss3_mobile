@@ -2,7 +2,6 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
-        <div class="crop_name noBorder">
           <van-field
             v-model="form.house.name"
             label="房屋地址"
@@ -12,9 +11,6 @@
             placeholder="请选择房屋地址"
             required>
           </van-field>
-          <div class="titleRed" v-if="form.corp_name">{{form.corp_name}}</div>
-          <div class="showBorder" v-else></div>
-        </div>
         <van-field
           v-model="form.house_type"
           type="text"
@@ -412,7 +408,6 @@
           draft: 0,
           contract_id: '',              //合同
           house_type: '',
-          corp_name: '',
           house: {
             id: '',
             name: '',
@@ -814,7 +809,6 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.contract_id = val.id;
-          this.form.corp_name = val.corp_name;
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
           this.form.house_type = val.house_type;
@@ -862,7 +856,6 @@
             let draft = res.data.data.draft_content;
             this.form.purchase_way = 509;
             this.form.id = data.id;
-            this.form.corp_name = draft.corp_name;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;
             this.form.contract_id = draft.contract_id;
@@ -958,7 +951,6 @@
         this.picStatus = 'success';
         this.form.processable_id = '';
         this.form.contract_id = '';
-        this.form.corp_name = '';
         this.form.house.id = '';
         this.form.house.name = '';
         this.form.month = '';

@@ -44,10 +44,41 @@
       }
     },
     mounted() {
-      this.paths = this.$router.options.routes;
+      // this.paths = this.$router.options.routes;
+      this.showFunc();
       this.responses();
     },
     methods: {
+      showFunc() {
+        this.$http.get(globalConfig.server + 'setting/mobile/index',{
+          params: {
+            all: 'all'
+          }
+        }).then(res => {
+          if(res.data.code === '30000'){
+            var paths = this.$router.options.routes;
+            var result = res.data.data.data;
+            var newPaths = [];
+            for (let i = 0;i<paths.length;i++){
+              if(paths[i].hidden){
+                newPaths.push(paths[i]);
+              }
+            }
+            for (let j=0;j<newPaths.length;j++){
+              for (let z = 0;z<result.length;z++){
+                if(newPaths[j].path === result[z].path){
+                  if(result[z].status === 0){
+                    newPaths[j].hidden = '';
+                  }
+                }
+              }
+            }
+            this.paths = newPaths;
+          }
+        }).catch(err => {
+          console.log(err);
+        })
+      },
       isWeiXin() {
         //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
         let ua = navigator.userAgent.toLowerCase();
