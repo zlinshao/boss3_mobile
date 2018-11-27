@@ -64,11 +64,11 @@ export default {
     },
   },
   activated() {
+    this.routerIndex('LejiaAlub');
+    this.ddRent('LejiaAlub');
     if (this.$route.query.classify_id) {
       this.getVideoList();
     }
-    this.routerIndex('/LejiaAlub');
-    this.ddRent('/LejiaAlub');
   },
 };
 </script>

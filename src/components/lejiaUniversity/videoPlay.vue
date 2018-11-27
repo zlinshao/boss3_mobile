@@ -96,12 +96,12 @@ export default {
     console.log(this.commentId, this.classify_id)
   },
   activated() {
+    this.routerIndex('LejiaUniversity');
+    this.ddRent('LejiaUniversity');
     this.commentId = this.$route.query.video_id;
     this.file = this.$route.query.filePath;
     this.getCount(this.commentId);
     this.getComment();
-    this.routerIndex('/LejiaUniversity');
-    this.ddRent('/LejiaUniversity');
   },
   mounted() {
   }

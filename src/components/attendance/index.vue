@@ -43,7 +43,7 @@
       <p>
         <span>职位:</span>
         <span>{{role}}</span>
-        <span>9:00-18:00</span>
+        <!-- <span>9:00-18:00</span> -->
       </p>
       <p>
         <span>考勤组:</span>
@@ -182,11 +182,11 @@ export default {
           if (res.data.code == "20000") {
             this.avatar = res.data.data.avatar;
             this.name = res.data.data.name;
-            res.data.data.role.forEach((item, index) => {
-              this.position += item.display_name + " "
-            })
             res.data.data.org.forEach((item, index) => {
-              this.role += item.name + ""
+              this.role += item.name + " "
+            })
+            res.data.data.role.forEach((item, index) => {
+              this.role += item.display_name + " "
             })
             this.recode = res.data.data.sort_dimension;
             if(this.recode.length==0) {
