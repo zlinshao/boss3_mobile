@@ -4,7 +4,7 @@
       <van-button type="danger" size="small">视屏分类</van-button>
     </div> -->
     <!-- <div class="back"><van-icon name="arrow-left" @click="goBack" />教学视频</div> -->
-    <van-nav-bar title="教学视频"  left-arrow left-text="返回"  @click-left="goBack"  />
+    <!-- <van-nav-bar title="教学视频"  left-arrow left-text="返回"  @click-left="goBack"  /> -->
     <div class="videoAlbum">
       <van-row gutter="20">
         <van-col span="12" v-for="(item, index) in videoAlbumlist" :key="index">

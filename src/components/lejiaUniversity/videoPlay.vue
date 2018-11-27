@@ -1,7 +1,10 @@
 <template>
     <div id="videoplay">
       <div style="position: relative">
-        <div class="videoDetail"><img src='../../assets/bofang1.jpg' id='imgRecording' style="width: 100%; position: fixed;top: 46px; z-index: 999;"  /></div>
+        <div class="videoDetail">
+          <!-- <img src='../../assets/bofang1.jpg' id='imgRecording' style="width: 100%; "  /> -->
+          <video :src="file" controls autoplay style=" width:100%; object-fit: fill; height: 212px;"></video>
+          </div>
         <div id="quan" @click="fullScreen">全屏</div>
       </div>
       <div class="comment">
@@ -26,11 +29,129 @@
 </template>
 
 <script>
+import { Toast } from "vant";
 export default {
-  
+  components: { Toast },
+  data() {
+    return {
+      commentList: [],   //评论列表
+      commentId: "",   // 评论id
+       params: {
+        video_id: "",
+        content: ""
+      },
+      file: "",  // 视频路径
+    }
+  },
+  methods: {
+    // 获取评论
+    getComment(id) {
+      this.$http.get(globalConfig.server + "video/comment/" + this.commentId).then(res => {
+        if (res.data.code == "10000") {
+          this.commentList = res.data.data;
+        }
+      });
+    },
+    // 发表评论
+    publishComment() {
+      this.params.video_id = this.commentId;
+      this.$http
+        .post(globalConfig.server + "video/comment", this.params)
+        .then(res => {
+          if (res.data.code == "10000") {
+            Toast(res.data.msg);
+            this.getComment(this.params.video_id);
+            this.params.content = ""
+          }
+        });
+    },
+     // 全屏
+    fullScreen() {
+      var video = document.getElementById("videoRecording");
+      video.webkitRequestFullScreen()
+    },
+  },
+  created() {
+    this.file = "";
+    this.commentId = this.$route.query.video_id;
+    this.file = this.$route.query.filePath;
+  },
+  mounted() {
+    this.getComment()
+  }
 }
 </script>
 
 <style lang="scss">
-
+  #videoplay {
+    #quan {
+    width: 33px;
+    height: 20px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: #666;
+    z-index: 999;
+  }
+    .commentList {
+      ul {
+        height: 340px;
+        overflow-y: scroll;
+      }
+      li {
+        padding: 0 10px 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #e5e5e5;
+        p {
+          overflow: hidden;
+          margin-bottom: 10px;
+          color: #969696;
+          font-size: 12px;
+          span:first-of-type {
+            float: left;
+          }
+          span:last-of-type {
+            float: right;
+          }
+        }
+        .commentConent {
+          padding-left: 10px;
+        }
+      }
+    }
+    .comment {
+      .commentText {
+        margin: 10px auto 20px;
+        width: 80%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        color: #409eff;
+        border-radius: 5px;
+      }
+    }
+    .publishComment {
+      position: fixed;
+      bottom: 0;
+      padding-top: 20px;
+      width: 100%;
+      height: 148px;
+      background: #fff;
+      textarea {
+        display: block;
+        margin: auto;
+        width: 80%;
+        height: 60px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .van-button--primary {
+        float: right;
+        margin-right: 7%;
+        width: 70px;
+        background: #409eff;
+        border: 1px solid #409eff;
+      }
+    }
+  }
 </style>
