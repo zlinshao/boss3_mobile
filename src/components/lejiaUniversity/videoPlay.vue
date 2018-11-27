@@ -100,6 +100,8 @@ export default {
     this.file = this.$route.query.filePath;
     this.getCount(this.commentId);
     this.getComment();
+    this.routerIndex('/LejiaUniversity');
+    this.ddRent('/LejiaUniversity');
   },
   mounted() {
   }

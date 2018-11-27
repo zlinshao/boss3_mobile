@@ -10,7 +10,6 @@
         </p>
       </div>
     </div>
-    <!-- <router-view v-if="isRouterAlive"></router-view> -->
   </div>
 </template>
 
@@ -68,7 +67,9 @@ export default {
     if (this.$route.query.classify_id) {
       this.getVideoList();
     }
-  }
+    this.routerIndex('/LejiaAlub');
+    this.ddRent('/LejiaAlub');
+  },
 };
 </script>
 

@@ -61,7 +61,7 @@ export default {
       window.history.go(-1);
     }
   },
-  created() {
+  mounted() {
     this.getVideoAlbum();
   }
 };
