@@ -1,5 +1,6 @@
 <template>
     <div id="videoplayw">
+      <van-nav-bar  left-arrow left-text="返回"  @click-left="goBack"  />
       <div style="position: relative">
         <div class="videoDetail">
           <video :src="file" controls autoplay style=" width:100%; object-fit: fill; height: 212px;"></video>
@@ -90,6 +91,10 @@ export default {
           }
         });
     },
+    goBack() {
+      window.history.go(-1);
+    }
+
   },
   created() {
     // console.log(this.commentId, this.classify_id)

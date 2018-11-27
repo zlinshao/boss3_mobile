@@ -1,5 +1,6 @@
 <template>
   <div id="video1">
+    <van-nav-bar  left-arrow left-text="返回"  @click-left="goBack"  />
     <div class="videoList">
       <div class="video" v-for="(item, index) in videoList" :key="index">
         <img src="../../assets/bofang1.jpg" alt="" @click="palyVideo(item.id, index)">
@@ -62,6 +63,9 @@ export default {
       })
       this.$router.push({path: "/VideoPlay", query: {video_id:videoId,filePath: file,classify_id: this.$route.query.classify_id}});
     },
+    goBack() {
+      window.history.go(-1);
+    }
   },
   activated() {
     this.routerIndex('/LejiaAlub');
