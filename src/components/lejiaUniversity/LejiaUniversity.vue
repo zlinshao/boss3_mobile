@@ -27,8 +27,8 @@ export default {
   // 清除缓存
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.routerIndex("lejiaUniversity", "lejiaAlub");
-      vm.ddRent("lejiaUniversity", "lejiaAlub");
+      vm.routerIndex("/lejiaUniversity", "lejiaAlub");
+      vm.ddRent("/lejiaUniversity", "lejiaAlub");
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -64,8 +64,8 @@ export default {
     },
   },
   activated() {
-    this.routerIndex('LejiaAlub');
-    this.ddRent('LejiaAlub');
+    this.routerIndex('/LejiaAlub');
+    this.ddRent('/LejiaAlub');
     if (this.$route.query.classify_id) {
       this.getVideoList();
     }

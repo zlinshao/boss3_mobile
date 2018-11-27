@@ -46,8 +46,8 @@ export default {
    // 清除缓存
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.routerIndex("VideoPlay", "video1");
-      vm.ddRent("VideoPlay", "video1");
+      vm.routerIndex("/VideoPlay", "video1");
+      vm.ddRent("/VideoPlay", "video1");
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -92,12 +92,12 @@ export default {
     },
   },
   created() {
-    this.classify_id = this.$route.query.classify_id;
-    console.log(this.commentId, this.classify_id)
+    // console.log(this.commentId, this.classify_id)
   },
   activated() {
-    this.routerIndex('LejiaUniversity');
-    this.ddRent('LejiaUniversity');
+    this.routerIndex('/LejiaUniversity');
+    this.ddRent('/LejiaUniversity');
+    this.classify_id = this.$route.query.classify_id;
     this.commentId = this.$route.query.video_id;
     this.file = this.$route.query.filePath;
     this.getCount(this.commentId);

@@ -46,8 +46,8 @@
         <!-- <span>9:00-18:00</span> -->
       </p>
       <p>
-        <span>考勤组:</span>
-        <span>{{position}}</span>
+        <span>班次:</span>
+        <span>{{attendanceShift}}</span>
       </p>
     </div>
     <div class="punchNum">
@@ -86,6 +86,7 @@
 export default {
   data() {
     return {
+      attendanceShift: "",
       typesettingDate: [],
       isNormal: "",
       isAbnormal: "",
