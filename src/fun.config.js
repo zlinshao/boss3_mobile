@@ -388,7 +388,7 @@ export default {
           data.pay_way = data.pay_way + item.pay_way_str;
         }
       }
-      switch (money_key){
+      switch (money_key) {
         case 'front_money':
           data.payment = '定金';
           break;
@@ -411,32 +411,36 @@ export default {
         this.prompt('close');
         if (res.data.code === '20000') {
           let pdfUrls = res.data.data.shorten_uri;
-          dd.ready(function () {
-            dd.biz.cspace.saveFile({
-              corpId: sessionStorage.getItem('cropID'),
-              url: pdfUrls,  // 文件在第三方服务器地址， 也可为通过服务端接口上传文件得到的media_id，详见参数说明
-              name: "electronicReceipt.pdf",
-              onSuccess: function (data) {
-                dd.biz.cspace.preview({
-                  corpId: sessionStorage.getItem('cropID'),
-                  spaceId: data.data[0].spaceId,
-                  fileId: data.data[0].fileId,
-                  fileName: data.data[0].fileName,
-                  fileSize: data.data[0].fileSize,
-                  fileType: "pdf",
-                  onSuccess: function () {
-                    //无，直接在native显示文件详细信息
-                  },
-                  onFail: function (err) {
-                    // 无，直接在native页面显示具体的错误
-                  }
-                });
-              },
-              onFail: function (err) {
-                console.log(err);
-              }
+          if (navigator.userAgent == 'app/ApartMent') {
+            Android.toBrowser(pdfUrls);
+          } else {
+            dd.ready(function () {
+              dd.biz.cspace.saveFile({
+                corpId: sessionStorage.getItem('cropID'),
+                url: pdfUrls,  // 文件在第三方服务器地址， 也可为通过服务端接口上传文件得到的media_id，详见参数说明
+                name: "electronicReceipt.pdf",
+                onSuccess: function (data) {
+                  dd.biz.cspace.preview({
+                    corpId: sessionStorage.getItem('cropID'),
+                    spaceId: data.data[0].spaceId,
+                    fileId: data.data[0].fileId,
+                    fileName: data.data[0].fileName,
+                    fileSize: data.data[0].fileSize,
+                    fileType: "pdf",
+                    onSuccess: function () {
+                      //无，直接在native显示文件详细信息
+                    },
+                    onFail: function (err) {
+                      // 无，直接在native页面显示具体的错误
+                    }
+                  });
+                },
+                onFail: function (err) {
+                  console.log(err);
+                }
+              });
             });
-          });
+          }
         } else {
           this.prompt('', res.data.msg);
         }
