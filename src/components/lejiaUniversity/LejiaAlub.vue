@@ -54,7 +54,7 @@ export default {
     //  跳转视屏详情页
     toVideoDetail(id,name) {
       if(id) {
-        this.$router.push({ path: "/LejiaUniversity", query: { classify_id: id, titleName:  name} });
+        this.$router.push({ path: "/LejiaUniversity", query: { classify_id: id} });
       }
     },
     goBack() {

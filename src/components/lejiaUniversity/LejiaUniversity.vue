@@ -1,10 +1,7 @@
 <template>
   <div id="video1">
-    <!-- <div class="back"><van-icon name="arrow-left" @click="goBack" />{{titleName}}</div> -->
-      <!-- <van-nav-bar :title="titleName"  left-arrow left-text="返回"  @click-left="goBack"  /> -->
     <div class="videoList">
       <div class="video" v-for="(item, index) in videoList" :key="index">
-        <!-- <video :src="item.file" width="100%" height="100%" @click.stop="palyVideo(item.id, index)"  poster="../../assets/bofang1.jpg"></video> -->
         <img src="../../assets/bofang1.jpg" alt="" @click="palyVideo(item.id, index)">
         <p class="videoName">{{item.video_name}}</p>
         <p class="count">
@@ -13,7 +10,7 @@
         </p>
       </div>
     </div>
-   
+    <!-- <router-view v-if="isRouterAlive"></router-view> -->
   </div>
 </template>
 
@@ -25,17 +22,7 @@ export default {
   data() {
     return {
       videoList: [], // 视屏列表
-      scale: 0.3,
-      videoAlbumId: "",
-      countId: "",
-      titleName: "",
-      videoTitle: "",
-      show: false,
-      commentList: [],
-      params: {
-        video_id: "",
-        content: ""
-      }
+      // isRouterAlive: true,
     };
   },
   // 清除缓存
@@ -58,50 +45,26 @@ export default {
         message: "加载中..."
       });
       this.videoList = [];
-      this.$http
-        .get(
-          globalConfig.server +
-            "video/classify-video?classify_id=" +
-            this.$route.query.classify_id
-        )
-        .then(res => {
+      this.$http.get(globalConfig.server + "video/classify-video?classify_id=" + this.$route.query.classify_id).then(res => {
           if (res.data.code == "10000") {
             Toast.clear();
             this.videoList = res.data.data;
-            // this.file = res.data.data
-            console.log(this.videoList, "222")
           }
         });
     },
-    // 播放次数
-    getCount(id) {
-      this.$http
-        .post(globalConfig.server + "video/play-video", { video_id: id })
-        .then(res => {
-          if (res.data.code == "10000") {
-            // Toast(res.data.msg);
-          } else {
-            Toast(res.data.msg);
-          }
-        });
-    },
+    
     // 点击播放视屏
     palyVideo(videoId, id) {
-      console.log(videoId, id)
       let file = "";
-      console.log(file, "111")
       this.videoList.forEach((item, index) => {
         if(index == id) {
           file = item.file;
-          console.log(file, "2222")
         }
       })
-      history.go(0) 
-      this.$router.push({path: "/VideoPlay", query: {video_id:videoId,filePath: file}})
+      this.$router.push({path: "/VideoPlay", query: {video_id:videoId,filePath: file,classify_id: this.$route.query.classify_id}});
     },
   },
   activated() {
-    this.titleName = this.$route.query.titleName;
     if (this.$route.query.classify_id) {
       this.getVideoList();
     }

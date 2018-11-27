@@ -1,11 +1,9 @@
 <template>
-    <div id="videoplay">
+    <div id="videoplayw">
       <div style="position: relative">
         <div class="videoDetail">
-          <!-- <img src='../../assets/bofang1.jpg' id='imgRecording' style="width: 100%; "  /> -->
           <video :src="file" controls autoplay style=" width:100%; object-fit: fill; height: 212px;"></video>
           </div>
-        <div id="quan" @click="fullScreen">全屏</div>
       </div>
       <div class="comment">
         <p class="commentText">评论</p>    
@@ -31,6 +29,7 @@
 <script>
 import { Toast } from "vant";
 export default {
+  name: "videoplayw",
   components: { Toast },
   data() {
     return {
@@ -41,13 +40,31 @@ export default {
         content: ""
       },
       file: "",  // 视频路径
+      classify_id: "",
     }
+  },
+   // 清除缓存
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.routerIndex("VideoPlay", "video1");
+      vm.ddRent("VideoPlay", "video1");
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    Toast.clear();
+    next();
   },
   methods: {
     // 获取评论
     getComment(id) {
+      Toast.loading({
+        mask: true,
+        duration: 10,
+        message: "加载中..."
+      });
       this.$http.get(globalConfig.server + "video/comment/" + this.commentId).then(res => {
         if (res.data.code == "10000") {
+          Toast.clear();
           this.commentList = res.data.data;
         }
       });
@@ -55,9 +72,7 @@ export default {
     // 发表评论
     publishComment() {
       this.params.video_id = this.commentId;
-      this.$http
-        .post(globalConfig.server + "video/comment", this.params)
-        .then(res => {
+      this.$http.post(globalConfig.server + "video/comment", this.params).then(res => {
           if (res.data.code == "10000") {
             Toast(res.data.msg);
             this.getComment(this.params.video_id);
@@ -65,25 +80,34 @@ export default {
           }
         });
     },
-     // 全屏
-    fullScreen() {
-      var video = document.getElementById("videoRecording");
-      video.webkitRequestFullScreen()
+    // 播放次数
+    getCount(id) {
+      this.$http.post(globalConfig.server + "video/play-video", { video_id: id }).then(res => {
+          if (res.data.code == "10000") {
+            // Toast(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
+        });
     },
   },
   created() {
-    this.file = "";
+    this.classify_id = this.$route.query.classify_id;
+    console.log(this.commentId, this.classify_id)
+  },
+  activated() {
     this.commentId = this.$route.query.video_id;
     this.file = this.$route.query.filePath;
+    this.getCount(this.commentId);
+    this.getComment();
   },
   mounted() {
-    this.getComment()
   }
 }
 </script>
 
 <style lang="scss">
-  #videoplay {
+  #videoplayw {
     #quan {
     width: 33px;
     height: 20px;

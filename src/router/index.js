@@ -590,6 +590,7 @@ export default new Router({
     {
       path: '/VideoPlay',
       name: '播放视频',
+      hidden: false,
       meta: {
         title: '播放视频'
       },
