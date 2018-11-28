@@ -1,45 +1,16 @@
 <template>
   <div id="video1">
-    <!-- <div class="back"><van-icon name="arrow-left" @click="goBack" />{{titleName}}</div> -->
-      <van-nav-bar :title="titleName"  left-arrow left-text="返回"  @click-left="goBack"  />
+    <van-nav-bar  left-arrow left-text="返回"  @click-left="goBack"  />
     <div class="videoList">
       <div class="video" v-for="(item, index) in videoList" :key="index">
-        <!-- <video :src="item.file" width="100%" height="100%" @click.stop="palyVideo(item.id, index)"  poster="../../assets/bofang1.jpg"></video> -->
         <img src="../../assets/bofang1.jpg" alt="" @click="palyVideo(item.id, index)">
         <p class="videoName">{{item.video_name}}</p>
         <p class="count">
           <span>人数：{{item.play_user}}</span>
           <span>次数：{{item.play_count}}</span>
         </p>
-        <!-- <img src="../../assets/chexiao.png" alt="" "> -->
       </div>
     </div>
-    <!-- 遮罩 -->
-    <van-popup v-model="show" position="right" :overlay="false" class="popup">
-      <van-nav-bar :title="videoTitle" left-text="返回"  left-arrow @click-left="onClickLeft"  />
-      <div style="position: relative">
-        <div class="videoDetail"><img src='../../assets/bofang1.jpg' id='imgRecording' style="width: 100%; position: fixed;top: 46px; z-index: 999;"  /></div>
-        <div id="quan" @click="fullScreen">全屏</div>
-      </div>
-      <div class="comment">
-        <p class="commentText">评论</p>    
-        <div class="commentList">
-          <ul>
-            <li v-for="(item, index) in commentList.list" :key="index">
-              <p class="commentName">
-                <span style="font-size: 12px;height: 13px;">{{item.user.name}}</span>
-                <span style="font-size: 12px;height: 13px;">{{item.create_time}}</span>
-              </p>
-              <div class="commentConent">{{item.content}}</div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="publishComment">
-        <textarea v-model="params.content" placeholder="请输入评论..." style="resize:none"></textarea>
-        <van-button type="primary" size="small" @click="publishComment">发表评论</van-button>
-      </div>
-    </van-popup>
   </div>
 </template>
 
@@ -51,24 +22,14 @@ export default {
   data() {
     return {
       videoList: [], // 视屏列表
-      scale: 0.3,
-      videoAlbumId: "",
-      countId: "",
-      titleName: "",
-      videoTitle: "",
-      show: false,
-      commentList: [],
-      params: {
-        video_id: "",
-        content: ""
-      }
+      // isRouterAlive: true,
     };
   },
   // 清除缓存
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.routerIndex("lejiaUniversity", "lejiaAlub");
-      vm.ddRent("lejiaUniversity", "lejiaAlub");
+      vm.routerIndex("/lejiaUniversity", "lejiaAlub");
+      vm.ddRent("/lejiaUniversity", "lejiaAlub");
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -84,103 +45,35 @@ export default {
         message: "加载中..."
       });
       this.videoList = [];
-      this.$http
-        .get(
-          globalConfig.server +
-            "video/classify-video?classify_id=" +
-            this.$route.query.classify_id
-        )
-        .then(res => {
+      this.$http.get(globalConfig.server + "video/classify-video?classify_id=" + this.$route.query.classify_id).then(res => {
           if (res.data.code == "10000") {
             Toast.clear();
             this.videoList = res.data.data;
           }
         });
     },
-    // 播放次数
-    getCount(id) {
-      this.$http
-        .post(globalConfig.server + "video/play-video", { video_id: id })
-        .then(res => {
-          if (res.data.code == "10000") {
-            // Toast(res.data.msg);
-          } else {
-            Toast(res.data.msg);
-          }
-        });
-    },
+    
     // 点击播放视屏
     palyVideo(videoId, id) {
-      this.show = true;
-      var mobileWidth = document.body.clientWidth;
-      var mobileHeight = document.body.clientHeight;
-      var newvideo = $("<video id='videoRecording' controlsList='nodownload' poster='../../assets/bofang1.jpg' controls></video>");
-      newvideo.css({
-        width: mobileWidth + "px",
-         position: 'fixed',
-         top: "46px",
-         height: "212px"
-      });
+      let file = "";
       this.videoList.forEach((item, index) => {
-        if (index == id) {
-          $(".videoDetail").append(newvideo);
-          newvideo.attr("src", item.file);
-          this.videoTitle = item.video_name
+        if(index == id) {
+          file = item.file;
         }
-      });
-      var img1 = document.getElementById("imgRecording");
-      var creatvideo = document.getElementById("videoRecording");
-      let _this = this
-      this.params.video_id = videoId;
-      img1.onclick = function() {
-        img1.style.display = "none";
-        creatvideo.play();
-         _this.getCount(videoId);
-      }
-      this.getComment(videoId);
-    },
-    // 获取评论
-    getComment(id) {
-      this.$http.get(globalConfig.server + "video/comment/" + id).then(res => {
-        if (res.data.code == "10000") {
-          this.commentList = res.data.data;
-        }
-      });
-    },
-    // 发表评论
-    publishComment() {
-      this.$http
-        .post(globalConfig.server + "video/comment", this.params)
-        .then(res => {
-          if (res.data.code == "10000") {
-            Toast(res.data.msg);
-            this.getComment(this.params.video_id);
-            this.params.content = ""
-          }
-        });
-    },
-    // 全屏
-    fullScreen() {
-      var video = document.getElementById("videoRecording");
-      video.webkitRequestFullScreen()
-    },
-    onClickLeft() {
-      var img = document.getElementById("imgRecording")
-      img.style.display = "block";
-      $(".videoDetail").find("video").remove();
-      this.getVideoList();
-      this.show = false;
+      })
+      this.$router.push({path: "/VideoPlay", query: {video_id:videoId,filePath: file,classify_id: this.$route.query.classify_id}});
     },
     goBack() {
       window.history.go(-1);
     }
   },
   activated() {
-    this.titleName = this.$route.query.titleName;
+    this.routerIndex('/LejiaAlub');
+    this.ddRent('/LejiaAlub');
     if (this.$route.query.classify_id) {
       this.getVideoList();
     }
-  }
+  },
 };
 </script>
 

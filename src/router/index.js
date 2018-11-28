@@ -91,6 +91,7 @@ import SearchHouse from '../components/common/searchHouse.vue';//计算器房屋
 // 乐伽大学
 import LejiaUniversity from '../components/lejiaUniversity/LejiaUniversity.vue'
 import LejiaAlub from '../components/lejiaUniversity/LejiaAlub.vue'
+import VideoPlay from '../components/lejiaUniversity/videoPlay.vue'
 
 // 考勤记录
 import Attendance from '../components/attendance/index.vue'
@@ -564,28 +565,37 @@ export default new Router({
     //   meta: {title: '业绩报表'},
     //   component: DataStatic
     // },
-    // {
-    //   path: '/LejiaAlub',
-    //   name: '教学视频',
-    //   icon: 'iconfont icon-daxue',
-    //   hidden: 'other',
-    //   back: '#F19851',
-    //   meta: {
-    //     title: '教学视频',
-    //     // keepAlive: true
-    //   },
-    //   component: LejiaAlub
-    // },
-    // {
-    //   path: '/LejiaUniversity',
-    //   name: '教学列表',
-    //   hidden: false,
-    //   meta: {
-    //     title: '教学列表',
-    //     // keepAlive: true
-    //   },
-    //   component: LejiaUniversity
-    // },
+    {
+      path: '/LejiaAlub',
+      name: '教学视频',
+      icon: 'iconfont icon-daxue',
+      hidden: 'other',
+      back: '#F19851',
+      meta: {
+        title: '教学视频',
+        // keepAlive: true
+      },
+      component: LejiaAlub
+    },
+    {
+      path: '/LejiaUniversity',
+      name: '教学列表',
+      hidden: false,
+      meta: {
+        title: '教学列表',
+        // keepAlive: true
+      },
+      component: LejiaUniversity
+    },
+    {
+      path: '/VideoPlay',
+      name: '播放视频',
+      hidden: false,
+      meta: {
+        title: '播放视频'
+      },
+      component: VideoPlay
+    },
     // {
     //   path: '/dataCount',
     //   name: '业绩计算器',

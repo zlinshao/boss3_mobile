@@ -1,10 +1,5 @@
 <template>
   <div id="lejiaAlub">
-    <!-- <div class="videoTop">
-      <van-button type="danger" size="small">视屏分类</van-button>
-    </div> -->
-    <!-- <div class="back"><van-icon name="arrow-left" @click="goBack" />教学视频</div> -->
-    <van-nav-bar title="教学视频"  left-arrow left-text="返回"  @click-left="goBack"  />
     <div class="videoAlbum">
       <van-row gutter="20">
         <van-col span="12" v-for="(item, index) in videoAlbumlist" :key="index">
@@ -54,14 +49,11 @@ export default {
     //  跳转视屏详情页
     toVideoDetail(id,name) {
       if(id) {
-        this.$router.push({ path: "/LejiaUniversity", query: { classify_id: id, titleName:  name} });
+        this.$router.push({ path: "/LejiaUniversity", query: { classify_id: id} });
       }
     },
-    goBack() {
-      window.history.go(-1);
-    }
   },
-  created() {
+  mounted() {
     this.getVideoAlbum();
   }
 };
