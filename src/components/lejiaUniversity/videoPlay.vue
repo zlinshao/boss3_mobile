@@ -135,6 +135,9 @@ export default {
         padding: 0 10px 10px;
         margin-bottom: 20px;
         border-bottom: 1px solid #e5e5e5;
+        :last-of-type{
+          margin-bottom: 0;
+        }
         p {
           overflow: hidden;
           margin-bottom: 10px;
