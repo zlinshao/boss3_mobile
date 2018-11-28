@@ -1,6 +1,6 @@
 <template>
   <div id="video1">
-    <van-nav-bar  left-arrow left-text="返回"  @click-left="goBack"  />
+    <!-- <van-nav-bar  left-arrow left-text="返回"  @click-left="goBack"  /> -->
     <div class="videoList">
       <div class="video" v-for="(item, index) in videoList" :key="index">
         <img src="../../assets/bofang1.jpg" alt="" @click="palyVideo(item.id, index)">

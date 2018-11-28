@@ -32,7 +32,7 @@
             {{item.day}}
             <!-- <div class="dot" :class="{ 'colorA': item.typesetting == 'A', 'colorB': item.typesetting == 'B','colorC': item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}} -->
             <!-- <div class="dot" :class="{ 'success': item.typesetting == 'A' || item.typesetting == 'B'|| item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}} -->
-              <div class="dot" :class="[item.correct ? 'success' : 'warning']">
+              <div class="dot" :class="[item.correct == '正常' ? 'success' : (item.correct == '异常' ? 'warning' : 'rest')]">{{item.typesetting}}
               </div>
           </td>
         </tr>
@@ -137,22 +137,24 @@ export default {
             userdimension.forEach((item, index) => {
             let obj = {};
               item.forEach((val, kay) => {
-                console.log(val)
                 if(val.event_attribute == 1 && val.status == 0) {
-                  obj["a"] = true;
+                  obj["a"] = 1;
                 } else if(val.event_attribute == 2 && val.status == 0) {
-                  obj["b"] = true;
-                } else {
-
+                  obj["b"] = 2;
+                } else if(val.event_attribute == 5 && val.status == 0) {
+                  obj["c"] = 3;
                 }
               })
                 arr.push(obj)
             })
+            console.log(arr)
             arr.forEach((item, index) => {
-              if(item.a && item.b) {
-                this.typesettingDate[index] = true
+              if(item.a == 1 && item.b == 2) {
+                this.typesettingDate[index] = "正常";
+              } else if(item.c == 3) {
+                this.typesettingDate[index] = "休息";
               } else {
-                this.typesettingDate[index] = false;
+                this.typesettingDate[index] ="异常";
               }
             })
             console.log(this.typesettingDate)
@@ -517,6 +519,9 @@ export default {
   .gray {
     color: gray;
     visibility: hidden;
+  }
+  .rest {
+    background-color: gray;
   }
   .warning {
     background-color: #f90;
