@@ -141,6 +141,7 @@
       // this.dict();
     },
     activated() {
+      $('.imgItem').remove();
       this.haveInHand = true;
       this.queries = this.$route.query;
 
@@ -361,7 +362,6 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        $('.imgItem').remove();
         this.form.content = '';
         this.form.image_pic = [];
       },
