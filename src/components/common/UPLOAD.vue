@@ -244,7 +244,7 @@
                   _this.picData.type = file.type ? file.type : '';
                   _this.picData.sourceLink = sourceLink ? sourceLink : '';
                   _this.picData.key_name = sessionStorage.hhhhhh ? sessionStorage.hhhhhh : '';
-                  _this.$http.post(_this.url + 'save/picData', _this.picData).then(res => {
+                  _this.$http.post(_this.url + 'api/v1/save/picData', _this.picData).then(res => {
 
                   }).catch(_ => {
                     console.log(_)
