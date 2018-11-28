@@ -361,6 +361,7 @@
         setTimeout(() => {
           this.isClear = false;
         });
+        $('.imgItem').remove();
         this.form.content = '';
         this.form.image_pic = [];
       },
