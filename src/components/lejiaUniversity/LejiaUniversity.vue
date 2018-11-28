@@ -1,6 +1,6 @@
 <template>
   <div id="video1">
-    <van-nav-bar  left-arrow left-text="返回"  @click-left="goBack"  />
+    <!-- <van-nav-bar  left-arrow left-text="返回"  @click-left="goBack"  /> -->
     <div class="videoList">
       <div class="video" v-for="(item, index) in videoList" :key="index">
         <img src="../../assets/bofang1.jpg" alt="" @click="palyVideo(item.id, index)">
@@ -23,13 +23,16 @@ export default {
     return {
       videoList: [], // 视屏列表
       // isRouterAlive: true,
+      path: "",
     };
   },
   // 清除缓存
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.routerIndex("/lejiaUniversity", "lejiaAlub");
-      vm.ddRent("/lejiaUniversity", "lejiaAlub");
+      // console.log(from.path)
+      vm.path = from.path;
+      vm.routerIndex(vm.path, "lejiaAlub");
+      vm.ddRent(vm.path, "lejiaAlub");
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -68,8 +71,8 @@ export default {
     }
   },
   activated() {
-    this.routerIndex('/LejiaAlub');
-    this.ddRent('/LejiaAlub');
+    this.routerIndex(this.path);
+    this.ddRent(this.path);
     if (this.$route.query.classify_id) {
       this.getVideoList();
     }

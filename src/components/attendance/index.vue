@@ -31,8 +31,8 @@
           <td v-for="(item, index) in week" :key="index" :class="{'gray': item.prevmonth || item.nextmonth}" @click.stop="viewattendance(item.day)">
             {{item.day}}
             <!-- <div class="dot" :class="{ 'colorA': item.typesetting == 'A', 'colorB': item.typesetting == 'B','colorC': item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}} -->
-            <div class="dot" :class="{ 'success': item.typesetting == 'A' || item.typesetting == 'B'|| item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}}
-              <!-- <div class="dot" :class="[item.correct ? 'success' : 'warning']"> -->
+            <!-- <div class="dot" :class="{ 'success': item.typesetting == 'A' || item.typesetting == 'B'|| item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}} -->
+              <div class="dot" :class="[item.correct == '正常' ? 'success' : (item.correct == '异常' ? 'warning' : 'rest')]">{{item.typesetting}}
               </div>
           </td>
         </tr>
@@ -132,33 +132,37 @@ export default {
           this.typesetting = {};
           console.log(res, "11111");
           if (res.data.code == "20000") {
+            let arr = [];
+            let userdimension = res.data.data.data.users.sort_dimension
+            userdimension.forEach((item, index) => {
+            let obj = {};
+              item.forEach((val, kay) => {
+                if(val.event_attribute == 1 && val.status == 0) {
+                  obj["a"] = 1;
+                } else if(val.event_attribute == 2 && val.status == 0) {
+                  obj["b"] = 2;
+                } else if(val.event_attribute == 5 && val.status == 0) {
+                  obj["c"] = 3;
+                }
+              })
+                arr.push(obj)
+            })
+            console.log(arr)
+            arr.forEach((item, index) => {
+              if(item.a == 1 && item.b == 2) {
+                this.typesettingDate[index] = "正常";
+              } else if(item.c == 3) {
+                this.typesettingDate[index] = "休息";
+              } else {
+                this.typesettingDate[index] ="异常";
+              }
+            })
+            console.log(this.typesettingDate)
             this.typesetting = res.data.data.data.arrange;
             this.currentMonth = res.data.data.month;
             this.currentYear = res.data.data.year;
             this.getCalendar(this.currentYear, this.currentMonth, true);
-            // let arr = [];
-            // let userdimension = res.data.data.data.users.sort_dimension
-            // userdimension.forEach((item, index) => {
-            // let obj = {};
-            //   item.forEach((val, kay) => {
-            //     if(val.event_attribute == 1 && val.status == 0) {
-            //       obj["a"] = true;
-            //     } else if(val.event_attribute == 2 && val.status == 0) {
-            //       obj["b"] = true;
-            //     } else {
-
-            //     }
-            //   })
-            //     arr.push(obj)
-            // })
-            // arr.forEach((item, index) => {
-            //   if(item.a && item.b) {
-            //     this.typesettingDate[index] = true
-            //   } else {
-            //     this.typesettingDate[index] = false;
-            //   }
-            // })
-            // console.log(this.typesettingDate)
+            
           } else {
             this.typesetting = {};
             this.currentMonth = res.data.data.month;
@@ -410,30 +414,34 @@ export default {
       let _this = this;
       let settingObj = Object.values(this.typesetting);
         console.log(this.typesettingDate);
-      let typeArr = Object.values(this.typesettingDate);
-      console.log(typeArr);
+        let typeArr = [];
+        // typeArr = Object.values(this.typesettingDate);
+        for(let key in _this.typesettingDate) {
+          typeArr.push(_this.typesettingDate[key])
+        // console.log(typeArr);
+        }
       _arr.forEach((item, index) => {
           item.forEach((val, key) => {
-            // if (val.nextmonth || val.prevmonth) {
             if (val.currentmonth) {
               settingObj.forEach((a, b) => {
                 if (_arr[index][key].day == b + 1) {
                   _arr[index][key]["typesetting"] = a;
                 }
               });
-              // typeArr.forEach((c, d) => {
-              //   if(_arr[index][key].day == d + 1) {
-              //     _arr[index][key]["correct"] = c
-              //   }
-              // })
+              typeArr.forEach((c, d) => {
+                // console.log(_arr[index][key].day)
+                if(_arr[index][key].day == d + 1) {
+                  _arr[index][key]["correct"] = c
+                }
+              })
             }
           });
       });
-      // console.log(_arr)
+      console.log(_arr, "00000 ")
       this.arr = _arr
     },
   },
-  mounted() {
+  activated() {
     this.getCurrentDay();
     this.getCurrentWeek();
   }
@@ -511,6 +519,9 @@ export default {
   .gray {
     color: gray;
     visibility: hidden;
+  }
+  .rest {
+    background-color: gray;
   }
   .warning {
     background-color: #f90;
