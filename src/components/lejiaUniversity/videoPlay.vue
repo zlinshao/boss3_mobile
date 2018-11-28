@@ -42,13 +42,15 @@ export default {
       },
       file: "",  // 视频路径
       classify_id: "",
+      path: ""
     }
   },
    // 清除缓存
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.routerIndex("/VideoPlay", "video1");
-      vm.ddRent("/VideoPlay", "video1");
+      vm.path = from.path;
+      vm.routerIndex(from.path, "video1");
+      vm.ddRent(from.path, "video1");
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -100,8 +102,8 @@ export default {
     // console.log(this.commentId, this.classify_id)
   },
   activated() {
-    this.routerIndex('/LejiaUniversity');
-    this.ddRent('/LejiaUniversity');
+    this.routerIndex(this.path);
+    this.ddRent(this.path);
     this.classify_id = this.$route.query.classify_id;
     this.commentId = this.$route.query.video_id;
     this.file = this.$route.query.filePath;
