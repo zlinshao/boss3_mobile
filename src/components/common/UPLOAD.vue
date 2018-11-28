@@ -246,6 +246,8 @@
                   _this.picData.key_name = sessionStorage.hhhhhh ? sessionStorage.hhhhhh : '';
                   _this.$http.post(_this.url + 'save/picData', _this.picData).then(res => {
 
+                  }).catch(_ => {
+                    console.log(_)
                   })
                 }
               }
