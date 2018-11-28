@@ -4,10 +4,10 @@
       <div class="searchCustom">
         <div>
           <i class="van-icon van-icon-search"></i>
-          <input type="text" v-model="searchValue" @keyup.enter="search">
+          <input type="text" v-model="searchValue" @keyup.enter="onSearch">
           <i v-if="searchValue.length !== 0" class="iconfont icon-cuowu-guanbi" @click="searchValue = ''"></i>
         </div>
-        <p v-if="searchValue.length > 0" @click="search" style="color: #666666;">搜索</p>
+        <p v-if="searchValue.length > 0" @click="onSearch" style="color: #666666;">搜索</p>
         <p v-else @click="onCancel">取消</p>
       </div>
       <div class="searchContent">
@@ -82,8 +82,6 @@
         showDetail: 0,
         loading: true,
         finished: true,
-        page: 1,
-
         searchValue: '',          //搜索
         lists: [],
         params: {},
@@ -107,42 +105,33 @@
         let value = val.replace(/\s+/g, '');
         this.searchValue = value;
         if (value !== '') {
-          // if (value.length > 1) {
-          //   this.disabled = false;
-          //   this.page = 1;
-          //   this.lists = [];
-          // }
         } else {
           this.close_();
         }
       }
     },
     methods: {
-      search() {
-        this.finished = false;
-        this.page = 1;
-        this.lists = [];
-        this.onLoad();
-      },
-      onLoad() {
+      onLoad(val) {
         // 异步更新数据
         setTimeout(() => {
           // 加载状态结束
           this.loading = false;
           // 数据全部加载完成
           if (!this.finished) {
-            this.onSearch(this.params, this.searchValue);
-            this.page++;
+            this.myData(val);
+            this.params.page++;
           }
         }, 500);
       },
       // 搜索
-      onSearch(params, val) {
-        if (val !== '') {
+      onSearch() {
+        this.finished = false;
+        this.lists = [];
+        if (this.searchValue !== '') {
           this.showDetail = 1;
-          this.params.page = this.page;
-          this.params.q = val;
-          this.myData(params);
+          this.params.page = 1;
+          this.params.q = this.searchValue;
+          this.onLoad(this.params);
         }
       },
       myData(val) {
@@ -150,86 +139,75 @@
         this.$http.get(this.urls + 'workflow/process', {
           params: val,
         }).then((res) => {
-          if (this.searchValue !== '') {
-            if (res.data.code === '20000') {
-              let data = res.data.data.data;
-              if (data.length !== 0) {
-                for (let i = 0; i < data.length; i++) {
-                  let user = {};
-                  user.title = data[i].title;
-                  user.created_at = data[i].created_at;
-                  if (val.type === 3) {
-                    if (data[i].content.house) {
-                      user.house_name = data[i].content.house.name;
+          if (res.data.code === '20000') {
+            let data = res.data.data.data;
+            if (data.length !== 0) {
+              for (let i = 0; i < data.length; i++) {
+                let user = {};
+                user.title = data[i].title;
+                user.created_at = data[i].created_at;
+                if (val.type === 3) {
+                  if (data[i].content.house) {
+                    user.house_name = data[i].content.house.name;
+                  } else {
+                    user.house_name = '/';
+                  }
+                  if (data[i].user) {
+                    user.avatar = data[i].user.avatar;
+                    user.name = data[i].user.name;
+                    user.depart = data[i].user.org[0].name;
+                  } else {
+                    user.avatar = '';
+                    user.name = '';
+                    user.staff = '';
+                  }
+                  user.id = data[i].id;
+                  user.place = data[i].place.display_name;
+                  user.status = data[i].place.status;
+                  user.bulletin = data[i].content.bulletin_name;
+                }
+                if (val.type === 1 || val.type === 2 || val.type === 4) {
+                  if (data[i].flow) {
+                    if (user.house_name = data[i].flow.content.house) {
+                      user.house_name = data[i].flow.content.house.name;
                     } else {
                       user.house_name = '/';
                     }
                     if (data[i].user) {
-                      user.avatar = data[i].user.avatar;
-                      user.name = data[i].user.name;
-                      user.depart = data[i].user.org[0].name;
+                      user.avatar = data[i].flow.user.avatar;
+                      user.name = data[i].flow.user.name;
+                      user.depart = data[i].flow.user.org[0].name;
                     } else {
                       user.avatar = '';
                       user.name = '';
                       user.staff = '';
                     }
-                    user.id = data[i].id;
-                    user.place = data[i].place.display_name;
-                    user.status = data[i].place.status;
-                    user.bulletin = data[i].content.bulletin_name;
-                  }
-                  if (val.type === 1 || val.type === 2 || val.type === 4) {
-                    if (data[i].flow) {
-                      if (user.house_name = data[i].flow.content.house) {
-                        user.house_name = data[i].flow.content.house.name;
-                      } else {
-                        user.house_name = '/';
-                      }
-                      if (data[i].user) {
-                        user.avatar = data[i].flow.user.avatar;
-                        user.name = data[i].flow.user.name;
-                        user.depart = data[i].flow.user.org[0].name;
-                      } else {
-                        user.avatar = '';
-                        user.name = '';
-                        user.staff = '';
-                      }
-                      user.id = data[i].flow.id;
-                      user.place = data[i].flow.place.display_name;
-                      user.status = data[i].flow.place.status;
-                      if (data[i].flow.content.type) {
-                        user.bulletin = data[i].flow.content.type.name;
-                      } else {
-                        user.bulletin = '';
-                      }
+                    user.id = data[i].flow.id;
+                    user.place = data[i].flow.place.display_name;
+                    user.status = data[i].flow.place.status;
+                    if (data[i].flow.content.type) {
+                      user.bulletin = data[i].flow.content.type.name;
                     } else {
-                      user.place = '';
-                      user.status = '';
                       user.bulletin = '';
                     }
+                  } else {
+                    user.place = '';
+                    user.status = '';
+                    user.bulletin = '';
                   }
-                  this.lists.push(user);
                 }
-                this.finished = false;
-              } else {
-                this.loading = true;
+                this.lists.push(user);
               }
+              this.finished = false;
             } else {
               this.loading = true;
             }
-            if (res.data.data.length === 0 && res.data.status === 'success') {
-              this.showDetail = 2;
-            }
-            if (res.data.status === 'fail') {
-              this.showDetail = 2;
-            }
           } else {
             this.loading = true;
-            this.close_();
+            this.showDetail = 2;
           }
         })
       },
-
 
       // 房屋地址
       bulletinList(data) {
