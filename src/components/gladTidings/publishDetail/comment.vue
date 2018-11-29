@@ -141,6 +141,7 @@
       // this.dict();
     },
     activated() {
+      $('.imgItem').remove();
       this.haveInHand = true;
       this.queries = this.$route.query;
 
