@@ -42,25 +42,25 @@
           placeholder="请选择小区地址"
           required>
         </van-field>
-        <!--<div class="month">-->
-        <!--<van-field-->
-        <!--v-model="property_fee"-->
-        <!--label="物业费单价"-->
-        <!--type="text"-->
-        <!--:disabled="followUp"-->
-        <!--:placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"-->
-        <!--required>-->
-        <!--</van-field>-->
-        <!--</div>-->
-        <!--<div class="titleRed">单位：元/平米/月</div>-->
-        <!--<van-field-->
-        <!--v-model="form.community.property_phone"-->
-        <!--label="物业联系方式"-->
-        <!--type="text"-->
-        <!--:disabled="followUp"-->
-        <!--placeholder="请填写物业联系方式"-->
-        <!--required>-->
-        <!--</van-field>-->
+        <div class="month">
+        <van-field
+        v-model="property_fee"
+        label="物业费单价"
+        type="text"
+        :disabled="followUp"
+        :placeholder="form.community.property_fee ? form.community.property_fee : '请填写物业费单价'"
+        required>
+        </van-field>
+        </div>
+        <div class="titleRed">单位：元/平米/月</div>
+        <van-field
+        v-model="property_phone"
+        label="物业联系方式"
+        type="text"
+        :disabled="followUp"
+        placeholder="请填写物业联系方式"
+        required>
+        </van-field>
         <div class="fourth noBorder">
           <div class="titles required">门牌号</div>
           <van-field
@@ -509,7 +509,8 @@
           department_name: '',          //部门name
         },
         community_name: '',
-        // property_fee: '',
+        property_fee: '',
+        property_phone:'',
         photos: [],                     //房屋影像
 
         isValue1: true,
@@ -533,7 +534,6 @@
     activated() {
       let count = sessionStorage.count;
       this.counts = count;
-
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
@@ -578,7 +578,6 @@
 
     methods: {
       fffffff() {
-        console.log(this.community_name);
         sessionStorage.setItem('hhhhhh', this.community_name + JSON.parse(sessionStorage.personal).name + 'quality');
       },
       qualityChange(val) {
@@ -866,7 +865,8 @@
           return;
         }
         if (this.haveInHand) {
-          // this.form.community.property_fee = this.property_fee;
+          this.form.community.property_fee = this.property_fee;
+          this.form.community.property_phone = this.property_phone;
           this.haveInHand = false;
           this.form.heater = this.heaterOn ? 1 : 0;                 //暖气
           this.form.gas = this.gasOn ? 1 : 0;                       //天然气
@@ -929,7 +929,6 @@
           this.form.house_id = val.house_id;
           if (val.type === 'allHouse') {
             let house_res = JSON.parse(sessionStorage.getItem('house_res'));
-            console.log(house_res);
             this.prefill(house_res, 'house');
           }
         }
@@ -969,11 +968,9 @@
             this.form.processable_id = val.ids;
           } else {
             this.userInfo(true);
-            console.log(2)
           }
         } else {
           this.userInfo(true);
-          console.log(3);
           type = 'bulletin/quality';
         }
         this.$http.get(this.urls + type).then((res) => {
@@ -997,7 +994,6 @@
               this.form.quality_up = '0';
             }
             this.prefill(data, 'draught');
-            console.log(data);
           } else {
             this.form.id = '';
           }
@@ -1005,7 +1001,6 @@
       },
 
       prefill(data, val) {
-        console.log(val);
         this.isClear = false;
         this.form.city_id = data.city_id;                     //城市
         this.form.province_id = data.province_id;             //城市
@@ -1106,7 +1101,8 @@
         this.form.province_id = this.beforeProvinceId;    //城市
         this.form.city_name = this.beforeCity;            //城市
         this.form.community = {};                         //小区id
-        // this.property_fee = '';                         //小区id
+        this.property_fee = '';                           //物业费
+        this.property_phone = '';                         //物业电话
         this.community_name = '';                         //小区名称
         this.form.door_address = ['', '', ''];
 
