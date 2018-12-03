@@ -1001,6 +1001,9 @@
       },
 
       prefill(data, val) {
+        console.log(data)
+        this.property_fee = data.community.property_fee;
+        this.property_phone = data.community.property_phone;
         this.isClear = false;
         this.form.city_id = data.city_id;                     //城市
         this.form.province_id = data.province_id;             //城市
