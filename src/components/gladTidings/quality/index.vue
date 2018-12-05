@@ -923,6 +923,7 @@
 
       houseInfo() {
         let t = this.$route.query;
+        console.log(this.$route.query)
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.house_name = val.house_name;
@@ -934,8 +935,10 @@
         }
         if (t.city !== undefined && t.city !== '') {
           let val = JSON.parse(t.city);
+          console.log(val)
           this.form.community = val;
           this.community_name = val.village_name;
+          this.property_phone = val.property_phone;
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
