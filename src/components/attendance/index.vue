@@ -32,7 +32,7 @@
             {{item.day}}
             <!-- <div class="dot" :class="{ 'colorA': item.typesetting == 'A', 'colorB': item.typesetting == 'B','colorC': item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}} -->
             <!-- <div class="dot" :class="{ 'success': item.typesetting == 'A' || item.typesetting == 'B'|| item.typesetting == 'C','colorD': item.typesetting == '休' }">{{item.typesetting}} -->
-              <div class="dot" :class="[item.correct == '正常' ? 'success' : (item.correct == '异常' ? 'warning' : 'rest')]">{{item.typesetting}}
+              <div class="dot" :class="[item.correct == '正常' ? 'success' : (item.correct == '异常' ? 'warning' : (item.correct == '无' ? 'kong' :  'rest'))]">{{item.typesetting}}
               </div>
           </td>
         </tr>
@@ -61,7 +61,7 @@
           <span>{{goWork}}</span>
           <span>(上班时间{{workShift}})</span>
           <p>
-            <van-tag round type="primary">{{resultWork}}</van-tag>
+            <van-tag round type="primary" :class="{'warning': resultWork =='补卡', 'warning': resultWork =='缺卡'}">{{resultWork}}</van-tag>
           </p>
         </van-step>
         <van-step v-if="workOff">
@@ -69,7 +69,7 @@
           <span>{{goOffWork}}</span>
           <span>(下班时间{{workOffShift}})</span>
           <p>
-            <van-tag round type="primary" :class="{'warning': resultOffWork =='补卡'}">{{resultOffWork}}</van-tag>
+            <van-tag round type="primary" :class="{'warning': resultOffWork =='补卡', 'warning': resultOffWork =='缺卡'}">{{resultOffWork}}</van-tag>
           </p>
         </van-step>
       </van-steps>
@@ -86,6 +86,8 @@
 export default {
   data() {
     return {
+      currentday: "",  //当前日
+      daycount: "",  // 月份最大值
       attendanceShift: "",
       typesettingDate: [],
       isNormal: "",
@@ -130,11 +132,13 @@ export default {
       // this.$http.get(globalConfig.server + "attendance/sort/sort?user_id=289&arrange_month=" + date).then(res => {   // 测试数据
       this.$http.get(globalConfig.server + "attendance/sort/sort?arrange_month=" + date).then(res => {
           this.typesetting = {};
-          console.log(res, "11111");
           if (res.data.code == "20000") {
             let arr = [];
             let userdimension = res.data.data.data.users.sort_dimension
             userdimension.forEach((item, index) => {
+              if(item.length == 2) {
+
+              }
             let obj = {};
               item.forEach((val, kay) => {
                 if(val.event_attribute == 1 && val.status == 0) {
@@ -143,21 +147,26 @@ export default {
                   obj["b"] = 2;
                 } else if(val.event_attribute == 5 && val.status == 0) {
                   obj["c"] = 3;
-                }
+                } 
+                // else if(item.length == 2 ) {
+                //   obj["d"] = 4
+                // }
               })
                 arr.push(obj)
             })
-            console.log(arr)
             arr.forEach((item, index) => {
               if(item.a == 1 && item.b == 2) {
                 this.typesettingDate[index] = "正常";
-              } else if(item.c == 3) {
+              } else if (item.c == 3) {
                 this.typesettingDate[index] = "休息";
-              } else {
+              // } else if ( item.d == 4) {
+              } else if (Object.keys(item).length == 0) {
+                this.typesettingDate[index] = "无"
+              } 
+              else{
                 this.typesettingDate[index] ="异常";
               }
             })
-            console.log(this.typesettingDate)
             this.typesetting = res.data.data.data.arrange;
             this.currentMonth = res.data.data.month;
             this.currentYear = res.data.data.year;
@@ -194,12 +203,34 @@ export default {
               this.role += item.display_name + " "
             })
             this.recode = res.data.data.sort_dimension;
-            if(this.recode.length==0) {
+            let recodeLength = this.recode.length;
+            if(recodeLength ==0) {
               this.punchNum = 0
             }
             let attendanceObj = {};
             let attendanceArr = [];
             this.recode.forEach((item, index) => {
+              if(this.currentday <= this.daycount) {}
+                if(recodeLength < 4 && recodeLength > 1) {
+                  let aaa = false;    //是否上班
+                  let bbb = false;   // 上班缺卡
+                  let ccc = false;   // 下班缺卡
+                  if(item.event_attribute == 3 || item.event_attribute == 4)  {
+                    aaa = true
+                  }
+                  if( item.event_attribute == 1) {
+                    bbb = true;   
+                  }
+                  if( item.event_attribute == 2) {
+                    ccc = true;
+                  }
+                  if(aaa && !bbb) {
+                    this.resultWork = "缺卡";
+                  }
+                  if(aaa && !ccc) {
+                    this.resultOffWork = "缺卡";
+                  }
+                }
               if (item.event_attribute == 1) {
                 if (item.status == 0) {
                   this.resultWork = "正常";
@@ -328,7 +359,9 @@ export default {
       let date = new Date();
       let y = date.getFullYear();
       let m = date.getMonth() + 1;
+      this.daycount = new Date(y, m, 0).getDate();
       let d = date.getDate();
+      this.currentday = d;
       let ym = y + "-" + m;
       this.currentDate = y + "-" + m +"-" + d;
       this.getAttendance(ym);
@@ -371,15 +404,12 @@ export default {
         this.dayarr = [];
       }
       var themonth1stday = new Date(year, month - 1, 1).getDay(); 
-      // console.log(themonth1stday, "本月第一天星期几");
       var y = month == 12 ? year + 1 : year;
       var m = month == 12 ? 1 : month;
       var themonthdaysamount = new Date(new Date(y, m, 1) - 1).getDate();
-      // console.log(themonthdaysamount, "这个月多少天");
       var prevmonthlastday = new Date(
         new Date(year, month - 1, 1) - 1
       ).getDate();
-      // console.log(prevmonthlastday, "上个月多少天");
       while (themonth1stday-- > 0) {
         this.dayarr.unshift({
           day: prevmonthlastday--,
@@ -413,12 +443,10 @@ export default {
       }
       let _this = this;
       let settingObj = Object.values(this.typesetting);
-        console.log(this.typesettingDate);
         let typeArr = [];
         // typeArr = Object.values(this.typesettingDate);
         for(let key in _this.typesettingDate) {
           typeArr.push(_this.typesettingDate[key])
-        // console.log(typeArr);
         }
       _arr.forEach((item, index) => {
           item.forEach((val, key) => {
@@ -429,7 +457,6 @@ export default {
                 }
               });
               typeArr.forEach((c, d) => {
-                // console.log(_arr[index][key].day)
                 if(_arr[index][key].day == d + 1) {
                   _arr[index][key]["correct"] = c
                 }
@@ -437,7 +464,6 @@ export default {
             }
           });
       });
-      console.log(_arr, "00000 ")
       this.arr = _arr
     },
   },
@@ -520,11 +546,14 @@ export default {
     color: gray;
     visibility: hidden;
   }
+  .kong {
+    background-color: #fff;
+  }
   .rest {
     background-color: gray;
   }
   .warning {
-    background-color: #f90;
+    background-color: #f90!important;
   }
   .success {
     background-color: #4d90fe;
