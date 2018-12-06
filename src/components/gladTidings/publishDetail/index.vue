@@ -364,7 +364,7 @@
               this.address = content.house.name;
             }
             //收房报备验证收款银行卡或收款人是否为公司员工
-            if((main.place.display_name === '核算经理审核中' || main.place.name === 'verify-manager_review') && main.processable_type === 'bulletin_collect_basic'){
+            if(main.place.name === 'verify-manager_review' && main.processable_type === 'bulletin_collect_basic'){
               this.$http.post(this.urls + '/bulletin/collect/validateBankCard', main).then(res => {
                 if(res.data.code === '50122'){
                   Dialog.alert({
