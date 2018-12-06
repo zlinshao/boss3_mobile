@@ -155,7 +155,7 @@ export default {
       })
     };
     // loading
-    Vue.prototype.prompt = function (type, msg) {
+    Vue.prototype.prompt = function (msg, type) {
       switch (type) {
         case 'send':
           Toast.loading({
@@ -406,9 +406,9 @@ export default {
         data['bank' + (index + 1)] = item;
       });
       data.account_id = val.account_id;
-      this.prompt('send', '正在生成电子收据！');
+      this.prompt('正在生成电子收据！', 'send');
       this.$http.post(this.urls + 'financial/receipt/generate', data).then(res => {
-        this.prompt('close');
+        this.prompt('', 'close');
         if (res.data.code === '20000') {
           let pdfUrls = res.data.data.shorten_uri;
           if (navigator.userAgent == 'app/ApartMent') {
@@ -442,10 +442,10 @@ export default {
             });
           }
         } else {
-          this.prompt('', res.data.msg);
+          this.prompt(res.data.msg);
         }
       }).catch(_ => {
-        this.prompt('close');
+        this.prompt('', 'close');
       })
     };
   }

@@ -49,6 +49,12 @@ $colorF: #fff;
   box-shadow: 0 0 .6rem .01rem rgba(189, 189, 189, 0.30);
 }
 
+@mixin backgroundImage($n) {
+  background: url($n) no-repeat;
+  -webkit-background-size: 100% 100%;
+  background-size: 100% 100%;
+}
+
 //搜索结果提示
 .notData {
   text-align: center;
