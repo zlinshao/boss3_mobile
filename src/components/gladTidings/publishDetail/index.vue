@@ -192,10 +192,11 @@
   import {ImagePreview} from 'vant';
   import {Toast} from 'vant';
   import SwitchCraft from '../../common/switchCraft.vue';
+  import {Dialog} from 'vant';
 
   export default {
     name: "index",
-    components: {ImagePreview, Toast, SwitchCraft},
+    components: {ImagePreview, Toast, SwitchCraft, Dialog},
     directives: {
       WaterfallLower: Waterfall('lower'),
       WaterfallUpper: Waterfall('upper'),
@@ -361,6 +362,16 @@
               this.address = content.rent_without_collect_address;
             } else {
               this.address = content.house.name;
+            }
+            //收房报备验证收款银行卡或收款人是否为公司员工
+            if(main.place.name === 'verify-manager_review' && main.processable_type === 'bulletin_collect_basic'){
+              this.$http.post(this.urls + '/bulletin/collect/validateBankCard', main).then(res => {
+                if(res.data.code === '50122'){
+                  Dialog.alert({
+                    message: res.data.msg
+                  })
+                }
+              })
             }
             this.process = main;
             if (this.rentReport.indexOf(main.processable_type) > -1) {
@@ -601,6 +612,8 @@
             break;
         }
       },
+      //
+
     },
   }
 </script>
