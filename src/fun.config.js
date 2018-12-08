@@ -102,9 +102,14 @@ export default {
       return Number(sum1) + Number(sum2) + Number(sum3);
     };
     // 格式化日期 yyyy-MM-dd
-    Vue.prototype.formatDate = function (date, type) {
+    Vue.prototype.formatDate = function (date, type, pre) {
       let year = date.getFullYear();
-      let month = date.getMonth() + 1;
+      let month;
+      if (pre === 'pre') {
+        month = date.getMonth();
+      } else {
+        month = date.getMonth() + 1;
+      }
       let day = date.getDate();
       let h = date.getHours();
       let m = date.getMinutes();

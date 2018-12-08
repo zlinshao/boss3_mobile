@@ -1,7 +1,7 @@
 <template>
   <div id='personalSalary' :style="{'height': allHeight + 'px'}">
     <div class="dateParams">
-      <div @click="timeChoose('date', params.date)">
+      <div @click="timeChoose('date', date)">
         <i class="colorE192 iconfont icon-richengguanli"></i>
         <span>{{params.date}}</span>
         <i class="selectDate iconfont icon-xiayibu"></i>
@@ -9,7 +9,7 @@
     </div>
     <div class="dataMain">
       <div class="scrollMain">
-        <div class="mainTop" :class="'mainTop' + index" v-for="(item,index) in modules">
+        <div class="mainTop" :class="'mainTop' + item.id" v-for="item in modules" @click="clickModule(item)">
           <div class="moneyIcon"></div>
           <div class="moneyTitle">
             {{item.title}}
@@ -53,18 +53,23 @@
     </div>
     <!--日期-->
     <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
+
+    <SalaryModule :module="salaryDetail" :detail="details" @close="onCancel"></SalaryModule>
   </div>
 </template>
 
 <script>
   import ChooseTime from '../../common/chooseTime.vue'
+  import SalaryModule from './detail.vue'
 
   export default {
     name: "index",
-    components: {ChooseTime},
+    components: {ChooseTime, SalaryModule},
     data() {
       return {
+        urls: globalConfig.server,
         allHeight: '',
+        salaryDetail: false,        //工资详情
         timeModule: false,          //日期状态
         formatData: {
           dateVal: '',              //格式化日期
@@ -72,58 +77,80 @@
           dateType: '',
         },
         params: {
-          date: '2018-12-06',
+          date: '',
         },
+        date: '',
+        details: {},
         modules: [
           {
-            title: '奖励',
-            money: '1000',
+            id: 1,
+            title: '总奖励',
+            money: '/',
+            color: '#23C1BE',
+            iconDetail: require('../../../assets/salary/zongjiangli@3x.png'),
+            data: {},
           },
           {
-            title: '绩效',
-            money: '2000',
+            id: 2,
+            title: '总绩效',
+            money: '/',
+            color: '#7668CE',
+            iconDetail: require('../../../assets/salary/jixiao-bai@3x.png'),
+
           },
           {
+            id: 3,
             title: '本月工资',
-            money: '20000',
+            money: '/',
+            color: '',
+            iconDetail: '',
+            data: {},
           },
           {
-            title: '扣款',
-            money: '300',
+            id: 4,
+            title: '扣款合计',
+            money: '/',
+            color: '#E56BB2',
+            iconDetail: require('../../../assets/salary/koukuan-bai@3x.png'),
+            data: {},
           },
           {
-            title: '其他款项',
-            money: '3000',
+            id: 5,
+            title: '其他款项合计',
+            money: '/',
+            color: '#EF6566',
+            iconDetail: require('../../../assets/salary/qitakuanxiang-bai@3x.png'),
+            data: {},
           },
         ],
         moneyType: [
           {
             title: '工资',
-            areaRanking: 6,
-            allArea: 20,
-            allLargeArea: 125,
-            largeAreaRank: 100,
+            areaRanking: '/',
+            allArea: '/',
+            allLargeArea: '/',
+            largeAreaRank: '/',
           },
           {
             title: '绩效',
-            areaRanking: 3,
-            allArea: 20,
-            allLargeArea: 125,
-            largeAreaRank: 80,
+            areaRanking: '',
+            allArea: '',
+            allLargeArea: '',
+            largeAreaRank: '',
           },
           {
             title: '奖励',
-            areaRanking: 18,
-            allArea: 20,
-            allLargeArea: 125,
-            largeAreaRank: 12,
+            areaRanking: '',
+            allArea: '',
+            allLargeArea: '',
+            largeAreaRank: '',
           },
           {
             title: '扣款',
-            areaRanking: 1,
-            allArea: 20,
-            allLargeArea: 125,
-            largeAreaRank: 12,
+            areaRanking: '',
+            allArea: '',
+            allLargeArea: '',
+            largeAreaRank: '',
           },
         ]
       }
@@ -131,16 +158,65 @@
     mounted() {
     },
     activated() {
+      this.date = this.formatDate(new Date(), 'date', 'pre');
+      this.params.date = this.date.substring(0, 7);
+      this.getList();
       this.allHeight = document.documentElement.clientHeight || document.body.clientHeight;
       let dataMain = $('.dataMain');
       let scrollMain = $('.scrollMain');
-      dataMain.scrollLeft((Number(scrollMain.css('width').split('px')[0]) / 2.8));
+      // dataMain.scrollLeft((Number(scrollMain.css('width').split('px')[0]) / 2.8));
     },
     watch: {},
     computed: {},
     methods: {
-      routerLink() {
-        this.$router.push({path: '/personalDetail'});
+      getList() {
+        this.$http.get(this.urls + 'salary/sala/getSalarySummary', {
+          params: this.params,
+        }).then(res => {
+          if (res.data.code === '88800') {
+            let data = res.data.data;
+            this.summary(data.summary);
+            this.ranking(data.Ranking);
+            this.moduleDetail(data.salary_detail);
+          } else {
+            this.modules.forEach((arr, index) => {
+              this.modules[index].money = '/';
+              this.modules[index].data = {};
+            });
+            this.moneyType.forEach((arr, index) => {
+              this.moneyType[index].allArea = '';
+              this.moneyType[index].areaRanking = '';
+              this.moneyType[index].allLargeArea = '';
+              this.moneyType[index].largeAreaRank = '';
+            })
+          }
+        })
+      },
+      // 总工资
+      summary(sum) {
+        this.modules[0].money = sum.award;
+        this.modules[1].money = sum.achievement;
+        this.modules[2].money = sum.salary;
+        this.modules[3].money = sum.cut;
+        this.modules[4].money = sum.other;
+      },
+      // 排名
+      ranking(ran) {
+        this.moneyType[0].allArea = ran.group_ranking.a;//片区
+        this.moneyType[0].areaRanking = ran.group_ranking.p;//片区
+        this.moneyType[0].allLargeArea = ran.area_ranking.a;//区域
+        this.moneyType[0].largeAreaRank = ran.area_ranking.p;//区域
+      },
+      // 详情
+      moduleDetail(data) {
+        this.modules.forEach((res, index) => {
+          this.modules[index].data = data;
+        })
+      },
+      clickModule(val) {
+        this.details = val;
+        if (val.id === 3) return;
+        this.salaryDetail = true;
       },
       // 显示日期
       timeChoose(val, time) {
@@ -153,11 +229,14 @@
       },
       // 确定日期
       onConTime(val) {
-        this.params[val.dataKey] = val.dateVal;
+        this.params[val.dataKey] = val.dateVal.substring(0, 7);
+        this.date = val.dateVal;
+        this.getList();
         this.onCancel();
       },
       // select关闭
       onCancel() {
+        this.salaryDetail = false;
         this.timeModule = false;
       },
     },
@@ -220,31 +299,31 @@
             font-size: .6rem;
           }
         }
-        .mainTop0 {
+        .mainTop1 {
           @include backgroundImage('../../../assets/salary/jiangli@3x.png');
           .moneyIcon {
             @include backgroundImage('../../../assets/salary/jiangli.png');
           }
         }
-        .mainTop1 {
+        .mainTop2 {
           @include backgroundImage('../../../assets/salary/jixiao@3x.png');
           .moneyIcon {
             @include backgroundImage('../../../assets/salary/jixiao.png');
           }
         }
-        .mainTop2 {
+        .mainTop3 {
           @include backgroundImage('../../../assets/salary/benyuegongzi@3x.png');
           .moneyIcon {
             @include backgroundImage('../../../assets/salary/benyuegongzi.png');
           }
         }
-        .mainTop3 {
+        .mainTop4 {
           @include backgroundImage('../../../assets/salary/koukuan@3x.png');
           .moneyIcon {
             @include backgroundImage('../../../assets/salary/koukuan.png');
           }
         }
-        .mainTop4 {
+        .mainTop5 {
           @include backgroundImage('../../../assets/salary/qitakuanxiang@3x.png');
           .moneyIcon {
             @include backgroundImage('../../../assets/salary/qitakuanxiang.png');
