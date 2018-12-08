@@ -57,8 +57,8 @@
             this.detailList = {
               'old_lord_award': '原收房奖励',
               'old_rent_award': '原租房奖励',
-              'lord_overflow_award': '收益价奖励',
-              'rent_overflow_award': '租益价奖励',
+              'lord_overflow_award': '收溢价奖励',
+              'rent_overflow_award': '租溢价奖励',
               'new_secondrent_award': '新绩效续租奖励',
               'lord_award': '收房奖励',
               'rent_award': '租房奖励',
