@@ -161,7 +161,9 @@
       this.date = this.formatDate(new Date(), 'date', 'pre');
       this.params.date = this.date.substring(0, 7);
       this.getList();
-      this.allHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      this.$nextTick(function () {
+        this.allHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      });
       let dataMain = $('.dataMain');
       let scrollMain = $('.scrollMain');
       dataMain.scrollLeft((Number(scrollMain.css('width').split('px')[0]) / 2.8));
