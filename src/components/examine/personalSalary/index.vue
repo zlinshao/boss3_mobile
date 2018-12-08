@@ -162,7 +162,7 @@
       this.params.date = this.date.substring(0, 7);
       this.getList();
       this.$nextTick(function () {
-        this.allHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        this.allHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
       });
       let dataMain = $('.dataMain');
       let scrollMain = $('.scrollMain');
@@ -250,6 +250,7 @@
 
   #personalSalary {
     color: #fff;
+    padding-bottom: .5rem;
     @include backgroundImage('../../../assets/salary/backgroundimage@3x.png');
     .dateParams {
       @include flex('center');
@@ -276,6 +277,7 @@
       }
       width: 100%;
       overflow: auto;
+      -webkit-overflow-scrolling: touch;
       .scrollMain {
         @include flex('itemCenter');
         width: 26rem;
@@ -334,7 +336,7 @@
       }
     }
     .ranking {
-      margin: 0.6rem .3rem;
+      margin: 0.5rem .3rem 0;
       @include radius(.05rem);
       border: .01rem solid #BD4D8B;
       border-top: none;
