@@ -156,13 +156,16 @@
       }
     },
     mounted() {
-    },
-    activated() {
       this.date = this.formatDate(new Date(), 'date', 'pre');
       this.params.date = this.date.substring(0, 7);
       this.getList();
+    },
+    activated() {
+      this.routerIndex('');
+      this.ddRent('');
       this.$nextTick(function () {
         this.allHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+        window.scrollTo(0, 0);
       });
       let dataMain = $('.dataMain');
       let scrollMain = $('.scrollMain');
@@ -177,10 +180,12 @@
         }).then(res => {
           if (res.data.code === '88800') {
             let data = res.data.data;
+            sessionStorage.setItem('salary', JSON.stringify(data));
             this.summary(data.summary);
             this.ranking(data.Ranking);
             this.moduleDetail(data.salary_detail);
           } else {
+            sessionStorage.setItem('salary', '');
             this.modules.forEach((arr, index) => {
               this.modules[index].money = '/';
               this.modules[index].data = {};
@@ -217,7 +222,10 @@
       },
       clickModule(val) {
         this.details = val;
-        if (val.id === 3) return;
+        if (val.id === 3) {
+          this.$router.push('/allDetail');
+          return;
+        }
         this.salaryDetail = true;
       },
       // 显示日期
@@ -240,6 +248,8 @@
       onCancel() {
         this.salaryDetail = false;
         this.timeModule = false;
+        this.routerIndex('');
+        this.ddRent('');
       },
     },
   }
