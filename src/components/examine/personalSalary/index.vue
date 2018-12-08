@@ -164,7 +164,7 @@
       this.allHeight = document.documentElement.clientHeight || document.body.clientHeight;
       let dataMain = $('.dataMain');
       let scrollMain = $('.scrollMain');
-      // dataMain.scrollLeft((Number(scrollMain.css('width').split('px')[0]) / 2.8));
+      dataMain.scrollLeft((Number(scrollMain.css('width').split('px')[0]) / 2.8));
     },
     watch: {},
     computed: {},
