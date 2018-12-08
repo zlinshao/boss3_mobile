@@ -110,7 +110,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, .3);
+    background: rgba(0, 0, 0, .4);
     @include flex('center');
     .moneyDetail {
       background: #fff;
