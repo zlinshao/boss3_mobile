@@ -38,11 +38,7 @@
             smallTitle: 'Performance',
             color: '#7668CE',
             iconDetail: require('../../../assets/salary/jixiaoicon@3x.png'),
-            data: {
-              'old_basic_achv': '老绩效工资',
-              'new_basic_achv': '新绩效工资',
-              'push_money': '提成工资',
-            }
+            data: Object.assign({}, JSON.parse(JSON.stringify(salaryPerformance)), {'push_money': '提成工资'}),
           },
           {
             // 奖励
@@ -50,14 +46,7 @@
             smallTitle: 'Reward',
             color: '#23C1BE',
             iconDetail: require('../../../assets/salary/jiangliicon@3x.png'),
-            data: {
-              'old_lord_award': '原收房奖励',
-              'old_rent_award': '原租房奖励',
-              'lord_overflow_award': '收溢价奖励',
-              'rent_overflow_award': '租溢价奖励',
-              'lord_award': '收房奖励',
-              'rent_award': '租房奖励',
-            }
+            data: salaryReward,
           },
           {
             // 扣款
@@ -65,27 +54,11 @@
             smallTitle: 'Deductions',
             color: '#E56BB2',
             iconDetail: require('../../../assets/salary/koukuanicon@3x.png'),
-            data: {
-              'late_cut': '迟到扣款',
-              'personal_leave_cut': '事假扣款',
-              'sick_leave_cut': '病假扣款',
-              'missing_date_money': '缺勤扣款',
-              'missing_cut_money': '缺卡扣款',
-              'social_security_cut': '社保扣款',
-              'absenteeism_cut': '旷工扣款',
-              'dormitory_cut': '宿舍扣款',
-              'ele_driver_cut': '电动车扣款',
-              'accident_security_cut': '意外险扣款',
-              'contract_cut': '合同扣款',
-              'finance_cut': '财务扣款',
-              'administration_cut': '行政扣款',
-              'other_cut': '其他扣款',
-              'customer_server_cut': '客服扣款',
-              'personal_income_tax': '个税',
+            data: Object.assign({}, JSON.parse(JSON.stringify(salaryDeductions)), {
               'final_money_complete': '尾款不齐',
               'doc_complete': '资料不齐',
-              'cut_sum': '应扣合计',
-            }
+              'cut_sum': '应扣合计'
+            }),
           },
           {
             // 其他款项
@@ -93,9 +66,7 @@
             smallTitle: 'Other payments',
             color: '#EF6566',
             iconDetail: require('../../../assets/salary/qitakuanxiangicon@3x.png'),
-            data: {
-              'bonus': '各项补贴',
-            }
+            data: salaryOther,
           },
         ],
       }
@@ -192,7 +163,7 @@
       height: 3rem;
       @include backgroundImage('../../../assets/salary/banner@3x.png');
       div {
-        width: 30%;
+        width: 38%;
         text-align: right;
         color: #fff;
         padding-top: .6rem;

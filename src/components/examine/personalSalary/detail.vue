@@ -54,46 +54,16 @@
       lists() {
         switch (this.detail.id) {
           case 1:
-            this.detailList = {
-              'old_lord_award': '原收房奖励',
-              'old_rent_award': '原租房奖励',
-              'lord_overflow_award': '收溢价奖励',
-              'rent_overflow_award': '租溢价奖励',
-              'new_secondrent_award': '新绩效续租奖励',
-              'lord_award': '收房奖励',
-              'rent_award': '租房奖励',
-            };
+            this.detailList = Object.assign({}, JSON.parse(JSON.stringify(salaryReward)), {'new_secondrent_award': '新绩效续租奖励'});
             break;
           case 2:
-            this.detailList = {
-              'old_basic_achv': '老绩效工资',
-              'new_basic_achv': '新绩效工资',
-            };
+            this.detailList = salaryPerformance;
             break;
           case 4:
-            this.detailList = {
-              'late_cut': '迟到扣款',
-              'personal_leave_cut': '事假扣款',
-              'sick_leave_cut': '病假扣款',
-              'missing_date_money': '缺勤扣款',
-              'missing_cut_money': '缺卡扣款',
-              'social_security_cut': '社保扣款',
-              'absenteeism_cut': '旷工扣款',
-              'dormitory_cut': '宿舍扣款',
-              'ele_driver_cut': '电动车扣款',
-              'accident_security_cut': '意外险扣款',
-              'contract_cut': '合同扣款',
-              'finance_cut': '财务扣款',
-              'administration_cut': '行政扣款',
-              'other_cut': '其他扣款',
-              'customer_server_cut': '客服扣款',
-              'personal_income_tax': '个税',
-            };
+            this.detailList = salaryDeductions;
             break;
           case 5:
-            this.detailList = {
-              'bonus': '其他补贴',
-            };
+            this.detailList = salaryOther;
             break;
         }
       }
