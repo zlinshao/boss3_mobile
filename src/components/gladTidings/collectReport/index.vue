@@ -457,11 +457,9 @@
         picStatus: 'success',
         isClear: false,
 
-        lists: [],
         tabs: '',
         columns: [],              //select值
         selectHide: false,
-        joint: false,             //是否合租
         first_date: [],
         timeModule: false,          //日期状态
         formatData: {

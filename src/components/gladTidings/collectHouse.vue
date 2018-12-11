@@ -182,6 +182,7 @@
               break;
           }
         }
+        sessionStorage.setItem('contractVal', JSON.stringify(key.contractVal));
         key.house = JSON.stringify(houseData);
         this.routLink(path, key);
       },
@@ -340,6 +341,7 @@
         } else {
           list.end_at = '';
         }
+        list.contractVal = value;
         list.id = value.id;
         list.agency_info = value.agency_info;
         list.is_agency = value.is_agency;
