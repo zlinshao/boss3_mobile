@@ -60,14 +60,12 @@
           <van-field
             v-model="form.customers[index].name"
             type="text"
-            :disabled="index === 0"
             label="客户姓名"
             placeholder="请填写客户姓名">
           </van-field>
           <van-field
             v-model="form.customers[index].phone"
             type="text"
-            :disabled="index === 0"
             label="联系方式"
             placeholder="请填写联系方式">
           </van-field>
