@@ -44,7 +44,7 @@
             @click="timeChoose('sign_date', contract.sign_date)"
             placeholder="请选择签约日期日期">
           </van-field>
-          <div class="first_date month">
+          <div class="first_date month" v-if="form.collect_or_rent === '0'">
             <div class="titles">签约时长</div>
             <van-field
               v-model="contract.month"
@@ -58,6 +58,23 @@
               type="text"
               class="number"
               @keyup="endDate(contract.end_date_vacant, contract.month, contract.day, 2)"
+              placeholder="请填写天数">
+            </van-field>
+          </div>
+          <div class="first_date month" v-if="form.collect_or_rent === '1'">
+            <div class="titles">签约时长</div>
+            <van-field
+              v-model="contract.month"
+              type="text"
+              class="number"
+              @keyup="endDate(contract.begin_date, contract.month, contract.day, 2)"
+              placeholder="请填写月数">
+            </van-field>
+            <van-field
+              v-model="contract.day"
+              type="text"
+              class="number"
+              @keyup="endDate(contract.begin_date, contract.month, contract.day, 2)"
               placeholder="请填写天数">
             </van-field>
           </div>
@@ -532,7 +549,7 @@
             }
             break;
           case 3:
-            this.form.pay_way_bet = value;
+            this.contract.pay_way_bet = value;
             break;
           case 7:
             this.vacancy_way_name = value;
@@ -616,6 +633,7 @@
 
       // 结束日期
       endDate(time, month, day, val) {
+        console.log(month)
         let params = {};
         if (val === 1) {
           params.begin_date = time;
