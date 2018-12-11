@@ -393,8 +393,7 @@
         this.routerIndex('');
         this.ddRent('');
         this.close_();
-        this.specialDetail('');
-        this.dicts();
+        this.dicts('');
       }
     },
     activated() {
@@ -409,8 +408,7 @@
         this.routerIndex('');
         this.ddRent('');
         this.close_();
-        this.specialDetail('');
-        this.dicts();
+        this.dicts('');
         count = count + '1';
         sessionStorage.setItem('count', count);
       }
@@ -437,15 +435,14 @@
           this.ddRent('');
         }
         this.close_();
-        this.specialDetail(newID);
-        this.dicts();
+        this.dicts(newID);
         count = count + '1';
         sessionStorage.setItem('count', count);
       }
       this.houseInfo();
     },
     methods: {
-      dicts() {
+      dicts(val) {
         //付款方式
         this.dictionary(443, 1).then((res) => {
           this.value4 = [];
@@ -460,6 +457,7 @@
             for (let i = 0; i < res.data.length; i++) {
               this.value7.push(res.data[i].dictionary_name);
             }
+            this.specialDetail(val);
           });
         });
       },
