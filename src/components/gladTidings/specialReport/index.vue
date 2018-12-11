@@ -190,7 +190,7 @@
         </div>
         <van-cell-group v-if="form.collect_or_rent === '1'">
           <van-field
-            v-model="form.pay_way_bet"
+            v-model="contract.pay_way_bet"
             type="text"
             class="number"
             label="押"
@@ -601,9 +601,15 @@
 
       // 日期计算
       countDate(val, per) {
-        this.$http.get(this.urls + '/bulletin/helper/date', {
+        let begin = [];
+        if (this.form.collect_or_rent === '0') {
+          begin = this.contract.pay_first_date;
+        } else {
+          begin = this.contract.begin_date;
+        }
+        this.$http.get(this.urls + 'bulletin/helper/date', {
           params: {
-            begin_date: this.contract.pay_first_date,
+            begin_date: begin,
             period: per,
           }
         }).then((res) => {
@@ -615,6 +621,7 @@
             }
           }
         })
+
       },
 
       // 结束日期
@@ -660,13 +667,13 @@
 
       rentChange(val) {
         if (this.numbers !== val) {
+          this.resetting();
           this.form.address = '';
           this.form.corp_name = '';
           this.form.house_id = '';
           this.form.contract_id = '';
           this.numbers = val;
         }
-        this.resetting();
       },
 
       saveCollect(val) {
@@ -770,6 +777,7 @@
       },
       // 租
       contractRent(val) {
+        console.log(val);
         this.contract.pay_way_bet = val.pay_bet; //付款方式 押
         this.first_date = [];
         this.first_date.push(val.start_at);
@@ -790,8 +798,8 @@
             }
           }
         });
-        this.countDate(1, val.period_price_arr);
-        this.countDate(2, val.period_pay_arr);
+        this.countDate(1, this.contract.period_price_arr);
+        this.countDate(2, this.contract.period_pay_arr);
       },
       // 收
       contractCol(val) {
@@ -823,8 +831,8 @@
             }
           }
         });
-        this.countDate(1, val.period_price_arr);
-        this.countDate(2, val.period_pay_arr);
+        this.countDate(1, this.contract.period_price_arr);
+        this.countDate(2, this.contract.period_pay_arr);
 
         this.form.vacancy_way = val.vacancy_way;
         for (let j = 0; j < this.dictValue7.length; j++) {
@@ -859,9 +867,9 @@
             this.form.contract_id = draft.contract_id;
             this.form.content = draft.content;
             this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot;
+            this.screenshots = data.screenshot || [];
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.screenshots_leader = data.screenshot_leader;
+            this.screenshots_leader = data.screenshot_leader || [];
             this.form.staff_name = draft.staff_name;
             if (draft.department_name) {
               this.form.department_id = draft.department_id;
@@ -870,9 +878,50 @@
               this.form.department_id = data.department_id;
               this.form.department_name = data.department_name;
             }
-
             this.form.staff_id = draft.staff_id;
+            // 合同
+            let con = draft.contract;
 
+            this.contract.sign_date = con.sign_date;
+            this.contract.month = con.month;
+            this.contract.day = con.day === '0' ? '' : con.day;
+
+            this.contract.begin_date = con.begin_date;
+            this.contract.end_date = con.end_date;
+
+            this.amountPrice = con.price_arr.length;
+            this.contract.period_price_arr = con.period_price_arr;
+            this.contract.price_arr = con.price_arr;
+            this.contract.period_pay_arr = con.period_pay_arr;
+
+            if (draft.collect_or_rent === '0') {
+              this.contract.vacancy = con.vacancy;
+              this.contract.end_date_vacant = con.end_date_vacant;
+              this.contract.pay_first_date = con.pay_first_date;
+              this.first_date = [];
+              this.first_date.push(con.pay_first_date);
+              this.datePrice[0] = con.pay_first_date;
+              this.datePay[0] = con.pay_first_date;
+              this.contract.pay_second_date = con.pay_second_date;
+              for (let j = 0; j < this.dictValue7.length; j++) {
+                if (this.dictValue7[j].id === con.vacancy_way) {
+                  this.vacancy_way_name = this.dictValue7[j].dictionary_name;
+                }
+              }
+              this.form.vacancy_other = con.vacancy_other;
+              for (let i = 0; i < con.pay_way_arr.length; i++) {
+                this.amountPay = i + 1;
+                this.contract.pay_way_arr.push('');
+                for (let j = 0; j < this.dictValue4.length; j++) {
+                  if (this.dictValue4[j].id === con.pay_way_arr[i]) {
+                    this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
+                  }
+                }
+              }
+            }
+            if (con.collect_or_rent === '1') {
+              // this.contract.pay_way_bet = con.pay_way_bet;
+            }
           } else {
             this.form.id = '';
           }
