@@ -33,7 +33,7 @@
           required>
         </van-field>
       </van-cell-group>
-      <div class="revise" @click="reviseStatus = !reviseStatus">修改合同信息</div>
+      <div class="revise" @click="reviseSta">修改合同信息</div>
       <div v-if="reviseStatus">
         <van-cell-group>
           <van-field
@@ -42,11 +42,10 @@
             readonly
             type="text"
             @click="timeChoose('sign_date', contract.sign_date)"
-            placeholder="请选择签约日期日期"
-            required>
+            placeholder="请选择签约日期日期">
           </van-field>
           <div class="first_date month">
-            <div class="titles required">签约时长</div>
+            <div class="titles">签约时长</div>
             <van-field
               v-model="contract.month"
               type="text"
@@ -70,8 +69,7 @@
             label="空置期开始"
             placeholder="请选择空置期开始日期"
             readonly
-            @click="timeChoose('begin_date', contract.begin_date)"
-            required>
+            @click="timeChoose('begin_date', contract.begin_date)">
           </van-field>
           <van-field
             v-if="form.collect_or_rent === '1'"
@@ -162,8 +160,7 @@
               type="text"
               label="开始时间"
               placeholder="获取周期开始日期"
-              disabled
-              required>
+              disabled>
             </van-field>
             <van-field
               v-model="contract.period_price_arr[index]"
@@ -172,16 +169,14 @@
               label="付款周期"
               :disabled="amountPrice === 1 && contract.period_price_arr[index] === contract.month"
               @keyup="periodDate(1)"
-              placeholder="请填写月单价周期"
-              required>
+              placeholder="请填写月单价周期">
             </van-field>
             <van-field
               v-model="contract.price_arr[index]"
               type="text"
               class="number"
               label="价格"
-              placeholder="请填写金额"
-              required>
+              placeholder="请填写金额">
             </van-field>
           </van-cell-group>
         </div>
@@ -196,8 +191,7 @@
             label="押"
             placeholder="请填写付款方式-押"
             @click="selectShow(3)"
-            readonly
-            required>
+            readonly>
           </van-field>
         </van-cell-group>
         <div class="changes" v-for="(key,index) in amountPay">
@@ -211,8 +205,7 @@
               type="text"
               label="开始时间"
               placeholder="获取周期开始日期"
-              disabled
-              required>
+              disabled>
             </van-field>
             <van-field
               v-model="contract.period_pay_arr[index]"
@@ -221,8 +214,7 @@
               label="付款周期"
               :disabled="amountPay === 1 && contract.period_pay_arr[index] === contract.month"
               @keyup="periodDate(2)"
-              placeholder="请填写付款方式周期"
-              required>
+              placeholder="请填写付款方式周期">
             </van-field>
             <van-field
               v-if="form.collect_or_rent === '0'"
@@ -231,8 +223,7 @@
               label="付款方式"
               type="text"
               readonly
-              placeholder="请选择付款方式"
-              required>
+              placeholder="请选择付款方式">
             </van-field>
             <van-field
               v-if="form.collect_or_rent === '1'"
@@ -240,8 +231,7 @@
               label="付(月数)"
               type="text"
               class="number"
-              placeholder="如:半年付请输入6"
-              required>
+              placeholder="如:半年付请输入6">
             </van-field>
           </van-cell-group>
         </div>
@@ -727,7 +717,13 @@
           Toast(this.alertMsg('sub'));
         }
       },
-
+      reviseSta() {
+        if (this.form.house_id) {
+          this.reviseStatus = !this.reviseStatus;
+        } else {
+          this.prompt('请选择房屋地址!');
+        }
+      },
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
