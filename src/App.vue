@@ -106,13 +106,13 @@
             data.phone = res.data.data.phone;
             data.department_name = res.data.data.org[0].name;
             data.department_id = res.data.data.org[0].id;
-            this.loading = false;
+            this.loading = true;
             sessionStorage.setItem('personal', JSON.stringify(data));
           }).catch(_ => {
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = true;
+          this.loading = false;
           if (this.isWeiXin()) {
             this.prevent();
           } else {

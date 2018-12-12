@@ -347,6 +347,7 @@
         revise: {
           id: '',
           sign_date: '',                //签约日期
+          vacancy_way: '',              //空置期安置方式
           month: '',                    //收/租 房月数
           day: '',                      //收/租 房天数
           begin_date: '',               //空置期开始日期/合同开始日期
@@ -631,7 +632,6 @@
 
       // 结束日期
       endDate(time, month, day, val) {
-        console.log(month)
         let params = {};
         if (val === 1) {
           params.begin_date = time;
@@ -693,6 +693,11 @@
         if (this.haveInHand) {
           this.haveInHand = false;
           this.form.draft = val;
+          for (let key of Object.keys(this.contract)) {
+            if (Array.isArray(this.contract[key])) {
+              this.contract[key] = this.filter_array(this.contract[key]);
+            }
+          }
           this.form.contract = this.contract;
           this.$http.post(this.urls + 'bulletin/special', this.form).then((res) => {
             this.haveInHand = true;
@@ -754,6 +759,7 @@
           this.form.department_id = val.department_id;
 
           let conVal = JSON.parse(sessionStorage.contractVal);
+          console.log(conVal);
           this.revise = {
             id: conVal.id,
             sign_date: conVal.sign_at,                       //签约日期
@@ -789,12 +795,13 @@
       },
       // 租
       contractRent(val) {
-        console.log(val);
         this.contract.pay_way_bet = val.pay_bet; //付款方式 押
         this.first_date = [];
         this.first_date.push(val.start_at);
         this.datePrice[0] = val.start_at;
         this.datePay[0] = val.start_at;
+        this.amountPrice = val.month_price.length;
+        this.amountPay = val.pay_way.length;
         // 月单价周期
         val.month_price.forEach(arr => {
           this.contract.period_price_arr.push(arr.period);
@@ -828,6 +835,8 @@
         this.first_date.push(val.first_pay_at);
         this.datePrice[0] = val.first_pay_at;
         this.datePay[0] = val.first_pay_at;
+        this.amountPrice = val.month_price.length;
+        this.amountPay = val.pay_way.length;
         // 月单价周期
         val.month_price.forEach(arr => {
           this.contract.period_price_arr.push(arr.period);
@@ -915,7 +924,10 @@
               this.datePrice[0] = con.pay_first_date;
               this.datePay[0] = con.pay_first_date;
               this.contract.pay_second_date = con.pay_second_date;
+              console.log(con.vacancy_way)
               for (let j = 0; j < this.dictValue7.length; j++) {
+                console.log(this.dictValue7[j].id)
+
                 if (this.dictValue7[j].id === con.vacancy_way) {
                   this.vacancy_way_name = this.dictValue7[j].dictionary_name;
                 }
@@ -932,8 +944,10 @@
               }
             }
             if (con.collect_or_rent === '1') {
-              // this.contract.pay_way_bet = con.pay_way_bet;
+              this.contract.pay_way_bet = con.pay_way_bet;
             }
+            this.countDate(1, this.contract.period_price_arr);
+            this.countDate(2, this.contract.period_pay_arr);
           } else {
             this.form.id = '';
           }
