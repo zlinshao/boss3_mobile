@@ -900,6 +900,7 @@
               this.form.department_name = data.department_name;
             }
             this.form.staff_id = draft.staff_id;
+
             // 合同
             let con = draft.contract;
 
@@ -934,9 +935,8 @@
               this.contract.pay_way_arr = con.pay_way_arr;
               for (let i = 0; i < con.pay_way_arr.length; i++) {
                 this.amountPay = i + 1;
-                this.contract.pay_way_arr.push('');
                 for (let j = 0; j < this.dictValue4.length; j++) {
-                  if (this.dictValue4[j].id === con.pay_way_arr[i]) {
+                  if (this.dictValue4[j].id == con.pay_way_arr[i]) {
                     this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
                   }
                 }
