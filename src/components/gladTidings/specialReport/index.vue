@@ -775,18 +775,18 @@
           this.contract = {};
           if (this.form.collect_or_rent === '0') {
             let arr = {
-              end_date_vacant: '',          //空置期结束日期
-              vacancy: '',                  //空置期
-              vacancy_way: '',              //空置期安排方式
-              vacancy_other: '',            //空置期安排方式 随便填
-              pay_first_date: '',           //第一次付款时间
-              pay_second_date: '',          //第二次付款时间
+              vacancy: conVal.ready_days,                      //空置期
+              end_date_vacant: conVal.vacancy_end_date,        //空置期结束日期
+              pay_first_date: conVal.first_pay_at,             //第一次付款时间
+              pay_second_date: conVal.second_pay_at,           //第二次付款时间
+              vacancy_way: conVal.vacancy_way,                 //空置期安排方式
+              vacancy_other: conVal.vacancy_other,             //空置期安排方式 随便填
             };
             this.contract = Object.assign({}, arr, JSON.parse(JSON.stringify(this.revise)));
             this.contractCol(conVal);
           } else {
             let arr = {
-              pay_way_bet: '',              //付款方式 押
+              pay_way_bet: conVal.pay_way_bet,              //付款方式 押
             };
             this.contract = Object.assign({}, arr, JSON.parse(JSON.stringify(this.revise)));
             this.contractRent(conVal);
@@ -795,7 +795,6 @@
       },
       // 租
       contractRent(val) {
-        this.contract.pay_way_bet = val.pay_bet; //付款方式 押
         this.first_date = [];
         this.first_date.push(val.start_at);
         this.datePrice[0] = val.start_at;
@@ -822,15 +821,6 @@
       },
       // 收
       contractCol(val) {
-        let con = {
-          vacancy: val.ready_days,                      //空置期
-          end_date_vacant: val.vacancy_end_date,        //空置期结束日期
-          pay_first_date: val.first_pay_at,             //第一次付款时间
-          pay_second_date: val.second_pay_at,           //第二次付款时间
-          vacancy_way: val.vacancy_way,                 //空置期安排方式
-          vacancy_other: val.vacancy_other,             //空置期安排方式 随便填
-        };
-        this.contract = Object.assign({}, this.contract, con);
         this.first_date = [];
         this.first_date.push(val.first_pay_at);
         this.datePrice[0] = val.first_pay_at;
@@ -924,15 +914,15 @@
               this.datePrice[0] = con.pay_first_date;
               this.datePay[0] = con.pay_first_date;
               this.contract.pay_second_date = con.pay_second_date;
-              console.log(con.vacancy_way)
+              this.contract.vacancy_way = con.vacancy_way;
               for (let j = 0; j < this.dictValue7.length; j++) {
-                console.log(this.dictValue7[j].id)
-
                 if (this.dictValue7[j].id === con.vacancy_way) {
                   this.vacancy_way_name = this.dictValue7[j].dictionary_name;
                 }
               }
               this.form.vacancy_other = con.vacancy_other;
+
+              this.contract.pay_way_arr = con.pay_way_arr;
               for (let i = 0; i < con.pay_way_arr.length; i++) {
                 this.amountPay = i + 1;
                 this.contract.pay_way_arr.push('');
