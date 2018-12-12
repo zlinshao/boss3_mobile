@@ -564,6 +564,7 @@
         let list = {newID: proID, ids: '', type: 1};
         switch (this.process.processable_type) {
           case 'bulletin_quality'://质量
+          case 'bulletin_quality_follow'://跟进质量
             this.$router.push({path: '/quality', query: list});
             break;
           case 'bulletin_collect_basic'://收
@@ -599,12 +600,16 @@
           case 'bulletin_lose'://炸单
             this.$router.push({path: '/friedBill', query: list});
             break;
-          case 'bulletin_refund'://退款
+          case 'bulletin_refund_collect'://特殊
+          case 'bulletin_refund_rent'://特殊
+          case 'bulletin_refund'://特殊
             this.$router.push({path: '/drawback', query: list});
             break;
           case 'bulletin_retainage'://尾款
             this.$router.push({path: '/finalPayment', query: list});
             break;
+          case 'bulletin_special_collect'://特殊
+          case 'bulletin_special_rent'://特殊
           case 'bulletin_special'://特殊
             this.$router.push({path: '/special', query: list});
             break;
