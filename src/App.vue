@@ -167,7 +167,7 @@
       },
       // 获取uid
       getUserId(val) {
-        this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
+        this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code + '&entry=bulletin').then(res => {
           if (res.data.success) {
             let info = res.data.data;
             this.token = info;
