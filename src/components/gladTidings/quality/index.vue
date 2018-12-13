@@ -342,7 +342,7 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel required" @click="fffffff">
+      <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
         <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
         <div class="upload-tips">提示：请上传6张以上房屋照片和1个以上房屋视频哦~</div>
@@ -577,9 +577,6 @@
     },
 
     methods: {
-      fffffff() {
-        sessionStorage.setItem('hhhhhh', this.community_name + JSON.parse(sessionStorage.personal).name + 'quality');
-      },
       qualityChange(val) {
         if (this.numbers !== val) {
           this.close_();
