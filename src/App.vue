@@ -128,7 +128,7 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              if (this.isWeiXin()) {
+              if (that.isWeiXin()) {
                 window.close();
               } else {
                 DingTalkPC.device.notification.alert({
