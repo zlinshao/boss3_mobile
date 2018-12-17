@@ -106,7 +106,7 @@
             data.phone = res.data.data.phone;
             data.department_name = res.data.data.org[0].name;
             data.department_id = res.data.data.org[0].id;
-            this.loading = true;
+            this.loading = false;
             sessionStorage.setItem('personal', JSON.stringify(data));
           }).catch(_ => {
           });
