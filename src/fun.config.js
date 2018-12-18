@@ -325,12 +325,13 @@ export default {
     // 存储个人信息
     Vue.prototype.personalData = function (res, val, resolve) {
       let data = {};
-      data.id = res.data.id;
-      data.name = res.data.name;
-      data.avatar = res.data.avatar;
-      data.phone = res.data.phone;
-      data.department_name = res.data.org[0].name;
-      data.department_id = res.data.org[0].id;
+      let info = res.data.data;
+      data.id = info.id;
+      data.name = info.name;
+      data.avatar = info.avatar;
+      data.phone = info.phone;
+      data.department_name = info.org[0].name;
+      data.department_id = info.org[0].id;
       data.isCompany = '';
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;

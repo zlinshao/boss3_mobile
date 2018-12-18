@@ -100,14 +100,17 @@
           // }
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             let data = {};
-            data.id = res.data.data.id;
-            data.name = res.data.data.name;
-            data.avatar = res.data.data.avatar;
-            data.phone = res.data.data.phone;
-            data.department_name = res.data.data.org[0].name;
-            data.department_id = res.data.data.org[0].id;
-            this.loading = false;
+            let info = res.data.data;
+            data.id = info.id;
+            data.name = info.name;
+            data.avatar = info.avatar;
+            data.phone = info.phone;
+            data.department_name = info.org[0].name;
+            data.department_id = info.org[0].id;
+            data.isCompany = '';
             sessionStorage.setItem('personal', JSON.stringify(data));
+            globalConfig.personal = data;
+            this.loading = false;
           }).catch(_ => {
           });
         } else {
