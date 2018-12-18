@@ -101,7 +101,9 @@
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             let data = {};
             let info = res.data.data;
+            alert(10)
             data.id = info.id;
+            alert(11)
             data.name = info.name;
             data.avatar = info.avatar;
             data.phone = info.phone;
@@ -110,6 +112,7 @@
             data.isCompany = '';
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
+            alert(12)
             this.loading = false;
           }).catch(_ => {
           });
