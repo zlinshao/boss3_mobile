@@ -99,7 +99,7 @@
           //   this.$router.push({path: '/staffSquare'});
           // }
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
-            if (res.data.code === '"10090"') {
+            if (res.data.code === '10090') {
               let data = {};
               let info = res.data.data;
               data.id = info.id;
