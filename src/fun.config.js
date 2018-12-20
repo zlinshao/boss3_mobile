@@ -253,7 +253,7 @@ export default {
                   'code': info.code,
                 }
               }).then((res) => {
-                if (res.data.code === '10000') {
+                if (res.data.status !== 'fail') {
                   if (res.data !== false) {
                     that.personalData(res, val, resolve);
                   } else {
@@ -294,7 +294,7 @@ export default {
                     'code': info.code,
                   }
                 }).then((res) => {
-                  if (res.data.code === '10000') {
+                  if (res.data.status !== 'fail') {
                     if (res.data !== false) {
                       that.personalData(res, val, resolve);
                     } else {
