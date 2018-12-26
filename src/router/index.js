@@ -85,7 +85,7 @@ import ProposeQuestion from '../components/examine/interlocution/components/prop
 import WriteAnswer from '../components/examine/interlocution/components/writeAnswer.vue';  //写回答
 import WriteComment from '../components/examine/interlocution/components/writeComment.vue';  //写评论
 import PersonalSalary from '../components/examine/personalSalary/index.vue';  //个人工资
-import PersonalDetail from '../components/examine/personalSalary/detail.vue';  //个人工资 详情
+import AllDetail from '../components/examine/personalSalary/allDetail.vue';  //个人工资
 
 //计算器
 import SearchHouse from '../components/common/searchHouse.vue';//计算器房屋搜索
@@ -518,23 +518,22 @@ export default new Router({
       hidden: false,
       component: Development
     },
-    // {
-    //   path: '/personalSalary',
-    //   name: '个人工资',
-    //   icon: 'iconfont icon-jinbi',
-    //   back: '#E3705B',
-    //   meta: {title: '个人工资'},
-    //   hidden: 'other',
-    //   component: PersonalSalary
-    // },
-    // {
-    //   path: '/personalDetail',
-    //   name: '工资详情',
-    //   icon: '',
-    //   meta: {title: '工资详情'},
-    //   hidden: false,
-    //   component: PersonalDetail
-    // },
+    {
+      path: '/personalSalary',
+      name: '个人工资',
+      icon: 'iconfont icon-jinbi',
+      back: '#E3705B',
+      meta: {title: '个人工资'},
+      hidden: 'other',
+      component: PersonalSalary
+    },
+    {
+      path: '/allDetail',
+      name: '我的工资',
+      meta: {title: '我的工资'},
+      hidden: false,
+      component: AllDetail
+    },
     {
       path: '/interlocution',
       name: '问答中心',

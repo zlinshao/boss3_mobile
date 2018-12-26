@@ -38,17 +38,25 @@
         <div v-for="(key,index) in formList"
              v-if="printscreen.indexOf(index) === -1">
           <p v-if="index !== 'receiptUri'">{{index}}</p>
-          <h1>
+          <h1 v-if="index.includes('渠道信息')">
+            <span style="display: block;" v-for="arr in Object.keys(key)">
+              <span>{{arr}}&nbsp;:&nbsp;{{key[arr]}}</span>
+            </span>
+          </h1>
+          <h1 v-else>
             <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx].msg}}</span>
               <span style="display: block;">{{key[idx].period}}</span>
             </span>
-            <span v-if="index === '已收金额和汇款账户' || index === '实际收款时间' || index === '补交定金和收款方式'" v-for="(item,idx) in key.length">
+            <span v-if="index === '已收金额和汇款账户' || index === '实际收款时间' || index === '补交定金和收款方式'"
+                  v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx]}}</span>
             </span>
-            <span v-if="!Array.isArray(key) && index !== '房屋类型'">{{key}}</span>
+            <span v-if="!Array.isArray(key) && index !== '房屋类型'">
+              {{key}}
+            </span>
             <span v-if="!Array.isArray(key) && index === '房屋类型'">
-              <span style="display: block;">{{key.name}}</span>
+              <span style="display: block;" v-if="key.name">{{key.name}}</span>
             </span>
           </h1>
         </div>
@@ -364,9 +372,9 @@
               this.address = content.house.name;
             }
             //收房报备验证收款银行卡或收款人是否为公司员工
-            if(main.place.name === 'verify-manager_review' && main.processable_type === 'bulletin_collect_basic'){
+            if (main.place.name === 'verify-manager_review' && main.processable_type === 'bulletin_collect_basic') {
               this.$http.post(this.urls + '/bulletin/collect/validateBankCard', main).then(res => {
-                if(res.data.code === '50122'){
+                if (res.data.code === '50122') {
                   Dialog.alert({
                     message: res.data.msg
                   })
@@ -563,6 +571,7 @@
         let list = {newID: proID, ids: '', type: 1};
         switch (this.process.processable_type) {
           case 'bulletin_quality'://质量
+          case 'bulletin_quality_follow'://跟进质量
             this.$router.push({path: '/quality', query: list});
             break;
           case 'bulletin_collect_basic'://收
@@ -598,12 +607,16 @@
           case 'bulletin_lose'://炸单
             this.$router.push({path: '/friedBill', query: list});
             break;
-          case 'bulletin_refund'://退款
+          case 'bulletin_refund_collect'://特殊
+          case 'bulletin_refund_rent'://特殊
+          case 'bulletin_refund'://特殊
             this.$router.push({path: '/drawback', query: list});
             break;
           case 'bulletin_retainage'://尾款
             this.$router.push({path: '/finalPayment', query: list});
             break;
+          case 'bulletin_special_collect'://特殊
+          case 'bulletin_special_rent'://特殊
           case 'bulletin_special'://特殊
             this.$router.push({path: '/special', query: list});
             break;

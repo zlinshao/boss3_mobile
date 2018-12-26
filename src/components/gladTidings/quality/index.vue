@@ -342,7 +342,7 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel required" @click="fffffff">
+      <div class="aloneModel required">
         <div class="title"><span>*</span>房屋影像</div>
         <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
         <div class="upload-tips">提示：请上传6张以上房屋照片和1个以上房屋视频哦~</div>
@@ -577,9 +577,6 @@
     },
 
     methods: {
-      fffffff() {
-        sessionStorage.setItem('hhhhhh', this.community_name + JSON.parse(sessionStorage.personal).name + 'quality');
-      },
       qualityChange(val) {
         if (this.numbers !== val) {
           this.close_();
@@ -1013,14 +1010,14 @@
         this.form.city_name = data.city_name;                 //城市
         if (data.community) {
           this.form.community = data.community;              //小区id
-          this.community_name = data.community.village_name; //小区id
+            this.community_name = data.community.village_name; //小区id
         }
         this.form.door_address = data.door_address;
 
         this.form.house_type = data.house_type;
         let house = data.house_type;
         let room = dicts.value2[house[1]] === '无' ? '0厅' : dicts.value2[house[1]];
-        let hall = dicts.value3[house[2]] === '无' ? '0厅' : dicts.value3[house[2]];
+        let hall = dicts.value3[house[2]] === '无' ? '0卫' : dicts.value3[house[2]];
         this.house_type_name = dicts.value1[house[0] - 1] + room + hall;
 
         this.form.decorate = data.decorate;

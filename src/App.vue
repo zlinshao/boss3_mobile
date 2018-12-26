@@ -50,24 +50,24 @@
     },
     methods: {
       showFunc() {
-        this.$http.get(globalConfig.server + 'setting/mobile/index',{
+        this.$http.get(globalConfig.server + 'setting/mobile/index', {
           params: {
             all: 'all'
           }
         }).then(res => {
-          if(res.data.code === '30000'){
+          if (res.data.code === '30000') {
             var paths = this.$router.options.routes;
             var result = res.data.data.data;
             var newPaths = [];
-            for (let i = 0;i<paths.length;i++){
-              if(paths[i].hidden){
+            for (let i = 0; i < paths.length; i++) {
+              if (paths[i].hidden) {
                 newPaths.push(paths[i]);
               }
             }
-            for (let j=0;j<newPaths.length;j++){
-              for (let z = 0;z<result.length;z++){
-                if(newPaths[j].path === result[z].path){
-                  if(result[z].status === 0){
+            for (let j = 0; j < newPaths.length; j++) {
+              for (let z = 0; z < result.length; z++) {
+                if (newPaths[j].path === result[z].path) {
+                  if (result[z].status === 0) {
                     newPaths[j].hidden = '';
                   }
                 }
@@ -99,15 +99,22 @@
           //   this.$router.push({path: '/staffSquare'});
           // }
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
-            let data = {};
-            data.id = res.data.data.id;
-            data.name = res.data.data.name;
-            data.avatar = res.data.data.avatar;
-            data.phone = res.data.data.phone;
-            data.department_name = res.data.data.org[0].name;
-            data.department_id = res.data.data.org[0].id;
-            this.loading = false;
-            sessionStorage.setItem('personal', JSON.stringify(data));
+            if (res.data.code === '10090') {
+              let data = {};
+              let info = res.data.data;
+              data.id = info.id;
+              data.name = info.name;
+              data.avatar = info.avatar;
+              data.phone = info.phone;
+              data.department_name = info.org[0].name;
+              data.department_id = info.org[0].id;
+              data.isCompany = '';
+              sessionStorage.setItem('personal', JSON.stringify(data));
+              globalConfig.personal = data;
+              this.loading = false;
+            } else {
+              alert('读取信息失败，稍后再试！');
+            }
           }).catch(_ => {
           });
         } else {
@@ -128,7 +135,7 @@
           if (error && error.response) {
             if (error.response.status > 499) {
               alert('服务器故障,请联系产品经理~');
-              if (this.isWeiXin()) {
+              if (that.isWeiXin()) {
                 window.close();
               } else {
                 DingTalkPC.device.notification.alert({
@@ -167,7 +174,7 @@
       },
       // 获取uid
       getUserId(val) {
-        this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code).then(res => {
+        this.$http.get(this.urls + 'organization/getWeworkUser?appId=' + val.appid + '&code=' + val.code + '&entry=bulletin').then(res => {
           if (res.data.success) {
             let info = res.data.data;
             this.token = info;

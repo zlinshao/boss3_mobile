@@ -457,11 +457,9 @@
         picStatus: 'success',
         isClear: false,
 
-        lists: [],
         tabs: '',
         columns: [],              //select值
         selectHide: false,
-        joint: false,             //是否合租
         first_date: [],
         timeModule: false,          //日期状态
         formatData: {
@@ -1062,8 +1060,8 @@
                 this.vacancy_way_name = this.dictValue7[j].dictionary_name;
               }
             }
-
             this.form.vacancy_other = draft.vacancy_other;
+
             this.form.warranty = draft.warranty;
             this.form.warranty_day = draft.warranty_day === '0' ? '' : draft.warranty_day;
 
