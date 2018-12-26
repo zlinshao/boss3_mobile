@@ -88,7 +88,7 @@
           v-model="form.agency_price"
           type="text"
           class="number"
-          label="中介费"
+          label="渠道费"
           placeholder="请填写金额"
           @click-icon="form.agency_price = ''"
           icon="clear"
@@ -98,8 +98,8 @@
           v-model="form.agency_username"
           type="text"
           :disabled="agency2"
-          label="中介人"
-          placeholder="请填写中介人"
+          label="渠道人"
+          placeholder="请填写渠道人"
           @click-icon="form.agency_username = ''"
           required>
         </van-field>
@@ -107,8 +107,8 @@
           v-model="form.agency_name"
           type="text"
           :disabled="agency3"
-          label="中介名称"
-          placeholder="请填写中介名称"
+          label="渠道名称"
+          placeholder="请填写渠道名称"
           required>
         </van-field>
         <van-field
@@ -116,8 +116,8 @@
           type="text"
           class="number"
           :disabled="agency4"
-          label="中介联系方式"
-          placeholder="请填写中介联系方式"
+          label="渠道联系方式"
+          placeholder="请填写渠道联系方式"
           @click-icon="form.agency_phone = ''"
           required>
         </van-field>
@@ -240,10 +240,10 @@
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
 
-          agency_price: '',             //修改中介费
-          agency_username: '',          //中介人
-          agency_name: '',              //中介名称
-          agency_phone: '',             //中介电话
+          agency_price: '',             //修改渠道费
+          agency_username: '',          //渠道人
+          agency_name: '',              //渠道名称
+          agency_phone: '',             //渠道电话
           customer_name: '',            //客户姓名
           purchase_way: 509,            //支付方式
           bank: '',                     //银行名称
