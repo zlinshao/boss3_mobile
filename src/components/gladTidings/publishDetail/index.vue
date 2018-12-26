@@ -38,7 +38,12 @@
         <div v-for="(key,index) in formList"
              v-if="printscreen.indexOf(index) === -1">
           <p v-if="index !== 'receiptUri'">{{index}}</p>
-          <h1>
+          <h1 v-if="index.includes('渠道信息')">
+            <span style="display: block;" v-for="arr in Object.keys(key)">
+              <span>{{arr}}&nbsp;:&nbsp;{{key[arr]}}</span>
+            </span>
+          </h1>
+          <h1 v-else>
             <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx].msg}}</span>
               <span style="display: block;">{{key[idx].period}}</span>
@@ -47,9 +52,11 @@
                   v-for="(item,idx) in key.length">
               <span style="display: block;">{{key[idx]}}</span>
             </span>
-            <span v-if="!Array.isArray(key) && index !== '房屋类型'">{{key}}</span>
+            <span v-if="!Array.isArray(key) && index !== '房屋类型'">
+              {{key}}
+            </span>
             <span v-if="!Array.isArray(key) && index === '房屋类型'">
-              <span style="display: block;">{{key.name}}</span>
+              <span style="display: block;" v-if="key.name">{{key.name}}</span>
             </span>
           </h1>
         </div>

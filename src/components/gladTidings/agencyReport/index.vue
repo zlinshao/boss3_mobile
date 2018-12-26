@@ -83,81 +83,74 @@
         <!--@click-icon="form.agency_price = ''">-->
         <!--</van-field>-->
         <!--</div>-->
-
-        <van-field
-          v-model="form.agency_price"
-          type="text"
-          class="number"
-          label="中介费"
-          placeholder="请填写金额"
-          @click-icon="form.agency_price = ''"
-          icon="clear"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.agency_username"
-          type="text"
-          :disabled="agency2"
-          label="中介人"
-          placeholder="请填写中介人"
-          @click-icon="form.agency_username = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.agency_name"
-          type="text"
-          :disabled="agency3"
-          label="中介名称"
-          placeholder="请填写中介名称"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.agency_phone"
-          type="text"
-          class="number"
-          :disabled="agency4"
-          label="中介联系方式"
-          placeholder="请填写中介联系方式"
-          @click-icon="form.agency_phone = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.account"
-          label="卡号"
-          type="text"
-          class="number"
-          @blur="accountBank(form.account)"
-          placeholder="请填写卡号"
-          icon="clear"
-          @click-icon="form.account = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.bank"
-          label="银行"
-          type="text"
-          placeholder="请填写银行名称"
-          icon="clear"
-          @click-icon="form.bank = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.subbranch"
-          label="支行"
-          type="text"
-          placeholder="请填写支行"
-          icon="clear"
-          @click-icon="form.subbranch = ''">
-        </van-field>
-        <van-field
-          v-model="form.account_name"
-          label="开户名"
-          type="text"
-          placeholder="请填写开户名"
-          icon="clear"
-          @click-icon="form.account_name = ''"
-          required>
-        </van-field>
+        <div class="changes" v-for="(key,index) in amountDitch ">
+          <div class="paddingTitle">
+            <span>渠道信息<span v-if="amountDitch > 1">({{key}})</span></span>
+            <span class="colors" v-if="amountDitch > 1" @click="deleteAmount(index)">删除</span>
+          </div>
+          <van-field
+            v-model="form.agency_infos[index].agency_price"
+            type="text"
+            class="number"
+            label="中介费"
+            placeholder="请填写金额"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.agency_infos[index].agency_username"
+            type="text"
+            label="中介人"
+            placeholder="请填写中介人"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.agency_infos[index].agency_name"
+            type="text"
+            label="中介名称"
+            placeholder="请填写中介名称"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.agency_infos[index].agency_phone"
+            type="text"
+            class="number"
+            label="中介联系方式"
+            placeholder="请填写中介联系方式"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.agency_infos[index].account"
+            label="卡号"
+            type="text"
+            class="number"
+            @blur="accountBank(form.agency_infos[index].account, index)"
+            placeholder="请填写卡号"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.agency_infos[index].bank"
+            label="银行"
+            type="text"
+            placeholder="请填写银行名称"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.agency_infos[index].subbranch"
+            label="支行"
+            type="text"
+            placeholder="请填写支行">
+          </van-field>
+          <van-field
+            v-model="form.agency_infos[index].account_name"
+            label="开户名"
+            type="text"
+            placeholder="请填写开户名"
+            required>
+          </van-field>
+        </div>
+        <div @click="addAmount()" class="addInput bottom">
+          +增加渠道信息
+        </div>
         <van-switch-cell v-if="form.collect_or_rent === '1'" v-model="settleStatus" title="是否结清"/>
       </van-cell-group>
 
@@ -224,6 +217,7 @@
         haveInHand: true,
 
         settleStatus: true,      //是否结清
+        amountDitch: 1,           //渠道
 
         payStatus: false,
         priceStatus: false,
@@ -239,18 +233,20 @@
           collect_or_rent: '',
           contract_id: '',              //房屋地址id
           house_id: '',                 //房屋地址id
-
-          agency_price: '',             //修改中介费
-          agency_username: '',          //中介人
-          agency_name: '',              //中介名称
-          agency_phone: '',             //中介电话
           customer_name: '',            //客户姓名
           purchase_way: 509,            //支付方式
-          bank: '',                     //银行名称
-          subbranch: '',                //支行名称
-          account_name: '',             //帐户名称
-          account: '',                  //帐号
-
+          agency_infos: [
+            {
+              agency_price: '',         //修改中介费
+              agency_username: '',      //中介人
+              agency_name: '',          //中介名称
+              agency_phone: '',         //中介电话
+              bank: '',                 //银行名称
+              account: '',              //帐号
+              subbranch: '',            //支行名称
+              account_name: '',         //帐户名称
+            }
+          ],
           settle: 1,                    //是否结清
           screenshot: [],               //结清截图
           screenshot_leader: [],        //特殊情况
@@ -263,11 +259,6 @@
         screenshots: {},
         screenshots_leader: {},
         numbers: '',
-
-        agency1: false,
-        agency2: false,
-        agency3: false,
-        agency4: false,
 
         counts: '',
         retry: 0,
@@ -337,10 +328,10 @@
           this.payStatus = false;
         }
       },
-      accountBank(val) {
+      accountBank(val, index) {
         this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
           if (res.data.code === '51110') {
-            this.form.bank = res.data.data;
+            this.form.agency_infos[index].bank = res.data.data;
           }
         })
       },
@@ -362,6 +353,25 @@
         }
       },
 
+      addAmount() {
+        let data = {
+          agency_price: '',             //修改中介费
+          agency_username: '',          //中介人
+          agency_name: '',              //中介名称
+          agency_phone: '',             //中介电话
+          bank: '',                     //银行名称
+          subbranch: '',                //支行名称
+          account_name: '',             //帐户名称
+          account: '',                  //帐号
+        };
+        this.amountDitch++;
+        this.form.agency_infos.push(data);
+      },
+
+      deleteAmount(index) {
+        this.amountDitch--;
+        this.form.agency_infos.splice(index, 1);
+      },
       rentChange(val) {
         if (this.numbers !== val) {
           this.form.address = '';
@@ -438,43 +448,19 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
+          console.log(val);
           this.form.customer_name = val.customers;
-          if (val.agency_info !== null && val.agency_info.agency_name !== undefined) {
-            if (val.agency_info.agency_price) {
-              this.form.agency_price = val.agency_info.agency_price;
-            } else {
-              this.form.agency_price = '';
-            }
-            if (val.agency_info.agency_user_name) {
-              this.agency2 = true;
-              this.form.agency_username = val.agency_info.agency_user_name;
-            } else {
-              this.agency2 = false;
-              this.form.agency_username = '';
-            }
-            if (val.agency_info.agency_name) {
-              this.agency3 = true;
-              this.form.agency_name = val.agency_info.agency_name;
-            } else {
-              this.agency3 = false;
-              this.form.agency_name = '';
-            }
-            if (val.agency_info.agency_phone) {
-              this.agency4 = true;
-              this.form.agency_phone = val.agency_info.agency_phone;
-            } else {
-              this.agency4 = false;
-              this.form.agency_phone = '';
-            }
+          if (val.agency_info && val.agency_info.agency_name) {
+            this.form.agency_infos[0].agency_price = val.agency_info.agency_price || '';
+            this.form.agency_infos[0].agency_username = val.agency_info.agency_user_name || '';
+            this.form.agency_infos[0].agency_name = val.agency_info.agency_name || '';
+            this.form.agency_infos[0].agency_phone = val.agency_info.agency_phone || '';
           } else {
-            if (val.agency_info !== null && val.agency_info.price !== null) {
-              this.form.agency_price = val.agency_info.price;
+            if (val.agency_info && val.agency_info.price) {
+              this.form.agency_infos[0].agency_price = val.agency_info.price;
             } else {
-              this.form.agency_price = '';
+              this.form.agency_infos[0].agency_price = '';
             }
-            this.agency2 = false;
-            this.agency3 = false;
-            this.agency4 = false;
           }
           this.form.address = val.house_name;
           this.form.corp_name = val.corp_name;
@@ -516,9 +502,6 @@
         this.$http.get(this.urls + type).then((res) => {
           if (res.data.code === '50320') {
             this.isClear = false;
-            this.agency2 = false;
-            this.agency3 = false;
-            this.agency4 = false;
             let data = res.data.data;
             let draft = res.data.data.draft_content;
             this.form.purchase_way = 509;
@@ -530,17 +513,20 @@
             this.form.house_id = draft.house_id;
             this.form.collect_or_rent = draft.collect_or_rent;
             this.numbers = draft.collect_or_rent;
-
-            this.form.agency_price = draft.agency_price;
-            this.form.agency_username = draft.agency_username;
-            this.form.agency_name = draft.agency_name;
-            this.form.agency_phone = draft.agency_phone;
-
             this.form.customer_name = draft.customer_name;
-            this.form.bank = draft.bank;
-            this.form.subbranch = draft.subbranch;
-            this.form.account_name = draft.account_name;
-            this.form.account = draft.account;
+            if (draft.agency_infos) {
+              this.amountDitch = draft.agency_infos.length;
+              this.form.agency_infos = draft.agency_infos;
+            } else {
+              this.form.agency_infos[0].agency_price = draft.agency_price;
+              this.form.agency_infos[0].agency_username = draft.agency_username;
+              this.form.agency_infos[0].agency_name = draft.agency_name;
+              this.form.agency_infos[0].agency_phone = draft.agency_phone;
+              this.form.agency_infos[0].bank = draft.bank;
+              this.form.agency_infos[0].subbranch = draft.subbranch;
+              this.form.agency_infos[0].account_name = draft.account_name;
+              this.form.agency_infos[0].account = draft.account;
+            }
             this.form.settle = draft.settle;
             this.form.payWay = draft.payWay;
             this.form.price_arr = draft.price_arr;
@@ -576,17 +562,19 @@
         this.form.contract_id = '';
         this.form.house_id = '';
         this.form.collect_or_rent = '';
-
-        this.form.agency_price = '';
-        this.form.agency_username = '';
-        this.form.agency_name = '';
-        this.form.agency_phone = '';
-
+        this.agency_infos = [
+          {
+            agency_price: '',             //修改中介费
+            agency_username: '',          //中介人
+            agency_name: '',              //中介名称
+            agency_phone: '',             //中介电话
+            bank: '',                     //银行名称
+            subbranch: '',                //支行名称
+            account_name: '',             //帐户名称
+            account: '',                  //帐号
+          }
+        ];
         this.form.customer_name = '';
-        this.form.bank = '';
-        this.form.subbranch = '';
-        this.form.account_name = '';
-        this.form.account = '';
         this.form.settle = 0;
         this.settleStatus = true;
         this.form.screenshot = [];
@@ -606,5 +594,11 @@
 <style lang="scss">
   #agencyReport {
     overflow: hidden;
+    .paddingTitle {
+      background: #F8F8F8;
+    }
+    .addInput {
+      border-top: 1px solid #f8f8f8;
+    }
   }
 </style>
