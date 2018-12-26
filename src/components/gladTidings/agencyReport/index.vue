@@ -530,7 +530,7 @@
             this.form.settle = draft.settle;
             this.form.payWay = draft.payWay;
             this.form.price_arr = draft.price_arr;
-            this.settleStatus = draft.settle === 1 ? true : false;
+            this.settleStatus = draft.settle === 1;
             this.form.screenshot = draft.screenshot;
             this.screenshots = data.screenshot;
             this.form.screenshot_leader = draft.screenshot_leader;
