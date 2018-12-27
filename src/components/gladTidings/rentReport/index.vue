@@ -278,47 +278,47 @@
         <van-field
           v-model="cusFrom"
           @click="selectShow(5)"
-          label="是否中介"
+          label="是否渠道"
           type="text"
           readonly
-          placeholder="是否中介"
+          placeholder="是否渠道"
           required>
         </van-field>
         <div style="border-bottom: 1px solid #f4f4f4;" v-if="form.is_agency === 1">
           <van-field
             v-model="form.agency_name"
-            label="中介名称"
+            label="渠道名称"
             type="text"
-            placeholder="请填写中介名称"
+            placeholder="请填写渠道名称"
             icon="clear"
             @click-icon="form.agency_name = ''"
             required>
           </van-field>
           <van-field
             v-model="form.agency_price"
-            label="中介费"
+            label="渠道费"
             type="text"
             class="number"
-            placeholder="请填写中介费"
+            placeholder="请填写渠道费"
             icon="clear"
             @click-icon="form.agency_price = ''"
             required>
           </van-field>
           <van-field
             v-model="form.agency_user_name"
-            label="中介人"
+            label="渠道人"
             type="text"
-            placeholder="请填写中介人"
+            placeholder="请填写渠道人"
             icon="clear"
             @click-icon="form.agency_user_name = ''"
             required>
           </van-field>
           <van-field
             v-model="form.agency_phone"
-            label="中介联系方式"
+            label="渠道联系方式"
             type="text"
             class="number"
-            placeholder="请填写中介联系方式"
+            placeholder="请填写渠道联系方式"
             icon="clear"
             @click-icon="form.agency_phone = ''"
             required>
@@ -491,7 +491,7 @@
 
         amountMoney: 1,
 
-        cusFrom: '',                    //是否中介
+        cusFrom: '',                    //是否渠道
         corp: true,                     //公司单
         other_fee_status: false,
         is_receipt: false,              //电子收据
@@ -536,11 +536,11 @@
           other_fee: '',
           other_fee_name: '',
 
-          is_agency: '',                //客户来源    0个人1中介
-          agency_name: '',              //中介名
-          agency_price: '',             //中介费
-          agency_user_name: '',         //中介人
-          agency_phone: '',             //中介手机号
+          is_agency: '',                //客户来源    0个人1渠道
+          agency_name: '',              //渠道名
+          agency_price: '',             //渠道费
+          agency_user_name: '',         //渠道人
+          agency_phone: '',             //渠道手机号
 
           is_corp: 1,                   //是否公司单  0个人1公司
           contract_number: 'LJZF',      //合同编号
@@ -1140,8 +1140,8 @@
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
 
-            this.form.is_agency = draft.is_agency;                     //是否中介
-            this.cusFrom = dicts.value8[draft.is_agency];              //是否中介
+            this.form.is_agency = draft.is_agency;                     //是否渠道
+            this.cusFrom = dicts.value8[draft.is_agency];              //是否渠道
             this.form.agency_name = draft.agency_name;
             this.form.agency_price = draft.agency_price;
             this.form.agency_user_name = draft.agency_user_name;

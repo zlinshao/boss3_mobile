@@ -227,7 +227,7 @@
           }
         })
       },
-      // 中介费
+      // 渠道费
       agencyContract(data, type) {
         this.finish(2);
         if (type.indexOf('lord') > -1) {

@@ -283,7 +283,7 @@
           }
         });
       },
-      // 中介费收
+      // 渠道费收
       agencyLord(val, type) {
         for (let j = 0; j < val.lords.length; j++) {
           // if (!val.lords[j].end_type || this.end_type === 'none') {
@@ -295,7 +295,7 @@
           // }
         }
       },
-      // 中介费租
+      // 渠道费租
       agencyRent(val, type) {
         for (let j = 0; j < val.renters.length; j++) {
           // if (!val.renters[j].end_type || this.end_type === 'none') {

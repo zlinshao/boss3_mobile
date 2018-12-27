@@ -48,7 +48,7 @@ import Drawback from '../components/gladTidings/drawbackReport/index.vue'
 import FriedBill from '../components/gladTidings/friedBill/index.vue'         //zhadan
 import ClearRetreat from '../components/gladTidings/clearRetreat/index.vue'   //清退
 import Checkout from '../components/gladTidings/checkout/index.vue'           //清退
-import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //中介
+import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //渠道
 import PolishingCollect from '../components/gladTidings/polishing/collect.vue'   //收房补齐
 import PolishingRenter from '../components/gladTidings/polishing/renter.vue'    //租房补齐
 import Special from '../components/gladTidings/specialReport/index.vue'
@@ -287,11 +287,11 @@ export default new Router({
     },
     {
       path: '/agencyRent',
-      name: '中介费报备',
+      name: '渠道费报备',
       hidden: 'glad',
       back: '#F19851',
       icon: 'iconfont icon-fukuanguanli',
-      meta: {title: '中介费报备'},
+      meta: {title: '渠道费报备'},
       component: AgencyRent
     },
     {

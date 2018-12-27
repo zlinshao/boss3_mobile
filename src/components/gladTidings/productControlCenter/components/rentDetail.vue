@@ -105,10 +105,10 @@
       </div>
       <div class="content">
         <div class="title">
-          <span>是否中介</span>
+          <span>是否渠道</span>
         </div>
         <div class="value">
-          <span v-if="contractInfo.is_agency">中介</span>
+          <span v-if="contractInfo.is_agency">渠道</span>
           <span v-if="contractInfo.is_agency !== undefined && contractInfo.is_agency == 0">个人</span>
         </div>
       </div>
@@ -171,7 +171,7 @@
       </div>
       <div class="content">
         <div class="title">
-          <span>中介费(元)</span>
+          <span>渠道费(元)</span>
         </div>
         <div class="value">
           <span>{{contractInfo.agency}}</span>

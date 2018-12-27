@@ -1,5 +1,5 @@
 dicties = {
-  'is_agency': {'0': '个人', '1': '中介'},                    //是否中介
+  'is_agency': {'0': '个人', '1': '渠道'},                    //是否渠道
   'lord_pay_way': {'1': '月付', '2': '双月付', '3': '季付'},   //业绩计算 收房付款方式
 };
 // 收房报备
@@ -15,11 +15,11 @@ collectFormData = {
   sign_date: '',                //签约日期
   month: '',                    //收房月数
   day: '',                      //收房天数
-  is_agency: '',                //是否中介 0不是 1是
-  agency_name: '',              //中介名
-  agency_price: '',             //中介费
-  agency_user_name: '',         //中介人
-  agency_phone: '',             //中介手机号
+  is_agency: '',                //是否渠道 0不是 1是
+  agency_name: '',              //渠道名
+  agency_price: '',             //渠道费
+  agency_user_name: '',         //渠道人
+  agency_phone: '',             //渠道手机号
   begin_date: '',               //空置期开始日期
   vacancy: '',                  //空置期
   end_date_vacant: '',          //空置期结束日期
@@ -74,8 +74,8 @@ rentTitle_calculate = {
   overflow: '溢出业绩',
   // push_rate: '提成比例',
   push_money: '提成金额',
-  agency_count_lord: '收房中介费',
-  agency_count_rent: '租房中介费',
+  agency_count_lord: '收房渠道费',
+  agency_count_rent: '租房渠道费',
   real_money: '实际到手',
   // client_money: '客户维护费',
   // extra_award: '额外奖励',

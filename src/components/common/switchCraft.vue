@@ -64,7 +64,7 @@
           case 'bulletin_RWC_confirm'://未收先祖确定
             this.$router.push({path: '/unCollectBeforeRentSure', query: list});
             break;
-          case 'bulletin_agency'://中介费报备
+          case 'bulletin_agency'://渠道费报备
             this.$router.push({path: '/agencyRent', query: list});
             break;
           case 'bulletin_banish'://清退

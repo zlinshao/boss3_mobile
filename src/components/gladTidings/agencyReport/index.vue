@@ -65,14 +65,14 @@
         <!--<van-field-->
         <!--style="width: 110px;"-->
         <!--class="title"-->
-        <!--label="中介费"-->
+        <!--label="渠道费"-->
         <!--required>-->
         <!--</van-field>-->
         <!--<van-field-->
         <!--v-model="form.agency_before_price"-->
         <!--type="text"          class="number"-->
         <!--disabled-->
-        <!--placeholder="中介费已禁用">-->
+        <!--placeholder="渠道费已禁用">-->
         <!--</van-field>-->
         <!--<van-field-->
         <!--v-model="form.agency_price"-->
@@ -92,30 +92,30 @@
             v-model="form.agency_infos[index].agency_price"
             type="text"
             class="number"
-            label="中介费"
+            label="渠道费"
             placeholder="请填写金额"
             required>
           </van-field>
           <van-field
             v-model="form.agency_infos[index].agency_username"
             type="text"
-            label="中介人"
-            placeholder="请填写中介人"
+            label="渠道人"
+            placeholder="请填写渠道人"
             required>
           </van-field>
           <van-field
             v-model="form.agency_infos[index].agency_name"
             type="text"
-            label="中介名称"
-            placeholder="请填写中介名称"
+            label="渠道名称"
+            placeholder="请填写渠道名称"
             required>
           </van-field>
           <van-field
             v-model="form.agency_infos[index].agency_phone"
             type="text"
             class="number"
-            label="中介联系方式"
-            placeholder="请填写中介联系方式"
+            label="渠道联系方式"
+            placeholder="请填写渠道联系方式"
             required>
           </van-field>
           <van-field
@@ -237,10 +237,10 @@
           purchase_way: 509,            //支付方式
           agency_infos: [
             {
-              agency_price: '',         //修改中介费
-              agency_username: '',      //中介人
-              agency_name: '',          //中介名称
-              agency_phone: '',         //中介电话
+              agency_price: '',         //修改渠道费
+              agency_username: '',      //渠道人
+              agency_name: '',          //渠道名称
+              agency_phone: '',         //渠道电话
               bank: '',                 //银行名称
               account: '',              //帐号
               subbranch: '',            //支行名称
@@ -355,10 +355,10 @@
 
       addAmount() {
         let data = {
-          agency_price: '',             //修改中介费
-          agency_username: '',          //中介人
-          agency_name: '',              //中介名称
-          agency_phone: '',             //中介电话
+          agency_price: '',             //修改渠道费
+          agency_username: '',          //渠道人
+          agency_name: '',              //渠道名称
+          agency_phone: '',             //渠道电话
           bank: '',                     //银行名称
           subbranch: '',                //支行名称
           account_name: '',             //帐户名称
@@ -564,10 +564,10 @@
         this.form.collect_or_rent = '';
         this.agency_infos = [
           {
-            agency_price: '',             //修改中介费
-            agency_username: '',          //中介人
-            agency_name: '',              //中介名称
-            agency_phone: '',             //中介电话
+            agency_price: '',             //修改渠道费
+            agency_username: '',          //渠道人
+            agency_name: '',              //渠道名称
+            agency_phone: '',             //渠道电话
             bank: '',                     //银行名称
             subbranch: '',                //支行名称
             account_name: '',             //帐户名称

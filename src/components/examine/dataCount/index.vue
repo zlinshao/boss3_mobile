@@ -77,9 +77,9 @@
             <van-field
               v-if="rentType === '0'"
               v-model="form.lord_agency_count"
-              label="收房中介费"
+              label="收房渠道费"
               type="number"
-              placeholder="请填写收房中介费"
+              placeholder="请填写收房渠道费"
               required>
             </van-field>
 
@@ -127,9 +127,9 @@
             </van-field>
             <van-field
               v-model="form.rent_agency_count"
-              label="租房中介费"
+              label="租房渠道费"
               type="number"
-              placeholder="请填写租房中介费"
+              placeholder="请填写租房渠道费"
               required>
             </van-field>
             <van-field
