@@ -371,9 +371,23 @@
             } else {
               this.address = content.house.name;
             }
+            this.process = main;
+            if (this.rentReport.indexOf(main.processable_type) > -1) {
+              this.$http.get(this.urls + 'workflow/process/get/' + val).then(item => {
+                let content1 = item.data.data.content;
+                this.formList = JSON.parse(content1.show_content_compress);
+              })
+            } else {
+              this.formList = JSON.parse(content.show_content_compress);
+            }
+            this.personal = main.user;
+            // this.confirmBulletinType(res.data.data.process);
+            this.place = main.place;
+            this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1;
+
             //收房报备验证收款银行卡或收款人是否为公司员工
             if (main.place.status === 'review' && main.processable_type === 'bulletin_collect_basic') {
-              if (main.place.status === 'verify-manager_review') {
+              if (main.place.name === 'verify-manager_review') {
                 this.$http.post(this.urls + '/bulletin/collect/validateBankCard', main).then(res => {
                   if (res.data.code === '50122') {
                     Dialog.alert({
@@ -389,19 +403,6 @@
                 this.contractStatus(main);
               }
             }
-            this.process = main;
-            if (this.rentReport.indexOf(main.processable_type) > -1) {
-              this.$http.get(this.urls + 'workflow/process/get/' + val).then(item => {
-                let content1 = item.data.data.content;
-                this.formList = JSON.parse(content1.show_content_compress);
-              })
-            } else {
-              this.formList = JSON.parse(content.show_content_compress);
-            }
-            this.personal = main.user;
-            // this.confirmBulletinType(res.data.data.process);
-            this.place = main.place;
-            this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1;
             if (main.leader) {
               this.bull_name = main.leader;
             }
