@@ -362,6 +362,7 @@
           if (res.data.code === '20020' && res.data.data.length !== 0) {
             let content = res.data.data.process.content;
             let main = res.data.data.process;
+            this.contractStatus(main);
             this.operation = res.data.data.operation;
             this.deal = res.data.data.deal;
             if (content.address) {
@@ -422,6 +423,21 @@
             }
           }
         });
+      },
+      // 合同是否存在
+      contractStatus(main) {
+        if (main.place.status === 'review') {
+          this.$http.get(this.urls + 'coreproject/lord/has_lord/' + main.house_id).then(res => {
+            if (res.data !== true) {
+              Dialog.alert({
+                title: '提示',
+                message: '合同已存在！'
+              }).then(() => {
+                // on close
+              });
+            }
+          })
+        }
       },
       // 价格区间
       priceArea(price) {
