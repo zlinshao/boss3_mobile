@@ -371,16 +371,6 @@
             } else {
               this.address = content.house.name;
             }
-            //收房报备验证收款银行卡或收款人是否为公司员工
-            if (main.place.name === 'verify-manager_review' && main.processable_type === 'bulletin_collect_basic') {
-              this.$http.post(this.urls + '/bulletin/collect/validateBankCard', main).then(res => {
-                if (res.data.code === '50122') {
-                  Dialog.alert({
-                    message: res.data.msg
-                  })
-                }
-              })
-            }
             this.process = main;
             if (this.rentReport.indexOf(main.processable_type) > -1) {
               this.$http.get(this.urls + 'workflow/process/get/' + val).then(item => {
@@ -394,6 +384,25 @@
             // this.confirmBulletinType(res.data.data.process);
             this.place = main.place;
             this.placeFalse = this.placeStatus.indexOf(main.place.status) === -1;
+
+            //收房报备验证收款银行卡或收款人是否为公司员工
+            if (main.place.status === 'review' && main.processable_type === 'bulletin_collect_basic') {
+              if (main.place.name === 'verify-manager_review') {
+                this.$http.post(this.urls + '/bulletin/collect/validateBankCard', main).then(res => {
+                  if (res.data.code === '50122') {
+                    Dialog.alert({
+                      message: res.data.msg,
+                    }).then(() => {
+                      this.contractStatus(main);
+                    });
+                  } else {
+                    this.contractStatus(main);
+                  }
+                })
+              } else {
+                this.contractStatus(main);
+              }
+            }
             if (main.leader) {
               this.bull_name = main.leader;
             }
@@ -422,6 +431,19 @@
             }
           }
         });
+      },
+      // 合同是否存在
+      contractStatus(main) {
+        this.$http.get(this.urls + 'coreproject/lord/has_lord/' + main.house_id).then(res => {
+          if (res.data !== true) {
+            Dialog.alert({
+              title: '提示',
+              message: '合同已存在！'
+            }).then(() => {
+              // on close
+            });
+          }
+        })
       },
       // 价格区间
       priceArea(price) {
