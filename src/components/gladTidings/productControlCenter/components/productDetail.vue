@@ -20,7 +20,7 @@
         <div v-if="albumData.length>0">
           <van-swipe :autoplay="0" :show-indicators="false" @change="onChange">
             <van-swipe-item v-for="(image, index) in albumData[albumData.length-1].album.album_file" :key="index">
-              <div class="ig" @click="showLargePic(albumData[albumData.length-1].album.album_file,index)">
+              <div class="img" @click="showLargePic(albumData[albumData.length-1].album.album_file,index)">
                 <img v-if="image.info.mime&&image.info.mime.indexOf('image')>-1" :src="image.uri"/>
                 <img src="../../../../assets/noPic.png" v-else alt="">
               </div>
