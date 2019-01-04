@@ -362,7 +362,6 @@
           if (res.data.code === '20020' && res.data.data.length !== 0) {
             let content = res.data.data.process.content;
             let main = res.data.data.process;
-            this.contractStatus(main);
             this.operation = res.data.data.operation;
             this.deal = res.data.data.deal;
             if (content.address) {
@@ -373,12 +372,16 @@
               this.address = content.house.name;
             }
             //收房报备验证收款银行卡或收款人是否为公司员工
-            if (main.place.name === 'verify-manager_review' && main.processable_type === 'bulletin_collect_basic') {
+            if (main.place.status === 'review' && main.processable_type === 'bulletin_collect_basic') {
               this.$http.post(this.urls + '/bulletin/collect/validateBankCard', main).then(res => {
                 if (res.data.code === '50122') {
                   Dialog.alert({
-                    message: res.data.msg
-                  })
+                    message: res.data.msg,
+                  }).then(() => {
+                    this.contractStatus(main);
+                  });
+                } else {
+                  this.contractStatus(main);
                 }
               })
             }
