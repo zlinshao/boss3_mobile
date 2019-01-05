@@ -256,14 +256,14 @@
           +付款方式变化
         </div>
       </div>
-      <div class="aloneModel">
-        <div class="title">截图</div>
-        <UpLoad :ID="'jieTu'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+      <div class="aloneModel required">
+        <div class="title">领导同意截图</div>
+        <UpLoad :ID="'tongYi'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots_leader"></UpLoad>
       </div>
 
-      <div class="aloneModel required">
+      <div class="aloneModel">
         <div class="title"><span>*</span>特殊情况截图</div>
-        <UpLoad :ID="'tongYi'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots_leader"></UpLoad>
+        <UpLoad :ID="'jieTu'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <van-cell-group>
