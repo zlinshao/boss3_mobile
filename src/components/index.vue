@@ -260,9 +260,8 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      sessionStorage.setItem('hhhhhh', null);
       let count = sessionStorage.count;
-      if ((count && (count === '2')) || from.path === '/') {
+      if ((count && (count.includes('2'))) || from.path === '/') {
         sessionStorage.setItem('count', '1');
       }
       next();

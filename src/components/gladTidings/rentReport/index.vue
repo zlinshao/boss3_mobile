@@ -624,10 +624,12 @@
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
+        this.polishing();
       }
       if (count === '1') {
         this.routerIndex('');
         this.ddRent('');
+        this.polishing();
         this.close_();
         this.dicts('');
         count = count + '1';
@@ -664,6 +666,10 @@
       this.houseInfo();
     },
     methods: {
+      polishing() {
+        let id = JSON.parse(sessionStorage.personal).id;
+        this.polishingHint(id);
+      },
       userInfo(val1) {
         if (val1) {
           let per = JSON.parse(sessionStorage.personal);
@@ -1171,13 +1177,13 @@
             this.form.name = draft.name;
             this.form.phone = draft.phone;
             this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot ? data.screenshot : {};
+            this.screenshots = data.screenshot || {};
             this.form.photo = draft.photo;
-            this.photos = data.photo ? data.photo : {};
+            this.photos = data.photo || {};
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.screenshot_leader ? data.screenshot_leader : {};
+            this.leaders = data.screenshot_leader || {};
             this.form.deposit_photo = draft.deposit_photo;
-            this.receipts = data.deposit_photo ? data.deposit_photo : {};
+            this.receipts = data.deposit_photo || {};
             this.form.remark = draft.remark;
 
             if (val !== '' && val.type === 2) {

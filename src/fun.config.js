@@ -1,4 +1,4 @@
-import {Toast} from 'vant';
+import {Toast, Dialog} from 'vant';
 
 export default {
   install(Vue, options) {
@@ -207,6 +207,25 @@ export default {
         case 'errPic':
           return '请删除上传失败的文件并重新上传!';
       }
+    };
+    Vue.prototype.polishingHint = function (id) {
+      this.$http.get(globalConfig.server + 'bulletin/vali_contract_complete_count/' + id).then(res => {
+        if (res.data.code === '50196') {
+          Dialog.alert({
+            title: '提示信息',
+            message: res.data.msg,
+          }).then(() => {
+          });
+        }
+        if (res.data.code === '50199') {
+          Dialog.alert({
+            title: '提示信息',
+            message: res.data.msg,
+          }).then(() => {
+            this.$router.push('/index');
+          });
+        }
+      })
     };
     // 企业微信
     Vue.prototype.weiChatAuth = function (val) {
