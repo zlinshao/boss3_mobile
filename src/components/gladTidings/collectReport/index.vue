@@ -577,12 +577,13 @@
     activated() {
       let count = sessionStorage.count;
       this.counts = count;
-
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
+        this.polishing();
       }
       if (count === '1') {
+        this.polishing();
         this.routerIndex('');
         this.ddRent('');
         this.close_();
@@ -622,6 +623,10 @@
     },
 
     methods: {
+      polishing() {
+        let id = JSON.parse(sessionStorage.personal).id;
+        this.polishingHint(id);
+      },
       userInfo(val1) {
         if (val1) {
           let per = JSON.parse(sessionStorage.personal);
@@ -1085,14 +1090,14 @@
             this.form.contract_number = draft.contract_number === '' ? 'LJZF' : draft.contract_number;
 
             this.form.photo = draft.photo;
-            this.photos = data.photo;
+            this.photos = data.photo || {};
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.screenshots = data.screenshot_leader;
+            this.screenshots = data.screenshot_leader || {};
 
             this.form.property_photo = draft.property_photo;
-            this.property_photos = data.property_photo;
+            this.property_photos = data.property_photo || {};
             this.form.identity_photo = draft.identity_photo;
-            this.identity_photos = data.identity_photo;
+            this.identity_photos = data.identity_photo || {};
 
             this.form.remark = draft.remark;
             if (val !== '' && val.type === 2) {
