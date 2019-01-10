@@ -388,12 +388,12 @@
           if (res.data.code === '1000120') {
             // 收据编号默认日期
             if (res.data.data.py) {
-              this.receiptDate = res.data.data.py + res.data.data.year;
-              let receipt = res.data.data.py + res.data.data.year;
+              this.receiptDate = res.data.data.data.py + res.data.data.data.year;
+              let receipt = res.data.data.data.py + res.data.data.data.year;
               this.form.receipt.push(receipt);
             } else {
-              this.receiptDate = 'NJ' + res.data.data.year;
-              let receipt = 'NJ' + res.data.data.year;
+              this.receiptDate = 'NJ' + res.data.data.data.year;
+              let receipt = 'NJ' + res.data.data.data.year;
               this.form.receipt.push(receipt);
             }
           }
