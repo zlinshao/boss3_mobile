@@ -185,7 +185,7 @@
           type="text"
           readonly
           :disabled="followUp"
-          placeholder=""
+          placeholder="请选择门锁类型"
           required>
         </van-field>
 
