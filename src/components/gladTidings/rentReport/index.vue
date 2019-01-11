@@ -249,7 +249,7 @@
           type="text"
           class="number"
           label="违约金"
-          placeholder="租房价格与收房价格差大于500元的，请填写一个月租金。"
+          placeholder="收租价格差大于500元的"
           required>
         </van-field>
         <van-field
