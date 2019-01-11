@@ -178,6 +178,16 @@
           placeholder="是否渠道"
           required>
         </van-field>
+        <van-field
+          v-model="form.lock_type"
+          @click="selectShow(17)"
+          label="门锁类型"
+          type="text"
+          readonly
+          :disabled="followUp"
+          placeholder=""
+          required>
+        </van-field>
 
         <van-field
           @click="selectShow(4)"
@@ -398,7 +408,7 @@
   import {Toast} from 'vant';
 
   export default {
-    name: "index",
+    name: "quality",
     components: {UpLoad, Toast},
     data() {
       return {
@@ -474,7 +484,8 @@
           floor: '',                    //楼层
           floors: '',                   //总楼层
           price: '',                    //价格
-          is_agency: '',                 //是否渠道
+          is_agency: '',                //是否渠道
+          lock_type: '',                //门锁类型
           air_condition: 1,             //空调
           fridge: 1,                    //冰箱
           television: 1,                //电视
@@ -735,12 +746,16 @@
           case 16:
             this.columns = dicts.value8;
             break;
+          case 17:
+            this.columns = ['密码锁', '指纹锁', '普通锁'];
+            break;
           default:
             this.columns = dicts.value5;
         }
       },
 
       onConfirm(value, index) {
+        console.log(value, index)
         switch (this.tabs) {
           case 1:
             if (value[1] === '无') {
@@ -832,6 +847,9 @@
           case 16:
             this.form.is_agency = index;
             this.cusFrom = value;
+            break;
+          case 17:
+            this.form.lock_type = value;
             break;
         }
         this.selectHide = false;
@@ -1027,6 +1045,7 @@
         this.form.price = data.price;                                   //价格
         this.form.is_agency = data.is_agency;                           //是否渠道
         this.cusFrom = dicts.value8[data.is_agency];                    //是否渠道
+        this.form.lock_type = data.lock_type;                           //门锁类型
         this.form.air_condition = data.air_condition;                   //空调
         this.air_condition_name = dicts.value5[data.air_condition];     //空调
         this.form.fridge = data.fridge;                                 //冰箱
@@ -1120,6 +1139,7 @@
         this.form.floors = '';                   //总楼层
         this.form.price = '';                    //价格
         this.form.is_agency = '';                 //是否渠道
+        this.form.lock_type = '';                 //门锁类型
         this.cusFrom = '';                  //是否渠道
         this.form.air_condition = 1;           //空调
         this.form.fridge = 1;                       //冰箱

@@ -245,6 +245,14 @@
         <div class="addInput" @click="previewReceipt(form, receivedPrice)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
         <van-field
+          v-model="form.penalty"
+          type="text"
+          class="number"
+          label="违约金"
+          placeholder="如违约需支付金额"
+          required>
+        </van-field>
+        <van-field
           v-if="other_fee_status"
           v-model="form.other_fee_name"
           label="费用名称"
@@ -535,6 +543,7 @@
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
+          penalty: '',                     //违约金
 
           is_agency: '',                //客户来源    0个人1渠道
           agency_name: '',              //渠道名
@@ -1142,6 +1151,7 @@
             }
 
             this.form.discount = draft.discount;
+            this.form.penalty = draft.penalty;
             this.other_fee_status = draft.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
@@ -1293,6 +1303,7 @@
         this.form.photo = [];
         this.photos = {};
         this.form.remark = '';
+        this.form.penalty = '';
       }
     },
   }
