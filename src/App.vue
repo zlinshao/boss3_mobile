@@ -108,7 +108,11 @@
               data.phone = info.phone;
               data.department_name = info.org[0].name;
               data.department_id = info.org[0].id;
+              data.status = info.role.filter(str => {
+                return str.name === 'verify-manage';
+              });
               data.isCompany = '';
+              console.log(data);
               sessionStorage.setItem('personal', JSON.stringify(data));
               globalConfig.personal = data;
               this.loading = false;
@@ -186,6 +190,9 @@
             data.department_name = info.department_name[0];
             data.department_id = info.department_id[0];
             data.isCompany = info.isCompany;
+            data.status = info.role.filter(str => {
+              return str.name === 'verify-manage';
+            });
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
             this.loading = false;

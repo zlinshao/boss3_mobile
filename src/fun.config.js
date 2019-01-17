@@ -344,6 +344,7 @@ export default {
     // 存储个人信息
     Vue.prototype.personalData = function (res, val, resolve) {
       let data = {};
+      let power = [];
       let info = res.data.data;
       data.id = info.id;
       data.name = info.name;
@@ -352,6 +353,10 @@ export default {
       data.department_name = info.org[0].name;
       data.department_id = info.org[0].id;
       data.isCompany = '';
+      info.role.forEach(str => {
+        power.push(str.name);
+      });
+      data.status = power.indexOf('verify-manager') > -1;
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;
       dd.biz.navigation.setRight({show: false});
