@@ -356,7 +356,7 @@ export default {
       info.role.forEach(str => {
         power.push(str.name);
       });
-      data.status = power.indexOf('verify-manager') > -1;
+      data.status = power.indexOf('fund-master') > -1;
       sessionStorage.setItem('personal', JSON.stringify(data));
       globalConfig.personal = data;
       dd.biz.navigation.setRight({show: false});

@@ -109,7 +109,7 @@
               data.department_name = info.org[0].name;
               data.department_id = info.org[0].id;
               data.status = info.role.filter(str => {
-                return str.name === 'verify-manage';
+                return str.name === 'fund-master';
               });
               data.isCompany = '';
               console.log(data);
