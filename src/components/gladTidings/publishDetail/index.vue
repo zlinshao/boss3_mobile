@@ -402,7 +402,7 @@
                 let content1 = item.data.data.content;
                 this.previewStatus = 'preview';
                 this.formList = JSON.parse(content1.show_content_compress);
-                if (main.place.status === 'published') {
+                if (main.place.name === 'fund-master_review') {
                   let bulletinArr = ['bulletin_agency', 'bulletin_rent_basic', 'bulletin_rent_cont inued', 'bulletin_rent_trans', 'bulletin_change', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_retainage'];
                   if (bulletinArr.includes(main.processable_type && (content1.is_receipt || content1.is_receipt.id == 1))) {
                     this.showElectronicReceipt = true;
