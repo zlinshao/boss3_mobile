@@ -101,6 +101,7 @@
           this.$http.get(globalConfig.server + "special/special/loginInfo").then((res) => {
             if (res.data.code === '10090') {
               let data = {};
+              let power = [];
               let info = res.data.data;
               data.id = info.id;
               data.name = info.name;
@@ -108,11 +109,11 @@
               data.phone = info.phone;
               data.department_name = info.org[0].name;
               data.department_id = info.org[0].id;
-              data.status = info.role.filter(str => {
-                return str.name === 'fund-master';
-              });
               data.isCompany = '';
-              console.log(data);
+              info.role.forEach(str => {
+                power.push(str.name);
+              });
+              data.status = power.indexOf('fund-master') > -1;
               sessionStorage.setItem('personal', JSON.stringify(data));
               globalConfig.personal = data;
               this.loading = false;
@@ -183,6 +184,7 @@
             let info = res.data.data;
             this.token = info;
             let data = {};
+            let power = [];
             data.id = info.id;
             data.name = info.name;
             data.avatar = info.avatar;
@@ -190,9 +192,10 @@
             data.department_name = info.department_name[0];
             data.department_id = info.department_id[0];
             data.isCompany = info.isCompany;
-            data.status = info.role.filter(str => {
-              return str.name === 'fund-master';
+            info.role.forEach(str => {
+              power.push(str.name);
             });
+            data.status = power.indexOf('fund-master') > -1;
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
             this.loading = false;
