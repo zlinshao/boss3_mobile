@@ -277,11 +277,10 @@
         priceRegion: '',
         bank: {},                       //银行数据
 
-        showElectronicReceipt: true,    //展示电子收据
-        previewStatus: 'signature',       //展示电子收据
-        phoneShow: false,               //展示电子收据
-        phone: '',                      //展示电子收据
-        pdfLoading: '',                 //加载pdf
+        showElectronicReceipt: true,    //电子收据
+        previewStatus: 'signature',     //电子收据
+        phoneShow: false,               //电子收据
+        phone: '',                      //电子收据
       }
     },
     beforeRouteEnter(to, from, next) {
