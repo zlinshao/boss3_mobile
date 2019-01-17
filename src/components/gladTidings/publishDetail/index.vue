@@ -9,7 +9,7 @@
       </div>
       <div class="topRight">
         <div class="personal">
-          <p>{{personal.name}}{{path}}</p>
+          <p>{{personal.name}}</p>
           <p><span v-for="(key,index) in personal.org" v-if="index === 0">{{key.name}}</span></p>
         </div>
 

@@ -143,9 +143,11 @@
         }
       },
       passThrough(val) {
+        this.prompt('正在提交！', 'send');
         this.$http.post(this.urls + 'workflow/process/trans/' + this.queries.ids, {
           operation: this.queries.detail,
         }).then((res) => {
+          this.prompt('', 'close');
           this.haveInHand = true;
           this.flowPath(val);
           this.retry = 0;
@@ -162,6 +164,7 @@
             Toast(res.data.msg);
           }
         }).catch((error) => {
+          this.prompt('', 'close');
           this.haveInHand = true;
           this.flowPath(val);
           if (error.response === undefined) {
@@ -193,6 +196,7 @@
         }
         if (this.haveInHand) {
           this.haveInHand = false;
+          this.prompt('正在提交！', 'send');
           this.$http.post(this.urls + 'workflow/process/comment', {
             content: this.form.content,
             obj_id: this.queries.ids,
@@ -203,6 +207,7 @@
             image_pic: this.form.image_pic,
           }).then((res) => {
             this.retry = 0;
+            this.prompt('', 'close');
             if (res.data.code === '20000') {
               if (this.queries.detail === 'to_comment') {
                 this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
@@ -216,6 +221,7 @@
               this.haveInHand = true;
             }
           }).catch((error) => {
+            this.prompt('', 'close');
             this.haveInHand = true;
             if (error.response === undefined) {
               this.alertMsg('net');
@@ -266,45 +272,6 @@
             that.$router.push({path: urls, query: {ids: that.queries.ids}});
           });
         }
-      },
-
-      //生成电子收据
-      createElectronicReceipt(vm) {
-        // this.electronicReceiptVisible = true;
-        this.$http.post(globalConfig.server + 'financial/receipt/generate', {...vm.electronicReceiptParam, ...vm.bank}).then((res) => {
-          // this.pdfloading = false;
-          if (res.data.code === "20000") {
-            this.electronicReceiptId = res.data.data.id;
-            // this.pdfUrl = res.data.data.shorten_uri;
-            // this.pdf_loading = false;
-            // this.signature = true
-            sessionStorage.removeItem('showElectronicReceipt');
-          } else {
-            this.$notify.error({
-              title: '错误',
-              message: res.data.msg
-            });
-            // this.electronicReceiptVisible = false
-          }
-        })
-      },
-      //电子收据签章
-      signatureBtn() {
-        // this.pdfloading = true;
-        this.$http.post(globalConfig.server + '/financial/receipt/sign/' + this.electronicReceiptId).then((res) => {
-          if (res.data.code === "20000") {
-            // this.pdfloading = false;
-            // this.pdfUrl = res.data.data.shorten_uri;
-            // this.signature = false
-            // this.isShow = false;
-            // localStorage.setItem('pdfUrl',this.pdfUrl)
-          } else {
-            this.$notify.error({
-              title: '错误',
-              message: res.data.msg
-            });
-          }
-        })
       },
     },
   }
