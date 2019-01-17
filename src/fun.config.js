@@ -437,19 +437,23 @@ export default {
       data.account_id = val.account_id;
       this.previewJoggle(data);
     };
-    Vue.prototype.previewJoggle = function (val) {
+    Vue.prototype.previewJoggle = function (val, sign = '') {
       return new Promise((resolve, reject) => {
         this.prompt('正在生成电子收据！', 'send');
         this.$http.post(this.urls + 'financial/receipt/generate', val).then(res => {
-          this.prompt('', 'close');
+          if (sign !== 'sign') {
+            this.prompt('', 'close');
+          }
           if (res.data.code === '20000') {
-            sessionStorage.setItem('receiptId', res.data.data.id);
             let pdfUrls = res.data.data.shorten_uri;
             if (navigator.userAgent == 'app/ApartMent') {
               Android.toBrowser(pdfUrls);
             } else {
-              this.ddReceipt(pdfUrls, val);
-              resolve(true);
+              if (sign !== 'sign') {
+                this.ddReceipt(pdfUrls, val);
+              } else {
+                this.receiptSignature(res.data.data.id, resolve);
+              }
             }
           } else {
             this.prompt(res.data.msg);
@@ -461,30 +465,28 @@ export default {
         })
       })
     };
-    Vue.prototype.receiptSignature = function () {
-      return new Promise((resolve, reject) => {
-        this.prompt('正在签署电子收据！', 'send');
-        this.$http.post(this.urls + 'financial/receipt/sign/' + sessionStorage.getItem('receiptId'),).then(arr => {
-          this.prompt('', 'close');
-          if (arr.data.code === '20000') {
-            let pdfUrls = arr.data.data.shorten_uri;
-            if (navigator.userAgent == 'app/ApartMent') {
-              Android.toBrowser(pdfUrls);
-            } else {
-              let data = {};
-              data.date = this.formatDate(new Date());
-              this.ddReceipt(pdfUrls, data, resolve);
-              resolve(true);
-            }
+    Vue.prototype.receiptSignature = function (id, resolve) {
+      this.$http.post(this.urls + 'financial/receipt/sign/' + id).then(arr => {
+        this.prompt('', 'close');
+        if (arr.data.code === '20000') {
+          sessionStorage.setItem('receiptId', arr.data.data.id);
+          let pdfUrls = arr.data.data.shorten_uri;
+          if (navigator.userAgent == 'app/ApartMent') {
+            Android.toBrowser(pdfUrls);
           } else {
-            this.prompt(arr.data.msg);
-            resolve(false);
+            let data = {};
+            data.date = this.formatDate(new Date());
+            this.ddReceipt(pdfUrls, data);
+            resolve(true);
           }
-        }).catch(_ => {
-          this.prompt('', 'close');
+        } else {
+          this.prompt(arr.data.msg);
           resolve(false);
-          console.log(_);
-        });
+        }
+      }).catch(_ => {
+        this.prompt('', 'close');
+        resolve(false);
+        console.log(_);
       });
     };
     Vue.prototype.ddReceipt = function (pdfUrls, val) {

@@ -127,11 +127,8 @@
       </div>
       <div v-for="(key,index) in operation" @click="commentOn(index, marking)">{{key}}</div>
       <div @click="confirmBulletinType(contentGet,process,ids)"
-           v-if="previewStatus === 'preview' && showElectronicReceipt">
-        预览电子收据
-      </div>
-      <div @click="receiptSign()" v-if="previewStatus === 'signature' && showElectronicReceipt">
-        电子收据签章
+           v-if="previewStatus === 'signature' && showElectronicReceipt">
+        生成电子收据
       </div>
       <div @click="confirmSend()" v-if="previewStatus === 'send' && showElectronicReceipt">
         发送电子收据
@@ -277,7 +274,7 @@
         bank: {},                       //银行数据
 
         showElectronicReceipt: true,    //展示电子收据
-        previewStatus: 'preview',       //展示电子收据
+        previewStatus: 'signature',       //展示电子收据
         phoneShow: false,               //展示电子收据
         phone: '',                      //展示电子收据
         pdfLoading: '',                 //加载pdf
@@ -303,7 +300,7 @@
         this.personalId = JSON.parse(sessionStorage.personal);
       }
       if (this.ids !== this.$route.query.ids) {
-        this.previewStatus = 'preview';
+        this.previewStatus = 'signature';
       }
       this.ids = this.$route.query.ids;
       this.page = 1;
@@ -601,15 +598,8 @@
         data.money_way.forEach((item, index) => {
           res['bank' + (index + 1)] = item;
         });
-        this.previewJoggle(res).then(status => {
+        this.previewJoggle(res,'sign').then(status => {
           if (status) {
-            this.previewStatus = 'signature';
-          }
-        });
-      },
-      receiptSign() {
-        this.receiptSignature().then(res => {
-          if (res) {
             this.previewStatus = 'send';
           }
         });
