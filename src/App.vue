@@ -191,7 +191,7 @@
             data.department_id = info.department_id[0];
             data.isCompany = info.isCompany;
             data.status = info.role.filter(str => {
-              return str.name === 'verify-manage';
+              return str.name === 'fund-master';
             });
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
