@@ -295,6 +295,8 @@ div {
   justify-content: space-around;
   align-items: center;
   div {
+    padding: 0 .12rem;
+    white-space: nowrap;
     color: $color;
     width: 100%;
     height: .6rem;

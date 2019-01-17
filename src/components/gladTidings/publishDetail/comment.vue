@@ -3,14 +3,6 @@
     <div id="commentOn">
       <div>
         <div class="contents">
-          <!-- <div v-if="isShow" class="pdf-container">
-              <iframe  width="100%" height="280px" :src="pdfUrl" type="application/pdf"></iframe >
-              <pdf :src="pdfUrl"></pdf >
-              <div class="pdf-loading" v-if="pdf_loading">
-                <van-loading type="spinner"/>
-                <div class="loading-tips">电子收据加载中</div>
-              </div>
-          </div> -->
           <van-cell-group>
             <van-field
               v-model="form.content"
@@ -34,19 +26,11 @@
         </div>
       </div>
     </div>
-    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">-->
-    <!--<van-picker-->
-    <!--show-toolbar-->
-    <!--:columns="columns"-->
-    <!--@cancel="onCancel"-->
-    <!--@confirm="onConfirm"/>-->
-    <!--</van-popup>-->
   </div>
 </template>
 <script>
   import UpLoad from '../../common/UPLOAD.vue'
   import {Toast} from 'vant';
-  // import pdfshower  from 'vue-pdf-shower';
 
   export default {
     name: "comment",
@@ -60,17 +44,6 @@
 
         show: false,
         text: '',
-        // tabs: '',
-        // columns: [],              //select值
-        // selectHide: false,
-
-        // decorateAll: [],
-        // decorate_name: [],
-        // decorationOn: '',
-
-        // propertyAll: [],
-        // property_name: [],
-        // propertyOn: '',
 
         is_electric_status: true,         //家电是否齐全
         is_clean_status: true,            //卫生是否干净
@@ -85,25 +58,12 @@
         forms: {
           is_electric_appliance: 1,     //家电是否齐全
           is_clean: 1,                  //是否干净
-          // house_grade: 1,              //评分
-          // suggest_price: '',           //价格
-          // decoration: '',              //装修
-          // house_feature: '',           //特色
         },
-        // status: ['很差', '一般', '满意', '很满意', '非常满意'],
         path: '',
         queries: {},
         showContent: false,
 
         retry: 0,
-        // electronicReceiptParam:null,          //电子收据参数对象
-        // bank:null,                            //参数
-        // pdfloading : true,
-        // electronicReceiptId :'',              //电子收据id
-        // pdfUrl : '',                          //pdf
-        // isShow: false,                        //是否需要生成电子收据
-        // pdf_loading:true,                     //正在加载电子收据pdf
-
       }
     },
     watch: {
@@ -115,8 +75,6 @@
         }
         if (from.name === 'comment') {
           this.isShow = false;
-          // this.pdfUrl = '';
-          // this.pdf_loading = true;
         }
       }
     },
@@ -125,20 +83,10 @@
         vm.path = from.path;
         vm.ddBack(1, from.path);
         vm.ddBack(2, from.path);
-        if (vm.$route.query.detail === 'to_market-marketing-manager_approved') {
-          if (sessionStorage.getItem('showElectronicReceipt')) {
-            // vm.isShow = true;
-            // vm.electronicReceiptParam = JSON.parse(sessionStorage.getItem('electronicReceiptParam'));
-            // vm.bank = JSON.parse(sessionStorage.getItem('bank'));
-            // vm.createElectronicReceipt(vm);
-          }
-        } else {
-          // vm.isShow = false;
-        }
       })
     },
     mounted() {
-      // this.dict();
+
     },
     activated() {
       $('.imgItem').remove();
@@ -151,66 +99,6 @@
       this.is_clean_status = true;
     },
     methods: {
-      // onClick(key) {
-      //   return key;
-      // },
-      // dict() {
-      //   // 装修
-      //   this.dictionary(404, 1).then((res) => {
-      //     this.decorate_name = [];
-      //     this.decorateAll = res.data;
-      //     for (let i = 0; i < res.data.length; i++) {
-      //       this.decorate_name.push(res.data[i].dictionary_name);
-      //     }
-      //     // 房屋特色
-      //     this.dictionary(425, 1).then((res) => {
-      //       this.property_name = [];
-      //       this.propertyAll = res.data;
-      //       for (let i = 0; i < res.data.length; i++) {
-      //         this.property_name.push(res.data[i].dictionary_name);
-      //       }
-      //     });
-      //
-      //   });
-      // },
-      // selectShow(val) {
-      //   this.tabs = val;
-      //   this.selectHide = true;
-      //   switch (val) {
-      //     case 1:
-      //       this.columns = this.decorate_name;
-      //       break;
-      //     case 2:
-      //       this.columns = this.property_name;
-      //       break;
-      //   }
-      // },
-      //
-      // onConfirm(value, index) {
-      //   switch (this.tabs) {
-      //     case 1: // 装修
-      //       this.decorationOn = value;
-      //       for (let i = 0; i < this.decorateAll.length; i++) {
-      //         if (this.decorateAll[i].dictionary_name === value) {
-      //           this.forms.decoration = this.decorateAll[i].id;
-      //         }
-      //       }
-      //       break;
-      //     case 2: // 特色
-      //       this.propertyOn = value;
-      //       for (let i = 0; i < this.propertyAll.length; i++) {
-      //         if (this.propertyAll[i].dictionary_name === value) {
-      //           this.forms.house_feature = this.propertyAll[i].id;
-      //         }
-      //       }
-      //       break;
-      //   }
-      //   this.selectHide = false;
-      // },
-      // // select关闭
-      // onCancel() {
-      //   this.selectHide = false;
-      // },
 
       // 确认评论
       manager(val) {
@@ -223,9 +111,6 @@
             Toast('请填写评论内容');
           }
         }
-        // if(this.isShow){
-        //   this.signatureBtn();
-        // }
       },
       // 评分
       mark() {
@@ -286,7 +171,6 @@
               this.personalGet().then((data) => {
                 if (data && this.retry === 0) {
                   this.retry++;
-
                   this.passThrough();
                 }
               });
@@ -341,7 +225,6 @@
                 this.personalGet().then((data) => {
                   if (data && this.retry === 0) {
                     this.retry++;
-
                     this.comment();
                   }
                 });
@@ -384,6 +267,7 @@
           });
         }
       },
+
       //生成电子收据
       createElectronicReceipt(vm) {
         // this.electronicReceiptVisible = true;

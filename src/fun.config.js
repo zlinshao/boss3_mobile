@@ -102,7 +102,7 @@ export default {
       return Number(sum1) + Number(sum2) + Number(sum3);
     };
     // 格式化日期 yyyy-MM-dd
-    Vue.prototype.formatDate = function (date, type, pre) {
+    Vue.prototype.formatDate = function (date, type = '', pre) {
       let year = date.getFullYear();
       let month;
       if (pre === 'pre') {
@@ -367,7 +367,7 @@ export default {
     Vue.prototype.previewReceipt = function (val, money_key) {
       console.log(val);
       let data = {};
-      data.process_id = '0';
+      data.process_id = val.process_id;
 
       if (data.house_id_rent) {
         data.house_id = val.house_id_rent;
@@ -378,8 +378,8 @@ export default {
           data.house_id = '';
         }
       }
-      data.department_id = this.form.department_id;
-      data.date = this.formatDate(new Date, 'date');
+      data.department_id = val.department_id;
+      data.date = this.formatDate(new Date());
       data.payer = val.name;
       if (val.rent_without_collect_address) {
         data.address = val.rent_without_collect_address;
@@ -431,47 +431,87 @@ export default {
         data['bank' + (index + 1)] = item;
       });
       data.account_id = val.account_id;
-      this.prompt('正在生成电子收据！', 'send');
-      this.$http.post(this.urls + 'financial/receipt/generate', data).then(res => {
-        this.prompt('', 'close');
-        if (res.data.code === '20000') {
-          let pdfUrls = res.data.data.shorten_uri;
-          if (navigator.userAgent == 'app/ApartMent') {
-            Android.toBrowser(pdfUrls);
+      this.previewJoggle(val);
+    };
+    Vue.prototype.previewJoggle = function (val) {
+      return new Promise((resolve, reject) => {
+        this.prompt('正在生成电子收据！', 'send');
+        this.$http.post(this.urls + 'financial/receipt/generate', val).then(res => {
+          this.prompt('', 'close');
+          if (res.data.code === '20000') {
+            sessionStorage.setItem('receiptId', res.data.data.id);
+            let pdfUrls = res.data.data.shorten_uri;
+            if (navigator.userAgent == 'app/ApartMent') {
+              Android.toBrowser(pdfUrls);
+            } else {
+              this.ddReceipt(pdfUrls, val);
+              resolve(true);
+            }
           } else {
-            dd.ready(function () {
-              dd.biz.cspace.saveFile({
-                corpId: sessionStorage.getItem('cropID'),
-                url: pdfUrls,  // 文件在第三方服务器地址， 也可为通过服务端接口上传文件得到的media_id，详见参数说明
-                name: "electronicReceipt.pdf",
-                onSuccess: function (data) {
-                  dd.biz.cspace.preview({
-                    corpId: sessionStorage.getItem('cropID'),
-                    spaceId: data.data[0].spaceId,
-                    fileId: data.data[0].fileId,
-                    fileName: data.data[0].fileName,
-                    fileSize: data.data[0].fileSize,
-                    fileType: "pdf",
-                    onSuccess: function () {
-                      //无，直接在native显示文件详细信息
-                    },
-                    onFail: function (err) {
-                      // 无，直接在native页面显示具体的错误
-                    }
-                  });
-                },
-                onFail: function (err) {
-                  console.log(err);
-                }
-              });
-            });
+            this.prompt(res.data.msg);
+            resolve(false);
           }
-        } else {
-          this.prompt(res.data.msg);
-        }
-      }).catch(_ => {
-        this.prompt('', 'close');
+        }).catch(_ => {
+          resolve(false);
+          this.prompt('', 'close');
+        })
       })
     };
+    Vue.prototype.receiptSignature = function () {
+      return new Promise((resolve, reject) => {
+        this.prompt('正在签署电子收据！', 'send');
+        this.$http.post(this.urls + 'financial/receipt/sign/' + sessionStorage.getItem('receiptId'),).then(arr => {
+          this.prompt('', 'close');
+          if (arr.data.code === '20000') {
+            let pdfUrls = arr.data.data.shorten_uri;
+            if (navigator.userAgent == 'app/ApartMent') {
+              Android.toBrowser(pdfUrls);
+            } else {
+              let data = {};
+              data.date = this.formatDate(new Date());
+              this.ddReceipt(pdfUrls, data, resolve);
+              resolve(true);
+            }
+          } else {
+            this.prompt(arr.data.msg);
+            resolve(false);
+          }
+        }).catch(_ => {
+          this.prompt('', 'close');
+          resolve(false);
+          console.log(_);
+        });
+      });
+    };
+    Vue.prototype.ddReceipt = function (pdfUrls, val) {
+      let date = val.date.split(':').join('_');
+      let name = val.address + date + ".pdf";
+      dd.ready(function () {
+        dd.biz.cspace.saveFile({
+          corpId: sessionStorage.getItem('cropID'),
+          url: pdfUrls,  // 文件在第三方服务器地址， 也可为通过服务端接口上传文件得到的media_id，详见参数说明
+          name: name,
+          onSuccess: function (data) {
+            dd.biz.cspace.preview({
+              corpId: sessionStorage.getItem('cropID'),
+              spaceId: data.data[0].spaceId,
+              fileId: data.data[0].fileId,
+              fileName: data.data[0].fileName,
+              fileSize: data.data[0].fileSize,
+              fileType: "pdf",
+              onSuccess: function () {
+                //无，直接在native显示文件详细信息
+              },
+              onFail: function (err) {
+                // 无，直接在native页面显示具体的错误
+              }
+            });
+          },
+          onFail: function (err) {
+            console.log(err);
+          }
+        });
+      });
+    }
   }
 }
