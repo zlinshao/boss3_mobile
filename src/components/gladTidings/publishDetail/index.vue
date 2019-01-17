@@ -38,19 +38,20 @@
         <div v-for="(key,index) in formList"
              v-if="printscreen.indexOf(index) === -1">
           <p v-if="index !== 'receiptUri'">{{index}}</p>
-          <h1 v-if="index.includes('渠道信息')">
+          <h1 v-if="index === '渠道信息'">
             <span style="display: block;" v-for="arr in Object.keys(key)">
               <span>{{arr}}&nbsp;:&nbsp;{{key[arr]}}</span>
             </span>
           </h1>
           <h1 v-else>
-            <span v-if="Array.isArray(key)" v-for="(item,idx) in key.length">
-              <span style="display: block;">{{key[idx].msg}}</span>
-              <span style="display: block;">{{key[idx].period}}</span>
+            <span v-if="Array.isArray(key) && key">
+              <span v-for="(item,idx) in key.length">
+                <span style="display: block;">{{key[idx].msg}}</span>
+                <span style="display: block;">{{key[idx].period}}</span>
+              </span>
             </span>
-            <span v-if="index === '已收金额和汇款账户' || index === '实际收款时间' || index === '补交定金和收款方式'"
-                  v-for="(item,idx) in key.length">
-              <span style="display: block;">{{key[idx]}}</span>
+            <span v-if="index === '已收金额和汇款账户' || index === '实际收款时间' || index === '补交定金和收款方式'">
+              <span style="display: block;" v-for="(item,idx) in key.length">{{key[idx]}}</span>
             </span>
             <span v-if="!Array.isArray(key) && index !== '房屋类型'">
               {{key}}
@@ -381,9 +382,251 @@
         this.formDetail(this.ids);
       },
       formDetail(val) {
-        this.$http.get(this.urls + 'workflow/process/' + val).then((res) => {
+        this.$http.get(this.urls + 'workflow/process/' + val).then(() => {
+          let res = {};
+          res.data = {
+            "code": "20020",
+            "msg": "查询成功",
+            "data": {
+              "deal": "共耗时8670分钟",
+              "operation": {
+                "to_market-marketing-manager_approved": "同意",
+                "to_market-marketing-manager_rejected": "拒绝",
+                "to_comment": "评论"
+              },
+              "process": {
+                "id": 168784,
+                "content": {
+                  "id": 1301,
+                  "bank": "中国建设银行",
+                  "draft": {"id": 0, "name": "发布"},
+                  "amount": "1742",
+                  "payWay": ["2017-12-26~2018-06-25:押1付6", "2018-06-26~2018-12-25:押1付6"],
+                  "remark": "",
+                  "account": "6236681370000718996",
+                  "address": "天华园7-501",
+                  "dataFrom": null,
+                  "house_id": 10546,
+                  "is_draft": 0,
+                  "staff_id": 293,
+                  "corp_name": "南京乐伽商业管理有限公司",
+                  "money_sum": null,
+                  "price_arr": ["2017-12-26~2018-12-25:3500元"],
+                  "subbranch": "南京御道街之行",
+                  "staff_name": "戈晨星",
+                  "contract_id": 11869,
+                  "account_name": "张松",
+                  "bulletindate": "2019-01-11 17:05:20",
+                  "purchase_way": 509,
+                  "show_content": {
+                    "卡号": "6236681370000718996",
+                    "地址": "天华园7-501",
+                    "备注": "",
+                    "支行": "南京御道街之行",
+                    "部门": "#南京铁心桥组",
+                    "银行": "中国建设银行",
+                    "开单人": "戈晨星",
+                    "开户名": "张松",
+                    "月单价": [{"msg": "3500元", "period": "2017.12.26-2018.12.25"}],
+                    "付款方式": [{"msg": "押1付6", "period": "2017.12.26-2018.06.25"}, {
+                      "msg": "押1付6",
+                      "period": "2018.06.26-2018.12.25"
+                    }],
+                    "实退金额": "1742",
+                    "已收金额": null,
+                    "报备类型": "退款报备",
+                    "领导同意截图": [{
+                      "id": 4402712,
+                      "ext": "image\/png",
+                      "uri": "http:\/\/s.lejias.cn\/121d8b37133467e6e430f94ac6e2d084.png",
+                      "host": "s.lejias.cn",
+                      "mime": "image\/png",
+                      "name": "121d8b37133467e6e430f94ac6e2d084.png",
+                      "size": "527748",
+                      "bucket": "lejia-prod",
+                      "user_id": 1158,
+                      "is_video": false,
+                      "raw_name": "121d8b37133467e6e430f94ac6e2d084.png",
+                      "created_at": "2019-01-11 17:05:19",
+                      "deleted_at": null,
+                      "updated_at": "2019-01-11 17:05:19",
+                      "currentPlace": null,
+                      "display_name": "121d8b37133467e6e430f94ac6e2d084.png"
+                    }]
+                  },
+                  "show_summary": ["#南京大明路组-周兴超-退款报备", "地址: 【天华园7-501】", "支行: 【南京御道街之行】", "卡号: 【6236681370000718996】", "备注: 【】"],
+                  "bulletin_name": "退款报备",
+                  "bulletin_type": "bulletin_refund",
+                  "department_id": 286,
+                  "draft_content": {
+                    "id": 1301,
+                    "bank": "中国建设银行",
+                    "draft": 0,
+                    "amount": "1742",
+                    "payWay": ["2017-12-26~2018-06-25:押1付6", "2018-06-26~2018-12-25:押1付6"],
+                    "remark": "",
+                    "account": "6236681370000718996",
+                    "address": "天华园7-501",
+                    "house_id": 10546,
+                    "staff_id": 293,
+                    "corp_name": "南京乐伽商业管理有限公司",
+                    "money_sum": null,
+                    "price_arr": ["2017-12-26~2018-12-25:3500元"],
+                    "subbranch": "南京御道街之行",
+                    "staff_name": "戈晨星",
+                    "contract_id": 11869,
+                    "account_name": "张松",
+                    "purchase_way": 509,
+                    "bulletin_name": "退款报备",
+                    "department_id": 232,
+                    "department_name": "#南京铁心桥组",
+                    "screenshot_leader": ["4402712"]
+                  },
+                  "house_address": "天华园7-501",
+                  "department_name": "#南京铁心桥组",
+                  "bulletin_staff_id": 1158,
+                  "screenshot_leader": {
+                    "pic_ids": ["4402712"],
+                    "pic_addresses": [{
+                      "id": 4402712,
+                      "uri": "http:\/\/s.lejias.cn\/121d8b37133467e6e430f94ac6e2d084.png",
+                      "info": {
+                        "ext": "image\/png",
+                        "host": "s.lejias.cn",
+                        "mime": "image\/png",
+                        "size": "527748",
+                        "bucket": "lejia-prod"
+                      },
+                      "name": "121d8b37133467e6e430f94ac6e2d084.png",
+                      "user_id": 1158,
+                      "raw_name": "121d8b37133467e6e430f94ac6e2d084.png",
+                      "created_at": "2019-01-11 17:05:19",
+                      "deleted_at": null,
+                      "updated_at": "2019-01-11 17:05:19",
+                      "currentPlace": null,
+                      "display_name": "121d8b37133467e6e430f94ac6e2d084.png"
+                    }]
+                  },
+                  "show_content_compress": "{\"报备类型\":\"退款报备\",\"地址\":\"天华园7-501\",\"付款方式\":[{\"msg\":\"押1付6\",\"period\":\"2017.12.26-2018.06.25\"},{\"msg\":\"押1付6\",\"period\":\"2018.06.26-2018.12.25\"}],\"月单价\":[{\"msg\":\"3500元\",\"period\":\"2017.12.26-2018.12.25\"}],\"已收金额\":null,\"实退金额\":\"1742\",\"银行\":\"中国建设银行\",\"支行\":\"南京御道街之行\",\"卡号\":\"6236681370000718996\",\"开户名\":\"张松\",\"领导同意截图\":[{\"id\":4402712,\"name\":\"121d8b37133467e6e430f94ac6e2d084.png\",\"display_name\":\"121d8b37133467e6e430f94ac6e2d084.png\",\"raw_name\":\"121d8b37133467e6e430f94ac6e2d084.png\",\"currentPlace\":null,\"user_id\":1158,\"uri\":\"http:\/\/s.lejias.cn\/121d8b37133467e6e430f94ac6e2d084.png\",\"created_at\":\"2019-01-11 17:05:19\",\"updated_at\":\"2019-01-11 17:05:19\",\"deleted_at\":null,\"ext\":\"image\/png\",\"host\":\"s.lejias.cn\",\"mime\":\"image\/png\",\"size\":\"527748\",\"bucket\":\"lejia-prod\",\"is_video\":false}],\"备注\":\"\",\"开单人\":\"戈晨星\",\"部门\":\"#南京铁心桥组\"}"
+                },
+                "processable_id": 1301,
+                "processable_type": "bulletin_refund",
+                "user_id": 1158,
+                "place": {
+                  "name": "market-marketing-manager_review",
+                  "status": "review",
+                  "display_name": "片区经理审核中",
+                  "auditors": [{
+                    "id": 258,
+                    "name": "陈鑫",
+                    "nick_name": null,
+                    "avatar": "http:\/\/p.qlogo.cn\/bizmail\/5sUET7AICgib6juRjxXMQKdxdkvCeVoMiaiaEgBxKKEVgXhYVicVU7AWpA\/0",
+                    "phone": "17625912285",
+                    "email": null,
+                    "ding_user_id": "100068091537717994",
+                    "dismissed_at": null,
+                    "disabled_at": null,
+                    "py": "cx",
+                    "pinyin": "chenxin",
+                    "gender": 229,
+                    "is_on_job": null,
+                    "is_enable": null,
+                    "isleader": 0,
+                    "qr_code": "",
+                    "status": 1,
+                    "wx_user_id": null
+                  }]
+                },
+                "finish_at": null,
+                "org_id": 286,
+                "house_id": 10546,
+                "created_at": "2019-01-11 17:05:20",
+                "updated_at": "2019-01-11 17:05:22",
+                "deleted_at": null,
+                "leader": {
+                  "id": 258,
+                  "name": "陈鑫",
+                  "nick_name": null,
+                  "avatar": "http:\/\/p.qlogo.cn\/bizmail\/5sUET7AICgib6juRjxXMQKdxdkvCeVoMiaiaEgBxKKEVgXhYVicVU7AWpA\/0",
+                  "phone": "17625912285",
+                  "email": null,
+                  "ding_user_id": "100068091537717994",
+                  "dismissed_at": null,
+                  "disabled_at": null,
+                  "py": "cx",
+                  "pinyin": "chenxin",
+                  "gender": 229,
+                  "is_on_job": null,
+                  "is_enable": null,
+                  "isleader": 0,
+                  "qr_code": "",
+                  "status": 1,
+                  "wx_user_id": null
+                },
+                "user": {
+                  "id": 1158,
+                  "name": "周兴超",
+                  "nick_name": null,
+                  "avatar": "http:\/\/p.qlogo.cn\/bizmail\/xog4HhO3DduwlGibylGiasz7r7ZO1Cfb5Ec502pcuZMK5UDLj56pPfVQ\/0",
+                  "phone": "17746935366",
+                  "email": null,
+                  "ding_user_id": "186854565421447929",
+                  "dismissed_at": null,
+                  "disabled_at": null,
+                  "py": "zxc",
+                  "pinyin": "zhouxingchao",
+                  "gender": 229,
+                  "is_on_job": null,
+                  "is_enable": null,
+                  "isleader": 0,
+                  "qr_code": "",
+                  "status": 1,
+                  "wx_user_id": null,
+                  "org": [{
+                    "id": 286,
+                    "name": "#南京大明路组",
+                    "is_corp": 0,
+                    "company_id": 419,
+                    "order": 0,
+                    "is_enable": 1,
+                    "parent_id": 424,
+                    "leader_id": 258,
+                    "ding_department_id": 67069775,
+                    "pivot": {
+                      "id": 2315,
+                      "user_id": 1158,
+                      "org_id": 286,
+                      "created_at": "1970-01-01 08:00:00",
+                      "updated_at": "1970-01-01 08:00:00"
+                    },
+                    "leader": {
+                      "id": 258,
+                      "name": "陈鑫",
+                      "nick_name": null,
+                      "avatar": "http:\/\/p.qlogo.cn\/bizmail\/5sUET7AICgib6juRjxXMQKdxdkvCeVoMiaiaEgBxKKEVgXhYVicVU7AWpA\/0",
+                      "phone": "17625912285",
+                      "email": null,
+                      "ding_user_id": "100068091537717994",
+                      "dismissed_at": null,
+                      "disabled_at": null,
+                      "py": "cx",
+                      "pinyin": "chenxin",
+                      "gender": 229,
+                      "is_on_job": null,
+                      "is_enable": null,
+                      "isleader": 0,
+                      "qr_code": "",
+                      "status": 1,
+                      "wx_user_id": null
+                    }
+                  }]
+                }
+              },
+              "operators": []
+            }
+          }
           this.message = '';
-          if (res.data.code === '20020' && res.data.data.length !== 0) {
+          if (res.data.code === '20020') {
             let content = res.data.data.process.content;
             let main = res.data.data.process;
             this.operation = res.data.data.operation;
