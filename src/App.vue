@@ -123,7 +123,7 @@
           });
         } else {
           sessionStorage.setItem('queryType', 'ding');
-          this.loading = false
+          this.loading = true;
           if (this.isWeiXin()) {
             this.prevent();
           } else {
