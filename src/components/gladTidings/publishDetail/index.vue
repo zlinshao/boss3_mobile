@@ -303,12 +303,13 @@
         this.personalId = JSON.parse(sessionStorage.personal);
       }
       if (this.ids !== this.$route.query.ids) {
-        this.ids = this.$route.query.ids;
-        this.page = 1;
-        this.close_();
-        this.finished = false;
-        this.search();
+        this.previewStatus = 'preview';
       }
+      this.ids = this.$route.query.ids;
+      this.page = 1;
+      this.close_();
+      this.finished = false;
+      this.search();
     },
     watch: {
       showContent(val) {
@@ -356,7 +357,6 @@
         this.vLoading = true;
         this.deal = '';
         this.phone = '';
-        this.previewStatus = 'preview';
         this.videoSrc = '';
         this.formList = {};
         this.operation = {};
@@ -400,7 +400,6 @@
               this.$http.get(this.urls + 'workflow/process/get/' + val).then(item => {
                 this.contentGet = item.data.data.content;
                 let content1 = item.data.data.content;
-                this.previewStatus = 'preview';
                 this.formList = JSON.parse(content1.show_content_compress);
                 if (main.place.name === 'fund-master_review') {
                   let bulletinArr = ['bulletin_agency', 'bulletin_rent_basic', 'bulletin_rent_cont inued', 'bulletin_rent_trans', 'bulletin_change', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_retainage'];
