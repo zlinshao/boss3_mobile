@@ -365,7 +365,6 @@ export default {
     };
     // 生成电子收据
     Vue.prototype.previewReceipt = function (val, money_key) {
-      console.log(val);
       let data = {};
       data.process_id = val.process_id;
 
@@ -431,7 +430,7 @@ export default {
         data['bank' + (index + 1)] = item;
       });
       data.account_id = val.account_id;
-      this.previewJoggle(val);
+      this.previewJoggle(data);
     };
     Vue.prototype.previewJoggle = function (val) {
       return new Promise((resolve, reject) => {
