@@ -372,7 +372,6 @@ export default {
     Vue.prototype.previewReceipt = function (val, money_key) {
       let data = {};
       data.process_id = '0';
-
       if (data.house_id_rent) {
         data.house_id = val.house_id_rent;
       } else {
@@ -383,7 +382,6 @@ export default {
         }
       }
       data.department_id = val.department_id;
-      data.date = this.formatDate(new Date());
       data.payer = val.name;
       if (val.rent_without_collect_address) {
         data.address = val.rent_without_collect_address;
@@ -438,6 +436,7 @@ export default {
       this.previewJoggle(data);
     };
     Vue.prototype.previewJoggle = function (val, sign = '') {
+      val.date = this.formatDate(new Date());
       return new Promise((resolve, reject) => {
         this.prompt('正在生成电子收据！', 'send');
         this.$http.post(this.urls + 'financial/receipt/generate', val).then(res => {

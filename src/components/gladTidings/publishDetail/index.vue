@@ -126,7 +126,10 @@
         重新提交
       </div>
       <div v-for="(key,index) in operation" @click="commentOn(index, marking)">{{key}}</div>
-      <div @click="confirmBulletinType(contentGet,process,ids)"
+      <div @click="confirmBulletinType(contentGet,process,ids)" v-if="showElectronicReceipt">
+        预览电子收据
+      </div>
+      <div @click="confirmBulletinType(contentGet,process,ids, 'sign')"
            v-if="previewStatus === 'signature' && showElectronicReceipt">
         生成电子收据
       </div>
@@ -400,7 +403,7 @@
                 this.formList = JSON.parse(content1.show_content_compress);
                 if (main.place.status === 'published' && this.personalId.status) {
                   let bulletinArr = ['bulletin_agency', 'bulletin_rent_basic', 'bulletin_rent_continued', 'bulletin_rent_trans', 'bulletin_change', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_retainage'];
-                  if (bulletinArr.includes(main.processable_type) && (content1.is_receipt || content1.is_receipt.id == 1)) {
+                  if (bulletinArr.includes(main.processable_type) && (content1.is_receipt && content1.is_receipt.id == 1)) {
                     this.showElectronicReceipt = true;
                   }
                 }
@@ -559,12 +562,11 @@
         });
       },
       //确认订单类型是否需要生成电子收据
-      confirmBulletinType(data, type, ids) {
+      confirmBulletinType(data, type, ids, val) {
         let res = {};
         res.process_id = ids;
         res.house_id = data.house_id;
         res.department_id = data.department_id;
-        res.date = this.formatDate(new Date());
         res.address = data.address;
         res.duration = data.show_content["现签约时长"] || data.show_content["签约时长"];
         if (type.processable_type === 'bulletin_retainage') {
@@ -598,7 +600,7 @@
         data.money_way.forEach((item, index) => {
           res['bank' + (index + 1)] = item;
         });
-        this.previewJoggle(res,'sign').then(status => {
+        this.previewJoggle(res, val).then(status => {
           if (status) {
             this.previewStatus = 'send';
           }
@@ -606,12 +608,13 @@
       },
       // 发送电子收据
       confirmSend() {
+        this.phone = this.contentGet.phone;
         this.phoneShow = true;
       },
       beforeClose(action, done) {
         if (action === 'confirm') {
           this.prompt('正在生成电子收据！', 'send');
-          this.$http.post(this.urls + 'financial/receipt/send/' + sessionStorage.getItem('receiptId'),{
+          this.$http.post(this.urls + 'financial/receipt/send/' + sessionStorage.getItem('receiptId'), {
             phone: this.phone,
           }).then(res => {
             this.prompt('', 'close');
