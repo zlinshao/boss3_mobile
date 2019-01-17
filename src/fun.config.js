@@ -366,7 +366,7 @@ export default {
     // 生成电子收据
     Vue.prototype.previewReceipt = function (val, money_key) {
       let data = {};
-      data.process_id = val.process_id;
+      data.process_id = '0';
 
       if (data.house_id_rent) {
         data.house_id = val.house_id_rent;
