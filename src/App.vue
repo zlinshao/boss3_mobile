@@ -110,10 +110,10 @@
               data.department_name = info.org[0].name;
               data.department_id = info.org[0].id;
               data.isCompany = '';
-              info.role.forEach(str => {
-                power.push(str.name);
-              });
-              data.status = power.indexOf('fund-master') > -1;
+              // info.role.forEach(str => {
+              //   power.push(str.name);
+              // });
+              // data.status = power.indexOf('fund-master') > -1;
               sessionStorage.setItem('personal', JSON.stringify(data));
               globalConfig.personal = data;
               this.loading = false;
@@ -192,10 +192,10 @@
             data.department_name = info.department_name[0];
             data.department_id = info.department_id[0];
             data.isCompany = info.isCompany;
-            info.role.forEach(str => {
-              power.push(str.name);
-            });
-            data.status = power.indexOf('fund-master') > -1;
+            // info.role.forEach(str => {
+            //   power.push(str.name);
+            // });
+            // data.status = power.indexOf('fund-master') > -1;
             sessionStorage.setItem('personal', JSON.stringify(data));
             globalConfig.personal = data;
             this.loading = false;
