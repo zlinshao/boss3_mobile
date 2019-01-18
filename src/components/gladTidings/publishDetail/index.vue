@@ -38,7 +38,7 @@
         <div v-for="(key,index) in formList"
              v-if="printscreen.indexOf(index) === -1">
           <p v-if="index !== 'receiptUri'">{{index}}</p>
-          <h1 v-if="index === '渠道信息'">
+          <h1 v-if="index.includes('渠道信息')">
             <span style="display: block;" v-for="arr in Object.keys(key)">
               <span>{{arr}}&nbsp;:&nbsp;{{key[arr]}}</span>
             </span>
