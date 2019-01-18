@@ -40,7 +40,10 @@
           <p v-if="index !== 'receiptUri'">{{index}}</p>
           <h1 v-if="index.includes('渠道信息')">
             <span style="display: block;" v-for="arr in Object.keys(key)">
-              <span>{{arr}}&nbsp;:&nbsp;{{key[arr]}}</span>
+              <span>
+                <label style="color: #9c9c9c;">{{arr}}&nbsp;:&nbsp;</label>
+                {{key[arr]}}
+              </span>
             </span>
           </h1>
           <h1 v-else>
