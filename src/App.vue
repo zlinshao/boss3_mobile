@@ -2,7 +2,7 @@
   <div id="app">
     <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
-      <img src="./assets/loding1.gif">
+      <img src="./assets/cat.gif" style="width: 100%">
     </div>
     <div v-if="!loading">
       <keep-alive>
@@ -129,7 +129,10 @@
             this.prevent();
           } else {
             this.personalGet().then(res => {
-              this.loading = !res;
+              setTimeout(() => {
+                this.loading = !res;
+                console.log('...')
+              },6000)
             });
           }
         }
@@ -230,8 +233,10 @@
     }
 
     .loading {
+      width: 80%;
       top: 50%;
       left: 50%;
+      text-align: center;
       transform: translate(-50%, -50%);
       z-index: 1;
     }
