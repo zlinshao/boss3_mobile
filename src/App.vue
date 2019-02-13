@@ -233,7 +233,7 @@
     }
 
     .loading {
-      width: 80%;
+      width: 90%;
       top: 50%;
       left: 50%;
       text-align: center;
