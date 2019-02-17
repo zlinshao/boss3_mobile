@@ -227,8 +227,8 @@
       getVillage(data){
         let village = JSON.parse(data);
         if(village){
-          this.params.latitude = village.location.split(',')[0];
-          this.params.longitude = village.location.split(',')[1];
+          this.params.latitude = village.location.split(',')[1];
+          this.params.longitude = village.location.split(',')[0];
           this.params.address = village.district;
           this.params.village_name = village.name;
         }
