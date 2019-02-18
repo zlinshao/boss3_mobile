@@ -132,7 +132,7 @@
               setTimeout(() => {
                 this.loading = !res;
                 console.log('...')
-              },6000)
+              },3000)
             });
           }
         }
