@@ -162,11 +162,11 @@
         </van-field>
         <van-field
           v-model="form.month"
-          label="收房年限"
+          label="收房年限(月)"
           required
           type="text"
           :disabled="followUp"
-          placeholder="请填写收房年限">
+          placeholder="请填写月数">
         </van-field>
         <van-field
           v-model="form.vacancy"
