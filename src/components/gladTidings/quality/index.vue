@@ -160,7 +160,22 @@
           :disabled="followUp"
           placeholder="请填写价格">
         </van-field>
-
+        <van-field
+          v-model="form.month"
+          label="收房年限"
+          required
+          type="text"
+          :disabled="followUp"
+          placeholder="请填写收房年限">
+        </van-field>
+        <van-field
+          v-model="form.vacancy"
+          label="空置期天数"
+          required
+          type="text"
+          :disabled="followUp"
+          placeholder="请填写空置期天数">
+        </van-field>
         <!--<div class="titleSwitch">-->
         <!--<div class="cellGroup">-->
         <!--<span class="requiredIcon">*</span>-->
@@ -517,6 +532,9 @@
           department_id: '',
           staff_name: '',               //开单人name
           department_name: '',          //部门name
+
+          month: '',//收房年限
+          vacancy: '',//空置期天数
         },
         community_name: '',
         property_fee: '',
