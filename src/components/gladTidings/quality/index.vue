@@ -1055,6 +1055,8 @@
         this.form.decorate = data.decorate;
 
         this.form.area = data.area;                                     //面积
+        this.form.month = data.month;                                   //收房月数
+        this.form.vacancy = data.vacancy;                               //空置期
         this.form.direction = data.direction;                           //朝向
         this.form.property_type = data.property_type;                   //类型
         this.form.floor = data.floor;                                   //楼层
@@ -1146,6 +1148,8 @@
         this.house_type_name = '1室1厅1卫';
 
         this.form.area = '';                      //面积
+        this.form.month = '';                      //收房月数
+        this.form.vacancy = '';                    //空置期
         this.form.direction.name = '';            //朝向
         this.form.direction.id = '';              //朝向
         this.form.property_type.id = '';          //类型
