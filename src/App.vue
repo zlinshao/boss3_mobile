@@ -131,8 +131,7 @@
             this.personalGet().then(res => {
               setTimeout(() => {
                 this.loading = !res;
-                console.log('...')
-              },3000)
+              },1000);
             });
           }
         }
