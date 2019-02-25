@@ -2,7 +2,7 @@
   <div id="app">
     <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
-      <img src="./assets/cat.gif" style="width: 100%">
+      <img src="./assets/loding1.gif" style="width: 100%">
     </div>
     <div v-if="!loading">
       <keep-alive>
