@@ -51,6 +51,10 @@ import Checkout from '../components/gladTidings/checkout/index.vue'           //
 import AgencyRent from '../components/gladTidings/agencyReport/index.vue'     //渠道
 import PolishingCollect from '../components/gladTidings/polishing/collect.vue'   //收房补齐
 import PolishingRenter from '../components/gladTidings/polishing/renter.vue'    //租房补齐
+import EContract from '../components/gladTidings/polishing/eContract.vue'    //电子合同
+import NewCollectContract from '../components/gladTidings/polishing/newCollectContract.vue'    //新建收房电子合同
+import NewRentContract from '../components/gladTidings/polishing/newRentContract.vue'    //新建租房电子合同
+
 import Special from '../components/gladTidings/specialReport/index.vue'
 // import Confiscate from '../components/gladTidings/confiscate/index.vue'
 import FinalPayment from '../components/gladTidings/finalPayment/index.vue'
@@ -365,8 +369,27 @@ export default new Router({
       meta: {title: '租房补齐资料'},
       component: PolishingRenter
     },
-
-
+    {
+      path: '/eContract',
+      hidden: 'polish',
+      back: '#F19851',
+      icon: 'iconfont icon-zufang-',
+      name: '电子合同',
+      meta: {title: '电子合同'},
+      component: EContract
+    },
+    {
+      path: '/newCollectContract',
+      name: '收房电子合同',
+      meta: {title: '收房电子合同'},
+      component: NewCollectContract
+    },
+    {
+      path: '/newRentContract',
+      name: '租房电子合同',
+      meta: {title: '租房电子合同'},
+      component: NewRentContract
+    },
     {
       path: '/productDetail',
       hidden: false,

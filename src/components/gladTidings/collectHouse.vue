@@ -172,6 +172,7 @@
       sureRouter(path, key) {
         key.type = this.types;
         let houseData = {};
+        sessionStorage.setItem('item', JSON.stringify(key));//收房电子合同使用
         for (let item of Object.keys(key)) {
           switch (item) {
             case 'house_res':
