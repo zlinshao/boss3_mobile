@@ -2,22 +2,118 @@
   <div id="rentReport">
     <div class="main" id="main">
       <van-cell-group>
+        <div class="rent_types">
+          <div  class="label">租房类型</div>
+        <van-radio-group v-model="rentType">
+          <van-radio name="1">新租</van-radio>
+          <van-radio name="2">续租</van-radio>
+          <van-radio name="3">转租</van-radio>
+          <van-radio name="4">调租</van-radio>
+          <van-radio name="5">未收先租确定</van-radio>
+        </van-radio-group>
+        </div>
+        <div class="rent_types" v-if="rentType==='3'">
+          <div class="label">转租类型</div>
+          <van-radio-group v-model="form.trans_type">
+          <van-radio name="0">公司</van-radio>
+          <van-radio name="1">个人</van-radio>
+          </van-radio-group>
+        </div>
         <van-field
           v-model="form.contract_number"
           label="合同编号"
           type="text"
           placeholder="请填写合同编号"
-          icon="clear"
           readonly
           @click-icon="form.contract_number = ''">
         </van-field>
+
+
+        <!--下面是未收先租确定信息-->
+        <div class="crop_name noBorder" v-if="rentType==='5'">
+          <van-field
+            v-model="form.oldHouseName"
+            label="原喜报地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择原喜报地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.old_corp_name">{{form.corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
+        <!--上面是未收先租确定信息-->
+
+        <!--下面是调房信息-->
+        <van-cell-group style="margin-bottom: 12px;" v-if="rentType==='4'">
+        <div class="crop_name noBorder">
+          <van-field
+            v-model="form.old_house_name"
+            label="原房屋地址"
+            type="text"
+            readonly
+            @click="searchSelect(1)"
+            placeholder="请选择原房屋地址"
+            required>
+          </van-field>
+          <div class="titleRed" v-if="form.old_corp_name">{{form.old_corp_name}}</div>
+          <div class="showBorder" v-else></div>
+        </div>
+        <van-field
+          v-model="form.old_staff_name"
+          label="原开单人"
+          type="text"
+          disabled
+          placeholder="原房屋原开单人已禁用">
+        </van-field>
+        <van-field
+          class="disabling"
+          :class="{'payWay': payStatus && form.old_pay_way_arr.length > 1}"
+          @click="payWayClick(1)"
+          v-model="form.old_pay_way_arr[0]"
+          label="原付款方式"
+          type="text"
+          readonly
+          icon="arrow"
+          placeholder="原房屋付款方式已禁用">
+        </van-field>
+        <div class="accordion" v-if="payStatus && form.old_pay_way_arr.length > 1">
+          <div class="accordion" v-if="priceStatus && form.old_pay_way_arr.length > 1">
+            <div v-for="(key,index) in form.old_pay_way_arr" v-show="index !== 0">{{key}}</div>
+          </div>
+        </div>
+        <van-field
+          class="disabling"
+          :class="{'payWay': priceStatus && form.old_price.length > 1}"
+          v-model="form.old_price[0]"
+          @click="payWayClick(2)"
+          label="月单价"
+          type="text"
+          readonly
+          icon="arrow"
+          placeholder="月单价已禁用">
+        </van-field>
+        <div class="accordion" v-if="priceStatus && form.old_price.length > 1">
+          <div v-for="(key,index) in form.old_price" v-show="index !== 0">{{key}}</div>
+        </div>
+        <van-field
+          v-model="form.old_front_money"
+          label="定金"
+          type="text"
+          disabled
+          placeholder="原房屋定金已禁用">
+        </van-field>
+        </van-cell-group>
+        <!--上面是调租的原房屋-->
+
         <div class="crop_name noBorder">
           <van-field
             v-model="form.address"
             label="房屋地址"
             type="text"
             readonly
-            @click="searchSelect(1)"
+            @click="searchSelect(2)"
             placeholder="请选择房屋地址"
             required>
           </van-field>
@@ -529,7 +625,7 @@
         </van-field>
         <van-field
           v-model="form.staff_name"
-          @click="searchSelect(2)"
+          @click="searchSelect(3)"
           readonly
           label="开单人"
           type="text"
@@ -604,6 +700,7 @@
     data() {
       return {
         /*电子合同新加*/
+        rentType:'1',
         eshow:false,//是否显示选择弹框
         isShowChooseRemark:false,//是否显示备注弹框
 
@@ -656,8 +753,34 @@
         other_fee_status: false,
         is_receipt: false,              //电子收据
         isReceiptMsg: {},               //电子收据
+        /*下面是调房独有*/
+
+        payStatus: false,
+        priceStatus: false,
+        /*上面是调房独有*/
 
         form: {
+
+          /*下面是转租独有*/
+          trans_type:'0',//转租类型、默认公司 ,1是个人
+
+          /*上面是转租独有*/
+
+          /*下面是调房独有*/
+          old_staff_name: '',
+          old_pay_way_arr: [''],
+          old_price: [''],
+          old_front_money: '',
+          old_house_name: '',
+          old_corp_name: '',
+
+          /*上面是调房独有*/
+
+          /*下面是未收先租确定独有*/
+          oldHouseName:'',
+          /*上面是未收先租确定独有*/
+
+
           address: '',
           corp_name: '',
           id: '',
@@ -1000,10 +1123,36 @@
       },
       searchSelect(val) {
         switch (val) {
-          case 1:
-            this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+          case 1://选择原房屋
+            switch (this.rentType) {
+              case "4"://调
+                this.$router.push({path: '/collectHouse', query: {type: 'report'}});
+                break;
+              case "5"://未收先租
+                this.$router.push({path: '/collectHouse', query: {type: 'is_nrcy'}});
+                break;
+            }
             break;
-          case 2:
+          case 2://选择现房屋
+            switch (this.rentType) {
+              case "1"://新
+                this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+                break;
+              case "2"://续
+                this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
+                break;
+              case "3"://转
+                this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+                break;
+              case "4"://调
+                this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+                break;
+              case "5"://未收先租
+                this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+                break;
+            }
+            break;
+          case 3:
             this.$router.push({path: '/organize'});
             break;
           case 4:
@@ -1300,11 +1449,148 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
-          this.form.address = val.house_name;
-          this.form.corp_name = val.corp_name;
-          this.form.contract_id = val.id;
-          this.form.house_id = val.house_id;
+          if (t.type === 'report') {
+            console.log(val)
+            this.form.old_house_name = val.house_name;
+            this.form.old_corp_name = val.corp_name;
+            this.form.contract_id_rent = val.id;
+            this.form.house_id_rent = val.house_id;
+            this.form.sign_date = val.start_at;
+            this.form.name = val.customers;
+            this.form.old_front_money = val.front_money;
+            this.form.phone = val.cusPhone;
+
+            this.$http.get(this.urls + 'bulletin/helper/contract/' + val.id + '?collect_or_rent=1').then((res) => {
+              if (res.data.code === '51110') {
+                let pay = res.data.data;
+                this.form.old_staff_name = pay.staff ? pay.staff.name : '---';
+                this.form.old_pay_way_arr = [];
+                this.form.old_price = [];
+                for (let i = 0; i < pay.pay_way.length; i++) {
+                  this.form.old_pay_way_arr.push(pay.pay_way[i].begin_date + '~' + pay.pay_way[i].end_date + ':' + pay.pay_way[i].pay_way_str);
+                }
+                for (let i = 0; i < pay.price.length; i++) {
+                  this.form.old_price.push(pay.price[i].begin_date + '~' + pay.price[i].end_date + ':' + pay.price[i].price_str);
+                }
+              }
+            })
+          }else  if (t.type === 'is_nrcy') {
+            this.form.oldHouseName = val.house_name;
+            this.form.old_corp_name = val.old_corp_name;
+            this.form.contract_id_rent = val.id;
+            this.form.house_id_rent = val.house_id;
+
+            let rent = val.renters;
+            let rentDate = rent.start_at.substring(0, 10);
+            this.form.begin_date = rentDate;
+            this.first_date = [];
+            this.first_date.push(rentDate);
+            this.form.sign_date = rent.sign_at.substring(0, 10);
+            this.form.period_price_arr = [];
+            this.form.price_arr = [];
+            for (let i = 0; i < rent.month_price.length; i++) {
+              this.amountPrice = i + 1;
+              this.form.period_price_arr.push(rent.month_price[i].period);
+              this.form.price_arr.push(rent.month_price[i].price);
+            }
+            this.countDate(1, this.form.period_price_arr);
+
+            this.form.is_agency = rent.is_agency;                       //是否渠道
+            this.cusFrom = dicts.value8[rent.is_agency];                //是否渠道
+            this.$nextTick(function () {
+              this.form.agency_name = rent.agency_info.agency_name;
+              this.form.agency_price = rent.agency_info.agency_price;
+              this.form.agency_user_name = rent.agency_info.agency_user_name;
+              this.form.agency_phone = rent.agency_info.agency_phone;
+            });
+            this.form.pay_way_bet = rent.pay_way[0].pay_way_bet;
+            this.form.period_pay_arr = [];
+            this.form.pay_way_arr = [];
+            for (let i = 0; i < rent.pay_way.length; i++) {
+              this.amountPay = i + 1;
+              this.form.period_pay_arr.push(rent.pay_way[i].period);
+              this.form.pay_way_arr.push(rent.pay_way[i].pay_way);
+            }
+            this.countDate(2, this.form.period_pay_arr);
+
+            this.form.property_payer = rent.property_payer;
+            for (let j = 0; j < this.dictValue6.length; j++) {
+              if (this.dictValue6[j].id === rent.property_payer) {
+                this.property_name = this.dictValue6[j].dictionary_name;
+              }
+            }
+            this.form.front_money = rent.front_money;
+            this.form.deposit = rent.deposit;
+            this.form.deposit_payed = rent.deposit_payed ? rent.deposit_payed : '';
+            if (this.form.deposit_payed) {
+              this.receivedPrice = 'deposit_payed';
+            } else if (this.form.front_money) {
+              this.receivedPrice = 'front_money';
+            } else {
+              this.receivedPrice = 'rent_money';
+            }
+            this.$nextTick(function () {
+              this.form.money_sum = rent.money_sum;
+            });
+            this.form.memo = rent.memo ? rent.memo : '';
+            this.form.money_sep = [];
+            this.form.money_way = [];
+            for (let i = 0; i < rent.money_table.length; i++) {
+              this.amountMoney = i + 1;
+              this.form.money_sep.push(rent.money_table[i].money_sep);
+              this.form.money_way.push(rent.money_table[i].money_way);
+              if (rent.real_pay_at) {
+                this.form.real_pay_at.push(rent.money_table[i].real_pay_at);
+              } else {
+                this.form.real_pay_at.push('');
+              }
+              for (let j = 0; j < this.dictValue8.length; j++) {
+                if (this.dictValue8[j].bank_info === rent.money_table[i].money_way) {
+                  this.form.account_id[i] = this.dictValue8[j].id;
+                }
+              }
+            }
+
+            if (rent.is_receipt) {
+              this.is_receipt = true;
+              this.form.is_receipt = 1;
+              if (!this.is_receipt) {
+                this.getReceipt(rent);
+              }
+            } else {
+              this.is_receipt = false;
+              this.form.is_receipt = 0;
+              this.getReceipt(rent);
+            }
+            this.form.idtype = rent.idtype;
+            this.form.idcard = rent.idcard;
+            for (let j = 0; j < this.prove_all.length; j++) {
+              if (this.prove_all[j].id === rent.idtype) {
+                this.cardName = this.prove_all[j].dictionary_name;
+              }
+            }
+            this.other_fee_status = rent.is_other_fee === 1 ? true : false;
+            this.form.other_fee_name = rent.other_fee_name;
+            this.form.other_fee = rent.other_fee;
+
+            this.form.retainage_date = rent.final_payment_at;
+            if (rent.customers && rent.customers.length > 0) {
+              this.form.name = rent.customers[0].name;
+              this.form.phone = rent.customers[0].phone;
+            }
+            this.form.remark = rent.remark;
+
+            this.form.staff_id = rent.sign_user.id;
+            this.form.staff_name = rent.sign_user.name;
+            this.form.department_id = rent.sign_org.id;
+            this.form.department_name = rent.sign_org.name;
+          } else {
+            let val = JSON.parse(t.house);
+            this.form.address = val.house_name;
+            this.form.corp_name = val.corp_name;
+            this.form.contract_id = val.id;
+            this.form.house_id = val.house_id;
+          }
         }
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
@@ -1577,8 +1863,16 @@
 <style lang="scss">
   #rentReport {
     overflow: hidden;
-    .checks {
+    .rent_types{
+      padding-top: 1em;
       border-bottom: .5px solid #f8f8f8;
+      align-items: center;
+      padding-bottom: 1em;
+      display: flex;
+      .label{
+        min-width: 4.5em;
+        margin-left: 1em
+      }
     }
     .van-checkbox-group {
       padding-left: 2em;
@@ -1594,10 +1888,12 @@
       }}
     .van-radio-group{
       display: flex;
-      padding-top: 1em;
+      padding-right: 1em;
+      flex-wrap: wrap;
       width: 100%;
       .van-radio{
-        flex: 1;
+        margin-left: 1em;
+        margin-top: .2em;
         text-align: center;
       }
     }
