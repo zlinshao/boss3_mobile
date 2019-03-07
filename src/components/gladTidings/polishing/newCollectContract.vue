@@ -2,6 +2,10 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
+        <van-radio-group v-model="newOrOld">
+          <van-radio name="1">新收</van-radio>
+          <van-radio name="2">续收</van-radio>
+        </van-radio-group>
         <van-field
           v-model="form.contract_number"
           label="合同编号"
@@ -193,6 +197,7 @@
             placeholder="请填写天数">
           </van-field>
         </div>
+        <div v-if="newOrOld==='1'">
         <div class="titleRed">不包含空置期</div>
         <van-field
           v-model="form.begin_date"
@@ -240,6 +245,7 @@
           placeholder="空置期规则"
           required>
         </van-field>
+        </div>
         <van-field
           v-model="form.end_date"
           label="合同结束日期"
@@ -347,6 +353,7 @@
 
       <van-cell-group>
         <van-field
+          v-if="newOrOld==='1'"
           v-model="cusFrom"
           @click="selectShow(1,'')"
           label="是否渠道"
@@ -627,6 +634,7 @@
     data() {
       return {
         /*以下是电子合同新加字段*/
+        newOrOld:'1',
         eshow:false,
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
@@ -1564,6 +1572,15 @@
 <style lang="scss">
   #collectReport {
     overflow: hidden;
+    .van-radio-group{
+      display: flex;
+      padding-top: 1em;
+      width: 100%;
+      .van-radio{
+        flex: 1;
+        text-align: center;
+      }
+    }
   }
   .van-checkbox-group {
     padding-left: 2em;

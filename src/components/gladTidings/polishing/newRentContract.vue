@@ -1592,6 +1592,15 @@
 
         }
       }}
+    .van-radio-group{
+      display: flex;
+      padding-top: 1em;
+      width: 100%;
+      .van-radio{
+        flex: 1;
+        text-align: center;
+      }
+    }
   }
 
 </style>
