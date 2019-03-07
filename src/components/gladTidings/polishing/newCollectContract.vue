@@ -481,6 +481,7 @@
       //获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
       //console.log(item)
+      if(item===null)return
       let house_res = item.house_res;
       let house_res_com = house_res.community;
 

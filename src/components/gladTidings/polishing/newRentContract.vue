@@ -72,9 +72,201 @@
         placeholder="请选择租赁用途"
         required>
       </van-field>
+      <van-field
+        v-if="showOtherUse"
+        v-model="form.other_use"
+        label="其他用途"
+        type="text"
+        @click=""
+        placeholder="请输入其他用途"
+        required>
+      </van-field>
+      <van-field
+        v-model="form.people"
+        label="居住人数"
+        type="text"
+        placeholder="请输入居住人数"
+        required>
+      </van-field>
 
+      <van-field
+        v-model="rentTypeTxt"
+        label="居住类型"
+        readonly
+        type="text"
+        @click="showSelect(rentTypes)"
+        placeholder="请选择居住类型"
+        required>
+      </van-field>
+      <div v-if="showWholeFee">
+        <van-field
+          v-model="form.water_fee"
+          label="水费"
+          type="text"
+          placeholder="元/月"
+          icon=""
+          @click-icon="form.water_fee = ''"
+        >
+        </van-field>
+        <van-field
+          v-model="form.e_price"
+          label="电费"
+          type="text"
+          placeholder="元/月"
+          icon=""
+          @click-icon="form.e_price = ''"
+        >
+        </van-field>
+        <van-field
+          v-model="form.manage_fee"
+          label="管理费"
+          type="text"
+          placeholder="元/月"
+          icon=""
+          @click-icon="form.manage_fee = ''"
+        >
+        </van-field>
+        <van-field
+          v-model="form.public_fee"
+          label="代收物业公摊费"
+          type="text"
+          placeholder="元/月"
+          icon=""
+          @click-icon="form.public_fee = ''"
+        >
+        </van-field>
+      </div>
+      <!--下面时付款方式-->
+      <div class="changes" v-for="(key,index) in amountPrice">
+        <div class="paddingTitle">
+          <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
+          <span class="colors" v-if="amountPrice > 1" @click="deleteAmount(index,1)">删除</span>
+        </div>
+        <van-cell-group>
+          <van-field
+            v-model="datePrice[index]"
+            type="text"
+            label="开始时间"
+            placeholder="获取周期开始日期"
+            disabled
+            required>
+          </van-field>
+          <van-field
+            v-model="form.period_price_arr[index]"
+            type="text"
+            class="number"
+            label="周期"
+            :disabled="amountPrice === 1 && form.period_price_arr[index] === form.month"
+            @keyup="periodDate(1)"
+            placeholder="请填写月单价周期"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.price_arr[index]"
+            type="text"
+            class="number"
+            label="价格"
+            placeholder="请填写金额"
+            required>
+          </van-field>
+        </van-cell-group>
+      </div>
+      <div @click="priceAmount(1)" class="addInput">
+        +月单价变化
+      </div>
+
+      <van-cell-group>
+        <van-field
+          v-model="form.pay_way_bet"
+          type="text"
+          class="number"
+          label="押"
+          placeholder="请填写付款方式-押"
+          @click="selectShow(3)"
+          readonly
+          required>
+        </van-field>
+      </van-cell-group>
+
+      <div class="changes" v-for="(key,index) in amountPay">
+        <div class="paddingTitle">
+          <span>付<span v-if="amountPay > 1">({{index + 1}})</span></span>
+          <span class="colors" v-if="amountPay > 1" @click="deleteAmount(index,2)">删除</span>
+        </div>
+        <van-cell-group>
+          <van-field
+            v-model="datePay[index]"
+            type="text"
+            label="开始时间"
+            placeholder="获取周期开始日期"
+            disabled
+            required>
+          </van-field>
+          <van-field
+            v-model="form.period_pay_arr[index]"
+            type="text"
+            class="number"
+            label="周期"
+            :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
+            @keyup="periodDate(2)"
+            placeholder="other_fee_name"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.pay_way_arr[index]"
+            label="付(月数)"
+            type="text"
+            class="number"
+            placeholder="如:半年付请输入6"
+            required>
+          </van-field>
+        </van-cell-group>
+      </div>
+      <div @click="priceAmount(2)" class="addInput">
+        +付款方式变化
+      </div>
+
+
+      <!--上面时付款方式-->
+
+      <van-field
+        v-model="form.deposit"
+        label="押金"
+        type="number"
+        placeholder="请输入押金"
+        required>
+      </van-field>
+
+      <van-field
+        @click="showSelect(payAccountList)"
+        v-model="form.money_way[index]"
+        label="汇款帐户"
+        type="text"
+        readonly
+        placeholder="请选择汇款帐户"
+        required>
+      </van-field>
+
+      <van-field
+        v-model="remarksTxt"
+        label="备注条款"
+        readonly
+        type="text"
+        @click="showChooseRemark()"
+        placeholder="请选择备注条款(可多选)"
+        required>
+      </van-field>
     </van-cell-group>
 
+
+    <!--select 选择-->
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectShow" position="bottom" :overlay="true">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @cancel="onSelectCancel"
+        @confirm="onSelectConfirm"></van-picker>
+    </van-popup>
 
     <pdf-dialog  style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000"
                  ref="pdf"></pdf-dialog>
@@ -99,7 +291,21 @@
   export default {
     name: "newRentContract",
     components: {ChooseTime, PdfDialog},
+    activated(){
+      this.getPayAccount();
+    },
     methods:{
+      getPayAccount(){
+        let per = JSON.parse(sessionStorage.personal);
+        this.$http.get(this.urls + 'financial/account_alloc/map?org_id=' + per.department_id).then(res => {
+          if (res.data.code === '20000') {
+            this.payAccountList = [];
+            res.data.data.forEach(item => {
+              this.payAccountList.push(new CommonIdNameEntity('',item.bank_info));
+            });
+          }
+        });
+      },
       //选择房屋
       chooseHouse() {
         this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
@@ -143,16 +349,16 @@
           case 'begin_date':
             this.form[val.dataKey] = val.dateVal;
             this.endDate(val.dateVal, this.form.month, this.form.day, 2);
-            // this.form.period_price_arr[0] = this.form.month;
-            // this.form.period_pay_arr[0] = this.form.month;
-            // this.first_date = [];
-            // this.datePrice = [];
-            // this.datePay = [];
-            // this.first_date.push(val.dateVal);
-            // this.datePrice.push(val.dateVal);
-            // this.datePay.push(val.dateVal);
-            // this.countDate(1, this.form.period_price_arr);
-            // this.countDate(2, this.form.period_pay_arr);
+            this.form.period_price_arr[0] = this.form.month;
+            this.form.period_pay_arr[0] = this.form.month;
+            this.first_date = [];
+            this.datePrice = [];
+            this.datePay = [];
+            this.first_date.push(val.dateVal);
+            this.datePrice.push(val.dateVal);
+            this.datePay.push(val.dateVal);
+            this.countDate(1, this.form.period_price_arr);
+            this.countDate(2, this.form.period_pay_arr);
             break;
           case 'real_pay_at':
             this.form[val.dataKey][this.formatData.idx] = val.dateVal;
@@ -180,12 +386,118 @@
       onSelectCancel() {
         this.selectShow = false;//关闭弹框
       },
+      onSelectConfirm(value, index) {
+        this.selectShow = false;//关闭弹框
+        switch (this.curDatas) {
+          case this.rentUses://选择租赁用途
+            this.rentUseTxt=value;
+            this.showOtherUse=index===this.rentUses.length-1;
+            this.form.use_type=this.rentUses[index].id;
+            break;
+          case this.rentTypes:
+            this.showWholeFee=index===this.rentTypes.length-1;
+            this.form.rent_type=this.rentTypes[index].id;
+            this.rentTypeTxt=value;
+            break;
+          case this.payAccountList:
+            this
+            break;
+        }
+      },
+      //显示选择备注弹框
+      showChooseRemark() {
+        this.isShowChooseRemark = true;
+      },
+      //当备注条款改变时
+      changeContracts() {
+        this.remarksTxt = '';
+        let json = [];
+        for (let i = 0; i < this.choosedRemarks.length; i++) {
+          this.remarksTxt = this.remarksTxt + (i + 1) + '、' + this.choosedRemarks[i].name;
+          json[i] = this.choosedRemarks[i].id;
+        }
+        this.form.other_rule = json;
+      },
+      // 删除月单价
+      deleteAmount(index, val) {
+        if (val === 1) {
+          this.amountPrice--;
+          this.form.period_price_arr.splice(index, 1);
+          this.form.price_arr.splice(index, 1);
+          this.datePrice.splice(index, 1);
+          this.periodDate(val);
+        } else if (val === 2) {
+          this.amountPay--;
+          this.form.period_pay_arr.splice(index, 1);
+          this.form.pay_way_arr.splice(index, 1);
+          this.datePay.splice(index, 1);
+          this.periodDate(val);
+        } else if (val === 3) {
+          this.amountMoney--;
+          this.form.money_sep.splice(index, 1);
+          this.form.money_way.splice(index, 1);
+          this.form.real_pay_at.splice(index, 1);
+          this.form.account_id.splice(index, 1);
+        } else {
+          this.amountReceipt--;
+          this.form.receipt.splice(index, 1);
+        }
+      },
+      // 日期计算
+      periodDate(val) {
+        let per;
+        if (val === 1) {
+          per = this.form.period_price_arr;
+        } else {
+          per = this.form.period_pay_arr;
+        }
+        this.countDate(val, per);
+      },
+      // 月单价增加
+      priceAmount(val) {
+        if (val === 1) {
+          this.amountPrice++;
+          this.form.period_price_arr.push('');
+          this.form.price_arr.push('');
+        } else if (val === 2) {
+          this.amountPay++;
+          this.form.period_pay_arr.push('');
+          this.form.pay_way_arr.push('');
+        } else if (val === 3) {
+          this.amountMoney++;
+          this.form.money_sep.push('');
+          this.form.money_way.push('');
+          this.form.real_pay_at.push('');
+          this.form.account_id.push('');
+        } else {
+          this.amountReceipt++;
+          this.form.receipt.push(this.receiptDate);
+        }
+      },
+      // 日期计算
+      countDate(val, per) {
+        this.$http.get(this.urls + '/bulletin/helper/date', {
+          params: {
+            begin_date: this.form.begin_date,
+            period: per,
+          }
+        }).then((res) => {
+          if (res.data.code === '51110') {
+            if (val === 1) {
+              this.datePrice = this.first_date.concat(res.data.data);
+            } else {
+              this.datePay = this.first_date.concat(res.data.data);
+            }
+          }
+        })
+      },
     },
     data() {
       return {
         selectShow:false,//是否显示选择弹框
         dateShow:false,//是否显示时间弹框
         isShowChooseRemark:false,//是否显示备注弹框
+        urls: globalConfig.server,
         dateFormData: {
           dateVal: '',                  //格式化日期
           dataKey: '',                  //字段区分
@@ -195,6 +507,22 @@
         curDatas:[],//选择弹框元数据
         rentUses:[new CommonIdNameEntity('1','自住'),new CommonIdNameEntity('2','办公使用'),new CommonIdNameEntity('3','其他用途')],
         rentUseTxt:'',//租赁用途文字
+        //合同备注条款数据
+        remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'), new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'), new CommonIdNameEntity('3', '甲方需配合乙方办理居住证等相关证件'), new CommonIdNameEntity('4', '乙方将能够通过合法途径获取的租客信息告知甲方'), new CommonIdNameEntity('5', '非甲方及房屋原因导致的安全责任事故与甲方无关'), new CommonIdNameEntity('6', '同等条件下，房东享有签约权(从乙方处承租）')],
+        choosedRemarks: [],//已选择的备注条款
+        remarksTxt: '',//备注条款展示文字
+        showOtherUse:false,//显示其他用途输入框
+        showWholeFee:false,//整租时，显示水费等费用
+        rentTypes:[new CommonIdNameEntity('1','整租'),new CommonIdNameEntity('2','合租')],
+        rentTypeTxt:'',//租赁用途文字
+        payAccountList:[],//收款账户列表元数据
+        /*下面是付款方式*/
+        amountPrice: 1,
+        amountPay: 1,
+        datePrice :[],
+         datePay: [],
+        /*上面是付款方式*/
+
         form: {
           house:{
             id:'',
@@ -254,13 +582,35 @@
             "7": 8,
             "8": 9,
             "9": 10
-          }
+          },
+          price_arr: [''],              //月单价
+          period_price_arr: [''],       //月单价周期
+
+          pay_way_bet: '',              //付款方式 押
+
+          period_pay_arr: [''],         //付款方式周期
+          pay_way_arr: [''],            //付款方式 付
+          real_pay_at: [''],            //实际收款时间
+          money_way: [''],              //汇款帐户
+          account_id: [],               //汇款帐户ID
         }
       }
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  .van-checkbox-group {
+    padding-left: 2em;
 
+  .van-checkbox {
+    display: flex;
+    margin-top: 1em;
+    margin-bottom: 1em;
+
+  .van-checkbox__label {
+
+  }
+  }
+  }
 </style>
