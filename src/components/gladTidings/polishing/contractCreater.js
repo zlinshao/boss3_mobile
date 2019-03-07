@@ -25,13 +25,13 @@ let cancelContract=function (number,success,error) {
   })
 };
 
-function createCollectContract(pdf, param,error) {
+function createCollectContract(pdf, param,success,error) {
   console.log(param)
   Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
     if (res.data.code === '40000') {
       pdf.show(res.data.data.download_url.split('8443')[1], 1);
     }else{
-      error(res.data.data.msg);
+      error(res.data.msg);
     }
   })
 }
