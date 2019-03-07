@@ -643,7 +643,7 @@
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
         canAddThingTxt: '',//是否允许添加新物txt
         //合同备注条款数据
-        remarks: [new CommonIdNameEntity('1', '不能群租'), new CommonIdNameEntity('1', '不得扰民'), new CommonIdNameEntity('2', '不能随意搬动屋内家具家电'), new CommonIdNameEntity('3', '不能故意拆卸家具家电'), new CommonIdNameEntity('4', '不得养宠物'), new CommonIdNameEntity('5', '不得租住新疆人或外国人'), new CommonIdNameEntity('6', '乙方不得将房屋用于承办丧事、喜事等商业用途'), new CommonIdNameEntity('7', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'), new CommonIdNameEntity('8', '乙方居住10日内尽快办理居住证')],
+        remarks: [new CommonIdNameEntity('1', '不能群租'), new CommonIdNameEntity('2', '不得扰民'), new CommonIdNameEntity('3', '不能随意搬动屋内家具家电'), new CommonIdNameEntity('4', '不能故意拆卸家具家电'), new CommonIdNameEntity('5', '不得养宠物'), new CommonIdNameEntity('6', '不得租住新疆人或外国人'), new CommonIdNameEntity('7', '乙方不得将房屋用于承办丧事、喜事等商业用途'), new CommonIdNameEntity('8', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'), new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
         choosedRemarks: [],//已选择的备注条款
         remarksTxt: '',//备注条款展示文字
         signPeoples: [], //签约人列表，包括已选的房东和其他，其他时显示代理人
@@ -848,7 +848,7 @@
       /*获取电子合同相关字段*/
       //获取合同编号
       if (sessionStorage.getItem('number') === null) {
-        contractApi.getNumber(number => {
+        contractApi.getNumber(1,number => {
           this.setContractNumber(number);
           sessionStorage.setItem('number', number);
         }, error => {
@@ -955,9 +955,6 @@
           case this.houseCertificateTypes://选择持有证件的类型
             this.form.house_certificate = this.houseCertificateTypes[index].id;
             this.houseCertificateTypeTxt = this.houseCertificateTypes[index].name;
-            break;
-          case this.payMethods://选择付款方式
-            this.monthPriceAndPayMethods[this.payMethodsIndex].methodEntity = this.payMethods[index];
             break;
           case this.canDecorations://是否可以装修
             this.canDecorationsTxt = value;

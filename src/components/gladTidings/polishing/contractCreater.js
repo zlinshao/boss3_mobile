@@ -1,9 +1,10 @@
 let url = "http://192.168.20.27/ewal_contract/public/";
 import Vue from 'vue';
 
-let getNumber=function (success,error) {
+let getNumber=function (type,success,error) {
+  let version=type===1?'1.1':'1.2';
   Vue.prototype.$http.post(url + 'fdd/number/take', {
-    version: '1.1',
+    version: version,
     city_code: '01',
     ticket: '',
     uid: '',
@@ -36,8 +37,15 @@ function createCollectContract(pdf, param,success,error) {
   })
 }
 
-function createRentContract() {
-
+function createRentContract(pdf, param,success,error) {
+  console.log(param)
+  Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
+    if (res.data.code === '40000') {
+      pdf.show(res.data.data.download_url.split('8443')[1], 1);
+    }else{
+      error(res.data.msg);
+    }
+  })
 }
 
 export  {createCollectContract, createRentContract,getNumber,cancelContract}
