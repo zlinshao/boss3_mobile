@@ -2,7 +2,7 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-radio-group v-model="newOrOld">
+        <van-radio-group v-model="form.type">
           <van-radio name="1">新收</van-radio>
           <van-radio name="2">续收</van-radio>
         </van-radio-group>
@@ -197,54 +197,54 @@
             placeholder="请填写天数">
           </van-field>
         </div>
-        <div v-if="newOrOld==='1'">
-        <div class="titleRed">不包含空置期</div>
-        <van-field
-          v-model="form.begin_date"
-          type="text"
-          label="空置期开始"
-          placeholder="请选择空置期开始日期"
-          readonly
-          @click="timeChoose('begin_date', form.begin_date)"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.vacancy"
-          label="空置期(天)"
-          type="text"
-          class="number"
-          @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
-          placeholder="请填写空置期"
-          icon="clear"
-          @click-icon="form.vacancy = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.end_date_vacant"
-          type="text"
-          label="空置期结束"
-          placeholder="请选择空置期结束日期"
-          readonly
-          @click="timeChoose('end_date_vacant', form.end_date_vacant)"
-          required>
-        </van-field>
-        <van-field
-          v-model="vacancy_way_name"
-          @click="selectShow(7,'')"
-          label="空置期规则"
-          type="text"
-          readonly
-          placeholder="空置期规则"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.vacancy_other"
-          label="空置期规则"
-          type="text"
-          v-if="vacancy_way_name === '其他'"
-          placeholder="空置期规则"
-          required>
-        </van-field>
+        <div v-if="form.type==='1'">
+          <div class="titleRed">不包含空置期</div>
+          <van-field
+            v-model="form.begin_date"
+            type="text"
+            label="空置期开始"
+            placeholder="请选择空置期开始日期"
+            readonly
+            @click="timeChoose('begin_date', form.begin_date)"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.vacancy"
+            label="空置期(天)"
+            type="text"
+            class="number"
+            @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
+            placeholder="请填写空置期"
+            icon="clear"
+            @click-icon="form.vacancy = ''"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.end_date_vacant"
+            type="text"
+            label="空置期结束"
+            placeholder="请选择空置期结束日期"
+            readonly
+            @click="timeChoose('end_date_vacant', form.end_date_vacant)"
+            required>
+          </van-field>
+          <van-field
+            v-model="vacancy_way_name"
+            @click="selectShow(7,'')"
+            label="空置期规则"
+            type="text"
+            readonly
+            placeholder="空置期规则"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.vacancy_other"
+            label="空置期规则"
+            type="text"
+            v-if="vacancy_way_name === '其他'"
+            placeholder="空置期规则"
+            required>
+          </van-field>
         </div>
         <van-field
           v-model="form.end_date"
@@ -353,7 +353,7 @@
 
       <van-cell-group>
         <van-field
-          v-if="newOrOld==='1'"
+          v-if="form.type==='1'"
           v-model="cusFrom"
           @click="selectShow(1,'')"
           label="是否渠道"
@@ -501,7 +501,9 @@
         </div>
         <div class="titleRed">n为年限，且金额不足一万按一万算</div>
         <van-switch-cell v-model="corp" title="是否公司单"/>
-
+        <div @click="previewPdf" class="addInput bottom">
+          +预览电子合同
+        </div>
       </van-cell-group>
 
       <div class="aloneModel">
@@ -612,12 +614,13 @@
   import PdfDialog from '@/components/common/pdf/PdfDialog'
 
   //id name 实体类
-  export  class CommonIdNameEntity {
+  export class CommonIdNameEntity {
     constructor(id, name) {
       this.id = id || '';
       this.name = name || '';
     }
   }
+
   //房东实体类
   export class HouseOwner {
     constructor(name, idcard, phone, userid) {
@@ -630,12 +633,11 @@
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, ChooseTime,PdfDialog},
+    components: {UpLoad, Toast, ChooseTime, PdfDialog},
     data() {
       return {
         /*以下是电子合同新加字段*/
-        newOrOld:'1',
-        eshow:false,
+        eshow: false,
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
         houseCertificateTypeTxt: '',//房屋证明类别文字
@@ -690,7 +692,7 @@
         form: {
           id: '',
           processable_id: '',
-          type: 1,
+          type: '1',
           draft: 0,
           house: {
             id: '',
@@ -752,13 +754,13 @@
           toilet: "",
           area: "",
           house_certificate: "",
-          property_number: "",
-          QiuQuan_number: "",
+          property_number: "A123456",
+          QiuQuan_number: "B123456",
           sub_owner: '',//附属房东
           not_owner_fee: {},
-          other_fee_text: "",
-          allowed_decoration_to: "",
-          allowed_add_to: "",
+          other_fee_text: "其他费用20元",
+          allowed_decoration_to: "1",
+          allowed_add_to: "1",
           staff_phone: "",
           pdf_scene: 1,
           other_rule: {},
@@ -766,6 +768,7 @@
           partA_agents: '',//代理人信息
           houseOwners: [new HouseOwner()],//房屋所有人HouseOwner类的列表
           customerIds: '3328',
+          cookie: '',
           /*以上是电子合同特有字段*/
         },
         vacancy_way_name: '',           //空置期安置方式
@@ -854,22 +857,13 @@
       }
       this.houseInfo();
       /*获取电子合同相关字段*/
-      //获取合同编号
-      if (sessionStorage.getItem('number') === null) {
-        contractApi.getNumber(1,number => {
-          this.setContractNumber(number);
-          sessionStorage.setItem('number', number);
-        }, error => {
-          Toast(error)
-        });
-      } else {
-        this.setContractNumber(sessionStorage.getItem('number'));
-      }
+      this.getContractNumber();
       //获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
-      if (item === null) return;
       let house_res = item.house_res;
       let house_res_com = house_res.community;
+      if (item === null || house_res == null || house_res_com == null) return;
+
       this.form.province = house_res_com.province.province_name;//省
       this.form.city = house_res_com.city.city_name;//市
       this.form.district = house_res_com.area.area_name;
@@ -885,6 +879,36 @@
 
     methods: {
       /*以下是电子合同新加*/
+      getContractNumber(){
+        //获取业务员对应城市
+        this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
+          //获取合同编号
+          if (sessionStorage.getItem('sf_number') === null) {
+            contractApi.getNumber(1, res.data.city_id, number => {
+              this.setContractNumber(number);
+              sessionStorage.setItem('sf_number', number);
+            }, error => {
+              Toast(error)
+            });
+          } else {
+            this.setContractNumber(sessionStorage.getItem('sf_number'));
+          }
+        });
+      },
+      previewPdf() {
+        contractApi.cancelContract(this.form.contract_number, success => {
+          contractApi.createCollectContract(this.$refs.pdf, this.form, success => {
+            this.haveInHand = true;
+            this.retry = 0;
+          }, error => {
+            this.haveInHand = true;
+            Toast(error)
+          })
+        }, error => {
+          this.haveInHand = true;
+          Toast(error)
+        });
+      },
       //当非房东费用改变时，处理数据
       //显示非房东费用弹框
       showChooseNoOwnerFee() {
@@ -997,6 +1021,7 @@
           this.form.department_id = per.department_id;
           this.form.department_name = per.department_name;
           this.form.staff_phone = per.phone;
+          this.form.cookie = per.session_id;
         }
       },
 
@@ -1277,58 +1302,42 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
-          contractApi.cancelContract(this.form.contract_number,success=>{
-            contractApi.createCollectContract(this.$refs.pdf, this.form,success=>{
-              this.haveInHand = true;
-              this.retry = 0;
-            },error=>{
-              this.haveInHand = true;
-              Toast(error)
-            })
-          },error=>{
+          this.$http.post(this.eurls + 'fdd/contract/saveAndSend', this.form).then((res) => {
             this.haveInHand = true;
-            Toast(error)
-          });
-          // this.$http.post(this.eurls + 'fdd/contract/view', this.form).then((res) => {
-          //   if (res.data.code === '40000') {
-          //     this.$refs.pdf.show(res.data.data.download_url.split('8443')[1], 1);
-          //   }else{
-          //     error(res.data.data.msg);
-          //   }
-          //   this.haveInHand = true;
-          //   this.retry = 0;
-          //   // if (res.data.code === '50110' || res.data.code === '50130') {
-          //   //   Toast.success(res.data.msg);
-          //   //   if (res.data.data.id) {
-          //   //     this.routerDetail(res.data.data.id)
-          //   //   } else {
-          //   //     this.routerDetail(res.data.data.data.id)
-          //   //   }
-          //   //   this.close_();
-          //   //   $('.imgItem').remove();
-          //   // } else if (res.data.code === '50120' || res.data.code === '50130') {
-          //   //   this.form.day = this.form.day === '0' ? '' : this.form.day;
-          //   //   this.form.id = res.data.data.id;
-          //   //   Toast.success(res.data.msg);
-          //   // } else {
-          //   //   Toast(res.data.msg);
-          //   // }
-          // }).catch((error) => {
-          //   this.haveInHand = true;
-          //   if (error.response === undefined) {
-          //     this.alertMsg('net');
-          //   } else {
-          //     if (error.response.status === 401) {
-          //       this.personalGet().then((data) => {
-          //         if (data && this.retry === 0) {
-          //           this.retry++;
-          //
-          //           this.saveCollect(this.form.draft);
-          //         }
-          //       });
-          //     }
-          //   }
-          // })
+            this.retry = 0;
+            if (res.data.code === '50110' || res.data.code === '50130') {
+              Toast.success(res.data.msg);
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
+              this.close_();
+              $('.imgItem').remove();
+              //保存草稿
+            } else if (res.data.code === '50120' || res.data.code === '50130') {
+              this.form.day = this.form.day === '0' ? '' : this.form.day;
+              this.form.id = res.data.data.id;
+              Toast.success(res.data.msg);
+            } else {
+              Toast(res.data.msg);
+            }
+          }).catch((error) => {
+            this.haveInHand = true;
+            if (error.response === undefined) {
+              this.alertMsg('net');
+            } else {
+              if (error.response.status === 401) {
+                this.personalGet().then((data) => {
+                  if (data && this.retry === 0) {
+                    this.retry++;
+
+                    this.saveCollect(this.form.draft);
+                  }
+                });
+              }
+            }
+          })
         } else {
           Toast(this.alertMsg('sub'));
         }
@@ -1454,7 +1463,7 @@
               }
             }
             this.is_corp = draft.is_corp;
-            this.corp = draft.is_corp === 1 ? true : false;
+            this.corp = draft.is_corp === 1;
 
             this.form.name = draft.name;
             this.form.phone = draft.phone;
@@ -1564,6 +1573,18 @@
         this.identity_photos = {};
 
         this.form.remark = '';
+        for(let i in this.form){
+          let o=this.form[i];
+          if(o instanceof Array){
+            this.form[i]=[];
+          }
+          if(o instanceof  Object){
+            this.form[i]={}
+          }
+          if(o instanceof String){
+            this.form[i]=''
+          }
+        }
       }
     },
   }
@@ -1572,16 +1593,19 @@
 <style lang="scss">
   #collectReport {
     overflow: hidden;
-    .van-radio-group{
+
+    .van-radio-group {
       display: flex;
       padding-top: 1em;
       width: 100%;
-      .van-radio{
+
+      .van-radio {
         flex: 1;
         text-align: center;
       }
     }
   }
+
   .van-checkbox-group {
     padding-left: 2em;
 

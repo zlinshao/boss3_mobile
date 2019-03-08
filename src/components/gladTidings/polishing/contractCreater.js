@@ -1,11 +1,11 @@
 let url = "http://192.168.20.27/ewal_contract/public/";
 import Vue from 'vue';
 
-let getNumber=function (type,success,error) {
+let getNumber=function (type,city_id,success,error) {
   let version=type===1?'1.1':'1.2';
   Vue.prototype.$http.post(url + 'fdd/number/take', {
     version: version,
-    city_code: '01',
+    city_id: city_id,
     ticket: '',
     uid: '',
   }).then((res) => {

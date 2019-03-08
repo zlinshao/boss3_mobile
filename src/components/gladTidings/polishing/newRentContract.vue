@@ -4,12 +4,12 @@
       <van-cell-group>
         <div class="rent_types">
           <div  class="label">租房类型</div>
-        <van-radio-group v-model="rentType">
+        <van-radio-group v-model="form.type">
           <van-radio name="1">新租</van-radio>
-          <van-radio name="2">续租</van-radio>
-          <van-radio name="3">转租</van-radio>
+          <van-radio name="3">续租</van-radio>
+          <van-radio name="2">转租</van-radio>
           <van-radio name="4">调租</van-radio>
-          <van-radio name="5">未收先租确定</van-radio>
+          <van-radio name="0">未收先租确定</van-radio>
         </van-radio-group>
         </div>
         <div class="rent_types" v-if="rentType==='3'">
@@ -867,6 +867,7 @@
           emergency_phone: "18796005530",
           customer_info:[new HouseOwner()],
           other_rule: {},
+          cookie:'',
           /*以上是电子合同独特字段*/
         },
         screenshots: {},
@@ -1075,6 +1076,7 @@
           this.form.staff_phone=per.phone;
           this.form.department_id = per.department_id;
           this.form.department_name = per.department_name;
+          this.form.cookie=per.session_id;
         }
       },
       dicts(val) {
@@ -1449,8 +1451,8 @@
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
+          let val = JSON.parse(t.house);
           if (t.type === 'report') {
-            console.log(val)
             this.form.old_house_name = val.house_name;
             this.form.old_corp_name = val.corp_name;
             this.form.contract_id_rent = val.id;
@@ -1585,7 +1587,6 @@
             this.form.department_id = rent.sign_org.id;
             this.form.department_name = rent.sign_org.name;
           } else {
-            let val = JSON.parse(t.house);
             this.form.address = val.house_name;
             this.form.corp_name = val.corp_name;
             this.form.contract_id = val.id;
