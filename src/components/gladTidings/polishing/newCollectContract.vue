@@ -50,37 +50,37 @@
           icon=""
           @click-icon="form.QiuQuan_number = ''">
         </van-field>
-        <div class="changes" v-for="(item,index) in form.houseOwners">
+        <div class="changes" v-for="(item,index) in form.owner">
           <div class="paddingTitle">
-            <span>房东<span v-if="form.houseOwners.length > 1">({{index + 1}})</span></span>
-            <span class="colors" v-if="form.houseOwners.length > 1" @click="form.houseOwners.splice(index)">删除</span>
+            <span>房东<span v-if="form.owner.length > 1">({{index + 1}})</span></span>
+            <span class="colors" v-if="form.owner.length > 1" @click="form.owner.splice(index)">删除</span>
           </div>
           <van-field
-            v-model="form.houseOwners[index].name"
+            v-model="form.owner[index].name"
             label="房东姓名"
             type="text"
             placeholder="请填写房东姓名"
             icon="clear"
-            @click-icon="form.houseOwners[index].name=''"
+            @click-icon="form.owner[index].name=''"
             required>
           </van-field>
           <van-field
-            v-model="form.houseOwners[index].idcard"
+            v-model="form.owner[index].idcard"
             label="房东身份证号"
             type="text"
             placeholder="请填写房东身份证号"
             icon="clear"
-            @click-icon="form.houseOwners[index].idcard= ''"
+            @click-icon="form.owner[index].idcard= ''"
             required>
           </van-field>
           <van-field
-            v-model="form.houseOwners[index].phone"
+            v-model="form.owner[index].phone"
             label="联系方式"
             type="text"
             class="number"
             placeholder="请填写联系方式"
             icon="clear"
-            @click-icon="form.houseOwners[index].phone= ''"
+            @click-icon="form.owner[index].phone= ''"
             required>
           </van-field>
         </div>
@@ -682,15 +682,15 @@
 
         //显示在页面的字段
         showForm: {
-          houseCertificateTypeTxt: '',//房屋证明类别文字
-          canDecorationsTxt: '',//是否允许装修txt
+          houseCertificateTypeTxt: '房屋所有权证',//房屋证明类别文字
+          canDecorationsTxt: '允许',//是否允许装修txt
           choosedNoOwnerFees: [],//已选择的非房东费用列表
-          noOwnerFeeTxt: '',//展示非房东费用的字段
-          canAddThingTxt: '',//是否允许添加新物txt
+          noOwnerFeeTxt: '1、水费2、电费',//展示非房东费用的字段
+          canAddThingTxt: '允许',//是否允许添加新物txt
           choosedRemarks: [],//已选择的备注条款
-          remarksTxt: '',//备注条款展示文字
+          remarksTxt: '1、不得群租2、不得扰民3、不能随意搬动屋内家具家电',//备注条款展示文字
           signPeoples: [], //签约人列表，包括已选的房东和其他，其他时显示代理人
-          signPeople: '',//某房东姓名或者其他
+          signPeople: '123',//某房东姓名或者其他
           showProxyInfo: false,//显示代理信息
         },
 
@@ -703,75 +703,74 @@
             id: '',
             name: '',
           },
-          sign_date: '',                //签约日期
-          month: '',                    //收房月数
-          day: '',                      //收房天数
-          is_agency: '',                //是否渠道 0不是 1是
+          sign_date: '2019-03-08',                //签约日期
+          month: '20',                    //收房月数
+          day: '0',                      //收房天数
+          is_agency: '0',                //是否渠道 0不是 1是
           agency_name: '',              //渠道名
           agency_price: '',             //渠道费
           agency_user_name: '',         //渠道人
           agency_phone: '',             //渠道手机号
-          begin_date: '',               //空置期开始日期
-          end_date: '',                 //合同结束日期
-          vacancy: '',                  //空置期
-          end_date_vacant: '',          //空置期结束日期
-          pay_first_date: '',           //第一次付款时间
-          pay_second_date: '',          //第二次付款时间
-          price_arr: [''],              //月单价
-          period_price_arr: [''],       //月单价周期
-          pay_way_arr: [''],            //付款方式
-          period_pay_arr: [''],         //付款方式周期
+          begin_date: '2019-03-08',               //空置期开始日期
+          end_date: '2020-12-05',                 //合同结束日期
+          vacancy: '30',                  //空置期
+          end_date_vacant: '2019-04-06',          //空置期结束日期
+          pay_first_date: '2019-03-08',           //第一次付款时间
+          pay_second_date: '2019-03-08',          //第二次付款时间
+          price_arr: ['2000'],              //月单价
+          period_price_arr: ['20'],       //月单价周期
+          pay_way_arr: ['444'],            //付款方式
+          period_pay_arr: ['20'],         //付款方式周期
 
-          vacancy_way: '',              //空置期安排方式
+          vacancy_way: '438',              //空置期安排方式
           vacancy_other: '',            //空置期安排方式 随便填
-          warranty: '',                 //保修期月
-          warranty_day: '',             //保修期天
+          warranty: '1',                 //保修期月
+          warranty_day: '20',             //保修期天
           is_corp: 1,                   //是否公司单  0个人1公司
-          deposit: '',                  //押金
-          property_payer: '',           //物业费付款人
-          name: '',                     //房东姓名
-          phone: '',                    //电话号码
+          deposit: '2000',                  //押金
+          property_payer: '1',           //物业费付款人
+          name: '甲方',                     //房东姓名
+          phone: '17626043187',                    //电话号码
           purchase_way: 509,            //支付方式
-          bank: '',                     //银行名称
-          subbranch: '',                //支行名称
-          account_name: '',             //帐户名称
-          account: '',                  //帐号
-          relationship: '',             //房东与收款人关系
-          penalty: '',                  //违约金
+          bank: '邮政储蓄银行',                     //银行名称
+          subbranch: '测试支行',                //支行名称
+          account_name: '测试账户名',             //帐户名称
+          account: '6215993620000592735',                  //帐号
+          relationship: '测试关系',             //房东与收款人关系
+          penalty: '1233',                  //违约金
           contract_number: '',      //合同编号
           screenshot_leader: [],        //领导截图 数组
-          photo: [],                    //合同照片 数组
+          photo: [["4223693"]],                    //合同照片 数组
           property_photo: [],               //房产证照片
           identity_photo: [],           //证件照片
-          remark: '',                   //备注
+          remark: '1234',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
           /*以下是电子合同特有字段*/
-          province: "",
-          city: "",
-          district: "",
-          property_address: "",
-          village_name: "",
-          room: "",
-          hall: "",
-          toilet: "",
-          area: "",
-          house_certificate: "",
+          province: "江苏省",
+          city: "南京市",
+          district: "雨花台",
+          property_address: "测试路1号",
+          village_name: "测试小区",
+          room: "1",
+          hall: "1",
+          toilet: "1",
+          area: "80",
+          house_certificate: "1",
           property_number: "A123456",
           QiuQuan_number: "B123456",
-          sub_owner: '',//附属房东
-          not_owner_fee: {},
+          not_owner_fee: {'0':1,'1':2},
           other_fee_text: "其他费用20元",
           allowed_decoration_to: "1",
           allowed_add_to: "1",
           staff_phone: "",
           pdf_scene: 1,
-          other_rule: {},
+          other_rule: {'0':1,'1':2,'2':3},
           signer_type: '1',//签约类型1产权 2代理
           partA_agents: '',//代理人信息
-          houseOwners: [new HouseOwner()],//房屋所有人HouseOwner类的列表
+          owner: [new HouseOwner('123','341126199502023237','17626043187','3328')],//房屋所有人HouseOwner类的列表
           customerIds: '3328',
           cookie: '',
           /*以上是电子合同特有字段*/
@@ -816,6 +815,7 @@
       }
     },
     activated() {
+
       let count = sessionStorage.count;
       this.counts = count;
       if (count === '11') {
@@ -865,11 +865,11 @@
       this.getContractNumber();
       //获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
-      if (item === null||item===undefined) return;
+      if (item === null || item === undefined) return;
       let house_res = item.house_res;
-      if (house_res === null||house_res===undefined) return;
+      if (house_res === null || house_res === undefined) return;
       let house_res_com = house_res.community;
-      if ( house_res_com == null||house_res_com===undefined) return;
+      if (house_res_com === null || house_res_com === undefined) return;
 
       this.form.province = house_res_com.province.province_name;//省
       this.form.city = house_res_com.city.city_name;//市
@@ -905,14 +905,10 @@
       previewPdf() {
         contractApi.cancelContract(this.form.contract_number, success => {
           contractApi.createCollectContract(this.$refs.pdf, this.form, success => {
-            this.haveInHand = true;
-            this.retry = 0;
           }, error => {
-            this.haveInHand = true;
             Toast(error)
           })
         }, error => {
-          this.haveInHand = true;
           Toast(error)
         });
       },
@@ -938,8 +934,8 @@
       //显示签约人列表
       showSignPeoples() {
         this.showForm.signPeoples = [];
-        for (let i = 0; i < this.form.houseOwners.length; i++) {
-          let houseOwner = this.form.houseOwners[i];
+        for (let i = 0; i < this.form.owner.length; i++) {
+          let houseOwner = this.form.owner[i];
           this.showForm.signPeoples.push(houseOwner.name);
         }
         this.showForm.signPeoples.push('其他');
@@ -959,7 +955,7 @@
       },
       //添加附属房东信息
       addNewHouseOwner() {
-        this.form.houseOwners.push(new HouseOwner())
+        this.form.owner.push(new HouseOwner())
       },
       getNameFromList(entitys) {
         let names = [];
@@ -1507,14 +1503,17 @@
       },
 
       close_() {
+        //return
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;
         });
+        console.log(this.showForm.choosedNoOwnerFees)
+
         $('.imgItem').remove();
         this.userInfo(true);
         this.clearObj(this.form);
-        this.clearObj(this.showForm)
+        this.clearObj(this.showForm);
         this.form.purchase_way = 509;
         this.picStatus = 'success';
         this.cusFrom = '';
@@ -1530,24 +1529,25 @@
         this.screenshots = {};
         this.property_photos = {};
         this.identity_photos = {};
-        this.form.type='1';
+        this.form.type = '1';
+        this.form.owner = [new HouseOwner]
       },
       clearObj(obj) {
-        for (let i in obj) {
-          let o = obj[i];
-          if (o instanceof Array) {
-            obj[i] = [];
+        Object.keys(obj).forEach(function (key) {
+
+          let o = obj[key];
+
+          if (key === 'contract_number') {
+          } else if (o instanceof Array) {
+            obj[key] = [];
+          } else if (o instanceof Object) {
+            obj[key] = {}
+          } else if (typeof (o) === 'string') {
+            obj[key] = ''
+          } else if (o instanceof Boolean) {
+            obj[key] = false;
           }
-          if (o instanceof Object) {
-            obj[i] = {}
-          }
-          if (typeof (o) === 'string') {
-            obj[i] = ''
-          }
-          if (o instanceof Boolean) {
-            obj[i] = false;
-          }
-        }
+        });
       }
     },
   }

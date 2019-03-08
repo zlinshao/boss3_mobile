@@ -12,7 +12,7 @@
           <van-radio name="0">未收先租确定</van-radio>
         </van-radio-group>
         </div>
-        <div class="rent_types" v-if="rentType==='3'">
+        <div class="rent_types" v-if="form.type==='3'">
           <div class="label">转租类型</div>
           <van-radio-group v-model="form.trans_type">
           <van-radio name="0">公司</van-radio>
@@ -30,7 +30,7 @@
 
 
         <!--下面是未收先租确定信息-->
-        <div class="crop_name noBorder" v-if="rentType==='5'">
+        <div class="crop_name noBorder" v-if="form.type==='5'">
           <van-field
             v-model="form.oldHouseName"
             label="原喜报地址"
@@ -46,7 +46,7 @@
         <!--上面是未收先租确定信息-->
 
         <!--下面是调房信息-->
-        <van-cell-group style="margin-bottom: 12px;" v-if="rentType==='4'">
+        <van-cell-group style="margin-bottom: 12px;" v-if="form.type==='4'">
         <div class="crop_name noBorder">
           <van-field
             v-model="form.old_house_name"
@@ -588,6 +588,9 @@
           placeholder="请选择尾款补齐日期"
           required>
         </van-field>
+        <div @click="previewPdf" class="addInput bottom">
+          +预览电子合同
+        </div>
 
       </van-cell-group>
 
@@ -700,7 +703,6 @@
     data() {
       return {
         /*电子合同新加*/
-        rentType:'1',
         eshow:false,//是否显示选择弹框
         isShowChooseRemark:false,//是否显示备注弹框
 
@@ -785,7 +787,7 @@
           corp_name: '',
           id: '',
           processable_id: '',
-          type: 1,
+          type: '1',
           draft: 0,
           contract_id: '',              //合同id
           house_id: '',                 //房屋地址id
@@ -865,7 +867,7 @@
           staff_phone: "18796005530",
           pdf_scene: 2,
           emergency_phone: "18796005530",
-          customer_info:[new HouseOwner()],
+          customer_info: [new HouseOwner('123','341126199502023237','17626043187','3328')],//房屋所有人HouseOwner类的列表
           other_rule: {},
           cookie:'',
           /*以上是电子合同独特字段*/
@@ -929,7 +931,7 @@
     activated() {
       let count = sessionStorage.count;
       this.counts = count;
-      console.log(sessionStorage.personal)
+      console.log(sessionStorage.personal);
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
@@ -974,21 +976,15 @@
       }
       this.houseInfo();
       //获取合同编号
-      if (sessionStorage.getItem('number') === null) {
-        contractApi.getNumber(2,number => {
-          this.setContractNumber(number);
-          sessionStorage.setItem('number', number);
-        }, error => {
-          Toast(error)
-        });
-      } else {
-        this.setContractNumber(sessionStorage.getItem('number'));
-      }
+      this.getContractNumber();
       //获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
-      if (item === null) return;
+      if (item === null || item === undefined) return;
       let house_res = item.house_res;
+      if (house_res === null || house_res === undefined) return;
       let house_res_com = house_res.community;
+      if (house_res_com === null || house_res_com === undefined) return;
+
       this.form.province = house_res_com.province.province_name;//省
       this.form.city = house_res_com.city.city_name;//市
       this.form.district = house_res_com.area.area_name;
@@ -1003,6 +999,33 @@
     },
     methods: {
       /*以下是电子合同新加*/
+      getContractNumber() {
+        //获取业务员对应城市
+        this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
+          //获取合同编号
+          //if (sessionStorage.getItem('zf_number') === null) {
+            contractApi.getNumber(2, res.data.city_id, number => {
+              this.setContractNumber(number);
+             // sessionStorage.setItem('zf_number', number);
+            }, error => {
+              Toast(error)
+            });
+          // } else {
+          //   this.setContractNumber(sessionStorage.getItem('zf_number'));
+          // }
+        });
+      },
+      previewPdf() {
+        contractApi.cancelContract(this.form.contract_number, success => {
+          contractApi.createRentContract(this.$refs.pdf, this.form, success => {
+
+          }, error => {
+            Toast(error)
+          })
+        }, error => {
+          Toast(error)
+        });
+      },
       //添加附属租客信息
       addNewRentPeople() {
         this.form.customer_info.push(new HouseOwner())
@@ -1126,7 +1149,7 @@
       searchSelect(val) {
         switch (val) {
           case 1://选择原房屋
-            switch (this.rentType) {
+            switch (this.form.type) {
               case "4"://调
                 this.$router.push({path: '/collectHouse', query: {type: 'report'}});
                 break;
@@ -1136,7 +1159,7 @@
             }
             break;
           case 2://选择现房屋
-            switch (this.rentType) {
+            switch (this.form.type) {
               case "1"://新
                 this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
                 break;
