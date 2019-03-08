@@ -25,7 +25,7 @@
           required>
         </van-field>
         <van-field
-          v-model="houseCertificateTypeTxt"
+          v-model="showForm.houseCertificateTypeTxt"
           label="持有证件"
           readonly
           type="text"
@@ -88,7 +88,7 @@
           +添加附属房东
         </div>
         <van-field
-          v-model="signPeople"
+          v-model="showForm.signPeople"
           label="签约人"
           type="text"
           placeholder="请选择签约人"
@@ -96,7 +96,7 @@
           readonly
           required>
         </van-field>
-        <div v-if="showProxyInfo">
+        <div v-if="showForm.showProxyInfo">
           <van-field
             v-model="form.sign_people_name"
             label="代理人姓名"
@@ -126,7 +126,7 @@
           </van-field>
         </div>
         <van-field
-          v-model="noOwnerFeeTxt"
+          v-model="showForm.noOwnerFeeTxt"
           label="非房东费用"
           readonly
           type="text"
@@ -144,7 +144,7 @@
           required>
         </van-field>
         <van-field
-          v-model="canDecorationsTxt"
+          v-model="showForm.canDecorationsTxt"
           label="可否装修"
           readonly
           type="text"
@@ -153,7 +153,7 @@
           required>
         </van-field>
         <van-field
-          v-model="canAddThingTxt"
+          v-model="showForm.canAddThingTxt"
           label="可否添加物品"
           readonly
           type="text"
@@ -162,7 +162,7 @@
           required>
         </van-field>
         <van-field
-          v-model="remarksTxt"
+          v-model="showForm.remarksTxt"
           label="备注条款"
           readonly
           type="text"
@@ -588,7 +588,7 @@
     <!--选择非房东费用列表电子合同新加!-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseNoProperty" position="bottom"
                :overlay="true">
-      <van-checkbox-group v-model="choosedNoOwnerFees" @change="changeNoPropertyFee">
+      <van-checkbox-group v-model="showForm.choosedNoOwnerFees" @change="changeNoPropertyFee">
         <van-checkbox v-for="(item,index) in noOwnerFees" :name="item" :key="index">{{item.name}}</van-checkbox>
       </van-checkbox-group>
     </van-popup>
@@ -596,7 +596,7 @@
     <!--选择备注条款列表-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseRemark" position="bottom"
                :overlay="true">
-      <van-checkbox-group v-model="choosedRemarks" style="margin:1em;" @change="changeContracts">
+      <van-checkbox-group v-model="showForm.choosedRemarks" style="margin:1em;" @change="changeContracts">
         <van-checkbox v-for="(item,index) in remarks" :name="item" :key="index">{{item.name}}</van-checkbox>
       </van-checkbox-group>
     </van-popup>
@@ -640,25 +640,16 @@
         eshow: false,
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
-        houseCertificateTypeTxt: '',//房屋证明类别文字
         houseCertificateTypes: [new CommonIdNameEntity('1', '房屋所有权证'), new CommonIdNameEntity('2', '房屋买卖合同'), new CommonIdNameEntity('3', '其他房屋来源')],
         curDatas: [],//当前显示的选择弹框的元数据，就是CommonIdNameEntity的集合
         noOwnerFees: [new CommonIdNameEntity('1', '水费'), new CommonIdNameEntity('2', '电费'),
           new CommonIdNameEntity('3', '燃气费'),
           new CommonIdNameEntity('4', '网费'), new CommonIdNameEntity('5', '物业管理费')],
-        choosedNoOwnerFees: [],//已选择的非房东费用列表
-        noOwnerFeeTxt: '',//展示非房东费用的字段
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许装修
-        canDecorationsTxt: '',//是否允许装修txt
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
-        canAddThingTxt: '',//是否允许添加新物txt
         //合同备注条款数据
         remarks: [new CommonIdNameEntity('1', '不能群租'), new CommonIdNameEntity('2', '不得扰民'), new CommonIdNameEntity('3', '不能随意搬动屋内家具家电'), new CommonIdNameEntity('4', '不能故意拆卸家具家电'), new CommonIdNameEntity('5', '不得养宠物'), new CommonIdNameEntity('6', '不得租住新疆人或外国人'), new CommonIdNameEntity('7', '乙方不得将房屋用于承办丧事、喜事等商业用途'), new CommonIdNameEntity('8', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'), new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
-        choosedRemarks: [],//已选择的备注条款
-        remarksTxt: '',//备注条款展示文字
-        signPeoples: [], //签约人列表，包括已选的房东和其他，其他时显示代理人
-        signPeople: '',//某房东姓名或者其他
-        showProxyInfo: false,//显示代理信息
+
         /*以上是电子合同新增*/
         haveInHand: true,
         urls: globalConfig.server,
@@ -688,6 +679,20 @@
 
         corp: true,                 //公司单
         cusFrom: '',                //是否渠道
+
+        //显示在页面的字段
+        showForm: {
+          houseCertificateTypeTxt: '',//房屋证明类别文字
+          canDecorationsTxt: '',//是否允许装修txt
+          choosedNoOwnerFees: [],//已选择的非房东费用列表
+          noOwnerFeeTxt: '',//展示非房东费用的字段
+          canAddThingTxt: '',//是否允许添加新物txt
+          choosedRemarks: [],//已选择的备注条款
+          remarksTxt: '',//备注条款展示文字
+          signPeoples: [], //签约人列表，包括已选的房东和其他，其他时显示代理人
+          signPeople: '',//某房东姓名或者其他
+          showProxyInfo: false,//显示代理信息
+        },
 
         form: {
           id: '',
@@ -860,9 +865,11 @@
       this.getContractNumber();
       //获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
+      if (item === null||item===undefined) return;
       let house_res = item.house_res;
+      if (house_res === null||house_res===undefined) return;
       let house_res_com = house_res.community;
-      if (item === null || house_res == null || house_res_com == null) return;
+      if ( house_res_com == null||house_res_com===undefined) return;
 
       this.form.province = house_res_com.province.province_name;//省
       this.form.city = house_res_com.city.city_name;//市
@@ -879,7 +886,7 @@
 
     methods: {
       /*以下是电子合同新加*/
-      getContractNumber(){
+      getContractNumber() {
         //获取业务员对应城市
         this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
           //获取合同编号
@@ -920,33 +927,33 @@
       },
       //当备注条款改变时
       changeContracts() {
-        this.remarksTxt = '';
+        this.showForm.remarksTxt = '';
         let json = [];
-        for (let i = 0; i < this.choosedRemarks.length; i++) {
-          this.remarksTxt = this.remarksTxt + (i + 1) + '、' + this.choosedRemarks[i].name;
-          json[i] = this.choosedRemarks[i].id;
+        for (let i = 0; i < this.showForm.choosedRemarks.length; i++) {
+          this.showForm.remarksTxt = this.showForm.remarksTxt + (i + 1) + '、' + this.showForm.choosedRemarks[i].name;
+          json[i] = this.showForm.choosedRemarks[i].id;
         }
         this.form.other_rule = json;
       },
       //显示签约人列表
       showSignPeoples() {
-        this.signPeoples = [];
+        this.showForm.signPeoples = [];
         for (let i = 0; i < this.form.houseOwners.length; i++) {
           let houseOwner = this.form.houseOwners[i];
-          this.signPeoples.push(houseOwner.name);
+          this.showForm.signPeoples.push(houseOwner.name);
         }
-        this.signPeoples.push('其他');
-        this.columns = this.signPeoples;
-        this.curDatas = this.signPeoples;//设置当前元数据
+        this.showForm.signPeoples.push('其他');
+        this.columns = this.showForm.signPeoples;
+        this.curDatas = this.showForm.signPeoples;//设置当前元数据
         this.eshow = true;//显示弹框
       },
       changeNoPropertyFee() {
-        this.noOwnerFeeTxt = '';
+        this.showForm.noOwnerFeeTxt = '';
         let json = {};
-        for (let i = 0; i < this.choosedNoOwnerFees.length; i++) {
-          let name = this.choosedNoOwnerFees[i].name;
-          this.noOwnerFeeTxt = this.noOwnerFeeTxt + (i + 1) + '、' + name;
-          json[i] = this.choosedNoOwnerFees[i].id;
+        for (let i = 0; i < this.showForm.choosedNoOwnerFees.length; i++) {
+          let name = this.showForm.choosedNoOwnerFees[i].name;
+          this.showForm.noOwnerFeeTxt = this.showForm.noOwnerFeeTxt + (i + 1) + '、' + name;
+          json[i] = this.showForm.choosedNoOwnerFees[i].id;
         }
         this.form.not_owner_fee = json;
       },
@@ -986,24 +993,24 @@
         switch (this.curDatas) {
           case this.houseCertificateTypes://选择持有证件的类型
             this.form.house_certificate = this.houseCertificateTypes[index].id;
-            this.houseCertificateTypeTxt = this.houseCertificateTypes[index].name;
+            this.showForm.houseCertificateTypeTxt = this.houseCertificateTypes[index].name;
             break;
           case this.canDecorations://是否可以装修
-            this.canDecorationsTxt = value;
+            this.showForm.canDecorationsTxt = value;
             this.form.allowed_decoration_to = this.canDecorations[index].id;
             break;
           case this.canAddThings://是否添加新物
-            this.canAddThingTxt = value;
+            this.showForm.canAddThingTxt = value;
             this.form.allowed_add_to = this.canAddThings[index].id;
             break;
-          case this.signPeoples://签约人列表
-            this.signPeople = value;
-            if (index === this.signPeoples.length - 1) {
-              this.showProxyInfo = true;
+          case this.showForm.signPeoples://签约人列表
+            this.showForm.signPeople = value;
+            if (index === this.showForm.signPeoples.length - 1) {
+              this.showForm.showProxyInfo = true;
               this.form.signer_type = 2;
             } else {
               this.form.signer_type = 1;
-              this.showProxyInfo = false;
+              this.showForm.showProxyInfo = false;
             }
             break;
         }
@@ -1500,89 +1507,45 @@
       },
 
       close_() {
-        this.form.purchase_way = 509;
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;
         });
         $('.imgItem').remove();
         this.userInfo(true);
+        this.clearObj(this.form);
+        this.clearObj(this.showForm)
+        this.form.purchase_way = 509;
         this.picStatus = 'success';
-        this.joint = false;
-        this.form.processable_id = '';
-        this.form.house.id = '';
-        this.form.house.name = '';
-        this.form.month = '';
-        this.form.day = '';
-
-        this.form.begin_date = '';
-        this.form.end_date = '';
-        this.form.end_date_vacant = '';
-        this.form.pay_first_date = '';
-        this.form.pay_second_date = '';
-
-        this.form.is_agency = '';
         this.cusFrom = '';
-        this.form.agency_name = '';
-        this.form.agency_price = '';
-        this.form.agency_user_name = '';
-        this.form.agency_phone = '';
-
         this.amountPrice = 1;
-        this.form.period_price_arr = [''];
-        this.form.price_arr = [''];
-
         this.datePay = [];
         this.datePrice = [];
         this.amountPay = 1;
-        this.form.period_pay_arr = [''];
-        this.form.pay_way_arr = [''];
         this.payTypeNum = [''];
-
-        this.form.period_pay_arr = [''];
-        this.form.pay_way_arr = [''];
-
-        this.form.deposit = '';
-        this.form.vacancy = '';
-        this.form.vacancy_way = '';
         this.vacancy_way_name = '';
-        this.form.vacancy_other = '';
-        this.form.warranty = '';
-        this.form.warranty_day = '';
-        this.form.property_payer = '';
         this.property_name = '';
-        this.form.sign_date = '';
-        this.form.name = '';
-        this.form.is_corp = 1;
         this.corp = true;
-        this.form.phone = '';
-        this.form.bank = '';
-        this.form.subbranch = '';
-        this.form.account_name = '';
-        this.form.account = '';
-        this.form.relationship = '';
-        this.form.penalty = '';
-
-        this.form.photo = [];
         this.photos = {};
-        this.form.screenshot_leader = [];
         this.screenshots = {};
-        this.form.property_photo = [];
         this.property_photos = {};
-        this.form.identity_photo = [];
         this.identity_photos = {};
-
-        this.form.remark = '';
-        for(let i in this.form){
-          let o=this.form[i];
-          if(o instanceof Array){
-            this.form[i]=[];
+        this.form.type='1';
+      },
+      clearObj(obj) {
+        for (let i in obj) {
+          let o = obj[i];
+          if (o instanceof Array) {
+            obj[i] = [];
           }
-          if(o instanceof  Object){
-            this.form[i]={}
+          if (o instanceof Object) {
+            obj[i] = {}
           }
-          if(o instanceof String){
-            this.form[i]=''
+          if (typeof (o) === 'string') {
+            obj[i] = ''
+          }
+          if (o instanceof Boolean) {
+            obj[i] = false;
           }
         }
       }
