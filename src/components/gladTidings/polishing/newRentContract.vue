@@ -20,10 +20,19 @@
           </van-radio-group>
         </div>
         <van-field
+          v-if="form.regenerate==='1'"
+          v-model="form.old_contract_number"
+          label="原合同编号"
+          type="text"
+          placeholder=""
+          readonly
+          required>
+        </van-field>
+        <van-field
           v-model="form.contract_number"
           label="合同编号"
           type="text"
-          placeholder="请填写合同编号"
+          placeholder=""
           readonly
           @click-icon="form.contract_number = ''">
         </van-field>
@@ -847,6 +856,10 @@
           staff_name: '',               //开单人name
           department_name: '',          //部门name
           /*以下是电子合同独特字段*/
+          /*作废重签*/
+          old_contract_number:'',
+          regenerate:'',
+          /*作废重签*/
           province: "江苏",
           city: "南京",
           district: "建邺",
@@ -996,6 +1009,8 @@
       this.form.toilet = house_types[2];//卫
       this.form.area = house_res.area;//面积
       /*获取电子合同相关字段*/
+      console.log(this.$route.query);
+      this.form.regenerate=this.$route.query.type;//0新签 1作废重签
     },
     methods: {
       /*以下是电子合同新加*/
@@ -1426,7 +1441,8 @@
               this.form[key] = this.filter_array(this.form[key])
             }
           }
-          this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+          let url=this.form.regenerate==='0'?'fdd/contract/saveAndSend':'fdd/contract/reset';//0代表新签 1代表作废重签
+          this.$http.post(this.urls + url, this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50210' || res.data.code === '50230') {

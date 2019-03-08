@@ -7,11 +7,21 @@
           <van-radio name="2">续收</van-radio>
         </van-radio-group>
         <van-field
+          v-if="form.regenerate==='1'"
+          v-model="form.old_contract_number"
+          label="原合同编号"
+          type="text"
+          placeholder=""
+          readonly
+          required>
+        </van-field>
+        <van-field
           v-model="form.contract_number"
           label="合同编号"
           type="text"
           placeholder="请填写收房合同编号"
           icon="clear"
+          readonly
           @click-icon="form.contract_number = ''"
           required>
         </van-field>
@@ -749,6 +759,10 @@
           staff_name: '',               //开单人name
           department_name: '',          //部门name
           /*以下是电子合同特有字段*/
+          /*作废重签*/
+          old_contract_number:'',
+          regenerate:'',
+          /*作废重签*/
           province: "江苏省",
           city: "南京市",
           district: "雨花台",
@@ -813,9 +827,9 @@
         this.close_();
         this.dicts('');
       }
+
     },
     activated() {
-
       let count = sessionStorage.count;
       this.counts = count;
       if (count === '11') {
@@ -882,6 +896,7 @@
       this.form.toilet = house_types[2];//卫
       this.form.area = house_res.area;//面积
       /*获取电子合同相关字段*/
+      this.form.regenerate=this.$route.query.type;//0新签 1作废重签
     },
 
     methods: {
@@ -890,16 +905,16 @@
         //获取业务员对应城市
         this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
           //获取合同编号
-          if (sessionStorage.getItem('sf_number') === null) {
+          //if (sessionStorage.getItem('sf_number') === null) {
             contractApi.getNumber(1, res.data.city_id, number => {
               this.setContractNumber(number);
-              sessionStorage.setItem('sf_number', number);
+             // sessionStorage.setItem('sf_number', number);
             }, error => {
               Toast(error)
             });
-          } else {
-            this.setContractNumber(sessionStorage.getItem('sf_number'));
-          }
+          // } else {
+          //   this.setContractNumber(sessionStorage.getItem('sf_number'));
+          // }
         });
       },
       previewPdf() {
@@ -1305,7 +1320,8 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
-          this.$http.post(this.eurls + 'fdd/contract/saveAndSend', this.form).then((res) => {
+          let url=this.form.regenerate==='0'?'fdd/contract/saveAndSend':'fdd/contract/reset';//0代表新签 1代表作废重签
+          this.$http.post(this.eurls + url, this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50110' || res.data.code === '50130') {

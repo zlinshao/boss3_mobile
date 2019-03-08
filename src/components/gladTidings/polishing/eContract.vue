@@ -60,11 +60,11 @@
       },
       //添加收房合同
       collect(){
-        this.$router.push('/newCollectContract');
+        this.$router.push({path:'/newCollectContract',query:{type:'0'}});//type 0为新签 1为作废重签
       },
       //添加租房合同
       rent(){
-        this.$router.push('/newRentContract');
+        this.$router.push({path:'/newRentContract',query:{type:'0'}});//type 0为新签 1为作废重签
       }
     }
   }
