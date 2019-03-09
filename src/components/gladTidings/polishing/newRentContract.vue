@@ -20,7 +20,7 @@
           </van-radio-group>
         </div>
         <van-field
-          v-if="form.regenerate==='1'"
+          v-if="form.regenerate===1"
           v-model="form.old_contract_number"
           label="原合同编号"
           type="text"
@@ -446,7 +446,16 @@
             @click-icon="form.customer_info[index].idcard= ''"
             required>
           </van-field>
-
+          <van-field
+            v-model="form.customer_info[index].fadada_user_id===''?'':'实名认证成功'"
+            label="实名认证"
+            type="text"
+            class="number"
+            readonly
+            placeholder="点击进行实名认证"
+            @click="trueName(form.customer_info[index])"
+            required>
+          </van-field>
         </div>
         <div @click="addNewRentPeople" class="addInput bottom">
           +添加租客
@@ -776,10 +785,6 @@
 
 
         form: {
-          house:{
-            name:'',
-            id:'',
-          },
           /*下面是转租独有*/
           trans_type: '0',//转租类型、默认公司 ,1是个人
 
@@ -866,7 +871,7 @@
           /*以下是电子合同独特字段*/
           /*作废重签*/
           old_contract_number: '',
-          regenerate: '',
+          regenerate: 0,
           /*作废重签*/
           bank: '',
           account_name: '',
@@ -951,14 +956,15 @@
         this.close_();
         this.dicts('');
       }
-    },
-    activated() {
       if (this.$route.query.c_info !== undefined) {
         let type = this.$route.query.c_info.type;
         this.curContractInfo = this.$route.query.c_info;
-        console.log('赋值'+type);
         this.form.regenerate = type;//0新签 1作废重签
       }
+      this.getContractNumber();
+    },
+    activated() {
+
       let count = sessionStorage.count;
       this.counts = count;
       console.log(sessionStorage.personal);
@@ -990,6 +996,7 @@
       if (count === '2') {
         sessionStorage.setItem('process', JSON.stringify(this.$route.query));
         let newID = JSON.parse(sessionStorage.process);
+        console.log(newID+"sads")
         if (newID.type === 2) {
           this.close_();
           this.routerTo('/publishDetail', newID.ids);
@@ -1006,8 +1013,7 @@
       }
       this.houseInfo();
       //获取合同编号
-      this.getContractNumber();
-      //获取房屋信息
+      // 获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
       if (item === null || item === undefined) return;
       let house_res = item.house_res;
@@ -1030,6 +1036,9 @@
     },
     methods: {
       /*以下是电子合同新加*/
+      trueName(item) {
+        contractApi.trueName(item);
+      },
       getEntityForIndex(entitys,id) {
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
@@ -1064,7 +1073,7 @@
           });
         } else {//获取页面带过来的合同编号
           this.form.contract_number = this.curContractInfo.number;
-          this.manuscript();
+          this.rentDetail();
         }
       },
       previewPdf() {
@@ -1703,7 +1712,7 @@
         this.userInfo(this.isValue1);
       },
 
-      rentDetail(val) {
+      rentDetail() {
         this.form.processable_id = '';
         this.userInfo(true);
         this.$http.get(this.eurls + 'fdd/contract/read/' + this.contract_number).then((res) => {
@@ -1781,7 +1790,7 @@
 
             this.form.discount = draft.discount;
             this.form.penalty = draft.penalty;
-            this.other_fee_status = draft.is_other_fee === 1 ? true : false;
+            this.other_fee_status = draft.is_other_fee === 1;
             this.form.other_fee_name = draft.other_fee_name;
             this.form.other_fee = draft.other_fee;
 
@@ -1824,14 +1833,10 @@
             this.form.deposit_photo = draft.deposit_photo;
             this.receipts = data.deposit_photo || {};
             this.form.remark = draft.remark;
+            this.form.rent_type=draft.rent_type;
+            console.log(draft.rent_type+"111")
+            this.rentUseTxt=this.getEntityForIndex(this.rentUses,draft.rent_type);
 
-            if (val !== '' && val.type === 2) {
-              this.form.staff_id = draft.staff_id;
-              this.form.staff_name = draft.staff_name;
-              this.form.staff_phone = draft.phone;
-              this.form.department_id = draft.department_id;
-              this.form.department_name = draft.department_name;
-            }
           } else {
             this.receiptNum();
             this.form.id = '';

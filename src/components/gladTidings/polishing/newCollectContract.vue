@@ -92,14 +92,15 @@
             required>
           </van-field>
           <van-field
-          v-model="form.owner[index].phone"
-          label="实名认证"
-          type="text"
-          class="number"
-          readonly
-          placeholder="点击进行实名认证"
-          required>
-        </van-field>
+            v-model="item.fadada_user_id===''?'':'实名认证成功'"
+            label="实名认证"
+            type="text"
+            class="number"
+            readonly
+            placeholder="点击进行实名认证"
+            @click="trueName(item)"
+            required>
+          </van-field>
         </div>
         <div @click="addNewHouseOwner" class="addInput bottom">
           +添加附属房东
@@ -115,30 +116,40 @@
         </van-field>
         <div v-if="showForm.showProxyInfo">
           <van-field
-            v-model="form.sign_people_name"
+            v-model="form.partA_agents.name"
             label="代理人姓名"
             type="text"
             placeholder="请填写代理人姓名"
             icon=""
-            @click-icon="form.sign_people_name = ''"
+            @click-icon="form.partA_agents.name = ''"
             required>
           </van-field>
           <van-field
-            v-model="form.sign_people_phone"
+            v-model="form.partA_agents.phone"
             label="代理人手机号"
             type="text"
             placeholder="请填写代理人手机号"
             icon=""
-            @click-icon="form.sign_people_phone = ''"
+            @click-icon="form.partA_agents.phone = ''"
             required>
           </van-field>
           <van-field
-            v-model="form.sign_people_card_number"
+            v-model="form.partA_agents.idcard"
             label="代理人身份证号"
             type="text"
             placeholder="请填写代理人身份证号"
             icon=""
-            @click-icon="form.sign_people_card_number = ''"
+            @click-icon="form.partA_agents.idcard = ''"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.partA_agents.fadada_user_id===''?'':'实名认证成功'"
+            label="实名认证"
+            type="text"
+            class="number"
+            readonly
+            placeholder="点击进行实名认证"
+            @click="trueName(form.partA_agents)"
             required>
           </van-field>
         </div>
@@ -644,7 +655,7 @@
       this.name = name || '';
       this.idcard = idcard || '';
       this.phone = phone || '';
-      this.fadada_user_id = 'AD4D9D5FFA9C4B0500DE29F99DE1CF5DB8EBB9DA925BA67D9860FC575697ADDAEC983C8F76C7F49A1A3B0D8593162E5C';
+      this.fadada_user_id = userid || '';
     }
   }
 
@@ -709,6 +720,7 @@
           signPeoples: [], //签约人列表，包括已选的房东和其他，其他时显示代理人
           signPeople: '',//某房东姓名或者其他
           showProxyInfo: false,//显示代理信息
+          trueNames: [],
         },
 
         form: {
@@ -791,8 +803,8 @@
           pdf_scene: 1,
           other_rule: {},
           signer_type: '',//签约类型1产权 2代理
-          partA_agents: '',//代理人信息
-          signer:'',
+          partA_agents: {},//代理人信息
+          signer: '',
           owner: [new HouseOwner()],//房屋所有人HouseOwner类的列表
           customerIds: '3328',
           cookie: '',
@@ -917,6 +929,9 @@
 
     methods: {
       /*以下是电子合同新加*/
+      trueName(item) {
+        contractApi.trueName(item);
+      },
       getContractNumber() {
         //获取业务员对应城市
         if (this.curContractInfo.type !== 2) {
@@ -929,8 +944,8 @@
               Toast(error)
             });
           });
-        }else{//获取页面带过来的合同编号
-          this.form.contract_number=this.curContractInfo.number;
+        } else {//获取页面带过来的合同编号
+          this.form.contract_number = this.curContractInfo.number;
           this.manuscript();
         }
       },
@@ -989,24 +1004,24 @@
       addNewHouseOwner() {
         this.form.owner.push(new HouseOwner())
       },
-      getEntityForIndex(entitys,id) {
+      getEntityForIndex(entitys, id) {
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
-          if(id===entity.id){
+          if (id === entity.id) {
             return entity;
           }
         }
         return null;
       },
-      getListFromList(entitys,ids) {
+      getListFromList(entitys, ids) {
         let list = [];
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
-         for(let j=0;j<ids.length;j++){
-           if(entity.id===ids[j]){
-             list.push(entity)
-           }
-         }
+          for (let j = 0; j < ids.length; j++) {
+            if (entity.id === ids[j]) {
+              list.push(entity)
+            }
+          }
         }
         return list;
       },
@@ -1060,7 +1075,7 @@
             } else {
               this.form.signer_type = 1;
               this.showForm.showProxyInfo = false;
-              this.form.signer=this.form.owner[index]
+              this.form.signer = this.form.owner[index]
             }
             break;
         }
@@ -1358,7 +1373,7 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
-          let url = this.form.draft === 1 ? 'fdd/contract/save' : this.form.regenerate === 0||this.form.regenerate === 2  ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
+          let url = this.form.draft === 1 ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
           this.$http.post(this.eurls + url, this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -1435,7 +1450,7 @@
 
       // 草稿
       manuscript() {
-        let app=this;
+        let app = this;
 
         this.form.processable_id = '';
         this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.contract_number).then((res) => {
@@ -1446,10 +1461,10 @@
             this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.house = draft.house;
-            this.form.type=draft.type;
+            this.form.type = draft.type;
             this.form.sign_date = draft.sign_date;
             this.form.month = draft.month;
-            this.form.day =draft.day;
+            this.form.day = draft.day;
 
             this.form.begin_date = draft.begin_date;
             this.form.end_date = draft.end_date;
@@ -1535,33 +1550,26 @@
             this.identity_photos = data.identity_photo || {};
 
             this.form.remark = draft.remark;
-            if (this.form.type === 2) {
-              this.form.staff_id = draft.staff_id;
-              this.form.staff_name = draft.staff_name;
-              this.form.staff_phone = draft.phone;
-              this.form.department_id = draft.department_id;
-              this.form.department_name = draft.department_name;
-            }
-            this.form.house_certificate=draft.house_certificate;
-            this.showForm.houseCertificateTypeTxt=this.getEntityForIndex(this.houseCertificateTypes,this.form.house_certificate).name;
-            this.form.property_number=draft.property_number;
-            this.form.QiuQuan_number=draft.QiuQuan_number;
-            this.form.owner=draft.owner;
-            this.form.signer=draft.signer;
-            this.showForm.signPeople=draft.signer.name;
-            this.form.not_owner_fee=draft.not_owner_fee;
-            let not_owner_fee_choosed_ids=[];
-            Object.keys( this.form.not_owner_fee).forEach(function (key) {
+            this.form.house_certificate = draft.house_certificate;
+            this.showForm.houseCertificateTypeTxt = this.getEntityForIndex(this.houseCertificateTypes, this.form.house_certificate).name;
+            this.form.property_number = draft.property_number;
+            this.form.QiuQuan_number = draft.QiuQuan_number;
+            this.form.owner = draft.owner;
+            this.form.signer = draft.signer;
+            this.showForm.signPeople = draft.signer.name;
+            this.form.not_owner_fee = draft.not_owner_fee;
+            let not_owner_fee_choosed_ids = [];
+            Object.keys(this.form.not_owner_fee).forEach(function (key) {
               not_owner_fee_choosed_ids.push(key)
             });
-           this.showForm.choosedNoOwnerFees=this.getListFromList(this.noOwnerFees,not_owner_fee_choosed_ids);
+            this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
             this.changeNoPropertyFee()
-            this.form.other_fee_text=draft.other_fee_text;
-            this.form.allowed_decoration_to=draft.allowed_decoration_to;
-            this.showForm.canDecorationsTxt=this.getEntityForIndex(this.canDecorations,this.form.allowed_decoration_to).name;
-            this.form.allowed_add_to=draft.allowed_add_to;
-            this.showForm.canAddThingTxt=this.getEntityForIndex(this.canAddThings,this.form.allowed_add_to).name;
-            this.showForm.choosedRemarks=this.getListFromList(this.remarks,draft.other_rule);
+            this.form.other_fee_text = draft.other_fee_text;
+            this.form.allowed_decoration_to = draft.allowed_decoration_to;
+            this.showForm.canDecorationsTxt = this.getEntityForIndex(this.canDecorations, this.form.allowed_decoration_to).name;
+            this.form.allowed_add_to = draft.allowed_add_to;
+            this.showForm.canAddThingTxt = this.getEntityForIndex(this.canAddThings, this.form.allowed_add_to).name;
+            this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
             this.changeContracts()
 
           } else {

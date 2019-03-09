@@ -47,5 +47,24 @@ function createRentContract(pdf, param,success,error) {
     }
   })
 }
+function trueName(item) {
+  Vue.prototype.$http.get(url+'/fdd/customer/verified?idcard='+item.idcard+'&name='+item.name+'&phone='+item.phone).then(success=>{
+    if(success.data.code==='40000'){
+      item.fadada_user_id=success.data.data.customer_id;
+    }else{
+      Vue.prototype.$http.post(url + 'fdd/customer/cert', {
+        customer_name: item.name,
+        idcard: item.idcard,
+        mobile: item.phone
+      }).then(success => {
+        if (success.data.code === '40010') {
+          window.open(success.data.data.data);
+        } else {
+          Toast(success.data.msg)
+        }
+      })
+    }
+  });
+}
 
-export  {createCollectContract, createRentContract,getNumber,cancelContract}
+export  {createCollectContract, createRentContract,getNumber,cancelContract,trueName}
