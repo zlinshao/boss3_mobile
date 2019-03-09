@@ -20,6 +20,7 @@
       <div v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
         <div class="infoParent">
           <div class="title">{{item.param_map.address}}</div>
+          <div class="title">{{item.param_map.contract_number}}</div>
           <div class="owner">房东</div>
         </div>
         <div class="btnParent">
@@ -104,7 +105,11 @@
 
       },
       toDetail(item){
-
+        if(this.type===1){
+          this.$router.push({path: '/newCollectContract', query: {c_info:new ContractInfo(2,item.contract_number)}});//type 0为新签 1为作废重签 2为读草稿
+        }else{
+          this.$router.push({path: '/newRentContract', query: {c_info:new ContractInfo(2,item.contract_number)}});//type 0为新签 1为作废重签 2为读草稿
+        }
       },
       onSearch() {
         this.page++;

@@ -692,15 +692,15 @@
 
         //显示在页面的字段
         showForm: {
-          houseCertificateTypeTxt: '房屋所有权证',//房屋证明类别文字
-          canDecorationsTxt: '允许',//是否允许装修txt
+          houseCertificateTypeTxt: '',//房屋证明类别文字
+          canDecorationsTxt: '',//是否允许装修txt
           choosedNoOwnerFees: [],//已选择的非房东费用列表
-          noOwnerFeeTxt: '1、水费2、电费',//展示非房东费用的字段
-          canAddThingTxt: '允许',//是否允许添加新物txt
+          noOwnerFeeTxt: '',//展示非房东费用的字段
+          canAddThingTxt: '',//是否允许添加新物txt
           choosedRemarks: [],//已选择的备注条款
-          remarksTxt: '1、不得群租2、不得扰民3、不能随意搬动屋内家具家电',//备注条款展示文字
+          remarksTxt: '',//备注条款展示文字
           signPeoples: [], //签约人列表，包括已选的房东和其他，其他时显示代理人
-          signPeople: '123',//某房东姓名或者其他
+          signPeople: '',//某房东姓名或者其他
           showProxyInfo: false,//显示代理信息
         },
 
@@ -714,47 +714,47 @@
             id: '',
             name: '',
           },
-          sign_date: '2019-03-08',                //签约日期
-          month: '20',                    //收房月数
+          sign_date: '',                //签约日期
+          month: '',                    //收房月数
           day: '0',                      //收房天数
           is_agency: '0',                //是否渠道 0不是 1是
           agency_name: '',              //渠道名
           agency_price: '',             //渠道费
           agency_user_name: '',         //渠道人
           agency_phone: '',             //渠道手机号
-          begin_date: '2019-03-08',               //空置期开始日期
-          end_date: '2020-12-05',                 //合同结束日期
-          vacancy: '30',                  //空置期
-          end_date_vacant: '2019-04-06',          //空置期结束日期
-          pay_first_date: '2019-03-08',           //第一次付款时间
-          pay_second_date: '2019-03-08',          //第二次付款时间
-          price_arr: ['2000'],              //月单价
-          period_price_arr: ['20'],       //月单价周期
-          pay_way_arr: ['444'],            //付款方式
-          period_pay_arr: ['20'],         //付款方式周期
+          begin_date: '',               //空置期开始日期
+          end_date: '',                 //合同结束日期
+          vacancy: '0',                  //空置期
+          end_date_vacant: '',          //空置期结束日期
+          pay_first_date: '',           //第一次付款时间
+          pay_second_date: '',          //第二次付款时间
+          price_arr: [''],              //月单价
+          period_price_arr: [''],       //月单价周期
+          pay_way_arr: [''],            //付款方式
+          period_pay_arr: [''],         //付款方式周期
 
-          vacancy_way: '438',              //空置期安排方式
+          vacancy_way: '',              //空置期安排方式
           vacancy_other: '',            //空置期安排方式 随便填
-          warranty: '1',                 //保修期月
-          warranty_day: '20',             //保修期天
+          warranty: '',                 //保修期月
+          warranty_day: '',             //保修期天
           is_corp: 1,                   //是否公司单  0个人1公司
-          deposit: '2000',                  //押金
+          deposit: '',                  //押金
           property_payer: '1',           //物业费付款人
-          name: '甲方',                     //房东姓名
-          phone: '17626043187',                    //电话号码
+          name: '',                     //房东姓名
+          phone: '',                    //电话号码
           purchase_way: 509,            //支付方式
-          bank: '邮政储蓄银行',                     //银行名称
-          subbranch: '测试支行',                //支行名称
-          account_name: '测试账户名',             //帐户名称
-          account: '6215993620000592735',                  //帐号
-          relationship: '测试关系',             //房东与收款人关系
-          penalty: '1233',                  //违约金
+          bank: '',                     //银行名称
+          subbranch: '',                //支行名称
+          account_name: '',             //帐户名称
+          account: '',                  //帐号
+          relationship: '',             //房东与收款人关系
+          penalty: '',                  //违约金
           contract_number: '',      //合同编号
           screenshot_leader: [],        //领导截图 数组
-          photo: [["4223693"]],                    //合同照片 数组
+          photo: [[]],                    //合同照片 数组
           property_photo: [],               //房产证照片
           identity_photo: [],           //证件照片
-          remark: '1234',                   //备注
+          remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
           staff_name: '',               //开单人name
@@ -764,28 +764,29 @@
           old_contract_number: '',
           regenerate: '',
           /*作废重签*/
-          province: "江苏省",
-          city: "南京市",
-          district: "雨花台",
-          property_address: "测试路1号",
-          village_name: "测试小区",
-          room: "1",
-          hall: "1",
-          toilet: "1",
-          area: "80",
-          house_certificate: "1",
-          property_number: "A123456",
-          QiuQuan_number: "B123456",
-          not_owner_fee: {'0': 1, '1': 2},
-          other_fee_text: "其他费用20元",
-          allowed_decoration_to: "1",
-          allowed_add_to: "1",
+          province: "",
+          city: "",
+          district: "",
+          property_address: "",
+          village_name: "",
+          room: "",
+          hall: "",
+          toilet: "",
+          area: "",
+          house_certificate: "",
+          property_number: "",
+          QiuQuan_number: "",
+          not_owner_fee: {},
+          other_fee_text: "",
+          allowed_decoration_to: "",
+          allowed_add_to: "",
           staff_phone: "",
           pdf_scene: 1,
-          other_rule: {'0': 1, '1': 2, '2': 3},
-          signer_type: '1',//签约类型1产权 2代理
+          other_rule: {},
+          signer_type: '',//签约类型1产权 2代理
           partA_agents: '',//代理人信息
-          owner: [new HouseOwner('123', '341126199502023237', '17626043187', '3328'), new HouseOwner('房东2', '341126199502023237', '17626043187', '3328')],//房屋所有人HouseOwner类的列表
+          signer:'',
+          owner: [new HouseOwner()],//房屋所有人HouseOwner类的列表
           customerIds: '3328',
           cookie: '',
           /*以上是电子合同特有字段*/
@@ -828,14 +829,15 @@
         this.close_();
         this.dicts('');
       }
-
-    },
-    activated() {
       if (this.$route.query.c_info !== undefined) {
         let type = this.$route.query.c_info.type;
         this.curContractInfo = this.$route.query.c_info;
         this.form.regenerate = type;//0新签 1作废重签
       }
+      this.getContractNumber();
+    },
+    activated() {
+
       let count = sessionStorage.count;
       this.counts = count;
       if (count === '11') {
@@ -882,7 +884,7 @@
       }
       this.houseInfo();
       /*获取电子合同相关字段*/
-      this.getContractNumber();
+
       //获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
       if (item === null || item === undefined) return;
@@ -1029,6 +1031,7 @@
             } else {
               this.form.signer_type = 1;
               this.showForm.showProxyInfo = false;
+              this.form.signer=this.form.owner[index]
             }
             break;
         }
@@ -1412,7 +1415,7 @@
             this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.house = draft.house;
-
+            this.form.type=draft.type;
             this.form.sign_date = draft.sign_date;
             this.form.month = draft.month;
             this.form.day = draft.day === '0' ? '' : draft.day;

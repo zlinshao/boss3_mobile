@@ -1585,7 +1585,7 @@
               }
             }
             this.form.front_money = rent.front_money;
-            this.form.deposit = rent.deposit;
+            this.form.deposit = rent.deposit||0;
             this.form.deposit_payed = rent.deposit_payed ? rent.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
