@@ -79,7 +79,7 @@
         totalPages: 1,
         selectHide: false,
         curCustomerList:[],
-        curContractId:'',
+        curContractNumber:'',
         curContractTitle:'',
         columns: []
       }
@@ -93,7 +93,7 @@
       },
       onConfirm(value, index) {
         this.selectHide = true;
-        this.signTrue( this.curContractId,this.curContractTitle,this.curCustomerList[index].fadada_user_id);
+        this.signTrue( this.curContractNumber,this.curContractTitle,this.curCustomerList[index].fadada_user_id);
       },
       getStatusStr(item) {
         let str = '';
@@ -152,13 +152,13 @@
       sign(item) {
         let param = item.param_map;
         if (this.type === 1) {//收房
-          this.signTrue(item.id,item.title,param.signer.fadada_user_id)
+          this.signTrue(item.contract_number,item.title,param.signer.fadada_user_id)
         } else {
           if (param.customer_info.length === 1) {
-            this.signTrue(item.id,item.title,param.customer_info[0].fadada_user_id);
+            this.signTrue(item.contract_number,item.title,param.customer_info[0].fadada_user_id);
           }else{
             this.columns=[];
-            this.curContractId=item.id;
+            this.curContractNumber=item.contract_number;
             this.curContractTitle=item.title;
             this.curCustomerList=param.customer_info;
             for(let i=0;i<param.customer_info.length;i++){
@@ -168,9 +168,9 @@
           }
         }
       },
-      signTrue(contract_id,title,id) {
+      signTrue(contract_number,title,id) {
         this.$http.post(this.eurls+'fdd/contract/manual', {
-          contract_id:contract_id,
+          contract_id:contract_number,
           title: title,
           customer_id: id,
         }, success => {
