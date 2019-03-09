@@ -59,7 +59,7 @@ function trueName(item) {
       }).then(success => {
         if (success.data.code === '40010') {
           dd.biz.util.openLink({
-            url:"success.data.data.data",//要打开链接的地址
+            url:success.data.data.data,//要打开链接的地址
             onSuccess : function(result) {
               alert(JSON.stringify(result))
             },
