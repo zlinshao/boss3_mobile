@@ -1,6 +1,7 @@
 <template>
   <div>
     <van-search
+      v-if="false"
       v-model="searchInfo"
       placeholder="地址/房东/租客"
       show-action
@@ -19,13 +20,19 @@
       @load="onSearch">
       <div v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
         <div class="infoParent">
-          <div class="title">{{item.param_map.address}}</div>
-          <div class="title">{{item.param_map.contract_number}}</div>
-          <div class="owner">房东</div>
+          <div class="title">
+            {{type===1?item.param_map.house!==undefined?item.param_map.house.name:'':item.param_map.address}}
+          </div>
+          <span class="owner">{{item.param_map.name}}</span>
+          <span class="owner" style="color: #e4393c;">{{getStatusStr(item)}}</span>
         </div>
         <div class="btnParent">
-          <van-button class="btn send" size="small" @click="send(item)">发送</van-button>
-          <van-button class="btn sign" size="small" @click="sign(item)">签署</van-button>
+          <van-button v-if="item.contract_status===0||item.contract_status===1" class="btn send" size="small"
+                      @click="send(item)" @click.stop>发送
+          </van-button>
+          <van-button v-if="item.contract_status===0||item.contract_status===1" class="btn sign" size="small"
+                      @click="sign(item)" @click.stop>签署
+          </van-button>
         </div>
       </div>
 
@@ -38,16 +45,24 @@
         <div class="choose" @click="rent">租房</div>
       </div>
     </van-popup>
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @cancel="onCancel"
+        @confirm="onConfirm"/>
+    </van-popup>
   </div>
 </template>
 
 <script>
-  export  class ContractInfo{
-    constructor(type,number){
-      this.type=type;
-      this.number=number;
+  export class ContractInfo {
+    constructor(type, number) {
+      this.type = type;
+      this.number = number;
     }
   }
+
   export default {
     name: "eContract",
     data() {
@@ -56,27 +71,60 @@
         searchInfo: '',//搜索内容
         finished: false,
         loading: false,
-        type:1,//1收2租
+        type: 1,//1收2租
         show: false,//是否显示收租房弹框
         eurls: globalConfig.e_server,
         page: 1,
         limit: 10,
-        totalPages: 1
+        totalPages: 1,
+        selectHide: false,
+        curCustomerList:[],
+        curContractId:'',
+        curContractTitle:'',
+        columns: []
       }
     },
     mounted() {
       this.getData();
     },
     methods: {
+      onCancel() {
+        this.selectHide = true;
+      },
+      onConfirm(value, index) {
+        this.selectHide = true;
+        this.signTrue( this.curContractId,this.curContractTitle,this.curCustomerList[index].fadada_user_id);
+      },
+      getStatusStr(item) {
+        let str = '';
+        switch (item.contract_status) {
+          case 0:
+            str = '等待签署';
+            break;
+          case 1:
+            str = '等待重签';
+            break;
+          case 2:
+            str = '已签署';
+            break;
+          case 3:
+            str = '已作废';
+            break;
+          case 4:
+            str = '已归档';
+            break;
+        }
+        return str;
+      },
       getData() {
         if (this.page > this.totalPages) return;
         this.loading = true;
         let per = JSON.parse(sessionStorage.personal);
         let staff_id = per.id;
         let app = this;
-        this.$http.get(this.eurls + 'fdd/contract/index?staff_id=' + staff_id + '&page=' + this.page + '&limit=' + this.limit+"&type="+this.type).then(res => {
+        this.$http.get(this.eurls + 'fdd/contract/index?staff_id=' + staff_id + '&page=' + this.page + '&limit=' + this.limit + "&type=" + this.type).then(res => {
           app.loading = false;
-          if(res.data.code==='40001'){
+          if (res.data.code === '40001') {
             app.finished = true;
             return
           }
@@ -94,7 +142,7 @@
           if (this.page === 1) {
             app.list = res.data.data.data;
           } else {
-            app.list=app.list.concat(res.data.data.data);
+            app.list = app.list.concat(res.data.data.data);
           }
         })
       },
@@ -102,13 +150,46 @@
 
       },
       sign(item) {
-
+        let param = item.param_map;
+        if (this.type === 1) {//收房
+          this.signTrue(item.id,item.title,param.signer.fadada_user_id)
+        } else {
+          if (param.customer_info.length === 1) {
+            this.signTrue(item.id,item.title,param.customer_info[0].fadada_user_id);
+          }else{
+            this.columns=[];
+            this.curContractId=item.id;
+            this.curContractTitle=item.title;
+            this.curCustomerList=param.customer_info;
+            for(let i=0;i<param.customer_info.length;i++){
+              this.columns.push(param.customer_info[i].name)
+            }
+            this.selectHide=true;
+          }
+        }
       },
-      toDetail(item){
-        if(this.type===1){
-          this.$router.push({path: '/newCollectContract', query: {c_info:new ContractInfo(2,item.contract_number)}});//type 0为新签 1为作废重签 2为读草稿
-        }else{
-          this.$router.push({path: '/newRentContract', query: {c_info:new ContractInfo(2,item.contract_number)}});//type 0为新签 1为作废重签 2为读草稿
+      signTrue(contract_id,title,id) {
+        this.$http.post(this.eurls+'fdd/contract/manual', {
+          contract_id:contract_id,
+          title: title,
+          customer_id: id,
+        }, success => {
+          window.open(success.data.data)
+        })
+      },
+      toDetail(item) {
+        let type = 0;
+        if (item.contract_status === 0) {
+          type = 0;
+        } else if (item.contract_status === 1) {
+          type = 1;
+        } else {
+          return;
+        }
+        if (this.type === 1) {
+          this.$router.push({path: '/newCollectContract', query: {c_info: new ContractInfo(2, item.contract_number)}});//type 0为新签 1为作废重签 2为读草稿
+        } else {
+          this.$router.push({path: '/newRentContract', query: {c_info: new ContractInfo(2, item.contract_number)}});//type 0为新签 1为作废重签 2为读草稿
         }
       },
       onSearch() {
@@ -117,8 +198,8 @@
       },
       //更改tab
       changeTab(index, title) {
-        this.type=index+1;
-        this.page=1;
+        this.type = index + 1;
+        this.page = 1;
         this.getData();
       },
       //显示选择收租房弹框
@@ -127,11 +208,11 @@
       },
       //添加收房合同
       collect() {
-        this.$router.push({path: '/newCollectContract', query: {c_info:new ContractInfo(0)}});//type 0为新签 1为作废重签 2为读草稿
+        this.$router.push({path: '/newCollectContract', query: {c_info: new ContractInfo(0)}});//type 0为新签 1为作废重签 2为读草稿
       },
       //添加租房合同
       rent() {
-        this.$router.push({path: '/newRentContract', query: {c_info:new ContractInfo(0)}});//type 0为新签 1为作废重签 2为读草稿
+        this.$router.push({path: '/newRentContract', query: {c_info: new ContractInfo(0)}});//type 0为新签 1为作废重签 2为读草稿
       }
     }
   }
@@ -141,7 +222,7 @@
   .new {
     position: fixed;
     bottom: 4em;
-    right: 4em;
+    left: 40%;
   }
 
   .choose {
@@ -171,12 +252,12 @@
     background-color: white;
 
     .infoParent {
-      text-align: center;
       margin-left: 1em;
     }
 
     .title {
-      font-size: 1.2em;
+      font-size: 1em;
+      margin-bottom: .5em;
     }
 
     .owner {

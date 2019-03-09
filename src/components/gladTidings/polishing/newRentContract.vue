@@ -776,7 +776,10 @@
 
 
         form: {
-
+          house:{
+            name:'',
+            id:'',
+          },
           /*下面是转租独有*/
           trans_type: '0',//转租类型、默认公司 ,1是个人
 
@@ -1027,6 +1030,27 @@
     },
     methods: {
       /*以下是电子合同新加*/
+      getEntityForIndex(entitys,id) {
+        for (let i = 0; i < entitys.length; i++) {
+          let entity = entitys[i];
+          if(id===entity.id){
+            return entity;
+          }
+        }
+        return null;
+      },
+      getListFromList(entitys,ids) {
+        let list = [];
+        for (let i = 0; i < entitys.length; i++) {
+          let entity = entitys[i];
+          for(let j=0;j<ids.length;j++){
+            if(entity.id===ids[j]){
+              list.push(entity)
+            }
+          }
+        }
+        return list;
+      },
       getContractNumber() {
         //获取业务员对应城市
         if (this.curContractInfo.type !== 2) {

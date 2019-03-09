@@ -20,9 +20,7 @@
           label="合同编号"
           type="text"
           placeholder="请填写收房合同编号"
-          icon="clear"
           readonly
-          @click-icon="form.contract_number = ''"
           required>
         </van-field>
         <van-field
@@ -93,6 +91,15 @@
             @click-icon="form.owner[index].phone= ''"
             required>
           </van-field>
+          <van-field
+          v-model="form.owner[index].phone"
+          label="实名认证"
+          type="text"
+          class="number"
+          readonly
+          placeholder="点击进行实名认证"
+          required>
+        </van-field>
         </div>
         <div @click="addNewHouseOwner" class="addInput bottom">
           +添加附属房东
@@ -637,7 +644,7 @@
       this.name = name || '';
       this.idcard = idcard || '';
       this.phone = phone || '';
-      this.fadada_user_id = userid || ''
+      this.fadada_user_id = 'AD4D9D5FFA9C4B0500DE29F99DE1CF5DB8EBB9DA925BA67D9860FC575697ADDAEC983C8F76C7F49A1A3B0D8593162E5C';
     }
   }
 
@@ -762,7 +769,7 @@
           /*以下是电子合同特有字段*/
           /*作废重签*/
           old_contract_number: '',
-          regenerate: '',
+          regenerate: '0',
           /*作废重签*/
           province: "",
           city: "",
@@ -837,7 +844,7 @@
       this.getContractNumber();
     },
     activated() {
-
+      console.log(111)
       let count = sessionStorage.count;
       this.counts = count;
       if (count === '11') {
@@ -887,6 +894,7 @@
 
       //获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
+      //console.log(sessionStorage.getItem('item'))
       if (item === null || item === undefined) return;
       let house_res = item.house_res;
       if (house_res === null || house_res === undefined) return;
@@ -980,6 +988,27 @@
       //添加附属房东信息
       addNewHouseOwner() {
         this.form.owner.push(new HouseOwner())
+      },
+      getEntityForIndex(entitys,id) {
+        for (let i = 0; i < entitys.length; i++) {
+          let entity = entitys[i];
+          if(id===entity.id){
+            return entity;
+          }
+        }
+        return null;
+      },
+      getListFromList(entitys,ids) {
+        let list = [];
+        for (let i = 0; i < entitys.length; i++) {
+          let entity = entitys[i];
+         for(let j=0;j<ids.length;j++){
+           if(entity.id===ids[j]){
+             list.push(entity)
+           }
+         }
+        }
+        return list;
       },
       getNameFromList(entitys) {
         let names = [];
@@ -1329,7 +1358,7 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
-          let url = this.form.draft === '1' ? 'fdd/contract/save' : this.form.regenerate === 0||this.form.regenerate === 2  ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
+          let url = this.form.draft === 1 ? 'fdd/contract/save' : this.form.regenerate === 0||this.form.regenerate === 2  ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
           this.$http.post(this.eurls + url, this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -1406,6 +1435,8 @@
 
       // 草稿
       manuscript() {
+        let app=this;
+
         this.form.processable_id = '';
         this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.contract_number).then((res) => {
           if (res.data.code === '40000') {
@@ -1418,7 +1449,7 @@
             this.form.type=draft.type;
             this.form.sign_date = draft.sign_date;
             this.form.month = draft.month;
-            this.form.day = draft.day === '0' ? '' : draft.day;
+            this.form.day =draft.day;
 
             this.form.begin_date = draft.begin_date;
             this.form.end_date = draft.end_date;
@@ -1504,13 +1535,35 @@
             this.identity_photos = data.identity_photo || {};
 
             this.form.remark = draft.remark;
-            if (val !== '' && val.type === 2) {
+            if (this.form.type === 2) {
               this.form.staff_id = draft.staff_id;
               this.form.staff_name = draft.staff_name;
               this.form.staff_phone = draft.phone;
               this.form.department_id = draft.department_id;
               this.form.department_name = draft.department_name;
             }
+            this.form.house_certificate=draft.house_certificate;
+            this.showForm.houseCertificateTypeTxt=this.getEntityForIndex(this.houseCertificateTypes,this.form.house_certificate).name;
+            this.form.property_number=draft.property_number;
+            this.form.QiuQuan_number=draft.QiuQuan_number;
+            this.form.owner=draft.owner;
+            this.form.signer=draft.signer;
+            this.showForm.signPeople=draft.signer.name;
+            this.form.not_owner_fee=draft.not_owner_fee;
+            let not_owner_fee_choosed_ids=[];
+            Object.keys( this.form.not_owner_fee).forEach(function (key) {
+              not_owner_fee_choosed_ids.push(key)
+            });
+           this.showForm.choosedNoOwnerFees=this.getListFromList(this.noOwnerFees,not_owner_fee_choosed_ids);
+            this.changeNoPropertyFee()
+            this.form.other_fee_text=draft.other_fee_text;
+            this.form.allowed_decoration_to=draft.allowed_decoration_to;
+            this.showForm.canDecorationsTxt=this.getEntityForIndex(this.canDecorations,this.form.allowed_decoration_to).name;
+            this.form.allowed_add_to=draft.allowed_add_to;
+            this.showForm.canAddThingTxt=this.getEntityForIndex(this.canAddThings,this.form.allowed_add_to).name;
+            this.showForm.choosedRemarks=this.getListFromList(this.remarks,draft.other_rule);
+            this.changeContracts()
+
           } else {
             this.form.id = '';
           }
@@ -1523,7 +1576,6 @@
         setTimeout(() => {
           this.isClear = false;
         });
-        console.log(this.showForm.choosedNoOwnerFees)
 
         $('.imgItem').remove();
         this.userInfo(true);

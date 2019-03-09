@@ -1,4 +1,4 @@
-let url = "http://192.168.20.27/ewal_contract/public/";
+let url = globalConfig.e_server;
 import Vue from 'vue';
 
 let getNumber=function (type,city_id,success,error) {
