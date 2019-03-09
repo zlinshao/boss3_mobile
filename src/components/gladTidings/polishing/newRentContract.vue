@@ -3,20 +3,20 @@
     <div class="main" id="main">
       <van-cell-group>
         <div class="rent_types">
-          <div  class="label">租房类型</div>
-        <van-radio-group v-model="form.type">
-          <van-radio name="1">新租</van-radio>
-          <van-radio name="3">续租</van-radio>
-          <van-radio name="2">转租</van-radio>
-          <van-radio name="4">调租</van-radio>
-          <van-radio name="0">未收先租确定</van-radio>
-        </van-radio-group>
+          <div class="label">租房类型</div>
+          <van-radio-group v-model="form.type">
+            <van-radio name="1">新租</van-radio>
+            <van-radio name="3">续租</van-radio>
+            <van-radio name="2">转租</van-radio>
+            <van-radio name="5">调租</van-radio>
+            <van-radio name="0">未收先租确定</van-radio>
+          </van-radio-group>
         </div>
         <div class="rent_types" v-if="form.type==='3'">
           <div class="label">转租类型</div>
           <van-radio-group v-model="form.trans_type">
-          <van-radio name="0">公司</van-radio>
-          <van-radio name="1">个人</van-radio>
+            <van-radio name="0">公司</van-radio>
+            <van-radio name="1">个人</van-radio>
           </van-radio-group>
         </div>
         <van-field
@@ -39,7 +39,7 @@
 
 
         <!--下面是未收先租确定信息-->
-        <div class="crop_name noBorder" v-if="form.type==='5'">
+        <div class="crop_name noBorder" v-if="form.type==='0'">
           <van-field
             v-model="form.oldHouseName"
             label="原喜报地址"
@@ -55,64 +55,64 @@
         <!--上面是未收先租确定信息-->
 
         <!--下面是调房信息-->
-        <van-cell-group style="margin-bottom: 12px;" v-if="form.type==='4'">
-        <div class="crop_name noBorder">
+        <van-cell-group style="margin-bottom: 12px;" v-if="form.type==='5'">
+          <div class="crop_name noBorder">
+            <van-field
+              v-model="form.old_house_name"
+              label="原房屋地址"
+              type="text"
+              readonly
+              @click="searchSelect(1)"
+              placeholder="请选择原房屋地址"
+              required>
+            </van-field>
+            <div class="titleRed" v-if="form.old_corp_name">{{form.old_corp_name}}</div>
+            <div class="showBorder" v-else></div>
+          </div>
           <van-field
-            v-model="form.old_house_name"
-            label="原房屋地址"
+            v-model="form.old_staff_name"
+            label="原开单人"
+            type="text"
+            disabled
+            placeholder="原房屋原开单人已禁用">
+          </van-field>
+          <van-field
+            class="disabling"
+            :class="{'payWay': payStatus && form.old_pay_way_arr.length > 1}"
+            @click="payWayClick(1)"
+            v-model="form.old_pay_way_arr[0]"
+            label="原付款方式"
             type="text"
             readonly
-            @click="searchSelect(1)"
-            placeholder="请选择原房屋地址"
-            required>
+            icon="arrow"
+            placeholder="原房屋付款方式已禁用">
           </van-field>
-          <div class="titleRed" v-if="form.old_corp_name">{{form.old_corp_name}}</div>
-          <div class="showBorder" v-else></div>
-        </div>
-        <van-field
-          v-model="form.old_staff_name"
-          label="原开单人"
-          type="text"
-          disabled
-          placeholder="原房屋原开单人已禁用">
-        </van-field>
-        <van-field
-          class="disabling"
-          :class="{'payWay': payStatus && form.old_pay_way_arr.length > 1}"
-          @click="payWayClick(1)"
-          v-model="form.old_pay_way_arr[0]"
-          label="原付款方式"
-          type="text"
-          readonly
-          icon="arrow"
-          placeholder="原房屋付款方式已禁用">
-        </van-field>
-        <div class="accordion" v-if="payStatus && form.old_pay_way_arr.length > 1">
-          <div class="accordion" v-if="priceStatus && form.old_pay_way_arr.length > 1">
-            <div v-for="(key,index) in form.old_pay_way_arr" v-show="index !== 0">{{key}}</div>
+          <div class="accordion" v-if="payStatus && form.old_pay_way_arr.length > 1">
+            <div class="accordion" v-if="priceStatus && form.old_pay_way_arr.length > 1">
+              <div v-for="(key,index) in form.old_pay_way_arr" v-show="index !== 0">{{key}}</div>
+            </div>
           </div>
-        </div>
-        <van-field
-          class="disabling"
-          :class="{'payWay': priceStatus && form.old_price.length > 1}"
-          v-model="form.old_price[0]"
-          @click="payWayClick(2)"
-          label="月单价"
-          type="text"
-          readonly
-          icon="arrow"
-          placeholder="月单价已禁用">
-        </van-field>
-        <div class="accordion" v-if="priceStatus && form.old_price.length > 1">
-          <div v-for="(key,index) in form.old_price" v-show="index !== 0">{{key}}</div>
-        </div>
-        <van-field
-          v-model="form.old_front_money"
-          label="定金"
-          type="text"
-          disabled
-          placeholder="原房屋定金已禁用">
-        </van-field>
+          <van-field
+            class="disabling"
+            :class="{'payWay': priceStatus && form.old_price.length > 1}"
+            v-model="form.old_price[0]"
+            @click="payWayClick(2)"
+            label="月单价"
+            type="text"
+            readonly
+            icon="arrow"
+            placeholder="月单价已禁用">
+          </van-field>
+          <div class="accordion" v-if="priceStatus && form.old_price.length > 1">
+            <div v-for="(key,index) in form.old_price" v-show="index !== 0">{{key}}</div>
+          </div>
+          <van-field
+            v-model="form.old_front_money"
+            label="定金"
+            type="text"
+            disabled
+            placeholder="原房屋定金已禁用">
+          </van-field>
         </van-cell-group>
         <!--上面是调租的原房屋-->
 
@@ -415,27 +415,28 @@
         <div class="changes" v-for="(item,index) in form.customer_info">
           <div class="paddingTitle">
             <span>租客<span v-if="form.customer_info.length > 1">({{index + 1}})</span></span>
-            <span class="colors" v-if="form.customer_info.length > 1" @click="form.customer_info.splice(index)">删除</span>
+            <span class="colors" v-if="form.customer_info.length > 1"
+                  @click="form.customer_info.splice(index)">删除</span>
           </div>
-        <van-field
-          v-model="form.customer_info[index].name"
-          label="客户姓名"
-          type="text"
-          placeholder="请填写客户姓名"
-          icon="clear"
-          @click-icon="form.customer_info[index].name = ''"
-          required>
-        </van-field>
-        <van-field
-          v-model="form.customer_info[index].phone"
-          label="联系方式"
-          type="text"
-          class="number"
-          placeholder="请填写联系方式"
-          icon="clear"
-          @click-icon="form.customer_info[index].phone= ''"
-          required>
-        </van-field>
+          <van-field
+            v-model="form.customer_info[index].name"
+            label="客户姓名"
+            type="text"
+            placeholder="请填写客户姓名"
+            icon="clear"
+            @click-icon="form.customer_info[index].name = ''"
+            required>
+          </van-field>
+          <van-field
+            v-model="form.customer_info[index].phone"
+            label="联系方式"
+            type="text"
+            class="number"
+            placeholder="请填写联系方式"
+            icon="clear"
+            @click-icon="form.customer_info[index].phone= ''"
+            required>
+          </van-field>
           <van-field
             v-model="form.customer_info[index].idcard"
             label="租客身份证号"
@@ -686,8 +687,8 @@
         @confirm="onSelectConfirm"></van-picker>
     </van-popup>
 
-    <pdf-dialog  style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000"
-                 ref="pdf"></pdf-dialog>
+    <pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000"
+                ref="pdf"></pdf-dialog>
     <!--选择备注条款列表-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseRemark" position="bottom"
                :overlay="true">
@@ -704,29 +705,31 @@
   import {Toast, Dialog} from 'vant';
   import * as contractApi from './contractCreater'
   import PdfDialog from '@/components/common/pdf/PdfDialog'
-  import {CommonIdNameEntity,HouseOwner} from  './newCollectContract'
+  import {CommonIdNameEntity, HouseOwner} from './newCollectContract'
+  import {ContractType} from './eContract'
 
   export default {
     name: "index",
-    components: {UpLoad, Toast, ChooseTime,PdfDialog},
+    components: {UpLoad, Toast, ChooseTime, PdfDialog},
     data() {
       return {
         /*电子合同新加*/
-        eshow:false,//是否显示选择弹框
-        isShowChooseRemark:false,//是否显示备注弹框
-
-        curDatas:[],//选择弹框元数据
-        rentUses:[new CommonIdNameEntity('1','自住'),new CommonIdNameEntity('2','办公使用'),new CommonIdNameEntity('3','其他用途')],
-        rentUseTxt:'',//租赁用途文字
+        eshow: false,//是否显示选择弹框
+        isShowChooseRemark: false,//是否显示备注弹框
+        curContractInfo: '',
+        curDatas: [],//选择弹框元数据
+        rentUses: [new CommonIdNameEntity('1', '自住'), new CommonIdNameEntity('2', '办公使用'), new CommonIdNameEntity('3', '其他用途')],
+        rentUseTxt: '',//租赁用途文字
         //合同备注条款数据
         remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'), new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'), new CommonIdNameEntity('3', '甲方需配合乙方办理居住证等相关证件'), new CommonIdNameEntity('4', '乙方将能够通过合法途径获取的租客信息告知甲方'), new CommonIdNameEntity('5', '非甲方及房屋原因导致的安全责任事故与甲方无关'), new CommonIdNameEntity('6', '同等条件下，房东享有签约权(从乙方处承租）')],
         choosedRemarks: [],//已选择的备注条款
         remarksTxt: '',//备注条款展示文字
-        showOtherUse:false,//显示其他用途输入框
-        showWholeFee:false,//整租时，显示水费等费用
-        rentTypes:[new CommonIdNameEntity('1','整租'),new CommonIdNameEntity('2','合租')],
-        rentTypeTxt:'',//租赁用途文字
-        payAccountList:[],//收款账户列表元数据
+        showOtherUse: false,//显示其他用途输入框
+        showWholeFee: false,//整租时，显示水费等费用
+        rentTypes: [new CommonIdNameEntity('1', '整租'), new CommonIdNameEntity('2', '合租')],
+        rentTypeTxt: '',//租赁用途文字
+        payAccountList: [],//收款账户列表元数据
+
         /*电子合同新加*/
         timeModule: false,              //日期
         formatData: {
@@ -737,6 +740,7 @@
         },
         haveInHand: true,
         urls: globalConfig.server,
+        eurls: globalConfig.e_server,
         isClear: false,                 //删除图片
         picStatus: 'success',
 
@@ -770,10 +774,11 @@
         priceStatus: false,
         /*上面是调房独有*/
 
+
         form: {
 
           /*下面是转租独有*/
-          trans_type:'0',//转租类型、默认公司 ,1是个人
+          trans_type: '0',//转租类型、默认公司 ,1是个人
 
           /*上面是转租独有*/
 
@@ -788,7 +793,7 @@
           /*上面是调房独有*/
 
           /*下面是未收先租确定独有*/
-          oldHouseName:'',
+          oldHouseName: '',
           /*上面是未收先租确定独有*/
 
 
@@ -802,34 +807,34 @@
           house_id: '',                 //房屋地址id
           discount: 0,                  //让价总金额
 
-          month: '',                    //租房月数
-          day: '',                      //租房天数
-          sign_date: '',                //签约开始日期
-          end_date: '',                 //签约结束日期
-          begin_date: '',               //合同开始日期
-          price_arr: [''],              //月单价
-          period_price_arr: [''],       //月单价周期
+          month: '12',                    //租房月数
+          day: '0',                      //租房天数
+          sign_date: '2019-03-09',                //签约开始日期
+          end_date: '2020-03-08',                 //签约结束日期
+          begin_date: '2019-03-09',               //合同开始日期
+          price_arr: ['1200'],              //月单价
+          period_price_arr: ['6'],       //月单价周期
 
-          pay_way_bet: '',              //付款方式 押
+          pay_way_bet: '1',              //付款方式 押
 
-          period_pay_arr: [''],         //付款方式周期
-          pay_way_arr: [''],            //付款方式 付
+          period_pay_arr: ['6'],         //付款方式周期
+          pay_way_arr: ['6'],            //付款方式 付
 
-          front_money: '',              //定金
-          deposit: '',                  //押金
-          rent_money: '',               //租金
-          deposit_payed: '',            //已收押金
-          money_sum: '',                //总金额
-          money_sep: [''],              //分金额
-          real_pay_at: [''],            //实际收款时间
+          front_money: '1200',              //定金
+          deposit: '1000',                  //押金
+          rent_money: '1200',               //租金
+          deposit_payed: '10000',            //已收押金
+          money_sum: '10000',                //总金额
+          money_sep: ['1200'],              //分金额
+          real_pay_at: ['2019-03-09'],            //实际收款时间
           money_way: [''],              //汇款帐户
           account_id: [],               //汇款帐户ID
-          memo: '',                     //收款备注
+          memo: 'dsadasda',                     //收款备注
 
           is_other_fee: 0,
-          other_fee: '',
-          other_fee_name: '',
-          penalty: '',                     //违约金
+          other_fee: '111',
+          other_fee_name: 'dsad',
+          penalty: '666',                     //违约金
 
           is_agency: '',                //客户来源    0个人1渠道
           agency_name: '',              //渠道名
@@ -842,24 +847,27 @@
 
           is_receipt: 1,                //1是 2不是
           receipt: [''],                //收据编号
-          property_payer: '',           //物业费
-          retainage_date: '',           //尾款补齐时间
+          property_payer: '120',           //物业费
+          retainage_date: '2019-03-09',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
           screenshot_leader: [],        //领导截图 数组
           screenshot: [],               //凭证截图 数组
           deposit_photo: [],            //押金收条 数组
           photo: [],                    //合同照片 数组
-          remark: '',                   //备注
+          remark: 'dad',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
           /*以下是电子合同独特字段*/
           /*作废重签*/
-          old_contract_number:'',
-          regenerate:'',
+          old_contract_number: '',
+          regenerate: '',
           /*作废重签*/
+          bank: '',
+          account_name: '',
+          account: '',
           province: "江苏",
           city: "南京",
           district: "建邺",
@@ -880,9 +888,9 @@
           staff_phone: "18796005530",
           pdf_scene: 2,
           emergency_phone: "18796005530",
-          customer_info: [new HouseOwner('123','341126199502023237','17626043187','3328')],//房屋所有人HouseOwner类的列表
+          customer_info: [new HouseOwner('123', '341126199502023237', '17626043187', '3328')],//房屋所有人HouseOwner类的列表
           other_rule: {},
-          cookie:'',
+          cookie: '',
           /*以上是电子合同独特字段*/
         },
         screenshots: {},
@@ -942,6 +950,12 @@
       }
     },
     activated() {
+      if (this.$route.query.c_info !== undefined) {
+        let type = this.$route.query.c_info.type;
+        this.curContractInfo = this.$route.query.c_info;
+        console.log('赋值'+type);
+        this.form.regenerate = type;//0新签 1作废重签
+      }
       let count = sessionStorage.count;
       this.counts = count;
       console.log(sessionStorage.personal);
@@ -1009,26 +1023,25 @@
       this.form.toilet = house_types[2];//卫
       this.form.area = house_res.area;//面积
       /*获取电子合同相关字段*/
-      console.log(this.$route.query);
-      this.form.regenerate=this.$route.query.type;//0新签 1作废重签
+
     },
     methods: {
       /*以下是电子合同新加*/
       getContractNumber() {
         //获取业务员对应城市
-        this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
-          //获取合同编号
-          //if (sessionStorage.getItem('zf_number') === null) {
+        if (this.curContractInfo.type !== 2) {
+          this.userInfo(true);
+          this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
             contractApi.getNumber(2, res.data.city_id, number => {
               this.setContractNumber(number);
-             // sessionStorage.setItem('zf_number', number);
             }, error => {
               Toast(error)
             });
-          // } else {
-          //   this.setContractNumber(sessionStorage.getItem('zf_number'));
-          // }
-        });
+          });
+        } else {//获取页面带过来的合同编号
+          this.form.contract_number = this.curContractInfo.number;
+          this.manuscript();
+        }
       },
       previewPdf() {
         contractApi.cancelContract(this.form.contract_number, success => {
@@ -1066,14 +1079,14 @@
         this.eshow = false;//关闭弹框
         switch (this.curDatas) {
           case this.rentUses://选择租赁用途
-            this.rentUseTxt=value;
-            this.showOtherUse=index===this.rentUses.length-1;
-            this.form.use_type=this.rentUses[index].id;
+            this.rentUseTxt = value;
+            this.showOtherUse = index === this.rentUses.length - 1;
+            this.form.use_type = this.rentUses[index].id;
             break;
           case this.rentTypes:
-            this.showWholeFee=index===this.rentTypes.length-1;
-            this.form.rent_type=this.rentTypes[index].id;
-            this.rentTypeTxt=value;
+            this.showWholeFee = index === this.rentTypes.length - 1;
+            this.form.rent_type = this.rentTypes[index].id;
+            this.rentTypeTxt = value;
             break;
         }
       },
@@ -1111,10 +1124,10 @@
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
-          this.form.staff_phone=per.phone;
+          this.form.staff_phone = per.phone;
           this.form.department_id = per.department_id;
           this.form.department_name = per.department_name;
-          this.form.cookie=per.session_id;
+          this.form.cookie = per.session_id;
         }
       },
       dicts(val) {
@@ -1165,10 +1178,10 @@
         switch (val) {
           case 1://选择原房屋
             switch (this.form.type) {
-              case "4"://调
+              case "5"://调
                 this.$router.push({path: '/collectHouse', query: {type: 'report'}});
                 break;
-              case "5"://未收先租
+              case "0"://未收先租
                 this.$router.push({path: '/collectHouse', query: {type: 'is_nrcy'}});
                 break;
             }
@@ -1178,16 +1191,16 @@
               case "1"://新
                 this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
                 break;
-              case "2"://续
+              case "3"://续
                 this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
                 break;
-              case "3"://转
+              case "2"://转
                 this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
                 break;
-              case "4"://调
+              case "5"://调
                 this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
                 break;
-              case "5"://未收先租
+              case "0"://未收先租
                 this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
                 break;
             }
@@ -1441,27 +1454,38 @@
               this.form[key] = this.filter_array(this.form[key])
             }
           }
-          let url=this.form.regenerate==='0'?'fdd/contract/saveAndSend':'fdd/contract/reset';//0代表新签 1代表作废重签
-          this.$http.post(this.urls + url, this.form).then((res) => {
+          console.log(this.form.regenerate)
+          let url = this.form.draft === '1' ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
+          if (this.form.money_way.length !== 0) {
+            let bankInfo = this.form.money_way[0];
+            let banks = bankInfo.split(' ');
+            this.form.bank = banks[2];
+            this.form.account_name = banks[1];
+            this.form.account = banks[0];
+          }
+
+          this.$http.post(this.eurls + url, this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
-            if (res.data.code === '50210' || res.data.code === '50230') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              if (res.data.data.id) {
-                this.routerDetail(res.data.data.id)
+            if (res.data.code === '40000') {
+              if (this.form.draft === '1') {
+                this.form.id = res.data.data.id;
+                if (receipt.length === 0) {
+                  this.form.receipt = [];
+                  this.form.receipt.push(this.receiptDate);
+                }
+                this.form.day = this.form.day === '0' ? '' : this.form.day;
+                Toast.success(res.data.msg)
               } else {
-                this.routerDetail(res.data.data.data.id)
+                Toast.success(res.data.msg);
+                this.close_();
+                $('.imgItem').remove();
+                if (res.data.data.id) {
+                  this.routerDetail(res.data.data.id)
+                } else {
+                  this.routerDetail(res.data.data.data.id)
+                }
               }
-            } else if (res.data.code === '50220') {
-              this.form.id = res.data.data.id;
-              if (receipt.length === 0) {
-                this.form.receipt = [];
-                this.form.receipt.push(this.receiptDate);
-              }
-              this.form.day = this.form.day === '0' ? '' : this.form.day;
-              Toast.success(res.data.msg)
             } else {
               Toast(res.data.msg);
             }
@@ -1515,7 +1539,7 @@
                 }
               }
             })
-          }else  if (t.type === 'is_nrcy') {
+          } else if (t.type === 'is_nrcy') {
             this.form.oldHouseName = val.house_name;
             this.form.old_corp_name = val.old_corp_name;
             this.form.contract_id_rent = val.id;
@@ -1605,11 +1629,11 @@
             }
             this.form.idtype = rent.idtype;
             this.form.idcard = rent.idcard;
-            for (let j = 0; j < this.prove_all.length; j++) {
-              if (this.prove_all[j].id === rent.idtype) {
-                this.cardName = this.prove_all[j].dictionary_name;
-              }
-            }
+            // for (let j = 0; j < this.prove_all.length; j++) {
+            //   if (this.prove_all[j].id === rent.idtype) {
+            //     this.cardName = this.prove_all[j].dictionary_name;
+            //   }
+            // }
             this.other_fee_status = rent.is_other_fee === 1 ? true : false;
             this.form.other_fee_name = rent.other_fee_name;
             this.form.other_fee = rent.other_fee;
@@ -1636,7 +1660,7 @@
           let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;
           this.form.staff_name = val.staff_name;
-          this.form.staff_phone=val.phone;
+          this.form.staff_phone = val.phone;
           this.form.department_id = val.depart_id;
           this.form.department_name = val.depart_name;
           this.isValue1 = val.activeRevise;
@@ -1657,23 +1681,13 @@
 
       rentDetail(val) {
         this.form.processable_id = '';
-        let type;
-        if (val !== '') {
-          type = 'bulletin/rent/' + val.newID;
-          if (val.type === 2) {
-            this.form.processable_id = val.ids;
-          } else {
-            this.userInfo(true);
-          }
-        } else {
-          this.userInfo(true);
-          type = 'bulletin/rent?type=1';
-        }
-        this.$http.get(this.urls + type).then((res) => {
-          if (res.data.code === '50220') {
+        this.userInfo(true);
+        this.$http.get(this.eurls + 'fdd/contract/read/' + this.contract_number).then((res) => {
+          if (res.data.code === '40000') {
             this.isClear = false;
+
             let data = res.data.data;
-            let draft = res.data.data.draft_content;
+            let draft = res.data.data.param_map;
 
             this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
@@ -1755,7 +1769,7 @@
             this.form.agency_phone = draft.agency_phone;
 
             this.is_corp = draft.is_corp;
-            this.corp = draft.is_corp === 1 ? true : false;
+            this.corp = draft.is_corp === 1;
             if (draft.is_receipt) {
               this.is_receipt = true;
               this.form.is_receipt = 1;
@@ -1790,7 +1804,7 @@
             if (val !== '' && val.type === 2) {
               this.form.staff_id = draft.staff_id;
               this.form.staff_name = draft.staff_name;
-              this.form.staff_phone=draft.phone;
+              this.form.staff_phone = draft.phone;
               this.form.department_id = draft.department_id;
               this.form.department_name = draft.department_name;
             }
@@ -1820,6 +1834,7 @@
         }
       },
       close_() {
+        return
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;
@@ -1903,17 +1918,20 @@
 <style lang="scss">
   #rentReport {
     overflow: hidden;
-    .rent_types{
+
+    .rent_types {
       padding-top: 1em;
       border-bottom: .5px solid #f8f8f8;
       align-items: center;
       padding-bottom: 1em;
       display: flex;
-      .label{
+
+      .label {
         min-width: 4.5em;
         margin-left: 1em
       }
     }
+
     .van-checkbox-group {
       padding-left: 2em;
 
@@ -1925,13 +1943,16 @@
         .van-checkbox__label {
 
         }
-      }}
-    .van-radio-group{
+      }
+    }
+
+    .van-radio-group {
       display: flex;
       padding-right: 1em;
       flex-wrap: wrap;
       width: 100%;
-      .van-radio{
+
+      .van-radio {
         margin-left: 1em;
         margin-top: .2em;
         text-align: center;

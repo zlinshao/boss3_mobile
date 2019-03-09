@@ -659,11 +659,11 @@
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
         //合同备注条款数据
         remarks: [new CommonIdNameEntity('1', '不能群租'), new CommonIdNameEntity('2', '不得扰民'), new CommonIdNameEntity('3', '不能随意搬动屋内家具家电'), new CommonIdNameEntity('4', '不能故意拆卸家具家电'), new CommonIdNameEntity('5', '不得养宠物'), new CommonIdNameEntity('6', '不得租住新疆人或外国人'), new CommonIdNameEntity('7', '乙方不得将房屋用于承办丧事、喜事等商业用途'), new CommonIdNameEntity('8', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'), new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
-
+        curContractInfo: '',//ContractInfo类
         /*以上是电子合同新增*/
         haveInHand: true,
         urls: globalConfig.server,
-        eurls: 'http://192.168.20.27/ewal_contract/public/',
+        eurls: globalConfig.e_server,
         picStatus: 'success',
         isClear: false,
 
@@ -709,6 +709,7 @@
           processable_id: '',
           type: '1',
           draft: 0,
+          contract_id: '',              //合同 续收才有
           house: {
             id: '',
             name: '',
@@ -760,8 +761,8 @@
           department_name: '',          //部门name
           /*以下是电子合同特有字段*/
           /*作废重签*/
-          old_contract_number:'',
-          regenerate:'',
+          old_contract_number: '',
+          regenerate: '',
           /*作废重签*/
           province: "江苏省",
           city: "南京市",
@@ -775,16 +776,16 @@
           house_certificate: "1",
           property_number: "A123456",
           QiuQuan_number: "B123456",
-          not_owner_fee: {'0':1,'1':2},
+          not_owner_fee: {'0': 1, '1': 2},
           other_fee_text: "其他费用20元",
           allowed_decoration_to: "1",
           allowed_add_to: "1",
           staff_phone: "",
           pdf_scene: 1,
-          other_rule: {'0':1,'1':2,'2':3},
+          other_rule: {'0': 1, '1': 2, '2': 3},
           signer_type: '1',//签约类型1产权 2代理
           partA_agents: '',//代理人信息
-          owner: [new HouseOwner('123','341126199502023237','17626043187','3328')],//房屋所有人HouseOwner类的列表
+          owner: [new HouseOwner('123', '341126199502023237', '17626043187', '3328'), new HouseOwner('房东2', '341126199502023237', '17626043187', '3328')],//房屋所有人HouseOwner类的列表
           customerIds: '3328',
           cookie: '',
           /*以上是电子合同特有字段*/
@@ -830,6 +831,11 @@
 
     },
     activated() {
+      if (this.$route.query.c_info !== undefined) {
+        let type = this.$route.query.c_info.type;
+        this.curContractInfo = this.$route.query.c_info;
+        this.form.regenerate = type;//0新签 1作废重签
+      }
       let count = sessionStorage.count;
       this.counts = count;
       if (count === '11') {
@@ -896,26 +902,27 @@
       this.form.toilet = house_types[2];//卫
       this.form.area = house_res.area;//面积
       /*获取电子合同相关字段*/
-      this.form.regenerate=this.$route.query.type;//0新签 1作废重签
+
     },
 
     methods: {
       /*以下是电子合同新加*/
       getContractNumber() {
         //获取业务员对应城市
-        this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
-          //获取合同编号
-          //if (sessionStorage.getItem('sf_number') === null) {
+        if (this.curContractInfo.type !== 2) {
+          this.userInfo(true);
+          this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
+            //获取合同编号
             contractApi.getNumber(1, res.data.city_id, number => {
               this.setContractNumber(number);
-             // sessionStorage.setItem('sf_number', number);
             }, error => {
               Toast(error)
             });
-          // } else {
-          //   this.setContractNumber(sessionStorage.getItem('sf_number'));
-          // }
-        });
+          });
+        }else{//获取页面带过来的合同编号
+          this.form.contract_number=this.curContractInfo.number;
+          this.manuscript();
+        }
       },
       previewPdf() {
         contractApi.cancelContract(this.form.contract_number, success => {
@@ -1076,7 +1083,6 @@
               for (let i = 0; i < res.data.length; i++) {
                 this.value7.push(res.data[i].dictionary_name);
               }
-              this.manuscript(val);
             });
 
           });
@@ -1320,24 +1326,25 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
-          let url=this.form.regenerate==='0'?'fdd/contract/saveAndSend':'fdd/contract/reset';//0代表新签 1代表作废重签
+          let url = this.form.draft === '1' ? 'fdd/contract/save' : this.form.regenerate === 0||this.form.regenerate === 2  ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
           this.$http.post(this.eurls + url, this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
-            if (res.data.code === '50110' || res.data.code === '50130') {
-              Toast.success(res.data.msg);
-              if (res.data.data.id) {
-                this.routerDetail(res.data.data.id)
+            if (res.data.code === '40000') {
+              if (this.form.draft === 1) {
+                this.form.day = this.form.day === '0' ? '' : this.form.day;
+                this.form.id = res.data.data.id;
+                Toast.success(res.data.msg);
               } else {
-                this.routerDetail(res.data.data.data.id)
+                Toast.success(res.data.msg);
+                if (res.data.data.id) {
+                  this.routerDetail(res.data.data.id)
+                } else {
+                  this.routerDetail(res.data.data.data.id)
+                }
+                this.close_();
+                $('.imgItem').remove();
               }
-              this.close_();
-              $('.imgItem').remove();
-              //保存草稿
-            } else if (res.data.code === '50120' || res.data.code === '50130') {
-              this.form.day = this.form.day === '0' ? '' : this.form.day;
-              this.form.id = res.data.data.id;
-              Toast.success(res.data.msg);
             } else {
               Toast(res.data.msg);
             }
@@ -1365,6 +1372,7 @@
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
+          this.form.contract_id = val.id;
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
           this.form.is_agency = val.is_agency;                           //是否渠道
@@ -1394,25 +1402,13 @@
       },
 
       // 草稿
-      manuscript(val) {
+      manuscript() {
         this.form.processable_id = '';
-        let type;
-        if (val !== '') {
-          type = 'bulletin/collect/' + val.newID;
-          if (val.type === 2) {
-            this.form.processable_id = val.ids;
-          } else {
-            this.userInfo(true);
-          }
-        } else {
-          this.userInfo(true);
-          type = 'bulletin/collect?type=1';
-        }
-        this.$http.get(this.urls + type).then((res) => {
-          if (res.data.code === '50120') {
+        this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.contract_number).then((res) => {
+          if (res.data.code === '40000') {
             this.isClear = false;
             let data = res.data.data;
-            let draft = res.data.data.draft_content;
+            let draft = res.data.data.param_map;
             this.form.purchase_way = 509;
             this.form.id = data.id;
             this.form.house = draft.house;
@@ -1519,7 +1515,7 @@
       },
 
       close_() {
-        //return
+        return
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;

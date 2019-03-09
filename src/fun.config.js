@@ -383,7 +383,7 @@ export default {
         }
       }
       data.department_id = val.department_id;
-      data.payer = val.name;
+      data.payer = val.customer_info[0].name;
       if (val.rent_without_collect_address) {
         data.address = val.rent_without_collect_address;
       } else {
