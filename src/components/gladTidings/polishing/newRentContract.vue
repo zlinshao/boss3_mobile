@@ -670,7 +670,7 @@
       <div @click="saveCollect(0)">修改</div>
     </div>
 
-    <div class="footer" v-if="counts === '1' || counts === '11'">
+    <div class="footer">
       <div @click="close_()">重置</div>
       <!--<div @click="saveCollect(1)">草稿</div>-->
       <div @click="saveCollect(0)">发布</div>
@@ -995,7 +995,9 @@
     methods: {
       /*以下是电子合同新加*/
       trueName(item) {
-        contractApi.trueName(item, error => {
+        contractApi.trueName(item, success => {
+          window.open(success)
+        }, error => {
           Toast(error)
         });
       },
@@ -1021,6 +1023,7 @@
         return list;
       },
       getCity(success) {
+        this.userInfo();
         this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
           //获取合同编号
           contractApi.getNumber(1, res.data.city_id, number => {
@@ -1040,7 +1043,6 @@
       getContractNumber() {
         //获取业务员对应城市
         //获取业务员对应城市
-        this.getSessionInfo();
         this.getSessionInfo();
         if (this.form.regenerate === '1' || this.form.regenerate === 1 || this.form.regenerate === '2' || this.form.regenerate === 2) {
           console.log('读取草稿');
@@ -1125,7 +1127,7 @@
         let id = JSON.parse(sessionStorage.personal).id;
         this.polishingHint(id);
       },
-      userInfo(val1) {
+      userInfo() {
         let per = JSON.parse(sessionStorage.personal);
         this.form.staff_id = per.id;
         this.form.staff_name = per.name;
@@ -1465,6 +1467,7 @@
             this.form.account_name = banks[1];
             this.form.account = banks[0];
           }
+          console.log(this.form.bank)
           this.getSessionInfo();
           if (this.form.regenerate === 1 || this.form.regenerate === '1') {
             this.post();

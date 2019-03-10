@@ -59,7 +59,7 @@ function trueName(item, success,error) {
         mobile: item.phone
       }).then(res => {
         if (res.data.code === '40010') {
-          success(res);
+          success(res.data.data.data);
         } else {
           error(res.data.msg);
         }

@@ -879,9 +879,11 @@
         this.form.regenerate = sessionStorage.getItem('contract_type');
       },
       trueName(item) {
-        contractApi.trueName(item, error => {
+        contractApi.trueName(item, success=>{
+          window.open(success)
+        },error => {
           Toast(error)
-        }, this);
+        });
       },
       getCity(success) {
         this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
