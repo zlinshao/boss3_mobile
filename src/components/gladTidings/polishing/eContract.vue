@@ -52,6 +52,7 @@
         @cancel="onCancel"
         @confirm="onConfirm"/>
     </van-popup>
+
   </div>
 </template>
 
@@ -68,12 +69,14 @@
   export default {
     name: "eContract",
     components: {Toast},
-    activated(){
+    activated() {
       this.routerIndex('');
       this.ddRent('');
     },
     data() {
       return {
+        isShowIframe: false,
+        iframeSrc: 'http://www.baidu.com',
         list: [],
         searchInfo: '',//搜索内容
         finished: false,
@@ -105,10 +108,10 @@
       onConfirm(value, index) {
         switch (this.val) {
           case 1://收房选择合同或者收条
-            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[0].fdd_user_id, this.isSendMsg, this.signTypeColumns[0].index);
+            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[idnex].fdd_user_id, this.isSendMsg, this.signTypeColumns[0].index);
             break;
           case 2://租房选择租客
-            this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[0].fdd_user_id, this.isSendMsg);
+            this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg);
             break
         }
         this.selectHide = false;
@@ -135,14 +138,14 @@
         return str;
       },
       send(item) {//发送短信给房东租客签约
-        this.isSendMsg=1;
+        this.isSendMsg = 1;
         this.signNow(item);
       },
       sign(item) {//在本机签约
-        this.isSendMsg=0;
+        this.isSendMsg = 0;
         this.signNow(item)
       },
-      signNow(item){
+      signNow(item) {
         let list = [];
         this.signTypeColumns = [];
         this.curItem = item;
@@ -164,10 +167,10 @@
         } else {
           for (let i = 0; i < users.length; i++) {
             this.signTypeColumns.push(users[i]);
-            if(users[i].customer.name!==null){
+            if (users[i].customer.name !== null) {
               list.push(users[i].customer.name);
-            }else{
-              list.push('租客'+(i+1));
+            } else {
+              list.push('租客' + (i + 1));
             }
           }
           if (this.signTypeColumns.length === 0) {
@@ -185,14 +188,14 @@
           customer_id: id,
           type: type,//1发短信 0不发
           index: index
-        }).then(res=>{
-          if(res.data.code==='40000'){
+        }).then(res => {
+          if (res.data.code === '40000') {
             if (type === 1) {
               Toast('发送成功!');
-            }else{
+            } else {
               window.open(res.data.data.data);
             }
-          }else{
+          } else {
             Toast(res.data.msg);
           }
         })
@@ -205,15 +208,15 @@
           customer_id: id,
           type: type,//1发短信 0不发
         }).then(res => {
-           if(res.data.code==='40000'){
-             if (type === 1) {
-               Toast('发送成功!');
-             }else{
-               window.open(res.data.data.data);
-             }
-           }else{
-             Toast(res.data.msg);
-           }
+          if (res.data.code === '40000') {
+            if (type === 1) {
+              Toast('发送成功!');
+            } else {
+              window.open(res.data.data.data);
+            }
+          } else {
+            Toast(res.data.msg);
+          }
         })
       }
       ,
@@ -244,7 +247,8 @@
       ,
       //显示选择收租房弹框
       showChooseDialog() {
-        this.show = true;
+        this.isShowIframe = true;
+        // this.show = true;
       }
       ,
       //添加收房合同

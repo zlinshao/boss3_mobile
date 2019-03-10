@@ -628,9 +628,17 @@
         <van-checkbox v-for="(item,index) in remarks" :name="item" :key="index">{{item.name}}</van-checkbox>
       </van-checkbox-group>
     </van-popup>
+    <!--选择备注条款列表-->
 
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowIframe" position="ceter"
+               style="width: 100%;height: 100%"
+               :overlay="true">
+      <iframe v-show="isShowIframe" id="show-iframe" frameborder=0 name="showHere" scrolling=none :src="iframeSrc"
+              style="width: 100%;height: 100%;"></iframe>
+      <img src="@/assets/close.png" style="width: 2em;height: 2em;position: absolute;top: 1em;left: 1em"
+           @click="isShowIframe=false">
+    </van-popup>
     <pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000" ref="pdf"></pdf-dialog>
-
   </div>
 </template>
 
