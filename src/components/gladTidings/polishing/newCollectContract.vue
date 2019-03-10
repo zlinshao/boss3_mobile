@@ -1368,7 +1368,7 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           // let url = this.form.draft === 1 ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
-          let url = this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+          let url = this.form.regenerate === 0||this.form.regenerate==='0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
           this.$http.post(this.eurls + url, this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;

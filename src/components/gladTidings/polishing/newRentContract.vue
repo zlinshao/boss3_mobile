@@ -1488,7 +1488,7 @@
               this.form[key] = this.filter_array(this.form[key])
             }
           }
-          let url = this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+          let url = this.form.regenerate === 0||this.form.regenerate==='0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
           //let url = this.form.draft === '1' ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
           if (this.form.money_way.length !== 0) {
             let bankInfo = this.form.money_way[0];
