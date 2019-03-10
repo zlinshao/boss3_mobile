@@ -91,16 +91,6 @@
             @click-icon="form.owner[index].phone= ''"
             required>
           </van-field>
-          <van-field
-            v-model="item.fadada_user_id===''?'':'实名认证成功'"
-            label="实名认证"
-            type="text"
-            class="number"
-            readonly
-            placeholder="点击进行实名认证"
-            @click="trueName(item)"
-            required>
-          </van-field>
         </div>
         <div @click="addNewHouseOwner" class="addInput bottom">
           +添加附属房东
@@ -113,6 +103,7 @@
           @click="showSignPeoples()"
           readonly
           required>
+          <van-button slot="button" size="small" type="primary" @click="trueName(curTrueNameItem)">{{(curTrueNameItem===null||curTrueNameItem.fadada_user_id==='')?'实名认证':'已认证'}}</van-button>
         </van-field>
         <div v-if="showForm.showProxyInfo">
           <van-field
@@ -140,16 +131,6 @@
             placeholder="请填写代理人身份证号"
             icon=""
             @click-icon="form.partA_agents.idcard = ''"
-            required>
-          </van-field>
-          <van-field
-            v-model="form.partA_agents.fadada_user_id===''?'':'实名认证成功'"
-            label="实名认证"
-            type="text"
-            class="number"
-            readonly
-            placeholder="点击进行实名认证"
-            @click="trueName(form.partA_agents)"
             required>
           </van-field>
         </div>
@@ -665,6 +646,7 @@
       return {
         /*以下是电子合同新加字段*/
         eshow: false,
+        curTrueNameItem:null,//当前需要实名认证的item
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
         houseCertificateTypes: [new CommonIdNameEntity('1', '房屋所有权证'), new CommonIdNameEntity('2', '房屋买卖合同'), new CommonIdNameEntity('3', '其他房屋来源')],
@@ -732,7 +714,7 @@
           },
           sign_date: '',                //签约日期
           month: '',                    //收房月数
-          day: '0',                      //收房天数
+          day: '',                      //收房天数
           is_agency: '0',                //是否渠道 0不是 1是
           agency_name: '',              //渠道名
           agency_price: '',             //渠道费
@@ -740,7 +722,7 @@
           agency_phone: '',             //渠道手机号
           begin_date: '',               //空置期开始日期
           end_date: '',                 //合同结束日期
-          vacancy: '0',                  //空置期
+          vacancy: '',                  //空置期
           end_date_vacant: '',          //空置期结束日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -879,6 +861,10 @@
         this.form.regenerate = sessionStorage.getItem('contract_type');
       },
       trueName(item) {
+        if(item===null){
+          Toast('请先选择签约人');
+          return
+        }
         contractApi.trueName(item, success=>{
           window.open(success)
         },error => {
@@ -1031,7 +1017,9 @@
             if (index === this.showForm.signPeoples.length - 1) {
               this.showForm.showProxyInfo = true;
               this.form.signer_type = 2;
+              this.curTrueNameItem=this.form.partA_agents;
             } else {
+              this.curTrueNameItem=this.form.owner[index];
               this.form.signer_type = 1;
               this.showForm.showProxyInfo = false;
               this.form.signer = this.form.owner[index]
