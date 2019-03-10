@@ -171,10 +171,12 @@
             type="text"
             placeholder="元/月"
             icon=""
+            readonly
             @click-icon="form.water_fee = ''"
           >
           </van-field>
           <van-field
+            v-if="false"
             v-model="form.e_price"
             label="电费"
             type="text"
@@ -890,7 +892,7 @@
           rent_type: "1",
           manage_fee: "",
           manage_share: "",
-          water_fee: "",
+          water_fee: "30",
           net_fee: "1",
           public_fee: "",
           staff_phone: "",
@@ -1462,6 +1464,8 @@
       },
 
       saveCollect(val) {
+        console.log(this.form.bank+'111')
+
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
@@ -1831,8 +1835,36 @@
               this.receipts=success;
             });
             this.form.remark = draft.remark;
+
+            this.form.use_type=draft.use_type;
+            this.rentUseTxt = this.getEntityForIndex(this.rentUses, draft.use_type);
+
+            this.form.people=draft.people;
+
             this.form.rent_type = draft.rent_type;
-            this.rentUseTxt = this.getEntityForIndex(this.rentUses, draft.rent_type);
+            this.rentTypeTxt=this.getEntityForIndex(this.rentTypes, draft.rent_type)
+
+            this.form.emergency_phone=draft.emergency_phone;
+
+            this.form.account_name=draft.account_name;
+            this.form.account=draft.account;
+            this.form.province=draft.province;
+            this.form.city=draft.city;
+            this.form.district=draft.district;
+            this.form.village_name=draft.village_name;
+            this.form.room=draft.room;
+            this.form.hall=draft.hall;
+            this.form.toilet=draft.toilet;
+            this.form.are=draft.area;
+            this.form.other_use=draft.other_use;
+            this.form.manage_fee=draft.manage_fee;
+            this.form.manage_share=draft.manage_share;
+            this.form.water_fee=draft.water_fee;
+            this.form.public_fee=draft.public_fee;
+            this.form.net_fee=draft.net_fee;
+            this.form.customer_info=draft.customer_info;
+            this.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
+
           } else {
             this.receiptNum();
             this.form.id = '';
