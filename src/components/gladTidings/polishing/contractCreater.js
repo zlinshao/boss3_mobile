@@ -47,7 +47,7 @@ function createRentContract(pdf, param,success,error) {
     }
   })
 }
-function trueName(item,error) {
+function trueName(item,error,vue) {
   Vue.prototype.$http.get(url+'/fdd/customer/verified?idcard='+item.idcard+'&name='+item.name+'&phone='+item.phone).then(success=>{
     if(success.data.code==='40000'){
       item.fadada_user_id=success.data.data.customer_id;
@@ -58,8 +58,8 @@ function trueName(item,error) {
         mobile: item.phone
       }).then(success => {
         if (success.data.code === '40010') {
-          Vue.routerIndex('newCollectContract', 'house');
-          Vue.ddRent('newCollectContract', 'house');
+          vue.routerIndex('newCollectContract', 'house');
+          vue.ddRent('newCollectContract', 'house');
           window.open(success.data.data.data);
         } else {
           error(success.data.msg);

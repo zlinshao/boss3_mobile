@@ -928,7 +928,7 @@
       trueName(item) {
         contractApi.trueName(item, error => {
           Toast(error)
-        });
+        },this);
       },
       getContractNumber() {
         //获取业务员对应城市
@@ -1451,7 +1451,9 @@
         this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.contract_number).then((res) => {
           if (res.data.code === '40000') {
             this.isClear = false;
+
             let draft = res.data.data.param_map;
+
             let list={}
             for(let key in this.form){
               console.log(draft[key])
