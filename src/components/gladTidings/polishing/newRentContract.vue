@@ -19,23 +19,23 @@
             <van-radio name="1">个人</van-radio>
           </van-radio-group>
         </div>
-        <van-field
-          v-if="form.regenerate===1"
-          v-model="form.old_contract_number"
-          label="原合同编号"
-          type="text"
-          placeholder=""
-          readonly
-          required>
-        </van-field>
-        <van-field
-          v-model="form.contract_number"
-          label="合同编号"
-          type="text"
-          placeholder=""
-          readonly
-          @click-icon="form.contract_number = ''">
-        </van-field>
+        <!--<van-field-->
+        <!--v-if="form.regenerate===1"-->
+        <!--v-model="form.old_contract_number"-->
+        <!--label="原合同编号"-->
+        <!--type="text"-->
+        <!--placeholder=""-->
+        <!--readonly-->
+        <!--required>-->
+        <!--</van-field>-->
+        <!--<van-field-->
+        <!--v-model="form.contract_number"-->
+        <!--label="合同编号"-->
+        <!--type="text"-->
+        <!--placeholder=""-->
+        <!--readonly-->
+        <!--@click-icon="form.contract_number = ''">-->
+        <!--</van-field>-->
 
 
         <!--下面是未收先租确定信息-->
@@ -672,7 +672,7 @@
 
     <div class="footer" v-if="counts === '1' || counts === '11'">
       <div @click="close_()">重置</div>
-      <div @click="saveCollect(1)">草稿</div>
+      <!--<div @click="saveCollect(1)">草稿</div>-->
       <div @click="saveCollect(0)">发布</div>
     </div>
 
@@ -946,7 +946,7 @@
         }
       }
     },
-    created(){
+    created() {
       this.getContractNumber();
     },
     mounted() {
@@ -995,25 +995,25 @@
     methods: {
       /*以下是电子合同新加*/
       trueName(item) {
-        contractApi.trueName(item,error=>{
+        contractApi.trueName(item, error => {
           Toast(error)
         });
       },
-      getEntityForIndex(entitys,id) {
+      getEntityForIndex(entitys, id) {
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
-          if(id===entity.id){
+          if (id === entity.id) {
             return entity;
           }
         }
         return null;
       },
-      getListFromList(entitys,ids) {
+      getListFromList(entitys, ids) {
         let list = [];
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
-          for(let j=0;j<ids.length;j++){
-            if(entity.id===ids[j]){
+          for (let j = 0; j < ids.length; j++) {
+            if (entity.id === ids[j]) {
               list.push(entity)
             }
           }
@@ -1025,7 +1025,7 @@
           //获取合同编号
           contractApi.getNumber(1, res.data.city_id, number => {
             this.setContractNumber(number);
-            if(success!==undefined){
+            if (success !== undefined) {
               success();
             }
           }, error => {
@@ -1033,17 +1033,20 @@
           });
         });
       },
+      getSessionInfo() {
+        this.form.old_contract_number = sessionStorage.getItem('contract_number');
+        this.form.regenerate = sessionStorage.getItem('contract_type');
+      },
       getContractNumber() {
         //获取业务员对应城市
         //获取业务员对应城市
-        this.form.contract_number = sessionStorage.getItem('contract_number');
-        this.form.regenerate = sessionStorage.getItem('contract_type');
-        if (this.regenerate !== 1) {
-          this.userInfo(true);
-          this.getCity()
-        } else {//获取页面带过来的合同编号
-          this.form.contract_number = this.curContractInfo.number;
-          this.manuscript();
+        this.getSessionInfo();
+        this.getSessionInfo();
+        if (this.form.regenerate === '1' || this.form.regenerate === 1 || this.form.regenerate === '2' || this.form.regenerate === 2) {
+          console.log('读取草稿');
+          this.rentDetail();
+        } else {
+          this.getCity();
         }
       },
       previewPdf() {
@@ -1123,13 +1126,13 @@
         this.polishingHint(id);
       },
       userInfo(val1) {
-          let per = JSON.parse(sessionStorage.personal);
-          this.form.staff_id = per.id;
-          this.form.staff_name = per.name;
-          this.form.staff_phone = per.phone;
-          this.form.department_id = per.department_id;
-          this.form.department_name = per.department_name;
-          this.form.cookie = per.session_id;
+        let per = JSON.parse(sessionStorage.personal);
+        this.form.staff_id = per.id;
+        this.form.staff_name = per.name;
+        this.form.staff_phone = per.phone;
+        this.form.department_id = per.department_id;
+        this.form.department_name = per.department_name;
+        this.form.cookie = per.session_id;
       },
       dicts(val) {
         // 收款帐户
@@ -1462,56 +1465,65 @@
             this.form.account_name = banks[1];
             this.form.account = banks[0];
           }
-          this.getCity(resp=>{
-            let url = this.form.regenerate === 0||this.form.regenerate==='0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
-            this.$http.post(this.eurls + url, this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === '40000') {
-                if (this.form.draft === '1') {
-                  this.form.id = res.data.data.id;
-                  if (receipt.length === 0) {
-                    this.form.receipt = [];
-                    this.form.receipt.push(this.receiptDate);
-                  }
-                  this.form.day = this.form.day === '0' ? '' : this.form.day;
-                  Toast.success(res.data.msg)
-                } else {
-                  Toast.success(res.data.msg);
-                  this.close_();
-                  $('.imgItem').remove();
-                  if (res.data.data.id) {
-                    this.routerDetail(res.data.data.id)
-                  } else {
-                    this.routerDetail(res.data.data.data.id)
-                  }
-                }
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
-              }
-            })
-          });
+          this.getSessionInfo();
+          if (this.form.regenerate === 1 || this.form.regenerate === '1') {
+            this.post();
+          } else {
+            this.getCity(resp => {
+              this.getSessionInfo();
+              this.post();
+            });
+          }
         } else {
           Toast(this.alertMsg('sub'));
         }
       },
+      post() {
+        let url = this.form.regenerate === 0 || this.form.regenerate === '0' ||
+        this.form.regenerate === 2 || this.form.regenerate === '2' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+        this.$http.post(this.eurls + url, this.form).then((res) => {
+          this.haveInHand = true;
+          this.retry = 0;
+          if (res.data.code === '40000') {
+            if (this.form.draft === '1') {
+              this.form.id = res.data.data.id;
+              if (receipt.length === 0) {
+                this.form.receipt = [];
+                this.form.receipt.push(this.receiptDate);
+              }
+              this.form.day = this.form.day === '0' ? '' : this.form.day;
+              Toast.success(res.data.msg)
+            } else {
+              Toast.success(res.data.msg);
+              this.close_();
+              $('.imgItem').remove();
+              if (res.data.data.id) {
+                this.routerDetail(res.data.data.id)
+              } else {
+                this.routerDetail(res.data.data.data.id)
+              }
+            }
+          } else {
+            Toast(res.data.msg);
+          }
+        }).catch((error) => {
+          this.haveInHand = true;
+          if (error.response === undefined) {
+            this.alertMsg('net');
 
+          } else {
+            if (error.response.status === 401) {
+              this.personalGet().then((data) => {
+                if (data && this.retry === 0) {
+                  this.retry++;
+
+                  this.saveCollect(this.form.draft);
+                }
+              });
+            }
+          }
+        })
+      },
       houseInfo() {
         let t = this.$route.query;
         if (t.house !== undefined && t.house !== '') {
@@ -1586,7 +1598,7 @@
               }
             }
             this.form.front_money = rent.front_money;
-            this.form.deposit = rent.deposit||0;
+            this.form.deposit = rent.deposit || 0;
             this.form.deposit_payed = rent.deposit_payed ? rent.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
@@ -1781,9 +1793,9 @@
             this.form.deposit_photo = draft.deposit_photo;
             this.receipts = data.deposit_photo || {};
             this.form.remark = draft.remark;
-            this.form.rent_type=draft.rent_type;
-            console.log(draft.rent_type+"111")
-            this.rentUseTxt=this.getEntityForIndex(this.rentUses,draft.rent_type);
+            this.form.rent_type = draft.rent_type;
+            console.log(draft.rent_type + "111")
+            this.rentUseTxt = this.getEntityForIndex(this.rentUses, draft.rent_type);
 
           } else {
             this.receiptNum();

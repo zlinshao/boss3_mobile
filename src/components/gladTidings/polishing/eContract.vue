@@ -220,13 +220,25 @@
       }
       ,
       toDetail(item) {
-        if (item.contract_status !== 1) {
-          return;
+        let signType = 2;
+        switch (item.contract_status) {
+          case 0:
+            signType=2;
+            break;
+          case 1:
+            signType=1;
+            break;
+          case 2:
+            break;
+          case 3:
+            break;
+          case 4:
+            break;
         }
         if (this.type === 1) {
-          this.collect(1, item.contract_number);
+          this.collect(signType, item.contract_number);
         } else {
-          this.rent(1, item.contract_number);
+          this.rent(signType, item.contract_number);
         }
       }
       ,
@@ -246,7 +258,7 @@
       ,
       //显示选择收租房弹框
       showChooseDialog() {
-         this.show = true;
+        this.show = true;
       }
       ,
       //添加收房合同

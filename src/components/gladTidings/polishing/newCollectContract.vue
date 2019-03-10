@@ -899,7 +899,7 @@
       getContractNumber() {
         //获取业务员对应城市
         this.getSessionInfo();
-        if (this.form.regenerate === '1' || this.form.regenerate === 1) {
+        if (this.form.regenerate === '1' || this.form.regenerate === 1||this.form.regenerate==='2'||this.form.regenerate===2) {
           console.log('读取草稿');
           this.manuscript();
         } else {
@@ -1324,48 +1324,56 @@
           this.form.is_corp = this.corp ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
-          this.getCity(resp=>{
-            this.getSessionInfo();
-            let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
-            this.$http.post(this.eurls + url, this.form).then((res) => {
-              this.haveInHand = true;
-              this.retry = 0;
-              if (res.data.code === '40000') {
-                Toast.success(res.data.msg);
-                if (res.data.data.id) {
-                  this.routerDetail(res.data.data.id)
-                } else {
-                  this.routerDetail(res.data.data.data.id)
-                }
-                this.close_();
-                $('.imgItem').remove();
-              } else if (res.data.code === '40040') {
-                this.$router.go(-1);
-                Toast(res.data.msg);
-              } else {
-                Toast(res.data.msg);
-              }
-            }).catch((error) => {
-              this.haveInHand = true;
-              if (error.response === undefined) {
-                this.alertMsg('net');
-              } else {
-                if (error.response.status === 401) {
-                  this.personalGet().then((data) => {
-                    if (data && this.retry === 0) {
-                      this.retry++;
-
-                      this.saveCollect(this.form.draft);
-                    }
-                  });
-                }
-              }
+          this.getSessionInfo();
+          if(this.form.regenerate === 1 || this.form.regenerate === '1'){
+            this.post();
+          }else {
+            this.getCity(resp => {
+              this.getSessionInfo();
+              this.post();
             })
-          })
-
+          }
         } else {
           Toast(this.alertMsg('sub'));
         }
+      },
+      post(){
+        let url = this.form.regenerate === 0 || this.form.regenerate === '0'||
+        this.form.regenerate === 2 || this.form.regenerate === '2'? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+        this.$http.post(this.eurls + url, this.form).then((res) => {
+          this.haveInHand = true;
+          this.retry = 0;
+          if (res.data.code === '40000') {
+            Toast.success(res.data.msg);
+            if (res.data.data.id) {
+              this.routerDetail(res.data.data.id)
+            } else {
+              this.routerDetail(res.data.data.data.id)
+            }
+            this.close_();
+            $('.imgItem').remove();
+          } else if (res.data.code === '40040') {
+            this.$router.go(-1);
+            Toast(res.data.msg);
+          } else {
+            Toast(res.data.msg);
+          }
+        }).catch((error) => {
+          this.haveInHand = true;
+          if (error.response === undefined) {
+            this.alertMsg('net');
+          } else {
+            if (error.response.status === 401) {
+              this.personalGet().then((data) => {
+                if (data && this.retry === 0) {
+                  this.retry++;
+
+                  this.saveCollect(this.form.draft);
+                }
+              });
+            }
+          }
+        })
       },
       // 草稿
       manuscript() {
