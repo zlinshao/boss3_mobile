@@ -352,7 +352,7 @@ export default {
       data.phone = info.phone;
       data.department_name = info.org[0].name;
       data.department_id = info.org[0].id;
-      data.session_id=info.session_id;
+      data.session_id = info.session_id;
       data.isCompany = '';
       info.role.forEach(str => {
         power.push(str.name);
