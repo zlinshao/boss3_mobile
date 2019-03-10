@@ -75,7 +75,6 @@
     },
     data() {
       return {
-        isShowIframe: false,
         iframeSrc: 'http://www.baidu.com',
         list: [],
         searchInfo: '',//搜索内容
@@ -247,8 +246,7 @@
       ,
       //显示选择收租房弹框
       showChooseDialog() {
-        this.isShowIframe = true;
-        // this.show = true;
+         this.show = true;
       }
       ,
       //添加收房合同

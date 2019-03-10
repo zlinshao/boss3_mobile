@@ -6,23 +6,23 @@
           <van-radio name="1">新收</van-radio>
           <van-radio name="2">续收</van-radio>
         </van-radio-group>
-        <van-field
-          v-if="form.regenerate===1||form.regenerate==='1'"
-          v-model="form.old_contract_number"
-          label="原合同编号"
-          type="text"
-          placeholder=""
-          readonly
-          required>
-        </van-field>
-        <van-field
-          v-model="form.contract_number"
-          label="合同编号"
-          type="text"
-          placeholder="请填写收房合同编号"
-          readonly
-          required>
-        </van-field>
+        <!--<van-field-->
+          <!--v-if="form.regenerate===1||form.regenerate==='1'"-->
+          <!--v-model="form.old_contract_number"-->
+          <!--label="原合同编号"-->
+          <!--type="text"-->
+          <!--placeholder=""-->
+          <!--readonly-->
+          <!--required>-->
+        <!--</van-field>-->
+        <!--<van-field-->
+          <!--v-model="form.contract_number"-->
+          <!--label="合同编号"-->
+          <!--type="text"-->
+          <!--placeholder="请填写收房合同编号"-->
+          <!--readonly-->
+          <!--required>-->
+        <!--</van-field>-->
         <van-field
           v-model="form.house.name"
           label="房屋地址"
@@ -629,15 +629,6 @@
       </van-checkbox-group>
     </van-popup>
     <!--选择备注条款列表-->
-
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowIframe" position="ceter"
-               style="width: 100%;height: 100%"
-               :overlay="true">
-      <iframe v-show="isShowIframe" id="show-iframe" frameborder=0 name="showHere" scrolling=none :src="iframeSrc"
-              style="width: 100%;height: 100%;"></iframe>
-      <img src="@/assets/close.png" style="width: 2em;height: 2em;position: absolute;top: 1em;left: 1em"
-           @click="isShowIframe=false">
-    </van-popup>
     <pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000" ref="pdf"></pdf-dialog>
   </div>
 </template>
@@ -892,11 +883,14 @@
           Toast(error)
         }, this);
       },
-      getCity() {
+      getCity(success) {
         this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
           //获取合同编号
           contractApi.getNumber(1, res.data.city_id, number => {
             this.setContractNumber(number);
+           if(success!==undefined){
+             success();
+           }
           }, error => {
             Toast(error)
           });
@@ -1330,42 +1324,45 @@
           this.form.is_corp = this.corp ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
-          this.getSessionInfo();
-          let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
-          this.$http.post(this.eurls + url, this.form).then((res) => {
-            this.haveInHand = true;
-            this.retry = 0;
-            if (res.data.code === '40000') {
-              Toast.success(res.data.msg);
-              if (res.data.data.id) {
-                this.routerDetail(res.data.data.id)
+          this.getCity(resp=>{
+            this.getSessionInfo();
+            let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+            this.$http.post(this.eurls + url, this.form).then((res) => {
+              this.haveInHand = true;
+              this.retry = 0;
+              if (res.data.code === '40000') {
+                Toast.success(res.data.msg);
+                if (res.data.data.id) {
+                  this.routerDetail(res.data.data.id)
+                } else {
+                  this.routerDetail(res.data.data.data.id)
+                }
+                this.close_();
+                $('.imgItem').remove();
+              } else if (res.data.code === '40040') {
+                this.$router.go(-1);
+                Toast(res.data.msg);
               } else {
-                this.routerDetail(res.data.data.data.id)
+                Toast(res.data.msg);
               }
-              this.close_();
-              $('.imgItem').remove();
-            } else if (res.data.code === '40040') {
-              this.$router.go(-1);
-              Toast(res.data.msg);
-            } else {
-              Toast(res.data.msg);
-            }
-          }).catch((error) => {
-            this.haveInHand = true;
-            if (error.response === undefined) {
-              this.alertMsg('net');
-            } else {
-              if (error.response.status === 401) {
-                this.personalGet().then((data) => {
-                  if (data && this.retry === 0) {
-                    this.retry++;
+            }).catch((error) => {
+              this.haveInHand = true;
+              if (error.response === undefined) {
+                this.alertMsg('net');
+              } else {
+                if (error.response.status === 401) {
+                  this.personalGet().then((data) => {
+                    if (data && this.retry === 0) {
+                      this.retry++;
 
-                    this.saveCollect(this.form.draft);
-                  }
-                });
+                      this.saveCollect(this.form.draft);
+                    }
+                  });
+                }
               }
-            }
+            })
           })
+
         } else {
           Toast(this.alertMsg('sub'));
         }

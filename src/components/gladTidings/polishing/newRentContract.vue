@@ -1020,6 +1020,19 @@
         }
         return list;
       },
+      getCity(success) {
+        this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
+          //获取合同编号
+          contractApi.getNumber(1, res.data.city_id, number => {
+            this.setContractNumber(number);
+            if(success!==undefined){
+              success();
+            }
+          }, error => {
+            Toast(error)
+          });
+        });
+      },
       getContractNumber() {
         //获取业务员对应城市
         //获取业务员对应城市
@@ -1027,14 +1040,7 @@
         this.form.regenerate = sessionStorage.getItem('contract_type');
         if (this.regenerate !== 1) {
           this.userInfo(true);
-          this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
-            //获取合同编号
-            contractApi.getNumber(1, res.data.city_id, number => {
-              this.setContractNumber(number);
-            }, error => {
-              Toast(error)
-            });
-          });
+          this.getCity()
         } else {//获取页面带过来的合同编号
           this.form.contract_number = this.curContractInfo.number;
           this.manuscript();
@@ -1449,8 +1455,6 @@
               this.form[key] = this.filter_array(this.form[key])
             }
           }
-          let url = this.form.regenerate === 0||this.form.regenerate==='0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
-          //let url = this.form.draft === '1' ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
           if (this.form.money_way.length !== 0) {
             let bankInfo = this.form.money_way[0];
             let banks = bankInfo.split(' ');
@@ -1458,48 +1462,51 @@
             this.form.account_name = banks[1];
             this.form.account = banks[0];
           }
-          this.$http.post(this.eurls + url, this.form).then((res) => {
-            this.haveInHand = true;
-            this.retry = 0;
-            if (res.data.code === '40000') {
-              if (this.form.draft === '1') {
-                this.form.id = res.data.data.id;
-                if (receipt.length === 0) {
-                  this.form.receipt = [];
-                  this.form.receipt.push(this.receiptDate);
-                }
-                this.form.day = this.form.day === '0' ? '' : this.form.day;
-                Toast.success(res.data.msg)
-              } else {
-                Toast.success(res.data.msg);
-                this.close_();
-                $('.imgItem').remove();
-                if (res.data.data.id) {
-                  this.routerDetail(res.data.data.id)
-                } else {
-                  this.routerDetail(res.data.data.data.id)
-                }
-              }
-            } else {
-              Toast(res.data.msg);
-            }
-          }).catch((error) => {
-            this.haveInHand = true;
-            if (error.response === undefined) {
-              this.alertMsg('net');
-
-            } else {
-              if (error.response.status === 401) {
-                this.personalGet().then((data) => {
-                  if (data && this.retry === 0) {
-                    this.retry++;
-
-                    this.saveCollect(this.form.draft);
+          this.getCity(resp=>{
+            let url = this.form.regenerate === 0||this.form.regenerate==='0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+            this.$http.post(this.eurls + url, this.form).then((res) => {
+              this.haveInHand = true;
+              this.retry = 0;
+              if (res.data.code === '40000') {
+                if (this.form.draft === '1') {
+                  this.form.id = res.data.data.id;
+                  if (receipt.length === 0) {
+                    this.form.receipt = [];
+                    this.form.receipt.push(this.receiptDate);
                   }
-                });
+                  this.form.day = this.form.day === '0' ? '' : this.form.day;
+                  Toast.success(res.data.msg)
+                } else {
+                  Toast.success(res.data.msg);
+                  this.close_();
+                  $('.imgItem').remove();
+                  if (res.data.data.id) {
+                    this.routerDetail(res.data.data.id)
+                  } else {
+                    this.routerDetail(res.data.data.data.id)
+                  }
+                }
+              } else {
+                Toast(res.data.msg);
               }
-            }
-          })
+            }).catch((error) => {
+              this.haveInHand = true;
+              if (error.response === undefined) {
+                this.alertMsg('net');
+
+              } else {
+                if (error.response.status === 401) {
+                  this.personalGet().then((data) => {
+                    if (data && this.retry === 0) {
+                      this.retry++;
+
+                      this.saveCollect(this.form.draft);
+                    }
+                  });
+                }
+              }
+            })
+          });
         } else {
           Toast(this.alertMsg('sub'));
         }
