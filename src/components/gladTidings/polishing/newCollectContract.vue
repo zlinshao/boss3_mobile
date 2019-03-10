@@ -92,7 +92,6 @@
             required>
           </van-field>
           <van-field
-            v-if="false"
             v-model="item.fadada_user_id===''?'':'实名认证成功'"
             label="实名认证"
             type="text"
@@ -725,10 +724,7 @@
         },
 
         form: {
-          id: '',
-          processable_id: '',
           type: '1',
-          draft: 0,
           contract_id: '',              //合同 续收才有
           house: {
             id: '',
@@ -931,7 +927,7 @@
     methods: {
       /*以下是电子合同新加*/
       trueName(item) {
-        contractApi.trueName(item,error=>{
+        contractApi.trueName(item, error => {
           Toast(error)
         });
       },
@@ -1453,50 +1449,30 @@
 
       // 草稿
       manuscript() {
-        let app = this;
-
-        this.form.processable_id = '';
         this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.contract_number).then((res) => {
           if (res.data.code === '40000') {
             this.isClear = false;
-            let data = res.data.data;
             let draft = res.data.data.param_map;
-            this.form.purchase_way = 509;
-            this.form.id = data.id;
-            this.form.house = draft.house;
-            this.form.type = draft.type;
-            this.form.sign_date = draft.sign_date;
-            this.form.month = draft.month;
-            this.form.day = draft.day;
+            // let list={}
+            // for(let key in this.form){
+            //   console.log(draft[key])
+            //   list[key] = draft[key];
+            // }
+            // let json=JSON.stringify(list);
+            // this.form=json;
+            // console.log(this.form);
 
-            this.form.begin_date = draft.begin_date;
-            this.form.end_date = draft.end_date;
-            this.form.vacancy = draft.vacancy;
-            this.form.end_date_vacant = draft.end_date_vacant;
-
-            this.form.pay_first_date = draft.pay_first_date;
-            this.first_date = [];
             this.first_date.push(draft.pay_first_date);
             this.datePrice[0] = draft.pay_first_date;
             this.datePay[0] = draft.pay_first_date;
-            this.form.pay_second_date = draft.pay_second_date;
 
-            this.form.is_agency = draft.is_agency;                           //是否渠道
             this.cusFrom = dicts.value8[draft.is_agency];                //是否渠道
-            this.form.agency_name = draft.agency_name;
-            this.form.agency_price = draft.agency_price;
-            this.form.agency_user_name = draft.agency_user_name;
-            this.form.agency_phone = draft.agency_phone;
-
             for (let i = 0; i < draft.price_arr.length; i++) {
               this.amountPrice = i + 1;
               this.form.period_price_arr.push('');
               this.form.price_arr.push('');
             }
-            this.form.period_price_arr = draft.period_price_arr;
             this.countDate(1, draft.period_price_arr);
-            this.form.price_arr = draft.price_arr;
-
             for (let i = 0; i < draft.pay_way_arr.length; i++) {
               this.amountPay = i + 1;
               this.form.pay_way_arr.push('');
@@ -1506,87 +1482,36 @@
                 }
               }
             }
-            this.form.period_pay_arr = draft.period_pay_arr;
             this.countDate(2, draft.period_pay_arr);
-            this.form.pay_way_arr = draft.pay_way_arr;
-
-            this.form.deposit = draft.deposit;
-            this.form.vacancy_way = draft.vacancy_way;
-
             for (let j = 0; j < this.dictValue7.length; j++) {
               if (this.dictValue7[j].id === draft.vacancy_way) {
                 this.vacancy_way_name = this.dictValue7[j].dictionary_name;
               }
             }
-            this.form.vacancy_other = draft.vacancy_other;
-
-            this.form.warranty = draft.warranty;
-            this.form.warranty_day = draft.warranty_day === '0' ? '' : draft.warranty_day;
-
-            this.form.property_payer = draft.property_payer;
             for (let j = 0; j < this.dictValue6.length; j++) {
               if (this.dictValue6[j].id === draft.property_payer) {
                 this.property_name = this.dictValue6[j].dictionary_name;
               }
             }
-            this.is_corp = draft.is_corp;
+            this.form.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1;
-
-            this.form.name = draft.name;
-            this.form.phone = draft.phone;
-            this.form.bank = draft.bank;
-            this.form.subbranch = draft.subbranch;
-            this.form.account_name = draft.account_name;
-            this.form.account = draft.account;
-            this.form.relationship = draft.relationship;
-            this.form.penalty = draft.penalty;
             this.setContractNumber(draft.contract_number);
-
-            this.form.photo = draft.photo;
-            this.photos = data.photo || {};
-            this.form.screenshot_leader = draft.screenshot_leader;
-            this.screenshots = data.screenshot_leader || {};
-
-            this.form.property_photo = draft.property_photo;
-            this.property_photos = data.property_photo || {};
-            this.form.identity_photo = draft.identity_photo;
+            this.photos = draft.photo || {};
+            this.screenshots = draft.screenshot_leader || {};
+            this.property_photos = draft.property_photo || {};
             this.identity_photos = data.identity_photo || {};
-
-            this.form.remark = draft.remark;
-            this.form.house_certificate = draft.house_certificate;
             this.showForm.houseCertificateTypeTxt = this.getEntityForIndex(this.houseCertificateTypes, this.form.house_certificate).name;
-            this.form.property_number = draft.property_number;
-            this.form.QiuQuan_number = draft.QiuQuan_number;
-            this.form.owner = draft.owner;
-            this.form.signer = draft.signer;
             this.showForm.signPeople = draft.signer.name;
-            this.form.not_owner_fee = draft.not_owner_fee;
             let not_owner_fee_choosed_ids = [];
             Object.keys(this.form.not_owner_fee).forEach(function (key) {
               not_owner_fee_choosed_ids.push(key)
             });
             this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
             this.changeNoPropertyFee();
-            this.form.other_fee_text = draft.other_fee_text;
-            this.form.allowed_decoration_to = draft.allowed_decoration_to;
             this.showForm.canDecorationsTxt = this.getEntityForIndex(this.canDecorations, this.form.allowed_decoration_to).name;
-            this.form.allowed_add_to = draft.allowed_add_to;
             this.showForm.canAddThingTxt = this.getEntityForIndex(this.canAddThings, this.form.allowed_add_to).name;
             this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
             this.changeContracts()
-
-            this.form.province =draft.province;//省
-            this.form.city = draft.city;//市
-            this.form.district = draft.district;
-            this.form.property_address = draft.property_address;//街道
-            this.form.village_name = draft.village_name;//校区地址
-            this.form.room = draft.room;//室
-            this.form.hall = draft.hall;//厅
-            this.form.toilet = draft.toilet;//卫
-            this.form.area =draft.area;//面积
-
-          } else {
-            this.form.id = '';
           }
         })
       },
