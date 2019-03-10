@@ -1026,7 +1026,7 @@
         this.userInfo();
         this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
           //获取合同编号
-          contractApi.getNumber(1, res.data.city_id, number => {
+          contractApi.getNumber(2, res.data.city_id, number => {
             this.setContractNumber(number);
             if (success !== undefined) {
               success();
@@ -1467,6 +1467,8 @@
             this.form.account_name = banks[1];
             this.form.account = banks[0];
           }
+          this.form.name=this.form.customer_info[0].name;
+          this.form.phone=this.form.customer_info[0].phone;
           console.log(this.form.bank)
           this.getSessionInfo();
           if (this.form.regenerate === 1 || this.form.regenerate === '1') {
