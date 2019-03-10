@@ -100,7 +100,7 @@
       onConfirm(value, index) {
         switch (this.val) {
           case 1://收房选择合同或者收条
-            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[0].fdd_user_id, this.signTypeColumns[0].index);
+            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[0].fdd_user_id, 1,this.signTypeColumns[0].index);
             break;
           case 2://租房选择租客
             break
@@ -164,6 +164,7 @@
         }
       },
       signCollect(contract_number, title, id, type, index) {
+        console.log(index)
         this.$http.post(this.eurls + 'fdd/contract/sign_collect', {
           contract_id: contract_number,
           title: title,

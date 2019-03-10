@@ -92,7 +92,6 @@
             required>
           </van-field>
           <van-field
-            v-if="false"
             v-model="item.fadada_user_id===''?'':'实名认证成功'"
             label="实名认证"
             type="text"
@@ -656,7 +655,7 @@
       this.name = name || '';
       this.idcard = idcard || '';
       this.phone = phone || '';
-      this.fadada_user_id = 'AD4D9D5FFA9C4B0500DE29F99DE1CF5DB8EBB9DA925BA67D9860FC575697ADDAEC983C8F76C7F49A1A3B0D8593162E5C';
+      this.fadada_user_id = userid||'';
     }
   }
 
