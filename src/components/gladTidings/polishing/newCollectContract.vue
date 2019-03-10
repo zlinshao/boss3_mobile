@@ -7,21 +7,21 @@
           <van-radio name="2">续收</van-radio>
         </van-radio-group>
         <!--<van-field-->
-          <!--v-if="form.regenerate===1||form.regenerate==='1'"-->
-          <!--v-model="form.old_contract_number"-->
-          <!--label="原合同编号"-->
-          <!--type="text"-->
-          <!--placeholder=""-->
-          <!--readonly-->
-          <!--required>-->
+        <!--v-if="form.regenerate===1||form.regenerate==='1'"-->
+        <!--v-model="form.old_contract_number"-->
+        <!--label="原合同编号"-->
+        <!--type="text"-->
+        <!--placeholder=""-->
+        <!--readonly-->
+        <!--required>-->
         <!--</van-field>-->
         <!--<van-field-->
-          <!--v-model="form.contract_number"-->
-          <!--label="合同编号"-->
-          <!--type="text"-->
-          <!--placeholder="请填写收房合同编号"-->
-          <!--readonly-->
-          <!--required>-->
+        <!--v-model="form.contract_number"-->
+        <!--label="合同编号"-->
+        <!--type="text"-->
+        <!--placeholder="请填写收房合同编号"-->
+        <!--readonly-->
+        <!--required>-->
         <!--</van-field>-->
         <van-field
           v-model="form.house.name"
@@ -103,7 +103,9 @@
           @click="showSignPeoples()"
           readonly
           required>
-          <van-button slot="button" size="small" type="primary" @click="trueName(curTrueNameItem)">{{(curTrueNameItem===null||curTrueNameItem.fadada_user_id==='')?'实名认证':'已认证'}}</van-button>
+          <van-button slot="button" size="small" type="primary" @click="trueName(curTrueNameItem)">
+            {{(curTrueNameItem===null||curTrueNameItem.fadada_user_id==='')?'实名认证':'已认证'}}
+          </van-button>
         </van-field>
         <div v-if="showForm.showProxyInfo">
           <van-field
@@ -635,7 +637,7 @@
       this.name = name || '';
       this.idcard = idcard || '';
       this.phone = phone || '';
-      this.fadada_user_id = userid||'';
+      this.fadada_user_id = userid || '';
     }
   }
 
@@ -646,7 +648,7 @@
       return {
         /*以下是电子合同新加字段*/
         eshow: false,
-        curTrueNameItem:null,//当前需要实名认证的item
+        curTrueNameItem: null,//当前需要实名认证的item
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
         houseCertificateTypes: [new CommonIdNameEntity('1', '房屋所有权证'), new CommonIdNameEntity('2', '房屋买卖合同'), new CommonIdNameEntity('3', '其他房屋来源')],
@@ -657,7 +659,7 @@
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许装修
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
         //合同备注条款数据
-        remarks: [new CommonIdNameEntity('1', '不能群租'), new CommonIdNameEntity('2', '不得扰民'), new CommonIdNameEntity('3', '不能随意搬动屋内家具家电'), new CommonIdNameEntity('4', '不能故意拆卸家具家电'), new CommonIdNameEntity('5', '不得养宠物'), new CommonIdNameEntity('6', '不得租住新疆人或外国人'), new CommonIdNameEntity('7', '乙方不得将房屋用于承办丧事、喜事等商业用途'), new CommonIdNameEntity('8', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'), new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
+        remarks: [new CommonIdNameEntity('1', '不能群租'), new CommonIdNameEntity('2', '不得扰民'), new CommonIdNameEntity('3', '不能随意搬动屋内家具家电'), new CommonIdNameEntity('4', '不能故意拆卸家具家电'), new CommonIdNameEntity('5', '不得养宠物'), new CommonIdNameEntity('7', '乙方不得将房屋用于承办丧事、喜事等商业用途'), new CommonIdNameEntity('8', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'), new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
         curContractInfo: '',//ContractInfo类
         /*以上是电子合同新增*/
         haveInHand: true,
@@ -855,19 +857,49 @@
       }
     },
     methods: {
+      getPic(ids,success) {
+        let update = {show: []};
+        let list = [];
+        let data = {};
+        update.show = ids;
+        this.$http.post(globalConfig.server + 'api/v1/batch', {'batch': JSON.stringify(update)}).then((res) => {
+          if (res.data.code === '110100') {
+            res.data.data.forEach((item, index) => {
+              data.bucket = item.info.bucket;
+              data.created_at = item.created_at;
+              data.currentPlace = item.currentPlace;
+              data.deleted_at = item.deleted_at;
+              data.display_name = item.display_name;
+              data.ext = item.info.ext;
+              data.host = item.info.host;
+              data.id = item.id;
+              data.is_video = item.info.mime.indexOf('image') === -1;
+              data.mime=item.info.mime;
+              data.name=item.name;
+              data.raw_name=item.raw_name;
+              data.size=item.info.size;
+              data.update_at=item.update_at;
+              data.uri=item.uri;
+              data.user_id=item.user_id;
+              list.push(data);
+            });
+            success(list)
+          }
+        })
+      },
       /*以下是电子合同新加*/
       getSessionInfo() {
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
       },
       trueName(item) {
-        if(item===null){
+        if (item === null) {
           Toast('请先选择签约人');
           return
         }
-        contractApi.trueName(item, success=>{
+        contractApi.trueName(item, success => {
           window.open(success)
-        },error => {
+        }, error => {
           Toast(error)
         });
       },
@@ -876,9 +908,9 @@
           //获取合同编号
           contractApi.getNumber(1, res.data.city_id, number => {
             this.setContractNumber(number);
-           if(success!==undefined){
-             success();
-           }
+            if (success !== undefined) {
+              success();
+            }
           }, error => {
             Toast(error)
           });
@@ -887,7 +919,7 @@
       getContractNumber() {
         //获取业务员对应城市
         this.getSessionInfo();
-        if (this.form.regenerate === '1' || this.form.regenerate === 1||this.form.regenerate==='2'||this.form.regenerate===2) {
+        if (this.form.regenerate === '1' || this.form.regenerate === 1 || this.form.regenerate === '2' || this.form.regenerate === 2) {
           console.log('读取草稿');
           this.manuscript();
         } else {
@@ -1017,9 +1049,9 @@
             if (index === this.showForm.signPeoples.length - 1) {
               this.showForm.showProxyInfo = true;
               this.form.signer_type = 2;
-              this.curTrueNameItem=this.form.partA_agents;
+              this.curTrueNameItem = this.form.partA_agents;
             } else {
-              this.curTrueNameItem=this.form.owner[index];
+              this.curTrueNameItem = this.form.owner[index];
               this.form.signer_type = 1;
               this.showForm.showProxyInfo = false;
               this.form.signer = this.form.owner[index]
@@ -1315,9 +1347,9 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.getSessionInfo();
-          if(this.form.regenerate === 1 || this.form.regenerate === '1'){
+          if (this.form.regenerate === 1 || this.form.regenerate === '1') {
             this.post();
-          }else {
+          } else {
             this.getCity(resp => {
               this.getSessionInfo();
               this.post();
@@ -1327,9 +1359,9 @@
           Toast(this.alertMsg('sub'));
         }
       },
-      post(){
-        let url = this.form.regenerate === 0 || this.form.regenerate === '0'||
-        this.form.regenerate === 2 || this.form.regenerate === '2'? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+      post() {
+        let url = this.form.regenerate === 0 || this.form.regenerate === '0' ||
+        this.form.regenerate === 2 || this.form.regenerate === '2' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
           this.haveInHand = true;
           this.retry = 0;
@@ -1397,10 +1429,19 @@
             }
             this.form.is_corp = draft.is_corp;
             this.corp = draft.is_corp === 1;
-            this.photos = draft.photo || {};
-            this.screenshots = draft.screenshot_leader || {};
-            this.property_photos = draft.property_photo || {};
-            this.identity_photos = draft.identity_photo || {};
+            this.getPic( draft.photo,success=>{
+              this.photos=success;
+            });
+            this.getPic( draft.screenshot_leader,success=>{
+              this.screenshots=success;
+            });
+            this.getPic( draft.property_photo,success=>{
+              this.property_photos=success;
+            });
+            this.getPic( draft.identity_photo,success=>{
+              this.identity_photos=success;
+            });
+
             this.showForm.houseCertificateTypeTxt = this.getEntityForIndex(this.houseCertificateTypes, this.form.house_certificate).name;
             this.showForm.signPeople = draft.signer.name;
             let not_owner_fee_choosed_ids = [];

@@ -994,6 +994,36 @@
     },
     methods: {
       /*以下是电子合同新加*/
+      getPic(ids,success) {
+        let update = {show: []};
+        let list = [];
+        let data = {};
+        update.show = ids;
+        this.$http.post(globalConfig.server + 'api/v1/batch', {'batch': JSON.stringify(update)}).then((res) => {
+          if (res.data.code === '110100') {
+            res.data.data.forEach((item, index) => {
+              data.bucket = item.info.bucket;
+              data.created_at = item.created_at;
+              data.currentPlace = item.currentPlace;
+              data.deleted_at = item.deleted_at;
+              data.display_name = item.display_name;
+              data.ext = item.info.ext;
+              data.host = item.info.host;
+              data.id = item.id;
+              data.is_video = item.info.mime.indexOf('image') === -1;
+              data.mime=item.info.mime;
+              data.name=item.name;
+              data.raw_name=item.raw_name;
+              data.size=item.info.size;
+              data.update_at=item.update_at;
+              data.uri=item.uri;
+              data.user_id=item.user_id;
+              list.push(data);
+            });
+            success(list)
+          }
+        })
+      },
       trueName(item) {
         contractApi.trueName(item, success => {
           window.open(success)
@@ -1683,14 +1713,9 @@
         this.$http.get(this.eurls + 'fdd/contract/read/' + this.contract_number).then((res) => {
           if (res.data.code === '40000') {
             this.isClear = false;
-
-            let data = res.data.data;
             let draft = res.data.data.param_map;
-
-            this.form.id = data.id;
             this.form.contract_id = draft.contract_id;
             this.form.house_id = draft.house_id;
-
             this.form.address = draft.address;
             this.form.corp_name = draft.corp_name;
             this.form.month = draft.month;
@@ -1790,18 +1815,24 @@
             this.form.name = draft.name;
             this.form.phone = draft.phone;
             this.form.screenshot = draft.screenshot;
-            this.screenshots = data.screenshot || {};
             this.form.photo = draft.photo;
-            this.photos = data.photo || {};
             this.form.screenshot_leader = draft.screenshot_leader;
-            this.leaders = data.screenshot_leader || {};
             this.form.deposit_photo = draft.deposit_photo;
-            this.receipts = data.deposit_photo || {};
+            this.getPic( draft.screenshot,success=>{
+              this.screenshots=success;
+            });
+            this.getPic( draft.photo,success=>{
+              this.photos=success;
+            });
+            this.getPic( draft.screenshot_leader,success=>{
+              this.leaders=success;
+            });
+            this.getPic( draft.deposit_photo,success=>{
+              this.receipts=success;
+            });
             this.form.remark = draft.remark;
             this.form.rent_type = draft.rent_type;
-            console.log(draft.rent_type + "111")
             this.rentUseTxt = this.getEntityForIndex(this.rentUses, draft.rent_type);
-
           } else {
             this.receiptNum();
             this.form.id = '';
