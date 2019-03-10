@@ -1455,6 +1455,11 @@
             let draft = res.data.data.param_map;
 
             let list={}
+
+            Object.keys(obj).forEach(function (key) {
+
+            });
+
             for(let key in this.form){
               console.log(draft[key])
               list[key] = draft[key];

@@ -4,6 +4,7 @@ export default {
   install(Vue, options) {
     Vue.prototype.routerIndex = function (url, house, id) {
       let that = this;
+      alert(6)
       document.addEventListener('backbutton', function (e) {
         e.preventDefault();
         if (url !== '' && house === 'house') {
@@ -45,6 +46,7 @@ export default {
     };
     Vue.prototype.ddRent = function (url, house) {
       let that = this;
+      alert(7)
       dd.biz.navigation.setLeft({
         control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
         onSuccess: function (result) {

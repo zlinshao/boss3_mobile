@@ -58,9 +58,19 @@ function trueName(item,error,vue) {
         mobile: item.phone
       }).then(success => {
         if (success.data.code === '40010') {
-          vue.routerIndex('newCollectContract', 'house');
-          vue.ddRent('newCollectContract', 'house');
-          window.open(success.data.data.data);
+          alert(1);
+          vue.routerIndex('/newCollectContract', 'house');
+          vue.ddRent('/newCollectContract', 'house');
+          alert(2);
+          dd.biz.util.openLink({
+            url:success.data.data.data,//要打开链接的地址
+            onSuccess : function(result) {
+              alert(JSON.stringify(result))
+            },
+            onFail : function(err) {
+              alert(JSON.stringify(err))
+            }
+          });
         } else {
           error(success.data.msg);
         }
