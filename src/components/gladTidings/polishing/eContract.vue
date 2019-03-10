@@ -210,7 +210,7 @@
       },
       //添加收房合同
       collect(type,number) {
-        sessionStorage.setItem('contract_type',type);
+        sessionStorage.setItem('contract_type',type||0);
         sessionStorage.setItem('contract_number',number||'');
         this.$router.push( '/newCollectContract');//type 0为新签 1为作废重签 2为读草稿
       },

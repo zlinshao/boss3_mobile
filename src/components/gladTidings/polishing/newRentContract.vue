@@ -948,6 +948,9 @@
         }
       }
     },
+    created(){
+      this.getContractNumber();
+    },
     mounted() {
       this.isReceiptMsg = isReceiptMessage;
       let count = sessionStorage.count;
@@ -1027,7 +1030,6 @@
       this.form.toilet = house_types[2];//卫
       this.form.area = house_res.area;//面积
       /*获取电子合同相关字段*/
-      this.getContractNumber();
     },
     methods: {
       /*以下是电子合同新加*/

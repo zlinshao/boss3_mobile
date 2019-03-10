@@ -836,6 +836,9 @@
         }
       }
     },
+    created(){
+      this.getContractNumber();
+    },
     mounted() {
       let count = sessionStorage.count;
       if (count === '11') {
@@ -844,8 +847,6 @@
         this.close_();
         this.dicts('');
       }
-
-      this.getContractNumber();
     },
     activated() {
       let count = sessionStorage.count;
@@ -929,7 +930,7 @@
         //获取业务员对应城市
         this.form.contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
-        if (this.regenerate ==='0') {
+        if (this.form.regenerate ==='0'||this.form.regenerate===0) {
           this.userInfo(true);
           this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
             //获取合同编号
@@ -1415,6 +1416,7 @@
           this.form.contract_id = val.id;
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
+
           this.form.is_agency = val.is_agency;                           //是否渠道
           this.cusFrom = dicts.value8[val.is_agency];                    //是否渠道
         }
