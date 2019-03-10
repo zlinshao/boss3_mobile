@@ -930,7 +930,7 @@
         //获取业务员对应城市
         this.form.contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
-        if (this.regenerate !== 1) {
+        if (this.regenerate ==='0') {
           this.userInfo(true);
           this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
             //获取合同编号
@@ -941,7 +941,6 @@
             });
           });
         } else {//获取页面带过来的合同编号
-          this.form.contract_number = this.curContractInfo.number;
           this.manuscript();
         }
       },
@@ -1451,12 +1450,10 @@
           if (res.data.code === '40000') {
             this.isClear = false;
 
-            // let draft = res.data.data.param_map;
-            //
-            // Object.keys(app.form).forEach(function (key) {
-            //   console.log(app.form);
-            //   app.form[key]=draft[key];
-            // });
+            let draft = res.data.data.param_map;
+
+            this.form=contractApi.copy(this.form,draft);
+            console.log(this.form)
 
             this.first_date.push(draft.pay_first_date);
             this.datePrice[0] = draft.pay_first_date;
@@ -1495,7 +1492,7 @@
             this.photos = draft.photo || {};
             this.screenshots = draft.screenshot_leader || {};
             this.property_photos = draft.property_photo || {};
-            this.identity_photos = data.identity_photo || {};
+            this.identity_photos = draft.identity_photo || {};
             this.showForm.houseCertificateTypeTxt = this.getEntityForIndex(this.houseCertificateTypes, this.form.house_certificate).name;
             this.showForm.signPeople = draft.signer.name;
             let not_owner_fee_choosed_ids = [];
