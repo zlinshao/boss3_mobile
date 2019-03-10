@@ -87,7 +87,8 @@
         curItem: {},
         columns: [],
         signTypeColumns: [],//签约类型list，如合同、收条
-        val: 1  //1收房选择签约类别 如合同、收条 2租房选择签约人
+        val: 1, //1收房选择签约类别 如合同、收条 2租房选择签约人
+        isSendMsg: 0,//0不发短信 1发短信
       }
     },
     mounted() {
@@ -100,9 +101,10 @@
       onConfirm(value, index) {
         switch (this.val) {
           case 1://收房选择合同或者收条
-            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[0].fdd_user_id, 1,this.signTypeColumns[0].index);
+            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[0].fdd_user_id, this.isSendMsg, this.signTypeColumns[0].index);
             break;
           case 2://租房选择租客
+            this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[0].fdd_user_id, this.isSendMsg);
             break
         }
         this.selectHide = false;
@@ -128,13 +130,19 @@
         }
         return str;
       },
-      sign(item) {
-        let param = item.param_map;
-
+      send(item) {//发送短信给房东租客签约
+        this.isSendMsg=1;
+        this.signNow(item);
+      },
+      sign(item) {//在本机签约
+        this.isSendMsg=0;
+        this.signNow(item)
+      },
+      signNow(item){
         let list = [];
         this.signTypeColumns = [];
         this.curItem = item;
-        let users = item.electronContractCustomers;
+        let users = item.electron_contract_customers;
 
         if (this.type === 1) {//收房
           for (let i = 0; i < users.length; i++) {
@@ -149,11 +157,14 @@
           this.val = 1;
           this.selectHide = true;
           this.columns = list;
-
         } else {
           for (let i = 0; i < users.length; i++) {
             this.signTypeColumns.push(users[i]);
-            list.push('租客' + i);
+            if(users[i].customer.name!==null){
+              list.push(users[i].customer.name);
+            }else{
+              list.push('租客'+(i+1));
+            }
           }
           if (this.signTypeColumns.length === 0) {
             return
@@ -164,16 +175,21 @@
         }
       },
       signCollect(contract_number, title, id, type, index) {
-        console.log(index)
         this.$http.post(this.eurls + 'fdd/contract/sign_collect', {
           contract_id: contract_number,
           title: title,
           customer_id: id,
-          type: 1,//1发短信 0不发
+          type: type,//1发短信 0不发
           index: index
-        }, success => {
-          if (type === 1) {
-            Toast('发送成功!');
+        }).then(res=>{
+          if(res.data.code==='40000'){
+            if (type === 1) {
+              Toast('发送成功!');
+            }else{
+              window.open(res.data.data.data);
+            }
+          }else{
+            Toast(res.data.msg);
           }
         })
       }
@@ -183,11 +199,17 @@
           contract_id: contract_number,
           title: title,
           customer_id: id,
-          type: 1,//1发短信 0不发
-        }, success => {
-          if (type === 1) {
-            Toast('发送成功!');
-          }
+          type: type,//1发短信 0不发
+        }).then(res => {
+           if(res.data.code==='40000'){
+             if (type === 1) {
+               Toast('发送成功!');
+             }else{
+               window.open(res.data.data.data);
+             }
+           }else{
+             Toast(res.data.msg);
+           }
         })
       }
       ,
@@ -265,10 +287,7 @@
           }
         })
       }
-      ,
-      send(item) {
 
-      }
     }
   }
 </script>
