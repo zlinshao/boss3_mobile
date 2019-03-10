@@ -68,6 +68,10 @@
   export default {
     name: "eContract",
     components: {Toast},
+    activated(){
+      this.routerIndex('');
+      this.ddRent('');
+    },
     data() {
       return {
         list: [],

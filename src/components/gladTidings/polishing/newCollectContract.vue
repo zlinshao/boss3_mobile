@@ -841,6 +841,8 @@
     },
     activated() {
       //如果房屋信息为空 则请求读草稿
+      this.routerIndex('eContract');
+      this.ddRent('eContract');
       this.userInfo();
       let item = JSON.parse(sessionStorage.getItem('item'));
       if (item === null) {

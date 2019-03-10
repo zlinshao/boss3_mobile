@@ -961,7 +961,8 @@
       }
     },
     activated() {
-
+      this.routerIndex('eContract');
+      this.ddRent('eContract');
       let count = sessionStorage.count;
       this.counts = count;
       console.log(sessionStorage.personal);
