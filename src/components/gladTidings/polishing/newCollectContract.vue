@@ -1456,16 +1456,9 @@
 
             let list={}
 
-            Object.keys(obj).forEach(function (key) {
-
-            });
-
-            for(let key in this.form){
-              console.log(draft[key])
-              list[key] = draft[key];
-            }
-            let json=JSON.stringify(list);
-            this.form=json;
+            // Object.keys(this.form).forEach(function (key) {
+            //   app.form[key]=draft[key];
+            // });
             console.log(this.form);
 
             this.first_date.push(draft.pay_first_date);

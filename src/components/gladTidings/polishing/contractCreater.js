@@ -62,15 +62,16 @@ function trueName(item,error,vue) {
           vue.routerIndex('/newCollectContract', 'house');
           vue.ddRent('/newCollectContract', 'house');
           alert(2);
-          dd.biz.util.openLink({
-            url:success.data.data.data,//要打开链接的地址
-            onSuccess : function(result) {
-              alert(JSON.stringify(result))
-            },
-            onFail : function(err) {
-              alert(JSON.stringify(err))
-            }
-          });
+          location.href=success.data.data;
+          // dd.biz.util.openLink({
+          //   url:success.data.data.data,//要打开链接的地址
+          //   onSuccess : function(result) {
+          //     alert(JSON.stringify(result))
+          //   },
+          //   onFail : function(err) {
+          //     alert(JSON.stringify(err))
+          //   }
+          // });
         } else {
           error(success.data.msg);
         }
