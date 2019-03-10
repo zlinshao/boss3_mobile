@@ -815,34 +815,34 @@
           house_id: '',                 //房屋地址id
           discount: 0,                  //让价总金额
 
-          month: '12',                    //租房月数
+          month: '',                    //租房月数
           day: '0',                      //租房天数
-          sign_date: '2019-03-09',                //签约开始日期
-          end_date: '2020-03-08',                 //签约结束日期
-          begin_date: '2019-03-09',               //合同开始日期
-          price_arr: ['1200'],              //月单价
-          period_price_arr: ['6'],       //月单价周期
+          sign_date: '',                //签约开始日期
+          end_date: '',                 //签约结束日期
+          begin_date: '',               //合同开始日期
+          price_arr: [''],              //月单价
+          period_price_arr: [''],       //月单价周期
 
-          pay_way_bet: '1',              //付款方式 押
+          pay_way_bet: '',              //付款方式 押
 
-          period_pay_arr: ['6'],         //付款方式周期
-          pay_way_arr: ['6'],            //付款方式 付
+          period_pay_arr: [''],         //付款方式周期
+          pay_way_arr: [''],            //付款方式 付
 
-          front_money: '1200',              //定金
-          deposit: '1000',                  //押金
-          rent_money: '1200',               //租金
-          deposit_payed: '10000',            //已收押金
-          money_sum: '10000',                //总金额
-          money_sep: ['1200'],              //分金额
-          real_pay_at: ['2019-03-09'],            //实际收款时间
+          front_money: '',              //定金
+          deposit: '',                  //押金
+          rent_money: '',               //租金
+          deposit_payed: '',            //已收押金
+          money_sum: '',                //总金额
+          money_sep: [''],              //分金额
+          real_pay_at: [''],            //实际收款时间
           money_way: [''],              //汇款帐户
           account_id: [],               //汇款帐户ID
-          memo: 'dsadasda',                     //收款备注
+          memo: '',                     //收款备注
 
           is_other_fee: 0,
           other_fee: '111',
-          other_fee_name: 'dsad',
-          penalty: '666',                     //违约金
+          other_fee_name: '',
+          penalty: '',                     //违约金
 
           is_agency: '',                //客户来源    0个人1渠道
           agency_name: '',              //渠道名
@@ -855,15 +855,15 @@
 
           is_receipt: 1,                //1是 2不是
           receipt: [''],                //收据编号
-          property_payer: '120',           //物业费
-          retainage_date: '2019-03-09',           //尾款补齐时间
+          property_payer: '',           //物业费
+          retainage_date: '',           //尾款补齐时间
           name: '',                     //客户姓名
           phone: '',                    //电话号码
           screenshot_leader: [],        //领导截图 数组
           screenshot: [],               //凭证截图 数组
           deposit_photo: [],            //押金收条 数组
           photo: [],                    //合同照片 数组
-          remark: 'dad',                   //备注
+          remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
           staff_name: '',               //开单人name
@@ -876,27 +876,27 @@
           bank: '',
           account_name: '',
           account: '',
-          province: "江苏",
-          city: "南京",
-          district: "建邺",
-          village_name: "艺树家工厂",
-          room: "3",
-          hall: "2",
-          toilet: "1",
-          area: "120",
-          use_type: "3",
-          other_use: "烧鸡",
-          people: "2",
+          province: "",
+          city: "",
+          district: "",
+          village_name: "",
+          room: "",
+          hall: "",
+          toilet: "",
+          area: "",
+          use_type: "",
+          other_use: "",
+          people: "",
           rent_type: "1",
-          manage_fee: "3500",
-          manage_share: "2500",
-          water_fee: "1500",
+          manage_fee: "",
+          manage_share: "",
+          water_fee: "",
           net_fee: "1",
-          public_fee: "1200",
-          staff_phone: "18796005530",
+          public_fee: "",
+          staff_phone: "",
           pdf_scene: 2,
-          emergency_phone: "18796005530",
-          customer_info: [new HouseOwner('123', '341126199502023237', '17626043187', '3328')],//房屋所有人HouseOwner类的列表
+          emergency_phone: "",
+          customer_info: [new HouseOwner()],//房屋所有人HouseOwner类的列表
           other_rule: {},
           cookie: '',
           /*以上是电子合同独特字段*/
@@ -912,7 +912,6 @@
         dictValue8: [],                 //支付方式
         value8: [],
 
-        isValue1: true,
         counts: '',
 
         retry: 0,
@@ -963,73 +962,35 @@
     activated() {
       this.routerIndex('eContract');
       this.ddRent('eContract');
-      let count = sessionStorage.count;
-      this.counts = count;
-      console.log(sessionStorage.personal);
-      if (count === '11') {
-        this.routerIndex('');
-        this.ddRent('');
-        this.polishing();
-      }
-      if (count === '1') {
-        this.routerIndex('');
-        this.ddRent('');
-        this.polishing();
-        this.close_();
-        this.dicts('');
-        count = count + '1';
-        sessionStorage.setItem('count', count);
-      }
-      if (count === '21') {
-        this.isValue1 = false;
-        let newID = JSON.parse(sessionStorage.process);
-        if (newID.type === 2) {
-          this.routerTo('/publishDetail', newID.ids);
-        } else {
-          this.counts = '1';
-          this.routerIndex('');
-          this.ddRent('');
-        }
-      }
-      if (count === '2') {
-        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
-        let newID = JSON.parse(sessionStorage.process);
-        console.log(newID+"sads")
-        if (newID.type === 2) {
-          this.close_();
-          this.routerTo('/publishDetail', newID.ids);
-        } else {
-          this.counts = '1';
-          this.close_();
-          this.routerIndex('');
-          this.ddRent('');
-        }
-        this.close_();
-        this.dicts(newID);
-        count = count + '1';
-        sessionStorage.setItem('count', count);
-      }
+      this.userInfo();
       this.houseInfo();
-      //获取合同编号
-      // 获取房屋信息
       let item = JSON.parse(sessionStorage.getItem('item'));
-      if (item === null || item === undefined) return;
-      let house_res = item.house_res;
-      if (house_res === null || house_res === undefined) return;
-      let house_res_com = house_res.community;
-      if (house_res_com === null || house_res_com === undefined) return;
-
-      this.form.province = house_res_com.province.province_name;//省
-      this.form.city = house_res_com.city.city_name;//市
-      this.form.district = house_res_com.area.area_name;
-      this.form.property_address = house_res_com.address;//街道
-      this.form.village_name = house_res_com.village_name;//校区地址
-      let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
-      this.form.room = house_types[0];//室
-      this.form.hall = house_types[1];//厅
-      this.form.toilet = house_types[2];//卫
-      this.form.area = house_res.area;//面积
-      /*获取电子合同相关字段*/
+      if (item === null) {
+        console.log('读取合同编号');
+        this.dicts(success => {
+          this.getContractNumber();
+        }, error => {
+        });
+      } else {
+        console.log('读取房屋信息');
+        let house_res = item.house_res;
+        let house_res_com = house_res.community;
+        this.form.house = {id: '', name: ''};
+        this.form.house.id = item.house_id;
+        this.form.house.name = item.house_name;
+        this.form.province = house_res_com.province.province_name;//省
+        this.form.city = house_res_com.city.city_name;//市
+        this.form.district = house_res_com.area.area_name;
+        this.form.property_address = house_res_com.address;//街道
+        this.form.village_name = house_res_com.village_name;//校区地址
+        let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
+        this.form.room = house_types[0];//室
+        this.form.hall = house_types[1];//厅
+        this.form.toilet = house_types[2];//卫
+        this.form.area = house_res.area;//面积
+        sessionStorage.setItem('item', null)
+        /*获取电子合同相关字段*/
+      }
     },
     methods: {
       /*以下是电子合同新加*/
@@ -1156,7 +1117,6 @@
         this.polishingHint(id);
       },
       userInfo(val1) {
-        if (val1) {
           let per = JSON.parse(sessionStorage.personal);
           this.form.staff_id = per.id;
           this.form.staff_name = per.name;
@@ -1164,7 +1124,6 @@
           this.form.department_id = per.department_id;
           this.form.department_name = per.department_name;
           this.form.cookie = per.session_id;
-        }
       },
       dicts(val) {
         // 收款帐户
@@ -1691,27 +1650,7 @@
             this.form.house_id = val.house_id;
           }
         }
-        if (t.staff !== undefined && t.staff !== '') {
-          let val = JSON.parse(t.staff);
-          this.form.staff_id = val.staff_id;
-          this.form.staff_name = val.staff_name;
-          this.form.staff_phone = val.phone;
-          this.form.department_id = val.depart_id;
-          this.form.department_name = val.depart_name;
-          this.isValue1 = val.activeRevise;
-          this.stick();
-        }
-        if (t.depart !== undefined && t.depart !== '') {
-          let val = JSON.parse(t.depart);
-          this.form.department_name = val.name;
-          this.form.department_id = val.id;
-          this.isValue1 = val.activeRevise;
-          this.stick();
-        }
-        if (t.tops === '') {
-          this.stick();
-        }
-        this.userInfo(this.isValue1);
+        this.userInfo();
       },
 
       rentDetail() {
