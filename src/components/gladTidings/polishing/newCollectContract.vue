@@ -92,6 +92,7 @@
             required>
           </van-field>
           <van-field
+            v-if="false"
             v-model="item.fadada_user_id===''?'':'实名认证成功'"
             label="实名认证"
             type="text"
@@ -930,7 +931,9 @@
     methods: {
       /*以下是电子合同新加*/
       trueName(item) {
-        contractApi.trueName(item);
+        contractApi.trueName(item,error=>{
+          Toast(error)
+        });
       },
       getContractNumber() {
         //获取业务员对应城市

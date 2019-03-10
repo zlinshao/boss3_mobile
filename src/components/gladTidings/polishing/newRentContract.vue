@@ -447,6 +447,7 @@
             required>
           </van-field>
           <van-field
+            v-if="false"
             v-model="form.customer_info[index].fadada_user_id===''?'':'实名认证成功'"
             label="实名认证"
             type="text"
@@ -1037,7 +1038,9 @@
     methods: {
       /*以下是电子合同新加*/
       trueName(item) {
-        contractApi.trueName(item);
+        contractApi.trueName(item,error=>{
+          Toast(error)
+        });
       },
       getEntityForIndex(entitys,id) {
         for (let i = 0; i < entitys.length; i++) {

@@ -47,7 +47,7 @@ function createRentContract(pdf, param,success,error) {
     }
   })
 }
-function trueName(item) {
+function trueName(item,error) {
   Vue.prototype.$http.get(url+'/fdd/customer/verified?idcard='+item.idcard+'&name='+item.name+'&phone='+item.phone).then(success=>{
     if(success.data.code==='40000'){
       item.fadada_user_id=success.data.data.customer_id;
@@ -68,7 +68,7 @@ function trueName(item) {
             }
           });
         } else {
-          Toast(success.data.msg)
+          error(success.data.msg);
         }
       })
     }
