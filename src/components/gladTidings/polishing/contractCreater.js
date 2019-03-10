@@ -59,10 +59,10 @@ function trueName(item,error,vue) {
       }).then(success => {
         if (success.data.code === '40010') {
           alert(1);
-          vue.routerIndex('/newCollectContract', 'house');
-          vue.ddRent('/newCollectContract', 'house');
+          vue.routerIndex('');
+          vue.ddRent('');
           alert(2);
-          location.href=success.data.data;
+          location.href=success.data.data.data;
           // dd.biz.util.openLink({
           //   url:success.data.data.data,//要打开链接的地址
           //   onSuccess : function(result) {

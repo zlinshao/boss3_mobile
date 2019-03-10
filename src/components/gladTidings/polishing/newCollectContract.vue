@@ -1456,9 +1456,11 @@
 
             let list={}
 
-            // Object.keys(this.form).forEach(function (key) {
-            //   app.form[key]=draft[key];
-            // });
+            Object.keys(this.form).forEach(function (key) {
+              console.log(key);
+
+              app.form[key]=draft[key];
+            });
             console.log(this.form);
 
             this.first_date.push(draft.pay_first_date);
