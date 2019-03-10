@@ -58,16 +58,16 @@ function trueName(item,error) {
         mobile: item.phone
       }).then(success => {
         if (success.data.code === '40010') {
-          window.open(success.data.data.data);
-          // dd.biz.util.openLink({
-          //   url:success.data.data.data,//要打开链接的地址
-          //   onSuccess : function(result) {
-          //     alert(JSON.stringify(result))
-          //   },
-          //   onFail : function(err) {
-          //     alert(JSON.stringify(err))
-          //   }
-          // });
+          //window.open(success.data.data.data);
+          dd.biz.util.openLink({
+            url:success.data.data.data,//要打开链接的地址
+            onSuccess : function(result) {
+              alert(JSON.stringify(result))
+            },
+            onFail : function(err) {
+              alert(JSON.stringify(err))
+            }
+          });
         } else {
           error(success.data.msg);
         }

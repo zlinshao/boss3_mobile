@@ -853,7 +853,6 @@
       this.getContractNumber();
     },
     activated() {
-      console.log(111)
       let count = sessionStorage.count;
       this.counts = count;
       if (count === '11') {
@@ -1453,14 +1452,14 @@
           if (res.data.code === '40000') {
             this.isClear = false;
             let draft = res.data.data.param_map;
-            // let list={}
-            // for(let key in this.form){
-            //   console.log(draft[key])
-            //   list[key] = draft[key];
-            // }
-            // let json=JSON.stringify(list);
-            // this.form=json;
-            // console.log(this.form);
+            let list={}
+            for(let key in this.form){
+              console.log(draft[key])
+              list[key] = draft[key];
+            }
+            let json=JSON.stringify(list);
+            this.form=json;
+            console.log(this.form);
 
             this.first_date.push(draft.pay_first_date);
             this.datePrice[0] = draft.pay_first_date;
