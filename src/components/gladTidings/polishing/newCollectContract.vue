@@ -590,7 +590,7 @@
 
     <div class="footer" v-if="counts === '1' || counts === '11'">
       <div @click="close_()">重置</div>
-      <div @click="saveCollect(1)">草稿</div>
+      <!--<div @click="saveCollect(1)">草稿</div>-->
       <div @click="saveCollect(0)">发布</div>
     </div>
 
@@ -845,11 +845,7 @@
         this.close_();
         this.dicts('');
       }
-      if (this.$route.query.c_info !== undefined) {
-        let type = this.$route.query.c_info.type;
-        this.curContractInfo = this.$route.query.c_info;
-        this.form.regenerate = type;//0新签 1作废重签
-      }
+
       this.getContractNumber();
     },
     activated() {
@@ -928,11 +924,13 @@
       trueName(item) {
         contractApi.trueName(item, error => {
           Toast(error)
-        },this);
+        }, this);
       },
       getContractNumber() {
         //获取业务员对应城市
-        if (this.curContractInfo.type !== 2) {
+        this.form.contract_number = sessionStorage.getItem('contract_number');
+        this.form.regenerate = sessionStorage.getItem('contract_type');
+        if (this.regenerate !== 1) {
           this.userInfo(true);
           this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
             //获取合同编号
@@ -1357,7 +1355,7 @@
         }
       },
 
-      saveCollect(val) {
+      saveCollect() {
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
@@ -1370,8 +1368,8 @@
           this.form.is_corp = this.corp ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
-          this.form.draft = val;
-          let url = this.form.draft === 1 ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
+          // let url = this.form.draft === 1 ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
+          let url = this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
           this.$http.post(this.eurls + url, this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -1448,18 +1446,17 @@
 
       // 草稿
       manuscript() {
+        let app = this;
         this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.contract_number).then((res) => {
           if (res.data.code === '40000') {
             this.isClear = false;
 
-            let draft = res.data.data.param_map;
-
-            console.log(app.form)
-            Object.keys(this.form).forEach(function (key) {
-
-              app.form[key]=draft[key];
-            });
-            console.log(this.form);
+            // let draft = res.data.data.param_map;
+            //
+            // Object.keys(app.form).forEach(function (key) {
+            //   console.log(app.form);
+            //   app.form[key]=draft[key];
+            // });
 
             this.first_date.push(draft.pay_first_date);
             this.datePrice[0] = draft.pay_first_date;

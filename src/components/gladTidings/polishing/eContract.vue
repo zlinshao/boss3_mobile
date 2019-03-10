@@ -40,9 +40,9 @@
     <van-button round type="danger" class="new" @click="showChooseDialog()">新增合同</van-button>
     <van-popup v-model="show" class="popup">
       <div>
-        <div class="choose" @click="collect">收房</div>
+        <div class="choose" @click="collect(0,'')">收房</div>
         <div class="line"></div>
-        <div class="choose" @click="rent">租房</div>
+        <div class="choose" @click="rent(0,'')">租房</div>
       </div>
     </van-popup>
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -187,9 +187,9 @@
           return;
         }
         if (this.type === 1) {
-          this.$router.push({path: '/newCollectContract', query: {c_info: new ContractInfo(2, item.contract_number)}});//type 0为新签 1为作废重签 2为读草稿
+          this.collect(1,item.contract_number);
         } else {
-          this.$router.push({path: '/newRentContract', query: {c_info: new ContractInfo(2, item.contract_number)}});//type 0为新签 1为作废重签 2为读草稿
+          this.rent(1,item.contract_number);
         }
       },
       onSearch() {
@@ -209,13 +209,17 @@
         this.show = true;
       },
       //添加收房合同
-      collect() {
-        this.$router.push({path: '/newCollectContract', query: {c_info: new ContractInfo(0)}});//type 0为新签 1为作废重签 2为读草稿
+      collect(type,number) {
+        sessionStorage.setItem('contract_type',type);
+        sessionStorage.setItem('contract_number',number||'');
+        this.$router.push( '/newCollectContract');//type 0为新签 1为作废重签 2为读草稿
       },
       //添加租房合同
-      rent() {
-        this.$router.push({path: '/newRentContract', query: {c_info: new ContractInfo(0)}});//type 0为新签 1为作废重签 2为读草稿
-      }
+      rent(type,number) {
+        sessionStorage.setItem('contract_type',type||0);
+        sessionStorage.setItem('contract_number',number||'');
+        this.$router.push('/newRentContract');//type 0为新签 1为作废重签 2为读草稿
+      },
     }
   }
 </script>
