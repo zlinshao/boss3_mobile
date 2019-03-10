@@ -62,7 +62,8 @@ function trueName(item,error,vue) {
           vue.routerIndex('');
           vue.ddRent('');
           alert(2);
-          location.href=success.data.data.data;
+          window.open(success.data.data.data);
+         // location.href=success.data.data.data;
           // dd.biz.util.openLink({
           //   url:success.data.data.data,//要打开链接的地址
           //   onSuccess : function(result) {
