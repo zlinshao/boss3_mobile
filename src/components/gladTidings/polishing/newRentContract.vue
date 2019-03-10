@@ -1866,7 +1866,6 @@
         }
       },
       close_() {
-        return
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;

@@ -200,6 +200,8 @@
       changeTab(index, title) {
         this.type = index + 1;
         this.page = 1;
+        this.list=[];
+        this.finished=false;
         this.getData();
       },
       //显示选择收租房弹框

@@ -1566,7 +1566,7 @@
               not_owner_fee_choosed_ids.push(key)
             });
             this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
-            this.changeNoPropertyFee()
+            this.changeNoPropertyFee();
             this.form.other_fee_text = draft.other_fee_text;
             this.form.allowed_decoration_to = draft.allowed_decoration_to;
             this.showForm.canDecorationsTxt = this.getEntityForIndex(this.canDecorations, this.form.allowed_decoration_to).name;
@@ -1575,6 +1575,16 @@
             this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
             this.changeContracts()
 
+            this.form.province =draft.province;//省
+            this.form.city = draft.city;//市
+            this.form.district = draft.district;
+            this.form.property_address = draft.property_address;//街道
+            this.form.village_name = draft.village_name;//校区地址
+            this.form.room = draft.room;//室
+            this.form.hall = draft.hall;//厅
+            this.form.toilet = draft.toilet;//卫
+            this.form.area =draft.area;//面积
+
           } else {
             this.form.id = '';
           }
@@ -1582,7 +1592,6 @@
       },
 
       close_() {
-        return
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;
