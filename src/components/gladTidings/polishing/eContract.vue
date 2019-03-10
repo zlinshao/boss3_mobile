@@ -27,10 +27,10 @@
           <span class="owner" style="color: #e4393c;">{{getStatusStr(item)}}</span>
         </div>
         <div class="btnParent">
-          <van-button v-if="item.contract_status===0||item.contract_status===1" class="btn send" size="small"
+          <van-button v-if="item.contract_status===0" class="btn send" size="small"
                       @click="send(item)" @click.stop>发送
           </van-button>
-          <van-button v-if="item.contract_status===0||item.contract_status===1" class="btn sign" size="small"
+          <van-button v-if="item.contract_status===0" class="btn sign" size="small"
                       @click="sign(item)" @click.stop>签署
           </van-button>
         </div>
@@ -78,9 +78,9 @@
         limit: 10,
         totalPages: 1,
         selectHide: false,
-        curCustomerList:[],
-        curContractNumber:'',
-        curContractTitle:'',
+        curCustomerList: [],
+        curContractNumber: '',
+        curContractTitle: '',
         columns: []
       }
     },
@@ -93,7 +93,7 @@
       },
       onConfirm(value, index) {
         this.selectHide = true;
-        this.signTrue( this.curContractNumber,this.curContractTitle,this.curCustomerList[index].fadada_user_id);
+        this.signTrue(this.curContractNumber, this.curContractTitle, this.curCustomerList[index].fadada_user_id);
       },
       getStatusStr(item) {
         let str = '';
@@ -152,25 +152,25 @@
       sign(item) {
         let param = item.param_map;
         if (this.type === 1) {//收房
-          this.signTrue(item.contract_number,item.title,param.signer.fadada_user_id)
+          this.signTrue(item.contract_number, item.title, param.signer.fadada_user_id)
         } else {
           if (param.customer_info.length === 1) {
-            this.signTrue(item.contract_number,item.title,param.customer_info[0].fadada_user_id);
-          }else{
-            this.columns=[];
-            this.curContractNumber=item.contract_number;
-            this.curContractTitle=item.title;
-            this.curCustomerList=param.customer_info;
-            for(let i=0;i<param.customer_info.length;i++){
+            this.signTrue(item.contract_number, item.title, param.customer_info[0].fadada_user_id);
+          } else {
+            this.columns = [];
+            this.curContractNumber = item.contract_number;
+            this.curContractTitle = item.title;
+            this.curCustomerList = param.customer_info;
+            for (let i = 0; i < param.customer_info.length; i++) {
               this.columns.push(param.customer_info[i].name)
             }
-            this.selectHide=true;
+            this.selectHide = true;
           }
         }
       },
-      signTrue(contract_number,title,id) {
-        this.$http.post(this.eurls+'fdd/contract/manual', {
-          contract_id:contract_number,
+      signTrue(contract_number, title, id) {
+        this.$http.post(this.eurls + 'fdd/contract/manual', {
+          contract_id: contract_number,
           title: title,
           customer_id: id,
         }, success => {
@@ -178,18 +178,13 @@
         })
       },
       toDetail(item) {
-        let type = 0;
-        if (item.contract_status === 0) {
-          type = 0;
-        } else if (item.contract_status === 1) {
-          type = 1;
-        } else {
+        if (item.contract_status !== 1) {
           return;
         }
         if (this.type === 1) {
-          this.collect(1,item.contract_number);
+          this.collect(1, item.contract_number);
         } else {
-          this.rent(1,item.contract_number);
+          this.rent(1, item.contract_number);
         }
       },
       onSearch() {
@@ -200,8 +195,8 @@
       changeTab(index, title) {
         this.type = index + 1;
         this.page = 1;
-        this.list=[];
-        this.finished=false;
+        this.list = [];
+        this.finished = false;
         this.getData();
       },
       //显示选择收租房弹框
@@ -209,15 +204,15 @@
         this.show = true;
       },
       //添加收房合同
-      collect(type,number) {
-        sessionStorage.setItem('contract_type',type||0);
-        sessionStorage.setItem('contract_number',number||'');
-        this.$router.push( '/newCollectContract');//type 0为新签 1为作废重签 2为读草稿
+      collect(type, number) {
+        sessionStorage.setItem('contract_type', type || 0);
+        sessionStorage.setItem('contract_number', number || '');
+        this.$router.push('/newCollectContract');//type 0为新签 1为作废重签 2为读草稿
       },
       //添加租房合同
-      rent(type,number) {
-        sessionStorage.setItem('contract_type',type||0);
-        sessionStorage.setItem('contract_number',number||'');
+      rent(type, number) {
+        sessionStorage.setItem('contract_type', type || 0);
+        sessionStorage.setItem('contract_number', number || '');
         this.$router.push('/newRentContract');//type 0为新签 1为作废重签 2为读草稿
       },
     }

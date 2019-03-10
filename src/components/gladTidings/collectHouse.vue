@@ -173,7 +173,6 @@
         key.type = this.types;
         let houseData = {};
         sessionStorage.setItem('item', JSON.stringify(key));//收房电子合同使用
-        console.log(JSON.stringify(key))
         for (let item of Object.keys(key)) {
           switch (item) {
             case 'house_res':

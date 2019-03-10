@@ -68,9 +68,13 @@ function trueName(item, error, vue) {
   });
 }
 
-function copy(oldObj, source) {
+function copy(oldObj, source,split) {
   let data = {};
   for (let item in oldObj) {
+    if(split.indexOf(item)!==-1){
+      data[item]='';
+      continue
+    }
     if (source[item] instanceof Array) {
       data[item]=copyArray(source[item])
     } else if (typeof source[item] === 'object') {
