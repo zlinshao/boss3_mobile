@@ -82,7 +82,6 @@ function copy(oldObj, source) {
   return data;
 }
 function copyArray(source) {
-  console.log(source)
   let list=[];
   for(let i=0;i<source.length;i++){
     let entity=source[i];

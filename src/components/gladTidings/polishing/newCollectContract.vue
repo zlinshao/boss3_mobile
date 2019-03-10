@@ -767,7 +767,7 @@
           penalty: '',                  //违约金
           contract_number: '',      //合同编号
           screenshot_leader: [],        //领导截图 数组
-          photo: [[]],                    //合同照片 数组
+          photo: [],                    //合同照片 数组
           property_photo: [],               //房产证照片
           identity_photo: [],           //证件照片
           remark: '',                   //备注
@@ -803,7 +803,6 @@
           partA_agents: {},//代理人信息
           signer: '',
           owner: [new HouseOwner()],//房屋所有人HouseOwner类的列表
-          customerIds: '3328',
           cookie: '',
           /*以上是电子合同特有字段*/
         },
@@ -1367,7 +1366,6 @@
           this.form.is_corp = this.corp ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
-          // let url = this.form.draft === 1 ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
           let url = this.form.regenerate === 0||this.form.regenerate==='0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
           this.$http.post(this.eurls + url, this.form).then((res) => {
             this.haveInHand = true;
@@ -1460,15 +1458,15 @@
             this.datePay[0] = draft.pay_first_date;
 
             this.cusFrom = dicts.value8[draft.is_agency];                //是否渠道
-            for (let i = 0; i < draft.price_arr.length; i++) {
-              this.amountPrice = i + 1;
-              this.form.period_price_arr.push('');
-              this.form.price_arr.push('');
-            }
+            // for (let i = 0; i < draft.price_arr.length; i++) {
+            //   this.amountPrice = i + 1;
+            //   this.form.period_price_arr.push('');
+            //   this.form.price_arr.push('');
+            // }
             this.countDate(1, draft.period_price_arr);
             for (let i = 0; i < draft.pay_way_arr.length; i++) {
-              this.amountPay = i + 1;
-              this.form.pay_way_arr.push('');
+              //this.amountPay = i + 1;
+             // this.form.pay_way_arr.push('');
               for (let j = 0; j < this.dictValue4.length; j++) {
                 if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
                   this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
