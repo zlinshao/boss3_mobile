@@ -908,9 +908,9 @@
           Toast('请先选择签约人');
           return
         }
-        this.sendOrSave(1,success=>{
+        this.sendOrSave(1, success => {
           contractApi.trueName(item, success => {
-            location.href=success
+            location.href = success
           }, error => {
             Toast(error)
           });
@@ -1003,7 +1003,7 @@
       addNewHouseOwner() {
         this.form.owner.push(new HouseOwner())
       },
-      getNameForIndex(entitys, id){
+      getNameForIndex(entitys, id) {
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
           if (id === entity.id) {
@@ -1364,7 +1364,7 @@
         }
       },
 
-      sendOrSave(type,success) {//0发布1草稿
+      sendOrSave(type, success) {//0发布1草稿
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
@@ -1381,57 +1381,50 @@
             mask: true,
             message: '加载中...'
           });
-          if(type===1){//草稿
-            let json={content:this.form,type:'1'};
-            this.$http.post(this.eurls+'fdd/contract/stash',json).then(res=>{
-              this.haveInHand=true;
+          if (type === 1) {//草稿
+            let json = {content: this.form, type: '1'};
+            this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+              this.haveInHand = true;
               Toast.clear();
-              if(success===undefined) {
+              if (success === undefined) {
                 Toast(res.data.msg)
-              }else{
+              } else {
                 success()
               }
-            }).catch(e=>{
+            }).catch(e => {
               Toast.clear();
-              this.haveInHand=true;
+              this.haveInHand = true;
             });
-           return
+            return
           }
-          if (this.form.regenerate === 1 || this.form.regenerate === '1') {
+          this.getSessionInfo();
+          this.getCity(resp => {
             this.post();
-          } else {
-            this.getCity(resp => {
-              this.post();
-            })
-          }
+          })
         } else {
           Toast(this.alertMsg('sub'));
         }
       },
       post() {
-        this.getSessionInfo();
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           this.haveInHand = true;
           this.retry = 0;
+          Toast(res.data.msg);
           if (res.data.code === '40000') {
-            Toast.success(res.data.msg);
-            if (res.data.data.id) {
-              this.routerDetail(res.data.data.id)
-            } else {
-              this.routerDetail(res.data.data.data.id)
-            }
+            this.routerDetail(res.data.data.data.id);
             this.close_();
             $('.imgItem').remove();
           } else if (res.data.code === '40040') {
-            this.$router.go(-1);
-            Toast(res.data.msg);
-          } else {
-            Toast(res.data.msg);
+            if (res.data.data.is_bulletin) {
+              this.routerDetail(res.data.data.data.id)
+            } else {
+              this.$router.go(-1);
+            }
           }
         }).catch((error) => {
-          Toase.clear;
+          Toast.clear();
           this.haveInHand = true;
           if (error.response === undefined) {
             this.alertMsg('net');
@@ -1452,7 +1445,7 @@
       getContractDetail() {
         this.getSessionInfo();
 
-        if(this.form.regenerate==='1'){
+        if (this.form.regenerate === '1') {
           this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.old_contract_number).then((res) => {
             Toast.clear();
             if (res.data.code === '40000') {
@@ -1460,18 +1453,18 @@
               let draft = res.data.data.param_map;
               this.changeContractData(draft);
             }
-          }).catch(e=>{
+          }).catch(e => {
             Toast.clear();
           })
-        }else{
+        } else {
           this.getCity();
           //读小飞草稿
-          this.$http.get(this.eurls+'fdd/contract/stash?staff_id='+this.form.staff_id+'&type='+1).then(res=>{
+          this.$http.get(this.eurls + 'fdd/contract/stash?staff_id=' + this.form.staff_id + '&type=' + 1).then(res => {
             Toast.clear();
-            if(res.data.code==='40000'){
+            if (res.data.code === '40000') {
               this.changeContractData(res.data.data)
             }
-          }).catch(e=>{
+          }).catch(e => {
             Toast.clear();
           })
         }
@@ -1517,9 +1510,9 @@
         });
         this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
         this.showForm.signPeople = draft.signer.name;
-        this.curTrueNameItem=draft.signer;
+        this.curTrueNameItem = draft.signer;
         //验证身份
-        contractApi.trueName( this.curTrueNameItem, success => {
+        contractApi.trueName(this.curTrueNameItem, success => {
         }, error => {
         });
         let not_owner_fee_choosed_ids = [];

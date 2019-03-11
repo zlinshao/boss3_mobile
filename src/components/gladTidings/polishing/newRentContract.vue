@@ -965,9 +965,9 @@
         this.routerIndex('');
         this.ddRent('');
         this.close_();
-/*
-        this.dicts('');
-*/
+        /*
+                this.dicts('');
+        */
       }
     },
     activated() {
@@ -1041,9 +1041,9 @@
         })
       },
       trueName(item) {
-        this.sendOrSave(1,success=>{
+        this.sendOrSave(1, success => {
           contractApi.trueName(item, success => {
-            location.href=success
+            location.href = success
           }, error => {
             Toast(error)
           });
@@ -1089,7 +1089,7 @@
         this.form.regenerate = sessionStorage.getItem('contract_type');
         this.setContractNumber(sessionStorage.getItem('contract_number'))
       },
-      getNameForIndex(entitys, id){
+      getNameForIndex(entitys, id) {
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
           if (id === entity.id) {
@@ -1113,18 +1113,18 @@
               this.receiptNum();
               this.form.id = '';
             }
-          }).catch(e=>{
+          }).catch(e => {
             Toast.clear();
           })
         } else {
           this.getCity();
           //读小飞草稿
-          this.$http.get(this.eurls+'fdd/contract/stash?staff_id='+this.form.staff_id+'&type='+2).then(res=>{
+          this.$http.get(this.eurls + 'fdd/contract/stash?staff_id=' + this.form.staff_id + '&type=' + 2).then(res => {
             Toast.clear();
-            if(res.data.code==='40000'){
+            if (res.data.code === '40000') {
               this.changeContractDetail(res.data.data)
             }
-          }).catch(e=>{
+          }).catch(e => {
             Toast.clear();
           })
         }
@@ -1248,7 +1248,7 @@
                 this.value6.push(res.data[i].dictionary_name);
               }
               success();
-            }).catch(e=>{
+            }).catch(e => {
               error()
             });
           } else {
@@ -1573,7 +1573,7 @@
             message: '加载中...'
           });
           if (val === 1) {//草稿
-            let json = {content: this.form,type:'2'};
+            let json = {content: this.form, type: '2'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
               this.haveInHand = true;
               Toast.clear();
@@ -1589,46 +1589,31 @@
             return
           }
           this.getSessionInfo();
-          if (this.form.regenerate === 1 || this.form.regenerate === '1') {
+          this.getCity(resp => {
             this.post();
-          } else {
-            console.log('getCity')
-            this.getCity(resp => {
-              this.post();
-            });
-          }
+          })
         } else {
           Toast(this.alertMsg('sub'));
         }
       },
       post() {
-        this.getSessionInfo();
-        let url = this.form.regenerate === 0 || this.form.regenerate === '0'? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+        let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
-          Toast.clear;
+          Toast.clear();
           this.haveInHand = true;
           this.retry = 0;
+          Toast(res.data.msg);
           if (res.data.code === '40000') {
-            if (this.form.draft === '1') {
-              this.form.id = res.data.data.id;
-              if (receipt.length === 0) {
-                this.form.receipt = [];
-                this.form.receipt.push(this.receiptDate);
-              }
-              this.form.day = this.form.day === '0' ? '' : this.form.day;
-              Toast.success(res.data.msg)
+            Toast.success(res.data.msg);
+            this.close_();
+            $('.imgItem').remove();
+            this.routerDetail(res.data.data.data.id);
+          } else if (res.data.code === '40040') {
+            if (res.data.data.is_bulletin) {
+              this.routerDetail(res.data.data.data.id)
             } else {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              if (res.data.data.id) {
-                this.routerDetail(res.data.data.id)
-              } else {
-                this.routerDetail(res.data.data.data.id)
-              }
+              this.$router.go(-1);
             }
-          } else {
-            Toast(res.data.msg);
           }
         }).catch((error) => {
           Toast.clear();
