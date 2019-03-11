@@ -1086,8 +1086,8 @@
       },
       getSessionInfo() {
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
-        this.form.contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
+        this.setContractNumber(sessionStorage.getItem('contract_number'))
       },
       getNameForIndex(entitys, id){
         for (let i = 0; i < entitys.length; i++) {
@@ -1592,8 +1592,8 @@
           if (this.form.regenerate === 1 || this.form.regenerate === '1') {
             this.post();
           } else {
+            console.log('getCity')
             this.getCity(resp => {
-              this.getSessionInfo();
               this.post();
             });
           }
@@ -1602,8 +1602,8 @@
         }
       },
       post() {
-        let url = this.form.regenerate === 0 || this.form.regenerate === '0' ||
-        this.form.regenerate === 2 || this.form.regenerate === '2' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+        this.getSessionInfo();
+        let url = this.form.regenerate === 0 || this.form.regenerate === '0'? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear;
           this.haveInHand = true;

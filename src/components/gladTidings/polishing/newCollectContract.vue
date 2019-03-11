@@ -900,8 +900,8 @@
       /*以下是电子合同新加*/
       getSessionInfo() {
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
-        this.form.contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
+        this.setContractNumber(sessionStorage.getItem('contract_number'))
       },
       trueName(item) {
         if (item === null) {
@@ -1410,8 +1410,7 @@
       },
       post() {
         this.getSessionInfo();
-        let url = this.form.regenerate === 0 || this.form.regenerate === '0' ||
-        this.form.regenerate === 2 || this.form.regenerate === '2' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+        let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           this.haveInHand = true;

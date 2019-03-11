@@ -32,7 +32,7 @@ function createContract(pdf, param, success, error) {
   Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
     Toast.clear();
     if (res.data.code === '40000') {
-      pdf.show(res.data.data.download_url, 1);
+      pdf.show(url+res.data.data, 1);
     } else {
       error(res.data.msg);
     }
