@@ -12,7 +12,7 @@
             <van-radio name="0">未收先租确定</van-radio>
           </van-radio-group>
         </div>
-        <div class="rent_types" v-if="form.type==='3'">
+        <div class="rent_types" v-if="form.type==='2'">
           <div class="label">转租类型</div>
           <van-radio-group v-model="form.trans_type">
             <van-radio name="0">公司</van-radio>
