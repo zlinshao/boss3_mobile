@@ -664,8 +664,9 @@
           new CommonIdNameEntity('3', '不能随意搬动屋内家具家电'),
           new CommonIdNameEntity('4', '不能故意拆卸家具家电'),
           new CommonIdNameEntity('5', '不得养宠物'),
-          new CommonIdNameEntity('7', '乙方不得将房屋用于承办丧事、喜事等商业用途'),
-          new CommonIdNameEntity('8', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'),
+          new CommonIdNameEntity('6', '乙方不得将房屋用于承办丧事、喜事等商业用途'),
+          new CommonIdNameEntity('7', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'),
+          new CommonIdNameEntity('8', '保修期外的家具家电人为损坏，乙方照价赔偿'),
           new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
         curContractInfo: '',//ContractInfo类
         /*以上是电子合同新增*/
