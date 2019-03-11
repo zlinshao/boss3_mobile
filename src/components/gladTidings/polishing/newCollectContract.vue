@@ -1509,7 +1509,7 @@
         this.getPic(draft.identity_photo, success => {
           this.identity_photos = success;
         });
-        this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certiicate);
+        this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
         this.showForm.signPeople = draft.signer.name;
         this.curTrueNameItem=draft.signer;
         //验证身份
