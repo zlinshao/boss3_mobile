@@ -833,7 +833,7 @@
       this.routerIndex('eContract');
       this.ddRent('eContract');
       this.userInfo();
-      let item = JSON.parse(sessionStorage.getItem('collect_contract_item'));
+      let item = JSON.parse(sessionStorage.getItem('contract_house_item'));
       console.log(item)
       if (item === null) {
         console.log('读取合同编号');
@@ -848,7 +848,7 @@
         });
       } else {
         console.log('读取房屋信息');
-        sessionStorage.setItem('collect_contract_item', null);
+        sessionStorage.setItem('contract_house_item', null);
         let house_res = item.house_res;
         let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};
