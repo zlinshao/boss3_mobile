@@ -661,15 +661,11 @@
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许装修
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
         //合同备注条款数据
-        remarks: [new CommonIdNameEntity('1', '不能群租'),
-          new CommonIdNameEntity('2', '不得扰民'),
-          new CommonIdNameEntity('3', '不能随意搬动屋内家具家电'),
-          new CommonIdNameEntity('4', '不能故意拆卸家具家电'),
-          new CommonIdNameEntity('5', '不得养宠物'),
-          new CommonIdNameEntity('6', '乙方不得将房屋用于承办丧事、喜事等商业用途'),
-          new CommonIdNameEntity('7', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'),
-          new CommonIdNameEntity('8', '保修期外的家具家电人为损坏，乙方照价赔偿'),
-          new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
+        remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'),
+          new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'),
+          new CommonIdNameEntity('3', '乙方将能够通过合法途径获取的租客信息告知甲方'),
+          new CommonIdNameEntity('4', '非甲方及房屋原因导致的安全责任事故与甲方无关'),
+          new CommonIdNameEntity('5', '同等条件下，房东享有签约权(从乙方处承租）')],
         curContractInfo: '',//ContractInfo类
         /*以上是电子合同新增*/
         haveInHand: true,
@@ -840,6 +836,10 @@
       let item = JSON.parse(sessionStorage.getItem('item'));
       if (item === null) {
         console.log('读取合同编号');
+        Toast.loading({
+          mask: true,
+          message: '加载中...'
+        });
         this.dicts(success => {
           this.getContractDetail();
         }, error => {
@@ -1452,21 +1452,28 @@
       // 获取合同详情
       getContractDetail() {
         this.getSessionInfo();
+
         if(this.form.regenerate==='1'){
           this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.old_contract_number).then((res) => {
+            Toast.clear();
             if (res.data.code === '40000') {
               this.isClear = false;
               let draft = res.data.data.param_map;
               this.changeContractData(draft);
             }
+          }).catch(e=>{
+            Toast.clear();
           })
         }else{
           this.getCity();
           //读小飞草稿
           this.$http.get(this.eurls+'fdd/contract/stash?staff_id='+this.form.staff_id+'&type='+1).then(res=>{
+            Toast.clear();
             if(res.data.code==='40000'){
               this.changeContractData(res.data.data)
             }
+          }).catch(e=>{
+            Toast.clear();
           })
         }
       },
