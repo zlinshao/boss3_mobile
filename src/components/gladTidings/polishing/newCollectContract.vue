@@ -1375,11 +1375,14 @@
           if(type===1){//草稿
             let json={content:this.form};
             this.$http.post(this.eurls+'fdd/contract/stash',json).then(res=>{
+              this.haveInHand=true;
               if(success===undefined) {
                 Toast(res.data.msg)
               }else{
                 success()
               }
+            }).catch(e=>{
+              this.haveInHand=true;
             });
            return
           }
@@ -1493,9 +1496,14 @@
         this.getPic(draft.identity_photo, success => {
           this.identity_photos = success;
         });
-        this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
+        this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certiicate);
         this.showForm.signPeople = draft.signer.name;
         this.curTrueNameItem=draft.signer;
+        //验证身份
+        contractApi.trueName( this.curTrueNameItem, success => {
+        }, error => {
+          Toast(error)
+        });
         let not_owner_fee_choosed_ids = [];
         for (let key in this.form.not_owner_fee) {
           not_owner_fee_choosed_ids.push(this.form.not_owner_fee[key])

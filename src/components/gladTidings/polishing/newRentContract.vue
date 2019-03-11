@@ -953,7 +953,6 @@
       }
     },
     created() {
-      this.getContractNumber();
     },
     mounted() {
       this.isReceiptMsg = isReceiptMessage;
@@ -962,7 +961,9 @@
         this.routerIndex('');
         this.ddRent('');
         this.close_();
+/*
         this.dicts('');
+*/
       }
     },
     activated() {
@@ -1032,10 +1033,12 @@
         })
       },
       trueName(item) {
-        contractApi.trueName(item, success => {
-          window.open(success)
-        }, error => {
-          Toast(error)
+        this.sendOrSave(1,success=>{
+          contractApi.trueName(item, success => {
+            location.href=success
+          }, error => {
+            Toast(error)
+          });
         });
       },
       getEntityForIndex(entitys, id) {
@@ -1077,19 +1080,38 @@
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
       },
+      getNameForIndex(entitys, id){
+        for (let i = 0; i < entitys.length; i++) {
+          let entity = entitys[i];
+          if (id === entity.id) {
+            return entity.name;
+          }
+        }
+        return '';
+      },
       getContractDetail() {
         this.getSessionInfo();
         if (this.form.regenerate === '1') {
+          this.form.processable_id = '';
+          this.userInfo(true);
           this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.old_contract_number).then((res) => {
             if (res.data.code === '40000') {
               this.isClear = false;
               let draft = res.data.data.param_map;
-              this.changeContractData(draft);
+              this.changeContractDetail(draft);
+            } else {
+              this.receiptNum();
+              this.form.id = '';
             }
           })
         } else {
           this.getCity();
           //读小飞草稿
+          this.$http.get(this.eurls+'fdd/contract/stash?staff_id='+this.form.staff_id).then(res=>{
+            if(res.data.code==='40000'){
+              this.changeContractDetail(res.data.data)
+            }
+          })
         }
       },
       previewPdf() {
@@ -1189,7 +1211,7 @@
         this.form.department_name = per.department_name;
         this.form.cookie = per.session_id;
       },
-      dicts(val) {
+      dicts(success, error) {
         // 收款帐户
         let per = JSON.parse(sessionStorage.personal);
         this.$http.get(this.urls + 'financial/account_alloc/map?org_id=' + per.department_id).then(res => {
@@ -1199,18 +1221,22 @@
             res.data.data.forEach(item => {
               this.value8.push(item.bank_info);
             });
+            //房东租客
+            this.dictionary(449, 1).then((res) => {
+              this.value6 = [];
+              this.dictValue6 = res.data;
+              for (let i = 0; i < res.data.length; i++) {
+                this.value6.push(res.data[i].dictionary_name);
+              }
+              success();
+            }).catch(e=>{
+              error()
+            });
+          } else {
+            error()
           }
-          //房东租客
-          this.dictionary(449, 1).then((res) => {
-            this.value6 = [];
-            this.dictValue6 = res.data;
-            for (let i = 0; i < res.data.length; i++) {
-              // if (res.data[i].dictionary_name !== '房东承担') {
-              this.value6.push(res.data[i].dictionary_name);
-              // }
-            }
-            this.changeContractData(val);
-          });
+        }).catch(e => {
+          error()
         });
         this.receiptNum();
       },
@@ -1452,7 +1478,7 @@
       },
       // 日期计算
       countDate(val, per) {
-        this.$http.post(this.urls + '/bulletin/helper/date', {
+        this.$http.post(this.urls + 'bulletin/helper/date', {
           params: {
             begin_date: this.form.begin_date,
             period: per,
@@ -1484,7 +1510,7 @@
         }
       },
 
-      sendOrSave(val) {
+      sendOrSave(val, success) {
 
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
@@ -1523,10 +1549,17 @@
           }
           this.form.name = this.form.customer_info[0].name;
           this.form.phone = this.form.customer_info[0].phone;
-          if(type===1){//草稿
-            let json={content:this.form};
-            this.$http.post(this.eurls+'fdd/contract/stash',json).then(success=>{
-              Toast(success.data.msg)
+          if (val === 1) {//草稿
+            let json = {content: this.form};
+            this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+              this.haveInHand = true;
+              if (success === undefined) {
+                Toast(res.data.msg)
+              } else {
+                success()
+              }
+            }).catch(e => {
+              this.haveInHand = true;
             });
             return
           }
@@ -1736,21 +1769,6 @@
         }
         this.userInfo();
       },
-
-      changeContractData() {
-        this.form.processable_id = '';
-        this.userInfo(true);
-        this.$http.get(this.eurls + 'fdd/contract/read/' + this.contract_number).then((res) => {
-          if (res.data.code === '40000') {
-            this.isClear = false;
-            let draft = res.data.data.param_map;
-            this.changeContractDetail(draft);
-          } else {
-            this.receiptNum();
-            this.form.id = '';
-          }
-        })
-      },
       changeContractDetail(draft) {
         this.form.contract_id = draft.contract_id;
         this.form.house_id = draft.house_id;
@@ -1871,12 +1889,12 @@
         this.form.remark = draft.remark;
 
         this.form.use_type = draft.use_type;
-        this.rentUseTxt = this.getEntityForIndex(this.rentUses, draft.use_type);
+        this.rentUseTxt = this.getNameForIndex(this.rentUses, draft.use_type);
 
         this.form.people = draft.people;
 
         this.form.rent_type = draft.rent_type;
-        this.rentTypeTxt = this.getEntityForIndex(this.rentTypes, draft.rent_type)
+        this.rentTypeTxt = this.getNameForIndex(this.rentTypes, draft.rent_type);
 
         this.form.emergency_phone = draft.emergency_phone;
 
@@ -1897,6 +1915,12 @@
         this.form.public_fee = draft.public_fee;
         this.form.net_fee = draft.net_fee;
         this.form.customer_info = draft.customer_info;
+        for (let i = 0; i < this.form.customer_info; i++) {
+          contractApi.trueName(this.form.customer_info[i], success => {
+          }, error => {
+            Toast(error)
+          });
+        }
         this.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
       },
       getReceipt(draft) {
