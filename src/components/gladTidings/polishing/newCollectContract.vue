@@ -1487,39 +1487,86 @@
         }
       },
       changeContractData(draft) {
-        this.form = contractApi.copy(this.form, draft, ['contract_number']);
+
+        this.form.purchase_way = 509;
+        this.form.house = draft.house;
+        this.form.sign_date = draft.sign_date;
+        this.form.month = draft.month;
+        this.form.day = draft.day === '0' ? '' : draft.day;
+        this.form.begin_date = draft.begin_date;
+        this.form.end_date = draft.end_date;
+        this.form.vacancy = draft.vacancy;
+        this.form.end_date_vacant = draft.end_date_vacant;
+        this.form.pay_first_date = draft.pay_first_date;
+        this.first_date = [];
         this.first_date.push(draft.pay_first_date);
         this.datePrice[0] = draft.pay_first_date;
         this.datePay[0] = draft.pay_first_date;
+        this.form.pay_second_date = draft.pay_second_date;
+        this.form.is_agency = draft.is_agency;                           //是否渠道
         this.cusFrom = dicts.value8[draft.is_agency];                //是否渠道
+        this.form.agency_name = draft.agency_name;
+        this.form.agency_price = draft.agency_price;
+        this.form.agency_user_name = draft.agency_user_name;
+        this.form.agency_phone = draft.agency_phone;
+
 
         for (let i = 0; i < draft.price_arr.length; i++) {
           this.amountPrice = i + 1;
           this.form.period_price_arr.push('');
           this.form.price_arr.push('');
         }
-
+        this.form.period_price_arr = draft.period_price_arr;
         this.countDate(1, draft.period_price_arr);
+        this.form.price_arr = draft.price_arr;
         for (let i = 0; i < draft.pay_way_arr.length; i++) {
+          this.amountPay = i + 1;
+          this.form.pay_way_arr.push('');
           for (let j = 0; j < this.dictValue4.length; j++) {
             if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
               this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
             }
           }
         }
+        this.form.period_pay_arr = draft.period_pay_arr;
         this.countDate(2, draft.period_pay_arr);
+        this.form.pay_way_arr = draft.pay_way_arr;
+
+        this.form.deposit = draft.deposit;
+        this.form.vacancy_way = draft.vacancy_way;
+
         for (let j = 0; j < this.dictValue7.length; j++) {
           if (this.dictValue7[j].id === draft.vacancy_way) {
             this.vacancy_way_name = this.dictValue7[j].dictionary_name;
           }
         }
+        this.form.vacancy_other = draft.vacancy_other;
+
+        this.form.warranty = draft.warranty;
+        this.form.warranty_day = draft.warranty_day === '0' ? '' : draft.warranty_day;
+
+        this.form.property_payer = draft.property_payer;
         for (let j = 0; j < this.dictValue6.length; j++) {
           if (this.dictValue6[j].id === draft.property_payer) {
             this.property_name = this.dictValue6[j].dictionary_name;
           }
         }
-        this.form.is_corp = draft.is_corp;
+        //this.is_corp = draft.is_corp;
         this.corp = draft.is_corp === 1;
+
+        this.form.name = draft.name;
+        this.form.phone = draft.phone;
+        this.form.bank = draft.bank;
+        this.form.subbranch = draft.subbranch;
+        this.form.account_name = draft.account_name;
+        this.form.account = draft.account;
+        this.form.relationship = draft.relationship;
+        this.form.penalty = draft.penalty;
+        this.form.photo = draft.photo;
+        this.form.screenshot_leader = draft.screenshot_leader;
+        this.form.property_photo = draft.property_photo;
+        this.form.identity_photo = draft.identity_photo;
+        this.form.remark = draft.remark;
         this.getPic(draft.photo, success => {
           this.photos = success;
         });
@@ -1532,11 +1579,13 @@
         this.getPic(draft.identity_photo, success => {
           this.identity_photos = success;
         });
-
-
-
-
+        this.form.house_certificate=draft.house_certificate;
         this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
+        this.form.property_address=draft.property_address;
+        this.form.QiuQuan_number=draft.QiuQuan_number;
+        this.form.property_number=draft.property_number;
+        this.form.owner=draft.owner;
+
         if(this.form.signer_type===2){//代理
           this.showForm.showProxyInfo=true;
           this.showForm.signPeople = draft.partA_agents.name;
@@ -1550,13 +1599,18 @@
         contractApi.trueName(this.curTrueNameItem, success => {
         }, error => {
         });
+        this.form.not_owner_fee=draft.not_owner_fee;
         let not_owner_fee_choosed_ids = [];
         for (let key in this.form.not_owner_fee) {
           not_owner_fee_choosed_ids.push(this.form.not_owner_fee[key])
         }
+        this.form.other_fee_text=draft.other_fee_text;
+        this.form.allowed_decoration_to=draft.allowed_decoration_to;
         this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
         this.changeNoPropertyFee();
+        this.form.allowed_decoration_to=draft.allowed_decoration_to;
         this.showForm.canDecorationsTxt = this.getNameForIndex(this.canDecorations, this.form.allowed_decoration_to);
+        this.form.allowed_add_to=draft.allowed_add_to;
         this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
         this.changeContracts();
