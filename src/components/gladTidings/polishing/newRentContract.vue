@@ -1108,7 +1108,7 @@
         } else {
           this.getCity();
           //读小飞草稿
-          this.$http.get(this.eurls+'fdd/contract/stash?staff_id='+this.form.staff_id).then(res=>{
+          this.$http.get(this.eurls+'fdd/contract/stash?staff_id='+this.form.staff_id+'&type='+1).then(res=>{
             if(res.data.code==='40000'){
               this.changeContractDetail(res.data.data)
             }
