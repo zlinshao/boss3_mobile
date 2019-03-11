@@ -1576,14 +1576,14 @@
             let json = {content: this.form,type:'2'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
               this.haveInHand = true;
-              Toase.clear();
+              Toast.clear();
               if (success === undefined) {
                 Toast(res.data.msg)
               } else {
                 success()
               }
             }).catch(e => {
-              Toase.clear();
+              Toast.clear();
               this.haveInHand = true;
             });
             return
