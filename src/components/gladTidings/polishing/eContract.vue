@@ -75,6 +75,7 @@
     activated() {
       this.routerIndex('');
       this.ddRent('');
+      this.getData();
     },
     data() {
       return {
@@ -101,7 +102,6 @@
       }
     },
     mounted() {
-      this.getData();
     },
     methods: {
       onCancel() {
@@ -272,8 +272,10 @@
         let per = JSON.parse(sessionStorage.personal);
         let staff_id = per.id;
         let app = this;
+        let curPage=this.page;
         this.$http.get(this.eurls + 'fdd/contract/index?staff_id=' + staff_id + '&page=' + this.page + '&limit=' + this.limit + "&type=" + this.type).then(res => {
           app.loading = false;
+          this.page=curPage;
           if (res.data.code === '40001') {
             app.finished = true;
             return
@@ -286,14 +288,18 @@
             totalPages = parseInt(count / app.limit) + 1;
           }
           this.totalPages = totalPages;
-          if (app.page === totalPages) {
+          if (this.page === totalPages) {
             app.finished = true;
+          }else{
+            app.finished=false;
           }
           if (this.page === 1) {
             app.list = res.data.data.data;
           } else {
             app.list = app.list.concat(res.data.data.data);
           }
+        }).catch(e=>{
+          this.page=curPage;
         })
       }
 
