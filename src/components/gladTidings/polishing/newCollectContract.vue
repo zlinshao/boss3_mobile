@@ -523,7 +523,7 @@
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
-      <div class="aloneModel required">
+      <div class="aloneModel required" v-if="false">
         <div class="title"><span>*</span>合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
