@@ -790,7 +790,7 @@
           pdf_scene: 1,
           other_rule: [],
           signer_type: '',//签约类型1产权 2代理
-          partA_agents: {},//代理人信息
+          partA_agents: new HouseOwner(),//代理人信息
           signer: {},
           owner: [new HouseOwner()],//房屋所有人HouseOwner类的列表
           cookie: '',
@@ -1522,8 +1522,15 @@
           this.identity_photos = success;
         });
         this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
-        this.showForm.signPeople = draft.signer.name;
-        this.curTrueNameItem = draft.signer;
+        if(this.form.signer_type===2){//代理
+          this.showForm.showProxyInfo=true;
+          this.showForm.signPeople = draft.partA_agents.name;
+          this.curTrueNameItem = draft.partA_agents;
+        }else{//房东
+          this.showForm.showProxyInfo=false;
+          this.showForm.signPeople = draft.signer.name;
+          this.curTrueNameItem = draft.signer;
+        }
         //验证身份
         contractApi.trueName(this.curTrueNameItem, success => {
         }, error => {
@@ -1538,7 +1545,9 @@
         this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
         this.changeContracts();
-
+        if(this.form.partA_agents.length===0){
+          this.form.partA_agents=new HouseOwner();
+        }
       },
       close_() {
         this.isClear = true;
