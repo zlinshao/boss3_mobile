@@ -1431,7 +1431,7 @@
       },
       // 日期计算
       countDate(val, per) {
-        this.$http.get(this.urls + '/bulletin/helper/date', {
+        this.$http.post(this.urls + '/bulletin/helper/date', {
           params: {
             begin_date: this.form.begin_date,
             period: per,
