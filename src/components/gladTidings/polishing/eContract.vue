@@ -15,17 +15,23 @@
     </van-tabs>
     <van-list
       v-model="loading"
+      style="margin-bottom: 4em"
       :finished="finished"
       finished-text="没有更多了"
       @load="onSearch">
       <div v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
         <div class="infoParent">
+          <span class="owner" style="color: #e4393c;">{{getStatusStr(item)}}</span>
+          <span class="owner" style="color: #e4393c;">{{getContractType(item)}}</span>
           <div class="title">
+            合同编号:
+            {{item.contract_number}}
+          </div>
+          <div class="title">
+            房屋地址:
             {{type===1?item.param_map.house!==undefined?item.param_map.house.name:'':item.param_map.address}}
           </div>
-          <span class="owner">{{item.param_map.name}}</span>
-          <span class="owner" style="color: #e4393c;">{{getContractType(item)}}</span>
-          <span class="owner" style="color: #e4393c;">{{getStatusStr(item)}}</span>
+          <span class="owner">{{type==='1'?'房东：':'租客：'+item.param_map.name}}</span>
         </div>
         <div class="btnParent">
           <van-button v-if="item.contract_status===0" class="btn send" size="small"
@@ -41,7 +47,7 @@
       </div>
 
     </van-list>
-    <van-button round type="danger" class="new" @click="showChooseDialog()">新增合同</van-button>
+    <div  type="info" class="new" @click="showChooseDialog()">新增合同</div>
     <van-popup v-model="show" class="popup">
       <div>
         <div class="choose" @click="collect(0,'')">收房</div>
@@ -335,9 +341,14 @@
 
 <style scoped lang="scss">
   .new {
+    height: 3em;
+    line-height: 3em;
+    background-color: #1989FA;
+    text-align: center;
     position: fixed;
-    bottom: 4em;
-    left: 40%;
+    bottom: 0em;
+    color: white;
+    width: 100%;
   }
 
   .choose {
@@ -361,7 +372,8 @@
   .list {
     margin-top: 10px;
     width: 100%;
-    height: 5em;
+    padding-top: 1em;
+    padding-bottom: 1em;
     display: flex;
     align-items: center;
     background-color: white;
@@ -371,7 +383,8 @@
     }
 
     .title {
-      font-size: 1em;
+      font-size: .8em;
+      margin-top: .5em;
       margin-bottom: .5em;
     }
 
