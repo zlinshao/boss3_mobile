@@ -674,8 +674,8 @@
 
     <div class="footer">
       <div @click="close_()">重置</div>
-      <!--<div @click="saveCollect(1)">草稿</div>-->
-      <div @click="saveCollect(0)">发布</div>
+      <div @click="sendOrSave(1)">草稿</div>
+      <div @click="sendOrSave(0)">发布</div>
     </div>
 
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
@@ -1484,8 +1484,7 @@
         }
       },
 
-      saveCollect(val) {
-        console.log(this.form.bank + '111')
+      sendOrSave(val) {
 
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
@@ -1524,6 +1523,13 @@
           }
           this.form.name = this.form.customer_info[0].name;
           this.form.phone = this.form.customer_info[0].phone;
+          if(type===1){//草稿
+            let json={content:this.form};
+            this.$http.post(this.eurls+'fdd/contract/stash',json).then(success=>{
+              Toast(success.data.msg)
+            });
+            return
+          }
           this.getSessionInfo();
           if (this.form.regenerate === 1 || this.form.regenerate === '1') {
             this.post();
@@ -1576,7 +1582,7 @@
                 if (data && this.retry === 0) {
                   this.retry++;
 
-                  this.saveCollect(this.form.draft);
+                  this.sendOrSave(this.form.draft);
                 }
               });
             }

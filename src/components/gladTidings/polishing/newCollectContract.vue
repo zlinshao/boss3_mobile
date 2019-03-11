@@ -104,7 +104,7 @@
           readonly
           required>
           <van-button slot="button" size="small" type="primary" @click="trueName(curTrueNameItem)">
-            {{(curTrueNameItem===null||curTrueNameItem.fadada_user_id==='')?'实名认证':'已认证'}}
+            {{(curTrueNameItem!==null&&curTrueNameItem.fadada_user_id!==''&&curTrueNameItem.fadada_user_id!==undefined)?'已认证':'实名认证'}}
           </van-button>
         </van-field>
         <div v-if="showForm.showProxyInfo">
@@ -795,7 +795,7 @@
           other_rule: [],
           signer_type: '',//签约类型1产权 2代理
           partA_agents: {},//代理人信息
-          signer: '',
+          signer: {},
           owner: [new HouseOwner()],//房屋所有人HouseOwner类的列表
           cookie: '',
           /*以上是电子合同特有字段*/
@@ -907,11 +907,14 @@
           Toast('请先选择签约人');
           return
         }
-        contractApi.trueName(item, success => {
-          window.open(success)
-        }, error => {
-          Toast(error)
+        this.sendOrSave(1,success=>{
+          contractApi.trueName(item, success => {
+            location.href=success
+          }, error => {
+            Toast(error)
+          });
         });
+
       },
       getCity(success) {
         this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
@@ -994,6 +997,15 @@
       //添加附属房东信息
       addNewHouseOwner() {
         this.form.owner.push(new HouseOwner())
+      },
+      getNameForIndex(entitys, id){
+        for (let i = 0; i < entitys.length; i++) {
+          let entity = entitys[i];
+          if (id === entity.id) {
+            return entity.name;
+          }
+        }
+        return '';
       },
       getEntityForIndex(entitys, id) {
         for (let i = 0; i < entitys.length; i++) {
@@ -1347,7 +1359,7 @@
         }
       },
 
-      sendOrSave(type) {//0发布1草稿
+      sendOrSave(type,success) {//0发布1草稿
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
@@ -1361,9 +1373,13 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           if(type===1){//草稿
-            let json={content:this.form}
-            this.$http.post(this.eurls+'fdd/contract/stash',json).then(success=>{
-              Toast(success.data.msg)
+            let json={content:this.form};
+            this.$http.post(this.eurls+'fdd/contract/stash',json).then(res=>{
+              if(success===undefined) {
+                Toast(res.data.msg)
+              }else{
+                success()
+              }
             });
            return
           }
@@ -1477,19 +1493,20 @@
         this.getPic(draft.identity_photo, success => {
           this.identity_photos = success;
         });
-
-        this.showForm.houseCertificateTypeTxt = this.getEntityForIndex(this.houseCertificateTypes, this.form.house_certificate).name;
+        this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
         this.showForm.signPeople = draft.signer.name;
+        this.curTrueNameItem=draft.signer;
         let not_owner_fee_choosed_ids = [];
         for (let key in this.form.not_owner_fee) {
           not_owner_fee_choosed_ids.push(this.form.not_owner_fee[key])
         }
         this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
         this.changeNoPropertyFee();
-        this.showForm.canDecorationsTxt = this.getEntityForIndex(this.canDecorations, this.form.allowed_decoration_to).name;
-        this.showForm.canAddThingTxt = this.getEntityForIndex(this.canAddThings, this.form.allowed_add_to).name;
+        this.showForm.canDecorationsTxt = this.getNameForIndex(this.canDecorations, this.form.allowed_decoration_to);
+        this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
         this.changeContracts();
+
       },
       close_() {
         this.isClear = true;
