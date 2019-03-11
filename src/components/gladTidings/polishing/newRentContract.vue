@@ -975,8 +975,9 @@
       this.ddRent('eContract');
       this.userInfo();
       this.houseInfo();
-      let item = JSON.parse(sessionStorage.getItem('contract_house_item'));
-      if (item === null) {
+      let item = sessionStorage.getItem('contract_house_item');
+      console.log(item);
+      if (item===null||item === 'null') {
         console.log('读取合同编号');
         Toast.loading({
           mask: true,
@@ -989,7 +990,9 @@
         });
       } else {
         console.log('读取房屋信息');
-        sessionStorage.setItem('contract_house_item', null)
+        sessionStorage.setItem('contract_house_item', null);
+        if(item==='test')return;
+        item=JSON.parse(item);
         let house_res = item.house_res;
         let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};
