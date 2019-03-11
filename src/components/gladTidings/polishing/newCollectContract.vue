@@ -865,7 +865,24 @@
         sessionStorage.setItem('item', null)
         /*获取电子合同相关字段*/
       }
-    },
+      let t=this.$route.query;
+      if (t.staff !== undefined && t.staff !== '') {
+        let val = JSON.parse(t.staff);
+        this.form.staff_id = val.staff_id;
+        this.form.staff_name = val.staff_name;
+        this.form.department_id = val.depart_id;
+        this.form.department_name = val.depart_name;
+        this.isValue1 = val.activeRevise;
+        this.stick();
+      }
+      if (t.depart !== undefined && t.depart !== '') {
+        let val = JSON.parse(t.depart);
+        this.form.department_name = val.name;
+        this.form.department_id = val.id;
+        this.isValue1 = val.activeRevise;
+        this.stick();
+      }
+      },
     methods: {
       getPic(ids, success) {
         let update = {show: []};
