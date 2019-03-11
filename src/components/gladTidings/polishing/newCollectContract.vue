@@ -1422,6 +1422,10 @@
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
+          //清除草稿
+          let json = {content: {}, type: '1'};
+          this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+          });
           this.haveInHand = true;
           this.retry = 0;
           Toast(res.data.msg);
@@ -1488,6 +1492,13 @@
         this.datePrice[0] = draft.pay_first_date;
         this.datePay[0] = draft.pay_first_date;
         this.cusFrom = dicts.value8[draft.is_agency];                //是否渠道
+
+        for (let i = 0; i < draft.price_arr.length; i++) {
+          this.amountPrice = i + 1;
+          this.form.period_price_arr.push('');
+          this.form.price_arr.push('');
+        }
+
         this.countDate(1, draft.period_price_arr);
         for (let i = 0; i < draft.pay_way_arr.length; i++) {
           for (let j = 0; j < this.dictValue4.length; j++) {
@@ -1521,6 +1532,10 @@
         this.getPic(draft.identity_photo, success => {
           this.identity_photos = success;
         });
+
+
+
+
         this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
         if(this.form.signer_type===2){//代理
           this.showForm.showProxyInfo=true;

@@ -1810,6 +1810,7 @@
           this.form.period_pay_arr.push('');
           this.form.pay_way_arr.push('');
         }
+
         this.form.period_pay_arr = draft.period_pay_arr;
         this.countDate(2, draft.period_pay_arr);
         this.form.pay_way_arr = draft.pay_way_arr;
