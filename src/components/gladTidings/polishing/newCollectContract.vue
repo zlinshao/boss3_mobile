@@ -147,6 +147,7 @@
         </van-field>
         <van-field
           v-model="form.other_fee_text"
+          v-if="getIsShowOtherFee()"
           label="其他费用"
           type="text"
           placeholder="请填写其他费用"
@@ -573,7 +574,7 @@
 
     <div class="footer">
       <div @click="close_()">重置</div>
-      <!--<div @click="saveCollect(1)">草稿</div>-->
+      <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
     </div>
 
@@ -648,6 +649,7 @@
       return {
         /*以下是电子合同新加字段*/
         eshow: false,
+        showOtherFee:false,
         curTrueNameItem: null,//当前需要实名认证的item
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
@@ -655,7 +657,7 @@
         curDatas: [],//当前显示的选择弹框的元数据，就是CommonIdNameEntity的集合
         noOwnerFees: [new CommonIdNameEntity('1', '水费'), new CommonIdNameEntity('2', '电费'),
           new CommonIdNameEntity('3', '燃气费'),
-          new CommonIdNameEntity('4', '网费'), new CommonIdNameEntity('5', '物业管理费')],
+          new CommonIdNameEntity('4', '网费'), new CommonIdNameEntity('5', '物业管理费'),new CommonIdNameEntity('6', '其他费用')],
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许装修
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
         //合同备注条款数据
@@ -979,6 +981,15 @@
         this.columns = this.showForm.signPeoples;
         this.curDatas = this.showForm.signPeoples;//设置当前元数据
         this.eshow = true;//显示弹框
+      },
+      getIsShowOtherFee(){
+        let isShow=false;
+        for(let i=0;i<this.showForm.choosedNoOwnerFees.length;i++){
+          if(this.showForm.choosedNoOwnerFees[i].id==='6'){
+            isShow=true;
+          }
+        }
+        return isShow;
       },
       changeNoPropertyFee() {
         this.showForm.noOwnerFeeTxt = '';
