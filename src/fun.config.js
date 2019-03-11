@@ -6,6 +6,7 @@ export default {
       let that = this;
       document.addEventListener('backbutton', function (e) {
         e.preventDefault();
+        alert(1111111)
         if (url !== '' && house === 'house') {
           that.$router.push({path: url});
         } else if (url !== '' && house !== 'house') {
@@ -48,6 +49,7 @@ export default {
       dd.biz.navigation.setLeft({
         control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
         onSuccess: function (result) {
+          alert(22222222)
           if (url !== '' && house === 'house') {
             that.$router.push({path: url});
           } else if (url !== '' && house !== 'house') {
