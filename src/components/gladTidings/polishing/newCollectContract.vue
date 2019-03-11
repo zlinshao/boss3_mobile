@@ -931,6 +931,10 @@
         });
       },
       previewPdf() {
+        Toast.loading({
+          mask: true,
+          message: '加载中...'
+        });
         if (this.form.regenerate === 1 || this.form.regenerate === '1') {
           this.previewTrue();
         } else {
@@ -940,7 +944,7 @@
         }
       },
       previewTrue() {
-        contractApi.createRentContract(this.$refs.pdf, this.form, success => {
+        contractApi.createContract(this.$refs.pdf, this.form, success => {
         }, error => {
           Toast(error)
         })
@@ -1373,16 +1377,22 @@
           this.form.is_corp = this.corp ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
+          Toast.loading({
+            mask: true,
+            message: '加载中...'
+          });
           if(type===1){//草稿
             let json={content:this.form,type:'1'};
             this.$http.post(this.eurls+'fdd/contract/stash',json).then(res=>{
               this.haveInHand=true;
+              Toast.clear();
               if(success===undefined) {
                 Toast(res.data.msg)
               }else{
                 success()
               }
             }).catch(e=>{
+              Toast.clear();
               this.haveInHand=true;
             });
            return
@@ -1403,6 +1413,7 @@
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ||
         this.form.regenerate === 2 || this.form.regenerate === '2' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
+          Toase.clear();
           this.haveInHand = true;
           this.retry = 0;
           if (res.data.code === '40000') {
@@ -1421,6 +1432,7 @@
             Toast(res.data.msg);
           }
         }).catch((error) => {
+          Toase.clear;
           this.haveInHand = true;
           if (error.response === undefined) {
             this.alertMsg('net');

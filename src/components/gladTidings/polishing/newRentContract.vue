@@ -1123,6 +1123,10 @@
           this.form.account_name = banks[1];
           this.form.account = banks[0];
         }
+        Toast.loading({
+          mask: true,
+          message: '加载中...'
+        });
         if (this.form.regenerate === 1 || this.form.regenerate === '1') {
           this.previewTrue();
         } else {
@@ -1132,7 +1136,7 @@
         }
       },
       previewTrue() {
-        contractApi.createRentContract(this.$refs.pdf, this.form, success => {
+        contractApi.createContract(this.$refs.pdf, this.form, success => {
 
         }, error => {
           Toast(error)
@@ -1550,16 +1554,22 @@
           }
           this.form.name = this.form.customer_info[0].name;
           this.form.phone = this.form.customer_info[0].phone;
+          Toast.loading({
+            mask: true,
+            message: '加载中...'
+          });
           if (val === 1) {//草稿
             let json = {content: this.form,type:'2'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
               this.haveInHand = true;
+              Toase.clear();
               if (success === undefined) {
                 Toast(res.data.msg)
               } else {
                 success()
               }
             }).catch(e => {
+              Toase.clear();
               this.haveInHand = true;
             });
             return
@@ -1581,6 +1591,7 @@
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ||
         this.form.regenerate === 2 || this.form.regenerate === '2' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
+          Toast.clear;
           this.haveInHand = true;
           this.retry = 0;
           if (res.data.code === '40000') {
@@ -1606,6 +1617,7 @@
             Toast(res.data.msg);
           }
         }).catch((error) => {
+          Toast.clear();
           this.haveInHand = true;
           if (error.response === undefined) {
             this.alertMsg('net');

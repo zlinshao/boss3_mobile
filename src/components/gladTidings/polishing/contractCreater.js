@@ -1,5 +1,6 @@
 let url = globalConfig.e_server;
 import Vue from 'vue';
+import {Toast} from 'vant'
 
 let getNumber = function (type, city_id, success, error) {
   let version = type === 1 ? '1.1' : '1.2';
@@ -26,29 +27,21 @@ let cancelContract = function (number, success, error) {
   })
 };
 
-function createCollectContract(pdf, param, success, error) {
-  console.log(param)
+function createContract(pdf, param, success, error) {
+
   Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
+    Toast.clear();
     if (res.data.code === '40000') {
       pdf.show(res.data.data.download_url, 1);
     } else {
       error(res.data.msg);
     }
+  }).catch(e=>{
+    Toast.clear();
   })
 }
 
-function createRentContract(pdf, param, success, error) {
-  console.log(param)
-  Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
-    if (res.data.code === '40000') {
-      pdf.show(res.data.data.download_url, 1);
-    } else {
-      error(res.data.msg);
-    }
-  })
-}
-
-function trueName(item, success,error) {
+function trueName(item, success, error) {
   Vue.prototype.$http.get(url + '/fdd/customer/verified?idcard=' + item.idcard + '&name=' + item.name + '&phone=' + item.phone).then(res => {
     if (res.data.code === '40000') {
       item.fadada_user_id = res.data.data.customer_id;
@@ -68,15 +61,15 @@ function trueName(item, success,error) {
   });
 }
 
-function copy(oldObj, source,split) {
+function copy(oldObj, source, split) {
   let data = {};
   for (let item in oldObj) {
-    if(split.indexOf(item)!==-1){
-      data[item]='';
+    if (split.indexOf(item) !== -1) {
+      data[item] = '';
       continue
     }
     if (source[item] instanceof Array) {
-      data[item]=copyArray(source[item])
+      data[item] = copyArray(source[item])
     } else if (typeof source[item] === 'object') {
       data[item] = copyChild(source[item])
     } else {
@@ -85,10 +78,11 @@ function copy(oldObj, source,split) {
   }
   return data;
 }
+
 function copyArray(source) {
-  let list=[];
-  for(let i=0;i<source.length;i++){
-    let entity=source[i];
+  let list = [];
+  for (let i = 0; i < source.length; i++) {
+    let entity = source[i];
     list.push(entity)
   }
   return list;
@@ -107,4 +101,4 @@ function copyChild(source) {
 }
 
 
-export {createCollectContract, createRentContract, getNumber, cancelContract, trueName, copy}
+export {createContract, getNumber, cancelContract, trueName, copy}
