@@ -32,13 +32,13 @@ module.exports = merge(baseWebpackConfig, {
       inject: true
     }),
     new FriendlyErrorsPlugin(),
-    new CopyWebpackPlugin([
-      {
-        from: 'node_modules/pdfjs-dist/cmaps/',
-        to: 'cmaps/'
-      },
-      {from:'node_modules/pdfjs-dist/cmaps',
-        to:'app.worker.js'}
-    ]),
+    // new CopyWebpackPlugin([
+    //   {
+    //     from: 'node_modules/pdfjs-dist/cmaps/',
+    //     to: 'cmaps/'
+    //   },
+    //   {from:'node_modules/pdfjs-dist/cmaps',
+    //     to:'app.worker.js'}
+    // ]),
   ]
 })

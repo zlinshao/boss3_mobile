@@ -43,7 +43,7 @@
       let app = this;
       PDFJS.getDocument({
         url: app.url
-        , cMapUrl: "cmaps/"
+        , cMapUrl: "../../../../static/cmaps/"
         , cMapPacked: true
       }).then(function (pdf) {
         app.pdfDoc = pdf;
