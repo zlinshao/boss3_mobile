@@ -6,7 +6,6 @@ export default {
       let that = this;
       document.addEventListener('backbutton', function (e) {
         e.preventDefault();
-        alert(1111111)
         if (url !== '' && house === 'house') {
           that.$router.push({path: url});
         } else if (url !== '' && house !== 'house') {
