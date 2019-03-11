@@ -1347,7 +1347,7 @@
         }
       },
 
-      sendOrSave() {
+      sendOrSave(type) {//0发布1草稿
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
@@ -1360,6 +1360,13 @@
           this.form.is_corp = this.corp ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
+          if(type===1){//草稿
+            let json={content:this.form}
+            this.$http.post(this.eurls+'fdd/contract/stash',json).then(success=>{
+              Toast(success.data.msg)
+            });
+           return
+          }
           if (this.form.regenerate === 1 || this.form.regenerate === '1') {
             this.post();
           } else {
@@ -1424,6 +1431,11 @@
         }else{
           this.getCity();
           //读小飞草稿
+          this.$http.get(this.eurls+'fdd/contract/stash?staff_id='+this.form.staff_id).then(res=>{
+            if(res.data.code==='40000'){
+              this.changeContractData(res.data.data)
+            }
+          })
         }
       },
       changeContractData(draft) {

@@ -974,8 +974,9 @@
       if (item === null) {
         console.log('读取合同编号');
         this.dicts(success => {
-          this.getContractNumber();
+          this.getContractDetail();
         }, error => {
+          Toast('加载数据失败！')
         });
       } else {
         console.log('读取房屋信息');
@@ -1000,7 +1001,7 @@
     },
     methods: {
       /*以下是电子合同新加*/
-      getPic(ids,success) {
+      getPic(ids, success) {
         let update = {show: []};
         let list = [];
         let data = {};
@@ -1017,13 +1018,13 @@
               data.host = item.info.host;
               data.id = item.id;
               data.is_video = item.info.mime.indexOf('image') === -1;
-              data.mime=item.info.mime;
-              data.name=item.name;
-              data.raw_name=item.raw_name;
-              data.size=item.info.size;
-              data.update_at=item.update_at;
-              data.uri=item.uri;
-              data.user_id=item.user_id;
+              data.mime = item.info.mime;
+              data.name = item.name;
+              data.raw_name = item.raw_name;
+              data.size = item.info.size;
+              data.update_at = item.update_at;
+              data.uri = item.uri;
+              data.user_id = item.user_id;
               list.push(data);
             });
             success(list)
@@ -1076,15 +1077,19 @@
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
       },
-      getContractNumber() {
-        //获取业务员对应城市
-        //获取业务员对应城市
+      getContractDetail() {
         this.getSessionInfo();
-        if (this.form.regenerate === '1' || this.form.regenerate === 1 || this.form.regenerate === '2' || this.form.regenerate === 2) {
-          console.log('读取草稿');
-          this.rentDetail();
+        if (this.form.regenerate === '1') {
+          this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.old_contract_number).then((res) => {
+            if (res.data.code === '40000') {
+              this.isClear = false;
+              let draft = res.data.data.param_map;
+              this.changeContractData(draft);
+            }
+          })
         } else {
           this.getCity();
+          //读小飞草稿
         }
       },
       previewPdf() {
@@ -1103,7 +1108,7 @@
           });
         }
       },
-      previewTrue(){
+      previewTrue() {
         contractApi.createRentContract(this.$refs.pdf, this.form, success => {
 
         }, error => {
@@ -1204,7 +1209,7 @@
               this.value6.push(res.data[i].dictionary_name);
               // }
             }
-            this.rentDetail(val);
+            this.changeContractData(val);
           });
         });
         this.receiptNum();
@@ -1480,7 +1485,7 @@
       },
 
       saveCollect(val) {
-        console.log(this.form.bank+'111')
+        console.log(this.form.bank + '111')
 
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
@@ -1517,8 +1522,8 @@
             this.form.account_name = banks[1];
             this.form.account = banks[0];
           }
-          this.form.name=this.form.customer_info[0].name;
-          this.form.phone=this.form.customer_info[0].phone;
+          this.form.name = this.form.customer_info[0].name;
+          this.form.phone = this.form.customer_info[0].phone;
           this.getSessionInfo();
           if (this.form.regenerate === 1 || this.form.regenerate === '1') {
             this.post();
@@ -1726,165 +1731,167 @@
         this.userInfo();
       },
 
-      rentDetail() {
+      changeContractData() {
         this.form.processable_id = '';
         this.userInfo(true);
         this.$http.get(this.eurls + 'fdd/contract/read/' + this.contract_number).then((res) => {
           if (res.data.code === '40000') {
             this.isClear = false;
             let draft = res.data.data.param_map;
-            this.form.contract_id = draft.contract_id;
-            this.form.house_id = draft.house_id;
-            this.form.address = draft.address;
-            this.form.corp_name = draft.corp_name;
-            this.form.month = draft.month;
-            this.form.day = draft.day === '0' ? '' : draft.day;
-            this.form.contract_number = this.setContractNumber(draft.contract_number);
-            this.form.sign_date = draft.sign_date;
-            this.form.begin_date = draft.begin_date;
-            this.form.end_date = draft.end_date;
-            this.first_date = [];
-            this.first_date.push(draft.begin_date);
-            this.datePrice[0] = draft.begin_date;
-            this.datePay[0] = draft.begin_date;
-            for (let i = 0; i < draft.price_arr.length; i++) {
-              this.amountPrice = i + 1;
-              this.form.period_price_arr.push('');
-              this.form.price_arr.push('');
-            }
-            this.form.period_price_arr = draft.period_price_arr;
-            this.countDate(1, draft.period_price_arr);
-            this.form.price_arr = draft.price_arr;
-
-            this.form.pay_way_bet = draft.pay_way_bet;
-            for (let i = 0; i < draft.pay_way_arr.length; i++) {
-              this.amountPay = i + 1;
-              this.form.period_pay_arr.push('');
-              this.form.pay_way_arr.push('');
-            }
-            this.form.period_pay_arr = draft.period_pay_arr;
-            this.countDate(2, draft.period_pay_arr);
-            this.form.pay_way_arr = draft.pay_way_arr;
-
-            this.form.deposit = draft.deposit;
-            this.form.rent_money = draft.rent_money;
-            this.form.front_money = draft.front_money;
-            this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
-            if (this.form.deposit_payed) {
-              this.receivedPrice = 'deposit_payed';
-            } else if (this.form.front_money) {
-              this.receivedPrice = 'front_money';
-            } else {
-              this.receivedPrice = 'rent_money';
-            }
-            this.$nextTick(function () {
-              this.form.money_sum = draft.money_sum;
-            });
-            this.form.memo = draft.memo ? draft.memo : '';
-            this.form.money_sep = draft.money_sep;
-            this.form.money_way = draft.money_way;
-            for (let i = 0; i < draft.money_way.length; i++) {
-              if (draft.real_pay_at) {
-                this.form.real_pay_at[i] = draft.real_pay_at[i];
-              } else {
-                this.form.real_pay_at.push('');
-              }
-              this.amountMoney = i + 1;
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                  this.form.account_id[i] = this.dictValue8[j].id;
-                }
-              }
-            }
-
-            this.form.discount = draft.discount;
-            this.form.penalty = draft.penalty;
-            this.other_fee_status = draft.is_other_fee === 1;
-            this.form.other_fee_name = draft.other_fee_name;
-            this.form.other_fee = draft.other_fee;
-
-            this.form.is_agency = draft.is_agency;                     //是否渠道
-            this.cusFrom = dicts.value8[draft.is_agency];              //是否渠道
-            this.form.agency_name = draft.agency_name;
-            this.form.agency_price = draft.agency_price;
-            this.form.agency_user_name = draft.agency_user_name;
-            this.form.agency_phone = draft.agency_phone;
-
-            this.is_corp = draft.is_corp;
-            this.corp = draft.is_corp === 1;
-            if (draft.is_receipt) {
-              this.is_receipt = true;
-              this.form.is_receipt = 1;
-              if (!this.is_receipt) {
-                this.getReceipt(draft);
-              }
-            } else {
-              this.is_receipt = false;
-              this.form.is_receipt = 0;
-              this.getReceipt(draft);
-            }
-            this.form.property = draft.property;
-            this.form.property_payer = draft.property_payer;
-            for (let j = 0; j < this.dictValue6.length; j++) {
-              if (this.dictValue6[j].id === draft.property_payer) {
-                this.property_name = this.dictValue6[j].dictionary_name;
-              }
-            }
-            this.form.retainage_date = draft.retainage_date;
-            this.form.name = draft.name;
-            this.form.phone = draft.phone;
-            this.form.screenshot = draft.screenshot;
-            this.form.photo = draft.photo;
-            this.form.screenshot_leader = draft.screenshot_leader;
-            this.form.deposit_photo = draft.deposit_photo;
-            this.getPic( draft.screenshot,success=>{
-              this.screenshots=success;
-            });
-            this.getPic( draft.photo,success=>{
-              this.photos=success;
-            });
-            this.getPic( draft.screenshot_leader,success=>{
-              this.leaders=success;
-            });
-            this.getPic( draft.deposit_photo,success=>{
-              this.receipts=success;
-            });
-            this.form.remark = draft.remark;
-
-            this.form.use_type=draft.use_type;
-            this.rentUseTxt = this.getEntityForIndex(this.rentUses, draft.use_type);
-
-            this.form.people=draft.people;
-
-            this.form.rent_type = draft.rent_type;
-            this.rentTypeTxt=this.getEntityForIndex(this.rentTypes, draft.rent_type)
-
-            this.form.emergency_phone=draft.emergency_phone;
-
-            this.form.account_name=draft.account_name;
-            this.form.account=draft.account;
-            this.form.province=draft.province;
-            this.form.city=draft.city;
-            this.form.district=draft.district;
-            this.form.village_name=draft.village_name;
-            this.form.room=draft.room;
-            this.form.hall=draft.hall;
-            this.form.toilet=draft.toilet;
-            this.form.are=draft.area;
-            this.form.other_use=draft.other_use;
-            this.form.manage_fee=draft.manage_fee;
-            this.form.manage_share=draft.manage_share;
-            this.form.water_fee=draft.water_fee;
-            this.form.public_fee=draft.public_fee;
-            this.form.net_fee=draft.net_fee;
-            this.form.customer_info=draft.customer_info;
-            this.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
-
+            this.changeContractDetail(draft);
           } else {
             this.receiptNum();
             this.form.id = '';
           }
         })
+      },
+      changeContractDetail(draft) {
+        this.form.contract_id = draft.contract_id;
+        this.form.house_id = draft.house_id;
+        this.form.address = draft.address;
+        this.form.corp_name = draft.corp_name;
+        this.form.month = draft.month;
+        this.form.day = draft.day === '0' ? '' : draft.day;
+        this.form.contract_number = this.setContractNumber(draft.contract_number);
+        this.form.sign_date = draft.sign_date;
+        this.form.begin_date = draft.begin_date;
+        this.form.end_date = draft.end_date;
+        this.first_date = [];
+        this.first_date.push(draft.begin_date);
+        this.datePrice[0] = draft.begin_date;
+        this.datePay[0] = draft.begin_date;
+        for (let i = 0; i < draft.price_arr.length; i++) {
+          this.amountPrice = i + 1;
+          this.form.period_price_arr.push('');
+          this.form.price_arr.push('');
+        }
+        this.form.period_price_arr = draft.period_price_arr;
+        this.countDate(1, draft.period_price_arr);
+        this.form.price_arr = draft.price_arr;
+
+        this.form.pay_way_bet = draft.pay_way_bet;
+        for (let i = 0; i < draft.pay_way_arr.length; i++) {
+          this.amountPay = i + 1;
+          this.form.period_pay_arr.push('');
+          this.form.pay_way_arr.push('');
+        }
+        this.form.period_pay_arr = draft.period_pay_arr;
+        this.countDate(2, draft.period_pay_arr);
+        this.form.pay_way_arr = draft.pay_way_arr;
+
+        this.form.deposit = draft.deposit;
+        this.form.rent_money = draft.rent_money;
+        this.form.front_money = draft.front_money;
+        this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
+        if (this.form.deposit_payed) {
+          this.receivedPrice = 'deposit_payed';
+        } else if (this.form.front_money) {
+          this.receivedPrice = 'front_money';
+        } else {
+          this.receivedPrice = 'rent_money';
+        }
+        this.$nextTick(function () {
+          this.form.money_sum = draft.money_sum;
+        });
+        this.form.memo = draft.memo ? draft.memo : '';
+        this.form.money_sep = draft.money_sep;
+        this.form.money_way = draft.money_way;
+        for (let i = 0; i < draft.money_way.length; i++) {
+          if (draft.real_pay_at) {
+            this.form.real_pay_at[i] = draft.real_pay_at[i];
+          } else {
+            this.form.real_pay_at.push('');
+          }
+          this.amountMoney = i + 1;
+          for (let j = 0; j < this.dictValue8.length; j++) {
+            if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+              this.form.account_id[i] = this.dictValue8[j].id;
+            }
+          }
+        }
+
+        this.form.discount = draft.discount;
+        this.form.penalty = draft.penalty;
+        this.other_fee_status = draft.is_other_fee === 1;
+        this.form.other_fee_name = draft.other_fee_name;
+        this.form.other_fee = draft.other_fee;
+
+        this.form.is_agency = draft.is_agency;                     //是否渠道
+        this.cusFrom = dicts.value8[draft.is_agency];              //是否渠道
+        this.form.agency_name = draft.agency_name;
+        this.form.agency_price = draft.agency_price;
+        this.form.agency_user_name = draft.agency_user_name;
+        this.form.agency_phone = draft.agency_phone;
+
+        this.is_corp = draft.is_corp;
+        this.corp = draft.is_corp === 1;
+        if (draft.is_receipt) {
+          this.is_receipt = true;
+          this.form.is_receipt = 1;
+          if (!this.is_receipt) {
+            this.getReceipt(draft);
+          }
+        } else {
+          this.is_receipt = false;
+          this.form.is_receipt = 0;
+          this.getReceipt(draft);
+        }
+        this.form.property = draft.property;
+        this.form.property_payer = draft.property_payer;
+        for (let j = 0; j < this.dictValue6.length; j++) {
+          if (this.dictValue6[j].id === draft.property_payer) {
+            this.property_name = this.dictValue6[j].dictionary_name;
+          }
+        }
+        this.form.retainage_date = draft.retainage_date;
+        this.form.name = draft.name;
+        this.form.phone = draft.phone;
+        this.form.screenshot = draft.screenshot;
+        this.form.photo = draft.photo;
+        this.form.screenshot_leader = draft.screenshot_leader;
+        this.form.deposit_photo = draft.deposit_photo;
+        this.getPic(draft.screenshot, success => {
+          this.screenshots = success;
+        });
+        this.getPic(draft.photo, success => {
+          this.photos = success;
+        });
+        this.getPic(draft.screenshot_leader, success => {
+          this.leaders = success;
+        });
+        this.getPic(draft.deposit_photo, success => {
+          this.receipts = success;
+        });
+        this.form.remark = draft.remark;
+
+        this.form.use_type = draft.use_type;
+        this.rentUseTxt = this.getEntityForIndex(this.rentUses, draft.use_type);
+
+        this.form.people = draft.people;
+
+        this.form.rent_type = draft.rent_type;
+        this.rentTypeTxt = this.getEntityForIndex(this.rentTypes, draft.rent_type)
+
+        this.form.emergency_phone = draft.emergency_phone;
+
+        this.form.account_name = draft.account_name;
+        this.form.account = draft.account;
+        this.form.province = draft.province;
+        this.form.city = draft.city;
+        this.form.district = draft.district;
+        this.form.village_name = draft.village_name;
+        this.form.room = draft.room;
+        this.form.hall = draft.hall;
+        this.form.toilet = draft.toilet;
+        this.form.are = draft.area;
+        this.form.other_use = draft.other_use;
+        this.form.manage_fee = draft.manage_fee;
+        this.form.manage_share = draft.manage_share;
+        this.form.water_fee = draft.water_fee;
+        this.form.public_fee = draft.public_fee;
+        this.form.net_fee = draft.net_fee;
+        this.form.customer_info = draft.customer_info;
+        this.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
       },
       getReceipt(draft) {
         if (typeof draft.receipt !== "string") {
