@@ -732,7 +732,11 @@
         rentUses: [new CommonIdNameEntity('1', '自住'), new CommonIdNameEntity('2', '办公使用'), new CommonIdNameEntity('3', '其他用途')],
         rentUseTxt: '',//租赁用途文字
         //合同备注条款数据
-        remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'), new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'), new CommonIdNameEntity('3', '甲方需配合乙方办理居住证等相关证件'), new CommonIdNameEntity('4', '乙方将能够通过合法途径获取的租客信息告知甲方'), new CommonIdNameEntity('5', '非甲方及房屋原因导致的安全责任事故与甲方无关'), new CommonIdNameEntity('6', '同等条件下，房东享有签约权(从乙方处承租）')],
+        remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'),
+          new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'),
+          new CommonIdNameEntity('3', '乙方将能够通过合法途径获取的租客信息告知甲方'),
+          new CommonIdNameEntity('4', '非甲方及房屋原因导致的安全责任事故与甲方无关'),
+          new CommonIdNameEntity('5', '同等条件下，房东享有签约权(从乙方处承租）')],
         choosedRemarks: [],//已选择的备注条款
         remarksTxt: '',//备注条款展示文字
         showOtherUse: false,//显示其他用途输入框
@@ -1084,15 +1088,27 @@
         }
       },
       previewPdf() {
-        contractApi.cancelContract(this.form.contract_number, success => {
-          contractApi.createRentContract(this.$refs.pdf, this.form, success => {
+        if (this.form.money_way.length !== 0) {
+          let bankInfo = this.form.money_way[0];
+          let banks = bankInfo.split(' ');
+          this.form.bank = banks[2];
+          this.form.account_name = banks[1];
+          this.form.account = banks[0];
+        }
+        if (this.form.regenerate === 1 || this.form.regenerate === '1') {
+          this.previewTrue();
+        } else {
+          this.getCity(resp => {
+            this.previewTrue();
+          });
+        }
+      },
+      previewTrue(){
+        contractApi.createRentContract(this.$refs.pdf, this.form, success => {
 
-          }, error => {
-            Toast(error)
-          })
         }, error => {
           Toast(error)
-        });
+        })
       },
       //添加附属租客信息
       addNewRentPeople() {
@@ -1503,7 +1519,6 @@
           }
           this.form.name=this.form.customer_info[0].name;
           this.form.phone=this.form.customer_info[0].phone;
-          console.log(this.form.bank)
           this.getSessionInfo();
           if (this.form.regenerate === 1 || this.form.regenerate === '1') {
             this.post();
