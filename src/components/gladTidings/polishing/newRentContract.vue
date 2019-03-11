@@ -1078,6 +1078,7 @@
       },
       getSessionInfo() {
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
+        this.form.contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
       },
       getNameForIndex(entitys, id){
@@ -1907,7 +1908,7 @@
         this.form.room = draft.room;
         this.form.hall = draft.hall;
         this.form.toilet = draft.toilet;
-        this.form.are = draft.area;
+        this.form.area = draft.area;
         this.form.other_use = draft.other_use;
         this.form.manage_fee = draft.manage_fee;
         this.form.manage_share = draft.manage_share;
@@ -1922,6 +1923,7 @@
           });
         }
         this.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
+        this.changeContracts();
       },
       getReceipt(draft) {
         if (typeof draft.receipt !== "string") {

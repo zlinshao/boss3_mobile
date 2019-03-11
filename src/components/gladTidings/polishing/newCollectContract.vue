@@ -900,6 +900,7 @@
       /*以下是电子合同新加*/
       getSessionInfo() {
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
+        this.form.contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
       },
       trueName(item) {
