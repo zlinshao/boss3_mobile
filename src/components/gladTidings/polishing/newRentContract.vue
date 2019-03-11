@@ -1479,7 +1479,7 @@
       },
       // 日期计算
       countDate(val, per) {
-        this.$http.post(this.urls + 'bulletin/helper/date', {
+        this.$http.get(this.urls + 'bulletin/helper/date', {
           params: {
             begin_date: this.form.begin_date,
             period: per,
@@ -1551,7 +1551,7 @@
           this.form.name = this.form.customer_info[0].name;
           this.form.phone = this.form.customer_info[0].phone;
           if (val === 1) {//草稿
-            let json = {content: this.form};
+            let json = {content: this.form,type:'2'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
               this.haveInHand = true;
               if (success === undefined) {

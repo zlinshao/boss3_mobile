@@ -1374,7 +1374,7 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           if(type===1){//草稿
-            let json={content:this.form};
+            let json={content:this.form,type:'1'};
             this.$http.post(this.eurls+'fdd/contract/stash',json).then(res=>{
               this.haveInHand=true;
               if(success===undefined) {
