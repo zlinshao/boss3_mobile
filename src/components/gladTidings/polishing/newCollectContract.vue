@@ -935,14 +935,19 @@
         }
       },
       previewPdf() {
-        contractApi.cancelContract(this.form.contract_number, success => {
-          contractApi.createCollectContract(this.$refs.pdf, this.form, success => {
-          }, error => {
-            Toast(error)
-          })
+        if (this.form.regenerate === 1 || this.form.regenerate === '1') {
+          this.previewTrue();
+        } else {
+          this.getCity(resp => {
+            this.previewTrue();
+          });
+        }
+      },
+      previewTrue(){
+        contractApi.createRentContract(this.$refs.pdf, this.form, success => {
         }, error => {
           Toast(error)
-        });
+        })
       },
       //当非房东费用改变时，处理数据
       //显示非房东费用弹框
