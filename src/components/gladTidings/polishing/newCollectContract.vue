@@ -928,7 +928,7 @@
       trueName(item) {
         contractApi.trueName(item, error => {
           Toast(error)
-        },this);
+        },this)
       },
       getContractNumber() {
         //获取业务员对应城市
