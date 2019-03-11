@@ -649,7 +649,7 @@
       return {
         /*以下是电子合同新加字段*/
         eshow: false,
-        showOtherFee:false,
+        showOtherFee: false,
         curTrueNameItem: null,//当前需要实名认证的item
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
@@ -657,7 +657,7 @@
         curDatas: [],//当前显示的选择弹框的元数据，就是CommonIdNameEntity的集合
         noOwnerFees: [new CommonIdNameEntity('1', '水费'), new CommonIdNameEntity('2', '电费'),
           new CommonIdNameEntity('3', '燃气费'),
-          new CommonIdNameEntity('4', '网费'), new CommonIdNameEntity('5', '物业管理费'),new CommonIdNameEntity('6', '其他费用')],
+          new CommonIdNameEntity('4', '网费'), new CommonIdNameEntity('5', '物业管理费'), new CommonIdNameEntity('6', '其他费用')],
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许装修
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
         //合同备注条款数据
@@ -841,9 +841,9 @@
       if (item === null) {
         console.log('读取合同编号');
         this.dicts(success => {
-          this.getContractNumber();
+          this.getContractDetail();
         }, error => {
-
+          Toast('加载数据失败！')
         });
       } else {
         console.log('读取房屋信息');
@@ -867,7 +867,7 @@
       }
     },
     methods: {
-      getPic(ids,success) {
+      getPic(ids, success) {
         let update = {show: []};
         let list = [];
         let data = {};
@@ -884,13 +884,13 @@
               data.host = item.info.host;
               data.id = item.id;
               data.is_video = item.info.mime.indexOf('image') === -1;
-              data.mime=item.info.mime;
-              data.name=item.name;
-              data.raw_name=item.raw_name;
-              data.size=item.info.size;
-              data.update_at=item.update_at;
-              data.uri=item.uri;
-              data.user_id=item.user_id;
+              data.mime = item.info.mime;
+              data.name = item.name;
+              data.raw_name = item.raw_name;
+              data.size = item.info.size;
+              data.update_at = item.update_at;
+              data.uri = item.uri;
+              data.user_id = item.user_id;
               list.push(data);
             });
             success(list)
@@ -926,16 +926,6 @@
           });
         });
       },
-      getContractNumber() {
-        //获取业务员对应城市
-        this.getSessionInfo();
-        if (this.form.regenerate === '1' || this.form.regenerate === 1 || this.form.regenerate === '2' || this.form.regenerate === 2) {
-          console.log('读取草稿');
-          this.manuscript();
-        } else {
-          this.getCity();
-        }
-      },
       previewPdf() {
         if (this.form.regenerate === 1 || this.form.regenerate === '1') {
           this.previewTrue();
@@ -945,7 +935,7 @@
           });
         }
       },
-      previewTrue(){
+      previewTrue() {
         contractApi.createRentContract(this.$refs.pdf, this.form, success => {
         }, error => {
           Toast(error)
@@ -982,11 +972,11 @@
         this.curDatas = this.showForm.signPeoples;//设置当前元数据
         this.eshow = true;//显示弹框
       },
-      getIsShowOtherFee(){
-        let isShow=false;
-        for(let i=0;i<this.showForm.choosedNoOwnerFees.length;i++){
-          if(this.showForm.choosedNoOwnerFees[i].id==='6'){
-            isShow=true;
+      getIsShowOtherFee() {
+        let isShow = false;
+        for (let i = 0; i < this.showForm.choosedNoOwnerFees.length; i++) {
+          if (this.showForm.choosedNoOwnerFees[i].id === '6') {
+            isShow = true;
           }
         }
         return isShow;
@@ -1357,7 +1347,7 @@
         }
       },
 
-      saveCollect() {
+      sendOrSave() {
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
@@ -1370,12 +1360,10 @@
           this.form.is_corp = this.corp ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
-          this.getSessionInfo();
           if (this.form.regenerate === 1 || this.form.regenerate === '1') {
             this.post();
           } else {
             this.getCity(resp => {
-              this.getSessionInfo();
               this.post();
             })
           }
@@ -1384,6 +1372,7 @@
         }
       },
       post() {
+        this.getSessionInfo();
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ||
         this.form.regenerate === 2 || this.form.regenerate === '2' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
@@ -1421,67 +1410,74 @@
           }
         })
       },
-      // 草稿
-      manuscript() {
-        this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.old_contract_number).then((res) => {
-          if (res.data.code === '40000') {
-            this.isClear = false;
-            let draft = res.data.data.param_map;
-            this.form = contractApi.copy(this.form, draft, ['contract_number']);
-            this.first_date.push(draft.pay_first_date);
-            this.datePrice[0] = draft.pay_first_date;
-            this.datePay[0] = draft.pay_first_date;
-            this.cusFrom = dicts.value8[draft.is_agency];                //是否渠道
-            this.countDate(1, draft.period_price_arr);
-            for (let i = 0; i < draft.pay_way_arr.length; i++) {
-              for (let j = 0; j < this.dictValue4.length; j++) {
-                if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
-                  this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
-                }
-              }
+      // 获取合同详情
+      getContractDetail() {
+        this.getSessionInfo();
+        if(this.form.regenerate==='1'){
+          this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.old_contract_number).then((res) => {
+            if (res.data.code === '40000') {
+              this.isClear = false;
+              let draft = res.data.data.param_map;
+              this.changeContractData(draft);
             }
-            this.countDate(2, draft.period_pay_arr);
-            for (let j = 0; j < this.dictValue7.length; j++) {
-              if (this.dictValue7[j].id === draft.vacancy_way) {
-                this.vacancy_way_name = this.dictValue7[j].dictionary_name;
-              }
-            }
-            for (let j = 0; j < this.dictValue6.length; j++) {
-              if (this.dictValue6[j].id === draft.property_payer) {
-                this.property_name = this.dictValue6[j].dictionary_name;
-              }
-            }
-            this.form.is_corp = draft.is_corp;
-            this.corp = draft.is_corp === 1;
-            this.getPic( draft.photo,success=>{
-              this.photos=success;
-            });
-            this.getPic( draft.screenshot_leader,success=>{
-              this.screenshots=success;
-            });
-            this.getPic( draft.property_photo,success=>{
-              this.property_photos=success;
-            });
-            this.getPic( draft.identity_photo,success=>{
-              this.identity_photos=success;
-            });
-
-            this.showForm.houseCertificateTypeTxt = this.getEntityForIndex(this.houseCertificateTypes, this.form.house_certificate).name;
-            this.showForm.signPeople = draft.signer.name;
-            let not_owner_fee_choosed_ids = [];
-            for (let key in this.form.not_owner_fee) {
-              not_owner_fee_choosed_ids.push(this.form.not_owner_fee[key])
-            }
-            this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
-            this.changeNoPropertyFee();
-            this.showForm.canDecorationsTxt = this.getEntityForIndex(this.canDecorations, this.form.allowed_decoration_to).name;
-            this.showForm.canAddThingTxt = this.getEntityForIndex(this.canAddThings, this.form.allowed_add_to).name;
-            this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
-            this.changeContracts();
-          }
-          this.getSessionInfo();
+          })
+        }else{
           this.getCity();
-        })
+          //读小飞草稿
+        }
+      },
+      changeContractData(draft) {
+        this.form = contractApi.copy(this.form, draft, ['contract_number']);
+        this.first_date.push(draft.pay_first_date);
+        this.datePrice[0] = draft.pay_first_date;
+        this.datePay[0] = draft.pay_first_date;
+        this.cusFrom = dicts.value8[draft.is_agency];                //是否渠道
+        this.countDate(1, draft.period_price_arr);
+        for (let i = 0; i < draft.pay_way_arr.length; i++) {
+          for (let j = 0; j < this.dictValue4.length; j++) {
+            if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
+              this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
+            }
+          }
+        }
+        this.countDate(2, draft.period_pay_arr);
+        for (let j = 0; j < this.dictValue7.length; j++) {
+          if (this.dictValue7[j].id === draft.vacancy_way) {
+            this.vacancy_way_name = this.dictValue7[j].dictionary_name;
+          }
+        }
+        for (let j = 0; j < this.dictValue6.length; j++) {
+          if (this.dictValue6[j].id === draft.property_payer) {
+            this.property_name = this.dictValue6[j].dictionary_name;
+          }
+        }
+        this.form.is_corp = draft.is_corp;
+        this.corp = draft.is_corp === 1;
+        this.getPic(draft.photo, success => {
+          this.photos = success;
+        });
+        this.getPic(draft.screenshot_leader, success => {
+          this.screenshots = success;
+        });
+        this.getPic(draft.property_photo, success => {
+          this.property_photos = success;
+        });
+        this.getPic(draft.identity_photo, success => {
+          this.identity_photos = success;
+        });
+
+        this.showForm.houseCertificateTypeTxt = this.getEntityForIndex(this.houseCertificateTypes, this.form.house_certificate).name;
+        this.showForm.signPeople = draft.signer.name;
+        let not_owner_fee_choosed_ids = [];
+        for (let key in this.form.not_owner_fee) {
+          not_owner_fee_choosed_ids.push(this.form.not_owner_fee[key])
+        }
+        this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
+        this.changeNoPropertyFee();
+        this.showForm.canDecorationsTxt = this.getEntityForIndex(this.canDecorations, this.form.allowed_decoration_to).name;
+        this.showForm.canAddThingTxt = this.getEntityForIndex(this.canAddThings, this.form.allowed_add_to).name;
+        this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
+        this.changeContracts();
       },
       close_() {
         this.isClear = true;

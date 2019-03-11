@@ -33,6 +33,9 @@
           <van-button v-if="item.contract_status===0" class="btn sign" size="small"
                       @click="sign(item)" @click.stop>签署
           </van-button>
+          <van-button v-if="item.contract_status===1" class="btn sign" size="small"
+                      @click="toDetail(item)" @click.stop>修改
+          </van-button>
         </div>
       </div>
 
@@ -107,7 +110,7 @@
       onConfirm(value, index) {
         switch (this.val) {
           case 1://收房选择合同或者收条
-            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[idnex].fdd_user_id, this.isSendMsg, this.signTypeColumns[0].index);
+            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg, this.signTypeColumns[0].index);
             break;
           case 2://租房选择租客
             this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg);
@@ -220,25 +223,13 @@
       }
       ,
       toDetail(item) {
-        let signType = 2;
-        switch (item.contract_status) {
-          case 0:
-            signType=2;
-            break;
-          case 1:
-            signType=1;
-            break;
-          case 2:
-            break;
-          case 3:
-            break;
-          case 4:
-            break;
+        if(item.contract_status!==1){
+          return
         }
         if (this.type === 1) {
-          this.collect(signType, item.contract_number);
+          this.collect(1, item.contract_number);
         } else {
-          this.rent(signType, item.contract_number);
+          this.rent(1, item.contract_number);
         }
       }
       ,
@@ -265,14 +256,14 @@
       collect(type, number) {
         sessionStorage.setItem('contract_type', type || 0);
         sessionStorage.setItem('contract_number', number || '');
-        this.$router.push('/newCollectContract');//type 0为新签 1为作废重签 2为读草稿
+        this.$router.push('/newCollectContract');//type 0为新签 1为作废重签
       }
       ,
       //添加租房合同
       rent(type, number) {
         sessionStorage.setItem('contract_type', type || 0);
         sessionStorage.setItem('contract_number', number || '');
-        this.$router.push('/newRentContract');//type 0为新签 1为作废重签 2为读草稿
+        this.$router.push('/newRentContract');//type 0为新签 1为作废重签
       }
       ,
       getData() {
