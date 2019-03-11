@@ -1585,10 +1585,12 @@
         this.form.QiuQuan_number=draft.QiuQuan_number;
         this.form.property_number=draft.property_number;
         this.form.owner=draft.owner;
-
+        this.form.signer_type=draft.signer_type;
+        this.form.signer=draft.signer;
+        this.form.partA_agents=draft.partA_agents;
         if(this.form.signer_type===2){//代理
           this.showForm.showProxyInfo=true;
-          this.showForm.signPeople = draft.partA_agents.name;
+          this.showForm.signPeople = '其他';
           this.curTrueNameItem = draft.partA_agents;
         }else{//房东
           this.showForm.showProxyInfo=false;
