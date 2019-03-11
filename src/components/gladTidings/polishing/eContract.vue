@@ -24,6 +24,7 @@
             {{type===1?item.param_map.house!==undefined?item.param_map.house.name:'':item.param_map.address}}
           </div>
           <span class="owner">{{item.param_map.name}}</span>
+          <span class="owner" style="color: #e4393c;">{{getContractType(item)}}</span>
           <span class="owner" style="color: #e4393c;">{{getStatusStr(item)}}</span>
         </div>
         <div class="btnParent">
@@ -117,6 +118,31 @@
             break
         }
         this.selectHide = false;
+      },
+      getContractType(item){
+        if(this.type===1){
+          return item.param_map.type==='1'?'新收':'续收';
+        }else{
+          let str='';
+          switch (item.param_map.type) {
+            case '0':
+              str='未收先租确定';
+              break;
+            case '1':
+              str='新租';
+              break;
+            case '2':
+              str='转租';
+              break;
+            case '3':
+              str='续租';
+              break;
+            case '5':
+              str='调租';
+              break;
+          }
+          return str;
+        }
       },
       getStatusStr(item) {
         let str = '';
