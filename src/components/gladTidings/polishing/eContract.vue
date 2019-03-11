@@ -21,17 +21,17 @@
       @load="onSearch">
       <div v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
         <div class="infoParent">
-          <span class="owner" style="color: #e4393c;">{{getStatusStr(item)}}</span>
-          <span class="owner" style="color: #e4393c;">{{getContractType(item)}}</span>
+          <span class="owner" style="color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
           <div class="title">
             合同编号:
             {{item.contract_number}}
           </div>
-          <div class="title">
+          <span class="title">
             房屋地址:
             {{type===1?item.param_map.house!==undefined?item.param_map.house.name:'':item.param_map.address}}
-          </div>
-          <span class="owner">{{type==='1'?'房东：':'租客：'+item.param_map.name}}</span>
+          </span>
+          <span class="owner" style="color: #e4393c;">({{getContractType(item)}})</span>
+          <div class="owner">{{type==='1'?'房东：':'租客：'+item.param_map.name}}</div>
         </div>
         <div class="btnParent">
           <van-button v-if="item.contract_status===0" class="btn send" size="small"
@@ -370,6 +370,7 @@
   }
 
   .list {
+    position: relative;
     margin-top: 10px;
     width: 100%;
     padding-top: 1em;
@@ -379,6 +380,7 @@
     background-color: white;
 
     .infoParent {
+      width: 100%;
       margin-left: 1em;
     }
 
@@ -389,13 +391,14 @@
     }
 
     .owner {
-      margin-top: .5em;
+      margin-top: .8em;
       font-size: .8em;
     }
 
     .btnParent {
       position: absolute;
       right: 1em;
+      bottom: 1em;
 
       .btn {
 
