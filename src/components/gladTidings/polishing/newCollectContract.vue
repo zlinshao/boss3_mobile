@@ -6,23 +6,23 @@
           <van-radio name="1">新收</van-radio>
           <van-radio name="2">续收</van-radio>
         </van-radio-group>
-        <van-field
-          v-if="form.regenerate==='1'"
-          v-model="form.old_contract_number"
-          label="原合同编号"
-          type="text"
-          placeholder=""
-          readonly
-          required>
-        </van-field>
-        <van-field
-          v-model="form.contract_number"
-          label="合同编号"
-          type="text"
-          placeholder="请填写收房合同编号"
-          readonly
-          required>
-        </van-field>
+        <!--<van-field-->
+        <!--v-if="form.regenerate===1||form.regenerate==='1'"-->
+        <!--v-model="form.old_contract_number"-->
+        <!--label="原合同编号"-->
+        <!--type="text"-->
+        <!--placeholder=""-->
+        <!--readonly-->
+        <!--required>-->
+        <!--</van-field>-->
+        <!--<van-field-->
+        <!--v-model="form.contract_number"-->
+        <!--label="合同编号"-->
+        <!--type="text"-->
+        <!--placeholder="请填写收房合同编号"-->
+        <!--readonly-->
+        <!--required>-->
+        <!--</van-field>-->
         <van-field
           v-model="form.house.name"
           label="房屋地址"
@@ -91,16 +91,6 @@
             @click-icon="form.owner[index].phone= ''"
             required>
           </van-field>
-          <van-field
-            v-model="item.fadada_user_id===''?'':'实名认证成功'"
-            label="实名认证"
-            type="text"
-            class="number"
-            readonly
-            placeholder="点击进行实名认证"
-            @click="trueName(item)"
-            required>
-          </van-field>
         </div>
         <div @click="addNewHouseOwner" class="addInput bottom">
           +添加附属房东
@@ -113,6 +103,9 @@
           @click="showSignPeoples()"
           readonly
           required>
+          <van-button slot="button" size="small" type="primary" @click="trueName(curTrueNameItem)">
+            {{(curTrueNameItem!==null&&curTrueNameItem.fadada_user_id!==''&&curTrueNameItem.fadada_user_id!==undefined)?'已认证':'实名认证'}}
+          </van-button>
         </van-field>
         <div v-if="showForm.showProxyInfo">
           <van-field
@@ -142,16 +135,6 @@
             @click-icon="form.partA_agents.idcard = ''"
             required>
           </van-field>
-          <van-field
-            v-model="form.partA_agents.fadada_user_id===''?'':'实名认证成功'"
-            label="实名认证"
-            type="text"
-            class="number"
-            readonly
-            placeholder="点击进行实名认证"
-            @click="trueName(form.partA_agents)"
-            required>
-          </van-field>
         </div>
         <van-field
           v-model="showForm.noOwnerFeeTxt"
@@ -164,6 +147,7 @@
         </van-field>
         <van-field
           v-model="form.other_fee_text"
+          v-if="getIsShowOtherFee()"
           label="其他费用"
           type="text"
           placeholder="请填写其他费用"
@@ -584,14 +568,14 @@
       </van-cell-group>
     </div>
 
-    <div class="footer" v-if="counts === '2' || counts === '21'">
-      <div @click="saveCollect(0)">修改</div>
-    </div>
+    <!--<div class="footer" v-if="counts === '2' || counts === '21'">-->
+    <!--<div @click="saveCollect(0)">修改</div>-->
+    <!--</div>-->
 
-    <div class="footer" v-if="counts === '1' || counts === '11'">
+    <div class="footer">
       <div @click="close_()">重置</div>
-      <div @click="saveCollect(1)">草稿</div>
-      <div @click="saveCollect(0)">发布</div>
+      <div @click="sendOrSave(1)">草稿</div>
+      <div @click="sendOrSave(0)">发布</div>
     </div>
 
     <!--日期-->
@@ -628,9 +612,8 @@
         <van-checkbox v-for="(item,index) in remarks" :name="item" :key="index">{{item.name}}</van-checkbox>
       </van-checkbox-group>
     </van-popup>
-
+    <!--选择备注条款列表-->
     <pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000" ref="pdf"></pdf-dialog>
-
   </div>
 </template>
 
@@ -655,7 +638,7 @@
       this.name = name || '';
       this.idcard = idcard || '';
       this.phone = phone || '';
-      this.fadada_user_id = 'AD4D9D5FFA9C4B0500DE29F99DE1CF5DB8EBB9DA925BA67D9860FC575697ADDAEC983C8F76C7F49A1A3B0D8593162E5C';
+      this.fadada_user_id = userid || '';
     }
   }
 
@@ -666,17 +649,23 @@
       return {
         /*以下是电子合同新加字段*/
         eshow: false,
+        showOtherFee: false,
+        curTrueNameItem: null,//当前需要实名认证的item
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
         houseCertificateTypes: [new CommonIdNameEntity('1', '房屋所有权证'), new CommonIdNameEntity('2', '房屋买卖合同'), new CommonIdNameEntity('3', '其他房屋来源')],
         curDatas: [],//当前显示的选择弹框的元数据，就是CommonIdNameEntity的集合
         noOwnerFees: [new CommonIdNameEntity('1', '水费'), new CommonIdNameEntity('2', '电费'),
           new CommonIdNameEntity('3', '燃气费'),
-          new CommonIdNameEntity('4', '网费'), new CommonIdNameEntity('5', '物业管理费')],
+          new CommonIdNameEntity('5', '网费'), new CommonIdNameEntity('4', '物业管理费'), new CommonIdNameEntity('6', '其他费用')],
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许装修
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
         //合同备注条款数据
-        remarks: [new CommonIdNameEntity('1', '不能群租'), new CommonIdNameEntity('2', '不得扰民'), new CommonIdNameEntity('3', '不能随意搬动屋内家具家电'), new CommonIdNameEntity('4', '不能故意拆卸家具家电'), new CommonIdNameEntity('5', '不得养宠物'), new CommonIdNameEntity('6', '不得租住新疆人或外国人'), new CommonIdNameEntity('7', '乙方不得将房屋用于承办丧事、喜事等商业用途'), new CommonIdNameEntity('8', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'), new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
+        remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'),
+          new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'),
+          new CommonIdNameEntity('3', '乙方将能够通过合法途径获取的租客信息告知甲方'),
+          new CommonIdNameEntity('4', '非甲方及房屋原因导致的安全责任事故与甲方无关'),
+          new CommonIdNameEntity('5', '同等条件下，房东享有签约权(从乙方处承租）')],
         curContractInfo: '',//ContractInfo类
         /*以上是电子合同新增*/
         haveInHand: true,
@@ -725,6 +714,7 @@
 
         form: {
           type: '1',
+          draft: 0,
           contract_id: '',              //合同 续收才有
           house: {
             id: '',
@@ -732,7 +722,7 @@
           },
           sign_date: '',                //签约日期
           month: '',                    //收房月数
-          day: '0',                      //收房天数
+          day: '',                      //收房天数
           is_agency: '0',                //是否渠道 0不是 1是
           agency_name: '',              //渠道名
           agency_price: '',             //渠道费
@@ -740,7 +730,7 @@
           agency_phone: '',             //渠道手机号
           begin_date: '',               //空置期开始日期
           end_date: '',                 //合同结束日期
-          vacancy: '0',                  //空置期
+          vacancy: '',                  //空置期
           end_date_vacant: '',          //空置期结束日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -767,7 +757,7 @@
           penalty: '',                  //违约金
           contract_number: '',      //合同编号
           screenshot_leader: [],        //领导截图 数组
-          photo: [[]],                    //合同照片 数组
+          photo: [],                    //合同照片 数组
           property_photo: [],               //房产证照片
           identity_photo: [],           //证件照片
           remark: '',                   //备注
@@ -792,18 +782,17 @@
           house_certificate: "",
           property_number: "",
           QiuQuan_number: "",
-          not_owner_fee: {},
+          not_owner_fee: [],
           other_fee_text: "",
           allowed_decoration_to: "",
           allowed_add_to: "",
           staff_phone: "",
           pdf_scene: 1,
-          other_rule: {},
+          other_rule: [],
           signer_type: '',//签约类型1产权 2代理
-          partA_agents: {},//代理人信息
-          signer: '',
+          partA_agents: new HouseOwner(),//代理人信息
+          signer: {},
           owner: [new HouseOwner()],//房屋所有人HouseOwner类的列表
-          customerIds: '3328',
           cookie: '',
           /*以上是电子合同特有字段*/
         },
@@ -827,6 +816,7 @@
         retry: 0,
       }
     },
+    computed: {},
     watch: {
       cusFrom() {
         if (this.form.is_agency === 0) {
@@ -835,127 +825,142 @@
           this.form.agency_user_name = '';
           this.form.agency_phone = '';
         }
-      }
-    },
-    mounted() {
-      let count = sessionStorage.count;
-      if (count === '11') {
-        this.routerIndex('');
-        this.ddRent('');
-        this.close_();
-        this.dicts('');
-      }
-      if (this.$route.query.c_info !== undefined) {
-        let type = this.$route.query.c_info.type;
-        this.curContractInfo = this.$route.query.c_info;
-        this.form.regenerate = type;//0新签 1作废重签
-      }
-      this.getContractNumber();
+      },
+
     },
     activated() {
-      let count = sessionStorage.count;
-      this.counts = count;
-      if (count === '11') {
-        this.routerIndex('');
-        this.ddRent('');
-        this.polishing();
+      //如果房屋信息为空 则请求读草稿
+      this.routerIndex('eContract');
+      this.ddRent('eContract');
+      this.userInfo();
+      let item = JSON.parse(sessionStorage.getItem('contract_house_item'));
+      if (item === null) {
+        console.log('读取合同编号');
+        Toast.loading({
+          mask: true,
+          message: '加载中...'
+        });
+        this.dicts(success => {
+          this.getContractDetail();
+        }, error => {
+          Toast('加载数据失败！')
+        });
+      } else {
+        console.log('读取房屋信息');
+        sessionStorage.setItem('contract_house_item', null);
+        let house_res = item.house_res;
+        let house_res_com = house_res.community;
+        this.form.house = {id: '', name: ''};
+        this.form.house.id = item.house_id;
+        this.form.house.name = item.house_name;
+        this.form.province = house_res_com.province.province_name;//省
+        this.form.city = house_res_com.city.city_name;//市
+        this.form.district = house_res_com.area.area_name;
+        this.form.property_address = house_res_com.address;//街道
+        this.form.village_name = this.form.house.name;//物业地址
+        let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
+        this.form.room = house_types[0];//室
+        this.form.hall = house_types[1];//厅
+        this.form.toilet = house_types[2];//卫
+        this.form.area = house_res.area;//面积
+        /*获取电子合同相关字段*/
       }
-      if (count === '1') {
-        this.polishing();
-        this.routerIndex('');
-        this.ddRent('');
-        this.close_();
-        this.dicts('');
-        count = count + '1';
-        sessionStorage.setItem('count', count);
+      let t=this.$route.query;
+      if (t.staff !== undefined && t.staff !== '') {
+        let val = JSON.parse(t.staff);
+        this.form.staff_id = val.staff_id;
+        this.form.staff_name = val.staff_name;
+        this.form.department_id = val.depart_id;
+        this.form.department_name = val.depart_name;
+        this.isValue1 = val.activeRevise;
+        this.stick();
       }
-      if (count === '21') {
-        this.isValue1 = false;
-        let newID = JSON.parse(sessionStorage.process);
-        if (newID.type === 2) {
-          this.routerTo('/publishDetail', newID.ids);
-        } else {
-          this.counts = '1';
-          this.routerIndex('');
-          this.ddRent('');
-        }
+      if (t.depart !== undefined && t.depart !== '') {
+        let val = JSON.parse(t.depart);
+        this.form.department_name = val.name;
+        this.form.department_id = val.id;
+        this.isValue1 = val.activeRevise;
+        this.stick();
       }
-      if (count === '2') {
-        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
-        let newID = JSON.parse(sessionStorage.process);
-        if (newID.type === 2) {
-          this.close_();
-          this.routerTo('/publishDetail', newID.ids);
-        } else {
-          this.counts = '1';
-          this.close_();
-          this.routerIndex('');
-          this.ddRent('');
-        }
-        this.close_();
-        this.dicts(newID);
-        count = count + '1';
-        sessionStorage.setItem('count', count);
-      }
-      this.houseInfo();
-      /*获取电子合同相关字段*/
-
-      //获取房屋信息
-      let item = JSON.parse(sessionStorage.getItem('item'));
-      //console.log(sessionStorage.getItem('item'))
-      if (item === null || item === undefined) return;
-      let house_res = item.house_res;
-      if (house_res === null || house_res === undefined) return;
-      let house_res_com = house_res.community;
-      if (house_res_com === null || house_res_com === undefined) return;
-
-      this.form.province = house_res_com.province.province_name;//省
-      this.form.city = house_res_com.city.city_name;//市
-      this.form.district = house_res_com.area.area_name;
-      this.form.property_address = house_res_com.address;//街道
-      this.form.village_name = house_res_com.village_name;//校区地址
-      let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
-      this.form.room = house_types[0];//室
-      this.form.hall = house_types[1];//厅
-      this.form.toilet = house_types[2];//卫
-      this.form.area = house_res.area;//面积
-      /*获取电子合同相关字段*/
-
-    },
-
+      },
     methods: {
-      /*以下是电子合同新加*/
-      trueName(item) {
-        contractApi.trueName(item, error => {
-          Toast(error)
-        },this)
-      },
-      getContractNumber() {
-        //获取业务员对应城市
-        if (this.curContractInfo.type !== 2) {
-          this.userInfo(true);
-          this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
-            //获取合同编号
-            contractApi.getNumber(1, res.data.city_id, number => {
-              this.setContractNumber(number);
-            }, error => {
-              Toast(error)
+      getPic(ids, success) {
+        let update = {show: []};
+        let list = [];
+        let data = {};
+        update.show = ids;
+        this.$http.post(globalConfig.server + 'api/v1/batch', {'batch': JSON.stringify(update)}).then((res) => {
+          if (res.data.code === '110100') {
+            res.data.data.forEach((item, index) => {
+              data.bucket = item.info.bucket;
+              data.created_at = item.created_at;
+              data.currentPlace = item.currentPlace;
+              data.deleted_at = item.deleted_at;
+              data.display_name = item.display_name;
+              data.ext = item.info.ext;
+              data.host = item.info.host;
+              data.id = item.id;
+              data.is_video = item.info.mime.indexOf('image') === -1;
+              data.mime = item.info.mime;
+              data.name = item.name;
+              data.raw_name = item.raw_name;
+              data.size = item.info.size;
+              data.update_at = item.update_at;
+              data.uri = item.uri;
+              data.user_id = item.user_id;
+              list.push(data);
             });
-          });
-        } else {//获取页面带过来的合同编号
-          this.form.contract_number = this.curContractInfo.number;
-          this.manuscript();
-        }
+            success(list)
+          }
+        })
       },
-      previewPdf() {
-        contractApi.cancelContract(this.form.contract_number, success => {
-          contractApi.createCollectContract(this.$refs.pdf, this.form, success => {
+      /*以下是电子合同新加*/
+      getSessionInfo() {
+        this.form.old_contract_number = sessionStorage.getItem('contract_number');
+        this.form.regenerate = sessionStorage.getItem('contract_type');
+        this.setContractNumber(sessionStorage.getItem('contract_number'))
+      },
+      trueName(item) {
+        if (item === null) {
+          Toast('请先选择签约人');
+          return
+        }
+        this.sendOrSave(1, success => {
+          contractApi.trueName(item, success => {
+            location.href = success
           }, error => {
             Toast(error)
-          })
+          });
+        });
+
+      },
+      getCity(success) {
+        this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
+          //获取合同编号
+          contractApi.getNumber(1, res.data.city_id, number => {
+            this.setContractNumber(number);
+            if (success !== undefined) {
+              success();
+            }
+          }, error => {
+            Toast(error)
+          });
+        });
+      },
+      previewPdf() {
+        Toast.loading({
+          mask: true,
+          message: '加载中...'
+        });
+        this.getCity(resp => {
+          this.previewTrue();
+        });
+      },
+      previewTrue() {
+        contractApi.createContract(this.$refs.pdf, this.form, success => {
         }, error => {
           Toast(error)
-        });
+        })
       },
       //当非房东费用改变时，处理数据
       //显示非房东费用弹框
@@ -972,7 +977,7 @@
         let json = [];
         for (let i = 0; i < this.showForm.choosedRemarks.length; i++) {
           this.showForm.remarksTxt = this.showForm.remarksTxt + (i + 1) + '、' + this.showForm.choosedRemarks[i].name;
-          json[i] = this.showForm.choosedRemarks[i].id;
+          json.push(this.showForm.choosedRemarks[i].id);
         }
         this.form.other_rule = json;
       },
@@ -988,19 +993,37 @@
         this.curDatas = this.showForm.signPeoples;//设置当前元数据
         this.eshow = true;//显示弹框
       },
+      getIsShowOtherFee() {
+        let isShow = false;
+        for (let i = 0; i < this.showForm.choosedNoOwnerFees.length; i++) {
+          if (this.showForm.choosedNoOwnerFees[i].id === '6') {
+            isShow = true;
+          }
+        }
+        return isShow;
+      },
       changeNoPropertyFee() {
         this.showForm.noOwnerFeeTxt = '';
-        let json = {};
+        let list = [];
         for (let i = 0; i < this.showForm.choosedNoOwnerFees.length; i++) {
           let name = this.showForm.choosedNoOwnerFees[i].name;
           this.showForm.noOwnerFeeTxt = this.showForm.noOwnerFeeTxt + (i + 1) + '、' + name;
-          json[i] = this.showForm.choosedNoOwnerFees[i].id;
+          list.push(this.showForm.choosedNoOwnerFees[i].id);
         }
-        this.form.not_owner_fee = json;
+        this.form.not_owner_fee = list;
       },
       //添加附属房东信息
       addNewHouseOwner() {
         this.form.owner.push(new HouseOwner())
+      },
+      getNameForIndex(entitys, id) {
+        for (let i = 0; i < entitys.length; i++) {
+          let entity = entitys[i];
+          if (id === entity.id) {
+            return entity.name;
+          }
+        }
+        return '';
       },
       getEntityForIndex(entitys, id) {
         for (let i = 0; i < entitys.length; i++) {
@@ -1070,7 +1093,9 @@
             if (index === this.showForm.signPeoples.length - 1) {
               this.showForm.showProxyInfo = true;
               this.form.signer_type = 2;
+              this.curTrueNameItem = this.form.partA_agents;
             } else {
+              this.curTrueNameItem = this.form.owner[index];
               this.form.signer_type = 1;
               this.showForm.showProxyInfo = false;
               this.form.signer = this.form.owner[index]
@@ -1078,23 +1103,15 @@
             break;
         }
       },
-      /*以上是电子合同新加*/
-      polishing() {
-        let id = JSON.parse(sessionStorage.personal).id;
-        this.polishingHint(id);
+      userInfo() {
+        let per = JSON.parse(sessionStorage.personal);
+        this.form.staff_id = per.id;
+        this.form.staff_name = per.name;
+        this.form.department_id = per.department_id;
+        this.form.department_name = per.department_name;
+        this.form.staff_phone = per.phone;
+        this.form.cookie = per.session_id;
       },
-      userInfo(val1) {
-        if (val1) {
-          let per = JSON.parse(sessionStorage.personal);
-          this.form.staff_id = per.id;
-          this.form.staff_name = per.name;
-          this.form.department_id = per.department_id;
-          this.form.department_name = per.department_name;
-          this.form.staff_phone = per.phone;
-          this.form.cookie = per.session_id;
-        }
-      },
-
       accountBank(val) {
         this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
           if (res.data.code === '51110') {
@@ -1102,25 +1119,23 @@
           }
         })
       },
-      dicts(val) {
-        //付款方式
-        this.dictionary(443, 1).then((res) => {
-          this.value4 = [];
-          this.dictValue4 = res.data;
+      dicts(success, error) {
+        //房东租客
+        this.dictionary(449, 1).then((res) => {
+          this.value6 = [];
+          this.dictValue6 = res.data;
           for (let i = 0; i < res.data.length; i++) {
-            this.value4.push(res.data[i].dictionary_name);
-          }
-
-          //房东租客
-          this.dictionary(449, 1).then((res) => {
-            this.value6 = [];
-            this.dictValue6 = res.data;
-            for (let i = 0; i < res.data.length; i++) {
-              if (res.data[i].dictionary_name !== '租客承担') {
-                this.value6.push(res.data[i].dictionary_name);
-              }
+            if (res.data[i].dictionary_name !== '租客承担') {
+              this.value6.push(res.data[i].dictionary_name);
             }
-
+          }
+          //付款方式
+          this.dictionary(443, 1).then((res) => {
+            this.value4 = [];
+            this.dictValue4 = res.data;
+            for (let i = 0; i < res.data.length; i++) {
+              this.value4.push(res.data[i].dictionary_name);
+            }
             //安置方式
             this.dictionary(437, 1).then((res) => {
               this.value7 = [];
@@ -1128,10 +1143,15 @@
               for (let i = 0; i < res.data.length; i++) {
                 this.value7.push(res.data[i].dictionary_name);
               }
+              success();
+            }).catch(e => {
+              error();
             });
-
+          }).catch(e => {
+            error();
           });
-
+        }).catch(e => {
+          error();
         });
       },
       searchSelect(val) {
@@ -1357,7 +1377,7 @@
         }
       },
 
-      saveCollect(val) {
+      sendOrSave(type, success) {//0发布1草稿
         if (this.picStatus === 'err') {
           Toast(this.alertMsg('errPic'));
           return;
@@ -1370,157 +1390,170 @@
           this.form.is_corp = this.corp ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
-          this.form.draft = val;
-          let url = this.form.draft === 1 ? 'fdd/contract/save' : this.form.regenerate === 0 || this.form.regenerate === 2 ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';//0代表新签 1代表作废重签
-          this.$http.post(this.eurls + url, this.form).then((res) => {
-            this.haveInHand = true;
-            this.retry = 0;
-            if (res.data.code === '40000') {
-              if (this.form.draft === 1) {
-                this.form.day = this.form.day === '0' ? '' : this.form.day;
-                this.form.id = res.data.data.id;
-                Toast.success(res.data.msg);
+          Toast.loading({
+            mask: true,
+            message: '加载中...'
+          });
+          if (type === 1) {//草稿
+            let json = {content: this.form, type: '1'};
+            this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+              this.haveInHand = true;
+              Toast.clear();
+              if (success === undefined) {
+                Toast(res.data.msg)
               } else {
-                Toast.success(res.data.msg);
-                if (res.data.data.id) {
-                  this.routerDetail(res.data.data.id)
-                } else {
-                  this.routerDetail(res.data.data.data.id)
-                }
-                this.close_();
-                $('.imgItem').remove();
+                success()
               }
-            } else {
-              Toast(res.data.msg);
-            }
-          }).catch((error) => {
-            this.haveInHand = true;
-            if (error.response === undefined) {
-              this.alertMsg('net');
-            } else {
-              if (error.response.status === 401) {
-                this.personalGet().then((data) => {
-                  if (data && this.retry === 0) {
-                    this.retry++;
-
-                    this.saveCollect(this.form.draft);
-                  }
-                });
-              }
-            }
+            }).catch(e => {
+              Toast.clear();
+              this.haveInHand = true;
+            });
+            return
+          }
+          this.getSessionInfo();
+          this.getCity(resp => {
+            this.post();
           })
         } else {
           Toast(this.alertMsg('sub'));
         }
       },
-      houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
-          this.form.contract_id = val.id;
-          this.form.house.id = val.house_id;
-          this.form.house.name = val.house_name;
-          this.form.is_agency = val.is_agency;                           //是否渠道
-          this.cusFrom = dicts.value8[val.is_agency];                    //是否渠道
-        }
-        if (t.staff !== undefined && t.staff !== '') {
-          let val = JSON.parse(t.staff);
-          this.form.staff_id = val.staff_id;
-          this.form.staff_name = val.staff_name;
-          this.form.department_id = val.depart_id;
-          this.form.department_name = val.depart_name;
-          this.form.staff_phone = val.phone;
-          this.isValue1 = val.activeRevise;
-          this.stick();
-        }
-        if (t.depart !== undefined && t.depart !== '') {
-          let val = JSON.parse(t.depart);
-          this.form.department_name = val.name;
-          this.form.department_id = val.id;
-          this.isValue1 = val.activeRevise;
-          this.stick();
-        }
-        if (t.tops === '') {
-          this.stick();
-        }
-        this.userInfo(this.isValue1);
-      },
-
-      // 草稿
-      manuscript() {
-        this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.contract_number).then((res) => {
+      post() {
+        let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+        this.$http.post(this.eurls + url, this.form).then((res) => {
+          Toast.clear();
+          this.haveInHand = true;
+          this.retry = 0;
+          Toast(res.data.msg);
           if (res.data.code === '40000') {
-            this.isClear = false;
-
-            let draft = res.data.data.param_map;
-
-            console.log(app.form)
-            Object.keys(this.form).forEach(function (key) {
-
-              app.form[key]=draft[key];
-            });
-            console.log(this.form);
-
-            this.first_date.push(draft.pay_first_date);
-            this.datePrice[0] = draft.pay_first_date;
-            this.datePay[0] = draft.pay_first_date;
-
-            this.cusFrom = dicts.value8[draft.is_agency];                //是否渠道
-            for (let i = 0; i < draft.price_arr.length; i++) {
-              this.amountPrice = i + 1;
-              this.form.period_price_arr.push('');
-              this.form.price_arr.push('');
+            this.routerDetail(res.data.data.data.id);
+            this.close_();
+            $('.imgItem').remove();
+          } else if (res.data.code === '40040') {
+            if (res.data.data.is_bulletin) {
+              this.routerDetail(res.data.data.data.id)
+            } else {
+              this.$router.go(-1);
             }
-            this.countDate(1, draft.period_price_arr);
-            for (let i = 0; i < draft.pay_way_arr.length; i++) {
-              this.amountPay = i + 1;
-              this.form.pay_way_arr.push('');
-              for (let j = 0; j < this.dictValue4.length; j++) {
-                if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
-                  this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
+          }
+        }).catch((error) => {
+          Toast.clear();
+          this.haveInHand = true;
+          if (error.response === undefined) {
+            this.alertMsg('net');
+          } else {
+            if (error.response.status === 401) {
+              this.personalGet().then((data) => {
+                if (data && this.retry === 0) {
+                  this.retry++;
+
+                  this.sendOrSave(this.form.draft);
                 }
-              }
+              });
             }
-            this.countDate(2, draft.period_pay_arr);
-            for (let j = 0; j < this.dictValue7.length; j++) {
-              if (this.dictValue7[j].id === draft.vacancy_way) {
-                this.vacancy_way_name = this.dictValue7[j].dictionary_name;
-              }
-            }
-            for (let j = 0; j < this.dictValue6.length; j++) {
-              if (this.dictValue6[j].id === draft.property_payer) {
-                this.property_name = this.dictValue6[j].dictionary_name;
-              }
-            }
-            this.form.is_corp = draft.is_corp;
-            this.corp = draft.is_corp === 1;
-            this.setContractNumber(draft.contract_number);
-            this.photos = draft.photo || {};
-            this.screenshots = draft.screenshot_leader || {};
-            this.property_photos = draft.property_photo || {};
-            this.identity_photos = data.identity_photo || {};
-            this.showForm.houseCertificateTypeTxt = this.getEntityForIndex(this.houseCertificateTypes, this.form.house_certificate).name;
-            this.showForm.signPeople = draft.signer.name;
-            let not_owner_fee_choosed_ids = [];
-            Object.keys(this.form.not_owner_fee).forEach(function (key) {
-              not_owner_fee_choosed_ids.push(key)
-            });
-            this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
-            this.changeNoPropertyFee();
-            this.showForm.canDecorationsTxt = this.getEntityForIndex(this.canDecorations, this.form.allowed_decoration_to).name;
-            this.showForm.canAddThingTxt = this.getEntityForIndex(this.canAddThings, this.form.allowed_add_to).name;
-            this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
-            this.changeContracts()
           }
         })
       },
+      // 获取合同详情
+      getContractDetail() {
+        this.getSessionInfo();
 
+        if (this.form.regenerate === '1') {
+          this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.old_contract_number).then((res) => {
+            Toast.clear();
+            if (res.data.code === '40000') {
+              this.isClear = false;
+              let draft = res.data.data.param_map;
+              this.changeContractData(draft);
+            }
+          }).catch(e => {
+            Toast.clear();
+          })
+        } else {
+          this.getCity();
+          //读小飞草稿
+          this.$http.get(this.eurls + 'fdd/contract/stash?staff_id=' + this.form.staff_id + '&type=' + 1).then(res => {
+            Toast.clear();
+            if (res.data.code === '40000') {
+              this.changeContractData(res.data.data)
+            }
+          }).catch(e => {
+            Toast.clear();
+          })
+        }
+      },
+      changeContractData(draft) {
+        this.form = contractApi.copy(this.form, draft, ['contract_number']);
+        this.first_date.push(draft.pay_first_date);
+        this.datePrice[0] = draft.pay_first_date;
+        this.datePay[0] = draft.pay_first_date;
+        this.cusFrom = dicts.value8[draft.is_agency];                //是否渠道
+        this.countDate(1, draft.period_price_arr);
+        for (let i = 0; i < draft.pay_way_arr.length; i++) {
+          for (let j = 0; j < this.dictValue4.length; j++) {
+            if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
+              this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
+            }
+          }
+        }
+        this.countDate(2, draft.period_pay_arr);
+        for (let j = 0; j < this.dictValue7.length; j++) {
+          if (this.dictValue7[j].id === draft.vacancy_way) {
+            this.vacancy_way_name = this.dictValue7[j].dictionary_name;
+          }
+        }
+        for (let j = 0; j < this.dictValue6.length; j++) {
+          if (this.dictValue6[j].id === draft.property_payer) {
+            this.property_name = this.dictValue6[j].dictionary_name;
+          }
+        }
+        this.form.is_corp = draft.is_corp;
+        this.corp = draft.is_corp === 1;
+        this.getPic(draft.photo, success => {
+          this.photos = success;
+        });
+        this.getPic(draft.screenshot_leader, success => {
+          this.screenshots = success;
+        });
+        this.getPic(draft.property_photo, success => {
+          this.property_photos = success;
+        });
+        this.getPic(draft.identity_photo, success => {
+          this.identity_photos = success;
+        });
+        this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
+        if(this.form.signer_type===2){//代理
+          this.showForm.showProxyInfo=true;
+          this.showForm.signPeople = draft.partA_agents.name;
+          this.curTrueNameItem = draft.partA_agents;
+        }else{//房东
+          this.showForm.showProxyInfo=false;
+          this.showForm.signPeople = draft.signer.name;
+          this.curTrueNameItem = draft.signer;
+        }
+        //验证身份
+        contractApi.trueName(this.curTrueNameItem, success => {
+        }, error => {
+        });
+        let not_owner_fee_choosed_ids = [];
+        for (let key in this.form.not_owner_fee) {
+          not_owner_fee_choosed_ids.push(this.form.not_owner_fee[key])
+        }
+        this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
+        this.changeNoPropertyFee();
+        this.showForm.canDecorationsTxt = this.getNameForIndex(this.canDecorations, this.form.allowed_decoration_to);
+        this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
+        this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
+        this.changeContracts();
+        if(this.form.partA_agents.length===0){
+          this.form.partA_agents=new HouseOwner();
+        }
+      },
       close_() {
         this.isClear = true;
         setTimeout(() => {
           this.isClear = false;
         });
-
         $('.imgItem').remove();
         this.userInfo(true);
         this.clearObj(this.form);
@@ -1545,10 +1578,8 @@
       },
       clearObj(obj) {
         Object.keys(obj).forEach(function (key) {
-
           let o = obj[key];
-
-          if (key === 'contract_number') {
+          if (key === 'contract_number' || key === 'regenerate') {
           } else if (o instanceof Array) {
             obj[key] = [];
           } else if (o instanceof Object) {
@@ -1560,7 +1591,7 @@
           }
         });
       }
-    },
+    }
   }
 </script>
 

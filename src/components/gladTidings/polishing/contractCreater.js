@@ -1,5 +1,6 @@
 let url = globalConfig.e_server;
 import Vue from 'vue';
+import {Toast} from 'vant'
 
 let getNumber = function (type, city_id, success, error) {
   let version = type === 1 ? '1.1' : '1.2';
@@ -26,54 +27,78 @@ let cancelContract = function (number, success, error) {
   })
 };
 
-function createCollectContract(pdf, param, success, error) {
-  console.log(param)
+function createContract(pdf, param, success, error) {
+
   Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
+    Toast.clear();
     if (res.data.code === '40000') {
-      pdf.show(res.data.data.download_url.split('8443')[1], 1);
+      pdf.show(url+res.data.data, 1);
     } else {
       error(res.data.msg);
     }
+  }).catch(e=>{
+    Toast.clear();
   })
 }
 
-function createRentContract(pdf, param, success, error) {
-  console.log(param)
-  Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
+function trueName(item, success, error) {
+  Vue.prototype.$http.get(url + '/fdd/customer/verified?idcard=' + item.idcard + '&name=' + item.name + '&phone=' + item.phone).then(res => {
     if (res.data.code === '40000') {
-      pdf.show(res.data.data.download_url.split('8443')[1], 1);
-    } else {
-      error(res.data.msg);
-    }
-  })
-}
-
-function trueName(item, error, vue) {
-  Vue.prototype.$http.get(url + '/fdd/customer/verified?idcard=' + item.idcard + '&name=' + item.name + '&phone=' + item.phone).then(success => {
-    if (success.data.code === '40000') {
-      item.fadada_user_id = success.data.data.customer_id;
+      item.fadada_user_id = res.data.data.customer_id;
     } else {
       Vue.prototype.$http.post(url + 'fdd/customer/cert', {
         customer_name: item.name,
         idcard: item.idcard,
         mobile: item.phone
-      }).then(success => {
-        if (success.data.code === '40010') {
-          dd.biz.util.openLink({
-            url: success.data.data.data,//要打开链接的地址
-            onSuccess: function (result) {
-              vue.routerIndex('');
-              vue.ddRent('');
-            },
-            onFail: function (err) {
-            }
-          })
+      }).then(res => {
+        if (res.data.code === '40010') {
+          success(res.data.data.data);
         } else {
-          error(success.data.msg);
+          error(res.data.msg);
         }
       })
     }
-  })
+  });
 }
 
-export {createCollectContract, createRentContract, getNumber, cancelContract, trueName}
+function copy(oldObj, source, split) {
+  let data = {};
+  for (let item in oldObj) {
+    if (split.indexOf(item) !== -1) {
+      data[item] = '';
+      continue
+    }
+    if (source[item] instanceof Array) {
+      data[item] = copyArray(source[item])
+    } else if (typeof source[item] === 'object') {
+      data[item] = copyChild(source[item])
+    } else {
+      data[item] = source[item];
+    }
+  }
+  return data;
+}
+
+function copyArray(source) {
+  let list = [];
+  for (let i = 0; i < source.length; i++) {
+    let entity = source[i];
+    list.push(entity)
+  }
+  return list;
+}
+
+function copyChild(source) {
+  let data = {};
+  for (let item in source) {
+    if (typeof source[item] === 'object') {
+      data[item] = copyChild(source[item])
+    } else {
+      data[item] = source[item];
+    }
+  }
+  return data;
+}
+
+
+export {createContract, getNumber, cancelContract, trueName, copy}
