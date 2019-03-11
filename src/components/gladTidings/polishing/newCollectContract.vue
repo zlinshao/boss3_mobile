@@ -1515,7 +1515,6 @@
         //验证身份
         contractApi.trueName( this.curTrueNameItem, success => {
         }, error => {
-          Toast(error)
         });
         let not_owner_fee_choosed_ids = [];
         for (let key in this.form.not_owner_fee) {

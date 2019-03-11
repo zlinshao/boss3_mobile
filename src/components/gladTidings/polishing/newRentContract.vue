@@ -1931,7 +1931,6 @@
         for (let i = 0; i < this.form.customer_info; i++) {
           contractApi.trueName(this.form.customer_info[i], success => {
           }, error => {
-            Toast(error)
           });
         }
         this.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
