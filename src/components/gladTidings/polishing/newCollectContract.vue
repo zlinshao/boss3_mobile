@@ -657,7 +657,7 @@
         curDatas: [],//当前显示的选择弹框的元数据，就是CommonIdNameEntity的集合
         noOwnerFees: [new CommonIdNameEntity('1', '水费'), new CommonIdNameEntity('2', '电费'),
           new CommonIdNameEntity('3', '燃气费'),
-          new CommonIdNameEntity('4', '网费'), new CommonIdNameEntity('5', '物业管理费'), new CommonIdNameEntity('6', '其他费用')],
+          new CommonIdNameEntity('5', '网费'), new CommonIdNameEntity('4', '物业管理费'), new CommonIdNameEntity('6', '其他费用')],
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许装修
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
         //合同备注条款数据
@@ -834,7 +834,6 @@
       this.ddRent('eContract');
       this.userInfo();
       let item = JSON.parse(sessionStorage.getItem('contract_house_item'));
-      console.log(item)
       if (item === null) {
         console.log('读取合同编号');
         Toast.loading({
@@ -858,7 +857,7 @@
         this.form.city = house_res_com.city.city_name;//市
         this.form.district = house_res_com.area.area_name;
         this.form.property_address = house_res_com.address;//街道
-        this.form.village_name = house_res_com.village_name;//校区地址
+        this.form.village_name = this.form.house.name;//物业地址
         let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
         this.form.room = house_types[0];//室
         this.form.hall = house_types[1];//厅
