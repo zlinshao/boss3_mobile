@@ -833,7 +833,8 @@
       this.routerIndex('eContract');
       this.ddRent('eContract');
       this.userInfo();
-      let item = JSON.parse(sessionStorage.getItem('item'));
+      let item = JSON.parse(sessionStorage.getItem('collect_contract_item'));
+      console.log(item)
       if (item === null) {
         console.log('读取合同编号');
         Toast.loading({
@@ -847,6 +848,7 @@
         });
       } else {
         console.log('读取房屋信息');
+        sessionStorage.setItem('collect_contract_item', null);
         let house_res = item.house_res;
         let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};
@@ -862,7 +864,6 @@
         this.form.hall = house_types[1];//厅
         this.form.toilet = house_types[2];//卫
         this.form.area = house_res.area;//面积
-        sessionStorage.setItem('item', null)
         /*获取电子合同相关字段*/
       }
       let t=this.$route.query;
