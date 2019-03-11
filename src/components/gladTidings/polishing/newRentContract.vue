@@ -1012,6 +1012,15 @@
       }
     },
     methods: {
+      payWayClick(val) {
+        if (val === 1) {
+          this.payStatus = !this.payStatus;
+          this.priceStatus = false;
+        } else {
+          this.priceStatus = !this.priceStatus;
+          this.payStatus = false;
+        }
+      },
       /*以下是电子合同新加*/
       getPic(ids, success) {
         let update = {show: []};

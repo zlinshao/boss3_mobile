@@ -1423,7 +1423,7 @@
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           //清除草稿
-          let json = {content: {}, type: '1'};
+          let json = {content: {}, type: '2'};
           this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
           });
           this.haveInHand = true;
