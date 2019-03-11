@@ -574,8 +574,8 @@
 
     <div class="footer">
       <div @click="close_()">重置</div>
-      <div @click="saveCollect(1)">草稿</div>
-      <div @click="saveCollect(0)">发布</div>
+      <div @click="sendOrSave(1)">草稿</div>
+      <div @click="sendOrSave(0)">发布</div>
     </div>
 
     <!--日期-->
@@ -1403,7 +1403,7 @@
                 if (data && this.retry === 0) {
                   this.retry++;
 
-                  this.saveCollect(this.form.draft);
+                  this.sendOrSave(this.form.draft);
                 }
               });
             }
