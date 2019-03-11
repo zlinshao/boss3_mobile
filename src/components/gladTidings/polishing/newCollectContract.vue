@@ -935,13 +935,9 @@
           mask: true,
           message: '加载中...'
         });
-        if (this.form.regenerate === 1 || this.form.regenerate === '1') {
+        this.getCity(resp => {
           this.previewTrue();
-        } else {
-          this.getCity(resp => {
-            this.previewTrue();
-          });
-        }
+        });
       },
       previewTrue() {
         contractApi.createContract(this.$refs.pdf, this.form, success => {
