@@ -1274,7 +1274,7 @@
         this.form[val.dataKey] = val.dateVal;
         switch (val.dataKey) {
           case 'begin_date':
-            if (this.form.type === 1) {
+            if (this.form.type === '1') {
               this.endDate(val.dateVal, '', this.form.vacancy, 1);
             } else {
               this.endDate(this.form.begin_date, this.form.month, this.form.day, 2)
@@ -1583,7 +1583,7 @@
 
 
         this.form.house.name = draft.house.name;
-
+        this.form.type=draft.type;
         this.form.province = draft.province;//省
         this.form.city = draft.city;//市
         this.form.district = draft.district;
