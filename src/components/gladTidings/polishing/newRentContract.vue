@@ -977,6 +977,7 @@
       this.houseInfo();
       let item = sessionStorage.getItem('contract_house_item');
       console.log(item);
+      if(sessionStorage.getItem('contract_house_item')==='noload')return
       if (item===null||item === 'null') {
         console.log('读取合同编号');
         Toast.loading({
