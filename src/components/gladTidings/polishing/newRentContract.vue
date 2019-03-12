@@ -1838,6 +1838,7 @@
         this.form.house_id = draft.house_id;
         this.form.address = draft.address;
         this.form.corp_name = draft.corp_name;
+        this.form.type=draft.type;
         this.form.month = draft.month;
         this.form.day = draft.day === '0' ? '' : draft.day;
         this.form.contract_number = this.setContractNumber(draft.contract_number);
