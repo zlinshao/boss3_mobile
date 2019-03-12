@@ -760,6 +760,7 @@
           begin_date: '',               //空置期开始日期
           end_date: '',                 //合同结束日期
           vacancy: '',                  //空置期
+          house_type:'',
           end_date_vacant: '',          //空置期结束日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -774,7 +775,7 @@
           warranty_day: '',             //保修期天
           is_corp: 1,                   //是否公司单  0个人1公司
           deposit: '',                  //押金
-          property_payer: '1',           //物业费付款人
+          property_payer: '',           //物业费付款人
           name: '',                     //房东姓名
           phone: '',                    //电话号码
           purchase_way: 509,            //支付方式
@@ -1509,6 +1510,7 @@
         if(this.form.type==='2'){
           this.form.end_date_vacant=this.form.begin_date;
         }
+        this.form.house_type= this.form.room+'室'+this.form.hall+'厅'+this.form.toilet+'卫';
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           //清除草稿
