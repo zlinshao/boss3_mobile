@@ -98,7 +98,7 @@
             @keyup="onSignerChanged(form.owner[index])"
             v-model="form.owner[index].phone"
             label="联系方式"
-            type="text"
+            type="number"
             class="number"
             placeholder="请填写联系方式"
             icon="clear"
@@ -213,14 +213,14 @@
           <div class="titles required">签约时长</div>
           <van-field
             v-model="form.month"
-            type="text"
+            type="number"
             class="number"
             @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
           <van-field
             v-model="form.day"
-            type="text"
+            type="number"
             class="number"
             @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写天数">
@@ -329,7 +329,7 @@
           </van-field>
           <van-field
             v-model="form.period_price_arr[index]"
-            type="text"
+            type="number"
             class="number"
             label="付款周期"
             :disabled="amountPrice === 1 && form.period_price_arr[index] === form.month"
@@ -367,7 +367,7 @@
           </van-field>
           <van-field
             v-model="form.period_pay_arr[index]"
-            type="text"
+            type="number"
             class="number"
             label="付款周期"
             :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
@@ -456,14 +456,14 @@
           <div class="titles required">保修期</div>
           <van-field
             v-model="form.warranty"
-            type="text"
+            type="number"
             class="number"
             placeholder="保修期(月)">
           </van-field>
           <van-field
             class="twoBorder number"
             v-model="form.warranty_day"
-            type="text"
+            type="number"
             placeholder="保修期(天)">
           </van-field>
         </div>
