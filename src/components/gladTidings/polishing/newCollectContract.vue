@@ -1412,7 +1412,8 @@
           }
           this.getSessionInfo();
           if(this.form.province===''){
-            error('请先选择房屋地址');
+            Toast('请先选择房屋地址');
+            this.haveInHand = true;
             return
           }
           this.getCity(resp => {
