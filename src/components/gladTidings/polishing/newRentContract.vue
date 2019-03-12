@@ -978,7 +978,6 @@
       this.userInfo();
       this.houseInfo();
       let item = sessionStorage.getItem('contract_house_item');
-      console.log(item);
       if (sessionStorage.getItem('contract_house_item') === 'noload') {
         sessionStorage.setItem('contract_house_item', null);
         return;
@@ -1139,6 +1138,7 @@
       getContractDetail() {
         this.getSessionInfo();
         if (this.form.regenerate === '1') {
+          console.log('作废重签')
           this.form.processable_id = '';
           this.userInfo(true);
           this.$http.get(this.eurls + 'fdd/contract/read/' + this.form.old_contract_number).then((res) => {
@@ -1155,6 +1155,7 @@
             Toast.clear();
           })
         } else {
+          console.log('读草稿')
           this.getCity();
           //读小飞草稿
           this.$http.get(this.eurls + 'fdd/contract/stash?staff_id=' + this.form.staff_id + '&type=' + 2).then(res => {
@@ -1661,7 +1662,6 @@
           }else{
             return
           }
-
           //清除草稿
           let json = {
             content: {
@@ -1768,10 +1768,8 @@
             this.form.deposit_payed = rent.deposit_payed ? rent.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
-            } else if (this.form.front_money) {
+            } else  {
               this.receivedPrice = 'front_money';
-            } else {
-              this.receivedPrice = 'rent_money';
             }
             this.$nextTick(function () {
               this.form.money_sum = rent.money_sum;
@@ -1838,6 +1836,7 @@
         this.userInfo();
       },
       changeContractDetail(draft) {
+
         this.form.contract_id = draft.contract_id;
         this.form.house_id = draft.house_id;
         this.form.address = draft.address;
@@ -1879,10 +1878,8 @@
         this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
         if (this.form.deposit_payed) {
           this.receivedPrice = 'deposit_payed';
-        } else if (this.form.front_money) {
+        } else  {
           this.receivedPrice = 'front_money';
-        } else {
-          this.receivedPrice = 'rent_money';
         }
         this.$nextTick(function () {
           this.form.money_sum = draft.money_sum;
