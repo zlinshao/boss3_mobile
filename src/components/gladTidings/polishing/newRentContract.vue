@@ -1775,8 +1775,8 @@
               this.form.money_sum = rent.money_sum;
             });
             this.form.memo = rent.memo ? rent.memo : '';
-            this.form.money_sep = [];
-            this.form.money_way = [];
+            this.form.money_sep = [''];
+            this.form.money_way = [''];
             for (let i = 0; i < rent.money_table.length; i++) {
               this.amountMoney = i + 1;
               this.form.money_sep.push(rent.money_table[i].money_sep);
