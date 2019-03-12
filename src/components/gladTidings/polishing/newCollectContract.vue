@@ -32,12 +32,14 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
+        <!--          @click="showSelect(houseCertificateTypes)"
+-->
         <van-field
           v-model="showForm.houseCertificateTypeTxt"
           label="持有证件"
           readonly
+          @click="ss()"
           type="text"
-          @click="showSelect(houseCertificateTypes)"
           placeholder="请选择持有证件"
           required>
         </van-field>
@@ -906,6 +908,9 @@
       }
     },
     methods: {
+      ss(){
+        alert(2222)
+      },
       getPic(ids, success) {
         let update = {show: []};
         let list = [];
@@ -1097,7 +1102,6 @@
       },
       onSelectConfirm(value, index) {
         this.eshow = false;//关闭弹框
-        alert(index+':'+value);
         switch (this.curDatas) {
           case this.houseCertificateTypes://选择持有证件的类型
             this.form.house_certificate = this.houseCertificateTypes[index].id;

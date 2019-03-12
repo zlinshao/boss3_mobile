@@ -21,7 +21,7 @@
       @load="onSearch">
       <div v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
         <div class="infoParent">
-          <span class="owner" style="color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
+          <span class="owner" style="font-size:.6em;color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
           <div class="title">
             合同编号:
             {{item.contract_number}}
@@ -34,13 +34,13 @@
           <div class="owner">{{type==='1'?'房东：':'租客：'+item.param_map.name}}</div>
         </div>
         <div class="btnParent">
-          <van-button v-if="item.contract_status===0" class="btn send" size="small"
-                      @click="send(item)" @click.stop>发送
-          </van-button>
-          <van-button v-if="item.contract_status===0" class="btn sign" size="small"
+          <van-button v-if="item.contract_status===0" class="btn sign signBtn" size="small"
                       @click="sign(item)" @click.stop>签署
           </van-button>
-          <van-button v-if="item.contract_status===1" class="btn sign" size="small"
+          <van-button v-if="item.contract_status===0" class="btn send signBtn" size="small"
+                      @click="send(item)" @click.stop>发送
+          </van-button>
+          <van-button v-if="item.contract_status===1" class="btn sign signBtn" size="small"
                       @click="toDetail(item)" @click.stop>修改
           </van-button>
         </div>
@@ -399,7 +399,9 @@
       position: absolute;
       right: 1em;
       bottom: 1em;
-
+      .signBtn{
+        border-radius: 5px;
+      }
       .btn {
 
       }
