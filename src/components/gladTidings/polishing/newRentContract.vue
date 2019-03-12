@@ -417,6 +417,7 @@
             type="text"
             placeholder="请填写客户姓名"
             icon="clear"
+            @keyup="onChangeInfo(form.customer_info[index])"
             @click-icon="form.customer_info[index].name = ''"
             required>
           </van-field>
@@ -427,6 +428,7 @@
             class="number"
             placeholder="请填写联系方式"
             icon="clear"
+            @keyup="onChangeInfo(form.customer_info[index])"
             @click-icon="form.customer_info[index].phone= ''"
             required>
           </van-field>
@@ -434,13 +436,14 @@
             v-model="form.customer_info[index].idcard"
             label="租客身份证号"
             type="text"
+            @keyup="onChangeInfo(form.customer_info[index])"
             placeholder="请填写租客身份证号"
             icon="clear"
             @click-icon="form.customer_info[index].idcard= ''"
             required>
           </van-field>
           <van-field
-            v-model="form.customer_info[index].fadada_user_id===''?'':'实名认证成功'"
+            :value="getTrueNameInfo(form.customer_info[index])"
             label="实名认证"
             type="text"
             class="number"
@@ -1016,6 +1019,12 @@
       }
     },
     methods: {
+      onChangeInfo(item){
+        item.fadada_user_id='';
+      },
+      getTrueNameInfo(item){
+        return item.fadada_user_id===''?'':'已认证'
+      },
       payWayClick(val) {
         if (val === 1) {
           this.payStatus = !this.payStatus;

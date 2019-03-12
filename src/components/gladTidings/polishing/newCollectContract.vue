@@ -59,7 +59,7 @@
           placeholder="请填写产权证号"
           icon=""
           @click-icon="form.property_number = ''"
-          >
+        >
         </van-field>
         <van-field
           v-model="form.QiuQuan_number"
@@ -78,12 +78,14 @@
             v-model="form.owner[index].name"
             label="房东姓名"
             type="text"
+            @keyup="onSignerChanged(form.owner[index])"
             placeholder="请填写房东姓名"
             icon="clear"
             @click-icon="form.owner[index].name=''"
             required>
           </van-field>
           <van-field
+            @keyup="onSignerChanged(form.owner[index])"
             v-model="form.owner[index].idcard"
             label="房东身份证号"
             type="text"
@@ -93,6 +95,7 @@
             required>
           </van-field>
           <van-field
+            @keyup="onSignerChanged(form.owner[index])"
             v-model="form.owner[index].phone"
             label="联系方式"
             type="text"
@@ -120,6 +123,7 @@
         </van-field>
         <div v-if="showForm.showProxyInfo">
           <van-field
+            @keyup="onSignerChanged(form.partA_agents)"
             v-model="form.partA_agents.name"
             label="代理人姓名"
             type="text"
@@ -129,6 +133,7 @@
             required>
           </van-field>
           <van-field
+            @keyup="onSignerChanged(form.partA_agents)"
             v-model="form.partA_agents.phone"
             label="代理人手机号"
             type="text"
@@ -138,6 +143,7 @@
             required>
           </van-field>
           <van-field
+            @keyup="onSignerChanged(form.partA_agents)"
             v-model="form.partA_agents.idcard"
             label="代理人身份证号"
             type="text"
@@ -154,7 +160,7 @@
           type="text"
           @click="showChooseNoOwnerFee()"
           placeholder="请选择非房东费用(可多选)"
-          >
+        >
         </van-field>
         <van-field
           v-model="form.other_fee_text"
@@ -191,7 +197,7 @@
           type="text"
           @click="showChooseRemark()"
           placeholder="请选择备注条款(可多选)"
-          >
+        >
         </van-field>
 
         <van-field
@@ -663,6 +669,7 @@
       this.idcard = idcard || '';
       this.phone = phone || '';
       this.fadada_user_id = userid || '';
+      this.true_name='';
     }
   }
 
@@ -850,8 +857,8 @@
           this.form.agency_phone = '';
         }
       },
-      house(n,o){
-        console.log(n+":"+o)
+      house(n, o) {
+        console.log(n + ":" + o)
       }
 
     },
@@ -869,7 +876,7 @@
         console.log('读取合同编号');
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.dicts(success => {
@@ -896,7 +903,7 @@
         this.form.hall = house_types[1];//厅
         this.form.toilet = house_types[2];//卫
         this.form.area = house_res.area;//面积
-        if(this.form.type==='2'){//续收
+        if (this.form.type === '2') {//续收
           this.$http.get(this.eurls + 'fdd/contract/read/' + item.contractVal.contract_number).then((res) => {
             if (res.data.code === '40000') {
               let draft = res.data.data.param_map;
@@ -928,14 +935,17 @@
         this.stick();
       }
     },
-    computed:{
-      house(){
-         return this.form.house;
+    computed: {
+      house() {
+        return this.form.house;
       }
     },
     methods: {
-      ss() {
-        alert(2222)
+      onSignerChanged(item) {
+        if(this.curTrueNameItem===null){
+          return
+        }
+        this.curTrueNameItem.fadada_user_id=''
       },
       getPic(ids, success) {
         let update = {show: []};
@@ -981,21 +991,21 @@
         let json = {content: this.form, type: '1'};
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
-          if(res.data.code==='40000'){
+          if (res.data.code === '40000') {
             contractApi.trueName(item, success => {
               location.href = success
-            },error=>{
+            }, error => {
               Toast(error)
             });
-          }else{
+          } else {
             Toast.clear();
             Toast(res.data.msg);
           }
-        }).catch(e=>{
+        }).catch(e => {
           Toast.clear();
         });
       },
@@ -1015,7 +1025,7 @@
       previewPdf() {
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.getCity(resp => {
@@ -1463,7 +1473,7 @@
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           Toast.loading({
             mask: true,
-            duration:0,
+            duration: 0,
             message: '加载中...'
           });
           if (type === 1) {//草稿
@@ -1498,11 +1508,13 @@
       post() {
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
-            Toast.clear();
+          Toast.clear();
           //清除草稿
-          let json = {content: {
-            staff_id: this.form.staff_id
-            }, type: '1'};
+          let json = {
+            content: {
+              staff_id: this.form.staff_id
+            }, type: '1'
+          };
           this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
           });
           this.haveInHand = true;
@@ -1571,18 +1583,17 @@
         this.form.house.id = draft.house.id;
 
 
-
         this.form.house.name = draft.house.name;
 
         this.form.province = draft.province;//省
-        this.form.city =  draft.city;//市
+        this.form.city = draft.city;//市
         this.form.district = draft.district;
-        this.form.property_address =  draft.property_address;//街道
+        this.form.property_address = draft.property_address;//街道
         this.form.village_name = this.form.house.name;//物业地址
         this.form.room = draft.room;//室
         this.form.hall = draft.hall;//厅
         this.form.toilet = draft.toilet;//卫
-        this.form.area =  draft.area;//面积
+        this.form.area = draft.area;//面积
 
         this.form.sign_date = draft.sign_date;
         this.form.month = draft.month;
