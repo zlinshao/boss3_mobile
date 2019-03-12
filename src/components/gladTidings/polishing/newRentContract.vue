@@ -983,6 +983,7 @@
         console.log('读取合同编号');
         Toast.loading({
           mask: true,
+          duration:0,
           message: '加载中...'
         });
         this.dicts(success => {
@@ -1153,6 +1154,7 @@
         }
         Toast.loading({
           mask: true,
+          duration:0,
           message: '加载中...'
         });
         this.getCity(resp => {
@@ -1580,6 +1582,7 @@
           this.form.phone = this.form.customer_info[0].phone;
           Toast.loading({
             mask: true,
+            duration:0,
             message: '加载中...'
           });
           if (val === 1) {//草稿

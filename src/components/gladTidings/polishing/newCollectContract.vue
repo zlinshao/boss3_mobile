@@ -869,6 +869,7 @@
         console.log('读取合同编号');
         Toast.loading({
           mask: true,
+          duration:0,
           message: '加载中...'
         });
         this.dicts(success => {
@@ -989,6 +990,7 @@
       previewPdf() {
         Toast.loading({
           mask: true,
+          duration:0,
           message: '加载中...'
         });
         this.getCity(resp => {
@@ -1436,6 +1438,7 @@
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           Toast.loading({
             mask: true,
+            duration:0,
             message: '加载中...'
           });
           if (type === 1) {//草稿
