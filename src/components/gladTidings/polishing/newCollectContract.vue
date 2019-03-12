@@ -900,7 +900,11 @@
           this.$http.get(this.eurls + 'fdd/contract/read/' + item.contractVal.contract_number).then((res) => {
             if (res.data.code === '40000') {
               let draft = res.data.data.param_map;
-              this.changeContractData(draft);
+              this.form.house_certificate = draft.house_certificate;
+              this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
+              this.form.property_address = draft.property_address;
+              this.form.QiuQuan_number = draft.QiuQuan_number;
+              this.form.property_number = draft.property_number;
             }
           })
         }
