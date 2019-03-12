@@ -9,11 +9,11 @@
       @search="onSearch">
       <div slot="action" @click="onSearch">搜索</div>
     </van-search>
-    <van-tabs @click="changeTab" style="position: fixed;top: 0;z-index: 10000;width: 100%">
+    <van-tabs @click="changeTab" style="position: fixed;top: 0;z-index: 1000;width: 100%;">
       <van-tab title="收房"></van-tab>
       <van-tab title="租房"></van-tab>
     </van-tabs>
-    <van-pull-refresh v-model="isRefresh" @refresh="refresh" style="margin-bottom: 4em;margin-top: 3.2em">
+    <van-pull-refresh v-model="isRefresh" @refresh="refresh" style="margin-bottom: 4em;margin-top: 3em;">
     <van-list
       v-model="loading"
       :finished="finished"
