@@ -83,6 +83,11 @@
     activated() {
       this.routerIndex('');
       this.ddRent('');
+      Toast.loading({
+        mask: true,
+        duration:0,
+        message: '加载中...'
+      });
       this.getData();
     },
     data() {
@@ -315,6 +320,7 @@
         this.$http.get(this.eurls + 'fdd/contract/index?staff_id=' + staff_id + '&page=' + this.page + '&limit=' + this.limit + "&type=" + this.type).then(res => {
           app.loading = false;
           app.isRefresh=false;
+          Toast.clear();
           this.page=curPage;
           if (res.data.code === '40001') {
             app.finished = true;
@@ -342,6 +348,7 @@
           this.page=curPage;
           app.loading = false;
           app.isRefresh=false;
+          Toast.clear();
         })
       }
 
