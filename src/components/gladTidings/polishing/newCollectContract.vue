@@ -599,16 +599,20 @@
       <div @click="sendOrSave(0)">发布</div>
     </div>
 
-    <!--日期-->
-    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
+    <!--<pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000" ref="pdf"></pdf-dialog>-->
 
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
-      <van-picker
-        show-toolbar
-        :columns="columns"
-        @cancel="onCancel"
-        @confirm="onConfirm"/>
-    </van-popup>
+
+    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">-->
+      <!--<van-picker-->
+        <!--show-toolbar-->
+        <!--:columns="columns"-->
+        <!--@cancel="onCancel"-->
+        <!--@confirm="onConfirm"/>-->
+    <!--</van-popup>-->
+
+    <!--&lt;!&ndash;日期&ndash;&gt;-->
+    <!--<ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>-->
+
     <!--select 选择电子合同新加-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="eshow" position="bottom" :overlay="true">
       <van-picker
@@ -618,23 +622,22 @@
         @confirm="onSelectConfirm"></van-picker>
     </van-popup>
 
-    <!--选择非房东费用列表电子合同新加!-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseNoProperty" position="bottom"
-               :overlay="true">
-      <van-checkbox-group v-model="showForm.choosedNoOwnerFees" @change="changeNoPropertyFee">
-        <van-checkbox v-for="(item,index) in noOwnerFees" :name="item" :key="index">{{item.name}}</van-checkbox>
-      </van-checkbox-group>
-    </van-popup>
+    <!--&lt;!&ndash;选择非房东费用列表电子合同新加!&ndash;&gt;-->
+    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseNoProperty" position="bottom"-->
+               <!--:overlay="true">-->
+      <!--<van-checkbox-group v-model="showForm.choosedNoOwnerFees" @change="changeNoPropertyFee">-->
+        <!--<van-checkbox v-for="(item,index) in noOwnerFees" :name="item" :key="index">{{item.name}}</van-checkbox>-->
+      <!--</van-checkbox-group>-->
+    <!--</van-popup>-->
 
-    <!--选择备注条款列表-->
-    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseRemark" position="bottom"
-               :overlay="true">
-      <van-checkbox-group v-model="showForm.choosedRemarks" style="margin:1em;" @change="changeContracts">
-        <van-checkbox v-for="(item,index) in remarks" :name="item" :key="index">{{item.name}}</van-checkbox>
-      </van-checkbox-group>
-    </van-popup>
-    <!--选择备注条款列表-->
-    <pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000" ref="pdf"></pdf-dialog>
+    <!--&lt;!&ndash;选择备注条款列表&ndash;&gt;-->
+    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseRemark" position="bottom"-->
+               <!--:overlay="true">-->
+      <!--<van-checkbox-group v-model="showForm.choosedRemarks" style="margin:1em;" @change="changeContracts">-->
+        <!--<van-checkbox v-for="(item,index) in remarks" :name="item" :key="index">{{item.name}}</van-checkbox>-->
+      <!--</van-checkbox-group>-->
+    <!--</van-popup>-->
+    <!--&lt;!&ndash;选择备注条款列表&ndash;&gt;-->
   </div>
 </template>
 
@@ -838,7 +841,6 @@
         retry: 0,
       }
     },
-    computed: {},
     watch: {
       cusFrom() {
         if (this.form.is_agency === 0) {
@@ -848,6 +850,9 @@
           this.form.agency_phone = '';
         }
       },
+      house(n,o){
+        console.log(n+":"+o)
+      }
 
     },
     activated() {
@@ -907,6 +912,11 @@
         this.form.department_id = val.id;
         this.isValue1 = val.activeRevise;
         this.stick();
+      }
+    },
+    computed:{
+      house(){
+         return this.form.house;
       }
     },
     methods: {
@@ -1527,7 +1537,9 @@
       changeContractData(draft) {
 
         this.form.purchase_way = 509;
-        this.form.house = draft.house;
+        this.form.house = {id: '', name: ''};
+        this.form.house.id = draft.house.id;
+        this.form.house.name = draft.house.name;
         this.form.sign_date = draft.sign_date;
         this.form.month = draft.month;
         this.form.day = draft.day === '0' ? '' : draft.day;

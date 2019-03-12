@@ -678,6 +678,9 @@
       <div @click="sendOrSave(0)">发布</div>
     </div>
 
+    <pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000"
+                ref="pdf"></pdf-dialog>
+
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
       <van-picker
         show-toolbar
@@ -698,8 +701,6 @@
         @confirm="onSelectConfirm"></van-picker>
     </van-popup>
 
-    <pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000"
-                ref="pdf"></pdf-dialog>
     <!--选择备注条款列表-->
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseRemark" position="bottom"
                :overlay="true">
