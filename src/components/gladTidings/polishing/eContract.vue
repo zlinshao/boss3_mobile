@@ -21,7 +21,11 @@
       @load="onSearch">
       <van-cell v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
         <div class="infoParent">
-          <span class="owner" style="font-size:.6em;color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
+          <span class="owner" style="font-size:.8em;color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
+          <div class="title">
+            提交时间:
+            {{item.create_time}}
+          </div>
           <div class="title">
             合同编号:
             {{item.contract_number}}
