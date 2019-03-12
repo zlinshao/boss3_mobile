@@ -181,6 +181,15 @@ export default new Router({
       component: Comment
     },
     {
+      path: '/eContract',
+      hidden: 'glad',
+      back: '#F19851',
+      icon: 'iconfont icon-zufang-',
+      name: '电子合同',
+      meta: {title: '电子合同'},
+      component: EContract
+    },
+    {
       path: '/quality',               //房屋质量报备
       name: '房屋质量报备',
       hidden: 'glad',
@@ -369,15 +378,7 @@ export default new Router({
       meta: {title: '租房补齐资料'},
       component: PolishingRenter
     },
-    {
-      path: '/eContract',
-      hidden: 'polish',
-      back: '#F19851',
-      icon: 'iconfont icon-zufang-',
-      name: '电子合同',
-      meta: {title: '电子合同'},
-      component: EContract
-    },
+
     {
       path: '/newCollectContract',
       name: '收房电子合同',
