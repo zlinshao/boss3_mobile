@@ -9,13 +9,13 @@
       @search="onSearch">
       <div slot="action" @click="onSearch">搜索</div>
     </van-search>
-    <van-tabs @click="changeTab">
+    <van-tabs @click="changeTab" style="position: fixed;top: 0;z-index: 1000">
       <van-tab title="收房"></van-tab>
       <van-tab title="租房"></van-tab>
     </van-tabs>
     <van-list
       v-model="loading"
-      style="margin-bottom: 4em"
+      style="margin-bottom: 4em;margin-top: 3.2em"
       :finished="finished"
       finished-text="没有更多了"
       @load="onSearch">
