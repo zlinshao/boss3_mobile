@@ -42,12 +42,13 @@
           required>
         </van-field>
         <van-field
-          v-model="form.property_number"
-          label="产权证号"
+          v-if="showForm.houseCertificateTypeTxt==='其他房屋来源'"
+          v-model="form.other_house_cert"
+          label="其他房屋证明"
           type="text"
-          placeholder="请填写产权证号"
+          placeholder="请填写其他房屋证明"
           icon=""
-          @click-icon="form.property_number = ''"
+          @click-icon="form.other_house_cert = ''"
           required>
         </van-field>
         <van-field
@@ -1626,6 +1627,7 @@
           this.showForm.signPeople = draft.signer.name;
           this.curTrueNameItem = draft.signer;
         }
+        this.form.other_house_cert=draft.other_house_cert;
         //验证身份
         contractApi.trueName(this.curTrueNameItem, success => {
         }, error => {
