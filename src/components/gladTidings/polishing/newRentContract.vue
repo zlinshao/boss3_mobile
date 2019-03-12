@@ -1616,6 +1616,7 @@
       post() {
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
+
           Toast.clear();
           this.haveInHand = true;
           this.retry = 0;

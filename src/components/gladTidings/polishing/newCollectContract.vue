@@ -1470,7 +1470,7 @@
       post() {
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         this.$http.post(this.eurls + url, this.form).then((res) => {
-          Toast.clear();
+            Toast.clear();
           //清除草稿
           let json = {content: {
             staff_id: this.form.staff_id
