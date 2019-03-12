@@ -1555,6 +1555,10 @@
         params.begin_date = time;
         params.month = month;
         params.day = day;
+
+        if(params.day===undefined||params.day===''){
+          params.day=0;
+        }
         params.type = val;
         if (time && (month || day)) {
           this.computedDate(params).then((date) => {
