@@ -1540,7 +1540,21 @@
         this.form.purchase_way = 509;
         this.form.house = {id: '', name: ''};
         this.form.house.id = draft.house.id;
+
+
+
         this.form.house.name = draft.house.name;
+
+        this.form.province = draft.province;//省
+        this.form.city =  draft.city;//市
+        this.form.district = draft.district;
+        this.form.property_address =  draft.property_address;//街道
+        this.form.village_name = this.form.house.name;//物业地址
+        this.form.room = draft.room;//室
+        this.form.hall = draft.hall;//厅
+        this.form.toilet = draft.toilet;//卫
+        this.form.area =  draft.area;//面积
+
         this.form.sign_date = draft.sign_date;
         this.form.month = draft.month;
         this.form.day = draft.day === '0' ? '' : draft.day;
