@@ -1648,6 +1648,10 @@
           this.form.other_fee_name='暂无';
           this.form.other_fee='暂无'
         }
+        if(this.form.money_sep.length===0){
+          this.form.money_sep=['']
+          this.form.money_way=['']
+        }
         this.$http.post(this.eurls + url, this.form).then((res) => {
 
           Toast.clear();
