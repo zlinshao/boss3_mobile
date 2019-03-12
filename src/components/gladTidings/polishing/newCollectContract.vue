@@ -691,11 +691,11 @@
           new CommonIdNameEntity('5', '网费'), new CommonIdNameEntity('4', '物业管理费'), new CommonIdNameEntity('6', '其他费用')],
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('0', '不允许')],//是否允许装修
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('0', '不允许')],//是否允许添加新物
-        curWuyePayers:{},//已选物业费付款人信息
-        wuyePayers:[new CommonIdNameEntity('450','无物业费'),
-          new CommonIdNameEntity('451','房东承担'),
-          new CommonIdNameEntity('452','租客承担'),
-          new CommonIdNameEntity('453','公司承担')],
+        curWuyePayers: {},//已选物业费付款人信息
+        wuyePayers: [new CommonIdNameEntity('450', '无物业费'),
+          new CommonIdNameEntity('451', '房东承担'),
+          new CommonIdNameEntity('452', '租客承担'),
+          new CommonIdNameEntity('453', '公司承担')],
         //合同备注条款数据
         remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'),
           new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'),
@@ -767,7 +767,7 @@
           begin_date: '',               //空置期开始日期
           end_date: '',                 //合同结束日期
           vacancy: '',                  //空置期
-          house_type:'',
+          house_type: '',
           end_date_vacant: '',          //空置期结束日期
           pay_first_date: '',           //第一次付款时间
           pay_second_date: '',          //第二次付款时间
@@ -947,10 +947,10 @@
     },
     methods: {
       onSignerChanged(item) {
-        if(this.form.signer===null){
+        if (this.form.signer === null) {
           return
         }
-        this.form.signer.fadada_user_id=''
+        this.form.signer.fadada_user_id = ''
       },
       getPic(ids, success) {
         let update = {show: []};
@@ -1038,8 +1038,8 @@
         });
       },
       previewTrue() {
-        if(this.form.type==='2'){
-          this.form.end_date_vacant=this.form.begin_date;
+        if (this.form.type === '2') {
+          this.form.end_date_vacant = this.form.begin_date;
         }
         contractApi.createContract(this.$refs.pdf, this.form, success => {
         }, error => {
@@ -1091,15 +1091,15 @@
       changeNoPropertyFee() {
         this.showForm.noOwnerFeeTxt = '';
         let list = [];
-        this.curWuyePayers.id='451';
-        this.curWuyePayers.name='房东承担';
+        this.curWuyePayers.id = '451';
+        this.curWuyePayers.name = '房东承担';
         for (let i = 0; i < this.showForm.choosedNoOwnerFees.length; i++) {
           let name = this.showForm.choosedNoOwnerFees[i].name;
           this.showForm.noOwnerFeeTxt = this.showForm.noOwnerFeeTxt + (i + 1) + '、' + name;
           list.push(this.showForm.choosedNoOwnerFees[i].id);
-          if(this.showForm.choosedNoOwnerFees[i].id==='4'){
-            this.curWuyePayers.id='453';
-            this.curWuyePayers.name='公司承担';
+          if (this.showForm.choosedNoOwnerFees[i].id === '4') {
+            this.curWuyePayers.id = '453';
+            this.curWuyePayers.name = '公司承担';
           }
         }
         this.form.not_owner_fee = list;
@@ -1186,7 +1186,7 @@
             if (index === this.showForm.signPeoples.length - 1) {
               this.showForm.showProxyInfo = true;
               this.form.signer_type = 2;
-              this.form.signer=new HouseOwner();
+              this.form.signer = new HouseOwner();
             } else {
               this.form.signer_type = 1;
               this.showForm.showProxyInfo = false;
@@ -1249,7 +1249,11 @@
       searchSelect(val) {
         switch (val) {
           case 1:
-            this.$router.push({path: '/collectHouse', query: {type: ''}});
+            if (this.form.type === '2') {
+              this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+            } else {
+              this.$router.push({path: '/collectHouse', query: {type: ''}});
+            }
             break;
           case 2:
             this.$router.push({path: '/organize'});
@@ -1522,11 +1526,12 @@
       },
       post() {
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
-        if(this.form.type==='2'){
-          this.form.end_date_vacant=this.form.begin_date;
+        if (this.form.type === '2') {
+          this.form.end_date_vacant = this.form.begin_date;
         }
-        this.form.house_address=this.house.name;
-        this.form.house_type= this.form.room+'室'+this.form.hall+'厅'+this.form.toilet+'卫';
+        this.form.house_address = this.house.name;
+        this.form.house_type = this.form.room + '室' + this.form.hall + '厅' + this.form.toilet + '卫';
+        this.form.property_payer=this.curWuyePayers.id;
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           //清除草稿
@@ -1541,10 +1546,10 @@
             if (res.data.data.is_bulletin) {
               this.routerDetail(res.data.data.data.id)
             } else {
-              sessionStorage.setItem('isRefreshList','true');
+              sessionStorage.setItem('isRefreshList', 'true');
               this.$router.go(-1);
             }
-          }else {
+          } else {
             return
           }
           let json = {
@@ -1608,7 +1613,7 @@
 
 
         this.form.house.name = draft.house.name;
-        this.form.type=draft.type;
+        this.form.type = draft.type;
         this.form.province = draft.province;//省
         this.form.city = draft.city;//市
         this.form.district = draft.district;

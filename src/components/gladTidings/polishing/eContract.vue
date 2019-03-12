@@ -134,7 +134,7 @@
             this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg, this.signTypeColumns[index].index);
             break;
           case 2://租房选择租客
-            this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg);
+            this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg,this.signTypeColumns[index].index);
             break
         }
         this.selectHide = false;
@@ -213,6 +213,7 @@
           this.selectHide = true;
           this.columns = list;
         } else {
+          console.log(users)
           for (let i = 0; i < users.length; i++) {
             this.signTypeColumns.push(users[i]);
             if (users[i].customer.name !== null) {
@@ -249,11 +250,11 @@
         })
       }
       ,
-      signRent(contract_number, title, id, type) {
+      signRent(contract_number, title, id, type,index) {
         this.$http.post(this.eurls + 'fdd/contract/sign_rent', {
           contract_id: contract_number,
           title: title,
-          index:1,
+          index:index,
           customer_id: id,
           type: type,//1发短信 0不发
         }).then(res => {
