@@ -259,6 +259,16 @@
           </van-field>
         </div>
         <van-field
+          v-if="form.type==='2'"
+          v-model="form.begin_date"
+          type="text"
+          label="合同开始时间"
+          placeholder="请选择合同开始时间"
+          readonly
+          @click="timeChoose('begin_date', form.begin_date)"
+          required>
+        </van-field>
+        <van-field
           v-model="form.end_date"
           label="合同结束日期"
           readonly
@@ -865,7 +875,7 @@
         this.form.area = house_res.area;//面积
         /*获取电子合同相关字段*/
       }
-      let t=this.$route.query;
+      let t = this.$route.query;
       if (t.staff !== undefined && t.staff !== '') {
         let val = JSON.parse(t.staff);
         this.form.staff_id = val.staff_id;
@@ -882,7 +892,7 @@
         this.isValue1 = val.activeRevise;
         this.stick();
       }
-      },
+    },
     methods: {
       getPic(ids, success) {
         let update = {show: []};
@@ -1201,7 +1211,11 @@
         this.form[val.dataKey] = val.dateVal;
         switch (val.dataKey) {
           case 'begin_date':
-            this.endDate(val.dateVal, '', this.form.vacancy, 1);
+            if (this.form.type === 1) {
+              this.endDate(val.dateVal, '', this.form.vacancy, 1);
+            } else {
+              this.endDate(this.form.begin_date, this.form.month, this.form.day, 2)
+            }
             break;
           case 'end_date_vacant':
             this.endDate(val.dateVal, this.form.month, this.form.day, 2);
@@ -1411,7 +1425,7 @@
             return
           }
           this.getSessionInfo();
-          if(this.form.province===''){
+          if (this.form.province === '') {
             Toast('请先选择房屋地址');
             this.haveInHand = true;
             return
@@ -1584,21 +1598,21 @@
         this.getPic(draft.identity_photo, success => {
           this.identity_photos = success;
         });
-        this.form.house_certificate=draft.house_certificate;
+        this.form.house_certificate = draft.house_certificate;
         this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
-        this.form.property_address=draft.property_address;
-        this.form.QiuQuan_number=draft.QiuQuan_number;
-        this.form.property_number=draft.property_number;
-        this.form.owner=draft.owner;
-        this.form.signer_type=draft.signer_type;
-        this.form.signer=draft.signer;
-        this.form.partA_agents=draft.partA_agents;
-        if(this.form.signer_type===2){//代理
-          this.showForm.showProxyInfo=true;
+        this.form.property_address = draft.property_address;
+        this.form.QiuQuan_number = draft.QiuQuan_number;
+        this.form.property_number = draft.property_number;
+        this.form.owner = draft.owner;
+        this.form.signer_type = draft.signer_type;
+        this.form.signer = draft.signer;
+        this.form.partA_agents = draft.partA_agents;
+        if (this.form.signer_type === 2) {//代理
+          this.showForm.showProxyInfo = true;
           this.showForm.signPeople = '其他';
           this.curTrueNameItem = draft.partA_agents;
-        }else{//房东
-          this.showForm.showProxyInfo=false;
+        } else {//房东
+          this.showForm.showProxyInfo = false;
           this.showForm.signPeople = draft.signer.name;
           this.curTrueNameItem = draft.signer;
         }
@@ -1606,23 +1620,23 @@
         contractApi.trueName(this.curTrueNameItem, success => {
         }, error => {
         });
-        this.form.not_owner_fee=draft.not_owner_fee;
+        this.form.not_owner_fee = draft.not_owner_fee;
         let not_owner_fee_choosed_ids = [];
         for (let key in this.form.not_owner_fee) {
           not_owner_fee_choosed_ids.push(this.form.not_owner_fee[key])
         }
-        this.form.other_fee_text=draft.other_fee_text;
-        this.form.allowed_decoration_to=draft.allowed_decoration_to;
+        this.form.other_fee_text = draft.other_fee_text;
+        this.form.allowed_decoration_to = draft.allowed_decoration_to;
         this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
         this.changeNoPropertyFee();
-        this.form.allowed_decoration_to=draft.allowed_decoration_to;
+        this.form.allowed_decoration_to = draft.allowed_decoration_to;
         this.showForm.canDecorationsTxt = this.getNameForIndex(this.canDecorations, this.form.allowed_decoration_to);
-        this.form.allowed_add_to=draft.allowed_add_to;
+        this.form.allowed_add_to = draft.allowed_add_to;
         this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
         this.changeContracts();
-        if(this.form.partA_agents.length===0){
-          this.form.partA_agents=new HouseOwner();
+        if (this.form.partA_agents.length === 0) {
+          this.form.partA_agents = new HouseOwner();
         }
       },
       close_() {
@@ -1635,7 +1649,7 @@
         this.clearObj(this.form);
         this.clearObj(this.showForm);
         this.form.purchase_way = 509;
-        this.form.warranty_day='';
+        this.form.warranty_day = '';
         this.picStatus = 'success';
         this.cusFrom = '';
         this.amountPrice = 1;
