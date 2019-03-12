@@ -59,7 +59,7 @@
           placeholder="请填写产权证号"
           icon=""
           @click-icon="form.property_number = ''"
-          required>
+          >
         </van-field>
         <van-field
           v-model="form.QiuQuan_number"
@@ -154,7 +154,7 @@
           type="text"
           @click="showChooseNoOwnerFee()"
           placeholder="请选择非房东费用(可多选)"
-          required>
+          >
         </van-field>
         <van-field
           v-model="form.other_fee_text"
@@ -191,7 +191,7 @@
           type="text"
           @click="showChooseRemark()"
           placeholder="请选择备注条款(可多选)"
-          required>
+          >
         </van-field>
 
         <van-field
@@ -1672,11 +1672,11 @@
         if (this.form.signer_type === 2) {//代理
           this.showForm.showProxyInfo = true;
           this.showForm.signPeople = '其他';
-          this.curTrueNameItem = draft.partA_agents;
+          this.curTrueNameItem = this.form.partA_agents;
         } else {//房东
           this.showForm.showProxyInfo = false;
           this.showForm.signPeople = draft.signer.name;
-          this.curTrueNameItem = draft.signer;
+          this.curTrueNameItem = this.form.signer;
         }
         this.form.other_house_cert = draft.other_house_cert;
         //验证身份

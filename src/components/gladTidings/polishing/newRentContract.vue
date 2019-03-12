@@ -204,16 +204,7 @@
           >
           </van-field>
         </div>
-        <van-field
-          v-model="form.emergency_phone"
-          label="紧急联系人手机号"
-          type="text"
-          placeholder="请输入紧急联系人手机号"
-          icon=""
-          required
-          @click-icon="form.emergency_phone = ''"
-        >
-        </van-field>
+
         <van-field
           v-model="form.sign_date"
           label="签约日期"
@@ -463,6 +454,16 @@
           +添加租客
         </div>
         <van-field
+          v-model="form.emergency_phone"
+          label="紧急联系人手机号"
+          type="text"
+          placeholder="请输入紧急联系人手机号"
+          icon=""
+          required
+          @click-icon="form.emergency_phone = ''"
+        >
+        </van-field>
+        <van-field
           v-model="form.memo"
           label="收款备注"
           type="textarea"
@@ -576,7 +577,7 @@
           type="text"
           @click="showChooseRemark()"
           placeholder="请选择备注条款(可多选)"
-          required>
+        >
         </van-field>
         <van-switch-cell v-model="corp" title="是否公司单"/>
         <van-switch-cell v-model="is_receipt" title="电子收据"/>
