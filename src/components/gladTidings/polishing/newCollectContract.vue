@@ -1030,6 +1030,9 @@
         });
       },
       previewTrue() {
+        if(this.form.type==='2'){
+          this.form.end_date_vacant=this.form.begin_date;
+        }
         contractApi.createContract(this.$refs.pdf, this.form, success => {
         }, error => {
           Toast(error)
