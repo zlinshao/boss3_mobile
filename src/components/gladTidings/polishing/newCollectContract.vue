@@ -669,7 +669,6 @@
       this.idcard = idcard || '';
       this.phone = phone || '';
       this.fadada_user_id = userid || '';
-      this.true_name='';
     }
   }
 
