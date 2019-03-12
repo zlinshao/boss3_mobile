@@ -114,7 +114,7 @@
         curItem: {},
         columns: [],
         signTypeColumns: [],//签约类型list，如合同、收条
-        isSendMsg: 0,//0不发短信 1发短信
+        isSendMsg: 0,//2不发短信 1发短信
       }
     },
     mounted() {
@@ -185,7 +185,7 @@
         this.signNow(item);
       },
       sign(item) {//在本机签约
-        this.isSendMsg = 0;
+        this.isSendMsg = 2;
         this.signNow(item)
       },
       signNow(item) {
