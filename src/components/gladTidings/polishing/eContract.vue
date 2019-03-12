@@ -9,7 +9,7 @@
       @search="onSearch">
       <div slot="action" @click="onSearch">搜索</div>
     </van-search>
-    <van-tabs @click="changeTab" style="position: fixed;top: 0;z-index: 10000">
+    <van-tabs @click="changeTab" style="position: fixed;top: 0;z-index: 10000;width: 100%">
       <van-tab title="收房"></van-tab>
       <van-tab title="租房"></van-tab>
     </van-tabs>
