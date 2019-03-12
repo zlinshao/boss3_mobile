@@ -879,6 +879,7 @@
         });
       } else {
         console.log('读取房屋信息');
+        console.log(item);
         sessionStorage.setItem('contract_house_item', null);
         let house_res = item.house_res;
         let house_res_com = house_res.community;
@@ -895,6 +896,14 @@
         this.form.hall = house_types[1];//厅
         this.form.toilet = house_types[2];//卫
         this.form.area = house_res.area;//面积
+        if(this.form.type==='2'){//续收
+          this.$http.get(this.eurls + 'fdd/contract/read/' + item.contractVal.contract_number).then((res) => {
+            if (res.data.code === '40000') {
+              let draft = res.data.data.param_map;
+              this.changeContractData(draft);
+            }
+          })
+        }
         /*获取电子合同相关字段*/
       }
       let t = this.$route.query;
