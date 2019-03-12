@@ -9,17 +9,17 @@
       @search="onSearch">
       <div slot="action" @click="onSearch">搜索</div>
     </van-search>
-    <van-tabs @click="changeTab" style="position: fixed;top: 0;z-index: 1000">
+    <van-tabs @click="changeTab" style="position: fixed;top: 0;z-index: 10000">
       <van-tab title="收房"></van-tab>
       <van-tab title="租房"></van-tab>
     </van-tabs>
+    <van-pull-refresh v-model="isRefresh" @refresh="refresh" style="margin-bottom: 4em;margin-top: 3.2em">
     <van-list
       v-model="loading"
-      style="margin-bottom: 4em;margin-top: 3.2em"
       :finished="finished"
       finished-text="没有更多了"
       @load="onSearch">
-      <div v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
+      <van-cell v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
         <div class="infoParent">
           <span class="owner" style="font-size:.6em;color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
           <div class="title">
@@ -44,9 +44,10 @@
                       @click="toDetail(item)" @click.stop>修改
           </van-button>
         </div>
-      </div>
+      </van-cell>
 
     </van-list>
+    </van-pull-refresh>
     <div  type="info" class="new" @click="showChooseDialog()">新增合同</div>
     <van-popup v-model="show" class="popup">
       <div>
@@ -86,7 +87,7 @@
     },
     data() {
       return {
-        iframeSrc: 'http://www.baidu.com',
+        isRefresh:false,
         list: [],
         searchInfo: '',//搜索内容
         finished: false,
@@ -284,6 +285,12 @@
         this.show = true;
       }
       ,
+      refresh(){
+        this.page=1;
+        this.totalPages=1;
+        this.finished = false;
+        this.getData();
+      },
       //添加收房合同
       collect(type, number) {
         sessionStorage.setItem('contract_type', type || 0);
@@ -307,6 +314,7 @@
         let curPage=this.page;
         this.$http.get(this.eurls + 'fdd/contract/index?staff_id=' + staff_id + '&page=' + this.page + '&limit=' + this.limit + "&type=" + this.type).then(res => {
           app.loading = false;
+          app.isRefresh=false;
           this.page=curPage;
           if (res.data.code === '40001') {
             app.finished = true;
@@ -332,6 +340,8 @@
           }
         }).catch(e=>{
           this.page=curPage;
+          app.loading = false;
+          app.isRefresh=false;
         })
       }
 
