@@ -28,18 +28,18 @@ let cancelContract = function (number, success, error) {
 };
 
 function createContract(pdf, param, success, error) {
-  if(param.province===''){
+  if (param.province === '') {
     error('请先选择房屋地址');
     return
   }
   Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
     Toast.clear();
     if (res.data.code === '40000') {
-      pdf.show(url+res.data.data, 1);
+      pdf.show(url + res.data.data, 1);
     } else {
       error(res.data.msg);
     }
-  }).catch(e=>{
+  }).catch(e => {
     Toast.clear();
   })
 }
@@ -48,19 +48,27 @@ function trueName(item, success, error) {
   Vue.prototype.$http.get(url + '/fdd/customer/verified?idcard=' + item.idcard + '&name=' + item.name + '&phone=' + item.phone).then(res => {
     if (res.data.code === '40000') {
       item.fadada_user_id = res.data.data.customer_id;
+      Toast.clear();
     } else {
       Vue.prototype.$http.post(url + 'fdd/customer/cert', {
         customer_name: item.name,
         idcard: item.idcard,
         mobile: item.phone
       }).then(res => {
+        Toast.clear();
         if (res.data.code === '40010') {
           success(res.data.data.data);
         } else {
           error(res.data.msg);
         }
+      }).catch(e=>{
+        Toast.clear();
+        error('网络错误');
       })
     }
+  }).catch(e=>{
+    Toast.clear();
+    error('网络错误');
   });
 }
 

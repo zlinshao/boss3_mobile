@@ -1056,12 +1056,25 @@
         })
       },
       trueName(item) {
-        this.sendOrSave(1, success => {
-          contractApi.trueName(item, success => {
-            location.href = success
-          }, error => {
-            Toast(error)
-          });
+        let json = {content: this.form, type: '2'};
+        Toast.loading({
+          mask: true,
+          duration:0,
+          message: '加载中...'
+        });
+        this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+          if(res.data.code==='40000'){
+            contractApi.trueName(item, success => {
+              location.href = success
+            },error=>{
+              Toast(error)
+            });
+          }else{
+            Toast.clear();
+            Toast(res.data.msg);
+          }
+        }).catch(e=>{
+          Toast.clear();
         });
       },
       getEntityForIndex(entitys, id) {

@@ -682,8 +682,8 @@
         noOwnerFees: [new CommonIdNameEntity('1', '水费'), new CommonIdNameEntity('2', '电费'),
           new CommonIdNameEntity('3', '燃气费'),
           new CommonIdNameEntity('5', '网费'), new CommonIdNameEntity('4', '物业管理费'), new CommonIdNameEntity('6', '其他费用')],
-        canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许装修
-        canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('2', '不允许')],//是否允许添加新物
+        canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('0', '不允许')],//是否允许装修
+        canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('0', '不允许')],//是否允许添加新物
         //合同备注条款数据
         remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'),
           new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'),
@@ -965,14 +965,26 @@
           Toast('请先选择签约人');
           return
         }
-        this.sendOrSave(1, success => {
-          contractApi.trueName(item, success => {
-            location.href = success
-          }, error => {
-            Toast(error)
-          });
+        let json = {content: this.form, type: '1'};
+        Toast.loading({
+          mask: true,
+          duration:0,
+          message: '加载中...'
         });
-
+        this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+          if(res.data.code==='40000'){
+            contractApi.trueName(item, success => {
+              location.href = success
+            },error=>{
+              Toast(error)
+            });
+          }else{
+            Toast.clear();
+            Toast(res.data.msg);
+          }
+        }).catch(e=>{
+          Toast.clear();
+        });
       },
       getCity(success) {
         this.$http.get(this.urls + 'organization/org/org_to_city/' + this.form.department_id).then(res => {
