@@ -1509,13 +1509,7 @@
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           //清除草稿
-          let json = {
-            content: {
-              staff_id: this.form.staff_id
-            }, type: '1'
-          };
-          this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
-          });
+
           this.haveInHand = true;
           this.retry = 0;
           Toast(res.data.msg);
@@ -1528,7 +1522,16 @@
             } else {
               this.$router.go(-1);
             }
+          }else {
+            return
           }
+          let json = {
+            content: {
+              staff_id: this.form.staff_id
+            }, type: '1'
+          };
+          this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+          });
         }).catch((error) => {
           Toast.clear();
           this.haveInHand = true;

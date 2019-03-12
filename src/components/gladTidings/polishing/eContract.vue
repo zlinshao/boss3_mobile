@@ -114,7 +114,6 @@
         curItem: {},
         columns: [],
         signTypeColumns: [],//签约类型list，如合同、收条
-        val: 1, //1收房选择签约类别 如合同、收条 2租房选择签约人
         isSendMsg: 0,//0不发短信 1发短信
       }
     },
@@ -125,7 +124,7 @@
         this.selectHide = false;
       },
       onConfirm(value, index) {
-        switch (this.val) {
+        switch (this.type) {
           case 1://收房选择合同或者收条
             this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg, this.signTypeColumns[0].index);
             break;
@@ -249,6 +248,7 @@
         this.$http.post(this.eurls + 'fdd/contract/sign_rent', {
           contract_id: contract_number,
           title: title,
+          index:1,
           customer_id: id,
           type: type,//1发短信 0不发
         }).then(res => {
