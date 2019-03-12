@@ -854,6 +854,7 @@
       this.routerIndex('eContract');
       this.ddRent('eContract');
       this.userInfo();
+      if(sessionStorage.getItem('contract_house_item')==='noload')return
       let item = JSON.parse(sessionStorage.getItem('contract_house_item'));
       if (item === null) {
         console.log('读取合同编号');
@@ -1096,6 +1097,7 @@
       },
       onSelectConfirm(value, index) {
         this.eshow = false;//关闭弹框
+        alert(index+':'+value);
         switch (this.curDatas) {
           case this.houseCertificateTypes://选择持有证件的类型
             this.form.house_certificate = this.houseCertificateTypes[index].id;
