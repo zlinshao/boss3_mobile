@@ -1609,9 +1609,7 @@
             message: '加载中...'
           });
           if (val === 1) {//草稿
-            let json = {content: {
-                staff_id: this.form.staff_id
-              }, type: '2'};
+            let json = {content: this.form, type: '2'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
               this.haveInHand = true;
               Toast.clear();
