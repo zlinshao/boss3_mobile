@@ -38,7 +38,7 @@
           label="持有证件"
           readonly
           @click="showSelect(houseCertificateTypes)"
-           type="text"
+          type="text"
           placeholder="请选择持有证件"
           required>
         </van-field>
@@ -804,7 +804,7 @@
           property_number: "",
           QiuQuan_number: "",
           not_owner_fee: [],
-          other_house_cert:'',//其他房屋证件
+          other_house_cert: '',//其他房屋证件
           other_fee_text: "",
           allowed_decoration_to: "",
           allowed_add_to: "",
@@ -855,7 +855,7 @@
       this.routerIndex('eContract');
       this.ddRent('eContract');
       this.userInfo();
-      if(sessionStorage.getItem('contract_house_item')==='noload'){
+      if (sessionStorage.getItem('contract_house_item') === 'noload') {
         sessionStorage.setItem('contract_house_item', null);
         return
       }
@@ -910,7 +910,7 @@
       }
     },
     methods: {
-      ss(){
+      ss() {
         alert(2222)
       },
       getPic(ids, success) {
@@ -1095,10 +1095,9 @@
       },
       //显示选择项
       showSelect(entitys) {
-       // this.columns = this.getNameFromList(entitys);//设置当前弹框展示的数据
-        //this.curDatas = entitys;//设置当前元数据
+        this.columns = this.getNameFromList(entitys);//设置当前弹框展示的数据
+        this.curDatas = entitys;//设置当前元数据
         this.eshow = true;//显示弹框
-        alert(this.eshow)
       },
       onSelectCancel() {
         this.eshow = false;//关闭弹框
@@ -1636,7 +1635,7 @@
           this.showForm.signPeople = draft.signer.name;
           this.curTrueNameItem = draft.signer;
         }
-        this.form.other_house_cert=draft.other_house_cert;
+        this.form.other_house_cert = draft.other_house_cert;
         //验证身份
         contractApi.trueName(this.curTrueNameItem, success => {
         }, error => {
