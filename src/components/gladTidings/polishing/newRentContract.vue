@@ -150,7 +150,7 @@
         <van-field
           v-model="form.people"
           label="居住人数"
-          type="text"
+          type="number"
           placeholder="请输入居住人数"
           required>
         </van-field>
@@ -218,7 +218,7 @@
           <div class="titles required">签约时长</div>
           <van-field
             v-model="form.month"
-            type="text"
+            type="number"
             class="number"
             @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写月数">
@@ -226,7 +226,7 @@
           <van-field
             class="twoBorder number"
             v-model="form.day"
-            type="text"
+            type="number"
             @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
@@ -329,7 +329,7 @@
           <van-field
             v-model="form.pay_way_arr[index]"
             label="付(月数)"
-            type="text"
+            type="number"
             class="number"
             placeholder="如:半年付请输入6"
             required>
@@ -424,7 +424,7 @@
           <van-field
             v-model="form.customer_info[index].phone"
             label="联系方式"
-            type="text"
+            type="number"
             class="number"
             placeholder="请填写联系方式"
             icon="clear"
@@ -459,7 +459,7 @@
         <van-field
           v-model="form.emergency_phone"
           label="紧急联系人手机号"
-          type="text"
+          type="number"
           placeholder="请输入紧急联系人手机号"
           icon=""
           required
