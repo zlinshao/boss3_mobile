@@ -1597,6 +1597,10 @@
             return
           }
           this.getSessionInfo();
+          if(this.form.province===''){
+            error('请先选择房屋地址');
+            return
+          }
           this.getCity(resp => {
             this.post();
           })

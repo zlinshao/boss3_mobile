@@ -28,7 +28,10 @@ let cancelContract = function (number, success, error) {
 };
 
 function createContract(pdf, param, success, error) {
-
+  if(param.province===''){
+    error('请先选择房屋地址');
+    return
+  }
   Vue.prototype.$http.post(url + 'fdd/contract/view', param).then((res) => {
     Toast.clear();
     if (res.data.code === '40000') {
