@@ -163,6 +163,16 @@
         >
         </van-field>
         <van-field
+          v-model="curWuyePayers.name"
+          label="物业费付款人"
+          type="text"
+          disabled
+          placeholder="已禁用"
+          @click="selectShow(6,'')"
+          readonly
+          required>
+        </van-field>
+        <van-field
           v-model="form.other_fee_text"
           v-if="getIsShowOtherFee()"
           label="其他费用"
@@ -468,15 +478,7 @@
           </van-field>
         </div>
 
-        <van-field
-          v-model="property_name"
-          label="物业费付款人"
-          type="text"
-          placeholder="请选择物业费付款人"
-          @click="selectShow(6,'')"
-          readonly
-          required>
-        </van-field>
+
         <div class="month">
           <van-field
             v-model="form.account"
@@ -689,6 +691,11 @@
           new CommonIdNameEntity('5', '网费'), new CommonIdNameEntity('4', '物业管理费'), new CommonIdNameEntity('6', '其他费用')],
         canDecorations: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('0', '不允许')],//是否允许装修
         canAddThings: [new CommonIdNameEntity('1', '允许'), new CommonIdNameEntity('0', '不允许')],//是否允许添加新物
+        curWuyePayers:{},//已选物业费付款人信息
+        wuyePayers:[new CommonIdNameEntity('450','无物业费'),
+          new CommonIdNameEntity('451','房东承担'),
+          new CommonIdNameEntity('452','租客承担'),
+          new CommonIdNameEntity('453','公司承担')],
         //合同备注条款数据
         remarks: [new CommonIdNameEntity('1', '需经过乙方同意后，上门查房，不能打扰租客生活'),
           new CommonIdNameEntity('2', '房屋内家具家电自然老化，由甲方负责更换，人为损坏乙方负责'),
@@ -1052,9 +1059,11 @@
       changeContracts() {
         this.showForm.remarksTxt = '';
         let json = [];
+
         for (let i = 0; i < this.showForm.choosedRemarks.length; i++) {
           this.showForm.remarksTxt = this.showForm.remarksTxt + (i + 1) + '、' + this.showForm.choosedRemarks[i].name;
           json.push(this.showForm.choosedRemarks[i].id);
+
         }
         this.form.other_rule = json;
       },
@@ -1082,10 +1091,16 @@
       changeNoPropertyFee() {
         this.showForm.noOwnerFeeTxt = '';
         let list = [];
+        this.curWuyePayers.id='451';
+        this.curWuyePayers.name='房东承担';
         for (let i = 0; i < this.showForm.choosedNoOwnerFees.length; i++) {
           let name = this.showForm.choosedNoOwnerFees[i].name;
           this.showForm.noOwnerFeeTxt = this.showForm.noOwnerFeeTxt + (i + 1) + '、' + name;
           list.push(this.showForm.choosedNoOwnerFees[i].id);
+          if(this.showForm.choosedNoOwnerFees[i].id==='4'){
+            this.curWuyePayers.id='453';
+            this.curWuyePayers.name='公司承担';
+          }
         }
         this.form.not_owner_fee = list;
       },
