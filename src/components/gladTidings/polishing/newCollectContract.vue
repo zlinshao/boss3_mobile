@@ -599,21 +599,21 @@
       <div @click="sendOrSave(0)">发布</div>
     </div>
 
-    <!--<pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000" ref="pdf"></pdf-dialog>-->
+    <pdf-dialog style="width: 100%;height: 100%;position: fixed;top:0;z-index: 1000" ref="pdf"></pdf-dialog>
 
 
-    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">-->
-      <!--<van-picker-->
-        <!--show-toolbar-->
-        <!--:columns="columns"-->
-        <!--@cancel="onCancel"-->
-        <!--@confirm="onConfirm"/>-->
-    <!--</van-popup>-->
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @cancel="onCancel"
+        @confirm="onConfirm"/>
+    </van-popup>
 
-    <!--&lt;!&ndash;日期&ndash;&gt;-->
-    <!--<ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>-->
+    <!--日期-->
+    <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
 
-    <!--select 选择电子合同新加-->
+    select 选择电子合同新加
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="eshow" position="bottom" :overlay="true">
       <van-picker
         show-toolbar
@@ -622,22 +622,22 @@
         @confirm="onSelectConfirm"></van-picker>
     </van-popup>
 
-    <!--&lt;!&ndash;选择非房东费用列表电子合同新加!&ndash;&gt;-->
-    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseNoProperty" position="bottom"-->
-               <!--:overlay="true">-->
-      <!--<van-checkbox-group v-model="showForm.choosedNoOwnerFees" @change="changeNoPropertyFee">-->
-        <!--<van-checkbox v-for="(item,index) in noOwnerFees" :name="item" :key="index">{{item.name}}</van-checkbox>-->
-      <!--</van-checkbox-group>-->
-    <!--</van-popup>-->
+    <!--选择非房东费用列表电子合同新加!-->
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseNoProperty" position="bottom"
+               :overlay="true">
+      <van-checkbox-group v-model="showForm.choosedNoOwnerFees" @change="changeNoPropertyFee">
+        <van-checkbox v-for="(item,index) in noOwnerFees" :name="item" :key="index">{{item.name}}</van-checkbox>
+      </van-checkbox-group>
+    </van-popup>
 
-    <!--&lt;!&ndash;选择备注条款列表&ndash;&gt;-->
-    <!--<van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseRemark" position="bottom"-->
-               <!--:overlay="true">-->
-      <!--<van-checkbox-group v-model="showForm.choosedRemarks" style="margin:1em;" @change="changeContracts">-->
-        <!--<van-checkbox v-for="(item,index) in remarks" :name="item" :key="index">{{item.name}}</van-checkbox>-->
-      <!--</van-checkbox-group>-->
-    <!--</van-popup>-->
-    <!--&lt;!&ndash;选择备注条款列表&ndash;&gt;-->
+    <!--选择备注条款列表-->
+    <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="isShowChooseRemark" position="bottom"
+               :overlay="true">
+      <van-checkbox-group v-model="showForm.choosedRemarks" style="margin:1em;" @change="changeContracts">
+        <van-checkbox v-for="(item,index) in remarks" :name="item" :key="index">{{item.name}}</van-checkbox>
+      </van-checkbox-group>
+    </van-popup>
+    <!--选择备注条款列表-->
   </div>
 </template>
 
@@ -1105,6 +1105,7 @@
       },
       //显示选择项
       showSelect(entitys) {
+        console.log(entitys)
         this.columns = this.getNameFromList(entitys);//设置当前弹框展示的数据
         this.curDatas = entitys;//设置当前元数据
         this.eshow = true;//显示弹框
