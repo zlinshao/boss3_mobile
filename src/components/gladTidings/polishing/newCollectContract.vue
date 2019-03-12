@@ -32,14 +32,13 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
-        <!--          @click="showSelect(houseCertificateTypes)"
--->
+
         <van-field
           v-model="showForm.houseCertificateTypeTxt"
           label="持有证件"
           readonly
-          @click="ss()"
-          type="text"
+          @click="showSelect(houseCertificateTypes)"
+           type="text"
           placeholder="请选择持有证件"
           required>
         </van-field>
@@ -858,7 +857,7 @@
       this.userInfo();
       if(sessionStorage.getItem('contract_house_item')==='noload'){
         sessionStorage.setItem('contract_house_item', null);
-        return;
+        return
       }
       let item = JSON.parse(sessionStorage.getItem('contract_house_item'));
       if (item === null) {
@@ -1096,9 +1095,10 @@
       },
       //显示选择项
       showSelect(entitys) {
-        this.columns = this.getNameFromList(entitys);//设置当前弹框展示的数据
-        this.curDatas = entitys;//设置当前元数据
+       // this.columns = this.getNameFromList(entitys);//设置当前弹框展示的数据
+        //this.curDatas = entitys;//设置当前元数据
         this.eshow = true;//显示弹框
+        alert(this.eshow)
       },
       onSelectCancel() {
         this.eshow = false;//关闭弹框

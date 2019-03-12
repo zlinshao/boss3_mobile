@@ -965,9 +965,6 @@
         this.routerIndex('');
         this.ddRent('');
         this.close_();
-        /*
-                this.dicts('');
-        */
       }
     },
     activated() {
