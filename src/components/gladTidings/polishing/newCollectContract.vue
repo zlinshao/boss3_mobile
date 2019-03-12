@@ -1700,7 +1700,7 @@
         }
         this.form.other_house_cert = draft.other_house_cert;
         //验证身份
-        contractApi.trueName(this.curTrueNameItem, success => {
+        contractApi.trueName(this.signer, success => {
         }, error => {
         });
         this.form.not_owner_fee = draft.not_owner_fee;
