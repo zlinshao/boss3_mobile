@@ -1503,6 +1503,9 @@
       },
       post() {
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
+        if(this.form.type==='2'){
+          this.form.end_date_vacant=this.form.begin_date;
+        }
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           //清除草稿
