@@ -131,7 +131,7 @@
       onConfirm(value, index) {
         switch (this.type) {
           case 1://收房选择合同或者收条
-            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg, this.signTypeColumns[0].index);
+            this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg, this.signTypeColumns[index].index);
             break;
           case 2://租房选择租客
             this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg);

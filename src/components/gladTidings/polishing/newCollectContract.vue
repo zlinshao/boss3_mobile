@@ -1525,6 +1525,7 @@
         if(this.form.type==='2'){
           this.form.end_date_vacant=this.form.begin_date;
         }
+        this.form.house_address=this.house.name;
         this.form.house_type= this.form.room+'室'+this.form.hall+'厅'+this.form.toilet+'卫';
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
