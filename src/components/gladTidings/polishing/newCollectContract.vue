@@ -871,6 +871,7 @@
       //如果房屋信息为空 则请求读草稿
       this.routerIndex('eContract');
       this.ddRent('eContract');
+
       this.userInfo();
       if (sessionStorage.getItem('contract_house_item') === 'noload') {
         sessionStorage.setItem('contract_house_item', null);
@@ -923,6 +924,11 @@
         /*获取电子合同相关字段*/
       }
       let t = this.$route.query;
+      if (t.house !== undefined && t.house !== '') {
+        let val = JSON.parse(t.house);
+        this.form.contract_id = val.id;
+        this.form.house_type = val.house_type;
+      }
       if (t.staff !== undefined && t.staff !== '') {
         let val = JSON.parse(t.staff);
         this.form.staff_id = val.staff_id;
