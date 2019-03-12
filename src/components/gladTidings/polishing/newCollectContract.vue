@@ -51,6 +51,15 @@
           required>
         </van-field>
         <van-field
+          v-model="form.property_number"
+          label="产权证号"
+          type="text"
+          placeholder="请填写产权证号"
+          icon=""
+          @click-icon="form.property_number = ''"
+          required>
+        </van-field>
+        <van-field
           v-model="form.QiuQuan_number"
           label="丘权号"
           type="text"
@@ -793,6 +802,7 @@
           property_number: "",
           QiuQuan_number: "",
           not_owner_fee: [],
+          other_house_cert:'',//其他房屋证件
           other_fee_text: "",
           allowed_decoration_to: "",
           allowed_add_to: "",
