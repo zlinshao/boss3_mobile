@@ -1634,6 +1634,7 @@
         this.clearObj(this.form);
         this.clearObj(this.showForm);
         this.form.purchase_way = 509;
+        this.form.warranty_day='';
         this.picStatus = 'success';
         this.cusFrom = '';
         this.amountPrice = 1;
