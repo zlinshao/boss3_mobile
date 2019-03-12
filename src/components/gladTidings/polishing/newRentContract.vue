@@ -1669,6 +1669,7 @@
             if (res.data.data.is_bulletin) {
               this.routerDetail(res.data.data.data.id)
             } else {
+              sessionStorage.setItem('isRefreshList','true');
               this.$router.go(-1);
             }
           }else{

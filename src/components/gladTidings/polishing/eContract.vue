@@ -92,6 +92,11 @@
         duration:0,
         message: '加载中...'
       });
+      if(sessionStorage.getItem('isRefreshList')==='true'){
+        sessionStorage.setItem('isRefreshList','no');
+        this.page=1;
+        this.totalPages=1;
+      }
       this.getData();
     },
     data() {
