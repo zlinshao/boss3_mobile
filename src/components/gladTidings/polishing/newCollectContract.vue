@@ -856,7 +856,10 @@
       this.routerIndex('eContract');
       this.ddRent('eContract');
       this.userInfo();
-      if(sessionStorage.getItem('contract_house_item')==='noload')return
+      if(sessionStorage.getItem('contract_house_item')==='noload'){
+        sessionStorage.setItem('contract_house_item', null);
+        return;
+      }
       let item = JSON.parse(sessionStorage.getItem('contract_house_item'));
       if (item === null) {
         console.log('读取合同编号');

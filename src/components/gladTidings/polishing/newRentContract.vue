@@ -977,8 +977,11 @@
       this.houseInfo();
       let item = sessionStorage.getItem('contract_house_item');
       console.log(item);
-      if(sessionStorage.getItem('contract_house_item')==='noload')return
-      if (item===null||item === 'null') {
+      if (sessionStorage.getItem('contract_house_item') === 'noload') {
+        sessionStorage.setItem('contract_house_item', null);
+        return;
+      }
+      if (item === null || item === 'null') {
         console.log('读取合同编号');
         Toast.loading({
           mask: true,
@@ -992,8 +995,8 @@
       } else {
         console.log('读取房屋信息');
         sessionStorage.setItem('contract_house_item', null);
-        if(item==='test')return;
-        item=JSON.parse(item);
+        if (item === 'test') return;
+        item = JSON.parse(item);
         let house_res = item.house_res;
         let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};
@@ -1598,7 +1601,7 @@
             return
           }
           this.getSessionInfo();
-          if(this.form.province===''){
+          if (this.form.province === '') {
             Toast('请先选择房屋地址');
             this.haveInHand = true;
             return
@@ -2045,6 +2048,38 @@
         this.photos = {};
         this.form.remark = '';
         this.form.penalty = '';
+
+
+        this.form.use_type = '';
+        this.rentUseTxt = '';
+
+        this.form.people = '';
+
+        this.form.rent_type = '';
+        this.rentTypeTxt = '';
+
+        this.form.emergency_phone = '';
+
+        this.form.account_name = '';
+        this.form.account = '';
+        this.form.province = '';
+        this.form.city = '';
+        this.form.district = '';
+        this.form.village_name = '';
+        this.form.room = '';
+        this.form.hall = '';
+        this.form.toilet = '';
+        this.form.area = '';
+        this.form.other_use = '';
+        this.form.manage_fee = '';
+        this.form.manage_share = '';
+        this.form.water_fee = '';
+        this.form.public_fee = '';
+        this.form.net_fee = '';
+        this.form.customer_info = [new HouseOwner()];
+
+        this.choosedRemarks = [];
+        this.changeContracts();
       }
     },
   }
