@@ -1472,7 +1472,9 @@
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           //清除草稿
-          let json = {content: {}, type: '2'};
+          let json = {content: {
+            staff_id: this.form.staff_id
+            }, type: '1'};
           this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
           });
           this.haveInHand = true;
@@ -1480,7 +1482,6 @@
           Toast(res.data.msg);
           if (res.data.code === '40000') {
             this.routerDetail(res.data.data.data.id);
-            this.close_();
             $('.imgItem').remove();
           } else if (res.data.code === '40040') {
             if (res.data.data.is_bulletin) {
