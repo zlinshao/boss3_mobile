@@ -117,39 +117,39 @@
           @click="showSignPeoples()"
           readonly
           required>
-          <van-button slot="button" size="small" type="primary" @click="trueName(curTrueNameItem)">
-            {{(curTrueNameItem!==null&&curTrueNameItem.fadada_user_id!==''&&curTrueNameItem.fadada_user_id!==undefined)?'已认证':'实名认证'}}
+          <van-button slot="button" size="small" type="primary" @click="trueName(form.signer)">
+            {{(form.signer!==null&&form.signer.fadada_user_id!==''&&form.signer.fadada_user_id!==undefined)?'已认证':'实名认证'}}
           </van-button>
         </van-field>
         <div v-if="showForm.showProxyInfo">
           <van-field
-            @keyup="onSignerChanged(form.partA_agents)"
-            v-model="form.partA_agents.name"
+            @keyup="onSignerChanged(form.signer)"
+            v-model="form.signer.name"
             label="代理人姓名"
             type="text"
             placeholder="请填写代理人姓名"
             icon=""
-            @click-icon="form.partA_agents.name = ''"
+            @click-icon="form.signer.name = ''"
             required>
           </van-field>
           <van-field
-            @keyup="onSignerChanged(form.partA_agents)"
-            v-model="form.partA_agents.phone"
+            @keyup="onSignerChanged(form.signer)"
+            v-model="form.signer.phone"
             label="代理人手机号"
             type="text"
             placeholder="请填写代理人手机号"
             icon=""
-            @click-icon="form.partA_agents.phone = ''"
+            @click-icon="form.signer.phone = ''"
             required>
           </van-field>
           <van-field
-            @keyup="onSignerChanged(form.partA_agents)"
-            v-model="form.partA_agents.idcard"
+            @keyup="onSignerChanged(form.signer)"
+            v-model="form.signer.idcard"
             label="代理人身份证号"
             type="text"
             placeholder="请填写代理人身份证号"
             icon=""
-            @click-icon="form.partA_agents.idcard = ''"
+            @click-icon="form.signer.idcard = ''"
             required>
           </van-field>
         </div>
@@ -680,7 +680,6 @@
         /*以下是电子合同新加字段*/
         eshow: false,
         showOtherFee: false,
-        curTrueNameItem: null,//当前需要实名认证的item
         isShowChooseNoProperty: false,//是否显示选择非房东费用
         isShowChooseRemark: false,//是否显示备注弹框
         houseCertificateTypes: [new CommonIdNameEntity('1', '房屋所有权证'), new CommonIdNameEntity('2', '房屋买卖合同'), new CommonIdNameEntity('3', '其他房屋来源')],
@@ -821,7 +820,6 @@
           pdf_scene: 1,
           other_rule: [],
           signer_type: '',//签约类型1产权 2代理
-          partA_agents: new HouseOwner(),//代理人信息
           signer: {},
           owner: [new HouseOwner()],//房屋所有人HouseOwner类的列表
           cookie: '',
@@ -941,10 +939,10 @@
     },
     methods: {
       onSignerChanged(item) {
-        if(this.curTrueNameItem===null){
+        if(this.form.signer===null){
           return
         }
-        this.curTrueNameItem.fadada_user_id=''
+        this.form.signer.fadada_user_id=''
       },
       getPic(ids, success) {
         let update = {show: []};
@@ -1169,9 +1167,8 @@
             if (index === this.showForm.signPeoples.length - 1) {
               this.showForm.showProxyInfo = true;
               this.form.signer_type = 2;
-              this.curTrueNameItem = this.form.partA_agents;
+              this.form.signer=new HouseOwner();
             } else {
-              this.curTrueNameItem = this.form.owner[index];
               this.form.signer_type = 1;
               this.showForm.showProxyInfo = false;
               this.form.signer = this.form.owner[index]
@@ -1694,15 +1691,12 @@
         this.form.owner = draft.owner;
         this.form.signer_type = draft.signer_type;
         this.form.signer = draft.signer;
-        this.form.partA_agents = draft.partA_agents;
         if (this.form.signer_type === 2) {//代理
           this.showForm.showProxyInfo = true;
           this.showForm.signPeople = '其他';
-          this.curTrueNameItem = this.form.partA_agents;
         } else {//房东
           this.showForm.showProxyInfo = false;
           this.showForm.signPeople = draft.signer.name;
-          this.curTrueNameItem = this.form.signer;
         }
         this.form.other_house_cert = draft.other_house_cert;
         //验证身份
@@ -1723,9 +1717,7 @@
         this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
         this.changeContracts();
-        if (this.form.partA_agents.length === 0) {
-          this.form.partA_agents = new HouseOwner();
-        }
+
       },
       close_() {
         this.isClear = true;
