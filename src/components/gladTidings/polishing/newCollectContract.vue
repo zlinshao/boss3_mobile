@@ -240,7 +240,7 @@
           <van-field
             v-model="form.vacancy"
             label="空置期(天)"
-            type="text"
+            type="number"
             class="number"
             @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
             placeholder="请填写空置期"
@@ -1713,7 +1713,6 @@
           not_owner_fee_choosed_ids.push(this.form.not_owner_fee[key])
         }
         this.form.other_fee_text = draft.other_fee_text;
-        this.form.allowed_decoration_to = draft.allowed_decoration_to;
         this.showForm.choosedNoOwnerFees = this.getListFromList(this.noOwnerFees, not_owner_fee_choosed_ids);
         this.changeNoPropertyFee();
         this.form.allowed_decoration_to = draft.allowed_decoration_to;
