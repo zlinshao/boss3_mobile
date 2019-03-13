@@ -729,6 +729,12 @@
   export default {
     name: "index",
     components: {UpLoad, Toast, ChooseTime, PdfDialog},
+    computed:{
+      old(){
+        return this.form.oldHouseName;
+      }
+    },
+
     data() {
       return {
         /*电子合同新加*/
@@ -935,6 +941,9 @@
       }
     },
     watch: {
+      old(n,o){
+        console.log('n:'+n+'p:'+o)
+      },
       receivedPrice() {
         this.form.money_sum = '';
         this.form.front_money = '';
@@ -1616,6 +1625,7 @@
             message: '加载中...'
           });
           if (val === 1) {//草稿
+            console.log(this.form)
             let json = {content: this.form, type: '2'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
               this.haveInHand = true;
@@ -1904,12 +1914,8 @@
         this.form.money_sep = draft.money_sep;
         this.form.money_way = draft.money_way;
         this.form.account_id = [];
+        this.form.real_pay_at = draft.real_pay_at;
         for (let i = 0; i < draft.money_way.length; i++) {
-          if (draft.real_pay_at) {
-            this.form.real_pay_at[i] = draft.real_pay_at[i];
-          } else {
-            this.form.real_pay_at.push('');
-          }
           this.amountMoney = i + 1;
           for (let j = 0; j < this.dictValue8.length; j++) {
             if (this.dictValue8[j].bank_info === draft.money_way[i]) {
