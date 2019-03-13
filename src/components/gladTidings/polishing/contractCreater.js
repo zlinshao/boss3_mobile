@@ -48,6 +48,7 @@ function trueName(item, success, error) {
   Vue.prototype.$http.get(url + '/fdd/customer/verified?idcard=' + item.idcard + '&name=' + item.name + '&phone=' + item.phone).then(res => {
     if (res.data.code === '40000') {
       item.fadada_user_id = res.data.data.customer_id;
+      console.log(item.fadada_user_id+'1111')
       Toast.clear();
     } else {
       Vue.prototype.$http.post(url + 'fdd/customer/cert', {

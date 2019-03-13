@@ -2026,7 +2026,7 @@
         this.form.public_fee = draft.public_fee;
         this.form.net_fee = draft.net_fee;
         this.form.customer_info = draft.customer_info;
-        for (let i = 0; i < this.form.customer_info; i++) {
+        for (let i = 0; i < this.form.customer_info.length; i++) {
           contractApi.trueName(this.form.customer_info[i], success => {
           }, error => {
           });
