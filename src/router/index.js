@@ -184,7 +184,7 @@ export default new Router({
       path: '/eContract',
       hidden: '',
       back: '#F19851',
-      icon: 'iconfont icon-zufang-',
+      icon: 'iconfont icon-hetong',
       name: '电子合同',
       meta: {title: '电子合同'},
       component: EContract
