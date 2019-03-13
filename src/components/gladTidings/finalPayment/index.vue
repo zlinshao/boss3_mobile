@@ -322,7 +322,7 @@
 
         other_fee_status: false,
 
-        is_receipt: false,               //电子收据
+        is_receipt: true,               //电子收据
         isReceiptMsg: {},                //电子收据
         form: {
           address: '',
@@ -961,7 +961,8 @@
         this.form.deposit_photo_old = [];
         this.receipts = {};
         this.amountReceipt = 1;
-        this.is_receipt = false;
+        this.is_receipt = true;
+        this.form.is_receipt = 1;
         this.form.receipt = [];
         this.form.receipt[0] = this.receiptDate;
 

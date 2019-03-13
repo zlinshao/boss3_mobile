@@ -1277,7 +1277,7 @@
         this.form.agency_user_name = '';
         this.form.agency_phone = '';
 
-        this.is_receipt = false;
+        this.is_receipt = true;
         this.form.is_receipt = 1;
         this.amountReceipt = 1;
         this.form.receipt = [];

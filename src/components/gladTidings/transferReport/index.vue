@@ -540,7 +540,7 @@
           money_way: [''],              //分金额 方式
           account_id: [],               //汇款帐户ID
           memo: '',                     //收款备注
-
+          is_receipt: 1,
           discount: 0,                   //让价金额
           contract_number: 'LJZF',       //合同编号
           is_corp: 1,                    //是否公司单  0个人1公司

@@ -1192,7 +1192,7 @@
         this.form.account_id = [];
         this.form.from = 1;
 
-        this.is_receipt = false;
+        this.is_receipt = true;
         this.form.is_receipt = 1;
         this.amountReceipt = 1;
         this.form.receipt = [];
