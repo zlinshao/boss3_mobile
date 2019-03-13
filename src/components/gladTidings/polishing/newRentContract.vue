@@ -1914,7 +1914,10 @@
             }
           }
         }
-        console.log(this.form.account_id)
+        if(this.form.account_id.length!==this.form.money_way.length){
+          this.form.account_id.splice(0,this.form.account_id.length)
+          this.form.money_way.splice(0,this.form.money_way.length)
+        }
 
         this.form.discount = draft.discount;
         this.form.penalty = draft.penalty;
