@@ -2,7 +2,7 @@
   <div id="app">
     <div class="module" v-if="loading"></div>
     <div class="loading" v-if="loading">
-      <img src="./assets/cat.gif" style="width: 100%">
+      <img src="./assets/loding1.gif">
     </div>
     <div v-if="!loading">
       <keep-alive>
@@ -131,7 +131,7 @@
             this.personalGet().then(res => {
               setTimeout(() => {
                 this.loading = !res;
-              },1000);
+              },50);
             });
           }
         }

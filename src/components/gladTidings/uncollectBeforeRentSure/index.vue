@@ -513,7 +513,7 @@
 
         cusFrom: '',                      //客户来源
         other_fee_status: false,
-        is_receipt: false,               //电子收据
+        is_receipt: true,               //电子收据
         isReceiptMsg: {},                //电子收据
         form: {
           id: '',
