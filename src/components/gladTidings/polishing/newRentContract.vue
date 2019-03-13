@@ -991,7 +991,6 @@
         });
         this.dicts(success => {
           this.getContractDetail();
-          this.houseInfo();
         }, error => {
           Toast('加载数据失败！')
         });
@@ -1017,6 +1016,8 @@
         this.form.area = house_res.area;//面积
         /*获取电子合同相关字段*/
       }
+      this.houseInfo();
+
     },
     methods: {
       onChangeInfo(item){
