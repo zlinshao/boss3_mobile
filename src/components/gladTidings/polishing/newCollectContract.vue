@@ -1562,13 +1562,15 @@
           } else {
             return
           }
-          let json = {
-            content: {
-              staff_id: this.form.staff_id
-            }, type: '1'
-          };
-          this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
-          });
+          if(  this.form.regenerate === 0 || this.form.regenerate === '0') {
+            let json = {
+              content: {
+                staff_id: this.form.staff_id
+              }, type: '1'
+            };
+            this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+            });
+          }
         }).catch((error) => {
           Toast.clear();
           this.haveInHand = true;
