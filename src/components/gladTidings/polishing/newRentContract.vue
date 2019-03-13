@@ -1337,7 +1337,7 @@
                 this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
                 break;
               case "2"://转
-                this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
+                this.$router.push({path: '/collectHouse', query: {type: 'renter'}});
                 break;
               case "5"://调
                 this.$router.push({path: '/collectHouse', query: {type: 'lord'}});
