@@ -1914,9 +1914,12 @@
             }
           }
         }
+
         if(this.form.account_id.length!==this.form.money_way.length){
-          this.form.account_id.splice(0,this.form.account_id.length)
-          this.form.money_way.splice(0,this.form.money_way.length)
+          this.form.account_id.splice(0,this.form.account_id.length);
+          this.form.money_way.splice(0,this.form.money_way.length);
+          this.form.money_sep.splice(0,this.form.money_sep.length);
+          this.form.real_pay_at.splice(0,this.form.real_pay_at.length)
         }
 
         this.form.discount = draft.discount;
