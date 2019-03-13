@@ -1917,14 +1917,20 @@
         this.form.money_way = draft.money_way;
         this.form.account_id = [];
         this.form.real_pay_at = draft.real_pay_at;
+        this.amountMoney = draft.money_way.length;
+
         for (let i = 0; i < draft.money_way.length; i++) {
-          this.amountMoney = i + 1;
           for (let j = 0; j < this.dictValue8.length; j++) {
             if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-              this.form.account_id[j] = this.dictValue8[j].id;
+              this.form.account_id.push(this.dictValue8[j].id);
             }
           }
         }
+        console.log(this.amountMoney)
+        console.log(JSON.stringify(this.form.account_id))
+        console.log(this.form.money_way)
+        console.log(this.form.money_sep.length)
+        console.log(this.form.real_pay_at.length)
 
         let count=this.amountMoney;
         if(!(this.form.account_id.length===count&&this.form.money_way.length===count&&this.form.money_sep.length===count&&this.form.real_pay_at.length===count)){
