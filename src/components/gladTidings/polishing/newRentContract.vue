@@ -725,6 +725,7 @@
   import {ContractType} from './eContract'
 
 
+
   export default {
     name: "index",
     components: {UpLoad, Toast, ChooseTime, PdfDialog},
@@ -977,6 +978,7 @@
       this.routerIndex('eContract');
       this.ddRent('eContract');
       this.userInfo();
+      this.houseInfo();
       let item = sessionStorage.getItem('contract_house_item');
       if (sessionStorage.getItem('contract_house_item') === 'noload') {
         sessionStorage.setItem('contract_house_item', null);
@@ -1016,8 +1018,6 @@
         this.form.area = house_res.area;//面积
         /*获取电子合同相关字段*/
       }
-      this.houseInfo();
-
     },
     methods: {
       onChangeInfo(item){
