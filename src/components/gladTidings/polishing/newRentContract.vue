@@ -1654,6 +1654,9 @@
           this.form.money_sep=[''];
           this.form.money_way=['']
         }
+        if(this.form.day===''){
+          this.form.day='0';
+        }
         this.$http.post(this.eurls + url, this.form).then((res) => {
 
           Toast.clear();
