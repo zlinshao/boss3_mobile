@@ -999,6 +999,7 @@
           Toast('请先选择签约人');
           return
         }
+        console.log(this.form.signer===this.form.owner[0]);
         let json = {content: this.form, type: '1'};
         Toast.loading({
           mask: true,
@@ -1733,6 +1734,12 @@
         } else {//房东
           this.showForm.showProxyInfo = false;
           this.showForm.signPeople = draft.signer.name;
+          for(let i=0;i<this.form.owner.length;i++){
+            let people=this.form.owner[i];
+            if(people.name===this.form.signer.name&&people.idcard===this.form.signer.idcard&&people.phone===this.form.signer.phone){
+              this.form.signer=this.form.owner[i];
+            }
+          }
         }
         this.form.other_house_cert = draft.other_house_cert;
         //验证身份
