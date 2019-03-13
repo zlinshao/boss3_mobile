@@ -501,7 +501,7 @@
 
         rooms: [],
         roomsName: '',
-        is_receipt: false,               //电子收据
+        is_receipt: true,               //电子收据
         isReceiptMsg: {},                //电子收据
 
         form: {
@@ -545,7 +545,7 @@
           is_other_fee: 0,
           other_fee: '',
           other_fee_name: '',
-          is_receipt: 1,                //1是 2不是
+          is_receipt: 1,                //1是 0不是
           is_agency: '',                //客户来源    0个人1渠道
           agency_name: '',              //渠道名
           agency_price: '',             //渠道费
@@ -1296,7 +1296,7 @@
         this.form.is_other_fee = 0;
         this.other_fee_status = false;
 
-        this.is_receipt = false;
+        this.is_receipt = true;
         this.form.is_receipt = 1;
         this.amountReceipt = 1;
         this.form.receipt = [];
