@@ -32,7 +32,7 @@
             <!--<div>收起</div>-->
           </div>
           <div class="mainMain">
-            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'glad'" :to="key.path" :key="index">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'glad'||(index===10&&(groupId===134||groupId===473||groupId===141))" :to="key.path" :key="index">
               <p :style="{'background': key.back}">
                 <i :class="key.icon"></i>
               </p>
@@ -240,6 +240,7 @@
     components: {Toast},
     data() {
       return {
+        groupId:'',
         urls: globalConfig.server,
         list: [],
         page: 1,
@@ -276,6 +277,8 @@
       this.finished = true;
       this.scrollTops();
       this.toDone();
+      let per = JSON.parse(sessionStorage.personal);
+      this.groupId=per.department_id;
     },
     methods: {
       onLoad() {

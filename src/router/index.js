@@ -182,7 +182,7 @@ export default new Router({
     },
     {
       path: '/eContract',
-      hidden: 'glad',
+      hidden: '',
       back: '#F19851',
       icon: 'iconfont icon-zufang-',
       name: '电子合同',
