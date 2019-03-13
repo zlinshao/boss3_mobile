@@ -1539,7 +1539,7 @@
         if (this.form.type === '2') {
           this.form.end_date_vacant = this.form.begin_date;
           if(this.form.contract_id===''){
-            Toast('请先选择房屋地址');
+            Toast('请重新选择房屋地址');
             return
           }
         }
