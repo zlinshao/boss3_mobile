@@ -323,6 +323,16 @@
           </van-field>
         </div>
       </van-cell-group>
+      <van-field
+        v-model="form.deposit"
+        label="押金"
+        type="text"
+        class="number"
+        placeholder="请填写押金"
+        icon="clear"
+        @click-icon="form.deposit = ''"
+        required>
+      </van-field>
       <div class="changes" v-for="(key,index) in amountPrice">
         <div class="paddingTitle">
           <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
@@ -452,16 +462,7 @@
           </van-field>
         </div>
 
-        <van-field
-          v-model="form.deposit"
-          label="押金"
-          type="text"
-          class="number"
-          placeholder="请填写押金"
-          icon="clear"
-          @click-icon="form.deposit = ''"
-          required>
-        </van-field>
+
         <div class="first_date noBorder">
           <div class="titles required">保修期</div>
           <van-field
@@ -862,10 +863,9 @@
           this.form.agency_phone = '';
         }
       },
-      house(n, o) {
-        console.log(n + ":" + o)
+      firstMonthPrice(n){
+        this.form.deposit=n;
       }
-
     },
     activated() {
       //如果房屋信息为空 则请求读草稿
@@ -949,6 +949,9 @@
     computed: {
       house() {
         return this.form.house;
+      },
+      firstMonthPrice(){
+        return this.form.price_arr[0];
       }
     },
     methods: {
