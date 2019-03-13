@@ -1917,7 +1917,9 @@
             }
           }
         }
-        if(!(this.amountMoney===this.form.account_id.length===this.form.money_way.length===this.form.money_sep.length===this.form.real_pay_at.length)){
+
+        let count=this.amountMoney;
+        if(!(this.form.account_id.length===count&&this.form.money_way.length===count&&this.form.money_sep.length===count&&this.form.real_pay_at.length===count)){
           this.form.account_id.splice(0,this.form.account_id.length);
           this.form.money_way.splice(0,this.form.money_way.length);
           this.form.money_sep.splice(0,this.form.money_sep.length);
