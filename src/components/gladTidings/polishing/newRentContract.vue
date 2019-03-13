@@ -1665,7 +1665,7 @@
           this.form.money_sep=[''];
           this.form.money_way=['']
         }
-        if(this.form.day===''){
+        if(this.form.day===null||this.form.day===undefined||this.form.day===''){
           this.form.day='0';
         }
         this.$http.post(this.eurls + url, this.form).then((res) => {
