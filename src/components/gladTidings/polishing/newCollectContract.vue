@@ -1538,6 +1538,10 @@
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         if (this.form.type === '2') {
           this.form.end_date_vacant = this.form.begin_date;
+          if(this.form.contract_id===''){
+            Toast('请先选择房屋地址');
+            return
+          }
         }
         if(this.form.is_agency===''){
           this.form.is_agency='0'

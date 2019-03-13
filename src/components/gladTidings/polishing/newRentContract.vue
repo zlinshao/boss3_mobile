@@ -1920,6 +1920,10 @@
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
 
+        if(this.amountMoney===null||this.amountMoney===undefined||this.amountMoney===0||this.amountMoney==='0'){
+          this.amountMoney=1;
+        }
+
         for (let i = 0; i < draft.money_way.length; i++) {
           for (let j = 0; j < this.dictValue8.length; j++) {
             if (this.dictValue8[j].bank_info === draft.money_way[i]) {
