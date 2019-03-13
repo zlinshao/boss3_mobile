@@ -34,8 +34,8 @@
             房屋地址:
             {{type===1?item.param_map.house!==undefined?item.param_map.house.name:'':item.param_map.address}}
           </span>
-          <span class="owner" style="color: #e4393c;">({{getContractType(item)}})</span>
-          <div class="owner">{{type==='1'?'房东：':'租客：'+item.param_map.name}}</div>
+          <div class="owner">{{type==='1'?'房东：':'租客：'+item.param_map.name}}          <span class="owner" style="color: #e4393c;">({{getContractType(item)}})</span>
+          </div>
         </div>
         <div class="btnParent">
           <van-button v-if="item.contract_status===0" class="btn sign signBtn" size="small"

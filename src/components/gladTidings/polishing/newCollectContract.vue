@@ -323,16 +323,7 @@
           </van-field>
         </div>
       </van-cell-group>
-      <van-field
-        v-model="form.deposit"
-        label="押金"
-        type="text"
-        class="number"
-        placeholder="请填写押金"
-        icon="clear"
-        @click-icon="form.deposit = ''"
-        required>
-      </van-field>
+
       <div class="changes" v-for="(key,index) in amountPrice">
         <div class="paddingTitle">
           <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
@@ -370,7 +361,16 @@
       <div @click="priceAmount(1)" class="addInput">
         +月单价变化
       </div>
-
+      <van-field
+        v-model="form.deposit"
+        label="押金"
+        type="text"
+        class="number"
+        placeholder="请填写押金"
+        icon="clear"
+        @click-icon="form.deposit = ''"
+        required>
+      </van-field>
       <div class="changes" v-for="(key,index) in amountPay">
         <div class="paddingTitle">
           <span>付款方式<span v-if="amountPay > 1">({{index + 1}})</span></span>

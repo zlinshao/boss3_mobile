@@ -147,13 +147,6 @@
           placeholder="请输入其他用途"
           required>
         </van-field>
-        <van-field
-          v-model="form.people"
-          label="居住人数"
-          type="number"
-          placeholder="请输入居住人数"
-          required>
-        </van-field>
 
         <van-field
           v-model="rentTypeTxt"
@@ -164,6 +157,14 @@
           placeholder="请选择居住类型"
           required>
         </van-field>
+        <van-field
+          v-model="form.people"
+          label="居住人数"
+          type="number"
+          placeholder="请输入居住人数"
+          required>
+        </van-field>
+
         <div v-if="showWholeFee">
           <van-field
             v-model="form.water_fee"
@@ -743,7 +744,7 @@
         curContractInfo: '',
         curDatas: [],//选择弹框元数据
         rentUses: [new CommonIdNameEntity('1', '自住'), new CommonIdNameEntity('2', '办公使用'), new CommonIdNameEntity('3', '其他用途')],
-        rentUseTxt: '',//租赁用途文字
+        rentUseTxt: '自住',//租赁用途文字
         //合同备注条款数据
         remarks: [new CommonIdNameEntity('1', '不能群租'),
           new CommonIdNameEntity('2', '不得扰民'),
@@ -907,7 +908,7 @@
           hall: "",
           toilet: "",
           area: "",
-          use_type: "",
+          use_type: "1",
           other_use: "",
           people: "",
           rent_type: "1",
