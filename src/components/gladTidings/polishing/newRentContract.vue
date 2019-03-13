@@ -1900,6 +1900,7 @@
         this.form.memo = draft.memo ? draft.memo : '';
         this.form.money_sep = draft.money_sep;
         this.form.money_way = draft.money_way;
+        this.form.account_id = [];
         for (let i = 0; i < draft.money_way.length; i++) {
           if (draft.real_pay_at) {
             this.form.real_pay_at[i] = draft.real_pay_at[i];
@@ -1909,10 +1910,11 @@
           this.amountMoney = i + 1;
           for (let j = 0; j < this.dictValue8.length; j++) {
             if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-              this.form.account_id[i] = this.dictValue8[j].id;
+              this.form.account_id[j] = this.dictValue8[j].id;
             }
           }
         }
+        console.log(this.form.account_id)
 
         this.form.discount = draft.discount;
         this.form.penalty = draft.penalty;
