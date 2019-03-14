@@ -678,6 +678,8 @@
           case 'bulletin_change'://调房
             this.$router.push({path: '/transferReport', query: list});
             break;
+          case 'bulletin_lose_rent'://炸单
+          case 'bulletin_lose_collect'://炸单
           case 'bulletin_lose'://炸单
             this.$router.push({path: '/friedBill', query: list});
             break;

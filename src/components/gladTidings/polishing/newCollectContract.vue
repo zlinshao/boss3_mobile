@@ -1051,6 +1051,7 @@
         if (this.form.type === '2') {
           this.form.end_date_vacant = this.form.begin_date;
         }
+        this.form.property_payer=this.curWuyePayers.id;
         contractApi.createContract(this.$refs.pdf, this.form, success => {
         }, error => {
           Toast(error)
@@ -1546,13 +1547,10 @@
         if(this.form.is_agency===''){
           this.form.is_agency='0'
         }
-        this.form.house_address = this.house.name;
-        this.form.house_type = this.form.room + '室' + this.form.hall + '厅' + this.form.toilet + '卫';
         this.form.property_payer=this.curWuyePayers.id;
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           //清除草稿
-
           this.haveInHand = true;
           this.retry = 0;
           Toast(res.data.msg);
