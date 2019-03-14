@@ -352,6 +352,7 @@ export default {
       data.phone = info.phone;
       data.department_name = info.org[0].name;
       data.department_id = info.org[0].id;
+      data.session_id = info.session_id;
       data.isCompany = '';
       info.role.forEach(str => {
         power.push(str.name);
@@ -382,7 +383,7 @@ export default {
         }
       }
       data.department_id = val.department_id;
-      data.payer = val.name;
+      data.payer = val.customer_info[0].name;
       if (val.rent_without_collect_address) {
         data.address = val.rent_without_collect_address;
       } else {

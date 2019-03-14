@@ -32,7 +32,8 @@
             <!--<div>收起</div>-->
           </div>
           <div class="mainMain">
-            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'glad'" :to="key.path" :key="index">
+            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'glad'||(index===10&&showEContract)"
+                         :to="key.path" :key="index">
               <p :style="{'background': key.back}">
                 <i :class="key.icon"></i>
               </p>
@@ -42,21 +43,21 @@
         </div>
       </div>
       <!--<div class="inRough" v-if="queryType == 0 || queryType === 'ding'">-->
-        <!--<div class="mainIndex">-->
-          <!--<div class="mainTop">-->
-            <!--<div>-->
-              <!--<span>数据统计</span>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="mainMain">-->
-            <!--<router-link v-for="(key,index) in paths" v-if="key.hidden === 'dataStatic'" :to="key.path" :key="index">-->
-              <!--<p :style="{'background': key.back}">-->
-                <!--<i :class="key.icon"></i>-->
-              <!--</p>-->
-              <!--<h1>{{key.name}}</h1>-->
-            <!--</router-link>-->
-          <!--</div>-->
-        <!--</div>-->
+      <!--<div class="mainIndex">-->
+      <!--<div class="mainTop">-->
+      <!--<div>-->
+      <!--<span>数据统计</span>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--<div class="mainMain">-->
+      <!--<router-link v-for="(key,index) in paths" v-if="key.hidden === 'dataStatic'" :to="key.path" :key="index">-->
+      <!--<p :style="{'background': key.back}">-->
+      <!--<i :class="key.icon"></i>-->
+      <!--</p>-->
+      <!--<h1>{{key.name}}</h1>-->
+      <!--</router-link>-->
+      <!--</div>-->
+      <!--</div>-->
       <!--</div>-->
       <div class="inRough" v-if="queryType == 1 || queryType === 'ding'">
         <div class="mainIndex">
@@ -240,6 +241,7 @@
     components: {Toast},
     data() {
       return {
+        showEContract: false,
         urls: globalConfig.server,
         list: [],
         page: 1,
@@ -276,6 +278,7 @@
       this.finished = true;
       this.scrollTops();
       this.toDone();
+      this.getShowEContract();
     },
     methods: {
       onLoad() {
@@ -433,6 +436,12 @@
           }
         })
       },
+      //获取是否显示电子合同按钮
+      getShowEContract() {
+        this.$http.get(this.urls + 'bulletin/component_visible').then(resp => {
+          this.showEContract = resp.data.code === '20000';
+        })
+      }
     }
   }
 </script>
@@ -472,8 +481,10 @@
 
     .top, .started, .inRough, .footerIndex {
       background: #FFFFFF;
+
       P, h2 {
         text-align: center;
+
         i {
           font-size: .42rem;
           color: #ffffff;
@@ -490,6 +501,7 @@
     .waterfall {
       margin-top: 3.1rem;
       padding-bottom: 1.2rem;
+
       .bottom {
         @include flex;
         justify-content: center;
@@ -512,11 +524,13 @@
       justify-content: space-around;
       height: 2.1rem;
       border-top: .2rem solid #F8F8F8;
+
       div {
         @include flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+
         p {
           width: .9rem;
           height: .9rem;
@@ -524,11 +538,13 @@
           @include border_radius(50%);
           margin-bottom: .26rem;
           background: #e2e3e4;
+
           i {
             font-size: .42rem;
             color: $color;
           }
         }
+
         h1 {
           font-size: .28rem;
           color: $color;
@@ -542,15 +558,19 @@
 
     .okFinish {
       margin-top: 2.3rem;
+
       .inRough {
         padding: .4rem;
         margin-top: .3rem;
+
         .mainIndex {
           .mainTop {
             @include flex;
             justify-content: space-between;
+
             div, span {
               color: #818386;
+
               span:first-of-type {
                 padding-left: .4rem;
                 color: #101010;
@@ -558,13 +578,16 @@
               }
             }
           }
+
           .mainMain {
             @include flex;
             flex-wrap: wrap;
             margin-top: .3rem;
+
             a {
               width: 25%;
               text-align: center;
+
               P {
                 background: $onColor;
                 margin: .3rem auto .2rem;
@@ -573,6 +596,7 @@
                 height: .86rem;
                 line-height: .86rem;
               }
+
               h1 {
                 font-size: .24rem;
                 padding: 0 .1rem;
@@ -580,11 +604,13 @@
               }
             }
           }
+
           .mainMain.default {
             a {
               p {
                 background: #aaaaaa;
               }
+
               h1 {
                 color: #aaaaaa;
               }
@@ -604,64 +630,79 @@
 
     .started, .sendMain {
       @include flex;
+
       .startedMain {
         width: 100%;
         @include flex;
         padding-bottom: .3rem;
+
         .leftPic {
           @include img(.9rem);
           margin-right: .3rem;
+
           img {
             @include img(.9rem);
             @include border_radius(50%);
           }
         }
+
         .rightTitle {
           width: 100%;
           border-bottom: .02rem solid #ebebeb;
           padding-bottom: .3rem;
+
           span {
             color: #9c9c9c;
           }
+
           div.title, div.progress {
             @include flex;
             justify-content: space-between;
             align-items: center;
           }
+
           div.title {
             line-height: .42rem;
+
             h2 {
               max-width: 3.5rem;
               text-align: left;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
+
               span {
                 color: #101010;
               }
             }
+
             span.times {
               min-width: 2rem;
               text-align: right;
             }
           }
+
           h3 {
             margin: .15rem 0;
             color: $color;
           }
+
           div.progress {
             div {
               @include border_radius(10px);
             }
+
             div:first-of-type {
               width: 100%;
               @include flex;
               align-items: center;
+
               h4, h5 {
                 height: .06rem;
                 width: 100%;
                 background: #cccccc;
               }
+
               h4 {
                 background: -webkit-linear-gradient(left, #2BD7A1, #39b1ff);
                 background: -o-linear-gradient(left, #2BD7A1, #39b1ff);
@@ -669,6 +710,7 @@
                 background: linear-gradient(left, #2BD7A1, #39b1ff);
               }
             }
+
             div:last-of-type {
               margin-top: -.03rem;
               min-width: 2.4rem;
@@ -676,6 +718,7 @@
               color: $onColor;
             }
           }
+
           /*通过*/
           div.published {
             div:first-of-type {
@@ -683,16 +726,19 @@
                 width: 0;
               }
             }
+
             div:last-of-type {
               color: #2BD7A1;
             }
           }
+
           /*拒绝*/
           div.rejected {
             div:first-of-type {
               h5 {
                 width: 0;
               }
+
               h4 {
                 background: -webkit-linear-gradient(left, #2BD7A1, #e4393c);
                 background: -o-linear-gradient(left, #2BD7A1, #e4393c);
@@ -700,10 +746,12 @@
                 background: linear-gradient(left, #2BD7A1, #e4393c);
               }
             }
+
             div:last-of-type {
               color: #e4393c;
             }
           }
+
           /*撤回*/
           div.cancelled {
             div:first-of-type {
@@ -711,6 +759,7 @@
                 width: 0;
               }
             }
+
             div:last-of-type {
               color: #cccccc;
             }
@@ -730,17 +779,21 @@
         justify-content: space-around;
         border-top: .2rem solid #f4f4f4;
         border-bottom: .02rem solid #ebebeb;
+
         div {
           height: .8rem;
           width: 40%;
           line-height: .8rem;
           text-align: center;
+
           span {
             color: #101010;
           }
         }
+
         .readStatus {
           border-bottom: .03rem solid $onColor;
+
           span {
             color: $onColor;
           }
@@ -759,20 +812,25 @@
       background: #FFFFFF;
       justify-content: space-around;
       z-index: 999999;
+
       div + div {
         border-left: 1px solid #EEEEEE;
       }
+
       div {
         width: 50%;
         margin: .2rem 0;
         text-align: center;
+
         h2 {
           color: $color;
+
           i {
             color: $color;
             font-size: .34rem;
           }
         }
+
         h1 {
           padding-top: .06rem;
           font-size: .2rem;
@@ -785,18 +843,22 @@
       .onDiv {
         h1, h2 {
           color: $onColor;
+
           i {
             color: $onColor;
           }
         }
+
         p {
           background: $onColor;
+
           i {
             color: #FFFFFF;
           }
         }
       }
     }
+
     .titleNum {
       position: absolute;
       top: .08rem;
@@ -809,6 +871,7 @@
       font-size: .18rem;
       text-align: center;
     }
+
     .titleNum.fontMini {
       font-size: .12rem;
     }

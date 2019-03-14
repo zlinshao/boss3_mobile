@@ -1098,7 +1098,6 @@
             this.property_photos = data.property_photo || {};
             this.form.identity_photo = draft.identity_photo;
             this.identity_photos = data.identity_photo || {};
-
             this.form.remark = draft.remark;
             if (val !== '' && val.type === 2) {
               this.form.staff_id = draft.staff_id;
