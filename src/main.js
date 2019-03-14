@@ -27,7 +27,6 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Env'] = globalConfig.env;
 axios.defaults.headers = globalConfig.header;
 Vue.config.productionTip = false;
-export default vConsole;
 router.beforeEach((to, from, next) => {
   next();
 });
