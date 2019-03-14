@@ -1621,7 +1621,6 @@
         }
       },
       changeContractData(draft) {
-        this.close_();
         this.form.purchase_way = 509;
         this.form.house = {id: '', name: ''};
         this.form.house.id = draft.house.id;
