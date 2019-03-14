@@ -276,7 +276,7 @@
                     list.is_agency = 0;
                   }
                   //console.log(data[i])
-                 list.house_type=data[i].room+"室"+data[i].building+"厅"+data[i].toilet;
+                 list.house_type=data[i].room+"室"+data[i].hall+"厅"+data[i].toilet;
                   list.house_res=data[i].house_res;
                   this.houseList.push(list);
                   this.finish(4);
