@@ -697,6 +697,7 @@
             this.$router.push({path: '/special', query: list});
             break;
           case 'bulletin_checkout'://退租
+          case 'bulletin_checkout_rent':
             this.$router.push({path: '/checkout', query: list});
             break;
         }
