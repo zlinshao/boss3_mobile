@@ -836,10 +836,10 @@
         },
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
-        photos: {},                     //合同照片
-        screenshots: {},                //领导截图
-        property_photos: {},                //房产证照片
-        identity_photos: {},            //证件照片
+        photos: [],                     //合同照片
+        screenshots: [],                //领导截图
+        property_photos: [],                //房产证照片
+        identity_photos: [],            //证件照片
 
         dictValue4: [],                 //付款方式
         value4: [],
@@ -892,7 +892,6 @@
         });
       } else {
         console.log('读取房屋信息');
-        console.log(item);
         sessionStorage.setItem('contract_house_item', null);
         let house_res = item.house_res;
         let house_res_com = house_res.community;
@@ -905,7 +904,6 @@
         this.form.property_address = house_res_com.address;//街道
         this.form.village_name = this.form.house.name;//物业地址
         let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
-        console.log(house_types)
         this.form.room = house_types[0];//室
         this.form.hall = house_types[1];//厅
         this.form.toilet = house_types[2];//卫
@@ -1003,7 +1001,6 @@
           Toast('请先选择签约人');
           return
         }
-        console.log(this.form.signer===this.form.owner[0]);
         let json = {content: this.form, type: '1'};
         Toast.loading({
           mask: true,
@@ -1170,7 +1167,6 @@
       },
       //显示选择项
       showSelect(entitys) {
-        console.log(entitys)
         this.columns = this.getNameFromList(entitys);//设置当前弹框展示的数据
         this.curDatas = entitys;//设置当前元数据
         this.eshow = true;//显示弹框
@@ -1726,6 +1722,7 @@
           this.screenshots = success;
         });
         this.getPic(draft.property_photo, success => {
+          console.log(this.property_photos)
           this.property_photos = success;
         });
         this.getPic(draft.identity_photo, success => {
@@ -1739,6 +1736,7 @@
         this.form.owner = draft.owner;
         this.form.signer_type = draft.signer_type;
         this.form.signer = draft.signer;
+
         if (this.form.signer_type === 2) {//代理
           this.showForm.showProxyInfo = true;
           this.showForm.signPeople = '其他';

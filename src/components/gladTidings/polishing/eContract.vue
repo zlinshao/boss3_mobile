@@ -134,6 +134,7 @@
         }else{
           let customers=item.param_map.customer_info;
           let names='';
+          if(customers===undefined)return '';
           for(let i=0;i<customers.length;i++){
             names=names+' '+customers[i].name;
           }
