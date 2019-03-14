@@ -1769,6 +1769,7 @@
         this.form.allowed_add_to = draft.allowed_add_to;
         this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
+        this.form.contract_id=draft.contract_id;
         this.changeContracts();
 
       },
