@@ -1865,7 +1865,6 @@
         this.userInfo();
       },
       changeContractDetail(draft) {
-
         this.form.contract_id = draft.contract_id;
         this.form.house_id = draft.house_id;
         this.form.address = draft.address;

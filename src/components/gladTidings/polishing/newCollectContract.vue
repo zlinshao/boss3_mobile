@@ -836,10 +836,10 @@
         },
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
-        photos: {},                     //合同照片
-        screenshots: {},                //领导截图
-        property_photos: {},                //房产证照片
-        identity_photos: {},            //证件照片
+        photos: [],                     //合同照片
+        screenshots: [],                //领导截图
+        property_photos: [],                //房产证照片
+        identity_photos: [],            //证件照片
 
         dictValue4: [],                 //付款方式
         value4: [],
@@ -892,7 +892,6 @@
         });
       } else {
         console.log('读取房屋信息');
-        console.log(item);
         sessionStorage.setItem('contract_house_item', null);
         let house_res = item.house_res;
         let house_res_com = house_res.community;
@@ -1002,7 +1001,6 @@
           Toast('请先选择签约人');
           return
         }
-        console.log(this.form.signer===this.form.owner[0]);
         let json = {content: this.form, type: '1'};
         Toast.loading({
           mask: true,
@@ -1169,7 +1167,6 @@
       },
       //显示选择项
       showSelect(entitys) {
-        console.log(entitys)
         this.columns = this.getNameFromList(entitys);//设置当前弹框展示的数据
         this.curDatas = entitys;//设置当前元数据
         this.eshow = true;//显示弹框
@@ -1277,6 +1274,7 @@
 
       // 图片
       getImgData(val) {
+        console.log('111'+JSON.stringify(val))
         this.picStatus = val[2];
         switch (val[0]) {
           case 'screenshot':
@@ -1623,7 +1621,6 @@
         }
       },
       changeContractData(draft) {
-
         this.form.purchase_way = 509;
         this.form.house = {id: '', name: ''};
         this.form.house.id = draft.house.id;
@@ -1718,6 +1715,7 @@
         this.form.property_photo = draft.property_photo;
         this.form.identity_photo = draft.identity_photo;
         this.form.remark = draft.remark;
+
         this.getPic(draft.photo, success => {
           this.photos = success;
         });
@@ -1725,6 +1723,7 @@
           this.screenshots = success;
         });
         this.getPic(draft.property_photo, success => {
+          console.log(this.property_photos)
           this.property_photos = success;
         });
         this.getPic(draft.identity_photo, success => {
@@ -1738,6 +1737,7 @@
         this.form.owner = draft.owner;
         this.form.signer_type = draft.signer_type;
         this.form.signer = draft.signer;
+
         if (this.form.signer_type === 2) {//代理
           this.showForm.showProxyInfo = true;
           this.showForm.signPeople = '其他';
@@ -1769,6 +1769,7 @@
         this.form.allowed_add_to = draft.allowed_add_to;
         this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
+        this.form.contract_id=draft.contract_id;
         this.changeContracts();
 
       },

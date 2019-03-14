@@ -59,7 +59,7 @@
           this.editImg = [];
           this.imgId = [];
           for (let i = 0; i < val.length; i++) {
-            this.imgId.push(val[i].id);
+            this.imgId.push(val[i].id );
             this.editImg.push(val[i])
           }
         }
