@@ -34,7 +34,7 @@
             房屋地址:
             {{type===1?item.param_map.house!==undefined?item.param_map.house.name:'':item.param_map.address}}
           </span>
-          <div class="owner">{{type==='1'?'房东：':'租客：'+item.param_map.name}}          <span class="owner" style="color: #e4393c;">({{getContractType(item)}})</span>
+          <div class="owner">{{'客户：'+getName(item,index)}}          <span class="owner" style="color: #e4393c;">({{getContractType(item)}})</span>
           </div>
         </div>
         <div class="btnParent">
@@ -125,6 +125,18 @@
     mounted() {
     },
     methods: {
+      getName(item,index){
+        if(this.type===1){//收
+         return item.param_map.sign_name;
+        }else{
+          let customers=item.param_map.customer_info;
+          let names='';
+          for(let i=0;i<customers.length;i++){
+            names=names+' '+customers[i].name;
+          }
+          return names;
+        }
+      },
       onCancel() {
         this.selectHide = false;
       },
@@ -242,7 +254,7 @@
             if (type === 1) {
               Toast('发送成功!');
             } else {
-              window.open(res.data.data.data);
+              location.href=res.data.data.data;
             }
           } else {
             Toast(res.data.msg);
@@ -262,7 +274,7 @@
             if (type === 1) {
               Toast('发送成功!');
             } else {
-              window.open(res.data.data.data);
+              location.href=res.data.data.data;
             }
           } else {
             Toast(res.data.msg);
