@@ -1621,7 +1621,7 @@
         }
       },
       changeContractData(draft) {
-
+        this.close_();
         this.form.purchase_way = 509;
         this.form.house = {id: '', name: ''};
         this.form.house.id = draft.house.id;
@@ -1716,7 +1716,6 @@
         this.form.property_photo = draft.property_photo;
         this.form.identity_photo = draft.identity_photo;
         this.form.remark = draft.remark;
-        $('.imgItem').remove();
 
         this.getPic(draft.photo, success => {
           this.photos = success;
