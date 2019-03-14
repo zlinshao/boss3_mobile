@@ -1985,6 +1985,8 @@
         this.form.photo = draft.photo;
         this.form.screenshot_leader = draft.screenshot_leader;
         this.form.deposit_photo = draft.deposit_photo;
+        $('.imgItem').remove();
+
         this.getPic(draft.screenshot, success => {
           this.screenshots = success;
         });
