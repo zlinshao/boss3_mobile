@@ -110,6 +110,7 @@
               data.department_name = info.org[0].name;
               data.department_id = info.org[0].id;
               data.isCompany = '';
+              data.session_id=info.session_id;
               // info.role.forEach(str => {
               //   power.push(str.name);
               // });

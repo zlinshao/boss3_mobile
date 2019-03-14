@@ -992,6 +992,7 @@
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           if (t.type === 'report') {
+            console.log(val)
             this.form.old_house_name = val.house_name;
             this.form.old_corp_name = val.corp_name;
             this.form.contract_id_rent = val.id;

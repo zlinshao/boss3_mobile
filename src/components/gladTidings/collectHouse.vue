@@ -109,6 +109,7 @@
       })
     },
     activated() {
+      sessionStorage.setItem('contract_house_item', 'noload');//电子合同使用 noload为不加载草稿
       this.types = this.$route.query.type;
       this.end_type = this.$route.query.end_type;
       this.resetting();
@@ -172,6 +173,12 @@
       sureRouter(path, key) {
         key.type = this.types;
         let houseData = {};
+        console.log(key);
+        if(this.types!=='is_nrcy'&&this.types!=='report') {
+          sessionStorage.setItem('contract_house_item', JSON.stringify(key));//电子合同使用
+        }else{
+          sessionStorage.setItem('contract_house_item', 'test');//电子合同使用
+        }
         for (let item of Object.keys(key)) {
           switch (item) {
             case 'house_res':
@@ -268,6 +275,9 @@
                   } else {
                     list.is_agency = 0;
                   }
+                  //console.log(data[i])
+                 list.house_type=data[i].room+"室"+data[i].building+"厅"+data[i].toilet;
+                  list.house_res=data[i].house_res;
                   this.houseList.push(list);
                   this.finish(4);
                 }
