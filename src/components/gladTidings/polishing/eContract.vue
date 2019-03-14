@@ -242,7 +242,7 @@
             if (type === 1) {
               Toast('发送成功!');
             } else {
-              window.open(res.data.data.data);
+              location.href=res.data.data.data;
             }
           } else {
             Toast(res.data.msg);
@@ -262,7 +262,7 @@
             if (type === 1) {
               Toast('发送成功!');
             } else {
-              window.open(res.data.data.data);
+              location.href=res.data.data.data;
             }
           } else {
             Toast(res.data.msg);
