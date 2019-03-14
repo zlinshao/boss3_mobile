@@ -1274,6 +1274,7 @@
 
       // 图片
       getImgData(val) {
+        console.log('111'+JSON.stringify(val))
         this.picStatus = val[2];
         switch (val[0]) {
           case 'screenshot':
