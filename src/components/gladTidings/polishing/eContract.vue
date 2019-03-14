@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="eContract">
     <van-search
       v-if="false"
       v-model="searchInfo"
@@ -14,45 +14,45 @@
       <van-tab title="租房"></van-tab>
     </van-tabs>
     <van-pull-refresh v-model="isRefresh" @refresh="refresh" style="margin-bottom: 4em;margin-top: 3em;">
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onSearch">
-      <van-cell v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
-        <div class="infoParent">
-          <span class="owner" style="font-size:.8em;color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
-          <div class="title">
-            提交时间:
-            {{item.create_time}}
-          </div>
-          <div class="title">
-            合同编号:
-            {{item.contract_number}}
-          </div>
-          <span class="title">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onSearch">
+        <van-cell v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
+          <div class="infoParent">
+            <span class="owner" style="font-size:.8em;color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
+            <div class="title">
+              提交时间:
+              {{item.create_time}}
+            </div>
+            <div class="title">
+              合同编号:
+              {{item.contract_number}}
+            </div>
+            <span class="title">
             房屋地址:
             {{type===1?item.param_map.house!==undefined?item.param_map.house.name:'':item.param_map.address}}
           </span>
-          <div class="owner">{{'客户：'+getName(item,index)}}          <span class="owner" style="color: #e4393c;">({{getContractType(item)}})</span>
+            <div class="owner">{{'客户：'+getName(item,index)}} <span class="owner" style="color: #e4393c;">({{getContractType(item)}})</span>
+            </div>
           </div>
-        </div>
-        <div class="btnParent">
-          <van-button v-if="item.contract_status===0" class="btn sign signBtn" size="small"
-                      @click="sign(item)" @click.stop>签署
-          </van-button>
-          <van-button v-if="item.contract_status===0" class="btn send signBtn" size="small"
-                      @click="send(item)" @click.stop>发送
-          </van-button>
-          <van-button v-if="item.contract_status===1" class="btn sign signBtn" size="small"
-                      @click="toDetail(item)" @click.stop>修改
-          </van-button>
-        </div>
-      </van-cell>
+          <div class="btnParent">
+            <van-button v-if="item.contract_status===0" class="btn sign signBtn" size="small"
+                        @click="sign(item)" @click.stop>签署
+            </van-button>
+            <van-button v-if="item.contract_status===0" class="btn send signBtn" size="small"
+                        @click="send(item)" @click.stop>发送
+            </van-button>
+            <van-button v-if="item.contract_status===1" class="btn sign signBtn" size="small"
+                        @click="toDetail(item)" @click.stop>修改
+            </van-button>
+          </div>
+        </van-cell>
 
-    </van-list>
+      </van-list>
     </van-pull-refresh>
-    <div  type="info" class="new" @click="showChooseDialog()">新增合同</div>
+    <div type="info" class="new" @click="showChooseDialog()">新增合同</div>
     <van-popup v-model="show" class="popup">
       <div>
         <div class="choose" @click="collect(0,'')">收房</div>
@@ -79,7 +79,7 @@
     }
   }
 
-  import {Toast} from 'vant';
+  import {Toast, Dialog} from 'vant';
 
   export default {
     name: "eContract",
@@ -89,19 +89,19 @@
       this.ddRent('');
       Toast.loading({
         mask: true,
-        duration:0,
+        duration: 0,
         message: '加载中...'
       });
-      if(sessionStorage.getItem('isRefreshList')==='true'){
-        sessionStorage.setItem('isRefreshList','no');
-        this.page=1;
-        this.totalPages=1;
+      if (sessionStorage.getItem('isRefreshList') === 'true') {
+        sessionStorage.setItem('isRefreshList', 'no');
+        this.page = 1;
+        this.totalPages = 1;
       }
       this.getData();
     },
     data() {
       return {
-        isRefresh:false,
+        isRefresh: false,
         list: [],
         searchInfo: '',//搜索内容
         finished: false,
@@ -123,17 +123,25 @@
       }
     },
     mounted() {
+      Dialog.alert({
+        title: '警告',
+        className: 'messageRed',
+        message: '特别提示：乙方不得将租金、服务费、押金、水电燃气等与房屋租赁相关的费用以现金形式直接交给经办人员个人或转至经办人个人账户，否则视为未支付，需自行承担可能的钱财损失。'
+      }).then(() => {
+        // on close
+      });
+
     },
     methods: {
-      getName(item,index){
-        if(this.type===1){//收
-         return item.param_map.signer===undefined?'':item.param_map.signer.name;
-        }else{
-          let customers=item.param_map.customer_info;
-          let names='';
-          if(customers===undefined)return '';
-          for(let i=0;i<customers.length;i++){
-            names=names+' '+customers[i].name===undefined?'':customers[i].name;
+      getName(item, index) {
+        if (this.type === 1) {//收
+          return item.param_map.signer === undefined ? '' : item.param_map.signer.name;
+        } else {
+          let customers = item.param_map.customer_info;
+          let names = '';
+          if (customers === undefined) return '';
+          for (let i = 0; i < customers.length; i++) {
+            names = names + ' ' + customers[i].name === undefined ? '' : customers[i].name;
           }
           return names;
         }
@@ -147,31 +155,31 @@
             this.signCollect(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg, this.signTypeColumns[index].index);
             break;
           case 2://租房选择租客
-            this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg,this.signTypeColumns[index].index);
+            this.signRent(this.curItem.contract_number, this.curItem.title, this.signTypeColumns[index].fdd_user_id, this.isSendMsg, this.signTypeColumns[index].index);
             break
         }
         this.selectHide = false;
       },
-      getContractType(item){
-        if(this.type===1){
-          return item.param_map.type==='1'?'新收':'续收';
-        }else{
-          let str='';
+      getContractType(item) {
+        if (this.type === 1) {
+          return item.param_map.type === '1' ? '新收' : '续收';
+        } else {
+          let str = '';
           switch (item.param_map.type) {
             case '0':
-              str='未收先租确定';
+              str = '未收先租确定';
               break;
             case '1':
-              str='新租';
+              str = '新租';
               break;
             case '2':
-              str='转租';
+              str = '转租';
               break;
             case '3':
-              str='续租';
+              str = '续租';
               break;
             case '5':
-              str='调租';
+              str = '调租';
               break;
           }
           return str;
@@ -255,7 +263,7 @@
             if (type === 1) {
               Toast('发送成功!');
             } else {
-              location.href=res.data.data.data;
+              location.href = res.data.data.data;
             }
           } else {
             Toast(res.data.msg);
@@ -263,11 +271,11 @@
         })
       }
       ,
-      signRent(contract_number, title, id, type,index) {
+      signRent(contract_number, title, id, type, index) {
         this.$http.post(this.eurls + 'fdd/contract/sign_rent', {
           contract_id: contract_number,
           title: title,
-          index:index,
+          index: index,
           customer_id: id,
           type: type,//1发短信 0不发
         }).then(res => {
@@ -275,7 +283,7 @@
             if (type === 1) {
               Toast('发送成功!');
             } else {
-              location.href=res.data.data.data;
+              location.href = res.data.data.data;
             }
           } else {
             Toast(res.data.msg);
@@ -284,7 +292,7 @@
       }
       ,
       toDetail(item) {
-        if(item.contract_status!==1){
+        if (item.contract_status !== 1) {
           return
         }
         if (this.type === 1) {
@@ -313,9 +321,9 @@
         this.show = true;
       }
       ,
-      refresh(){
-        this.page=1;
-        this.totalPages=1;
+      refresh() {
+        this.page = 1;
+        this.totalPages = 1;
         this.finished = false;
         this.getData();
       },
@@ -339,12 +347,12 @@
         let per = JSON.parse(sessionStorage.personal);
         let staff_id = per.id;
         let app = this;
-        let curPage=this.page;
+        let curPage = this.page;
         this.$http.get(this.eurls + 'fdd/contract/index?staff_id=' + staff_id + '&page=' + this.page + '&limit=' + this.limit + "&type=" + this.type).then(res => {
           app.loading = false;
-          app.isRefresh=false;
+          app.isRefresh = false;
           Toast.clear();
-          this.page=curPage;
+          this.page = curPage;
           if (res.data.code === '40001') {
             app.finished = true;
             return
@@ -359,18 +367,18 @@
           this.totalPages = totalPages;
           if (this.page === totalPages) {
             app.finished = true;
-          }else{
-            app.finished=false;
+          } else {
+            app.finished = false;
           }
           if (this.page === 1) {
             app.list = res.data.data.data;
           } else {
             app.list = app.list.concat(res.data.data.data);
           }
-        }).catch(e=>{
-          this.page=curPage;
+        }).catch(e => {
+          this.page = curPage;
           app.loading = false;
-          app.isRefresh=false;
+          app.isRefresh = false;
           Toast.clear();
         })
       }
@@ -379,79 +387,92 @@
   }
 </script>
 
-<style scoped lang="scss">
-  .new {
-    height: 3em;
-    line-height: 3em;
-    background-color: #1989FA;
-    text-align: center;
-    position: fixed;
-    bottom: 0em;
-    color: white;
-    width: 100%;
-  }
+<style lang="scss">
+  /*.messageRed {*/
+    /*.van-dialog__message--has-title {*/
+      /*color: red;*/
+      /*.van-dialog__header{*/
+        /**/
+      /*}*/
+    /*}*/
+  /*}*/
 
-  .choose {
-    width: 100%;
-    height: 2.5em;
-    line-height: 2.5em;
-    text-align: center;
-  }
-
-  .line {
-    width: 100%;
-    background-color: #666666;
-    height: 1px;
-  }
-
-  .popup {
-    border-radius: 5px;
-    width: 50%;
-  }
-
-  .list {
-    position: relative;
-    margin-top: 10px;
-    width: 100%;
-    padding-top: 1em;
-    padding-bottom: 1em;
-    display: flex;
-    align-items: center;
-    background-color: white;
-
-    .infoParent {
+  #eContract {
+    .new {
+      height: 3em;
+      line-height: 3em;
+      background-color: #1989FA;
+      text-align: center;
+      position: fixed;
+      bottom: 0em;
+      color: white;
       width: 100%;
-      margin-left: 1em;
     }
 
-    .title {
-      font-size: .8em;
-      margin-top: .5em;
-      margin-bottom: .5em;
+    .choose {
+      width: 100%;
+      height: 2.5em;
+      line-height: 2.5em;
+      text-align: center;
     }
 
-    .owner {
-      margin-top: .8em;
-      font-size: .8em;
+    .line {
+      width: 100%;
+      background-color: #666666;
+      height: 1px;
     }
 
-    .btnParent {
-      position: absolute;
-      right: 1em;
-      bottom: 1em;
-      .signBtn{
-        border-radius: 5px;
+    .popup {
+      border-radius: 5px;
+      width: 50%;
+    }
+
+    .list {
+      position: relative;
+      margin-top: 10px;
+      width: 100%;
+      padding-top: 1em;
+      padding-bottom: 1em;
+      display: flex;
+      align-items: center;
+      background-color: white;
+
+      .infoParent {
+        width: 100%;
+        margin-left: 1em;
       }
-      .btn {
 
+      .title {
+        font-size: .8em;
+        margin-top: .5em;
+        margin-bottom: .5em;
       }
 
-      .sign {
-
+      .owner {
+        margin-top: .8em;
+        font-size: .8em;
       }
 
-      .send {
+      .btnParent {
+        position: absolute;
+        right: 1em;
+        bottom: 1em;
 
+        .signBtn {
+          border-radius: 5px;
+        }
+
+        .btn {
+
+        }
+
+        .sign {
+
+        }
+
+        .send {
+
+        }
       }
     }
   }
