@@ -127,7 +127,10 @@
     methods: {
       getName(item,index){
         if(this.type===1){//收
-         return item.param_map.sign_name;
+          if(item.signer===undefined){
+            return '';
+          }
+         return item.signer.name||'';
         }else{
           let customers=item.param_map.customer_info;
           let names='';
