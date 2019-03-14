@@ -32,7 +32,7 @@
             <!--<div>收起</div>-->
           </div>
           <div class="mainMain">
-            <router-link v-for="(key,index) in paths" v-if="key.hidden === 'glad'||(index===10&&showEContract)"
+            <router-link v-for="(key,index) in paths" v-if="getIsShowEContract(key,index)"
                          :to="key.path" :key="index">
               <p :style="{'background': key.back}">
                 <i :class="key.icon"></i>
@@ -242,6 +242,7 @@
     data() {
       return {
         showEContract: false,
+        showBulletin: false,
         urls: globalConfig.server,
         list: [],
         page: 1,
@@ -281,6 +282,28 @@
       this.getShowEContract();
     },
     methods: {
+      getIsShowEContract(key, index) {
+        let isShow = true;
+        switch (index) {
+          case 10:
+            isShow = this.showEContract;
+            break;
+          case 12:
+          case 13:
+          case 16:
+          case 19:
+          case 14:
+          case 15:
+          case 18:
+            isShow = this.showBulletin;
+            break;
+          default :
+            isShow=key.hidden==='glad';
+            break;
+        }
+        return isShow
+
+      },
       onLoad() {
         // 异步更新数据
         setTimeout(() => {
@@ -440,6 +463,7 @@
       getShowEContract() {
         this.$http.get(this.urls + 'bulletin/component_visible').then(resp => {
           this.showEContract = resp.data.code === '20000';
+          this.showBulletin=!this.showEContract;
         })
       }
     }
