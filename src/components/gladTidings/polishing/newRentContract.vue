@@ -2,7 +2,7 @@
   <div id="rentReport">
     <div class="main" id="main">
       <van-cell-group>
-        <div class="rent_types">
+        <div class="rent_types" >
           <div class="label">租房类型</div>
           <van-radio-group v-model="form.type">
             <van-radio name="1">新租</van-radio>
@@ -862,7 +862,7 @@
           money_way: [''],              //汇款帐户
           account_id: [],               //汇款帐户ID
           memo: '',                     //收款备注
-          from_bulletin:0,//是否从报备过来
+          from_bulletin:1,//是否从报备过来
           is_other_fee: 0,
           other_fee: '111',
           other_fee_name: '',
