@@ -285,7 +285,7 @@
       getIsShowEContract(key, index) {
         let isShow = true;
         switch (index) {
-          case 10:
+          case 11:
             isShow = this.showEContract;
             break;
           case 12:
