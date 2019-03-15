@@ -302,6 +302,7 @@
       })
     },
     activated() {
+      this.getShowEContract();
       sessionStorage.setItem('count', '2');
       if (sessionStorage.personal) {
         this.personalId = JSON.parse(sessionStorage.personal);
