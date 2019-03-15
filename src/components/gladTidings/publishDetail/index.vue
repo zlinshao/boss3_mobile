@@ -212,7 +212,7 @@
         关闭
       </div>
     </van-popup>
-    <div class="toContract"  v-if="this.process.processable_type==='bulletin_rent_basic'||this.process.processable_type==='bulletin_rent_continued'" @click="toContract()"><i class="iconfont icon-hetong"></i></div>
+    <div class="toContract"  v-if="showEContract&&(this.process.processable_type==='bulletin_rent_basic'||this.process.processable_type==='bulletin_rent_continued')" @click="toContract()"><i class="iconfont icon-hetong"></i></div>
     <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(this.process.processable_type) > -1"
                  :process="process"></SwitchCraft>
   </div>
@@ -234,6 +234,7 @@
     },
     data() {
       return {
+        showEContract:false,
         urls: globalConfig.server,
         personalId: {},
         vLoading: true,
@@ -331,6 +332,12 @@
             sessionStorage.setItem('contract_type','0');
             this.$router.push('/newRentContract');//type 0为新签 1为作废重签
           }
+        })
+      },
+      //获取是否显示电子合同按钮
+      getShowEContract() {
+        this.$http.get(this.urls + 'bulletin/component_visible').then(resp => {
+          this.showEContract = resp.data.code === '20000';
         })
       },
       // 审批人信息
