@@ -862,7 +862,7 @@
           money_way: [''],              //汇款帐户
           account_id: [],               //汇款帐户ID
           memo: '',                     //收款备注
-
+          from_bulletin:0,//是否从报备过来
           is_other_fee: 0,
           other_fee: '111',
           other_fee_name: '',
@@ -1881,6 +1881,7 @@
         this.form.begin_date = draft.begin_date;
         this.form.end_date = draft.end_date;
         this.first_date = [];
+        this.form.from_bulletin=draft.from_bulletin;
         this.first_date.push(draft.begin_date);
         this.datePrice[0] = draft.begin_date;
         this.datePay[0] = draft.begin_date;
