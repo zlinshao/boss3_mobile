@@ -288,15 +288,15 @@
           case 11:
             isShow = this.showEContract;
             break;
-          case 12:
-          case 13:
-          case 16:
-          case 19:
-          case 14:
-          case 15:
-          case 18:
-            isShow = this.showBulletin;
-            break;
+          // case 12:
+          // case 13:
+          // case 16:
+          // case 19:
+          // case 14:
+          // case 15:
+          // case 18:
+          //   isShow = this.showBulletin;
+          //   break;
           default :
             isShow=key.hidden==='glad';
             break;
