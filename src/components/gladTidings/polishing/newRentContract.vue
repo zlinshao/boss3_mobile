@@ -1134,6 +1134,10 @@
         });
       },
       getSessionInfo() {
+        let contract_sign_type=this.$route.query.contract_sign_type;
+        if(contract_sign_type!==undefined){
+          sessionStorage.setItem('contract_type',contract_sign_type|| 0);
+        }
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
         this.setContractNumber(sessionStorage.getItem('contract_number'))
