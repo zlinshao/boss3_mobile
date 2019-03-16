@@ -341,8 +341,6 @@
         }).then(res => {
           if (res.data.code === '20000') {
             this.contractSta = res.data.data.status;
-            alert(number.contract_number);
-            alert(JSON.stringify(res.data.data));
             if (!first) {
               if (res.data.data.url) {
                 dd.biz.util.openLink({
