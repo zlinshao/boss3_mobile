@@ -820,7 +820,7 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
-          from_bulletin:0,
+          from_bulletin: 0,
           staff_name: '',               //开单人name
           department_name: '',          //部门name
           /*以下是电子合同特有字段*/
@@ -1251,7 +1251,7 @@
             }
           }
           //付款方式
-          this.dictionary(443, 1,'collect').then((res) => {
+          this.dictionary(443, 1, 'collect').then((res) => {
             this.value4 = [];
             this.dictValue4 = res.data;
             for (let i = 0; i < res.data.length; i++) {
@@ -1295,7 +1295,6 @@
 
       // 图片
       getImgData(val) {
-        console.log('111' + JSON.stringify(val))
         this.picStatus = val[2];
         switch (val[0]) {
           case 'screenshot':
@@ -1327,6 +1326,8 @@
         this.form[val.dataKey] = val.dateVal;
         switch (val.dataKey) {
           case 'begin_date':
+            let num = (this.form.vacancy ? Number(this.form.vacancy) : 0) + 1;
+            this.get_first_date(this.myUtils.countDay(val.dateVal, num));
             if (this.form.type === '1') {
               this.endDate(val.dateVal, '', this.form.vacancy, 1);
             } else {
@@ -1337,20 +1338,23 @@
             this.endDate(val.dateVal, this.form.month, this.form.day, 2);
             break;
           case 'pay_first_date':
-            this.form.pay_first_date = val.dateVal;
-            this.form.period_price_arr[0] = this.form.month;
-            this.form.period_pay_arr[0] = this.form.month;
-            this.first_date = [];
-            this.datePrice = [];
-            this.datePay = [];
-            this.first_date.push(val.dateVal);
-            this.datePrice.push(val.dateVal);
-            this.datePay.push(val.dateVal);
-            this.countDate(1, this.form.period_price_arr);
-            this.countDate(2, this.form.period_pay_arr);
+            this.get_first_date(val.dateVal);
             break;
         }
         this.onCancel();
+      },
+      get_first_date(val) {
+        this.form.pay_first_date = val;
+        this.form.period_price_arr[0] = this.form.month;
+        this.form.period_pay_arr[0] = this.form.month;
+        this.first_date = [];
+        this.datePrice = [];
+        this.datePay = [];
+        this.first_date.push(val);
+        this.datePrice.push(val);
+        this.datePay.push(val);
+        this.countDate(1, this.form.period_price_arr);
+        this.countDate(2, this.form.period_pay_arr);
       },
       // select关闭
       onCancel() {
@@ -1480,6 +1484,7 @@
       endDate(time, month, day, val) {
         let params = {};
         if (val === 1) {
+          this.get_first_date(this.myUtils.countDay(time, day + 1));
           params.begin_date = time;
           params.vacancy = day;
           params.type = val;
@@ -1676,8 +1681,8 @@
         this.form.agency_price = draft.agency_price;
         this.form.agency_user_name = draft.agency_user_name;
         this.form.agency_phone = draft.agency_phone;
-        this.form.property_address=draft.property_address;
-        this.form.village_name=draft.village_name;
+        this.form.property_address = draft.property_address;
+        this.form.village_name = draft.village_name;
 
         for (let i = 0; i < draft.price_arr.length; i++) {
           this.amountPrice = i + 1;

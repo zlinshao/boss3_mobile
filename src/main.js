@@ -5,6 +5,7 @@ import router from './router/index.js'
 import axios from 'axios'
 import VueRouter from 'vue-router'
 import Fun from './fun.config.js'
+import myUtils from './utils/myUtils'
 import Vuex from 'vuex'
 import store from './store/index.js'
 import '@/assets/js/api.js'
@@ -21,6 +22,7 @@ Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(Boss);
 Vue.use(Fun);
+Vue.prototype.myUtils = myUtils;
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
 axios.defaults.withCredentials = true;
