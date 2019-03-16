@@ -923,7 +923,6 @@
         this.form.city = house_res_com.city.city_name;//市
         this.form.district = house_res_com.area.area_name;
         //this.form.property_address = house_res_com.address;//街道
-        //this.form.village_name = this.form.house.name;//物业地址
         let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
         this.form.room = house_types[0];//室
         this.form.hall = house_types[1];//厅
@@ -941,6 +940,8 @@
               this.form.property_number = draft.property_number;
             }
           })
+        } else {
+          this.form.village_name = item.house_name;//物业地址
         }
         /*获取电子合同相关字段*/
       }
