@@ -36,6 +36,7 @@
           v-model="form.property_address"
           label="产权地址"
           type="text"
+          required
           placeholder="请填写产权地址"
           icon=""
           @click-icon="form.property_address = ''"
@@ -47,6 +48,7 @@
           type="text"
           placeholder="请填写物业地址"
           icon=""
+          required
           @click-icon="form.village_name = ''"
         >
         </van-field>
