@@ -766,7 +766,10 @@
           showProxyInfo: false,//显示代理信息
           trueNames: [],
         },
-
+        pay_way_arr: [''],
+        pay_way_arr_name: [''],
+        vacancy_way_id: '',
+        vacancy_way: '',
         form: {
           type: '1',
           draft: 0,
@@ -1256,8 +1259,10 @@
             for (let i = 0; i < res.data.length; i++) {
               this.value4.push(res.data[i].dictionary_name);
             }
-            this.form.pay_way_arr[0] = res.data[0].id;
-            this.payTypeNum[0] = res.data[0].dictionary_name;
+            this.pay_way_arr[0] = res.data[0].id;
+            this.form.pay_way_arr = this.pay_way_arr;
+            this.pay_way_arr_name[0] = res.data[0].dictionary_name;
+            this.payTypeNum = this.pay_way_arr_name;
             //安置方式
             this.dictionary(437, 1).then((res) => {
               this.value7 = [];
@@ -1265,8 +1270,10 @@
               for (let i = 0; i < res.data.length; i++) {
                 this.value7.push(res.data[i].dictionary_name);
               }
-              this.form.vacancy_way = res.data[0].id;
-              this.vacancy_way_name = res.data[0].dictionary_name;
+              this.vacancy_way_id = res.data[0].id;
+              this.form.vacancy_way = this.vacancy_way_id;
+              this.vacancy_way = res.data[0].dictionary_name;
+              this.vacancy_way_name = this.vacancy_way;
               success();
             }).catch(e => {
               error();
@@ -1809,6 +1816,10 @@
         this.clearObj(this.form);
         this.clearObj(this.showForm);
         this.form.purchase_way = 509;
+        this.form.pay_way_arr = this.pay_way_arr;
+        this.payTypeNum = this.pay_way_arr_name;
+        this.form.vacancy_way = this.vacancy_way_id;
+        this.vacancy_way_name = this.vacancy_way;
         this.form.warranty_day = '';
         this.picStatus = 'success';
         this.cusFrom = '';
