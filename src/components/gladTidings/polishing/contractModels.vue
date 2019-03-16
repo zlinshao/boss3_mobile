@@ -59,7 +59,6 @@
         });
       },
       showPdf(item) {
-        let per = JSON.parse(sessionStorage.personal);
         dd.biz.util.openLink({
           url: item.file_url,//要打开链接的地址
           onSuccess: function (result) {
