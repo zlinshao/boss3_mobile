@@ -54,7 +54,6 @@
         this.$http.get(this.eurls + 'fdd/pdf' + '?page=1' + '&limit=100' + "&pdf_scene=" + this.type).then(res => {
           this.loading = false;
           this.list = res.data.data.data;
-          console.log(this.list)
         }).catch(e => {
           this.loading = false;
         });
@@ -62,9 +61,8 @@
       showPdf(item) {
         let per = JSON.parse(sessionStorage.personal);
         dd.biz.util.openLink({
-          url: this.eurls + item.file_url + "?cookie=" + per.session_id,//要打开链接的地址
+          url: item.file_url,//要打开链接的地址
           onSuccess: function (result) {
-            /**/
           },
           onFail: function (err) {
           }
