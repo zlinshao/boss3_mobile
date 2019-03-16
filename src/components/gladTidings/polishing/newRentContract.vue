@@ -1198,10 +1198,14 @@
               let draft = res.data.data.param_map;
               this.changeContractDetail(draft);
             } else {
+              this.close_();
+              this.userInfo();
               this.receiptNum();
               this.form.id = '';
             }
           }).catch(e => {
+            this.close_();
+            this.userInfo();
             Toast.clear();
           })
         } else {
@@ -1212,8 +1216,13 @@
             Toast.clear();
             if (res.data.code === '40000') {
               this.changeContractDetail(res.data.data)
+            } else {
+              this.close_();
+              this.userInfo();
             }
           }).catch(e => {
+            this.close_();
+            this.userInfo();
             Toast.clear();
           })
         }

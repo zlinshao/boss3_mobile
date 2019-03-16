@@ -906,7 +906,6 @@
           message: '加载中...'
         });
         this.dicts(success => {
-          this.close_();
           this.getContractDetail();
         }, error => {
           Toast('加载数据失败！')
@@ -1123,15 +1122,15 @@
       changeNoPropertyFee() {
         this.showForm.noOwnerFeeTxt = '';
         let list = [];
-        this.curWuyePayers.id = '451';
-        this.curWuyePayers.name = '房东承担';
+        // this.curWuyePayers.id = '451';
+        // this.curWuyePayers.name = '房东承担';
         for (let i = 0; i < this.showForm.choosedNoOwnerFees.length; i++) {
           let name = this.showForm.choosedNoOwnerFees[i].name;
           this.showForm.noOwnerFeeTxt = this.showForm.noOwnerFeeTxt + (i + 1) + '、' + name;
           list.push(this.showForm.choosedNoOwnerFees[i].id);
           if (this.showForm.choosedNoOwnerFees[i].id === '4') {
-            this.curWuyePayers.id = '453';
-            this.curWuyePayers.name = '公司承担';
+            // this.curWuyePayers.id = '453';
+            // this.curWuyePayers.name = '公司承担';
           }
         }
         this.form.not_owner_fee = list;
@@ -1639,8 +1638,13 @@
               this.isClear = false;
               let draft = res.data.data.param_map;
               this.changeContractData(draft);
+            } else {
+              this.close_();
+              this.userInfo();
             }
           }).catch(e => {
+            this.close_();
+            this.userInfo();
             Toast.clear();
           })
         } else {
@@ -1650,8 +1654,13 @@
             Toast.clear();
             if (res.data.code === '40000') {
               this.changeContractData(res.data.data)
+            } else {
+              this.close_();
+              this.userInfo();
             }
           }).catch(e => {
+            this.close_();
+            this.userInfo();
             Toast.clear();
           })
         }
@@ -1732,6 +1741,7 @@
         for (let j = 0; j < this.dictValue6.length; j++) {
           if (this.dictValue6[j].id === draft.property_payer) {
             this.property_name = this.dictValue6[j].dictionary_name;
+            this.curWuyePayers.name = this.dictValue6[j].dictionary_name;
           }
         }
         //this.is_corp = draft.is_corp;
