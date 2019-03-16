@@ -341,17 +341,21 @@
         }).then(res => {
           if (res.data.code === '20000') {
             this.contractSta = res.data.data.status;
-            if (!first && res.data.data.url) {
-              dd.biz.util.openLink({
-                url: res.data.data.url,//要打开链接的地址
-                onSuccess: function (result) {
-                  /**/
-                },
-                onFail: function (err) {
-                }
-              })
-            } else {
-              Toast('电子合同读取失败');
+            alert(number.contract_number);
+            alert(JSON.stringify(res.data.data));
+            if (!first) {
+              if (res.data.data.url) {
+                dd.biz.util.openLink({
+                  url: res.data.data.url,//要打开链接的地址
+                  onSuccess: function (result) {
+                    /**/
+                  },
+                  onFail: function (err) {
+                  }
+                })
+              } else {
+                Toast('电子合同读取失败');
+              }
             }
           } else {
             Toast(res.data.msg);
