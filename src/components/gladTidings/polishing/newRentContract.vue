@@ -1041,6 +1041,7 @@
         sessionStorage.setItem('contract_house_item', null);
         if (item === 'test') return;
         item = JSON.parse(item);
+        alert(item.village_address)
         let house_res = item.house_res;
         let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};

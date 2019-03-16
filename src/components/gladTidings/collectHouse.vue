@@ -174,9 +174,9 @@
         key.type = this.types;
         let houseData = {};
         console.log(key);
-        if(this.types!=='is_nrcy'&&this.types!=='report') {
+        if (this.types !== 'is_nrcy' && this.types !== 'report') {
           sessionStorage.setItem('contract_house_item', JSON.stringify(key));//电子合同使用
-        }else{
+        } else {
           sessionStorage.setItem('contract_house_item', 'test');//电子合同使用
         }
         for (let item of Object.keys(key)) {
@@ -276,8 +276,8 @@
                     list.is_agency = 0;
                   }
                   //console.log(data[i])
-                 list.house_type=data[i].room+"室"+data[i].hall+"厅"+data[i].toilet;
-                  list.house_res=data[i].house_res;
+                  list.house_type = data[i].room + "室" + data[i].hall + "厅" + data[i].toilet;
+                  list.house_res = data[i].house_res;
                   this.houseList.push(list);
                   this.finish(4);
                 }
@@ -353,6 +353,7 @@
         }
         list.contractVal = value;
         list.id = value.id;
+        list.village_address = value.village_address || '';
         list.agency_info = value.agency_info;
         list.is_agency = value.is_agency;
         if (value.sign_month !== null && value.sign_month !== undefined) {
