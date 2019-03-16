@@ -39,13 +39,13 @@
           </div>
           <div class="btnParent">
             <van-button v-if="item.contract_status===0" class="btn sign signBtn" size="small"
-                        @@click.stop="sign(item)">签署
+                        @click.stop="sign(item)">签署
             </van-button>
             <van-button v-if="item.contract_status===0" class="btn send signBtn" size="small"
-                        @@click.stop="send(item)">发送
+                        @click.stop="send(item)">发送
             </van-button>
             <van-button v-if="item.contract_status===1" class="btn sign signBtn" size="small"
-                        @@click.stop="toDetail(item)">修改
+                        @click.stop="toDetail(item)">修改
             </van-button>
             <van-button v-if="item.contract_status===2" class="btn send signBtn" size="small"
                         @click.stop="sendAgain(item)">发送合同
@@ -246,7 +246,6 @@
         this.signTypeColumns = [];
         this.curItem = item;
         let users = item.electron_contract_customers;
-
         if (this.type === 1) {//收房
           for (let i = 0; i < users.length; i++) {
             if (users[i].is_signed === '0') {
@@ -261,7 +260,6 @@
           this.selectHide = true;
           this.columns = list;
         } else {
-          console.log(users)
           for (let i = 0; i < users.length; i++) {
             this.signTypeColumns.push(users[i]);
             if (users[i].customer.name !== null) {

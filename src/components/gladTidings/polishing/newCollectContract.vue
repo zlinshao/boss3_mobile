@@ -1493,7 +1493,7 @@
             this.computedDate(params).then((date) => {
               this.form.end_date_vacant = date;
               this.endDate(date, this.form.month, this.form.day, 2);
-              this.form.pay_first_date = this.myUtils.countDay(date, 1);
+              this.get_first_date(this.myUtils.countDay(date, 1));
             })
           } else {
             this.form.end_date_vacant = '';
