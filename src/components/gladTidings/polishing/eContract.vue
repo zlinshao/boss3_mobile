@@ -145,10 +145,19 @@
       },
       //已签署的合同再次发送
       sendAgain(item){
-        this.$http.get(this.eurls+'fdd/contract/send/'+item.id+'?fdd_user_id='+item.fdd_use_id).then(res=>{
+        if(this.type===1){
+          this.sign(item.id,item.param_map.signer.fadada_user_id)
+        }else{
+          for(let i=0;i<item.param_map.customer_info.length;i++){
+            this.sign(item.id,item.param_map.customer_info[i].fadada_user_id)
+          }
+        }
+      },
+      sign(contractId,fadada_user_id){
+        this.$http.get(this.eurls+'fdd/contract/send/'+contractId+'?fdd_user_id='+fadada_user_id).then(res=>{
           Toast(res.data.msg);
         }).catch(e=>{
-
+          Toast('发送失败');
         });
       },
       getName(item, index) {

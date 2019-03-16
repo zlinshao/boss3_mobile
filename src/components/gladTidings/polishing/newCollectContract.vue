@@ -820,6 +820,7 @@
           remark: '',                   //备注
           staff_id: '',                 //开单人id
           department_id: '',            //部门id
+          from_bulletin:0,
           staff_name: '',               //开单人name
           department_name: '',          //部门name
           /*以下是电子合同特有字段*/
@@ -1675,7 +1676,8 @@
         this.form.agency_price = draft.agency_price;
         this.form.agency_user_name = draft.agency_user_name;
         this.form.agency_phone = draft.agency_phone;
-
+        this.form.property_address=draft.property_address;
+        this.form.village_name=draft.village_name;
 
         for (let i = 0; i < draft.price_arr.length; i++) {
           this.amountPrice = i + 1;

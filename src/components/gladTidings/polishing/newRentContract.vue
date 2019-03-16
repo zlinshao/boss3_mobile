@@ -323,7 +323,7 @@
       <div class="changes" v-for="(key,index) in amountPay">
         <div class="paddingTitle">
           <span>付<span v-if="amountPay > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountPay > 1 && enable()" @click="deleteAmount(index,2)" >删除</span>
+          <span class="colors" v-if="amountPay > 1 && enable()" @click="deleteAmount(index,2)">删除</span>
         </div>
         <van-cell-group>
           <van-field
@@ -388,7 +388,7 @@
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
           <span>已收金额支付方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountMoney > 1&&enable()" @click="deleteAmount(index,3)" >删除</span>
+          <span class="colors" v-if="amountMoney > 1&&enable()" @click="deleteAmount(index,3)">删除</span>
         </div>
         <van-cell-group>
           <van-field
@@ -756,12 +756,11 @@
   import {ContractType} from './eContract'
 
 
-
   export default {
     name: "index",
     components: {UpLoad, Toast, ChooseTime, PdfDialog},
-    computed:{
-      firstMonthPrice(){
+    computed: {
+      firstMonthPrice() {
         return this.form.price_arr[0];
       }
     },
@@ -893,7 +892,7 @@
           money_way: [''],              //汇款帐户
           account_id: [],               //汇款帐户ID
           memo: '',                     //收款备注
-          from_bulletin:0,//是否从报备过来
+          from_bulletin: 0,//是否从报备过来
           is_other_fee: 0,
           other_fee: '111',
           other_fee_name: '',
@@ -973,9 +972,9 @@
       }
     },
     watch: {
-      firstMonthPrice(n,o){
-        n=n||0;
-        this.form.penalty=n*2;
+      firstMonthPrice(n, o) {
+        n = n || 0;
+        this.form.penalty = n * 2;
       },
       receivedPrice() {
         this.form.money_sum = '';
@@ -1030,7 +1029,7 @@
         console.log('读取合同编号');
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.dicts(success => {
@@ -1062,14 +1061,14 @@
       }
     },
     methods: {
-      enable(){
-        return  this.form.from_bulletin===0;
+      enable() {
+        return this.form.from_bulletin === 0;
       },
-      onChangeInfo(item){
-        item.fadada_user_id='';
+      onChangeInfo(item) {
+        item.fadada_user_id = '';
       },
-      getTrueNameInfo(item){
-        return item.fadada_user_id===''?'':'已认证'
+      getTrueNameInfo(item) {
+        return item.fadada_user_id === '' ? '' : '已认证'
       },
       payWayClick(val) {
         if (val === 1) {
@@ -1115,21 +1114,21 @@
         let json = {content: this.form, type: '2'};
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
-          if(res.data.code==='40000'){
+          if (res.data.code === '40000') {
             contractApi.trueName(item, success => {
               location.href = success
-            },error=>{
+            }, error => {
               Toast(error)
             });
-          }else{
+          } else {
             Toast.clear();
             Toast(res.data.msg);
           }
-        }).catch(e=>{
+        }).catch(e => {
           Toast.clear();
         });
       },
@@ -1169,9 +1168,9 @@
         });
       },
       getSessionInfo() {
-        let contract_sign_type=this.$route.query.contract_sign_type;
-        if(contract_sign_type!==undefined){
-          sessionStorage.setItem('contract_type',contract_sign_type|| 0);
+        let contract_sign_type = this.$route.query.contract_sign_type;
+        if (contract_sign_type !== undefined) {
+          sessionStorage.setItem('contract_type', contract_sign_type || 0);
         }
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
@@ -1229,7 +1228,7 @@
         }
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.getCity(resp => {
@@ -1607,8 +1606,8 @@
         params.month = month;
         params.day = day;
 
-        if(params.day===undefined||params.day===''){
-          params.day=0;
+        if (params.day === undefined || params.day === '') {
+          params.day = 0;
         }
         params.type = val;
         if (time && (month || day)) {
@@ -1661,7 +1660,7 @@
           this.form.phone = this.form.customer_info[0].phone;
           Toast.loading({
             mask: true,
-            duration:0,
+            duration: 0,
             message: '加载中...'
           });
           if (val === 1) {//草稿
@@ -1696,16 +1695,16 @@
       },
       post() {
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
-        if(!this.other_fee_status){
-          this.form.other_fee_name='暂无';
-          this.form.other_fee='暂无'
+        if (!this.other_fee_status) {
+          this.form.other_fee_name = '暂无';
+          this.form.other_fee = '暂无'
         }
-        if(this.form.money_sep.length===0){
-          this.form.money_sep=[''];
-          this.form.money_way=['']
+        if (this.form.money_sep.length === 0) {
+          this.form.money_sep = [''];
+          this.form.money_way = ['']
         }
-        if(this.form.day===null||this.form.day===undefined||this.form.day===''){
-          this.form.day='0';
+        if (this.form.day === null || this.form.day === undefined || this.form.day === '') {
+          this.form.day = '0';
         }
         this.$http.post(this.eurls + url, this.form).then((res) => {
 
@@ -1722,14 +1721,14 @@
             if (res.data.data.is_bulletin) {
               this.routerDetail(res.data.data.data.id)
             } else {
-              sessionStorage.setItem('isRefreshList','true');
+              sessionStorage.setItem('isRefreshList', 'true');
               this.$router.go(-1);
             }
-          }else{
+          } else {
             return
           }
           //清除草稿
-          if(  this.form.regenerate === 0 || this.form.regenerate === '0') {
+          if (this.form.regenerate === 0 || this.form.regenerate === '0') {
             let json = {
               content: {
                 staff_id: this.form.staff_id,
@@ -1836,7 +1835,7 @@
             this.form.deposit_payed = rent.deposit_payed ? rent.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
-            } else  {
+            } else {
               this.receivedPrice = 'front_money';
             }
             this.$nextTick(function () {
@@ -1908,7 +1907,7 @@
         this.form.house_id = draft.house_id;
         this.form.address = draft.address;
         this.form.corp_name = draft.corp_name;
-        this.form.type=draft.type;
+        this.form.type = draft.type;
         this.form.month = draft.month;
         this.form.day = draft.day === '0' ? '' : draft.day;
         this.form.contract_number = this.setContractNumber(draft.contract_number);
@@ -1916,7 +1915,7 @@
         this.form.begin_date = draft.begin_date;
         this.form.end_date = draft.end_date;
         this.first_date = [];
-        this.form.from_bulletin=draft.from_bulletin||0;
+        this.form.from_bulletin = draft.from_bulletin || 0;
         this.first_date.push(draft.begin_date);
         this.datePrice[0] = draft.begin_date;
         this.datePay[0] = draft.begin_date;
@@ -1946,7 +1945,7 @@
         this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
         if (this.form.deposit_payed) {
           this.receivedPrice = 'deposit_payed';
-        } else  {
+        } else {
           this.receivedPrice = 'front_money';
         }
         this.$nextTick(function () {
@@ -1959,8 +1958,8 @@
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
 
-        if(this.amountMoney===null||this.amountMoney===undefined||this.amountMoney===0||this.amountMoney==='0'){
-          this.amountMoney=1;
+        if (this.amountMoney === null || this.amountMoney === undefined || this.amountMoney === 0 || this.amountMoney === '0') {
+          this.amountMoney = 1;
         }
 
         for (let i = 0; i < draft.money_way.length; i++) {
@@ -1976,12 +1975,12 @@
         console.log(this.form.money_sep.length)
         console.log(this.form.real_pay_at.length)
 
-        let count=this.amountMoney;
-        if(!(this.form.account_id.length===count&&this.form.money_way.length===count&&this.form.money_sep.length===count&&this.form.real_pay_at.length===count)){
-          this.form.account_id.splice(0,this.form.account_id.length);
-          this.form.money_way.splice(0,this.form.money_way.length);
-          this.form.money_sep.splice(0,this.form.money_sep.length);
-          this.form.real_pay_at.splice(0,this.form.real_pay_at.length)
+        let count = this.amountMoney;
+        if (!(this.form.account_id.length === count && this.form.money_way.length === count && this.form.money_sep.length === count && this.form.real_pay_at.length === count)) {
+          this.form.account_id.splice(0, this.form.account_id.length);
+          this.form.money_way.splice(0, this.form.money_way.length);
+          this.form.money_sep.splice(0, this.form.money_sep.length);
+          this.form.real_pay_at.splice(0, this.form.real_pay_at.length)
         }
 
         this.form.discount = draft.discount;
@@ -2111,7 +2110,7 @@
         this.form.discount = 0;
         this.form.sign_date = '';
         this.form.end_date = '';
-        this.form.from_bulletin=0;
+        this.form.from_bulletin = 0;
         this.form.begin_date = '';
         this.datePrice = [];
         this.datePay = [];
