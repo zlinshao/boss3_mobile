@@ -25,23 +25,21 @@
 
   export default {
     name: "contractModels",
-    components:{
+    components: {
       PdfDialog
-    },
-    activated(){
-      this.routerIndex('eContract');
-      this.ddRent('eContract');
     },
     data() {
       return {
         list: [],
-        finished:true,
-        loading:false,
+        finished: true,
+        loading: false,
         eurls: globalConfig.e_server,
-        type:1
+        type: 1
       }
     },
-    activated(){
+    activated() {
+      this.routerIndex('/eContract');
+      this.ddRent('/eContract');
       this.getData();
     },
     methods: {
@@ -52,17 +50,18 @@
       },
 
       getData() {
-        this.loading=true;
+        this.loading = true;
         this.$http.get(this.eurls + 'fdd/pdf' + '?page=1' + '&limit=100' + "&pdf_scene=" + this.type).then(res => {
-          this.loading=false;
-          this.list=res.data.data.data;
+          this.loading = false;
+          this.list = res.data.data.data;
           console.log(this.list)
-        }).catch(e=>{
-          this.loading=false;
+        }).catch(e => {
+          this.loading = false;
         });
       },
-      showPdf(item){
-        this.$refs.pdf.show(item.file_url, 1);
+      showPdf(item) {
+        let per = JSON.parse(sessionStorage.personal);
+        this.$refs.pdf.show(this.eurls + item.file_url + "?cookie=" + per.session_id, 1);
       }
     }
   }
