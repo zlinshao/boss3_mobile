@@ -888,6 +888,7 @@
       }
     },
     activated() {
+      this.close_();
       //如果房屋信息为空 则请求读草稿
       this.routerIndex('eContract');
       this.ddRent('eContract');
