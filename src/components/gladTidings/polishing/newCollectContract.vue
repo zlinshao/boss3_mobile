@@ -32,7 +32,26 @@
           placeholder="请选择房屋地址"
           required>
         </van-field>
-
+        <van-field
+          v-model="form.property_address"
+          label="产权地址"
+          type="text"
+          required
+          placeholder="请填写产权地址"
+          icon=""
+          @click-icon="form.property_address = ''"
+        >
+        </van-field>
+        <van-field
+          v-model="form.village_name"
+          label="物业地址"
+          type="text"
+          placeholder="请填写物业地址"
+          icon=""
+          required
+          @click-icon="form.village_name = ''"
+        >
+        </van-field>
         <van-field
           v-model="showForm.houseCertificateTypeTxt"
           label="持有证件"
@@ -863,8 +882,8 @@
           this.form.agency_phone = '';
         }
       },
-      firstMonthPrice(n){
-        this.form.deposit=n;
+      firstMonthPrice(n) {
+        this.form.deposit = n;
       }
     },
     activated() {
@@ -901,8 +920,8 @@
         this.form.province = house_res_com.province.province_name;//省
         this.form.city = house_res_com.city.city_name;//市
         this.form.district = house_res_com.area.area_name;
-        this.form.property_address = house_res_com.address;//街道
-        this.form.village_name = this.form.house.name;//物业地址
+        //this.form.property_address = house_res_com.address;//街道
+        //this.form.village_name = this.form.house.name;//物业地址
         let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
         this.form.room = house_types[0];//室
         this.form.hall = house_types[1];//厅
@@ -915,6 +934,7 @@
               this.form.house_certificate = draft.house_certificate;
               this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
               this.form.property_address = draft.property_address;
+              this.form.village_name = draft.village_name;
               this.form.QiuQuan_number = draft.QiuQuan_number;
               this.form.property_number = draft.property_number;
             }
@@ -949,7 +969,7 @@
       house() {
         return this.form.house;
       },
-      firstMonthPrice(){
+      firstMonthPrice() {
         return this.form.price_arr[0];
       }
     },
@@ -1049,7 +1069,7 @@
         if (this.form.type === '2') {
           this.form.end_date_vacant = this.form.begin_date;
         }
-        this.form.property_payer=this.curWuyePayers.id;
+        this.form.property_payer = this.curWuyePayers.id;
         contractApi.createContract(this.$refs.pdf, this.form, success => {
         }, error => {
           Toast(error)
@@ -1274,7 +1294,7 @@
 
       // 图片
       getImgData(val) {
-        console.log('111'+JSON.stringify(val))
+        console.log('111' + JSON.stringify(val))
         this.picStatus = val[2];
         switch (val[0]) {
           case 'screenshot':
@@ -1537,15 +1557,15 @@
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
         if (this.form.type === '2') {
           this.form.end_date_vacant = this.form.begin_date;
-          if(this.form.contract_id===''){
+          if (this.form.contract_id === '') {
             Toast('请重新选择房屋地址');
             return
           }
         }
-        if(this.form.is_agency===''){
-          this.form.is_agency='0'
+        if (this.form.is_agency === '') {
+          this.form.is_agency = '0'
         }
-        this.form.property_payer=this.curWuyePayers.id;
+        this.form.property_payer = this.curWuyePayers.id;
         this.$http.post(this.eurls + url, this.form).then((res) => {
           Toast.clear();
           //清除草稿
@@ -1565,7 +1585,7 @@
           } else {
             return
           }
-          if(  this.form.regenerate === 0 || this.form.regenerate === '0') {
+          if (this.form.regenerate === 0 || this.form.regenerate === '0') {
             let json = {
               content: {
                 staff_id: this.form.staff_id
@@ -1631,8 +1651,6 @@
         this.form.province = draft.province;//省
         this.form.city = draft.city;//市
         this.form.district = draft.district;
-        this.form.property_address = draft.property_address;//街道
-        this.form.village_name = this.form.house.name;//物业地址
         this.form.room = draft.room;//室
         this.form.hall = draft.hall;//厅
         this.form.toilet = draft.toilet;//卫
@@ -1731,7 +1749,6 @@
         });
         this.form.house_certificate = draft.house_certificate;
         this.showForm.houseCertificateTypeTxt = this.getNameForIndex(this.houseCertificateTypes, this.form.house_certificate);
-        this.form.property_address = draft.property_address;
         this.form.QiuQuan_number = draft.QiuQuan_number;
         this.form.property_number = draft.property_number;
         this.form.owner = draft.owner;
@@ -1744,10 +1761,10 @@
         } else {//房东
           this.showForm.showProxyInfo = false;
           this.showForm.signPeople = draft.signer.name;
-          for(let i=0;i<this.form.owner.length;i++){
-            let people=this.form.owner[i];
-            if(people.name===this.form.signer.name&&people.idcard===this.form.signer.idcard&&people.phone===this.form.signer.phone){
-              this.form.signer=this.form.owner[i];
+          for (let i = 0; i < this.form.owner.length; i++) {
+            let people = this.form.owner[i];
+            if (people.name === this.form.signer.name && people.idcard === this.form.signer.idcard && people.phone === this.form.signer.phone) {
+              this.form.signer = this.form.owner[i];
             }
           }
         }
@@ -1769,7 +1786,7 @@
         this.form.allowed_add_to = draft.allowed_add_to;
         this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
-        this.form.contract_id=draft.contract_id;
+        this.form.contract_id = draft.contract_id;
         this.changeContracts();
 
       },
