@@ -144,8 +144,12 @@
         this.$router.push('/contractModels');
       },
       //已签署的合同再次发送
-      sendAgain(){
-        Toast('发送成功！');
+      sendAgain(item){
+        this.$http.get(this.eurls+'fdd/contract/send/'+item.id+'?fdd_user_id='+item.fdd_use_id).then(res=>{
+          Toast(res.data.msg);
+        }).catch(e=>{
+
+        });
       },
       getName(item, index) {
         if (this.type === 1) {//收

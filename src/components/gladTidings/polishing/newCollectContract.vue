@@ -1250,7 +1250,7 @@
             }
           }
           //付款方式
-          this.dictionary(443, 1).then((res) => {
+          this.dictionary(443, 1,'collect').then((res) => {
             this.value4 = [];
             this.dictValue4 = res.data;
             for (let i = 0; i < res.data.length; i++) {
