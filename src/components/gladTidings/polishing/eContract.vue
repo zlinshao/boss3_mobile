@@ -56,8 +56,8 @@
       </van-list>
     </van-pull-refresh>
     <div class="bottomButton">
-    <div  class="new" @click="showChooseDialog()">新增合同</div>
-    <div  class="lookModel" @click="lookContractModels()">查看模板</div>
+      <div class="new" @click="showChooseDialog()">新增合同</div>
+      <div class="lookModel" @click="lookContractModels()">查看模板</div>
     </div>
     <van-popup v-model="show" class="popup">
       <div>
@@ -140,23 +140,23 @@
 
     },
     methods: {
-      lookContractModels(){
+      lookContractModels() {
         this.$router.push('/contractModels');
       },
       //已签署的合同再次发送
-      sendAgain(item){
-        if(this.type===1){
-          this.sign(item.id,item.param_map.signer.fadada_user_id)
-        }else{
-          for(let i=0;i<item.param_map.customer_info.length;i++){
-            this.sign(item.id,item.param_map.customer_info[i].fadada_user_id)
+      sendAgain(item) {
+        if (this.type === 1) {
+          this.sign(item.id, item.param_map.signer.fadada_user_id)
+        } else {
+          for (let i = 0; i < item.param_map.customer_info.length; i++) {
+            this.sign(item.id, item.param_map.customer_info[i].fadada_user_id)
           }
         }
       },
-      sign(contractId,fadada_user_id){
-        this.$http.get(this.eurls+'fdd/contract/send/'+contractId+'?fdd_user_id='+fadada_user_id).then(res=>{
+      sign(contractId, fadada_user_id) {
+        this.$http.get(this.eurls + 'fdd/contract/send/' + contractId + '?fdd_user_id=' + fadada_user_id).then(res => {
           Toast(res.data.msg);
-        }).catch(e=>{
+        }).catch(e => {
           Toast('发送失败');
         });
       },
@@ -416,12 +416,12 @@
 
 <style lang="scss">
   /*.messageRed {*/
-    /*.van-dialog__message--has-title {*/
-      /*color: red;*/
-      /*.van-dialog__header{*/
-        /**/
-      /*}*/
-    /*}*/
+  /*.van-dialog__message--has-title {*/
+  /*color: red;*/
+  /*.van-dialog__header{*/
+  /**/
+  /*}*/
+  /*}*/
   /*}*/
 
   #eContract {
