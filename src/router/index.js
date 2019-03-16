@@ -181,15 +181,6 @@ export default new Router({
       component: Comment
     },
     {
-      path: '/eContract',
-      hidden: '',
-      back: '#F19851',
-      icon: 'iconfont icon-hetong',
-      name: '电子合同',
-      meta: {title: '电子合同'},
-      component: EContract
-    },
-    {
       path: '/quality',               //房屋质量报备
       name: '房屋质量报备',
       hidden: 'glad',
@@ -197,6 +188,15 @@ export default new Router({
       icon: 'iconfont icon-fangwuzhiliangbaobei',
       meta: {title: '房屋质量报备'},
       component: Quality
+    },
+    {
+      path: '/eContract',
+      hidden: '',
+      back: '#F19851',
+      icon: 'iconfont icon-hetong',
+      name: '电子合同',
+      meta: {title: '电子合同'},
+      component: EContract
     },
     {
       path: '/collectReport',               //收房报备
