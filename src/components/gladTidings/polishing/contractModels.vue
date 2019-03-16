@@ -28,6 +28,10 @@
     components:{
       PdfDialog
     },
+    activated(){
+      this.routerIndex('eContract');
+      this.ddRent('eContract');
+    },
     data() {
       return {
         list: [],

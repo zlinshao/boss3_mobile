@@ -78,6 +78,7 @@
 </template>
 
 <script>
+
   export class ContractInfo {
     constructor(type, number) {
       this.type = type;
@@ -144,7 +145,7 @@
       },
       //已签署的合同再次发送
       sendAgain(){
-
+        Toast('发送成功！');
       },
       getName(item, index) {
         if (this.type === 1) {//收
