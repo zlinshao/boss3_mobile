@@ -1257,6 +1257,8 @@
             for (let i = 0; i < res.data.length; i++) {
               this.value4.push(res.data[i].dictionary_name);
             }
+            this.form.pay_way_arr[0] = res.data[0].id;
+            this.payTypeNum[0] = res.data[0].dictionary_name;
             //安置方式
             this.dictionary(437, 1).then((res) => {
               this.value7 = [];
@@ -1264,6 +1266,8 @@
               for (let i = 0; i < res.data.length; i++) {
                 this.value7.push(res.data[i].dictionary_name);
               }
+              this.form.vacancy_way = res.data[0].id;
+              this.vacancy_way_name = res.data[0].dictionary_name;
               success();
             }).catch(e => {
               error();
@@ -1668,6 +1672,7 @@
         this.form.begin_date = draft.begin_date;
         this.form.end_date = draft.end_date;
         this.form.vacancy = draft.vacancy;
+        this.get_first_date(this.myUtils.countDay(draft.begin_date, draft.vacancy));
         this.form.end_date_vacant = draft.end_date_vacant;
         this.form.pay_first_date = draft.pay_first_date;
         this.first_date = [];
