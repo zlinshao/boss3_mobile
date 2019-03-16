@@ -289,7 +289,15 @@
       <div @click="priceAmount(1)" class="addInput">
         +月单价变化
       </div>
-
+      <van-field
+        v-model="form.penalty"
+        type="text"
+        class="number"
+        label="违约金"
+        disabled
+        placeholder="收租价格差大于500元的"
+        required>
+      </van-field>
       <van-cell-group>
         <van-field
           v-model="form.pay_way_bet"
@@ -477,14 +485,7 @@
         </van-field>
         <div class="addInput" @click="previewReceipt(form, receivedPrice)">预览电子收据</div>
         <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
-        <van-field
-          v-model="form.penalty"
-          type="text"
-          class="number"
-          label="违约金"
-          placeholder="收租价格差大于500元的"
-          required>
-        </van-field>
+
         <van-field
           v-if="other_fee_status"
           v-model="form.other_fee_name"
@@ -575,6 +576,7 @@
           required>
         </van-field>
         <van-field
+          v-if="false"
           v-model="remarksTxt"
           label="备注条款"
           readonly
@@ -733,6 +735,9 @@
     computed:{
       old(){
         return this.form.oldHouseName;
+      },
+      firstMonthPrice(){
+        return this.form.price_arr[0];
       }
     },
 
@@ -755,7 +760,7 @@
           new CommonIdNameEntity('7', '租期内，乙方所产生的民事法律责任，乙方独自承担, 保修期外的家具家电人为损坏，乙方照价赔偿'),
           new CommonIdNameEntity('8', '保修期外的家具家电人为损坏，乙方照价赔偿'),
           new CommonIdNameEntity('9', '乙方居住10日内尽快办理居住证')],
-        choosedRemarks: [],//已选择的备注条款
+        choosedRemarks: [1,2,3,4,5,6,7,8,9],//已选择的备注条款
         remarksTxt: '',//备注条款展示文字
         showOtherUse: false,//显示其他用途输入框
         showWholeFee: false,//整租时，显示水费等费用
@@ -942,8 +947,9 @@
       }
     },
     watch: {
-      old(n,o){
-        console.log('n:'+n+'p:'+o)
+      firstMonthPrice(n){
+        n=n||0;
+        this.form.penalty=n*2;
       },
       receivedPrice() {
         this.form.money_sum = '';

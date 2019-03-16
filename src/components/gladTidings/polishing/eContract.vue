@@ -47,6 +47,9 @@
             <van-button v-if="item.contract_status===1" class="btn sign signBtn" size="small"
                         @click="toDetail(item)" @click.stop>修改
             </van-button>
+            <van-button v-if="item.contract_status===2" class="btn send signBtn" size="small"
+                        @click="sendAgain(item)" @click.stop>再次发送
+            </van-button>
           </div>
         </van-cell>
 
@@ -133,6 +136,10 @@
 
     },
     methods: {
+      //已签署的合同再次发送
+      sendAgain(){
+
+      },
       getName(item, index) {
         if (this.type === 1) {//收
           return item.param_map.signer === undefined ? '' : item.param_map.signer.name;
