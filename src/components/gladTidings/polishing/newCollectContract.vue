@@ -1408,10 +1408,11 @@
             }
             break;
           case 6:
-            this.property_name = value;
+            this.curWuyePayers.name = value;
             for (let i = 0; i < this.dictValue6.length; i++) {
               if (this.dictValue6[i].dictionary_name === value) {
                 this.form.property_payer = this.dictValue6[i].id;
+                this.curWuyePayers.id = this.dictValue6[i].id;
               }
             }
             break;
