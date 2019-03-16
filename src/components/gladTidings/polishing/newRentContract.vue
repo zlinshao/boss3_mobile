@@ -599,15 +599,15 @@
           readonly
           required>
         </van-field>
-        <van-field
-          v-model="remarksTxt"
-          label="备注条款"
-          readonly
-          type="text"
-          @click="showChooseRemark()"
-          placeholder="请选择备注条款(可多选)"
-        >
-        </van-field>
+        <!--<van-field-->
+          <!--v-model="remarksTxt"-->
+          <!--label="备注条款"-->
+          <!--readonly-->
+          <!--type="text"-->
+          <!--@click="showChooseRemark()"-->
+          <!--placeholder="请选择备注条款(可多选)"-->
+        <!--&gt;-->
+        <!--</van-field>-->
         <van-switch-cell v-model="corp" title="是否公司单" :disabled="!enable()"/>
         <van-switch-cell v-model="is_receipt" title="电子收据" :disabled="!enable()"/>
         <div class="is_receipt_css" v-if="!is_receipt">{{isReceiptMsg.content1}}</div>
