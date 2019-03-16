@@ -61,7 +61,14 @@
       },
       showPdf(item) {
         let per = JSON.parse(sessionStorage.personal);
-        this.$refs.pdf.show(this.eurls + item.file_url + "?cookie=" + per.session_id, 1);
+        dd.biz.util.openLink({
+          url: this.eurls + item.file_url + "?cookie=" + per.session_id,//要打开链接的地址
+          onSuccess: function (result) {
+            /**/
+          },
+          onFail: function (err) {
+          }
+        })
       }
     }
   }
