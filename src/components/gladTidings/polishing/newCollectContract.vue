@@ -1736,8 +1736,8 @@
 
         this.form.warranty = draft.warranty;
         this.form.warranty_day = draft.warranty_day === '0' ? '' : draft.warranty_day;
-
         this.form.property_payer = draft.property_payer;
+        this.curWuyePayers.id = draft.property_payer;
         for (let j = 0; j < this.dictValue6.length; j++) {
           if (this.dictValue6[j].id === draft.property_payer) {
             this.property_name = this.dictValue6[j].dictionary_name;
