@@ -600,12 +600,12 @@
           required>
         </van-field>
         <!--<van-field-->
-          <!--v-model="remarksTxt"-->
-          <!--label="备注条款"-->
-          <!--readonly-->
-          <!--type="text"-->
-          <!--@click="showChooseRemark()"-->
-          <!--placeholder="请选择备注条款(可多选)"-->
+        <!--v-model="remarksTxt"-->
+        <!--label="备注条款"-->
+        <!--readonly-->
+        <!--type="text"-->
+        <!--@click="showChooseRemark()"-->
+        <!--placeholder="请选择备注条款(可多选)"-->
         <!--&gt;-->
         <!--</van-field>-->
         <van-switch-cell v-model="corp" title="是否公司单" :disabled="!enable()"/>
@@ -1038,7 +1038,6 @@
           Toast('加载数据失败！')
         });
       } else {
-        console.log('读取房屋信息');
         sessionStorage.setItem('contract_house_item', null);
         if (item === 'test') return;
         item = JSON.parse(item);
@@ -1051,7 +1050,7 @@
         this.form.city = house_res_com.city.city_name;//市
         this.form.district = house_res_com.area.area_name;
         this.form.property_address = house_res_com.address;//街道
-        this.form.village_name = this.form.house.name;//物业地址
+        this.form.village_name = item.village_address || item.house_name || '';
         let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
         this.form.room = house_types[0];//室
         this.form.hall = house_types[1];//厅
