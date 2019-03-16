@@ -47,12 +47,18 @@
             <van-button v-if="item.contract_status===1" class="btn sign signBtn" size="small"
                         @click="toDetail(item)" @click.stop>修改
             </van-button>
+            <van-button v-if="item.contract_status===2" class="btn send signBtn" size="small"
+                        @click="sendAgain(item)" @click.stop>再次发送
+            </van-button>
           </div>
         </van-cell>
 
       </van-list>
     </van-pull-refresh>
-    <div type="info" class="new" @click="showChooseDialog()">新增合同</div>
+    <div class="bottomButton">
+    <div  class="new" @click="showChooseDialog()">新增合同</div>
+    <div  class="lookModel" @click="lookContractModels()">查看模板</div>
+    </div>
     <van-popup v-model="show" class="popup">
       <div>
         <div class="choose" @click="collect(0,'')">收房</div>
@@ -72,6 +78,7 @@
 </template>
 
 <script>
+
   export class ContractInfo {
     constructor(type, number) {
       this.type = type;
@@ -133,6 +140,26 @@
 
     },
     methods: {
+      lookContractModels(){
+        this.$router.push('/contractModels');
+      },
+      //已签署的合同再次发送
+      sendAgain(item){
+        if(this.type===1){
+          this.sign(item.id,item.param_map.signer.fadada_user_id)
+        }else{
+          for(let i=0;i<item.param_map.customer_info.length;i++){
+            this.sign(item.id,item.param_map.customer_info[i].fadada_user_id)
+          }
+        }
+      },
+      sign(contractId,fadada_user_id){
+        this.$http.get(this.eurls+'fdd/contract/send/'+contractId+'?fdd_user_id='+fadada_user_id).then(res=>{
+          Toast(res.data.msg);
+        }).catch(e=>{
+          Toast('发送失败');
+        });
+      },
       getName(item, index) {
         if (this.type === 1) {//收
           return item.param_map.signer === undefined ? '' : item.param_map.signer.name;
@@ -398,15 +425,28 @@
   /*}*/
 
   #eContract {
-    .new {
-      height: 3em;
-      line-height: 3em;
-      background-color: #1989FA;
-      text-align: center;
+    .bottomButton {
+      display: flex;
       position: fixed;
       bottom: 0em;
-      color: white;
       width: 100%;
+      align-items: center;
+      .new {
+        flex: 1;
+        height: 3em;
+        line-height: 3em;
+        background-color: #1989FA;
+        text-align: center;
+        color: white;
+      }
+      .lookModel {
+        flex: 1;
+        height: 3em;
+        line-height: 3em;
+        background-color: #ff6666;
+        text-align: center;
+        color: white;
+      }
     }
 
     .choose {

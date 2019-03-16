@@ -146,10 +146,13 @@ export default {
       return item.slice(0, val);
     };
     // 字典
-    Vue.prototype.dictionary = function (data, flag) {
+    Vue.prototype.dictionary = function (data, flag,collect) {
       return new Promise((resolve, reject) => {
         this.$http.get(globalConfig.server + 'setting/dictionary/' + data, {
-          params: {status: flag}
+          params: {
+            status: flag,
+            type:collect
+          }
         }).then((res) => {
           if (res.data.code === '30010') {
             resolve(res.data)

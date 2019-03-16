@@ -2,7 +2,7 @@
   <div id="rentReport">
     <div class="main" id="main">
       <van-cell-group>
-        <div class="rent_types">
+        <div class="rent_types" v-if="enable()">
           <div class="label">租房类型</div>
           <van-radio-group v-model="form.type">
             <van-radio name="1">新租</van-radio>
@@ -12,7 +12,7 @@
             <van-radio name="0">未收先租确定</van-radio>
           </van-radio-group>
         </div>
-        <div class="rent_types" v-if="form.type==='2'">
+        <div class="rent_types" v-if="form.type==='2'&&enable()">
           <div class="label">转租类型</div>
           <van-radio-group v-model="form.trans_type">
             <van-radio name="0">公司</van-radio>
@@ -39,7 +39,7 @@
 
 
         <!--下面是未收先租确定信息-->
-        <div class="crop_name noBorder" v-if="form.type==='0'">
+        <div class="crop_name noBorder" v-if="form.type==='0'" :disabled="enable()">
           <van-field
             v-model="form.oldHouseName"
             label="原喜报地址"
@@ -55,7 +55,7 @@
         <!--上面是未收先租确定信息-->
 
         <!--下面是调房信息-->
-        <van-cell-group style="margin-bottom: 12px;" v-if="form.type==='5'">
+        <van-cell-group style="margin-bottom: 12px;" v-if="form.type==='5'" :disabled="enable()">
           <div class="crop_name noBorder">
             <van-field
               v-model="form.old_house_name"
@@ -122,6 +122,7 @@
             label="房屋地址"
             type="text"
             readonly
+            :disabled="!enable()"
             @click="searchSelect(2)"
             placeholder="请选择房屋地址"
             required>
@@ -210,6 +211,7 @@
           v-model="form.sign_date"
           label="签约日期"
           readonly
+          :disabled="!enable()"
           type="text"
           @click="timeChoose('sign_date', form.sign_date)"
           placeholder="请选择签约日期"
@@ -221,6 +223,7 @@
             v-model="form.month"
             type="number"
             class="number"
+            :disabled="!enable()"
             @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
@@ -228,6 +231,7 @@
             class="twoBorder number"
             v-model="form.day"
             type="number"
+            :disabled="!enable()"
             @keyup="endDate(form.begin_date, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
@@ -237,6 +241,7 @@
           label="合同开始日期"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="timeChoose('begin_date', form.begin_date)"
           placeholder="请选择合同开始日期"
           required>
@@ -246,6 +251,7 @@
           label="合同结束日期"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="timeChoose('end_date', form.end_date)"
           placeholder="请选择合同结束日期"
           required>
@@ -255,7 +261,7 @@
       <div class="changes" v-for="(key,index) in amountPrice">
         <div class="paddingTitle">
           <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountPrice > 1" @click="deleteAmount(index,1)">删除</span>
+          <span class="colors" v-if="amountPrice > 1 && enable()" @click="deleteAmount(index,1)">删除</span>
         </div>
         <van-cell-group>
           <van-field
@@ -271,7 +277,7 @@
             type="text"
             class="number"
             label="周期"
-            :disabled="amountPrice === 1 && form.period_price_arr[index] === form.month"
+            :disabled="(amountPrice === 1 && form.period_price_arr[index] === form.month)||!enable()"
             @keyup="periodDate(1)"
             placeholder="请填写月单价周期"
             required>
@@ -281,21 +287,32 @@
             type="text"
             class="number"
             label="价格"
+            :disabled="!enable()"
             placeholder="请填写金额"
             required>
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(1)" class="addInput">
+      <div @click="priceAmount(1)" class="addInput" v-if="enable()">
         +月单价变化
       </div>
-
+      <van-field
+        v-model="form.penalty"
+        type="text"
+        class="number"
+        :disabled="!enable()"
+        label="违约金"
+        disabled
+        placeholder="收租价格差大于500元的"
+        required>
+      </van-field>
       <van-cell-group>
         <van-field
           v-model="form.pay_way_bet"
           type="text"
           class="number"
           label="押"
+          :disabled="!enable()"
           placeholder="请填写付款方式-押"
           @click="selectShow(3)"
           readonly
@@ -306,7 +323,7 @@
       <div class="changes" v-for="(key,index) in amountPay">
         <div class="paddingTitle">
           <span>付<span v-if="amountPay > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountPay > 1" @click="deleteAmount(index,2)">删除</span>
+          <span class="colors" v-if="amountPay > 1 && enable()" @click="deleteAmount(index,2)">删除</span>
         </div>
         <van-cell-group>
           <van-field
@@ -322,7 +339,7 @@
             type="text"
             class="number"
             label="周期"
-            :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
+            :disabled="(amountPay === 1 && form.period_pay_arr[index] === form.month)||!enable()"
             @keyup="periodDate(2)"
             placeholder="other_fee_name"
             required>
@@ -331,13 +348,14 @@
             v-model="form.pay_way_arr[index]"
             label="付(月数)"
             type="number"
+            :disabled="!enable()"
             class="number"
             placeholder="如:半年付请输入6"
             required>
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(2)" class="addInput">
+      <div @click="priceAmount(2)" class="addInput" v-if="enable()">
         +付款方式变化
       </div>
 
@@ -351,14 +369,15 @@
         <div class="checks">
           <div class="titles required">本次金额为</div>
           <van-radio-group v-model="receivedPrice">
-            <van-radio name="front_money">定金</van-radio>
-            <van-radio name="deposit_payed">租金+押金</van-radio>
+            <van-radio name="front_money" :disabled="!enable()">定金</van-radio>
+            <van-radio name="deposit_payed" :disabled="!enable()">租金+押金</van-radio>
           </van-radio-group>
         </div>
         <van-field
           v-model="form.money_sum"
           type="text"
           class="number"
+          :disabled="!enable()"
           label="总金额"
           placeholder="请填写总金额"
           @click-icon="form.money_sum = ''"
@@ -369,7 +388,7 @@
       <div class="changes" v-for="(key,index) in amountMoney">
         <div class="paddingTitle">
           <span>已收金额支付方式<span v-if="amountMoney > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountMoney > 1" @click="deleteAmount(index,3)">删除</span>
+          <span class="colors" v-if="amountMoney > 1&&enable()" @click="deleteAmount(index,3)">删除</span>
         </div>
         <van-cell-group>
           <van-field
@@ -377,6 +396,7 @@
             type="text"
             class="number"
             label="金额"
+            :disabled="!enable()"
             placeholder="请填写金额"
             required>
           </van-field>
@@ -384,6 +404,7 @@
             v-model="form.real_pay_at[index]"
             type="text"
             readonly
+            :disabled="!enable()"
             class="number"
             @click="timeChoose('real_pay_at', form.real_pay_at[index], index)"
             label="实际收款时间"
@@ -396,12 +417,13 @@
             label="汇款帐户"
             type="text"
             readonly
+            :disabled="!enable()"
             placeholder="请选择汇款帐户"
             required>
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(3)" class="addInput">
+      <div @click="priceAmount(3)" class="addInput" v-if="enable()">
         +支付方式变化
       </div>
 
@@ -471,24 +493,19 @@
           v-model="form.memo"
           label="收款备注"
           type="textarea"
+          :disabled="!enable()"
           placeholder="请填写备注"
           icon="clear"
           @click-icon="form.memo = ''">
         </van-field>
         <div class="addInput" @click="previewReceipt(form, receivedPrice)">预览电子收据</div>
-        <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"/>
-        <van-field
-          v-model="form.penalty"
-          type="text"
-          class="number"
-          label="违约金"
-          placeholder="收租价格差大于500元的"
-          required>
-        </van-field>
+        <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额" :disabled="!enable()"/>
+
         <van-field
           v-if="other_fee_status"
           v-model="form.other_fee_name"
           label="费用名称"
+          :disabled="!enable()"
           type="text"
           placeholder="请填写名称"
           icon="clear"
@@ -496,6 +513,7 @@
           required>
         </van-field>
         <van-field
+          :disabled="!enable()"
           v-if="other_fee_status"
           v-model="form.other_fee"
           label="费用金额"
@@ -511,6 +529,7 @@
           label="让总价金额"
           type="text"
           class="number"
+          :disabled="!enable()"
           placeholder="请填写金额"
           icon="clear"
           @click-icon="form.discount = 0"
@@ -522,6 +541,7 @@
           label="是否渠道"
           type="text"
           readonly
+          :disabled="!enable()"
           placeholder="是否渠道"
           required>
         </van-field>
@@ -530,6 +550,7 @@
             v-model="form.agency_name"
             label="渠道名称"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写渠道名称"
             icon="clear"
             @click-icon="form.agency_name = ''"
@@ -539,6 +560,7 @@
             v-model="form.agency_price"
             label="渠道费"
             type="text"
+            :disabled="!enable()"
             class="number"
             placeholder="请填写渠道费"
             icon="clear"
@@ -548,6 +570,7 @@
           <van-field
             v-model="form.agency_user_name"
             label="渠道人"
+            :disabled="!enable()"
             type="text"
             placeholder="请填写渠道人"
             icon="clear"
@@ -558,6 +581,7 @@
             v-model="form.agency_phone"
             label="渠道联系方式"
             type="text"
+            :disabled="!enable()"
             class="number"
             placeholder="请填写渠道联系方式"
             icon="clear"
@@ -569,6 +593,7 @@
           v-model="property_name"
           label="物业费付款人"
           type="text"
+          :disabled="!enable()"
           placeholder="请选择物业费付款人"
           @click="selectShow(1)"
           readonly
@@ -583,8 +608,8 @@
           placeholder="请选择备注条款(可多选)"
         >
         </van-field>
-        <van-switch-cell v-model="corp" title="是否公司单"/>
-        <van-switch-cell v-model="is_receipt" title="电子收据"/>
+        <van-switch-cell v-model="corp" title="是否公司单" :disabled="!enable()"/>
+        <van-switch-cell v-model="is_receipt" title="电子收据" :disabled="!enable()"/>
         <div class="is_receipt_css" v-if="!is_receipt">{{isReceiptMsg.content1}}</div>
       </van-cell-group>
       <div class="changes" v-for="(key,index) in amountReceipt" v-if="!is_receipt">
@@ -597,11 +622,12 @@
             v-model="form.receipt[index]"
             type="text"
             label="收据编号"
+            :disabled="!enable()"
             placeholder="请填写收据编号">
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(4)" class="addInput" v-if="!is_receipt">
+      <div @click="priceAmount(4)" class="addInput" v-if="!is_receipt&&enable()">
         +增加收据编号
       </div>
       <van-cell-group>
@@ -610,6 +636,7 @@
           label="尾款补齐日期"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="timeChoose('retainage_date', form.retainage_date)"
           placeholder="请选择尾款补齐日期"
           required>
@@ -620,17 +647,17 @@
 
       </van-cell-group>
 
-      <div class="aloneModel">
+      <div class="aloneModel" v-if="enable()">
         <div class="title">领导同意截图</div>
         <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
       </div>
 
-      <div class="aloneModel required">
+      <div class="aloneModel required" v-if="enable()">
         <div class="title"><span>*</span>凭证截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
-      <div class="aloneModel">
+      <div class="aloneModel" v-if="enable()">
         <div class="title">
           押金收条
           <div v-if="is_receipt">{{isReceiptMsg.content2}}</div>
@@ -638,13 +665,14 @@
         <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
       </div>
 
-      <div class="aloneModel">
+      <div class="aloneModel" v-if="enable()">
         <div class="title">合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
       <van-cell-group>
         <van-field
+          :disabled="!enable()"
           v-model="form.remark"
           label="备注"
           type="textarea"
@@ -657,6 +685,7 @@
           @click="searchSelect(3)"
           readonly
           label="开单人"
+          :disable="!enable()"
           type="text"
           placeholder="请选择开单人"
           required>
@@ -667,6 +696,7 @@
           readonly
           label="部门"
           type="text"
+          :disable="!enable()"
           placeholder="请选择部门"
           required>
         </van-field>
@@ -726,19 +756,19 @@
   import {ContractType} from './eContract'
 
 
-
   export default {
     name: "index",
     components: {UpLoad, Toast, ChooseTime, PdfDialog},
-    computed:{
-      old(){
-        return this.form.oldHouseName;
+    computed: {
+      firstMonthPrice() {
+        return this.form.price_arr[0];
       }
     },
 
     data() {
       return {
         /*电子合同新加*/
+
         eshow: false,//是否显示选择弹框
         isShowChooseRemark: false,//是否显示备注弹框
         curContractInfo: '',
@@ -862,7 +892,7 @@
           money_way: [''],              //汇款帐户
           account_id: [],               //汇款帐户ID
           memo: '',                     //收款备注
-
+          from_bulletin: 0,//是否从报备过来
           is_other_fee: 0,
           other_fee: '111',
           other_fee_name: '',
@@ -942,8 +972,9 @@
       }
     },
     watch: {
-      old(n,o){
-        console.log('n:'+n+'p:'+o)
+      firstMonthPrice(n, o) {
+        n = n || 0;
+        this.form.penalty = n * 2;
       },
       receivedPrice() {
         this.form.money_sum = '';
@@ -998,7 +1029,7 @@
         console.log('读取合同编号');
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.dicts(success => {
@@ -1030,11 +1061,14 @@
       }
     },
     methods: {
-      onChangeInfo(item){
-        item.fadada_user_id='';
+      enable() {
+        return this.form.from_bulletin === 0;
       },
-      getTrueNameInfo(item){
-        return item.fadada_user_id===''?'':'已认证'
+      onChangeInfo(item) {
+        item.fadada_user_id = '';
+      },
+      getTrueNameInfo(item) {
+        return item.fadada_user_id === '' ? '' : '已认证'
       },
       payWayClick(val) {
         if (val === 1) {
@@ -1080,21 +1114,21 @@
         let json = {content: this.form, type: '2'};
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
-          if(res.data.code==='40000'){
+          if (res.data.code === '40000') {
             contractApi.trueName(item, success => {
               location.href = success
-            },error=>{
+            }, error => {
               Toast(error)
             });
-          }else{
+          } else {
             Toast.clear();
             Toast(res.data.msg);
           }
-        }).catch(e=>{
+        }).catch(e => {
           Toast.clear();
         });
       },
@@ -1134,6 +1168,10 @@
         });
       },
       getSessionInfo() {
+        let contract_sign_type = this.$route.query.contract_sign_type;
+        if (contract_sign_type !== undefined) {
+          sessionStorage.setItem('contract_type', contract_sign_type || 0);
+        }
         this.form.old_contract_number = sessionStorage.getItem('contract_number');
         this.form.regenerate = sessionStorage.getItem('contract_type');
         this.setContractNumber(sessionStorage.getItem('contract_number'))
@@ -1190,7 +1228,7 @@
         }
         Toast.loading({
           mask: true,
-          duration:0,
+          duration: 0,
           message: '加载中...'
         });
         this.getCity(resp => {
@@ -1568,8 +1606,8 @@
         params.month = month;
         params.day = day;
 
-        if(params.day===undefined||params.day===''){
-          params.day=0;
+        if (params.day === undefined || params.day === '') {
+          params.day = 0;
         }
         params.type = val;
         if (time && (month || day)) {
@@ -1622,7 +1660,7 @@
           this.form.phone = this.form.customer_info[0].phone;
           Toast.loading({
             mask: true,
-            duration:0,
+            duration: 0,
             message: '加载中...'
           });
           if (val === 1) {//草稿
@@ -1657,16 +1695,16 @@
       },
       post() {
         let url = this.form.regenerate === 0 || this.form.regenerate === '0' ? 'fdd/contract/saveAndSend' : 'fdd/contract/reset';
-        if(!this.other_fee_status){
-          this.form.other_fee_name='暂无';
-          this.form.other_fee='暂无'
+        if (!this.other_fee_status) {
+          this.form.other_fee_name = '暂无';
+          this.form.other_fee = '暂无'
         }
-        if(this.form.money_sep.length===0){
-          this.form.money_sep=[''];
-          this.form.money_way=['']
+        if (this.form.money_sep.length === 0) {
+          this.form.money_sep = [''];
+          this.form.money_way = ['']
         }
-        if(this.form.day===null||this.form.day===undefined||this.form.day===''){
-          this.form.day='0';
+        if (this.form.day === null || this.form.day === undefined || this.form.day === '') {
+          this.form.day = '0';
         }
         this.$http.post(this.eurls + url, this.form).then((res) => {
 
@@ -1683,14 +1721,14 @@
             if (res.data.data.is_bulletin) {
               this.routerDetail(res.data.data.data.id)
             } else {
-              sessionStorage.setItem('isRefreshList','true');
+              sessionStorage.setItem('isRefreshList', 'true');
               this.$router.go(-1);
             }
-          }else{
+          } else {
             return
           }
           //清除草稿
-          if(  this.form.regenerate === 0 || this.form.regenerate === '0') {
+          if (this.form.regenerate === 0 || this.form.regenerate === '0') {
             let json = {
               content: {
                 staff_id: this.form.staff_id,
@@ -1797,7 +1835,7 @@
             this.form.deposit_payed = rent.deposit_payed ? rent.deposit_payed : '';
             if (this.form.deposit_payed) {
               this.receivedPrice = 'deposit_payed';
-            } else  {
+            } else {
               this.receivedPrice = 'front_money';
             }
             this.$nextTick(function () {
@@ -1869,7 +1907,7 @@
         this.form.house_id = draft.house_id;
         this.form.address = draft.address;
         this.form.corp_name = draft.corp_name;
-        this.form.type=draft.type;
+        this.form.type = draft.type;
         this.form.month = draft.month;
         this.form.day = draft.day === '0' ? '' : draft.day;
         this.form.contract_number = this.setContractNumber(draft.contract_number);
@@ -1877,6 +1915,7 @@
         this.form.begin_date = draft.begin_date;
         this.form.end_date = draft.end_date;
         this.first_date = [];
+        this.form.from_bulletin = draft.from_bulletin || 0;
         this.first_date.push(draft.begin_date);
         this.datePrice[0] = draft.begin_date;
         this.datePay[0] = draft.begin_date;
@@ -1906,7 +1945,7 @@
         this.form.deposit_payed = draft.deposit_payed ? draft.deposit_payed : '';
         if (this.form.deposit_payed) {
           this.receivedPrice = 'deposit_payed';
-        } else  {
+        } else {
           this.receivedPrice = 'front_money';
         }
         this.$nextTick(function () {
@@ -1919,8 +1958,8 @@
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
 
-        if(this.amountMoney===null||this.amountMoney===undefined||this.amountMoney===0||this.amountMoney==='0'){
-          this.amountMoney=1;
+        if (this.amountMoney === null || this.amountMoney === undefined || this.amountMoney === 0 || this.amountMoney === '0') {
+          this.amountMoney = 1;
         }
 
         for (let i = 0; i < draft.money_way.length; i++) {
@@ -1936,12 +1975,12 @@
         console.log(this.form.money_sep.length)
         console.log(this.form.real_pay_at.length)
 
-        let count=this.amountMoney;
-        if(!(this.form.account_id.length===count&&this.form.money_way.length===count&&this.form.money_sep.length===count&&this.form.real_pay_at.length===count)){
-          this.form.account_id.splice(0,this.form.account_id.length);
-          this.form.money_way.splice(0,this.form.money_way.length);
-          this.form.money_sep.splice(0,this.form.money_sep.length);
-          this.form.real_pay_at.splice(0,this.form.real_pay_at.length)
+        let count = this.amountMoney;
+        if (!(this.form.account_id.length === count && this.form.money_way.length === count && this.form.money_sep.length === count && this.form.real_pay_at.length === count)) {
+          this.form.account_id.splice(0, this.form.account_id.length);
+          this.form.money_way.splice(0, this.form.money_way.length);
+          this.form.money_sep.splice(0, this.form.money_sep.length);
+          this.form.real_pay_at.splice(0, this.form.real_pay_at.length)
         }
 
         this.form.discount = draft.discount;
@@ -2071,6 +2110,7 @@
         this.form.discount = 0;
         this.form.sign_date = '';
         this.form.end_date = '';
+        this.form.from_bulletin = 0;
         this.form.begin_date = '';
         this.datePrice = [];
         this.datePay = [];

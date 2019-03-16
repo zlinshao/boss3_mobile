@@ -212,7 +212,7 @@
         关闭
       </div>
     </van-popup>
-
+    <div class="toContract"  v-if="false&&(this.process.place.name==='published'&&showEContract&&this.process.content.cookie===undefined&&(this.process.processable_type==='bulletin_rent_basic'||this.process.processable_type==='bulletin_rent_continued'))" @click="toContract()"><i class="iconfont icon-hetong"></i></div>
     <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(this.process.processable_type) > -1"
                  :process="process"></SwitchCraft>
   </div>
@@ -234,6 +234,7 @@
     },
     data() {
       return {
+        showEContract:false,
         urls: globalConfig.server,
         personalId: {},
         vLoading: true,
@@ -301,6 +302,7 @@
       })
     },
     activated() {
+      this.getShowEContract();
       sessionStorage.setItem('count', '2');
       if (sessionStorage.personal) {
         this.personalId = JSON.parse(sessionStorage.personal);
@@ -324,6 +326,21 @@
       }
     },
     methods: {
+      //跳往电子合同(目前为租)
+      toContract(){
+        this.$http.post(this.urls+'bulletin/electronic_contract/generate',{process_id:this.process.id}).then(success=>{
+          if(success.data.code==='20000'){
+            sessionStorage.setItem('contract_type','0');
+            this.$router.push('/newRentContract');//type 0为新签 1为作废重签
+          }
+        })
+      },
+      //获取是否显示电子合同按钮
+      getShowEContract() {
+        this.$http.get(this.urls + 'bulletin/component_visible').then(resp => {
+          this.showEContract = resp.data.code === '20000';
+        })
+      },
       // 审批人信息
       approvePersonal(val) {
         if (val === 1) {
@@ -772,37 +789,46 @@
       padding: 0.3rem 0;
       font-size: 0.36rem;
     }
+
     .showContentTitle {
       border-bottom: 1px solid #f4f4f4;
     }
+
     .showContentFooter {
       border-top: 1px solid #f4f4f4;
       color: #409eff;
     }
+
     .showContent {
       width: 6.6rem;
       max-height: 8rem;
       overflow: auto;
       -webkit-overflow-scrolling: touch;
+
       p {
         color: #6a6a6a;
         margin: 0.12rem 0;
+
         a {
           color: $onColor;
         }
       }
+
       .showRoleName + .showRoleName {
         border-top: 1px solid #f4f4f4;
       }
+
       .showRoleName {
         @include flex;
         align-items: center;
         padding: 0.2rem;
+
         .showImg {
           min-width: 0.9rem;
           max-width: 0.9rem;
           height: 0.9rem;
           margin-right: 0.2rem;
+
           img {
             width: 100%;
             height: 100%;
@@ -822,10 +848,12 @@
         color: #409eff;
         @include flex;
         align-items: center;
+
         i {
           margin-right: 0.1rem;
         }
       }
+
       .deal {
         margin-top: 0.18rem;
         color: $borColor;
@@ -843,11 +871,13 @@
       align-items: center;
       background-color: rgba(0, 0, 0, 1);
       z-index: 10000;
+
       #video {
         position: absolute;
         top: 7.5%;
         left: 5%;
       }
+
       .close {
         position: absolute;
         width: 0.8rem;
@@ -861,6 +891,7 @@
         right: 2%;
         top: 2%;
         transform: translate(-50%);
+
         i {
           color: #ffffff;
           font-size: 0.6rem;
@@ -880,6 +911,7 @@
       @include flex;
       align-items: center;
       justify-content: center;
+
       div {
         p {
           position: absolute;
@@ -892,40 +924,48 @@
           color: #ffffff;
           margin: 0 0.2rem;
           border-radius: 50%;
+
           i {
             display: inline-block;
             font-size: 1rem;
           }
         }
+
         .nextPic,
         .prePic {
           height: 100%;
           @include flex;
           align-items: center;
         }
+
         .nextPic {
           left: 0;
           text-align: left;
           justify-content: flex-start;
+
           i {
             transform: rotate(180deg);
           }
         }
+
         .prePic {
           right: 0;
           text-align: right;
           justify-content: flex-end;
         }
+
         .close {
           width: 1rem;
           bottom: 0.6rem;
           left: 50%;
           transform: translate(-50%);
+
           i {
             font-size: 0.6rem;
           }
         }
       }
+
       img {
         max-width: 100%;
         max-height: 100%;
@@ -936,9 +976,11 @@
       p {
         padding-top: 0.2rem;
       }
+
       h1 {
         @include flex;
         flex-wrap: wrap;
+
         span {
           width: 1rem;
           height: 1rem;
@@ -953,6 +995,7 @@
         width: 100%;
         height: 100%;
       }
+
       position: fixed;
       top: 0;
       left: 0;
@@ -963,14 +1006,17 @@
       align-items: center;
       background: #ffffff;
       padding: 0.3rem;
+
       .detailLeft {
         min-width: 0.9rem;
         max-width: 0.9rem;
         margin-right: 0.3rem;
+
         div {
           width: 100%;
           height: 0.9rem;
           overflow: hidden;
+
           img {
             @include border_radius(50%);
             width: 100%;
@@ -978,20 +1024,24 @@
           }
         }
       }
+
       .priceRange {
         position: absolute;
         right: 0.4rem;
         bottom: 0.1rem;
         color: orange;
       }
+
       .topRight {
         @include flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
+
         .personal {
           min-width: 2.8rem;
           max-width: 2.8rem;
+
           p {
             min-width: 2.8rem;
             max-width: 2.8rem;
@@ -1001,19 +1051,24 @@
             white-space: nowrap;
             color: #9c9c9c;
           }
+
           p:first-of-type {
             color: #101010;
           }
         }
+
         .statusSuccess {
           background: url("../../../assets/tongguo.png") no-repeat;
         }
+
         .statusFail {
           background: url("../../../assets/shibai.png") no-repeat;
         }
+
         .cancelled {
           background: url("../../../assets/chexiao.png") no-repeat;
         }
+
         .statusSuccess,
         .statusFail,
         .cancelled {
@@ -1027,20 +1082,25 @@
         }
       }
     }
+
     .detailRight {
       img {
         width: 100%;
         height: 100%;
       }
+
       width: 100%;
+
       .topTitle {
         padding: 0.3rem;
         margin-top: 2rem;
         background: #ffffff;
+
         div {
           margin: 0.2rem 0;
           @include flex;
           word-break: break-all;
+
           p {
             min-width: 1.8rem;
             max-width: 1.8rem;
@@ -1049,14 +1109,17 @@
             color: #9c9c9c;
             text-align: left;
           }
+
           h1 {
             color: #101010;
             line-height: 0.4rem;
           }
+
           .electronicReceipt {
             color: green
           }
         }
+
         .load {
           display: flex;
           justify-content: center;
@@ -1075,12 +1138,14 @@
         span {
           color: #9c9c9c;
         }
+
         .headline {
           color: #444444;
           font-size: 0.33rem;
           padding: 0.3rem 0 0.2rem 0.3rem;
           font-weight: bold;
           border-bottom: 1px solid #dddddd;
+
           span {
             font-size: 0.33rem;
             font-weight: bold;
@@ -1088,25 +1153,31 @@
             padding-left: 0.1rem;
           }
         }
+
         .commentAreaMain {
           margin-top: 0.36rem;
           padding: 0 0.4rem;
+
           .commentTitle {
             @include flex;
             align-items: center;
             justify-content: space-between;
+
             .staff {
               @include flex;
               align-items: center;
+
               p {
                 min-width: 0.8rem;
                 max-width: 0.8rem;
                 height: 0.8rem;
                 margin-right: 0.12rem;
+
                 img {
                   @include border_radius(50%);
                 }
               }
+
               div {
                 width: 100%;
                 overflow: hidden;
@@ -1116,21 +1187,25 @@
                 white-space: nowrap;
               }
             }
+
             .times {
               min-width: 2rem;
               max-width: 2rem;
               text-align: right;
             }
           }
+
           .contents {
             margin-left: 0.9rem;
             color: #101010;
             line-height: 0.6rem;
           }
+
           .pics {
             @include flex;
             flex-wrap: wrap;
             margin-left: 0.9rem;
+
             div {
               width: 1rem;
               height: 1rem;
@@ -1140,12 +1215,30 @@
         }
       }
     }
+
     .bottom {
       @include flex;
       justify-content: center;
       align-items: center;
       padding: 0.4rem 0 1.3rem;
       color: #dddddd;
+    }
+
+    .toContract {
+      bottom: 9em;
+      right:16px;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      line-height: 50px;
+      border-radius: 50%;
+      z-index: 10000;
+      position: fixed;
+      color: #fff;
+      background: #409EFF;
+      i{
+        font-size: 24px;
+      }
     }
   }
 </style>

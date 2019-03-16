@@ -54,7 +54,7 @@ import PolishingRenter from '../components/gladTidings/polishing/renter.vue'    
 import EContract from '../components/gladTidings/polishing/eContract.vue'    //电子合同
 import NewCollectContract from '../components/gladTidings/polishing/newCollectContract.vue'    //新建收房电子合同
 import NewRentContract from '../components/gladTidings/polishing/newRentContract.vue'    //新建租房电子合同
-
+import ContractModels from '../components/gladTidings/polishing/contractModels.vue'
 import Special from '../components/gladTidings/specialReport/index.vue'
 // import Confiscate from '../components/gladTidings/confiscate/index.vue'
 import FinalPayment from '../components/gladTidings/finalPayment/index.vue'
@@ -198,6 +198,7 @@ export default new Router({
       meta: {title: '电子合同'},
       component: EContract
     },
+
     {
       path: '/collectReport',               //收房报备
       name: '收房报备',
@@ -685,6 +686,12 @@ export default new Router({
         // keepAlive: true
       },
       component: Attendance
+    },
+    {
+      path: '/contractModels',
+      name: '合同模板',
+      meta: {title: '合同模板'},
+      component: ContractModels
     },
   ]
 })
