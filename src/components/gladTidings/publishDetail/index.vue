@@ -129,6 +129,9 @@
            v-if="personalId.id === personal.id && (placeStatus.indexOf(place.status) > -1)">
         重新提交
       </div>
+      <div @click="handleLookContract(false, process.content)">
+        合同预览
+      </div>
       <div v-for="(key,index) in operation" @click="commentOn(index, marking)">{{key}}</div>
       <div @click="confirmBulletinType(contentGet,process,ids)" v-if="showElectronicReceipt">
         预览电子收据
@@ -212,7 +215,9 @@
         关闭
       </div>
     </van-popup>
-    <div class="toContract"  v-if="false&&(this.process.place.name==='published'&&showEContract&&this.process.content.cookie===undefined&&(this.process.processable_type==='bulletin_rent_basic'||this.process.processable_type==='bulletin_rent_continued'))" @click="toContract()"><i class="iconfont icon-hetong"></i></div>
+    <div class="toContract"
+         v-if="false&&(this.process.place.name==='published'&&showEContract&&this.process.content.cookie===undefined&&(this.process.processable_type==='bulletin_rent_basic'||this.process.processable_type==='bulletin_rent_continued'))"
+         @click="toContract()"><i class="iconfont icon-hetong"></i></div>
     <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(this.process.processable_type) > -1"
                  :process="process"></SwitchCraft>
   </div>
@@ -234,7 +239,9 @@
     },
     data() {
       return {
-        showEContract:false,
+        contractSta: '',
+
+        showEContract: false,
         urls: globalConfig.server,
         personalId: {},
         vLoading: true,
@@ -326,11 +333,38 @@
       }
     },
     methods: {
+      handleLookContract(first, number) {
+        this.$http.get(this.urls + 'bulletin/electronic_contract/view', {
+          params: {
+            contract_number: number.contract_number
+          }
+        }).then(res => {
+          if (res.data.code === '20000') {
+            this.contractSta = res.data.data.status;
+            if (!first && res.data.data.url) {
+              dd.biz.util.openLink({
+                url: res.data.data.url,//要打开链接的地址
+                onSuccess: function (result) {
+                  /**/
+                },
+                onFail: function (err) {
+                }
+              })
+            } else {
+              Toast('电子合同读取失败');
+            }
+          } else {
+            Toast(res.data.msg);
+          }
+        }).catch(err => {
+          console.log(err);
+        })
+      },
       //跳往电子合同(目前为租)
-      toContract(){
-        this.$http.post(this.urls+'bulletin/electronic_contract/generate',{process_id:this.process.id}).then(success=>{
-          if(success.data.code==='20000'){
-            sessionStorage.setItem('contract_type','0');
+      toContract() {
+        this.$http.post(this.urls + 'bulletin/electronic_contract/generate', {process_id: this.process.id}).then(success => {
+          if (success.data.code === '20000') {
+            sessionStorage.setItem('contract_type', '0');
             this.$router.push('/newRentContract');//type 0为新签 1为作废重签
           }
         })
@@ -416,6 +450,7 @@
               this.address = content.house.name;
             }
             this.process = main;
+            this.handleLookContract(true, content);
             if (this.rentReport.indexOf(main.processable_type) > -1) {
               this.$http.get(this.urls + 'workflow/process/get/' + val).then(item => {
                 this.contentGet = item.data.data.content;
@@ -1226,7 +1261,7 @@
 
     .toContract {
       bottom: 9em;
-      right:16px;
+      right: 16px;
       width: 50px;
       height: 50px;
       text-align: center;
@@ -1236,7 +1271,7 @@
       position: fixed;
       color: #fff;
       background: #409EFF;
-      i{
+      i {
         font-size: 24px;
       }
     }

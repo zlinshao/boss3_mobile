@@ -185,8 +185,7 @@
           v-model="curWuyePayers.name"
           label="物业费付款人"
           type="text"
-          disabled
-          placeholder="已禁用"
+          placeholder="请选择物业费付款人"
           @click="selectShow(6,'')"
           readonly
           required>
@@ -1331,7 +1330,6 @@
         switch (val.dataKey) {
           case 'begin_date':
             let num = (this.form.vacancy ? Number(this.form.vacancy) : 0) + 1;
-            this.get_first_date(this.myUtils.countDay(val.dateVal, num));
             if (this.form.type === '1') {
               this.endDate(val.dateVal, '', this.form.vacancy, 1);
             } else {
@@ -1488,7 +1486,6 @@
       endDate(time, month, day = 0, val) {
         let params = {};
         if (val === 1) {
-          this.get_first_date(this.myUtils.countDay(time, Number(day) + 1));
           params.begin_date = time;
           params.vacancy = day;
           params.type = val;
@@ -1496,6 +1493,7 @@
             this.computedDate(params).then((date) => {
               this.form.end_date_vacant = date;
               this.endDate(date, this.form.month, this.form.day, 2);
+              this.form.pay_first_date = this.myUtils.countDay(date, 1);
             })
           } else {
             this.form.end_date_vacant = '';
@@ -1672,7 +1670,6 @@
         this.form.begin_date = draft.begin_date;
         this.form.end_date = draft.end_date;
         this.form.vacancy = draft.vacancy;
-        this.get_first_date(this.myUtils.countDay(draft.begin_date, draft.vacancy));
         this.form.end_date_vacant = draft.end_date_vacant;
         this.form.pay_first_date = draft.pay_first_date;
         this.first_date = [];
