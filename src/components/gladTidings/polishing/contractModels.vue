@@ -61,7 +61,6 @@
       },
       showPdf(item) {
         let per = JSON.parse(sessionStorage.personal);
-        alert(this.eurls + item.file_url + "?cookie=" + per.session_id);
         this.$refs.pdf.show(this.eurls + item.file_url + "?cookie=" + per.session_id, 1);
       }
     }
