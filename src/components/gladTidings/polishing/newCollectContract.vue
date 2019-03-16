@@ -888,7 +888,6 @@
       }
     },
     activated() {
-      this.close_();
       //如果房屋信息为空 则请求读草稿
       this.routerIndex('eContract');
       this.ddRent('eContract');
@@ -907,6 +906,7 @@
           message: '加载中...'
         });
         this.dicts(success => {
+          this.close_();
           this.getContractDetail();
         }, error => {
           Toast('加载数据失败！')

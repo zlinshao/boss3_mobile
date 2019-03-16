@@ -497,6 +497,7 @@
         bottom: 1em;
 
         .signBtn {
+          margin-top: .1rem;
           border-radius: 5px;
         }
 

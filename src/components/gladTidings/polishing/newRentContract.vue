@@ -1016,7 +1016,6 @@
       }
     },
     activated() {
-      this.close_();
       this.routerIndex('eContract');
       this.ddRent('eContract');
       this.userInfo();
@@ -1034,6 +1033,7 @@
           message: '加载中...'
         });
         this.dicts(success => {
+          this.close_();
           this.getContractDetail();
         }, error => {
           Toast('加载数据失败！')
