@@ -203,14 +203,14 @@
       </div>
 
       <van-cell-group>
-        <van-field
-          v-model="form.remark_terms"
-          label="备注条款"
-          type="textarea"
-          placeholder="请填写备注条款"
-          icon="clear"
-          @click-icon="form.remark_terms = ''">
-        </van-field>
+        <!--<van-field-->
+          <!--v-model="form.remark_terms"-->
+          <!--label="备注条款"-->
+          <!--type="textarea"-->
+          <!--placeholder="请填写备注条款"-->
+          <!--icon="clear"-->
+          <!--@click-icon="form.remark_terms = ''">-->
+        <!--</van-field>-->
         <van-field
           v-model="form.remark"
           label="备注"

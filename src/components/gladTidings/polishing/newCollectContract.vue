@@ -1485,10 +1485,10 @@
       },
 
       // 结束日期
-      endDate(time, month, day, val) {
+      endDate(time, month, day = 0, val) {
         let params = {};
         if (val === 1) {
-          this.get_first_date(this.myUtils.countDay(time, day + 1));
+          this.get_first_date(this.myUtils.countDay(time, Number(day) + 1));
           params.begin_date = time;
           params.vacancy = day;
           params.type = val;

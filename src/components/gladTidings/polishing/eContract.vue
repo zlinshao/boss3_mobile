@@ -39,16 +39,16 @@
           </div>
           <div class="btnParent">
             <van-button v-if="item.contract_status===0" class="btn sign signBtn" size="small"
-                        @click="sign(item)" @click.stop>签署
+                        @@click.stop="sign(item)">签署
             </van-button>
             <van-button v-if="item.contract_status===0" class="btn send signBtn" size="small"
-                        @click="send(item)" @click.stop>发送
+                        @@click.stop="send(item)">发送
             </van-button>
             <van-button v-if="item.contract_status===1" class="btn sign signBtn" size="small"
-                        @click="toDetail(item)" @click.stop>修改
+                        @@click.stop="toDetail(item)">修改
             </van-button>
             <van-button v-if="item.contract_status===2" class="btn send signBtn" size="small"
-                        @click="sendAgain(item)" @click.stop>再次发送
+                        @click.stop="sendAgain(item)">发送合同
             </van-button>
           </div>
         </van-cell>
@@ -146,14 +146,14 @@
       //已签署的合同再次发送
       sendAgain(item) {
         if (this.type === 1) {
-          this.sign(item.id, item.param_map.signer.fadada_user_id)
+          this.signs(item.id, item.param_map.signer.fadada_user_id)
         } else {
           for (let i = 0; i < item.param_map.customer_info.length; i++) {
-            this.sign(item.id, item.param_map.customer_info[i].fadada_user_id)
+            this.signs(item.id, item.param_map.customer_info[i].fadada_user_id)
           }
         }
       },
-      sign(contractId, fadada_user_id) {
+      signs(contractId, fadada_user_id) {
         this.$http.get(this.eurls + 'fdd/contract/send/' + contractId + '?fdd_user_id=' + fadada_user_id).then(res => {
           Toast(res.data.msg);
         }).catch(e => {
