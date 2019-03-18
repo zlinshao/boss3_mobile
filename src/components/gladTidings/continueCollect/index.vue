@@ -215,6 +215,15 @@
           @click-icon="form.phone = ''"
           required>
         </van-field>
+        <van-field
+          v-model="form.account_name"
+          label="开户名"
+          type="text"
+          placeholder="请填写开户名"
+          icon="clear"
+          @click-icon="form.account_name = ''"
+          required>
+        </van-field>
         <div class="month">
           <van-field
             v-model="form.account"
@@ -246,15 +255,7 @@
           icon="clear"
           @click-icon="form.subbranch = ''">
         </van-field>
-        <van-field
-          v-model="form.account_name"
-          label="开户名"
-          type="text"
-          placeholder="请填写开户名"
-          icon="clear"
-          @click-icon="form.account_name = ''"
-          required>
-        </van-field>
+
         <van-field
           v-model="form.relationship"
           label="关系"
@@ -535,7 +536,7 @@
         }
       },
       accountBank(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val+ "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
           }
