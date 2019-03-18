@@ -1855,7 +1855,7 @@
         this.datePay = [];
         this.datePrice = [];
         this.amountPay = 1;
-        this.curPayWays=[];
+        this.curPayWays=[new CommonIdNameEntity];
         this.vacancy_way_name = '';
         this.property_name = '';
         this.corp = true;
