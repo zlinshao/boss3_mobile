@@ -216,7 +216,7 @@
       </div>
     </van-popup>
     <div class="toContract"
-         v-if="(this.process.place.name==='published'&&showEContract&&this.process.content.cookie===undefined&&(this.process.processable_type==='bulletin_rent_basic'||this.process.processable_type==='bulletin_rent_continued'))"
+         v-if="false&&(this.process.place.name==='published'&&showEContract&&this.process.content.cookie===undefined&&(this.process.processable_type==='bulletin_rent_basic'||this.process.processable_type==='bulletin_rent_continued'))"
          @click="toContract()"><i class="iconfont icon-hetong"></i></div>
     <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(this.process.processable_type) > -1"
                  :process="process"></SwitchCraft>
