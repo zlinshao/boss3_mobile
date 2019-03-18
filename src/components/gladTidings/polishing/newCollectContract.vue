@@ -947,7 +947,9 @@
       let t = this.$route.query;
       if (t.house !== undefined && t.house !== '') {
         let val = JSON.parse(t.house);
-        this.form.contract_id = val.id;
+        if(val.id!==null&&val.id!==undefined&&val.id!==''){
+          this.form.contract_id = val.id;
+        }
         this.form.house_type = val.house_type;
       }
       if (t.staff !== undefined && t.staff !== '') {
@@ -1639,11 +1641,11 @@
               let draft = res.data.data.param_map;
               this.changeContractData(draft);
             } else {
-              this.close_();
+              //this.close_();
               this.userInfo();
             }
           }).catch(e => {
-            this.close_();
+            //this.close_();
             this.userInfo();
             Toast.clear();
           })
@@ -1655,11 +1657,11 @@
             if (res.data.code === '40000') {
               this.changeContractData(res.data.data)
             } else {
-              this.close_();
+              //this.close_();
               this.userInfo();
             }
           }).catch(e => {
-            this.close_();
+            //this.close_();
             this.userInfo();
             Toast.clear();
           })
