@@ -413,7 +413,7 @@
           </van-field>
           <van-field
             @click="selectShow(4,index)"
-            v-model="payTypeNum[index]"
+            v-model="curPayWays[index].name"
             label="付款方式"
             type="text"
             readonly
@@ -727,7 +727,7 @@
         eurls: globalConfig.e_server,
         picStatus: 'success',
         isClear: false,
-
+        curPayWays:[new CommonIdNameEntity()],
         tabs: '',
         columns: [],              //select值
         selectHide: false,
@@ -745,7 +745,6 @@
         amountPay: 1,
         datePay: [],
         payType: [''],              //付款方式ID
-        payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
         corp: true,                 //公司单
@@ -1279,7 +1278,6 @@
             this.pay_way_arr[0] = res.data[0].id;
             this.form.pay_way_arr = this.pay_way_arr;
             this.pay_way_arr_name[0] = res.data[0].dictionary_name;
-            this.payTypeNum = this.pay_way_arr_name;
             //安置方式
             this.dictionary(437, 1).then((res) => {
               this.value7 = [];
@@ -1417,7 +1415,8 @@
             this.cusFrom = value;
             break;
           case 4:
-            this.payTypeNum[this.payIndex] = value;
+            let entity=new CommonIdNameEntity(this.dictValue4[index].id,this.dictValue4[index].dictionary_name);
+            this.curPayWays[this.payIndex]=entity;
             for (let i = 0; i < this.dictValue4.length; i++) {
               if (this.dictValue4[i].dictionary_name === value) {
                 this.form.pay_way_arr[this.payIndex] = this.dictValue4[i].id;
@@ -1458,7 +1457,7 @@
           this.amountPay++;
           this.form.period_pay_arr.push('');
           this.form.pay_way_arr.push('');
-          this.payTypeNum.push('');
+          this.curPayWays.push(new CommonIdNameEntity);
         }
       },
       // 删除月单价
@@ -1473,7 +1472,7 @@
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
           this.form.pay_way_arr.splice(index, 1);
-          this.payTypeNum.splice(index, 1);
+          this.curPayWays.splice(index, 1);
           this.datePay.splice(index, 1);
           this.periodDate(val);
         }
@@ -1735,7 +1734,8 @@
         for (let i = 0; i < draft.pay_way_arr.length; i++) {
           for (let j = 0; j < this.dictValue4.length; j++) {
             if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
-              this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
+              let entity=new CommonIdNameEntity(this.dictValue4[j].id,this.dictValue4[j].dictionary_name)
+              this.curPayWays[i]=entity;
             }
           }
         }
@@ -1846,7 +1846,6 @@
         this.clearObj(this.showForm);
         this.form.purchase_way = 509;
         this.form.pay_way_arr = this.pay_way_arr;
-        this.payTypeNum = this.pay_way_arr_name;
         this.form.vacancy_way = this.vacancy_way_id;
         this.vacancy_way_name = this.vacancy_way;
         this.form.warranty_day = '';
@@ -1856,7 +1855,7 @@
         this.datePay = [];
         this.datePrice = [];
         this.amountPay = 1;
-        this.payTypeNum = [''];
+        this.curPayWays=[];
         this.vacancy_way_name = '';
         this.property_name = '';
         this.corp = true;
