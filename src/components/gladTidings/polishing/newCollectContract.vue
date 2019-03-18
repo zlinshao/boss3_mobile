@@ -508,7 +508,6 @@
           <van-field
             v-model="form.account"
             label="卡号"
-            @blur="accountBank(form.account)"
             type="text"
             class="number"
             placeholder="请填写卡号"
@@ -521,6 +520,7 @@
         <van-field
           v-model="form.bank"
           label="银行"
+          @click="accountBank(form.account)"
           type="text"
           placeholder="请填写银行名称"
           icon="clear"
