@@ -913,19 +913,23 @@
       } else {
         console.log('读取房屋信息');
         sessionStorage.setItem('contract_house_item', null);
-        let house_res = item.house_res;
-        let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
         this.form.house.name = item.house_name;
-        this.form.province = house_res_com.province.province_name;//省
-        this.form.city = house_res_com.city.city_name;//市
-        this.form.district = house_res_com.area.area_name;
-        //this.form.property_address = house_res_com.address;//街道
         let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
         this.form.room = house_types[0];//室
         this.form.hall = house_types[1];//厅
         this.form.toilet = house_types[2];//卫
+
+        let house_res = item.house_res;
+        let house_res_com = house_res.community;
+        if(house_res_com===undefined){
+          return
+        }
+        this.form.province = house_res_com.province.province_name;//省
+        this.form.city = house_res_com.city.city_name;//市
+        this.form.district = house_res_com.area.area_name;
+        //this.form.property_address = house_res_com.address;//街道
         this.form.area = house_res.area;//面积
         if (this.form.type === '2') {//续收
           this.$http.get(this.eurls + 'fdd/contract/read/' + item.contractVal.contract_number).then((res) => {
@@ -947,7 +951,8 @@
       let t = this.$route.query;
       if (t.house !== undefined && t.house !== '') {
         let val = JSON.parse(t.house);
-        if(val.id!==null&&val.id!==undefined&&val.id!==''){
+        console.log(val)
+        if (val.id !== null && val.id !== undefined && val.id !== '') {
           this.form.contract_id = val.id;
         }
         this.form.house_type = val.house_type;
@@ -1237,7 +1242,7 @@
         this.form.cookie = per.session_id;
       },
       accountBank(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val+"&owner="+this.form.account_name).then((res) => {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val + "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
           }
