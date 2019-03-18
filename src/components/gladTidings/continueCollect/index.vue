@@ -537,7 +537,7 @@
         }
       },
       accountBank(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val + "&owner=" + this.form.account_name).then((res) => {
+        this.$http.get(this.urls + 'bulletin/helper/get_bank_name?card=' + val + "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
           }else{

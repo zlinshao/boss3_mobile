@@ -1251,7 +1251,7 @@
         this.form.cookie = per.session_id;
       },
       accountBank(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val + "&owner=" + this.form.account_name).then((res) => {
+        this.$http.get(this.urls + 'bulletin/helper/get_bank_name?card=' + val + "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
           }else{
@@ -1731,9 +1731,8 @@
         this.form.period_price_arr = draft.period_price_arr;
         this.countDate(1, draft.period_price_arr);
         this.form.price_arr = draft.price_arr;
+        this.amountPay = draft.pay_way_arr.length;
         for (let i = 0; i < draft.pay_way_arr.length; i++) {
-          this.amountPay = i + 1;
-          this.form.pay_way_arr.push('');
           for (let j = 0; j < this.dictValue4.length; j++) {
             if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
               this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
