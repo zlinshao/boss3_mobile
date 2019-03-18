@@ -439,7 +439,7 @@
         @cancel="onCancel"
         @confirm="onConfirm"/>
     </van-popup>
-
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -535,6 +535,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
+          uniq_code:'',
         },
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
@@ -916,6 +917,7 @@
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
 
             this.haveInHand = true;

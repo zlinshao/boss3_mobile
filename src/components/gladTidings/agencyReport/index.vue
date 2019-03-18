@@ -198,7 +198,7 @@
       <div @click="saveCollect(1)">草稿</div>
       <div @click="saveCollect(0)">发布</div>
     </div>
-
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -406,6 +406,7 @@
             this.form.settle = 0;
           }
           this.form.draft = val;
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -594,9 +595,11 @@
 <style lang="scss">
   #agencyReport {
     overflow: hidden;
+
     .paddingTitle {
       background: #F8F8F8;
     }
+
     .addInput {
       border-top: 1px solid #f8f8f8;
     }

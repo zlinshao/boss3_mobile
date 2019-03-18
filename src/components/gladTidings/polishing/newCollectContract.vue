@@ -663,6 +663,7 @@
       </van-checkbox-group>
     </van-popup>
     <!--选择备注条款列表-->
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -1554,6 +1555,7 @@
             duration: 0,
             message: '加载中...'
           });
+          this.form.uniq_code=this.$refs.float.getCode();
           if (type === 1) {//草稿
             let json = {content: this.form, type: '1'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {

@@ -272,6 +272,7 @@
 
     <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel"
                 @onDate="onConTime"></ChooseTime>
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -369,6 +370,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
+          uniq_code:''
         },
         leaders: {},
         screenshots: {},
@@ -665,6 +667,7 @@
           this.emptyPic(this.form.screenshot, 'screenshot');
           this.emptyPic(this.form.screenshot_leader, 'screenshot_leader');
           this.emptyPic(this.form.deposit_photo, 'deposit_photo');
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;

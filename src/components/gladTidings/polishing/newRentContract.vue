@@ -743,6 +743,7 @@
         <van-checkbox v-for="(item,index) in remarks" :name="item" :key="index">{{item.name}}</van-checkbox>
       </van-checkbox-group>
     </van-popup>
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -1637,6 +1638,8 @@
           Toast(this.alertMsg('pic'));
           return;
         }
+        this.form.uniq_code=this.$refs.float.getCode();
+
         if (this.haveInHand) {
           this.haveInHand = false;
           let receipt = [];

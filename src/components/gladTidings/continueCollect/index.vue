@@ -2,15 +2,15 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
-          <van-field
-            v-model="form.house.name"
-            label="房屋地址"
-            type="text"
-            readonly
-            @click="searchSelect(1)"
-            placeholder="请选择房屋地址"
-            required>
-          </van-field>
+        <van-field
+          v-model="form.house.name"
+          label="房屋地址"
+          type="text"
+          readonly
+          @click="searchSelect(1)"
+          placeholder="请选择房屋地址"
+          required>
+        </van-field>
         <van-field
           v-model="form.house_type"
           type="text"
@@ -361,7 +361,7 @@
 
     <!--日期-->
     <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel" @onDate="onConTime"></ChooseTime>
-
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -451,6 +451,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
+          uniq_code:''
         },
         property_name: '',              //物业费付款人
         photos: {},                     //照片
@@ -536,7 +537,7 @@
         }
       },
       accountBank(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val+ "&owner=" + this.form.account_name).then((res) => {
+        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val + "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
           }
@@ -763,6 +764,7 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -807,10 +809,10 @@
 
       houseInfo() {
         let t = this.$route.query;
-        if(t.community !== undefined && t.community !== ''){
-          let villageId=t.community.id;
-          this.$http.get(this.urls+'bulletin/quality/allow_community?community_id='+villageId).then(res=>{
-            if(res.data.code==='51401'){
+        if (t.community !== undefined && t.community !== '') {
+          let villageId = t.community.id;
+          this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + villageId).then(res => {
+            if (res.data.code === '51401') {
               Toast(res.data.msg)
             }
           });
