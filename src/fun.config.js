@@ -163,9 +163,9 @@ export default {
       })
     };
     // 报备码
-    Vue.prototype.bulletinCode = function () {
+    Vue.prototype.bulletinCode = function (prefix) {
       return new Promise((resolve) => {
-        this.$http.get(globalConfig.server + 'api/registration/uinq_code?prefix=boss3:receivable').then((res) => {
+        this.$http.get(globalConfig.server + 'api/registration/uinq_code?prefix='+prefix).then((res) => {
           if (res.data.code === 200) {
             resolve(res.data.data.uniq_code)
           }

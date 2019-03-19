@@ -7,6 +7,12 @@
   export default {
     name: "floatButton",
     components: {Toast},
+    props:{
+      type:{
+        type:Number,
+        default:1
+      }
+    },
     data(){
       return{
         uniq_code:''
@@ -19,7 +25,8 @@
     },
     activated(){
       //获取报备码
-      this.bulletinCode().then(res=>{
+      let prefix=(this.type===1?'boss3:payable':'boss3:receivable');
+      this.bulletinCode(prefix).then(res=>{
         this.uniq_code = res;
       });
     },

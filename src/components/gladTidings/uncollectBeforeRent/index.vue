@@ -447,7 +447,7 @@
 
     <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel"
                 @onDate="onConTime"></ChooseTime>
-    <float-btn ref="float"></float-btn>
+    <float-btn ref="float" :type="0"></float-btn>
   </div>
 </template>
 
