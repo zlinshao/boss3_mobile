@@ -162,6 +162,18 @@ export default {
         alert(JSON.stringify(err));
       })
     };
+    // 报备码
+    Vue.prototype.bulletinCode = function (prefix) {
+      return new Promise((resolve) => {
+        this.$http.get(globalConfig.server + 'api/registration/uinq_code?prefix='+prefix).then((res) => {
+          if (res.data.code === 200) {
+            resolve(res.data.data.uniq_code)
+          }
+        })
+      }).catch(err => {
+        alert(JSON.stringify(err));
+      })
+    };
     // loading
     Vue.prototype.prompt = function (msg, type) {
       switch (type) {

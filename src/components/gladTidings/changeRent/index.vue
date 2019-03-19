@@ -451,6 +451,7 @@
 
     <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel"
                 @onDate="onConTime"></ChooseTime>
+    <float-btn ref="float" :type="0"></float-btn>
   </div>
 </template>
 
@@ -569,6 +570,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
+          uniq_code:''
         },
         screenshots: {},
         photos: {},
@@ -629,7 +631,6 @@
     activated() {
       let count = sessionStorage.count;
       this.counts = count;
-
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
@@ -987,6 +988,7 @@
           this.form.is_other_fee = this.other_fee_status ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;

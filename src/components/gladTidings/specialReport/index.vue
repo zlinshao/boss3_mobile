@@ -303,6 +303,7 @@
         @cancel="onCancel"
         @confirm="onConfirm"/>
     </van-popup>
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -373,6 +374,8 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
+          uniq_code:''
+
         },
         screenshots: {},
         screenshots_leader: {},
@@ -400,7 +403,6 @@
     activated() {
       let count = sessionStorage.count;
       this.counts = count;
-
       if (count === '11') {
         this.routerIndex('');
         this.ddRent('');
@@ -699,6 +701,7 @@
             }
           }
           this.form.contract = this.contract;
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/special', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;

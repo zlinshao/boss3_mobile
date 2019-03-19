@@ -966,6 +966,12 @@
         }
         if (t.city !== undefined && t.city !== '') {
           let val = JSON.parse(t.city);
+          let villageId=val.id;
+          this.$http.get(this.urls+'bulletin/quality/allow_community?community_id='+villageId).then(res=>{
+            if(res.data.code==='51401'){
+              Toast(res.data.msg)
+            }
+          });
           this.form.community = val;
           this.community_name = val.village_name;
           this.property_phone = val.property_phone;

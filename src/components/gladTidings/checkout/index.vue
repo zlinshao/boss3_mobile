@@ -168,7 +168,7 @@
     <!--日期-->
     <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel"
                 @onDate="onConTime"></ChooseTime>
-
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -240,6 +240,7 @@
           department_id: '',            //部门id
           staff_name: '',                 //开单人name
           department_name: '',            //部门name
+          uniq_code:''
         },
         photos: {},
         checkouts: {},
@@ -429,6 +430,7 @@
         if (this.haveInHand) {
           this.haveInHand = false;
           this.form.draft = val;
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/checkout', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
