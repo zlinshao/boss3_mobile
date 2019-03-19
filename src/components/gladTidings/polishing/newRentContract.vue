@@ -1744,14 +1744,16 @@
           Toast(res.data.msg);
           if (res.data.code === '40000') {
             Toast.success(res.data.msg);
-            this.close_();
-            $('.imgItem').remove();
             if (this.form.from_bulletin === 0) {
               this.routerDetail(res.data.data.data.id);
             } else {
               sessionStorage.setItem('isRefreshList', 'true');
               this.$router.go(-1);
             }
+
+            this.close_();
+            $('.imgItem').remove();
+
           } else if (res.data.code === '40040') {
             if (res.data.data.is_bulletin) {
               this.routerDetail(res.data.data.data.id)
