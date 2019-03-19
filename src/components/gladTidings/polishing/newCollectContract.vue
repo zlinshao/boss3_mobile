@@ -1434,11 +1434,7 @@
             break;
           case 7:
             this.vacancy_way_name = value;
-            for (let i = 0; i < this.dictValue7.length; i++) {
-              if (this.dictValue7[i].dictionary_name === value) {
-                this.form.vacancy_way = this.dictValue7[i].id;
-              }
-            }
+            this.form.vacancy_way = this.dictValue7[index].id;
             if (value === '其他') {
               this.form.vacancy_other = '';
             }
@@ -1856,7 +1852,6 @@
         this.datePrice = [];
         this.amountPay = 1;
         this.curPayWays=[new CommonIdNameEntity];
-        this.vacancy_way_name = '';
         this.property_name = '';
         this.corp = true;
         this.photos = {};
