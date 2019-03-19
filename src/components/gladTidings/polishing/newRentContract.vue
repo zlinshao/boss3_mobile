@@ -1146,9 +1146,11 @@
         let list = [];
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
-          for (let j = 0; j < ids.length; j++) {
-            if (entity.id === ids[j]) {
-              list.push(entity)
+          if(ids!==null&&ids!==undefined){
+            for (let j = 0; j < ids.length; j++) {
+              if (entity.id === ids[j]) {
+                list.push(entity)
+              }
             }
           }
         }
@@ -1218,11 +1220,10 @@
             if (res.data.code === '40000') {
               this.changeContractDetail(res.data.data)
             } else {
-              this.close_();
               this.userInfo();
             }
           }).catch(e => {
-            this.close_();
+            console.log(e)
             this.userInfo();
             Toast.clear();
           })
@@ -1676,7 +1677,6 @@
             message: '加载中...'
           });
           if (val === 1) {//草稿
-            console.log(this.form)
             let json = {content: this.form, type: '2'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
               this.haveInHand = true;
@@ -1921,6 +1921,8 @@
         this.form.corp_name = draft.corp_name;
         this.form.type = draft.type;
         this.form.month = draft.month;
+        console.log(draft)
+
         this.form.day = draft.day === '0' ? '' : draft.day;
         this.form.contract_number = this.setContractNumber(draft.contract_number);
         this.form.sign_date = draft.sign_date;
@@ -1981,12 +1983,6 @@
             }
           }
         }
-        console.log(this.amountMoney)
-        console.log(JSON.stringify(this.form.account_id))
-        console.log(this.form.money_way)
-        console.log(this.form.money_sep.length)
-        console.log(this.form.real_pay_at.length)
-
         let count = this.amountMoney;
         if (!(this.form.account_id.length === count && this.form.money_way.length === count && this.form.money_sep.length === count && this.form.real_pay_at.length === count)) {
           this.form.account_id.splice(0, this.form.account_id.length);
