@@ -2,7 +2,7 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-radio-group v-model="form.type">
+        <van-radio-group v-model="form.type" :disabled="!enable()">
           <van-radio name="1">新收</van-radio>
           <van-radio name="2">续收</van-radio>
         </van-radio-group>
@@ -28,6 +28,7 @@
           label="房屋地址"
           type="text"
           readonly
+          :disabled="!enable()"
           @click="searchSelect(1)"
           placeholder="请选择房屋地址"
           required>
@@ -54,6 +55,7 @@
           v-model="showForm.houseCertificateTypeTxt"
           label="持有证件"
           readonly
+          :disabled="!enable()"
           @click="showSelect(houseCertificateTypes)"
           type="text"
           placeholder="请选择持有证件"
@@ -72,6 +74,7 @@
         <van-field
           v-model="form.property_number"
           label="产权证号"
+          :disabled="!enable()"
           type="text"
           placeholder="请填写产权证号"
           icon=""
@@ -82,6 +85,7 @@
           v-model="form.QiuQuan_number"
           label="丘权号"
           type="text"
+          :disabled="!enable()"
           placeholder="请填写丘权号"
           icon=""
           @click-icon="form.QiuQuan_number = ''">
@@ -89,12 +93,13 @@
         <div class="changes" v-for="(item,index) in form.owner">
           <div class="paddingTitle">
             <span>房东<span v-if="form.owner.length > 1">({{index + 1}})</span></span>
-            <span class="colors" v-if="form.owner.length > 1" @click="form.owner.splice(index)">删除</span>
+            <span class="colors" v-if="form.owner.length > 1&&((enable()&&index===0)||index!==0)" @click="form.owner.splice(index)">删除</span>
           </div>
           <van-field
             v-model="form.owner[index].name"
             label="房东姓名"
             type="text"
+            :disabled="!((enable()&&index===0)||index!==0)"
             @keyup="onSignerChanged(form.owner[index])"
             placeholder="请填写房东姓名"
             icon="clear"
@@ -102,6 +107,7 @@
             required>
           </van-field>
           <van-field
+            :disabled="!((enable()&&index===0)||index!==0)"
             @keyup="onSignerChanged(form.owner[index])"
             v-model="form.owner[index].idcard"
             label="房东身份证号"
@@ -117,6 +123,7 @@
             label="联系方式"
             type="number"
             class="number"
+            :disabled="!((enable()&&index===0)||index!==0)"
             placeholder="请填写联系方式"
             icon="clear"
             @click-icon="form.owner[index].phone= ''"
@@ -130,6 +137,7 @@
           v-model="showForm.signPeople"
           label="签约人"
           type="text"
+          :disabled="!enable()"
           placeholder="请选择签约人"
           @click="showSignPeoples()"
           readonly
@@ -146,6 +154,7 @@
             type="text"
             placeholder="请填写代理人姓名"
             icon=""
+            :disabled="!enable()"
             @click-icon="form.signer.name = ''"
             required>
           </van-field>
@@ -154,6 +163,7 @@
             v-model="form.signer.phone"
             label="代理人手机号"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写代理人手机号"
             icon=""
             @click-icon="form.signer.phone = ''"
@@ -164,6 +174,7 @@
             v-model="form.signer.idcard"
             label="代理人身份证号"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写代理人身份证号"
             icon=""
             @click-icon="form.signer.idcard = ''"
@@ -174,6 +185,7 @@
           v-model="showForm.noOwnerFeeTxt"
           label="非房东费用"
           readonly
+          :disabled="!enable()"
           type="text"
           @click="showChooseNoOwnerFee()"
           placeholder="请选择非房东费用(可多选)"
@@ -186,6 +198,7 @@
           placeholder="请选择物业费付款人"
           @click="selectShow(6,'')"
           readonly
+          :disabled="!enable()"
           required>
         </van-field>
         <van-field
@@ -195,6 +208,7 @@
           type="text"
           placeholder="请填写其他费用"
           icon="clear"
+          :disabled="!enable()"
           @click-icon="form.other_fee_text=''"
           required>
         </van-field>
@@ -203,6 +217,7 @@
           label="可否装修"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="showSelect(canDecorations)"
           placeholder="请选择可否装修"
           required>
@@ -212,6 +227,7 @@
           label="可否添加物品"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="showSelect(canAddThings)"
           placeholder="请选择可否添加物品"
           required>
@@ -221,6 +237,7 @@
           label="备注条款"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="showChooseRemark()"
           placeholder="请选择备注条款(可多选)"
         >
@@ -231,6 +248,7 @@
           label="签约日期"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="timeChoose('sign_date', form.sign_date)"
           placeholder="请选择签约日期日期"
           required>
@@ -241,6 +259,7 @@
             v-model="form.month"
             type="number"
             class="number"
+            :disabled="!enable()"
             @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
@@ -248,6 +267,7 @@
             v-model="form.day"
             type="number"
             class="number"
+            :disabled="!enable()"
             @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
@@ -257,6 +277,7 @@
           <van-field
             v-model="form.begin_date"
             type="text"
+            :disabled="!enable()"
             label="空置期开始"
             placeholder="请选择空置期开始日期"
             readonly
@@ -268,6 +289,7 @@
             label="空置期(天)"
             type="number"
             class="number"
+            :disabled="!enable()"
             @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
             placeholder="请填写空置期"
             icon="clear"
@@ -280,6 +302,7 @@
             label="空置期结束"
             placeholder="请选择空置期结束日期"
             readonly
+            :disabled="!enable()"
             @click="timeChoose('end_date_vacant', form.end_date_vacant)"
             required>
           </van-field>
@@ -289,6 +312,7 @@
             label="空置期规则"
             type="text"
             readonly
+            :disabled="!enable()"
             placeholder="空置期规则"
             required>
           </van-field>
@@ -296,6 +320,7 @@
             v-model="form.vacancy_other"
             label="空置期规则"
             type="text"
+            :disabled="!enable()"
             v-if="vacancy_way_name === '其他'"
             placeholder="空置期规则"
             required>
@@ -306,6 +331,7 @@
           v-model="form.begin_date"
           type="text"
           label="合同开始时间"
+          :disabled="!enable()"
           placeholder="请选择合同开始时间"
           readonly
           @click="timeChoose('begin_date', form.begin_date)"
@@ -316,6 +342,7 @@
           label="合同结束日期"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="timeChoose('end_date', form.end_date)"
           placeholder="请选择合同结束日期"
           required>
@@ -326,6 +353,7 @@
             v-model="form.pay_first_date"
             readonly
             type="text"
+            :disabled="!enable()"
             @click="timeChoose('pay_first_date', form.pay_first_date)"
             placeholder="第一次打款日期">
           </van-field>
@@ -334,6 +362,7 @@
             v-model="form.pay_second_date"
             readonly
             type="text"
+            :disabled="!enable()"
             @click="timeChoose('pay_second_date', form.pay_second_date)"
             placeholder="第二次打款日期">
           </van-field>
@@ -343,7 +372,7 @@
       <div class="changes" v-for="(key,index) in amountPrice">
         <div class="paddingTitle">
           <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountPrice > 1" @click="deleteAmount(index,1)">删除</span>
+          <span class="colors" v-if="amountPrice > 1&&enable()" @click="deleteAmount(index,1)">删除</span>
         </div>
         <van-cell-group>
           <van-field
@@ -359,7 +388,7 @@
             type="number"
             class="number"
             label="付款周期"
-            :disabled="amountPrice === 1 && form.period_price_arr[index] === form.month"
+            :disabled="(amountPrice === 1 && form.period_price_arr[index] === form.month)||!enable()"
             @keyup="periodDate(1)"
             placeholder="请填写月单价周期"
             required>
@@ -368,13 +397,14 @@
             v-model="form.price_arr[index]"
             type="text"
             class="number"
+            :disabled="!enable()"
             label="价格"
             placeholder="请填写金额"
             required>
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(1)" class="addInput">
+      <div @click="priceAmount(1)" class="addInput" v-if="enable()">
         +月单价变化
       </div>
       <van-field
@@ -384,6 +414,7 @@
         class="number"
         placeholder="请填写押金"
         icon="clear"
+        :disabled="!enable()"
         @click-icon="form.deposit = ''"
         required>
       </van-field>
@@ -406,7 +437,7 @@
             type="number"
             class="number"
             label="付款周期"
-            :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
+            :disabled="(amountPay === 1 && form.period_pay_arr[index] === form.month)||!enable()"
             @keyup="periodDate(2)"
             placeholder="请填写付款方式周期"
             required>
@@ -416,13 +447,14 @@
             v-model="curPayWays[index].name"
             label="付款方式"
             type="text"
+            :disabled="!enable()"
             readonly
             placeholder="请选择付款方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(2)" class="addInput bottom">
+      <div @click="priceAmount(2)" class="addInput bottom" v-if="enable()">
         +付款方式变化
       </div>
 
@@ -434,6 +466,7 @@
           label="是否渠道"
           type="text"
           readonly
+          :disabled="!enable()"
           placeholder="是否渠道"
           required>
         </van-field>
@@ -442,6 +475,7 @@
             v-model="form.agency_name"
             label="渠道名称"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写渠道名称"
             icon="clear"
             @click-icon="form.agency_name = ''"
@@ -450,6 +484,7 @@
           <van-field
             v-model="form.agency_price"
             label="渠道费"
+            :disabled="!enable()"
             type="text"
             class="number"
             placeholder="请填写渠道费"
@@ -461,6 +496,7 @@
             v-model="form.agency_user_name"
             label="渠道人"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写渠道人"
             icon="clear"
             @click-icon="form.agency_user_name = ''"
@@ -470,6 +506,7 @@
             v-model="form.agency_phone"
             label="渠道联系方式"
             type="text"
+            :disabled="!enable()"
             class="number"
             placeholder="请填写渠道联系方式"
             icon="clear"
@@ -484,6 +521,7 @@
           <van-field
             v-model="form.warranty"
             type="number"
+            :disabled="!enable()"
             class="number"
             placeholder="保修期(月)">
           </van-field>
@@ -491,6 +529,7 @@
             class="twoBorder number"
             v-model="form.warranty_day"
             type="number"
+            :disabled="!enable()"
             placeholder="保修期(天)">
           </van-field>
         </div>
@@ -501,6 +540,7 @@
           type="text"
           placeholder="请填写开户名"
           icon="clear"
+          :disabled="!enable()"
           @click-icon="form.account_name = ''"
           required>
         </van-field>
@@ -512,6 +552,7 @@
             class="number"
             placeholder="请填写卡号"
             icon="clear"
+            :disabled="!enable()"
             @click-icon="form.account = ''"
             required>
           </van-field>
@@ -522,6 +563,7 @@
           label="银行"
           @click="accountBank(form.account)"
           type="text"
+          :disabled="!enable()"
           placeholder="请填写银行名称"
           icon="clear"
           @click-icon="form.bank = ''"
@@ -533,6 +575,7 @@
           type="text"
           placeholder="请填写支行"
           icon="clear"
+          :disabled="!enable()"
           @click-icon="form.subbranch = ''">
         </van-field>
 
@@ -540,6 +583,7 @@
           v-model="form.relationship"
           label="关系"
           type="text"
+          :disabled="!enable()"
           placeholder="请填写收款人与房东关系"
           icon="clear"
           @click-icon="form.relationship = ''"
@@ -553,20 +597,21 @@
             class="number"
             placeholder="[n+1]*月单价,(n+1)≥4"
             icon="clear"
+            :disabled="!enable()"
             @click-icon="form.penalty = ''"
             required>
           </van-field>
         </div>
         <div class="titleRed">n为年限，且金额不足一万按一万算</div>
-        <van-switch-cell v-model="corp" title="是否公司单"/>
+        <van-switch-cell v-model="corp" title="是否公司单"   :disabled="!enable()"/>
         <div @click="previewPdf" class="addInput bottom">
           +预览电子合同
         </div>
       </van-cell-group>
 
-      <div class="aloneModel">
+      <div class="aloneModel"  v-if="enable()" >
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots" ></UpLoad>
       </div>
 
       <div class="aloneModel required" v-if="false">
@@ -574,12 +619,12 @@
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
-      <div class="aloneModel required">
+      <div class="aloneModel required"  v-if="enable()">
         <div class="title"><span>*</span>房产证照片</div>
         <UpLoad :ID="'property_photo'" @getImg="getImgData" :isClear="isClear" :editImage="property_photos"></UpLoad>
       </div>
 
-      <div class="aloneModel required">
+      <div class="aloneModel required"  v-if="enable()">
         <div class="title"><span>*</span>证件照片</div>
         <UpLoad :ID="'identity_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identity_photos"></UpLoad>
       </div>
@@ -591,12 +636,14 @@
           type="textarea"
           placeholder="请填写备注"
           icon="clear"
+          :disabled="!enable()"
           @click-icon="form.remark = ''">
         </van-field>
         <van-field
           v-model="form.staff_name"
           @click="searchSelect(2)"
           label="开单人"
+          :disabled="!enable()"
           type="text"
           readonly
           placeholder="请选择开单人"
@@ -608,6 +655,7 @@
           label="部门"
           type="text"
           readonly
+          :disabled="!enable()"
           placeholder="请选择部门"
           required>
         </van-field>
@@ -983,14 +1031,14 @@
       }
     },
     computed: {
-      house() {
-        return this.form.house;
-      },
       firstMonthPrice() {
         return this.form.price_arr[0];
       }
     },
     methods: {
+      enable(){
+        return this.form.regenerate==='0'||this.form.regenerate===0;
+      },
       onSignerChanged(item) {
         if (this.form.signer === null) {
           return
