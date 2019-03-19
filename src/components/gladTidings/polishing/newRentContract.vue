@@ -686,7 +686,7 @@
 
       <van-cell-group>
         <van-field
-          :disabled="!enable()"
+          :disabled="!enable()||!reenable()"
           v-model="form.remark"
           label="备注"
           type="textarea"
@@ -695,7 +695,7 @@
           @click-icon="form.remark = ''">
         </van-field>
         <van-field
-          v-if="enable()"
+          :disabled="!enable()||!reenable()"
           v-model="form.staff_name"
           @click="searchSelect(3)"
           readonly
@@ -710,7 +710,7 @@
           readonly
           label="部门"
           type="text"
-          v-if="enable()"
+          :disabled="!enable()||!reenable()"
           placeholder="请选择部门"
           required>
         </van-field>
