@@ -889,6 +889,7 @@
           day: '0',                      //租房天数
           sign_date: '',                //签约开始日期
           end_date: '',                 //签约结束日期
+          process_id:'',//报备ID
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -1953,6 +1954,7 @@
         this.form.sign_date = draft.sign_date;
         this.form.begin_date = draft.begin_date;
         this.form.end_date = draft.end_date;
+        this.form.process_id=draft.process_id;
         this.first_date = [];
         this.form.from_bulletin = draft.from_bulletin || 0;
         this.first_date.push(draft.begin_date);
