@@ -38,18 +38,14 @@
           label="产权地址"
           type="text"
           required
-          placeholder="请填写产权地址"
-          icon=""
-          @click-icon="form.property_address = ''">
+          placeholder="请填写产权地址">
         </van-field>
         <van-field
           v-model="form.village_name"
           label="物业地址"
           type="text"
           placeholder="请填写物业地址"
-          icon=""
-          required
-          @click-icon="form.village_name = ''">
+          required>
         </van-field>
         <van-field
           v-model="showForm.houseCertificateTypeTxt"
@@ -67,8 +63,6 @@
           label="其他房屋证明"
           type="text"
           placeholder="请填写其他房屋证明"
-          icon=""
-          @click-icon="form.other_house_cert = ''"
           required>
         </van-field>
         <van-field
@@ -77,8 +71,6 @@
           :disabled="!enable()"
           type="text"
           placeholder="请填写产权证号"
-          icon=""
-          @click-icon="form.property_number = ''"
         >
         </van-field>
         <van-field
@@ -86,9 +78,7 @@
           label="丘权号"
           type="text"
           :disabled="!enable()"
-          placeholder="请填写丘权号"
-          icon=""
-          @click-icon="form.QiuQuan_number = ''">
+          placeholder="请填写丘权号"         >
         </van-field>
         <div class="changes" v-for="(item,index) in form.owner">
           <div class="paddingTitle">
@@ -102,8 +92,6 @@
             :disabled="!((enable()&&index===0)||index!==0)"
             @keyup="onSignerChanged(form.owner[index])"
             placeholder="请填写房东姓名"
-            icon="clear"
-            @click-icon="form.owner[index].name=''"
             required>
           </van-field>
           <van-field
@@ -113,8 +101,6 @@
             label="房东身份证号"
             type="text"
             placeholder="请填写房东身份证号"
-            icon="clear"
-            @click-icon="form.owner[index].idcard= ''"
             required>
           </van-field>
           <van-field
@@ -125,8 +111,6 @@
             class="number"
             :disabled="!((enable()&&index===0)||index!==0)"
             placeholder="请填写联系方式"
-            icon="clear"
-            @click-icon="form.owner[index].phone= ''"
             required>
           </van-field>
         </div>
@@ -148,36 +132,30 @@
         </van-field>
         <div v-if="showForm.showProxyInfo">
           <van-field
-            @keyup="onSignerChanged(form.signer)"
+            @keyup="onSignerChanged(item)"
             v-model="form.signer.name"
             label="代理人姓名"
             type="text"
             placeholder="请填写代理人姓名"
-            icon=""
             :disabled="!enable()"
-            @click-icon="form.signer.name = ''"
             required>
           </van-field>
           <van-field
-            @keyup="onSignerChanged(form.signer)"
+            @keyup="onSignerChanged(item)"
             v-model="form.signer.phone"
             label="代理人手机号"
             type="text"
             :disabled="!enable()"
             placeholder="请填写代理人手机号"
-            icon=""
-            @click-icon="form.signer.phone = ''"
             required>
           </van-field>
           <van-field
-            @keyup="onSignerChanged(form.signer)"
+            @keyup="onSignerChanged(item)"
             v-model="form.signer.idcard"
             label="代理人身份证号"
             type="text"
             :disabled="!enable()"
             placeholder="请填写代理人身份证号"
-            icon=""
-            @click-icon="form.signer.idcard = ''"
             required>
           </van-field>
         </div>
@@ -207,9 +185,7 @@
           label="其他费用"
           type="text"
           placeholder="请填写其他费用"
-          icon="clear"
           :disabled="!enable()"
-          @click-icon="form.other_fee_text=''"
           required>
         </van-field>
         <van-field
@@ -292,8 +268,6 @@
             :disabled="!enable()"
             @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
             placeholder="请填写空置期"
-            icon="clear"
-            @click-icon="form.vacancy = ''"
             required>
           </van-field>
           <van-field
@@ -413,9 +387,7 @@
         type="text"
         class="number"
         placeholder="请填写押金"
-        icon="clear"
         :disabled="!enable()"
-        @click-icon="form.deposit = ''"
         required>
       </van-field>
       <div class="changes" v-for="(key,index) in amountPay">
@@ -477,8 +449,6 @@
             type="text"
             :disabled="!enable()"
             placeholder="请填写渠道名称"
-            icon="clear"
-            @click-icon="form.agency_name = ''"
             required>
           </van-field>
           <van-field
@@ -488,8 +458,6 @@
             type="text"
             class="number"
             placeholder="请填写渠道费"
-            icon="clear"
-            @click-icon="form.agency_price = ''"
             required>
           </van-field>
           <van-field
@@ -498,8 +466,6 @@
             type="text"
             :disabled="!enable()"
             placeholder="请填写渠道人"
-            icon="clear"
-            @click-icon="form.agency_user_name = ''"
             required>
           </van-field>
           <van-field
@@ -509,8 +475,6 @@
             :disabled="!enable()"
             class="number"
             placeholder="请填写渠道联系方式"
-            icon="clear"
-            @click-icon="form.agency_phone = ''"
             required>
           </van-field>
         </div>
@@ -539,9 +503,7 @@
           label="开户名"
           type="text"
           placeholder="请填写开户名"
-          icon="clear"
           :disabled="!enable()"
-          @click-icon="form.account_name = ''"
           required>
         </van-field>
         <div class="month">
@@ -551,9 +513,7 @@
             type="text"
             class="number"
             placeholder="请填写卡号"
-            icon="clear"
             :disabled="!enable()"
-            @click-icon="form.account = ''"
             required>
           </van-field>
         </div>
@@ -565,8 +525,6 @@
           type="text"
           :disabled="!enable()"
           placeholder="请填写银行名称"
-          icon="clear"
-          @click-icon="form.bank = ''"
           required>
         </van-field>
         <van-field
@@ -574,9 +532,7 @@
           label="支行"
           type="text"
           placeholder="请填写支行"
-          icon="clear"
-          :disabled="!enable()"
-          @click-icon="form.subbranch = ''">
+          :disabled="!enable()">
         </van-field>
 
         <van-field
@@ -585,8 +541,6 @@
           type="text"
           :disabled="!enable()"
           placeholder="请填写收款人与房东关系"
-          icon="clear"
-          @click-icon="form.relationship = ''"
           required>
         </van-field>
         <div class="month">
@@ -596,9 +550,7 @@
             type="text"
             class="number"
             placeholder="[n+1]*月单价,(n+1)≥4"
-            icon="clear"
             :disabled="!enable()"
-            @click-icon="form.penalty = ''"
             required>
           </van-field>
         </div>
@@ -635,9 +587,7 @@
           label="备注"
           type="textarea"
           placeholder="请填写备注"
-          icon="clear"
-          :disabled="!enable()"
-          @click-icon="form.remark = ''">
+          :disabled="!enable()">
         </van-field>
         <van-field
           v-model="form.staff_name"
@@ -1043,7 +993,9 @@
         if (this.form.signer === null) {
           return
         }
-        this.form.signer.fadada_user_id = ''
+        if(item.name===this.form.signer.name){
+          this.form.signer.fadada_user_id = ''
+        }
       },
       getPic(ids, success) {
         let update = {show: []};
