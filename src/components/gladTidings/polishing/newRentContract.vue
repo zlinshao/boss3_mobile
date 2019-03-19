@@ -1748,7 +1748,7 @@
               this.routerDetail(res.data.data.data.id);
             } else {
               sessionStorage.setItem('isRefreshList', 'true');
-              this.$router.go(-1);
+              this.$router.push('/eContract');
             }
 
             this.close_();
