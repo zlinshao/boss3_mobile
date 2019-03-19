@@ -609,22 +609,22 @@
         </div>
       </van-cell-group>
 
-      <div class="aloneModel"  v-if="enable()" >
+      <div class="aloneModel"  >
         <div class="title">特殊情况截图</div>
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots" ></UpLoad>
       </div>
 
-      <div class="aloneModel required" v-if="false">
+      <div class="aloneModel required">
         <div class="title"><span>*</span>合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
-      <div class="aloneModel required"  v-if="enable()">
+      <div class="aloneModel required" >
         <div class="title"><span>*</span>房产证照片</div>
         <UpLoad :ID="'property_photo'" @getImg="getImgData" :isClear="isClear" :editImage="property_photos"></UpLoad>
       </div>
 
-      <div class="aloneModel required"  v-if="enable()">
+      <div class="aloneModel required">
         <div class="title"><span>*</span>证件照片</div>
         <UpLoad :ID="'identity_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identity_photos"></UpLoad>
       </div>
