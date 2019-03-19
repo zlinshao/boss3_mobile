@@ -2,7 +2,7 @@
   <div id="rentReport">
     <div class="main" id="main">
       <van-cell-group>
-        <div class="rent_types" >
+        <div class="rent_types">
           <div class="label">租房类型</div>
           <van-radio-group v-model="form.type" :disabled="!enable()||!reenable()">
             <van-radio name="1">新租</van-radio>
@@ -39,7 +39,7 @@
 
 
         <!--下面是未收先租确定信息-->
-        <div class="crop_name noBorder" v-if="form.type==='0'" >
+        <div class="crop_name noBorder" v-if="form.type==='0'">
           <van-field
             :disabled="!enable()||!reenable()"
             v-model="form.oldHouseName"
@@ -513,7 +513,8 @@
           @click-icon="form.memo = ''">
         </van-field>
         <div class="addInput" @click="previewReceipt(form, receivedPrice)">预览电子收据</div>
-        <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额" :disabled="!enable()||!reenable()"/>
+        <van-switch-cell v-model="other_fee_status" @change="fee_status" title="是否有其他金额"
+                         :disabled="!enable()||!reenable()"/>
 
         <van-field
           v-if="other_fee_status"
@@ -663,7 +664,7 @@
 
       <div class="aloneModel">
         <div class="title">领导同意截图</div>
-        <UpLoad  :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
+        <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
       </div>
 
       <div class="aloneModel required">
@@ -1076,8 +1077,8 @@
       }
     },
     methods: {
-      reenable(){
-        return this.form.regenerate==='0'||this.form.regenerate===0;
+      reenable() {
+        return this.form.regenerate === '0' || this.form.regenerate === 0;
       },
       enable() {
         return this.form.from_bulletin === 0;
@@ -1163,7 +1164,7 @@
         let list = [];
         for (let i = 0; i < entitys.length; i++) {
           let entity = entitys[i];
-          if(ids!==null&&ids!==undefined){
+          if (ids !== null && ids !== undefined) {
             for (let j = 0; j < ids.length; j++) {
               if (entity.id === ids[j]) {
                 list.push(entity)
@@ -1656,7 +1657,7 @@
           Toast(this.alertMsg('pic'));
           return;
         }
-        this.form.uniq_code=this.$refs.float.getCode();
+        this.form.uniq_code = this.$refs.float.getCode();
 
         if (this.haveInHand) {
           this.haveInHand = false;
@@ -1745,7 +1746,12 @@
             Toast.success(res.data.msg);
             this.close_();
             $('.imgItem').remove();
-            this.routerDetail(res.data.data.data.id);
+            if (this.form.from_bulletin === 0) {
+              this.routerDetail(res.data.data.data.id);
+            } else {
+              sessionStorage.setItem('isRefreshList', 'true');
+              this.$router.go(-1);
+            }
           } else if (res.data.code === '40040') {
             if (res.data.data.is_bulletin) {
               this.routerDetail(res.data.data.data.id)
