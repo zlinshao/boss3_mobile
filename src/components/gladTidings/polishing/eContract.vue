@@ -168,7 +168,7 @@
           let names = '';
           if (customers === undefined) return '';
           for (let i = 0; i < customers.length; i++) {
-            names = names + ' ' + customers[i].name === undefined ? '' : customers[i].name;
+            names = names + ' ' + (customers[i].name === undefined ? '' : customers[i].name);
           }
           return names;
         }
