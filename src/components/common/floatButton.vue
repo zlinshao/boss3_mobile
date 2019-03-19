@@ -66,7 +66,7 @@
 //alert(parseInt(moveX))
 //判断滑动方向
         if(flag === 0) {//点击
-          Toast(app.uniq_code )
+          Toast('tips：提醒租客在转账时备注收款识别码，报备通过更快速~')
         }
       });
     }
