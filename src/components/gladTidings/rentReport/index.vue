@@ -658,8 +658,7 @@
         }
       }
       if (count === '2') {
-        let detail = this.$store.state.app.searchDetail;
-        sessionStorage.setItem('process', JSON.stringify(detail));
+        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
         let newID = JSON.parse(sessionStorage.process);
         if (newID.type === 2) {
           this.close_();

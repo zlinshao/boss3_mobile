@@ -605,12 +605,8 @@
         }
       }
       if (count === '2') {
-        let detail = this.$store.state.app.searchDetail;
-        console.log(detail);
-        sessionStorage.setItem('process', JSON.stringify(detail));
-        console.log(sessionStorage.process);
+        sessionStorage.setItem('process', JSON.stringify(this.$route.query));
         let newID = JSON.parse(sessionStorage.process);
-        console.log(newID);
         if (newID.type === 2) {
           this.close_();
           this.routerTo('/publishDetail', newID.ids);
