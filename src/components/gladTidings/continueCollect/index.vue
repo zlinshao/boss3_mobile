@@ -811,12 +811,12 @@
 
       houseInfo() {
         let t = this.$route.query;
-        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + t.communityId).then(res => {
-          if (res.data.code === '51401') {
-            Toast(res.data.msg)
-          }
-        });
         if (t.house !== undefined && t.house !== '') {
+          this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + t.communityId).then(res => {
+            if (res.data.code === '51401') {
+              Toast(res.data.msg)
+            }
+          });
           let val = JSON.parse(t.house);
           this.form.contract_id = val.id;
           this.form.house.id = val.house_id;

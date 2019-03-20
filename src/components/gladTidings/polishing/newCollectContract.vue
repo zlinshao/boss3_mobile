@@ -948,12 +948,12 @@
         /*获取电子合同相关字段*/
       }
       let t = this.$route.query;
-      this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + t.communityId).then(res => {
-        if (res.data.code === '51401') {
-          Toast(res.data.msg)
-        }
-      });
       if (t.house !== undefined && t.house !== '') {
+        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + t.communityId).then(res => {
+          if (res.data.code === '51401') {
+            Toast(res.data.msg)
+          }
+        });
         let val = JSON.parse(t.house);
         console.log(val)
         if (val.id !== null && val.id !== undefined && val.id !== '') {
