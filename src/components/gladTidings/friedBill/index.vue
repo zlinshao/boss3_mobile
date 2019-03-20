@@ -176,7 +176,7 @@
           department_name: '',            //部门name
           customers: '',                   //客户姓名
           return_money: '',                //退还金额
-          uniq_code:''
+          uniq_code: ''
 
         },
         screenshots: {},                //截图
@@ -301,7 +301,7 @@
           this.haveInHand = false;
           this.form.refund = this.refundSta ? 1 : 0;
           this.form.draft = val;
-          this.form.uniq_code=this.$refs.float.getCode();
+          this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -343,9 +343,9 @@
       },
 
       houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
+        let detail = this.$store.state.app.searchDetail;
+        if (Object.keys(detail).length > 0) {
+          let val = JSON.parse(detail.house);
           this.form.address = val.house_name;
           this.form.contract_id = val.id;
           this.form.house_id = val.house_id;
@@ -360,8 +360,6 @@
       helperBulletin(id) {
         this.$http.get(this.urls + 'bulletin/helper/contract/' + id + '?collect_or_rent=' + this.form.collect_or_rent).then((res) => {
           if (res.data.code === '51110') {
-            console.log(11111111111)
-            console.log(res)
             let pay = res.data.data;
             this.form.payWay = [];
             this.form.price_arr = [];

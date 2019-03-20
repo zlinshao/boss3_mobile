@@ -446,10 +446,9 @@
         }
       },
       houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
-          console.log(val);
+        let detail = this.$store.state.app.searchDetail;
+        if (Object.keys(detail).length > 0) {
+          let val = JSON.parse(detail.house);
           this.form.customer_name = val.customers;
           if (val.agency_info && val.agency_info.agency_name) {
             this.form.agency_infos[0].agency_price = val.agency_info.agency_price || '';
