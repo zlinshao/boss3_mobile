@@ -959,7 +959,6 @@
         });
       }
       let t = this.$route.query;
-      console.log(t)
       if (t.staff !== undefined && t.staff !== '') {
         let val = JSON.parse(t.staff);
         this.form.staff_id = val.staff_id;
