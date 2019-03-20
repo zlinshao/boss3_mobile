@@ -34,6 +34,13 @@
           required>
         </van-field>
         <van-field
+          v-model="form.area"
+          label="面积"
+          type="text"
+          required
+          placeholder="请填写房屋面积">
+        </van-field>
+        <van-field
           v-model="form.property_address"
           label="产权地址"
           type="text"

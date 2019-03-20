@@ -132,6 +132,13 @@
           <div class="showBorder" v-else></div>
         </div>
         <van-field
+          v-model="form.area"
+          label="面积"
+          type="text"
+          required
+          placeholder="请填写房屋面积">
+        </van-field>
+        <van-field
           v-model="rentUseTxt"
           label="租赁用途"
           readonly
@@ -1060,6 +1067,7 @@
         if (item === 'test') return;
         item = JSON.parse(item);
         let house_res = item.house_res;
+        console.log(house_res)
         let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
