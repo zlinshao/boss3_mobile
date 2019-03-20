@@ -294,11 +294,19 @@
           @click-icon="form.phone = ''"
           required>
         </van-field>
+        <van-field
+          v-model="form.account_name"
+          label="开户名"
+          type="text"
+          placeholder="请填写开户名"
+          icon="clear"
+          @click-icon="form.account_name = ''"
+          required>
+        </van-field>
         <div class="month">
           <van-field
             v-model="form.account"
             label="卡号"
-            @blur="accountBank(form.account)"
             type="text"
             class="number"
             placeholder="请填写卡号"
@@ -312,6 +320,7 @@
           v-model="form.bank"
           label="银行"
           type="text"
+          @click="accountBank(form.account)"
           placeholder="请填写银行名称"
           icon="clear"
           @click-icon="form.bank = ''"
@@ -325,15 +334,7 @@
           icon="clear"
           @click-icon="form.subbranch = ''">
         </van-field>
-        <van-field
-          v-model="form.account_name"
-          label="开户名"
-          type="text"
-          placeholder="请填写开户名"
-          icon="clear"
-          @click-icon="form.account_name = ''"
-          required>
-        </van-field>
+
         <van-field
           v-model="form.relationship"
           label="关系"
@@ -438,7 +439,7 @@
         @cancel="onCancel"
         @confirm="onConfirm"/>
     </van-popup>
-
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -534,6 +535,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
+          uniq_code:'',
         },
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
@@ -638,9 +640,11 @@
       },
 
       accountBank(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+        this.$http.get(this.urls + 'bulletin/helper/get_bank_name?card=' + val+ "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
+          }else{
+            Toast(res.data.msg)
           }
         })
       },
@@ -915,6 +919,7 @@
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
 
             this.haveInHand = true;
@@ -959,6 +964,14 @@
       },
       houseInfo() {
         let t = this.$route.query;
+        if(t.community !== undefined && t.community !== ''){
+          let villageId=t.community.id;
+          this.$http.get(this.urls+'bulletin/quality/allow_community?community_id='+villageId).then(res=>{
+            if(res.data.code==='51401'){
+              Toast(res.data.msg)
+            }
+          });
+        }
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.house.id = val.house_id;

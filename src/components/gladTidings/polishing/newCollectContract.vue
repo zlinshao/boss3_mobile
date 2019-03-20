@@ -2,7 +2,7 @@
   <div id="collectReport">
     <div class="main" id="main">
       <van-cell-group>
-        <van-radio-group v-model="form.type">
+        <van-radio-group v-model="form.type" :disabled="!enable()">
           <van-radio name="1">新收</van-radio>
           <van-radio name="2">续收</van-radio>
         </van-radio-group>
@@ -28,6 +28,7 @@
           label="房屋地址"
           type="text"
           readonly
+          :disabled="!enable()"
           @click="searchSelect(1)"
           placeholder="请选择房屋地址"
           required>
@@ -37,23 +38,20 @@
           label="产权地址"
           type="text"
           required
-          placeholder="请填写产权地址"
-          icon=""
-          @click-icon="form.property_address = ''">
+          placeholder="请填写产权地址">
         </van-field>
         <van-field
           v-model="form.village_name"
           label="物业地址"
           type="text"
           placeholder="请填写物业地址"
-          icon=""
-          required
-          @click-icon="form.village_name = ''">
+          required>
         </van-field>
         <van-field
           v-model="showForm.houseCertificateTypeTxt"
           label="持有证件"
           readonly
+          :disabled="!enable()"
           @click="showSelect(houseCertificateTypes)"
           type="text"
           placeholder="请选择持有证件"
@@ -65,50 +63,45 @@
           label="其他房屋证明"
           type="text"
           placeholder="请填写其他房屋证明"
-          icon=""
-          @click-icon="form.other_house_cert = ''"
           required>
         </van-field>
         <van-field
           v-model="form.property_number"
           label="产权证号"
+          :disabled="!enable()"
           type="text"
           placeholder="请填写产权证号"
-          icon=""
-          @click-icon="form.property_number = ''"
         >
         </van-field>
         <van-field
           v-model="form.QiuQuan_number"
           label="丘权号"
           type="text"
-          placeholder="请填写丘权号"
-          icon=""
-          @click-icon="form.QiuQuan_number = ''">
+          :disabled="!enable()"
+          placeholder="请填写丘权号">
         </van-field>
         <div class="changes" v-for="(item,index) in form.owner">
           <div class="paddingTitle">
             <span>房东<span v-if="form.owner.length > 1">({{index + 1}})</span></span>
-            <span class="colors" v-if="form.owner.length > 1" @click="form.owner.splice(index)">删除</span>
+            <span class="colors" v-if="form.owner.length > 1&&((enable()&&index===0)||index!==0)"
+                  @click="form.owner.splice(index)">删除</span>
           </div>
           <van-field
             v-model="form.owner[index].name"
             label="房东姓名"
             type="text"
+            :disabled="!((enable()&&index===0)||index!==0)"
             @keyup="onSignerChanged(form.owner[index])"
             placeholder="请填写房东姓名"
-            icon="clear"
-            @click-icon="form.owner[index].name=''"
             required>
           </van-field>
           <van-field
+            :disabled="!((enable()&&index===0)||index!==0)"
             @keyup="onSignerChanged(form.owner[index])"
             v-model="form.owner[index].idcard"
             label="房东身份证号"
             type="text"
             placeholder="请填写房东身份证号"
-            icon="clear"
-            @click-icon="form.owner[index].idcard= ''"
             required>
           </van-field>
           <van-field
@@ -117,9 +110,8 @@
             label="联系方式"
             type="number"
             class="number"
+            :disabled="!((enable()&&index===0)||index!==0)"
             placeholder="请填写联系方式"
-            icon="clear"
-            @click-icon="form.owner[index].phone= ''"
             required>
           </van-field>
         </div>
@@ -130,6 +122,7 @@
           v-model="showForm.signPeople"
           label="签约人"
           type="text"
+          :disabled="!enable()"
           placeholder="请选择签约人"
           @click="showSignPeoples()"
           readonly
@@ -140,33 +133,30 @@
         </van-field>
         <div v-if="showForm.showProxyInfo">
           <van-field
-            @keyup="onSignerChanged(form.signer)"
+            @keyup="onSignerChanged(item)"
             v-model="form.signer.name"
             label="代理人姓名"
             type="text"
             placeholder="请填写代理人姓名"
-            icon=""
-            @click-icon="form.signer.name = ''"
+            :disabled="!enable()"
             required>
           </van-field>
           <van-field
-            @keyup="onSignerChanged(form.signer)"
+            @keyup="onSignerChanged(item)"
             v-model="form.signer.phone"
             label="代理人手机号"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写代理人手机号"
-            icon=""
-            @click-icon="form.signer.phone = ''"
             required>
           </van-field>
           <van-field
-            @keyup="onSignerChanged(form.signer)"
+            @keyup="onSignerChanged(item)"
             v-model="form.signer.idcard"
             label="代理人身份证号"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写代理人身份证号"
-            icon=""
-            @click-icon="form.signer.idcard = ''"
             required>
           </van-field>
         </div>
@@ -174,6 +164,7 @@
           v-model="showForm.noOwnerFeeTxt"
           label="非房东费用"
           readonly
+          :disabled="!enable()"
           type="text"
           @click="showChooseNoOwnerFee()"
           placeholder="请选择非房东费用(可多选)"
@@ -186,6 +177,7 @@
           placeholder="请选择物业费付款人"
           @click="selectShow(6,'')"
           readonly
+          :disabled="!enable()"
           required>
         </van-field>
         <van-field
@@ -194,8 +186,7 @@
           label="其他费用"
           type="text"
           placeholder="请填写其他费用"
-          icon="clear"
-          @click-icon="form.other_fee_text=''"
+          :disabled="!enable()"
           required>
         </van-field>
         <van-field
@@ -203,6 +194,7 @@
           label="可否装修"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="showSelect(canDecorations)"
           placeholder="请选择可否装修"
           required>
@@ -212,6 +204,7 @@
           label="可否添加物品"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="showSelect(canAddThings)"
           placeholder="请选择可否添加物品"
           required>
@@ -221,6 +214,7 @@
           label="备注条款"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="showChooseRemark()"
           placeholder="请选择备注条款(可多选)"
         >
@@ -231,6 +225,7 @@
           label="签约日期"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="timeChoose('sign_date', form.sign_date)"
           placeholder="请选择签约日期日期"
           required>
@@ -241,6 +236,7 @@
             v-model="form.month"
             type="number"
             class="number"
+            :disabled="!enable()"
             @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写月数">
           </van-field>
@@ -248,6 +244,7 @@
             v-model="form.day"
             type="number"
             class="number"
+            :disabled="!enable()"
             @keyup="endDate(form.end_date_vacant, form.month, form.day, 2)"
             placeholder="请填写天数">
           </van-field>
@@ -257,6 +254,7 @@
           <van-field
             v-model="form.begin_date"
             type="text"
+            :disabled="!enable()"
             label="空置期开始"
             placeholder="请选择空置期开始日期"
             readonly
@@ -268,10 +266,9 @@
             label="空置期(天)"
             type="number"
             class="number"
+            :disabled="!enable()"
             @keyup="endDate(form.begin_date, '', form.vacancy, 1)"
             placeholder="请填写空置期"
-            icon="clear"
-            @click-icon="form.vacancy = ''"
             required>
           </van-field>
           <van-field
@@ -280,6 +277,7 @@
             label="空置期结束"
             placeholder="请选择空置期结束日期"
             readonly
+            :disabled="!enable()"
             @click="timeChoose('end_date_vacant', form.end_date_vacant)"
             required>
           </van-field>
@@ -289,6 +287,7 @@
             label="空置期规则"
             type="text"
             readonly
+            :disabled="!enable()"
             placeholder="空置期规则"
             required>
           </van-field>
@@ -296,6 +295,7 @@
             v-model="form.vacancy_other"
             label="空置期规则"
             type="text"
+            :disabled="!enable()"
             v-if="vacancy_way_name === '其他'"
             placeholder="空置期规则"
             required>
@@ -306,6 +306,7 @@
           v-model="form.begin_date"
           type="text"
           label="合同开始时间"
+          :disabled="!enable()"
           placeholder="请选择合同开始时间"
           readonly
           @click="timeChoose('begin_date', form.begin_date)"
@@ -316,6 +317,7 @@
           label="合同结束日期"
           readonly
           type="text"
+          :disabled="!enable()"
           @click="timeChoose('end_date', form.end_date)"
           placeholder="请选择合同结束日期"
           required>
@@ -326,6 +328,7 @@
             v-model="form.pay_first_date"
             readonly
             type="text"
+            :disabled="!enable()"
             @click="timeChoose('pay_first_date', form.pay_first_date)"
             placeholder="第一次打款日期">
           </van-field>
@@ -334,6 +337,7 @@
             v-model="form.pay_second_date"
             readonly
             type="text"
+            :disabled="!enable()"
             @click="timeChoose('pay_second_date', form.pay_second_date)"
             placeholder="第二次打款日期">
           </van-field>
@@ -343,7 +347,7 @@
       <div class="changes" v-for="(key,index) in amountPrice">
         <div class="paddingTitle">
           <span>月单价<span v-if="amountPrice > 1">({{index + 1}})</span></span>
-          <span class="colors" v-if="amountPrice > 1" @click="deleteAmount(index,1)">删除</span>
+          <span class="colors" v-if="amountPrice > 1&&enable()" @click="deleteAmount(index,1)">删除</span>
         </div>
         <van-cell-group>
           <van-field
@@ -359,7 +363,7 @@
             type="number"
             class="number"
             label="付款周期"
-            :disabled="amountPrice === 1 && form.period_price_arr[index] === form.month"
+            :disabled="(amountPrice === 1 && form.period_price_arr[index] === form.month)||!enable()"
             @keyup="periodDate(1)"
             placeholder="请填写月单价周期"
             required>
@@ -368,13 +372,14 @@
             v-model="form.price_arr[index]"
             type="text"
             class="number"
+            :disabled="!enable()"
             label="价格"
             placeholder="请填写金额"
             required>
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(1)" class="addInput">
+      <div @click="priceAmount(1)" class="addInput" v-if="enable()">
         +月单价变化
       </div>
       <van-field
@@ -383,8 +388,7 @@
         type="text"
         class="number"
         placeholder="请填写押金"
-        icon="clear"
-        @click-icon="form.deposit = ''"
+        :disabled="!enable()"
         required>
       </van-field>
       <div class="changes" v-for="(key,index) in amountPay">
@@ -406,23 +410,24 @@
             type="number"
             class="number"
             label="付款周期"
-            :disabled="amountPay === 1 && form.period_pay_arr[index] === form.month"
+            :disabled="(amountPay === 1 && form.period_pay_arr[index] === form.month)||!enable()"
             @keyup="periodDate(2)"
             placeholder="请填写付款方式周期"
             required>
           </van-field>
           <van-field
             @click="selectShow(4,index)"
-            v-model="payTypeNum[index]"
+            v-model="curPayWays[index].name"
             label="付款方式"
             type="text"
+            :disabled="!enable()"
             readonly
             placeholder="请选择付款方式"
             required>
           </van-field>
         </van-cell-group>
       </div>
-      <div @click="priceAmount(2)" class="addInput bottom">
+      <div @click="priceAmount(2)" class="addInput bottom" v-if="enable()">
         +付款方式变化
       </div>
 
@@ -434,6 +439,7 @@
           label="是否渠道"
           type="text"
           readonly
+          :disabled="!enable()"
           placeholder="是否渠道"
           required>
         </van-field>
@@ -442,38 +448,34 @@
             v-model="form.agency_name"
             label="渠道名称"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写渠道名称"
-            icon="clear"
-            @click-icon="form.agency_name = ''"
             required>
           </van-field>
           <van-field
             v-model="form.agency_price"
             label="渠道费"
+            :disabled="!enable()"
             type="text"
             class="number"
             placeholder="请填写渠道费"
-            icon="clear"
-            @click-icon="form.agency_price = ''"
             required>
           </van-field>
           <van-field
             v-model="form.agency_user_name"
             label="渠道人"
             type="text"
+            :disabled="!enable()"
             placeholder="请填写渠道人"
-            icon="clear"
-            @click-icon="form.agency_user_name = ''"
             required>
           </van-field>
           <van-field
             v-model="form.agency_phone"
             label="渠道联系方式"
             type="text"
+            :disabled="!enable()"
             class="number"
             placeholder="请填写渠道联系方式"
-            icon="clear"
-            @click-icon="form.agency_phone = ''"
             required>
           </van-field>
         </div>
@@ -484,6 +486,7 @@
           <van-field
             v-model="form.warranty"
             type="number"
+            :disabled="!enable()"
             class="number"
             placeholder="保修期(月)">
           </van-field>
@@ -491,21 +494,27 @@
             class="twoBorder number"
             v-model="form.warranty_day"
             type="number"
+            :disabled="!enable()"
             placeholder="保修期(天)">
           </van-field>
         </div>
 
-
+        <van-field
+          v-model="form.account_name"
+          label="开户名"
+          type="text"
+          placeholder="请填写开户名"
+          :disabled="!enable()"
+          required>
+        </van-field>
         <div class="month">
           <van-field
             v-model="form.account"
             label="卡号"
-            @blur="accountBank(form.account)"
             type="text"
             class="number"
             placeholder="请填写卡号"
-            icon="clear"
-            @click-icon="form.account = ''"
+            :disabled="!enable()"
             required>
           </van-field>
         </div>
@@ -513,10 +522,10 @@
         <van-field
           v-model="form.bank"
           label="银行"
+          @click="accountBank(form.account)"
           type="text"
+          :disabled="!enable()"
           placeholder="请填写银行名称"
-          icon="clear"
-          @click-icon="form.bank = ''"
           required>
         </van-field>
         <van-field
@@ -524,25 +533,15 @@
           label="支行"
           type="text"
           placeholder="请填写支行"
-          icon="clear"
-          @click-icon="form.subbranch = ''">
+          :disabled="!enable()">
         </van-field>
-        <van-field
-          v-model="form.account_name"
-          label="开户名"
-          type="text"
-          placeholder="请填写开户名"
-          icon="clear"
-          @click-icon="form.account_name = ''"
-          required>
-        </van-field>
+
         <van-field
           v-model="form.relationship"
           label="关系"
           type="text"
+          :disabled="!enable()"
           placeholder="请填写收款人与房东关系"
-          icon="clear"
-          @click-icon="form.relationship = ''"
           required>
         </van-field>
         <div class="month">
@@ -552,13 +551,12 @@
             type="text"
             class="number"
             placeholder="[n+1]*月单价,(n+1)≥4"
-            icon="clear"
-            @click-icon="form.penalty = ''"
+            :disabled="!enable()"
             required>
           </van-field>
         </div>
         <div class="titleRed">n为年限，且金额不足一万按一万算</div>
-        <van-switch-cell v-model="corp" title="是否公司单"/>
+        <van-switch-cell v-model="corp" title="是否公司单" :disabled="!enable()"/>
         <div @click="previewPdf" class="addInput bottom">
           +预览电子合同
         </div>
@@ -569,7 +567,7 @@
         <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
-      <div class="aloneModel required" v-if="false">
+      <div class="aloneModel required">
         <div class="title"><span>*</span>合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
@@ -590,13 +588,13 @@
           label="备注"
           type="textarea"
           placeholder="请填写备注"
-          icon="clear"
-          @click-icon="form.remark = ''">
+          :disabled="!enable()">
         </van-field>
         <van-field
           v-model="form.staff_name"
           @click="searchSelect(2)"
           label="开单人"
+          :disabled="!enable()"
           type="text"
           readonly
           placeholder="请选择开单人"
@@ -608,6 +606,7 @@
           label="部门"
           type="text"
           readonly
+          :disabled="!enable()"
           placeholder="请选择部门"
           required>
         </van-field>
@@ -663,6 +662,7 @@
       </van-checkbox-group>
     </van-popup>
     <!--选择备注条款列表-->
+    <float-btn ref="float"></float-btn>
   </div>
 </template>
 
@@ -726,7 +726,7 @@
         eurls: globalConfig.e_server,
         picStatus: 'success',
         isClear: false,
-
+        curPayWays: [new CommonIdNameEntity()],
         tabs: '',
         columns: [],              //select值
         selectHide: false,
@@ -744,7 +744,6 @@
         amountPay: 1,
         datePay: [],
         payType: [''],              //付款方式ID
-        payTypeNum: [''],           //付款方式
         payIndex: '',               //付款方式index
 
         corp: true,                 //公司单
@@ -913,19 +912,23 @@
       } else {
         console.log('读取房屋信息');
         sessionStorage.setItem('contract_house_item', null);
-        let house_res = item.house_res;
-        let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
         this.form.house.name = item.house_name;
-        this.form.province = house_res_com.province.province_name;//省
-        this.form.city = house_res_com.city.city_name;//市
-        this.form.district = house_res_com.area.area_name;
-        //this.form.property_address = house_res_com.address;//街道
         let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
         this.form.room = house_types[0];//室
         this.form.hall = house_types[1];//厅
         this.form.toilet = house_types[2];//卫
+
+        let house_res = item.house_res;
+        let house_res_com = house_res.community;
+        if (house_res_com === undefined) {
+          return
+        }
+        this.form.province = house_res_com.province.province_name;//省
+        this.form.city = house_res_com.city.city_name;//市
+        this.form.district = house_res_com.area.area_name;
+        //this.form.property_address = house_res_com.address;//街道
         this.form.area = house_res.area;//面积
         if (this.form.type === '2') {//续收
           this.$http.get(this.eurls + 'fdd/contract/read/' + item.contractVal.contract_number).then((res) => {
@@ -944,10 +947,17 @@
         }
         /*获取电子合同相关字段*/
       }
+
       let detail = this.$store.state.app.searchDetail;
       if (Object.keys(detail).length > 0) {
-        this.form.contract_id = detail.id;
-        this.form.house_type = detail.house_type;
+        this.form.contract_id = detail.house.id;
+        this.form.house_type = detail.house.house_type;
+        let villageId = detail.community.id;
+        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + villageId).then(res => {
+          if (res.data.code === '51401') {
+            Toast(res.data.msg)
+          }
+        });
       }
       let t = this.$route.query;
       if (t.staff !== undefined && t.staff !== '') {
@@ -968,19 +978,21 @@
       }
     },
     computed: {
-      house() {
-        return this.form.house;
-      },
       firstMonthPrice() {
         return this.form.price_arr[0];
       }
     },
     methods: {
+      enable() {
+        return this.form.regenerate === '0' || this.form.regenerate === 0;
+      },
       onSignerChanged(item) {
         if (this.form.signer === null) {
           return
         }
-        this.form.signer.fadada_user_id = ''
+        if (item.name === this.form.signer.name) {
+          this.form.signer.fadada_user_id = ''
+        }
       },
       getPic(ids, success) {
         let update = {show: []};
@@ -1235,9 +1247,11 @@
         this.form.cookie = per.session_id;
       },
       accountBank(val) {
-        this.$http.get(this.urls + 'bulletin/helper/bankname?card=' + val).then((res) => {
+        this.$http.get(this.urls + 'bulletin/helper/get_bank_name?card=' + val + "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
+          } else {
+            Toast(res.data.msg)
           }
         })
       },
@@ -1261,7 +1275,6 @@
             this.pay_way_arr[0] = res.data[0].id;
             this.form.pay_way_arr = this.pay_way_arr;
             this.pay_way_arr_name[0] = res.data[0].dictionary_name;
-            this.payTypeNum = this.pay_way_arr_name;
             //安置方式
             this.dictionary(437, 1).then((res) => {
               this.value7 = [];
@@ -1399,7 +1412,8 @@
             this.cusFrom = value;
             break;
           case 4:
-            this.payTypeNum[this.payIndex] = value;
+            let entity = new CommonIdNameEntity(this.dictValue4[index].id, this.dictValue4[index].dictionary_name);
+            this.curPayWays[this.payIndex] = entity;
             for (let i = 0; i < this.dictValue4.length; i++) {
               if (this.dictValue4[i].dictionary_name === value) {
                 this.form.pay_way_arr[this.payIndex] = this.dictValue4[i].id;
@@ -1417,11 +1431,7 @@
             break;
           case 7:
             this.vacancy_way_name = value;
-            for (let i = 0; i < this.dictValue7.length; i++) {
-              if (this.dictValue7[i].dictionary_name === value) {
-                this.form.vacancy_way = this.dictValue7[i].id;
-              }
-            }
+            this.form.vacancy_way = this.dictValue7[index].id;
             if (value === '其他') {
               this.form.vacancy_other = '';
             }
@@ -1440,7 +1450,7 @@
           this.amountPay++;
           this.form.period_pay_arr.push('');
           this.form.pay_way_arr.push('');
-          this.payTypeNum.push('');
+          this.curPayWays.push(new CommonIdNameEntity);
         }
       },
       // 删除月单价
@@ -1455,7 +1465,7 @@
           this.amountPay--;
           this.form.period_pay_arr.splice(index, 1);
           this.form.pay_way_arr.splice(index, 1);
-          this.payTypeNum.splice(index, 1);
+          this.curPayWays.splice(index, 1);
           this.datePay.splice(index, 1);
           this.periodDate(val);
         }
@@ -1539,6 +1549,7 @@
             duration: 0,
             message: '加载中...'
           });
+          this.form.uniq_code = this.$refs.float.getCode();
           if (type === 1) {//草稿
             let json = {content: this.form, type: '1'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
@@ -1639,11 +1650,11 @@
               let draft = res.data.data.param_map;
               this.changeContractData(draft);
             } else {
-              this.close_();
+              //this.close_();
               this.userInfo();
             }
           }).catch(e => {
-            this.close_();
+            //this.close_();
             this.userInfo();
             Toast.clear();
           })
@@ -1655,17 +1666,18 @@
             if (res.data.code === '40000') {
               this.changeContractData(res.data.data)
             } else {
-              this.close_();
+              //this.close_();
               this.userInfo();
             }
           }).catch(e => {
-            this.close_();
+            //this.close_();
             this.userInfo();
             Toast.clear();
           })
         }
       },
       changeContractData(draft) {
+        this.form.contract_id = draft.contract_id;
         this.form.purchase_way = 509;
         this.form.house = {id: '', name: ''};
         this.form.house.id = draft.house.id;
@@ -1711,12 +1723,12 @@
         this.form.period_price_arr = draft.period_price_arr;
         this.countDate(1, draft.period_price_arr);
         this.form.price_arr = draft.price_arr;
+        this.amountPay = draft.pay_way_arr.length;
         for (let i = 0; i < draft.pay_way_arr.length; i++) {
-          this.amountPay = i + 1;
-          this.form.pay_way_arr.push('');
           for (let j = 0; j < this.dictValue4.length; j++) {
             if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
-              this.payTypeNum[i] = this.dictValue4[j].dictionary_name;
+              let entity = new CommonIdNameEntity(this.dictValue4[j].id, this.dictValue4[j].dictionary_name)
+              this.curPayWays[i] = entity;
             }
           }
         }
@@ -1813,7 +1825,6 @@
         this.form.allowed_add_to = draft.allowed_add_to;
         this.showForm.canAddThingTxt = this.getNameForIndex(this.canAddThings, this.form.allowed_add_to);
         this.showForm.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
-        this.form.contract_id = draft.contract_id;
         this.changeContracts();
 
       },
@@ -1828,7 +1839,6 @@
         this.clearObj(this.showForm);
         this.form.purchase_way = 509;
         this.form.pay_way_arr = this.pay_way_arr;
-        this.payTypeNum = this.pay_way_arr_name;
         this.form.vacancy_way = this.vacancy_way_id;
         this.vacancy_way_name = this.vacancy_way;
         this.form.warranty_day = '';
@@ -1838,8 +1848,7 @@
         this.datePay = [];
         this.datePrice = [];
         this.amountPay = 1;
-        this.payTypeNum = [''];
-        this.vacancy_way_name = '';
+        this.curPayWays = [new CommonIdNameEntity];
         this.property_name = '';
         this.corp = true;
         this.photos = {};

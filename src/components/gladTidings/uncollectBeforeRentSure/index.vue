@@ -466,6 +466,7 @@
 
     <ChooseTime :module="timeModule" :formatData="formatData" @close="onCancel"
                 @onDate="onConTime"></ChooseTime>
+    <float-btn ref="float" :type="0"></float-btn>
   </div>
 </template>
 
@@ -579,6 +580,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
+          uniq_code:''
         },
         screenshots: {},
         property_name: '',
@@ -1011,6 +1013,7 @@
           this.form.is_receipt = this.is_receipt ? 1 : 0;
           this.form.is_other_fee = this.other_fee_status ? 1 : 0;
           this.form.day = this.form.day === '' ? '0' : this.form.day;
+          this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
