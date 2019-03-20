@@ -944,12 +944,12 @@
         }
         /*获取电子合同相关字段*/
       }
-      let t = this.$route.query;
-      if (t.house !== undefined && t.house !== '') {
-        let val = JSON.parse(t.house);
-        this.form.contract_id = val.id;
-        this.form.house_type = val.house_type;
+      let detail = this.$store.state.app.searchDetail;
+      if (Object.keys(detail).length > 0) {
+        this.form.contract_id = detail.id;
+        this.form.house_type = detail.house_type;
       }
+      let t = this.$route.query;
       if (t.staff !== undefined && t.staff !== '') {
         let val = JSON.parse(t.staff);
         this.form.staff_id = val.staff_id;

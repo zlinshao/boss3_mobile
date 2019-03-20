@@ -173,7 +173,6 @@
       sureRouter(path, key) {
         key.type = this.types;
         let houseData = {};
-        console.log(key);
         if (this.types !== 'is_nrcy' && this.types !== 'report') {
           sessionStorage.setItem('contract_house_item', JSON.stringify(key));//电子合同使用
         } else {
@@ -191,7 +190,8 @@
         }
         sessionStorage.setItem('contractVal', JSON.stringify(key.contractVal));
         key.house = JSON.stringify(houseData);
-        this.routLink(path, key);
+        this.routLink(path);
+        this.$store.dispatch('getSearchDetail', key);
       },
       onSearch() {
         if (this.searchValue !== '') {
