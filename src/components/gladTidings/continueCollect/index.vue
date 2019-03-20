@@ -451,7 +451,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
-          uniq_code:''
+          uniq_code: ''
         },
         property_name: '',              //物业费付款人
         photos: {},                     //照片
@@ -540,7 +540,7 @@
         this.$http.get(this.urls + 'bulletin/helper/get_bank_name?card=' + val + "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
-          }else{
+          } else {
             Toast(res.data.msg)
           }
         })
@@ -766,7 +766,7 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
-          this.form.uniq_code=this.$refs.float.getCode();
+          this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -811,14 +811,11 @@
 
       houseInfo() {
         let t = this.$route.query;
-        if (t.community !== undefined && t.community !== '') {
-          let villageId = t.community.id;
-          this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + villageId).then(res => {
-            if (res.data.code === '51401') {
-              Toast(res.data.msg)
-            }
-          });
-        }
+        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + t.communityId).then(res => {
+          if (res.data.code === '51401') {
+            Toast(res.data.msg)
+          }
+        });
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.contract_id = val.id;

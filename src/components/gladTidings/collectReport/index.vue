@@ -964,14 +964,11 @@
       },
       houseInfo() {
         let t = this.$route.query;
-        if(t.community !== undefined && t.community !== ''){
-          let villageId=t.community.id;
-          this.$http.get(this.urls+'bulletin/quality/allow_community?community_id='+villageId).then(res=>{
+          this.$http.get(this.urls+'bulletin/quality/allow_community?community_id='+t.communityId).then(res=>{
             if(res.data.code==='51401'){
               Toast(res.data.msg)
             }
           });
-        }
         if (t.house !== undefined && t.house !== '') {
           let val = JSON.parse(t.house);
           this.form.house.id = val.house_id;

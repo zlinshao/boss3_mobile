@@ -78,12 +78,13 @@
           label="丘权号"
           type="text"
           :disabled="!enable()"
-          placeholder="请填写丘权号"         >
+          placeholder="请填写丘权号">
         </van-field>
         <div class="changes" v-for="(item,index) in form.owner">
           <div class="paddingTitle">
             <span>房东<span v-if="form.owner.length > 1">({{index + 1}})</span></span>
-            <span class="colors" v-if="form.owner.length > 1&&((enable()&&index===0)||index!==0)" @click="form.owner.splice(index)">删除</span>
+            <span class="colors" v-if="form.owner.length > 1&&((enable()&&index===0)||index!==0)"
+                  @click="form.owner.splice(index)">删除</span>
           </div>
           <van-field
             v-model="form.owner[index].name"
@@ -555,15 +556,15 @@
           </van-field>
         </div>
         <div class="titleRed">n为年限，且金额不足一万按一万算</div>
-        <van-switch-cell v-model="corp" title="是否公司单"   :disabled="!enable()"/>
+        <van-switch-cell v-model="corp" title="是否公司单" :disabled="!enable()"/>
         <div @click="previewPdf" class="addInput bottom">
           +预览电子合同
         </div>
       </van-cell-group>
 
-      <div class="aloneModel"  >
+      <div class="aloneModel">
         <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots" ></UpLoad>
+        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
       </div>
 
       <div class="aloneModel required">
@@ -571,7 +572,7 @@
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
-      <div class="aloneModel required" >
+      <div class="aloneModel required">
         <div class="title"><span>*</span>房产证照片</div>
         <UpLoad :ID="'property_photo'" @getImg="getImgData" :isClear="isClear" :editImage="property_photos"></UpLoad>
       </div>
@@ -725,7 +726,7 @@
         eurls: globalConfig.e_server,
         picStatus: 'success',
         isClear: false,
-        curPayWays:[new CommonIdNameEntity()],
+        curPayWays: [new CommonIdNameEntity()],
         tabs: '',
         columns: [],              //select值
         selectHide: false,
@@ -921,7 +922,7 @@
 
         let house_res = item.house_res;
         let house_res_com = house_res.community;
-        if(house_res_com===undefined){
+        if (house_res_com === undefined) {
           return
         }
         this.form.province = house_res_com.province.province_name;//省
@@ -947,14 +948,11 @@
         /*获取电子合同相关字段*/
       }
       let t = this.$route.query;
-      if(t.community !== undefined && t.community !== ''){
-        let villageId=t.community.id;
-        this.$http.get(this.urls+'bulletin/quality/allow_community?community_id='+villageId).then(res=>{
-          if(res.data.code==='51401'){
-            Toast(res.data.msg)
-          }
-        });
-      }
+      this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + t.communityId).then(res => {
+        if (res.data.code === '51401') {
+          Toast(res.data.msg)
+        }
+      });
       if (t.house !== undefined && t.house !== '') {
         let val = JSON.parse(t.house);
         console.log(val)
@@ -986,14 +984,14 @@
       }
     },
     methods: {
-      enable(){
-        return this.form.regenerate==='0'||this.form.regenerate===0;
+      enable() {
+        return this.form.regenerate === '0' || this.form.regenerate === 0;
       },
       onSignerChanged(item) {
         if (this.form.signer === null) {
           return
         }
-        if(item.name===this.form.signer.name){
+        if (item.name === this.form.signer.name) {
           this.form.signer.fadada_user_id = ''
         }
       },
@@ -1253,7 +1251,7 @@
         this.$http.get(this.urls + 'bulletin/helper/get_bank_name?card=' + val + "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
-          }else{
+          } else {
             Toast(res.data.msg)
           }
         })
@@ -1415,8 +1413,8 @@
             this.cusFrom = value;
             break;
           case 4:
-            let entity=new CommonIdNameEntity(this.dictValue4[index].id,this.dictValue4[index].dictionary_name);
-            this.curPayWays[this.payIndex]=entity;
+            let entity = new CommonIdNameEntity(this.dictValue4[index].id, this.dictValue4[index].dictionary_name);
+            this.curPayWays[this.payIndex] = entity;
             for (let i = 0; i < this.dictValue4.length; i++) {
               if (this.dictValue4[i].dictionary_name === value) {
                 this.form.pay_way_arr[this.payIndex] = this.dictValue4[i].id;
@@ -1552,7 +1550,7 @@
             duration: 0,
             message: '加载中...'
           });
-          this.form.uniq_code=this.$refs.float.getCode();
+          this.form.uniq_code = this.$refs.float.getCode();
           if (type === 1) {//草稿
             let json = {content: this.form, type: '1'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
@@ -1730,8 +1728,8 @@
         for (let i = 0; i < draft.pay_way_arr.length; i++) {
           for (let j = 0; j < this.dictValue4.length; j++) {
             if (this.dictValue4[j].id === draft.pay_way_arr[i]) {
-              let entity=new CommonIdNameEntity(this.dictValue4[j].id,this.dictValue4[j].dictionary_name)
-              this.curPayWays[i]=entity;
+              let entity = new CommonIdNameEntity(this.dictValue4[j].id, this.dictValue4[j].dictionary_name)
+              this.curPayWays[i] = entity;
             }
           }
         }
@@ -1851,7 +1849,7 @@
         this.datePay = [];
         this.datePrice = [];
         this.amountPay = 1;
-        this.curPayWays=[new CommonIdNameEntity];
+        this.curPayWays = [new CommonIdNameEntity];
         this.property_name = '';
         this.corp = true;
         this.photos = {};
