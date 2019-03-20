@@ -947,20 +947,19 @@
         }
         /*获取电子合同相关字段*/
       }
-      let t = this.$route.query;
-      this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + t.communityId).then(res => {
-        if (res.data.code === '51401') {
-          Toast(res.data.msg)
-        }
-      });
-      if (t.house !== undefined && t.house !== '') {
-        let val = JSON.parse(t.house);
-        console.log(val)
-        if (val.id !== null && val.id !== undefined && val.id !== '') {
-          this.form.contract_id = val.id;
-        }
-        this.form.house_type = val.house_type;
+
+      let detail = this.$store.state.app.searchDetail;
+      if (Object.keys(detail).length > 0) {
+        this.form.contract_id = detail.house.id;
+        this.form.house_type = detail.house.house_type;
+        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + detail.communityId).then(res => {
+          if (res.data.code === '51401') {
+            Toast(res.data.msg)
+          }
+        });
       }
+      let t = this.$route.query;
+      console.log(t)
       if (t.staff !== undefined && t.staff !== '') {
         let val = JSON.parse(t.staff);
         this.form.staff_id = val.staff_id;
