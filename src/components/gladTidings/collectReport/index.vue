@@ -535,7 +535,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
-          uniq_code:'',
+          uniq_code: '',
         },
         vacancy_way_name: '',           //空置期安置方式
         property_name: '',              //物业费付款人
@@ -640,10 +640,10 @@
       },
 
       accountBank(val) {
-        this.$http.get(this.urls + 'bulletin/helper/get_bank_name?card=' + val+ "&owner=" + this.form.account_name).then((res) => {
+        this.$http.get(this.urls + 'bulletin/helper/get_bank_name?card=' + val + "&owner=" + this.form.account_name).then((res) => {
           if (res.data.code === '51110') {
             this.form.bank = res.data.data;
-          }else{
+          } else {
             Toast(res.data.msg)
           }
         })
@@ -919,7 +919,7 @@
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.draft = val;
-          this.form.uniq_code=this.$refs.float.getCode();
+          this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
 
             this.haveInHand = true;
@@ -963,19 +963,20 @@
         }
       },
       houseInfo() {
-        let t = this.$route.query;
-          this.$http.get(this.urls+'bulletin/quality/allow_community?community_id='+t.communityId).then(res=>{
-            if(res.data.code==='51401'){
-              Toast(res.data.msg)
-            }
-          });
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
+        let detail = this.$store.state.app.searchDetail;
+        if (Object.keys(detail).length > 0) {
+          let val = JSON.parse(detail.house);
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
           this.form.is_agency = val.is_agency;                           //是否渠道
           this.cusFrom = dicts.value8[val.is_agency];                    //是否渠道
+          this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + detail.communityId).then(res => {
+            if (res.data.code === '51401') {
+              Toast(res.data.msg)
+            }
+          });
         }
+        let t = this.$route.query;
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;

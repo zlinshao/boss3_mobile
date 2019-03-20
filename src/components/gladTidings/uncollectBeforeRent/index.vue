@@ -1037,9 +1037,9 @@
       },
 
       houseInfo() {
-        let t = this.$route.query;
-        if (t.staff !== undefined && t.staff !== '') {
-          let val = JSON.parse(t.staff);
+        let detail = this.$store.state.app.searchDetail;
+        if (Object.keys(detail).length > 0) {
+          let val = JSON.parse(detail.house);
           this.form.staff_id = val.staff_id;
           this.form.staff_name = val.staff_name;
           this.form.department_id = val.depart_id;
@@ -1047,6 +1047,7 @@
           this.isValue1 = val.activeRevise;
           this.stick();
         }
+        let t = this.$route.query;
         if (t.depart !== undefined && t.depart !== '') {
           let val = JSON.parse(t.depart);
           this.form.department_name = val.name;
