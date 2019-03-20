@@ -723,9 +723,9 @@
         }
       },
       houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
+        let detail = this.$store.state.app.searchDetail;
+        if (Object.keys(detail).length > 0) {
+          let val = detail.house;
           this.form.customer_name = val.customers;
           this.form.name = val.customers;
           this.form.phone = val.cusPhone;

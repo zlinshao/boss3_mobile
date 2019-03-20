@@ -992,11 +992,10 @@
       },
 
       houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
-          if (t.type === 'report') {
-            console.log(val)
+        let detail = this.$store.state.app.searchDetail;
+        if (Object.keys(detail).length > 0) {
+          let val = detail.house;
+          if (detail.type === 'report') {
             this.form.old_house_name = val.house_name;
             this.form.old_corp_name = val.corp_name;
             this.form.contract_id_rent = val.id;
@@ -1027,6 +1026,7 @@
             this.form.house_id = val.house_id;
           }
         }
+        let t = this.$route.query;
         if (t.staff !== undefined && t.staff !== '') {
           let val = JSON.parse(t.staff);
           this.form.staff_id = val.staff_id;

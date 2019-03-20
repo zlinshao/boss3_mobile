@@ -4,7 +4,7 @@
       <van-cell-group>
         <div class="checks">
           <div class="titles">报备性质</div>
-            <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.type">
+          <van-radio-group :disabled="counts === '2' || counts === '21'" v-model="form.type">
             <van-radio name="0">清退报备</van-radio>
             <van-radio name="1">取消报备</van-radio>
           </van-radio-group>
@@ -128,7 +128,7 @@
           department_id: '',            //部门id
           staff_name: '',                 //开单人name
           department_name: '',            //部门name
-          uniq_code:''
+          uniq_code: ''
 
         },
         screenshots: {},
@@ -221,7 +221,7 @@
         if (this.haveInHand) {
           this.haveInHand = false;
           this.form.draft = val;
-          this.form.uniq_code=this.$refs.float.getCode();
+          this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/banish', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
@@ -263,9 +263,9 @@
       },
 
       houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
+        let detail = this.$store.state.app.searchDetail;
+        if (Object.keys(detail).length > 0) {
+          let val = detail.house;
           this.form.address = val.house_name;
           this.form.corp_name = val.corp_name;
           this.form.contract_id = val.id;
