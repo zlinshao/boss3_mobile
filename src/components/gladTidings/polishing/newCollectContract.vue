@@ -34,6 +34,13 @@
           required>
         </van-field>
         <van-field
+          v-model="form.area"
+          label="面积"
+          type="text"
+          required
+          placeholder="请填写房屋面积">
+        </van-field>
+        <van-field
           v-model="form.property_address"
           label="产权地址"
           type="text"
@@ -947,20 +954,18 @@
         }
         /*获取电子合同相关字段*/
       }
-      let t = this.$route.query;
-      if (t.house !== undefined && t.house !== '') {
-        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + t.communityId).then(res => {
+
+      let detail = this.$store.state.app.searchDetail;
+      if (Object.keys(detail).length > 0) {
+        this.form.contract_id = detail.house.id;
+        this.form.house_type = detail.house.house_type;
+        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + detail.communityId).then(res => {
           if (res.data.code === '51401') {
             Toast(res.data.msg)
           }
         });
-        let val = JSON.parse(t.house);
-        console.log(val)
-        if (val.id !== null && val.id !== undefined && val.id !== '') {
-          this.form.contract_id = val.id;
-        }
-        this.form.house_type = val.house_type;
       }
+      let t = this.$route.query;
       if (t.staff !== undefined && t.staff !== '') {
         let val = JSON.parse(t.staff);
         this.form.staff_id = val.staff_id;

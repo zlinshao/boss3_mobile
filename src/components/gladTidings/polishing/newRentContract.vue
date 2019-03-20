@@ -132,6 +132,13 @@
           <div class="showBorder" v-else></div>
         </div>
         <van-field
+          v-model="form.area"
+          label="面积"
+          type="text"
+          required
+          placeholder="请填写房屋面积">
+        </van-field>
+        <van-field
           v-model="rentUseTxt"
           label="租赁用途"
           readonly
@@ -889,7 +896,7 @@
           day: '0',                      //租房天数
           sign_date: '',                //签约开始日期
           end_date: '',                 //签约结束日期
-          process_id:'',//报备ID
+          process_id: '',//报备ID
           begin_date: '',               //合同开始日期
           price_arr: [''],              //月单价
           period_price_arr: [''],       //月单价周期
@@ -1060,6 +1067,7 @@
         if (item === 'test') return;
         item = JSON.parse(item);
         let house_res = item.house_res;
+        console.log(house_res)
         let house_res_com = house_res.community;
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
@@ -1796,10 +1804,10 @@
         })
       },
       houseInfo() {
-        let t = this.$route.query;
-        if (t.house !== undefined && t.house !== '') {
-          let val = JSON.parse(t.house);
-          if (t.type === 'report') {
+        let detail = this.$store.state.app.searchDetail;
+        if (Object.keys(detail).length > 0) {
+          let val = JSON.parse(detail.house);
+          if (detail.type === 'report') {
             this.form.old_house_name = val.house_name;
             this.form.old_corp_name = val.corp_name;
             this.form.contract_id_rent = val.id;
@@ -1823,7 +1831,7 @@
                 }
               }
             })
-          } else if (t.type === 'is_nrcy') {
+          } else if (detail.type === 'is_nrcy') {
             this.form.oldHouseName = val.house_name;
             this.form.old_corp_name = val.old_corp_name;
             this.form.contract_id_rent = val.id;
@@ -1947,14 +1955,13 @@
         this.form.corp_name = draft.corp_name;
         this.form.type = draft.type;
         this.form.month = draft.month;
-        console.log(draft)
 
         this.form.day = draft.day === '0' ? '' : draft.day;
         this.form.contract_number = this.setContractNumber(draft.contract_number);
         this.form.sign_date = draft.sign_date;
         this.form.begin_date = draft.begin_date;
         this.form.end_date = draft.end_date;
-        this.form.process_id=draft.process_id;
+        this.form.process_id = draft.process_id;
         this.first_date = [];
         this.form.from_bulletin = draft.from_bulletin || 0;
         this.first_date.push(draft.begin_date);

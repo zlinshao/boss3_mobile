@@ -173,7 +173,6 @@
       sureRouter(path, key) {
         key.type = this.types;
         let houseData = {};
-        console.log(key);
         if (this.types !== 'is_nrcy' && this.types !== 'report') {
           sessionStorage.setItem('contract_house_item', JSON.stringify(key));//电子合同使用
         } else {
@@ -191,7 +190,8 @@
         }
         sessionStorage.setItem('contractVal', JSON.stringify(key.contractVal));
         key.house = JSON.stringify(houseData);
-        this.routLink(path, key);
+        this.routLink(path);
+        this.$store.dispatch('getSearchDetail', key);
       },
       onSearch() {
         if (this.searchValue !== '') {
@@ -278,7 +278,7 @@
                   //console.log(data[i])
                   list.house_type = data[i].room + "室" + data[i].hall + "厅" + data[i].toilet;
                   list.house_res = data[i].house_res;
-                  list.communityId=data[i].community.id;
+                  list.communityId = data[i].community.id;
                   this.houseList.push(list);
                   this.finish(4);
                 }
@@ -342,7 +342,7 @@
         } else {
           list.renters = {};
         }
-        list.communityId=val.community.id;
+        list.communityId = val.community.id;
         list.house_id = val.id;
         list.house_name = val.name;
         list.corp_name = val.corp_name;
