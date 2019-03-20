@@ -606,8 +606,11 @@
       }
       if (count === '2') {
         let detail = this.$store.state.app.searchDetail;
+        console.log(detail);
         sessionStorage.setItem('process', JSON.stringify(detail));
+        console.log(sessionStorage.process);
         let newID = JSON.parse(sessionStorage.process);
+        console.log(newID);
         if (newID.type === 2) {
           this.close_();
           this.routerTo('/publishDetail', newID.ids);
@@ -966,7 +969,7 @@
       houseInfo() {
         let detail = this.$store.state.app.searchDetail;
         if (Object.keys(detail).length > 0) {
-          let val = detail.house;
+          let val = JSON.parse(detail.house);
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;
           this.form.is_agency = val.is_agency;                           //是否渠道

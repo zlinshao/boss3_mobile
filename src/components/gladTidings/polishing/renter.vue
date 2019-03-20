@@ -593,7 +593,7 @@
       houseInfo() {
         let detail = this.$store.state.app.searchDetail;
         if (Object.keys(detail).length > 0) {
-          let val = detail.house;
+          let val = JSON.parse(detail.house);
           this.contract_id = val.id;
           this.address = val.house_name;
           this.corp_name = val.corp_name;

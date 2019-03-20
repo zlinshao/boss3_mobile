@@ -813,7 +813,7 @@
       houseInfo() {
         let detail = this.$store.state.app.searchDetail;
         if (Object.keys(detail).length > 0) {
-          let val = detail.house;
+          let val = JSON.parse(detail.house);
           this.form.contract_id = val.id;
           this.form.house.id = val.house_id;
           this.form.house.name = val.house_name;

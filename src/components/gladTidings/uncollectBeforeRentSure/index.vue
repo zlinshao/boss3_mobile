@@ -1062,7 +1062,7 @@
       houseInfo() {
         let detail = this.$store.state.app.searchDetail;
         if (Object.keys(detail).length > 0) {
-          let val = detail.house;
+          let val = JSON.parse(detail.house);
           if (detail.type === 'is_nrcy') {
             this.form.oldHouseName = val.house_name;
             this.form.old_corp_name = val.old_corp_name;
