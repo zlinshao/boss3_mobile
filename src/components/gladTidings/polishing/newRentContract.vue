@@ -1069,6 +1069,7 @@
         let house_res = item.house_res;
         console.log(house_res)
         let house_res_com = house_res.community;
+
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
         this.form.house.name = item.house_name;
@@ -1725,9 +1726,32 @@
             this.haveInHand = true;
             return
           }
-          this.getCity(resp => {
-            this.post();
-          })
+          if(this.form.type!=='1'){
+            this.getCity(resp => {
+              this.post();
+            });
+          }else {
+            let checkInfo = {
+              house_id: this.form.house_id,
+              start_at: this.form.begin_date,
+              customer_info: this.form.customer_info
+            };
+            this.$http.post(this.urls + 'coreproject/renter/validate', checkInfo).then(resp => {
+              this.haveInHand = true;
+              if (resp.data.code === '20020') {
+                this.getCity(resp => {
+                  this.post();
+                })
+              } else {
+                Toast.clear();
+                Toast(resp.data.msg);
+              }
+            }).catch(e => {
+              this.haveInHand = true;
+              Toast.clear();
+              Toast('网络请求失败')
+            });
+          }
         } else {
           Toast(this.alertMsg('sub'));
         }
