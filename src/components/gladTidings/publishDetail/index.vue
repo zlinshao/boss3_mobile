@@ -215,9 +215,12 @@
         关闭
       </div>
     </van-popup>
-    <div class="toContract"
-         v-if="(process.place.name==='published'&&showEContract&&process.content.cookie===undefined&&(process.processable_type==='bulletin_rent_basic'||process.processable_type==='bulletin_rent_continued'))"
-         @click="toContract()"><i class="iconfont icon-hetong"></i></div>
+    <div v-if="process.place">
+      <div class="toContract"
+           v-if="(process.place.name==='published'&&showEContract&&process.content.cookie===undefined&&(process.processable_type==='bulletin_rent_basic'||process.processable_type==='bulletin_rent_continued'))" @click="toContract()">
+        <i class="iconfont icon-hetong"></i>
+      </div>
+    </div>
     <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(process.processable_type) > -1"
                  :process="process"></SwitchCraft>
   </div>

@@ -2029,6 +2029,7 @@
         this.form.account_id = [];
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
+        console.log(draft);
         console.log(this.form);
         if (this.amountMoney === null || this.amountMoney === undefined || this.amountMoney === 0 || this.amountMoney === '0') {
           this.amountMoney = 1;
