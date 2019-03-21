@@ -2035,6 +2035,7 @@
           this.amountMoney = 1;
         }
         this.form.account_id = [];
+        console.log(this.dictValue8);
         for (let i = 0; i < draft.money_way.length; i++) {
           for (let j = 0; j < this.dictValue8.length; j++) {
             console.log(this.dictValue8[j].bank_info);
