@@ -1069,6 +1069,7 @@
         let house_res = item.house_res;
         console.log(house_res)
         let house_res_com = house_res.community;
+
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
         this.form.house.name = item.house_name;

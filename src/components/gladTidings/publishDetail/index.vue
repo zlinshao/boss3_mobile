@@ -367,6 +367,7 @@
         this.$http.post(this.urls + 'bulletin/electronic_contract/generate', {process_id: this.process.id}).then(success => {
           if (success.data.code === '20000') {
             sessionStorage.setItem('contract_type', '0');
+            sessionStorage.setItem('contract_house_item', null);
             this.$router.push('/newRentContract');//type 0为新签 1为作废重签
           }
         })
