@@ -1973,13 +1973,15 @@
         this.userInfo();
       },
       changeContractDetail(draft) {
+        console.log(draft)
         this.form.contract_id = draft.contract_id;
         this.form.house_id = draft.house_id;
         this.form.address = draft.address;
         this.form.corp_name = draft.corp_name;
         this.form.type = draft.type;
         this.form.month = draft.month;
-
+        console.log(1)
+        console.log(draft)
         this.form.day = draft.day === '0' ? '' : draft.day;
         this.form.contract_number = this.setContractNumber(draft.contract_number);
         this.form.sign_date = draft.sign_date;
@@ -1996,6 +1998,8 @@
           this.form.period_price_arr.push('');
           this.form.price_arr.push('');
         }
+        console.log(2)
+        console.log(draft)
         this.form.period_price_arr = draft.period_price_arr;
         this.countDate(1, draft.period_price_arr);
         this.form.price_arr = draft.price_arr;
@@ -2006,7 +2010,8 @@
           this.form.period_pay_arr.push('');
           this.form.pay_way_arr.push('');
         }
-
+        console.log(3)
+        console.log(draft)
         this.form.period_pay_arr = draft.period_pay_arr;
         this.countDate(2, draft.period_pay_arr);
         this.form.pay_way_arr = draft.pay_way_arr;
@@ -2023,14 +2028,16 @@
         this.$nextTick(function () {
           this.form.money_sum = draft.money_sum;
         });
+        console.log(4)
+        console.log(draft)
         this.form.memo = draft.memo ? draft.memo : '';
         this.form.money_sep = draft.money_sep;
         this.form.money_way = draft.money_way;
         this.form.account_id = [];
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
-        console.log(draft);
-        console.log(this.form);
+        console.log(5)
+        console.log(draft)
         if (this.amountMoney === null || this.amountMoney === undefined || this.amountMoney === 0 || this.amountMoney === '0') {
           this.amountMoney = 1;
         }
@@ -2047,8 +2054,7 @@
           this.form.account_id.splice(0, this.form.account_id.length);
           this.form.money_way.splice(0, this.form.money_way.length);
           this.form.money_sep.splice(0, this.form.money_sep.length);
-          this.form.real_pay_at.splice(0, this.form.real_pay_at.length)
-          console.log(this.form);
+          this.form.real_pay_at.splice(0, this.form.real_pay_at.length);
         }
 
         this.form.discount = draft.discount;
