@@ -1240,24 +1240,21 @@
             Toast.clear();
           })
         } else {
-          console.log('读草稿')
+          console.log('读草稿');
           this.getCity();
           //读小飞草稿
           this.$http.get(this.eurls + 'fdd/contract/stash?staff_id=' + this.form.staff_id + '&type=' + 2).then(res => {
             // Toast.clear();
             if (res.data.code === '40000') {
-              console.log(111111111)
-              console.log(res.data.data);
-              console.log(res.data.data.money_sep);
-              console.log(res.data.data.real_pay_at);
-              console.log(res.data.data.money_way);
-              console.log(222222222)
+              console.log(draft.money_sep);
+              console.log(draft.real_pay_at);
+              console.log(draft.money_way);
               this.changeContractDetail(res.data.data)
             } else {
               this.userInfo();
             }
           }).catch(e => {
-            console.log(e)
+            console.log(e);
             this.userInfo();
             Toast.clear();
           })
@@ -1979,7 +1976,6 @@
         this.userInfo();
       },
       changeContractDetail(draft) {
-        console.log(draft)
         this.form.contract_id = draft.contract_id;
         this.form.house_id = draft.house_id;
         this.form.address = draft.address;
@@ -1987,7 +1983,9 @@
         this.form.type = draft.type;
         this.form.month = draft.month;
         console.log(1)
-        console.log(draft)
+        console.log(draft.money_sep);
+        console.log(draft.real_pay_at);
+        console.log(draft.money_way);
         this.form.day = draft.day === '0' ? '' : draft.day;
         this.form.contract_number = this.setContractNumber(draft.contract_number);
         this.form.sign_date = draft.sign_date;
@@ -2005,7 +2003,9 @@
           this.form.price_arr.push('');
         }
         console.log(2)
-        console.log(draft)
+        console.log(draft.money_sep);
+        console.log(draft.real_pay_at);
+        console.log(draft.money_way);
         this.form.period_price_arr = draft.period_price_arr;
         this.countDate(1, draft.period_price_arr);
         this.form.price_arr = draft.price_arr;
@@ -2017,7 +2017,9 @@
           this.form.pay_way_arr.push('');
         }
         console.log(3)
-        console.log(draft)
+        console.log(draft.money_sep);
+        console.log(draft.real_pay_at);
+        console.log(draft.money_way);
         this.form.period_pay_arr = draft.period_pay_arr;
         this.countDate(2, draft.period_pay_arr);
         this.form.pay_way_arr = draft.pay_way_arr;
@@ -2035,7 +2037,9 @@
           this.form.money_sum = draft.money_sum;
         });
         console.log(4)
-        console.log(draft)
+        console.log(draft.money_sep);
+        console.log(draft.real_pay_at);
+        console.log(draft.money_way);
         this.form.memo = draft.memo ? draft.memo : '';
         this.form.money_sep = draft.money_sep;
         this.form.money_way = draft.money_way;
@@ -2043,7 +2047,9 @@
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
         console.log(5)
-        console.log(draft)
+        console.log(draft.money_sep);
+        console.log(draft.real_pay_at);
+        console.log(draft.money_way);
         if (this.amountMoney === null || this.amountMoney === undefined || this.amountMoney === 0 || this.amountMoney === '0') {
           this.amountMoney = 1;
         }
