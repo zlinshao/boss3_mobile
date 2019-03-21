@@ -1246,9 +1246,9 @@
           this.$http.get(this.eurls + 'fdd/contract/stash?staff_id=' + this.form.staff_id + '&type=' + 2).then(res => {
             // Toast.clear();
             if (res.data.code === '40000') {
-              console.log(draft.money_sep);
-              console.log(draft.real_pay_at);
-              console.log(draft.money_way);
+              console.log(res.data.data.money_sep);
+              console.log(res.data.data.real_pay_at);
+              console.log(res.data.data.money_way);
               this.changeContractDetail(res.data.data)
             } else {
               this.userInfo();
