@@ -1733,7 +1733,7 @@
             this.haveInHand = true;
             return
           }
-          if(this.form.type!=='1'){
+          if(this.form.type!=='1'||this.form.from_bulletin!==0){
             this.getCity(resp => {
               this.post();
             });
