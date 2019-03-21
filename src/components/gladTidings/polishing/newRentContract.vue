@@ -1247,7 +1247,10 @@
             // Toast.clear();
             if (res.data.code === '40000') {
               console.log(111111111)
-              console.log(res.data);
+              console.log(res.data.data);
+              console.log(res.data.data.money_sep);
+              console.log(res.data.data.real_pay_at);
+              console.log(res.data.data.money_way);
               console.log(222222222)
               this.changeContractDetail(res.data.data)
             } else {
