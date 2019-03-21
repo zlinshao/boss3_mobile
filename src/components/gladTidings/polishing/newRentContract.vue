@@ -862,9 +862,9 @@
 
 
         form: {
-          house:{
-            id:'',
-            name:''
+          house: {
+            id: '',
+            name: ''
           },
           /*下面是转租独有*/
           trans_type: '0',//转租类型、默认公司 ,1是个人
@@ -1730,11 +1730,11 @@
             this.haveInHand = true;
             return
           }
-          if(this.form.type!=='1'||this.form.from_bulletin!==0){
+          if (this.form.type !== '1' || this.form.from_bulletin !== 0) {
             this.getCity(resp => {
               this.post();
             });
-          }else {
+          } else {
             let checkInfo = {
               house_id: this.form.house_id,
               start_at: this.form.begin_date,
@@ -1979,7 +1979,7 @@
       changeContractDetail(draft) {
         this.form.contract_id = draft.contract_id;
         this.form.house_id = draft.house_id;
-        this.form.house=draft.house;
+        this.form.house = draft.house;
         this.form.address = draft.address;
         this.form.corp_name = draft.corp_name;
         this.form.type = draft.type;
@@ -2036,16 +2036,25 @@
         }
         this.form.account_id = [];
         console.log(this.dictValue8);
-        for (let i = 0; i < draft.money_way.length; i++) {
-          for (let j = 0; j < this.dictValue8.length; j++) {
-            console.log(this.dictValue8[j].bank_info);
-            console.log(draft.money_way[i]);
-            if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-              console.log(this.dictValue8[j].id)
-              this.form.account_id.push(this.dictValue8[j].id);
+        for (let item of draft.money_way) {
+          for (let key of this.dictValue8) {
+            console.log(item, 1000);
+            console.log(key.bank_info, 2000);
+            if (item === key.bank_info) {
+              this.form.account_id.push(key.id);
             }
           }
         }
+        // for (let i = 0; i < draft.money_way.length; i++) {
+        //   for (let j = 0; j < this.dictValue8.length; j++) {
+        //     console.log(this.dictValue8[j].bank_info, j, 2000);
+        //     console.log(draft.money_way[i], i, 3000);
+        //     if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+        //       console.log(this.dictValue8[j].id)
+        //       this.form.account_id.push(this.dictValue8[j].id);
+        //     }
+        //   }
+        // }
         let count = this.amountMoney;
         console.log(count);
         console.log(this.form.account_id);
