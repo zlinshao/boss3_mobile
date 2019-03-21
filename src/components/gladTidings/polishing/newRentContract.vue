@@ -2029,28 +2029,28 @@
         this.form.memo = draft.memo ? draft.memo : '';
         this.form.money_sep = draft.money_sep;
         this.form.money_way = draft.money_way;
-        this.form.account_id = [];
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
         if (this.amountMoney === null || this.amountMoney === undefined || this.amountMoney === 0 || this.amountMoney === '0') {
           this.amountMoney = 1;
         }
-        console.log(3)
-        console.log(draft.money_sep);
-        console.log(draft.real_pay_at);
-        console.log(draft.money_way);
+        this.form.account_id = [];
         for (let i = 0; i < draft.money_way.length; i++) {
           for (let j = 0; j < this.dictValue8.length; j++) {
+            console.log(this.dictValue8[j].bank_info);
+            console.log(tdraft.money_way[i]);
             if (this.dictValue8[j].bank_info === draft.money_way[i]) {
+              console.log(this.dictValue8[j].id)
               this.form.account_id.push(this.dictValue8[j].id);
             }
           }
         }
-        console.log(4)
-        console.log(draft.money_sep);
-        console.log(draft.real_pay_at);
-        console.log(draft.money_way);
         let count = this.amountMoney;
+        console.log(count);
+        console.log(this.form.account_id);
+        console.log(this.form.money_way);
+        console.log(this.form.money_sep);
+        console.log(this.form.real_pay_at);
         if (!(this.form.account_id.length === count && this.form.money_way.length === count && this.form.money_sep.length === count && this.form.real_pay_at.length === count)) {
           this.form.account_id.splice(0, this.form.account_id.length);
           this.form.money_way.splice(0, this.form.money_way.length);
@@ -2073,10 +2073,6 @@
         this.form.agency_price = draft.agency_price;
         this.form.agency_user_name = draft.agency_user_name;
         this.form.agency_phone = draft.agency_phone;
-        console.log(6)
-        console.log(draft.money_sep);
-        console.log(draft.real_pay_at);
-        console.log(draft.money_way);
         this.is_corp = draft.is_corp;
         this.corp = draft.is_corp === 1;
         if (draft.is_receipt) {
@@ -2150,16 +2146,8 @@
           }, error => {
           });
         }
-        console.log(7)
-        console.log(draft.money_sep);
-        console.log(draft.real_pay_at);
-        console.log(draft.money_way);
         this.choosedRemarks = this.getListFromList(this.remarks, draft.other_rule);
         this.changeContracts();
-        console.log(8)
-        console.log(draft.money_sep);
-        console.log(draft.real_pay_at);
-        console.log(draft.money_way);
       },
       getReceipt(draft) {
         if (typeof draft.receipt !== "string") {
