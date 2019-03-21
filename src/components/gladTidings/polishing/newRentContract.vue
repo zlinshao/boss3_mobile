@@ -862,6 +862,10 @@
 
 
         form: {
+          house:{
+            id:'',
+            name:''
+          },
           /*下面是转租独有*/
           trans_type: '0',//转租类型、默认公司 ,1是个人
 
@@ -1975,6 +1979,7 @@
       changeContractDetail(draft) {
         this.form.contract_id = draft.contract_id;
         this.form.house_id = draft.house_id;
+        this.form.house=draft.house;
         this.form.address = draft.address;
         this.form.corp_name = draft.corp_name;
         this.form.type = draft.type;
