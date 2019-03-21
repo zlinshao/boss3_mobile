@@ -994,7 +994,7 @@
             let checkInfo = {
               house_id: this.form.house_id,
               start_at: this.form.begin_date,
-              customer_name: this.form.name
+              customer_info: [{name:this.form.name,phone:this.form.phone}]
             };
             this.$http.post(this.urls + 'coreproject/renter/validate', checkInfo).then(resp => {
               this.haveInHand = true;

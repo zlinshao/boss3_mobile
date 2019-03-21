@@ -1731,15 +1731,10 @@
               this.post();
             });
           }else {
-            let customers = this.form.customer_info;
-            let names = [];
-            customers.forEach(houseOwner => {
-              names.push(houseOwner.name)
-            });
             let checkInfo = {
               house_id: this.form.house_id,
               start_at: this.form.begin_date,
-              customer_name: names
+              customer_info: this.form.customer_info
             };
             this.$http.post(this.urls + 'coreproject/renter/validate', checkInfo).then(resp => {
               this.haveInHand = true;
