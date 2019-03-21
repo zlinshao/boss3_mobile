@@ -2038,7 +2038,7 @@
         for (let i = 0; i < draft.money_way.length; i++) {
           for (let j = 0; j < this.dictValue8.length; j++) {
             console.log(this.dictValue8[j].bank_info);
-            console.log(tdraft.money_way[i]);
+            console.log(draft.money_way[i]);
             if (this.dictValue8[j].bank_info === draft.money_way[i]) {
               console.log(this.dictValue8[j].id)
               this.form.account_id.push(this.dictValue8[j].id);
