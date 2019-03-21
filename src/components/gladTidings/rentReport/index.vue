@@ -990,52 +990,75 @@
             }
           }
           this.form.uniq_code=this.$refs.float.getCode();
-          this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
-            this.haveInHand = true;
-            this.retry = 0;
-            if (res.data.code === '50210' || res.data.code === '50230') {
-              Toast.success(res.data.msg);
-              this.close_();
-              $('.imgItem').remove();
-              if (res.data.data.id) {
-                this.routerDetail(res.data.data.id)
+          if(this.form.draft===0){
+            let checkInfo = {
+              house_id: this.form.house_id,
+              start_at: this.form.begin_date,
+              customer_name: this.form.name
+            };
+            this.$http.post(this.urls + 'coreproject/renter/validate', checkInfo).then(resp => {
+              this.haveInHand = true;
+              if (resp.data.code === '20020') {
+                this.submit();
               } else {
-                this.routerDetail(res.data.data.data.id)
+                Toast.clear();
+                Toast(resp.data.msg);
               }
-            } else if (res.data.code === '50220') {
-              this.form.id = res.data.data.id;
-              if (receipt.length === 0) {
-                this.form.receipt = [];
-                this.form.receipt.push(this.receiptDate);
-              }
-              this.form.day = this.form.day === '0' ? '' : this.form.day;
-              this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
-              Toast.success(res.data.msg)
-            } else {
-              Toast(res.data.msg);
-            }
-          }).catch((error) => {
-            this.haveInHand = true;
-            if (error.response === undefined) {
-              this.alertMsg('net');
-
-            } else {
-              if (error.response.status === 401) {
-                this.personalGet().then((data) => {
-                  if (data && this.retry === 0) {
-                    this.retry++;
-
-                    this.saveCollect(this.form.draft);
-                  }
-                });
-              }
-            }
-          })
+            }).catch(e => {
+              this.haveInHand = true;
+              Toast.clear();
+              Toast('网络请求失败')
+            });
+            return
+          }
+          this.submit();
         } else {
           Toast(this.alertMsg('sub'));
         }
       },
+      submit(){
+        this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+          this.haveInHand = true;
+          this.retry = 0;
+          if (res.data.code === '50210' || res.data.code === '50230') {
+            Toast.success(res.data.msg);
+            this.close_();
+            $('.imgItem').remove();
+            if (res.data.data.id) {
+              this.routerDetail(res.data.data.id)
+            } else {
+              this.routerDetail(res.data.data.data.id)
+            }
+          } else if (res.data.code === '50220') {
+            this.form.id = res.data.data.id;
+            if (receipt.length === 0) {
+              this.form.receipt = [];
+              this.form.receipt.push(this.receiptDate);
+            }
+            this.form.day = this.form.day === '0' ? '' : this.form.day;
+            this.form.contract_number = this.form.contract_number === '' ? 'LJZF' : this.form.contract_number;
+            Toast.success(res.data.msg)
+          } else {
+            Toast(res.data.msg);
+          }
+        }).catch((error) => {
+          this.haveInHand = true;
+          if (error.response === undefined) {
+            this.alertMsg('net');
 
+          } else {
+            if (error.response.status === 401) {
+              this.personalGet().then((data) => {
+                if (data && this.retry === 0) {
+                  this.retry++;
+
+                  this.saveCollect(this.form.draft);
+                }
+              });
+            }
+          }
+        })
+      },
       houseInfo() {
         let detail = this.$store.state.app.searchDetail;
         if (Object.keys(detail).length > 0) {

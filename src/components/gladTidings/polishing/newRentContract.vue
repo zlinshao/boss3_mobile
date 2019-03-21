@@ -1725,31 +1725,37 @@
             this.haveInHand = true;
             return
           }
-          let customers=this.form.customer_info;
-          let names=[];
-          customers.forEach(houseOwner=>{
-            names.push(houseOwner.name)
-          });
-          let checkInfo={
-            house_id:this.form.house_id,
-            start_at:this.form.begin_date,
-            customer_name:names
-          };
-          this.$http.post(this.urls+'coreproject/renter/validate',checkInfo).then(resp=>{
-            this.haveInHand = true;
-            if(resp.data.code==='20020'){
-              this.getCity(resp => {
-                this.post();
-              })
-            }else{
+          if(this.form.type!=='1'){
+            this.getCity(resp => {
+              this.post();
+            });
+          }else {
+            let customers = this.form.customer_info;
+            let names = [];
+            customers.forEach(houseOwner => {
+              names.push(houseOwner.name)
+            });
+            let checkInfo = {
+              house_id: this.form.house_id,
+              start_at: this.form.begin_date,
+              customer_name: names
+            };
+            this.$http.post(this.urls + 'coreproject/renter/validate', checkInfo).then(resp => {
+              this.haveInHand = true;
+              if (resp.data.code === '20020') {
+                this.getCity(resp => {
+                  this.post();
+                })
+              } else {
+                Toast.clear();
+                Toast(resp.data.msg);
+              }
+            }).catch(e => {
+              this.haveInHand = true;
               Toast.clear();
-              Toast(resp.data.msg);
-            }
-          }).catch(e=>{
-            this.haveInHand = true;
-            Toast.clear();
-            Toast('网络请求失败')
-          });
+              Toast('网络请求失败')
+            });
+          }
         } else {
           Toast(this.alertMsg('sub'));
         }
