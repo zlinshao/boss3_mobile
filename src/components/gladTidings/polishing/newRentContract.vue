@@ -2038,39 +2038,18 @@
         console.log(this.dictValue8);
         for (let item of draft.money_way) {
           for (let key of this.dictValue8) {
-            console.log(item, 1000);
-            console.log(key.bank_info, 2000);
             if (item === key.bank_info) {
               this.form.account_id.push(key.id);
             }
           }
         }
-        // for (let i = 0; i < draft.money_way.length; i++) {
-        //   for (let j = 0; j < this.dictValue8.length; j++) {
-        //     console.log(this.dictValue8[j].bank_info, j, 2000);
-        //     console.log(draft.money_way[i], i, 3000);
-        //     if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-        //       console.log(this.dictValue8[j].id)
-        //       this.form.account_id.push(this.dictValue8[j].id);
-        //     }
-        //   }
-        // }
         let count = this.amountMoney;
-        console.log(count);
-        console.log(this.form.account_id);
-        console.log(this.form.money_way);
-        console.log(this.form.money_sep);
-        console.log(this.form.real_pay_at);
         if (!(this.form.account_id.length === count && this.form.money_way.length === count && this.form.money_sep.length === count && this.form.real_pay_at.length === count)) {
           this.form.account_id.splice(0, this.form.account_id.length);
           this.form.money_way.splice(0, this.form.money_way.length);
           this.form.money_sep.splice(0, this.form.money_sep.length);
           this.form.real_pay_at.splice(0, this.form.real_pay_at.length);
         }
-        console.log(5)
-        console.log(draft.money_sep);
-        console.log(draft.real_pay_at);
-        console.log(draft.money_way);
         this.form.discount = draft.discount;
         this.form.penalty = draft.penalty;
         this.other_fee_status = draft.is_other_fee === 1;
