@@ -2005,7 +2005,7 @@
         this.form.account_id = [];
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
-
+        console.log(this.form);
         if (this.amountMoney === null || this.amountMoney === undefined || this.amountMoney === 0 || this.amountMoney === '0') {
           this.amountMoney = 1;
         }
@@ -2023,6 +2023,7 @@
           this.form.money_way.splice(0, this.form.money_way.length);
           this.form.money_sep.splice(0, this.form.money_sep.length);
           this.form.real_pay_at.splice(0, this.form.real_pay_at.length)
+          console.log(this.form);
         }
 
         this.form.discount = draft.discount;
