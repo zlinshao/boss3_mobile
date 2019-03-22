@@ -862,8 +862,11 @@
 
 
         form: {
+          house:{
+            id:'',
+            name:''
+          },
           /*下面是转租独有*/
-          house:[{id:'',name:''}],
           trans_type: '0',//转租类型、默认公司 ,1是个人
 
           /*上面是转租独有*/
@@ -1240,7 +1243,7 @@
             Toast.clear();
           })
         } else {
-          console.log('读草稿')
+          console.log('读草稿');
           this.getCity();
           //读小飞草稿
           this.$http.get(this.eurls + 'fdd/contract/stash?staff_id=' + this.form.staff_id + '&type=' + 2).then(res => {
@@ -1251,7 +1254,7 @@
               this.userInfo();
             }
           }).catch(e => {
-            console.log(e)
+            console.log(e);
             this.userInfo();
             Toast.clear();
           })
@@ -1726,9 +1729,32 @@
             this.haveInHand = true;
             return
           }
-          this.getCity(resp => {
-            this.post();
-          })
+          if(this.form.type!=='1'||this.form.from_bulletin!==0){
+            this.getCity(resp => {
+              this.post();
+            });
+          }else {
+            let checkInfo = {
+              house_id: this.form.house_id,
+              start_at: this.form.begin_date,
+              customer_info: this.form.customer_info
+            };
+            this.$http.post(this.urls + 'coreproject/renter/validate', checkInfo).then(resp => {
+              this.haveInHand = true;
+              if (resp.data.code === '20020') {
+                this.getCity(resp => {
+                  this.post();
+                })
+              } else {
+                Toast.clear();
+                Toast(resp.data.msg);
+              }
+            }).catch(e => {
+              this.haveInHand = true;
+              Toast.clear();
+              Toast('网络请求失败')
+            });
+          }
         } else {
           Toast(this.alertMsg('sub'));
         }
@@ -2024,7 +2050,7 @@
           this.form.account_id.splice(0, this.form.account_id.length);
           this.form.money_way.splice(0, this.form.money_way.length);
           this.form.money_sep.splice(0, this.form.money_sep.length);
-          this.form.real_pay_at.splice(0, this.form.real_pay_at.length)
+          this.form.real_pay_at.splice(0, this.form.real_pay_at.length);
         }
 
         this.form.discount = draft.discount;
@@ -2218,8 +2244,7 @@
         this.rentUseTxt = '';
 
         this.form.people = '';
-        this.form.house.id='';
-        this.form.house.name=''
+
         this.form.rent_type = '';
         this.rentTypeTxt = '';
 
