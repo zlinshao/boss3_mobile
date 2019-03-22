@@ -167,11 +167,12 @@
             required>
           </van-field>
         </div>
+        <!--          :disabled="!enable()"
+-->
         <van-field
           v-model="showForm.noOwnerFeeTxt"
           label="非房东费用"
           readonly
-          :disabled="!enable()"
           type="text"
           @click="showChooseNoOwnerFee()"
           placeholder="请选择非房东费用(可多选)"
