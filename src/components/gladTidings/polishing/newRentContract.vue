@@ -862,9 +862,9 @@
 
 
         form: {
-          house:{
-            id:'',
-            name:''
+          house: {
+            id: '',
+            name: ''
           },
           /*下面是转租独有*/
           trans_type: '0',//转租类型、默认公司 ,1是个人
@@ -1073,6 +1073,7 @@
         let house_res = item.house_res;
         console.log(house_res)
         let house_res_com = house_res.community;
+
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
         this.form.house.name = item.house_name;
@@ -1729,11 +1730,11 @@
             this.haveInHand = true;
             return
           }
-          if(this.form.type!=='1'||this.form.from_bulletin!==0){
+          if (this.form.type !== '1' || this.form.from_bulletin !== 0) {
             this.getCity(resp => {
               this.post();
             });
-          }else {
+          } else {
             let checkInfo = {
               house_id: this.form.house_id,
               start_at: this.form.begin_date,
@@ -1977,13 +1978,12 @@
       },
       changeContractDetail(draft) {
         this.form.contract_id = draft.contract_id;
-        this.form.house=draft.house;
         this.form.house_id = draft.house_id;
+        this.form.house = draft.house;
         this.form.address = draft.address;
         this.form.corp_name = draft.corp_name;
         this.form.type = draft.type;
         this.form.month = draft.month;
-
         this.form.day = draft.day === '0' ? '' : draft.day;
         this.form.contract_number = this.setContractNumber(draft.contract_number);
         this.form.sign_date = draft.sign_date;
@@ -2010,7 +2010,6 @@
           this.form.period_pay_arr.push('');
           this.form.pay_way_arr.push('');
         }
-
         this.form.period_pay_arr = draft.period_pay_arr;
         this.countDate(2, draft.period_pay_arr);
         this.form.pay_way_arr = draft.pay_way_arr;
@@ -2030,18 +2029,17 @@
         this.form.memo = draft.memo ? draft.memo : '';
         this.form.money_sep = draft.money_sep;
         this.form.money_way = draft.money_way;
-        this.form.account_id = [];
         this.form.real_pay_at = draft.real_pay_at;
         this.amountMoney = draft.money_way.length;
-
         if (this.amountMoney === null || this.amountMoney === undefined || this.amountMoney === 0 || this.amountMoney === '0') {
           this.amountMoney = 1;
         }
-
-        for (let i = 0; i < draft.money_way.length; i++) {
-          for (let j = 0; j < this.dictValue8.length; j++) {
-            if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-              this.form.account_id.push(this.dictValue8[j].id);
+        this.form.account_id = [];
+        console.log(this.dictValue8);
+        for (let item of draft.money_way) {
+          for (let key of this.dictValue8) {
+            if (item === key.bank_info) {
+              this.form.account_id.push(key.id);
             }
           }
         }
@@ -2052,7 +2050,6 @@
           this.form.money_sep.splice(0, this.form.money_sep.length);
           this.form.real_pay_at.splice(0, this.form.real_pay_at.length);
         }
-
         this.form.discount = draft.discount;
         this.form.penalty = draft.penalty;
         this.other_fee_status = draft.is_other_fee === 1;
@@ -2065,7 +2062,6 @@
         this.form.agency_price = draft.agency_price;
         this.form.agency_user_name = draft.agency_user_name;
         this.form.agency_phone = draft.agency_phone;
-
         this.is_corp = draft.is_corp;
         this.corp = draft.is_corp === 1;
         if (draft.is_receipt) {
