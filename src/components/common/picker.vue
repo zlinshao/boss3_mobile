@@ -46,6 +46,10 @@
         let form = this.forms;
         let formatData = this.formatData;
         switch (picker.id) {
+          case 306:
+            form.city = value;
+            form.city_id = picker.ids[index];
+            break;
           case 437:// 空置期规则)
             formatData.vacancy_way = value;
             form.vacancy_way = picker.ids[index];

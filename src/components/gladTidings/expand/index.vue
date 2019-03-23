@@ -10,7 +10,7 @@
       </van-field>
       <van-field
         v-model="form.city"
-        @click="selectShow()"
+        @click="selectShow(306)"
         label="城市名"
         type="text"
         readonly
@@ -19,7 +19,7 @@
       </van-field>
       <van-field
         v-model="form.district"
-        @click="selectShow()"
+        @click="selectShow('district_id')"
         label="区县名称"
         type="text"
         readonly
@@ -41,6 +41,7 @@
     components: {Picker},
     data() {
       return {
+        url: globalConfig.server,
         pickerModule: false,//下拉框
         form: {
           village_name: '',//小区名称
@@ -56,9 +57,18 @@
           index: '',
           columns: [],//下拉数据
         },
+        cities: {},
+        areas: {},
       }
     },
     mounted() {
+      this.dictionary(306, 1).then(res => {
+        for (let item of res.data) {
+          if (item.variable && item.variable.city_id) {
+            this.cities[item.variable.city_id] = item.dictionary_name;
+          }
+        }
+      });
     },
     activated() {
     },
@@ -66,25 +76,32 @@
     computed: {},
     methods: {
       // 显示下拉
-      selectShow(val, index) {
+      selectShow(val) {
         setTimeout(() => {
           this.pickerModule = true;
         }, 200);
         let dict;
-        if (typeof val === 'string') {
-          dict = dicties[val];
+        if (val === 306) {
+          dict = this.cities;
         } else {
-          dict = this.dictData[val];
+          dict = this.areas;
         }
         this.pickers.columns = Object.values(dict);
         this.pickers.ids = Object.keys(dict);
         this.pickers.id = val;
-        this.pickers.index = index;
       },
       // 下拉选择结果
-      onConPicker(value, index) {
+      onConPicker(value) {
         this.form = value;
+        this.getArea(value.city_id);
         this.onCancel();
+      },
+      getArea(id) {
+        this.$http.get(this.url + 'setting/village/district?city_id=' + id).then(res => {
+          for (let item of res.data.data) {
+            this.areas[item.area_id] = item.name;
+          }
+        });
       },
       // 关闭模态框
       onCancel() {

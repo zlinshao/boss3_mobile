@@ -214,22 +214,22 @@
     </div>
 
     <!--底部-->
-    <div class="footerIndex">
-      <div @click="routerLink('/index')" :class="{'onDiv': footActive === 1}">
-        <h2>
-          <i class="iconfont icon-shenpi"></i>
-        </h2>
-        <h1>发起报备</h1>
-      </div>
-      <div @click="tabTag(2,0)" :class="{'onDiv': active === 2}">
-        <h2>
-          <i class="iconfont icon-daiban"></i>
-          <span class="titleNum" v-if="processType2 > 0 && processType2 < 100">{{processType2}}</span>
-          <span class="titleNum fontMini" v-if="processType2 > 99">99+</span>
-        </h2>
-        <h1>待办事项</h1>
-      </div>
-    </div>
+    <!--<div class="footerIndex">-->
+      <!--<div @click="routerLink('/index')" :class="{'onDiv': footActive === 1}">-->
+        <!--<h2>-->
+          <!--<i class="iconfont icon-shenpi"></i>-->
+        <!--</h2>-->
+        <!--<h1>发起报备</h1>-->
+      <!--</div>-->
+      <!--<div @click="tabTag(2,0)" :class="{'onDiv': active === 2}">-->
+        <!--<h2>-->
+          <!--<i class="iconfont icon-daiban"></i>-->
+          <!--<span class="titleNum" v-if="processType2 > 0 && processType2 < 100">{{processType2}}</span>-->
+          <!--<span class="titleNum fontMini" v-if="processType2 > 99">99+</span>-->
+        <!--</h2>-->
+        <!--<h1>待办事项</h1>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 
