@@ -278,7 +278,7 @@
                   //console.log(data[i])
                   list.house_type = data[i].room + "室" + data[i].hall + "厅" + data[i].toilet;
                   list.house_res = data[i].house_res;
-                  list.communityId = data[i].community.id || '';
+                  list.communityId = data[i].community ? data[i].community.id : '';
                   this.houseList.push(list);
                   this.finish(4);
                 }
@@ -341,8 +341,8 @@
           list.renters = value;
         } else {
           list.renters = {};
-        }
-        list.communityId = val.community.id || '';
+        };
+        list.communityId = val.community ? val.community.id : '';
         list.house_id = val.id;
         list.house_name = val.name;
         list.corp_name = val.corp_name;
