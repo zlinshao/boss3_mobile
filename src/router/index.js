@@ -193,15 +193,15 @@ export default new Router({
       meta: {title: '房屋质量报备'},
       component: Quality
     },
-    // {
-    //   path: '/expand',               //拓展新盘
-    //   name: '拓展新盘',
-    //   hidden: 'glad',
-    //   back: '#E3705B',
-    //   icon: 'iconfont icon-fangwuzhiliangbaobei',
-    //   meta: {title: '拓展新盘'},
-    //   component: Expand
-    // },
+    {
+      path: '/expand',               //拓展新盘
+      name: '拓展新盘',
+      hidden: 'glad',
+      back: '#E3705B',
+      icon: 'iconfont icon-fangwuzhiliangbaobei',
+      meta: {title: '拓展新盘'},
+      component: Expand
+    },
     {
       path: '/eContract',
       hidden: '',

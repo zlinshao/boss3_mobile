@@ -2,13 +2,6 @@
   <div>
     <van-cell-group>
       <van-field
-        v-model="form.village_name"
-        label="小区名称"
-        type="text"
-        readonly
-        placeholder="请选择小区名称">
-      </van-field>
-      <van-field
         v-model="form.city"
         @click="selectShow(306)"
         label="城市名"
@@ -26,8 +19,17 @@
         placeholder="请选择区县名称"
         required>
       </van-field>
+      <van-field
+        v-model="form.village_name"
+        label="小区"
+        type="text"
+        placeholder="请输入小区地址"
+        required>
+      </van-field>
     </van-cell-group>
-
+    <div class="footer">
+      <div @click="saveVillage()">提交</div>
+    </div>
     <Picker :module="pickerModule" :pickers="pickers" :form="form" :formData="{}" @close="onCancel"
             @succeed="onConPicker"></Picker>
   </div>
@@ -86,7 +88,6 @@
         } else {
           dict = this.areas;
         }
-        console.log(dict);
         this.pickers.columns = Object.values(dict);
         this.pickers.ids = Object.keys(dict);
         this.pickers.id = val;
@@ -97,16 +98,30 @@
         this.getArea(value.city_id);
         this.onCancel();
       },
-      getArea(id) {
-        this.$http.get(this.url + 'setting/village/district?city_id=' + id).then(res => {
-          for (let item of res.data.data) {
-            this.areas[item.area_id] = item.name;
-          }
-        });
-      },
       // 关闭模态框
       onCancel() {
         this.pickerModule = false;
+      },
+      getArea(id) {
+        this.$http.get(this.url + 'setting/village/district?city_id=' + id).then(res => {
+          for (let item of res.data.data) {
+            this.areas[item.area_id] = item.area_name;
+          }
+        });
+      },
+      saveVillage() {
+        alert(JSON.stringify(this.form));
+        this.prompt('正在提交...', 'send');
+        this.$http.post(this.url + 'setting/village/save', this.form).then(res => {
+          this.prompt('', 'close');
+          if (res.data.code === '9920') {
+
+          } else {
+            this.prompt(res.data.msg);
+          }
+        }).catch(_ => {
+          this.prompt('', 'close');
+        })
       },
     },
   }
