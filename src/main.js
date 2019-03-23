@@ -14,11 +14,56 @@ import '@/assets/js/formData.js'
 import 'vant/lib/index.css'
 // import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 
-import {Cell, Collapse, CollapseItem, CellGroup, Icon, DatetimePicker, PasswordInput, NumberKeyboard, Row, Col, Badge, Button, Loading, NavBar, Panel, Stepper, Step, Steps, Swipe, SwipeItem, Tab, Tabs, Tabbar, TabbarItem, Tag, Checkbox, CheckboxGroup, Field, RadioGroup, Radio, Search, Switch, Uploader, Actionsheet, Dialog, Picker, PullRefresh, Popup, SwitchCell, AddressList, List} from 'vant';
+import VConsole from 'vconsole/dist/vconsole.min.js'; //import vconsole
+let vConsole = new VConsole(); // 初始化
 
+import {
+  Cell,
+  Collapse,
+  CollapseItem,
+  CellGroup,
+  Icon,
+  DatetimePicker,
+  PasswordInput,
+  NumberKeyboard,
+  Row,
+  Col,
+  Badge,
+  Button,
+  Loading,
+  NavBar,
+  Panel,
+  Stepper,
+  Step,
+  Steps,
+  Swipe,
+  SwipeItem,
+  Tab,
+  Tabs,
+  Tabbar,
+  TabbarItem,
+  Tag,
+  Checkbox,
+  CheckboxGroup,
+  Field,
+  RadioGroup,
+  Radio,
+  Search,
+  Switch,
+  Uploader,
+  Actionsheet,
+  Dialog,
+  Picker,
+  PullRefresh,
+  Popup,
+  SwitchCell,
+  AddressList,
+  List
+} from 'vant';
+Vue.use(vConsole);
 Vue.use(Row).use(Collapse).use(CollapseItem).use(Col).use(Cell).use(RadioGroup).use(CellGroup).use(Icon).use(DatetimePicker).use(PasswordInput).use(NumberKeyboard).use(Badge).use(Button).use(Loading).use(NavBar).use(Panel).use(Stepper).use(Step).use(Steps).use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Tabbar).use(TabbarItem).use(Tag).use(Checkbox).use(CheckboxGroup).use(Field).use(Radio).use(Search).use(Switch).use(Uploader).use(Actionsheet).use(Dialog).use(PullRefresh).use(SwitchCell).use(Picker).use(Popup).use(AddressList).use(List);
 Vue.use(require('vue-wechat-title'));
-Vue.component('float-btn',floatButton);
+Vue.component('float-btn', floatButton);
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(Boss);

@@ -102,6 +102,10 @@ import VideoPlay from '../components/lejiaUniversity/videoPlay.vue'
 // 考勤记录
 import Attendance from '../components/attendance/index.vue'
 
+// 拓展新盘
+import Expand from '../components/gladTidings/expand/index.vue'
+
+
 Vue.use(Router);
 
 export default new Router({
@@ -189,6 +193,15 @@ export default new Router({
       meta: {title: '房屋质量报备'},
       component: Quality
     },
+    // {
+    //   path: '/expand',               //拓展新盘
+    //   name: '拓展新盘',
+    //   hidden: 'glad',
+    //   back: '#E3705B',
+    //   icon: 'iconfont icon-fangwuzhiliangbaobei',
+    //   meta: {title: '拓展新盘'},
+    //   component: Expand
+    // },
     {
       path: '/eContract',
       hidden: '',
