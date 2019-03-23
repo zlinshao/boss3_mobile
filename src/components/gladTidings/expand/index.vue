@@ -86,6 +86,7 @@
         } else {
           dict = this.areas;
         }
+        console.log(dict);
         this.pickers.columns = Object.values(dict);
         this.pickers.ids = Object.keys(dict);
         this.pickers.id = val;
