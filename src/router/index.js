@@ -202,15 +202,6 @@ export default new Router({
       component: EContract
     },
     {
-      path: '/expand',               //拓展新盘
-      name: '拓展新盘',
-      hidden: 'glad',
-      back: '#E3705B',
-      icon: 'iconfont icon-fangwuzhiliangbaobei',
-      meta: {title: '拓展新盘'},
-      component: Expand
-    },
-    {
       path: '/collectReport',               //收房报备
       name: '收房报备',
       hidden: 'glad',
@@ -346,7 +337,15 @@ export default new Router({
       meta: {title: '尾款房租报备'},
       component: FinalPayment
     },
-
+    {
+      path: '/expand',               //拓展新盘
+      name: '拓展新盘',
+      hidden: 'glad',
+      back: '#E3705B',
+      icon: 'iconfont icon-chanpinguankong',
+      meta: {title: '拓展新盘'},
+      component: Expand
+    },
     {
       path: '/productControlCenter',
       name: '产品管控中心',

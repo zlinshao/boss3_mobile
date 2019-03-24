@@ -103,6 +103,7 @@
         this.pickerModule = false;
       },
       getArea(id) {
+        this.areas =[];
         this.$http.get(this.url + 'setting/village/district?city_id=' + id).then(res => {
           for (let item of res.data.data) {
             this.areas[item.area_id] = item.area_name;
