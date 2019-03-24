@@ -169,7 +169,6 @@ export default new Router({
       meta: {title: '搜索'},
       component: SearchList
     },
-
     {
       path: '/publishDetail',
       name: 'publishDetail',
@@ -194,15 +193,6 @@ export default new Router({
       component: Quality
     },
     {
-      path: '/expand',               //拓展新盘
-      name: '拓展新盘',
-      hidden: 'glad',
-      back: '#E3705B',
-      icon: 'iconfont icon-fangwuzhiliangbaobei',
-      meta: {title: '拓展新盘'},
-      component: Expand
-    },
-    {
       path: '/eContract',
       hidden: '',
       back: '#F19851',
@@ -211,7 +201,15 @@ export default new Router({
       meta: {title: '电子合同'},
       component: EContract
     },
-
+    {
+      path: '/expand',               //拓展新盘
+      name: '拓展新盘',
+      hidden: 'glad',
+      back: '#E3705B',
+      icon: 'iconfont icon-fangwuzhiliangbaobei',
+      meta: {title: '拓展新盘'},
+      component: Expand
+    },
     {
       path: '/collectReport',               //收房报备
       name: '收房报备',

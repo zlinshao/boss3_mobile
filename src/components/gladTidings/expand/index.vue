@@ -110,12 +110,13 @@
         });
       },
       saveVillage() {
-        alert(JSON.stringify(this.form));
         this.prompt('正在提交...', 'send');
         this.$http.post(this.url + 'setting/village/save', this.form).then(res => {
           this.prompt('', 'close');
           if (res.data.code === '9920') {
-
+            this.prompt(res.data.msg, 'succeed');
+            this.close_();
+            this.$router.back(-1);
           } else {
             this.prompt(res.data.msg);
           }
@@ -123,6 +124,15 @@
           this.prompt('', 'close');
         })
       },
+      close_() {
+        this.form = {
+          village_name: '',//小区名称
+          city: '',//城市名
+          city_id: '',//城市id
+          district: '',//小区名称
+          district_id: '',//区县id
+        }
+      }
     },
   }
 </script>
