@@ -215,7 +215,7 @@ export default new Router({
       name: '收房报备',
       hidden: 'glad',
       back: '#E3705B',
-      icon: 'iconfont icon-shoufang',
+      icon: 'iconfont icon-gaoceng',
       meta: {title: '收房报备'},
       component: CollectReport
     },
