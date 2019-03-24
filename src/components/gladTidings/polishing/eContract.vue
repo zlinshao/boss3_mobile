@@ -78,14 +78,6 @@
 </template>
 
 <script>
-
-  export class ContractInfo {
-    constructor(type, number) {
-      this.type = type;
-      this.number = number;
-    }
-  }
-
   import {Toast, Dialog} from 'vant';
 
   export default {
@@ -140,6 +132,10 @@
 
     },
     methods: {
+      onSearch() {
+        this.page++;
+        this.getData();
+      },
       lookContractModels() {
         this.$router.push('/contractModels');
       },
@@ -149,7 +145,7 @@
           this.signs(item.id, item.param_map.signer.fadada_user_id)
         } else {
           for (let i = 0; i < item.param_map.customer_info.length; i++) {
-            this.signs(item.id, item.param_map.customer_info[i].fadada_user_id)
+            this.signs(item.id, item.param_map.customer_info[i].fadada_user_id);
           }
         }
       },
@@ -294,8 +290,7 @@
             Toast(res.data.msg);
           }
         })
-      }
-      ,
+      },
       signRent(contract_number, title, id, type, index) {
         this.$http.post(this.eurls + 'fdd/contract/sign_rent', {
           contract_id: contract_number,
@@ -314,8 +309,7 @@
             Toast(res.data.msg);
           }
         })
-      }
-      ,
+      },
       toDetail(item) {
         if (item.contract_status !== 1) {
           return
@@ -325,13 +319,7 @@
         } else {
           this.rent(1, item.contract_number);
         }
-      }
-      ,
-      onSearch() {
-        this.page++;
-        this.getData();
-      }
-      ,
+      },
       //更改tab
       changeTab(index, title) {
         this.type = index + 1;
@@ -344,8 +332,7 @@
       //显示选择收租房弹框
       showChooseDialog() {
         this.show = true;
-      }
-      ,
+      },
       refresh() {
         this.page = 1;
         this.totalPages = 1;
@@ -357,15 +344,13 @@
         sessionStorage.setItem('contract_type', type || 0);
         sessionStorage.setItem('contract_number', number || '');
         this.$router.push('/newCollectContract');//type 0为新签 1为作废重签
-      }
-      ,
+      },
       //添加租房合同
       rent(type, number) {
         sessionStorage.setItem('contract_type', type || 0);
         sessionStorage.setItem('contract_number', number || '');
         this.$router.push('/newRentContract');//type 0为新签 1为作废重签
-      }
-      ,
+      },
       getData() {
         if (this.page > this.totalPages) return;
         this.loading = true;

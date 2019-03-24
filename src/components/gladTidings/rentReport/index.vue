@@ -570,7 +570,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
-          uniq_code:''
+          uniq_code: ''
 
         },
         screenshots: {},
@@ -989,12 +989,12 @@
               this.form[key] = this.filter_array(this.form[key])
             }
           }
-          this.form.uniq_code=this.$refs.float.getCode();
-          if(this.form.draft===0){
+          this.form.uniq_code = this.$refs.float.getCode();
+          if (this.form.draft === 0) {
             let checkInfo = {
               house_id: this.form.house_id,
               start_at: this.form.begin_date,
-              customer_info: [{name:this.form.name,phone:this.form.phone}]
+              customer_info: [{name: this.form.name, phone: this.form.phone}]
             };
             this.$http.post(this.urls + 'coreproject/renter/validate', checkInfo).then(resp => {
               this.haveInHand = true;
@@ -1016,7 +1016,7 @@
           Toast(this.alertMsg('sub'));
         }
       },
-      submit(){
+      submit() {
         this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
           this.haveInHand = true;
           this.retry = 0;
@@ -1163,6 +1163,7 @@
             this.form.memo = draft.memo ? draft.memo : '';
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
+            this.form.account_id = draft.account_id || [];
             for (let i = 0; i < draft.money_way.length; i++) {
               if (draft.real_pay_at) {
                 this.form.real_pay_at[i] = draft.real_pay_at[i];
@@ -1170,11 +1171,6 @@
                 this.form.real_pay_at.push('');
               }
               this.amountMoney = i + 1;
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                  this.form.account_id[i] = this.dictValue8[j].id;
-                }
-              }
             }
 
             this.form.discount = draft.discount;
