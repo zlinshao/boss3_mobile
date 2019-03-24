@@ -1123,6 +1123,7 @@
             this.form.memo = rent.memo ? rent.memo : '';
             this.form.money_sep = [];
             this.form.money_way = [];
+            this.form.account_id = rent.account_id || [];
             for (let i = 0; i < rent.money_table.length; i++) {
               this.amountMoney = i + 1;
               this.form.money_sep.push(rent.money_table[i].money_sep);
@@ -1131,11 +1132,6 @@
                 this.form.real_pay_at.push(rent.money_table[i].real_pay_at);
               } else {
                 this.form.real_pay_at.push('');
-              }
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === rent.money_table[i].money_way) {
-                  this.form.account_id[i] = this.dictValue8[j].id;
-                }
               }
             }
 
@@ -1288,6 +1284,7 @@
             this.form.memo = draft.memo ? draft.memo : '';
             this.form.money_sep = draft.money_sep;
             this.form.money_way = draft.money_way;
+            this.form.account_id = draft.account_id || [];
             for (let i = 0; i < draft.money_way.length; i++) {
               if (draft.real_pay_at) {
                 this.form.real_pay_at[i] = draft.real_pay_at[i];
@@ -1295,11 +1292,6 @@
                 this.form.real_pay_at.push('');
               }
               this.amountMoney = i + 1;
-              for (let j = 0; j < this.dictValue8.length; j++) {
-                if (this.dictValue8[j].bank_info === draft.money_way[i]) {
-                  this.form.account_id[i] = this.dictValue8[j].id;
-                }
-              }
             }
 
             if (draft.is_receipt) {
