@@ -62,6 +62,7 @@
     activated() {
       this.type = this.$route.query.type;
       this.city_id = this.$route.query.city;
+      this.area = this.$route.query.area || '';
       this.routerIndex(this.path);
       this.close_();
     },
@@ -106,16 +107,19 @@
       },
       onSearch(val, page) {
         this.finished = true;
-        console.log(val);
-        console.log(page);
         this.params = {};
         this.params.num = 20;
         this.params.keywords = val;
         this.params.pages = page;
+        this.params.area = page;
         if (this.type === 1) {
           this.params.city = this.city_id;
         } else {
           this.params.province = this.city_id;
+        }
+        if (this.area) {
+          this.params.area = this.area;
+          this.params.province = '';
         }
         if (val !== '') {
           this.showDetail = 1;

@@ -25,6 +25,7 @@
         type="text"
         placeholder="请输入小区地址"
         required>
+        <van-button slot="button" size="small" type="primary" @click="searchSelect()">搜索小区</van-button>
       </van-field>
     </van-cell-group>
     <div class="footer">
@@ -37,6 +38,7 @@
 
 <script>
   import Picker from '../../common/picker.vue'
+  import {Toast} from 'vant'
 
   export default {
     name: "index",
@@ -61,6 +63,7 @@
         },
         cities: {},
         areas: {},
+        selectType: '',
       }
     },
     mounted() {
@@ -73,12 +76,35 @@
       });
     },
     activated() {
+      this.routerIndex('');
+      this.ddRent('');
+      let t = this.$route.query;
+      if (t.city) {
+        let val = JSON.parse(t.city);
+        this.form.village_name = val.village_name;
+      }
     },
     watch: {},
     computed: {},
     methods: {
+      searchSelect() {
+        if (!this.form.city_id) {
+          Toast('请选择城市');
+          return;
+        }
+        if (!this.form.district_id) {
+          Toast('请选择区/县');
+          return;
+        }
+        let data = {
+          city: this.form.city_id,
+          area: this.form.district_id,
+        };
+        this.$router.push({path: '/citySearch', query: data});
+      },
       // 显示下拉
       selectShow(val) {
+        this.selectType = val;
         setTimeout(() => {
           this.pickerModule = true;
         }, 200);
@@ -95,7 +121,11 @@
       // 下拉选择结果
       onConPicker(value) {
         this.form = value;
-        this.getArea(value.city_id);
+        if (this.selectType === 306) {
+          this.form.district = '';
+          this.form.district_id = '';
+          this.getArea(value.city_id);
+        }
         this.onCancel();
       },
       // 关闭模态框
@@ -103,7 +133,7 @@
         this.pickerModule = false;
       },
       getArea(id) {
-        this.areas =[];
+        this.areas = [];
         this.$http.get(this.url + 'setting/village/district?city_id=' + id).then(res => {
           for (let item of res.data.data) {
             this.areas[item.area_id] = item.area_name;
@@ -117,7 +147,7 @@
           if (res.data.code === '9920') {
             this.prompt(res.data.msg, 'succeed');
             this.close_();
-            this.$router.back(-1);
+            this.$router.push('/index');
           } else {
             this.prompt(res.data.msg);
           }
