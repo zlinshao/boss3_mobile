@@ -63,7 +63,7 @@
       <div>
         <div class="choose" @click="collect(0,'')">收房</div>
         <div class="line"></div>
-        <!--<div class="choose" @click="rent(0,'')">租房</div>-->
+        <div class="choose" @click="rent(0,'')">租房</div>
       </div>
     </van-popup>
     <van-popup :overlay-style="{'background':'rgba(0,0,0,.2)'}" v-model="selectHide" position="bottom" :overlay="true">
