@@ -111,15 +111,10 @@
         this.params.num = 20;
         this.params.keywords = val;
         this.params.pages = page;
-        this.params.area = page;
         if (this.type === 1) {
           this.params.city = this.city_id;
         } else {
           this.params.province = this.city_id;
-        }
-        if (this.area) {
-          this.params.area = this.area;
-          this.params.province = '';
         }
         if (val !== '') {
           this.showDetail = 1;
