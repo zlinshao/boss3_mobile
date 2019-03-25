@@ -1619,7 +1619,18 @@
             return
           }
           if (this.form.regenerate === 0 || this.form.regenerate === '0') {
-            let json = {
+            let json = {content: this.form, type: '1'};
+            this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+              Toast.clear();
+              if (success === undefined) {
+                Toast(res.data.msg)
+              } else {
+                success()
+              }
+            }).catch(e => {
+              Toast.clear();
+            });
+            json = {
               content: {
                 staff_id: this.form.staff_id
               }, type: '1'
