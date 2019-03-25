@@ -217,7 +217,7 @@
     </van-popup>
     <div v-if="process.place">
       <div class="toContract"
-           v-if="(process.place.name==='published'&&showEContract&&process.content.cookie===undefined&&(process.processable_type==='bulletin_rent_basic'||process.processable_type==='bulletin_rent_continued'))" @click="toContract()">
+           v-if="(process.place.name==='published'&&showEContract&&process.content.cookie===undefined&&(process.processable_type==='bulletin_rent_basic'||process.processable_type==='bulletin_rent_continued'||process.processable_type==='bulletin_RWC_confirm'))" @click="toContract()">
         <i class="iconfont icon-hetong"></i>
       </div>
     </div>
