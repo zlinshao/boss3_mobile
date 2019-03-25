@@ -1803,7 +1803,14 @@
           }
           //清除草稿
           if (this.form.regenerate === 0 || this.form.regenerate === '0') {
-            let json = {
+            let json = {content: this.form, type: '2'};
+            this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+              Toast.clear();
+              Toast(res.data.msg);
+            }).catch(e => {
+              Toast.clear();
+            });
+            json = {
               content: {
                 staff_id: this.form.staff_id,
                 type: '1'

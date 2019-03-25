@@ -1622,11 +1622,7 @@
             let json = {content: this.form, type: '1'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
               Toast.clear();
-              if (success === undefined) {
-                Toast(res.data.msg)
-              } else {
-                success()
-              }
+              Toast(res.data.msg);
             }).catch(e => {
               Toast.clear();
             });
