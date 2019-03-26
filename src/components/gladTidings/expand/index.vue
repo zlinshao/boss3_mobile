@@ -67,13 +67,16 @@
       }
     },
     mounted() {
-      this.dictionary(306, 1).then(res => {
-        for (let item of res.data) {
-          if (item.variable && item.variable.city_id) {
-            this.cities[item.variable.city_id] = item.dictionary_name;
-          }
-        }
+      this.$http.get(this.url + 'setting/village/city').then(res => {
+        this.cities = res.data.data;
       });
+      // this.dictionary(306, 1).then(res => {
+      //   for (let item of res.data) {
+      //     if (item.variable && item.variable.city_id) {
+      //       this.cities[item.variable.city_id] = item.dictionary_name;
+      //     }
+      //   }
+      // });
     },
     activated() {
       this.routerIndex('');
