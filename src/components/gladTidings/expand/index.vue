@@ -42,7 +42,7 @@
         </van-field>
         <van-field
           v-model="form.built_year"
-          label="建筑年限"
+          label="建筑年代"
           type="text"
           readonly
           @click="selectShow('built_year')"
@@ -88,9 +88,9 @@
         </van-field>
         <van-field
           v-model="form.lessor_phone"
-          label="出租人电话"
+          label="求租人电话"
           type="number"
-          placeholder="请输入出租人电话"
+          placeholder="请输入求租人电话"
           required>
         </van-field>
         <van-field
@@ -169,7 +169,7 @@
           total_houses: '',//房屋总数
           property_fee: '',//物业费
           property_phone: '',//物业电话
-          lessor_phone: '',//出租人电话
+          lessor_phone: '',//求租人电话
           property_com: '',//物业公司
           album: {
             village_photo: [],
@@ -203,7 +203,7 @@
             label: '房屋照片',
             key: 'home_photo'
           }, {
-            label: '调研报告',
+            label: '调研报告(可传文件)',
             key: 'files'
           }
         ],
