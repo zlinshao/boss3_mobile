@@ -126,8 +126,8 @@
           placeholder="请输入地铁线路"
           required>
         </van-field>
-        <div class="aloneModel" v-for="item in photo">
-          <div class="title">{{item.label}}</div>
+        <div class="aloneModel required" v-for="item in photo">
+          <div class="title"><span v-if="item.key !== 'files'">*</span>{{item.label}}</div>
           <UpLoad :ID="item.key" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
         </div>
 
