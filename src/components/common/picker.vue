@@ -50,6 +50,9 @@
             form.district = value;
             form.district_id = picker.ids[index];
             break;
+          case 'built_year':
+            form.built_year = value;
+            break;
           case 306:
             form.city = value;
             form.city_id = picker.ids[index];

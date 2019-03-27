@@ -146,12 +146,12 @@ export default {
       return item.slice(0, val);
     };
     // 字典
-    Vue.prototype.dictionary = function (data, flag,collect) {
+    Vue.prototype.dictionary = function (data, flag, collect) {
       return new Promise((resolve, reject) => {
         this.$http.get(globalConfig.server + 'setting/dictionary/' + data, {
           params: {
             status: flag,
-            type:collect
+            type: collect
           }
         }).then((res) => {
           if (res.data.code === '30010') {
@@ -165,7 +165,7 @@ export default {
     // 报备码
     Vue.prototype.bulletinCode = function (prefix) {
       return new Promise((resolve) => {
-        this.$http.get(globalConfig.server + 'api/registration/uinq_code?prefix='+prefix).then((res) => {
+        this.$http.get(globalConfig.server + 'api/registration/uinq_code?prefix=' + prefix).then((res) => {
           if (res.data.code === 200) {
             resolve(res.data.data.uniq_code)
           }
