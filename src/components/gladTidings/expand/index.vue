@@ -31,8 +31,7 @@
           v-model="form.village_alias"
           label="小区别名"
           type="text"
-          placeholder="请输入小区别名"
-          required>
+          placeholder="请输入小区别名">
         </van-field>
         <van-field
           v-model="form.address"
@@ -82,9 +81,16 @@
         </van-field>
         <van-field
           v-model="form.property_phone"
-          label="物业联系电话"
+          label="物业电话"
           type="number"
-          placeholder="请输入物业联系电话"
+          placeholder="请输入物业电话"
+          required>
+        </van-field>
+        <van-field
+          v-model="form.lessor_phone"
+          label="出租人电话"
+          type="number"
+          placeholder="请输入出租人电话"
           required>
         </van-field>
         <van-field
@@ -98,15 +104,13 @@
           v-model="form.content"
           label="详情"
           type="textarea"
-          placeholder="请输入详情"
-          required>
+          placeholder="请输入详情">
         </van-field>
         <van-field
           v-model="form.remark"
           label="备注"
           type="textarea"
-          placeholder="请输入备注"
-          required>
+          placeholder="请输入备注">
         </van-field>
         <van-field
           v-model="form.peripheral_info"
@@ -164,7 +168,8 @@
           total_buildings: '',//总栋数
           total_houses: '',//房屋总数
           property_fee: '',//物业费
-          property_phone: '',//物业联系电话
+          property_phone: '',//物业电话
+          lessor_phone: '',//出租人电话
           property_com: '',//物业公司
           album: {
             village_photo: [],
@@ -232,7 +237,7 @@
     computed: {},
     methods: {
       getImgData(val) {
-        this.pickers.album[val[0]] = val[1];
+        this.form.album[val[0]] = val[1];
       },
       searchSelect() {
         if (!this.form.city_id) {
@@ -326,6 +331,7 @@
           total_houses: '',//房屋总数
           property_fee: '',//物业费
           property_phone: '',//物业联系电话
+          lessor_phone: '',//出租人联系电话
           property_com: '',//物业公司
           album: {
             village_photo: [],
