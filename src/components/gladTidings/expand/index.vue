@@ -14,10 +14,10 @@
         <van-field
           v-model="form.district"
           @click="selectShow('district_id')"
-          label="区县名称"
+          label="区/县名称"
           type="text"
           readonly
-          placeholder="请选择区县名称"
+          placeholder="请选择区/县名称"
           required>
         </van-field>
         <van-field
@@ -95,13 +95,6 @@
           required>
         </van-field>
         <van-field
-          v-model="form.developers"
-          label="开发商"
-          type="text"
-          placeholder="请输入开发商"
-          required>
-        </van-field>
-        <van-field
           v-model="form.content"
           label="详情"
           type="textarea"
@@ -173,7 +166,6 @@
           property_fee: '',//物业费
           property_phone: '',//物业联系电话
           property_com: '',//物业公司
-          developers: '',//开发商
           album: {
             village_photo: [],
             home_photo: [],
@@ -206,7 +198,7 @@
             label: '房屋照片',
             key: 'home_photo'
           }, {
-            label: '文件上传',
+            label: '调研报告',
             key: 'files'
           }
         ],
@@ -335,7 +327,6 @@
           property_fee: '',//物业费
           property_phone: '',//物业联系电话
           property_com: '',//物业公司
-          developers: '',//开发商
           album: {
             village_photo: [],
             home_photo: [],
