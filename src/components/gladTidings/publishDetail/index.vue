@@ -202,7 +202,7 @@
         </div>
         <div class="showRoleName" v-if="JSON.stringify(bull_name) !== '{}'">
           <div class="showImg">
-            <img :src="bull_name.avatar" v-if="bull_name.avatar ">
+            <img :src="bull_name.avatar" v-if="bull_name.avatar">
             <img src="../../../assets/head.png" v-else>
           </div>
           <div>
@@ -217,7 +217,8 @@
     </van-popup>
     <div v-if="process.place">
       <div class="toContract"
-           v-if="(process.place.name==='published'&&showEContract&&process.content.cookie===undefined&&(process.processable_type==='bulletin_rent_basic'||process.processable_type==='bulletin_rent_continued'||process.processable_type==='bulletin_RWC_confirm'))" @click="toContract()">
+           v-if="(process.place.name==='published'&&showEContract&&process.content.cookie===undefined&&(process.processable_type==='bulletin_rent_basic'||process.processable_type==='bulletin_rent_continued'||process.processable_type==='bulletin_RWC_confirm'))"
+           @click="toContract()">
         <i class="iconfont icon-hetong"></i>
       </div>
     </div>
@@ -439,6 +440,12 @@
       },
       search() {
         this.formDetail(this.ids);
+        // this.promptBox();
+      },
+      promptBox() {
+        this.$http.get(this.urls + 'financial/pingxx/preCheck').then(res => {
+
+        });
       },
       formDetail(val) {
         this.$http.get(this.urls + 'workflow/process/' + val).then((res) => {
