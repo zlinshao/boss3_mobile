@@ -440,11 +440,16 @@
       },
       search() {
         this.formDetail(this.ids);
-        // this.promptBox();
       },
-      promptBox() {
-        this.$http.get(this.urls + 'financial/pingxx/preCheck').then(res => {
+      promptBox(id) {
+        this.$http.post(this.urls + 'financial/pingxx/preCheck', {
+          process_id: id,
+        }).then(res => {
+          if (res.data.code === '20000') {
 
+          } else {
+            alert(res.data.msg);
+          }
         });
       },
       formDetail(val) {
@@ -464,6 +469,9 @@
             }
             this.process = main;
             this.handleLookContract(true, content);
+            if (main.place.name === 'verify-manager_review') {
+              this.promptBox(val);
+            }
             if (this.rentReport.indexOf(main.processable_type) > -1) {
               this.$http.get(this.urls + 'workflow/process/get/' + val).then(item => {
                 this.contentGet = item.data.data.content;
