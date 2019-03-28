@@ -5,7 +5,12 @@
       <transition name="move">
         <div class="menu" v-show="show">
           <div class="inner inner-1" @click="newly"><i class="iconfont icon-xiugai--"></i></div>
-          <div class="inner inner-2"><i class="iconfont icon-jinyong--"></i></div>
+          <div class="inner inner-2 inner-4" v-if="process.processable_type === 'bulletin_collect_basic'">
+            <i class="iconfont icon-lizhi" @click="handleCheckReport(ids)"></i>
+          </div>
+          <div class="inner inner-2" v-else>
+            <i class="iconfont icon-jinyong--"></i>
+          </div>
           <div class="inner inner-3"><i class="iconfont icon-jinyong--"></i></div>
         </div>
       </transition>
@@ -16,9 +21,10 @@
 <script>
   export default {
     name: "switch-craft",
-    props: ['process'],
+    props: ['process', 'ids'],
     data() {
       return {
+        url: globalConfig.server,
         show: false,
       }
     },
@@ -31,6 +37,15 @@
       }
     },
     methods: {
+      handleCheckReport(process_id) {
+        this.$http.post(this.url + '/financial/pingxx/preventPay', {
+          process_id
+        }).then(res => {
+          if (res.data.code === '20000') {
+            this.$emit('close');
+          }
+        })
+      },
       showMenu() {
         this.show = !this.show;
       },
@@ -191,6 +206,9 @@
         left: -50px;
         top: 10px;
         background: #DDDDDD;
+      }
+      .inner-4 {
+        background: #F19851;
       }
     }
   }

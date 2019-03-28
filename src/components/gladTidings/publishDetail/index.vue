@@ -223,7 +223,7 @@
       </div>
     </div>
     <SwitchCraft v-if="approvedStatus && routerLinks.indexOf(process.processable_type) > -1"
-                 :process="process"></SwitchCraft>
+                 :process="process" :ids="ids" @close="formDetail(ids);"></SwitchCraft>
   </div>
 </template>
 
