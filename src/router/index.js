@@ -201,15 +201,15 @@ export default new Router({
       meta: {title: '电子合同'},
       component: EContract
     },
-    // {
-    //   path: '/collectReport',               //收房报备
-    //   name: '收房报备',
-    //   hidden: 'glad',
-    //   back: '#E3705B',
-    //   icon: 'iconfont icon-gaoceng',
-    //   meta: {title: '收房报备'},
-    //   component: CollectReport
-    // },
+    {
+      path: '/collectReport',               //收房报备
+      name: '收房报备',
+      hidden: 'glad',
+      back: '#E3705B',
+      icon: 'iconfont icon-gaoceng',
+      meta: {title: '收房报备'},
+      component: CollectReport
+    },
     {
       path: '/rentReport',                 //租房报备
       name: '租房报备',
