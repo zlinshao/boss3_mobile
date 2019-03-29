@@ -959,7 +959,9 @@
       let detail = this.$store.state.app.searchDetail;
       if (Object.keys(detail).length > 0) {
         let val = JSON.parse(detail.house);
-        this.form.contract_id = detail.contractVal.id;
+        if(this.form.type === '2'){
+          this.form.contract_id = detail.contractVal.id;
+        }
         this.form.house_type = val.house_type;
         this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + val.communityId).then(res => {
           if (res.data.code === '51401') {
