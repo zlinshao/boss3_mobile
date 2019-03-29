@@ -341,7 +341,7 @@
           list.renters = value;
         } else {
           list.renters = {};
-        };
+        }
         list.communityId = val.community ? val.community.id : '';
         list.house_id = val.id;
         list.house_name = val.name;

@@ -958,9 +958,10 @@
 
       let detail = this.$store.state.app.searchDetail;
       if (Object.keys(detail).length > 0) {
-        this.form.contract_id = detail.house.id;
-        this.form.house_type = detail.house.house_type;
-        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + detail.communityId).then(res => {
+        let val = JSON.parse(detail.house);
+        this.form.contract_id = detail.contractVal.id;
+        this.form.house_type = val.house_type;
+        this.$http.get(this.urls + 'bulletin/quality/allow_community?community_id=' + val.communityId).then(res => {
           if (res.data.code === '51401') {
             Toast(res.data.msg)
           }
