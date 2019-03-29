@@ -47,7 +47,7 @@
             <van-button v-if="item.contract_status===1" class="btn sign signBtn" size="small"
                         @click.stop="toDetail(item)">修改
             </van-button>
-            <van-button v-if="item.contract_status===2" class="btn send signBtn" size="small"
+            <van-button v-if="item.contract_status===2 || item.contract_status===4" class="btn send signBtn" size="small"
                         @click.stop="sendAgain(item)">发送合同
             </van-button>
           </div>
