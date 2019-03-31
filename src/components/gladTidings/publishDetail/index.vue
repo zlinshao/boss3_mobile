@@ -217,7 +217,7 @@
     </van-popup>
     <div v-if="process.place">
       <div class="toContract"
-           v-if="(process.place.name==='published'&&showEContract&&process.content.cookie===undefined&&(process.processable_type==='bulletin_rent_basic'||process.processable_type==='bulletin_rent_continued'||process.processable_type==='bulletin_RWC_confirm'))"
+           v-if="(process.place.name==='published'&&showEContract&&process.content.cookie===undefined&&(contractEle.includes(process.processable_type)))"
            @click="toContract()">
         <i class="iconfont icon-hetong"></i>
       </div>
@@ -257,6 +257,9 @@
         routerLinks: ['bulletin_quality', 'bulletin_collect_basic', 'bulletin_collect_continued', 'bulletin_rent_basic', 'bulletin_rent_continued', 'bulletin_rent_trans', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change', 'bulletin_retainage'],
         // 电子收据
         rentReport: ['bulletin_rent_basic', 'bulletin_rent_trans', 'bulletin_rent_continued', 'bulletin_rent_RWC', 'bulletin_RWC_confirm', 'bulletin_change', 'bulletin_retainage'],
+        // 电子合同
+        contractEle: ['bulletin_rent_basic','bulletin_rent_trans','bulletin_rent_continued','bulletin_RWC_confirm','bulletin_change'],
+
         message: '',
         ids: '',
 
