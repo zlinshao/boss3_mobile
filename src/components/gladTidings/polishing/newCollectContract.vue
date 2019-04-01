@@ -552,17 +552,17 @@
           placeholder="请填写收款人与房东关系"
           required>
         </van-field>
-        <div class="month">
-          <van-field
-            v-model="form.penalty"
-            label="违约金"
-            type="text"
-            class="number"
-            placeholder="[n+1]*月单价,(n+1)≥4"
-            :disabled="!enable()"
-            required>
-          </van-field>
-        </div>
+        <!--<div class="month">-->
+          <!--<van-field-->
+            <!--v-model="form.penalty"-->
+            <!--label="违约金"-->
+            <!--type="text"-->
+            <!--class="number"-->
+            <!--placeholder="[n+1]*月单价,(n+1)≥4"-->
+            <!--:disabled="!enable()"-->
+            <!--required>-->
+          <!--</van-field>-->
+        <!--</div>-->
         <div class="titleRed">n为年限，且金额不足一万按一万算</div>
         <van-switch-cell v-model="corp" title="是否公司单" :disabled="!enable()"/>
         <div @click="previewPdf" class="addInput bottom">
