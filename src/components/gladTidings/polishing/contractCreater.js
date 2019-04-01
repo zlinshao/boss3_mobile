@@ -2,7 +2,7 @@ let url = globalConfig.e_server;
 import Vue from 'vue';
 import {Toast} from 'vant'
 
-let getNumber = function (type, city_id, success, error) {
+let getNumber = function (type, city_id = '', success, error) {
   let version = type === 1 ? '1.1' : '1.2';
   Vue.prototype.$http.post(url + 'fdd/number/take', {
     version: version,

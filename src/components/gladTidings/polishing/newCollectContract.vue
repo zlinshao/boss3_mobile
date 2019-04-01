@@ -167,16 +167,15 @@
             required>
           </van-field>
         </div>
-        <!--          :disabled="!enable()"
--->
+        <!--:disabled="!enable()"-->
         <van-field
           v-model="showForm.noOwnerFeeTxt"
           label="非房东费用"
           readonly
           type="text"
           @click="showChooseNoOwnerFee()"
-          placeholder="请选择非房东费用(可多选)"
-        >
+          required
+          placeholder="请选择非房东费用(可多选)">
         </van-field>
         <van-field
           v-model="curWuyePayers.name"
@@ -576,7 +575,7 @@
       </div>
 
       <div class="aloneModel required">
-        <div class="title"><span>*</span>合同照片</div>
+        <div class="title">合同照片</div>
         <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
       </div>
 
