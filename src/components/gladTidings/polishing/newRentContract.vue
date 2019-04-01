@@ -412,7 +412,6 @@
             type="text"
             class="number"
             label="金额"
-            :disabled="!enable()||!reenable()"
             placeholder="请填写金额"
             required>
           </van-field>
@@ -420,7 +419,6 @@
             v-model="form.real_pay_at[index]"
             type="text"
             readonly
-            :disabled="!enable()||!reenable()"
             class="number"
             @click="timeChoose('real_pay_at', form.real_pay_at[index], index)"
             label="实际收款时间"
@@ -433,7 +431,6 @@
             label="汇款帐户"
             type="text"
             readonly
-            :disabled="!enable()||!reenable()"
             placeholder="请选择汇款帐户"
             required>
           </van-field>
