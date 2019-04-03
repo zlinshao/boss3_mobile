@@ -990,6 +990,8 @@
             }
           }
           this.form.uniq_code = this.$refs.float.getCode();
+          this.form.period_pay_arr = this.filter_array(this.form.period_pay_arr);
+          this.form.period_price_arr = this.filter_array(this.form.period_price_arr);
           if (this.form.draft === 0) {
             let checkInfo = {
               house_id: this.form.house_id,

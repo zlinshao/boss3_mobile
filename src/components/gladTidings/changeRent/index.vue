@@ -989,6 +989,8 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
           this.form.uniq_code=this.$refs.float.getCode();
+          this.form.period_pay_arr = this.filter_array(this.form.period_pay_arr);
+          this.form.period_price_arr = this.filter_array(this.form.period_price_arr);
           this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
