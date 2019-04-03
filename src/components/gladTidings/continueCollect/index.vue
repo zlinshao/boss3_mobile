@@ -767,6 +767,8 @@
           this.form.warranty_day = this.form.warranty_day === '' ? '0' : this.form.warranty_day;
           this.form.contract_number = this.form.contract_number === 'LJZF' ? '' : this.form.contract_number;
           this.form.uniq_code = this.$refs.float.getCode();
+          this.form.period_pay_arr = this.filter_array(this.form.period_pay_arr);
+          this.form.period_price_arr = this.filter_array(this.form.period_price_arr);
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;
