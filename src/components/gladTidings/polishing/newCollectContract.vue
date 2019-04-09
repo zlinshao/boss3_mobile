@@ -928,7 +928,7 @@
         this.form.toilet = house_types[2];//卫
 
         let house_res = item.house_res;
-        let house_res_com = house_res.community;
+        let house_res_com = item.community;
         if (house_res_com === undefined) {
           return
         }
