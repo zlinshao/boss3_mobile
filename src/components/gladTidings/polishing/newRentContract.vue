@@ -1068,14 +1068,14 @@
         if (item === 'test') return;
         item = JSON.parse(item);
         let house_res = item.house_res;
-        let house_res_com = community;
+        let house_res_com = item.community;
 
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
         this.form.house.name = item.house_name;
-        this.form.province = house_res_com.province.province_name;//省
-        this.form.city = house_res_com.city.city_name;//市
-        this.form.district = house_res_com.area.area_name;
+        this.form.province = house_res_com.provinces.province_name;//省
+        this.form.city = house_res_com.citys.city_name;//市
+        this.form.district = house_res_com.areas.area_name;
         this.form.property_address = house_res_com.address;//街道
         this.form.village_name = item.village_address || item.house_name || '';
         let house_types = item.house_type.replace("室", "-").replace("厅", "-").replace("卫", "").split("-");
