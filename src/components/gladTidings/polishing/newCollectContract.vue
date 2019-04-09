@@ -929,6 +929,7 @@
 
         let house_res = item.house_res;
         let house_res_com = item.community;
+        console.log(item)
         if (house_res_com === undefined) {
           return
         }
@@ -1796,7 +1797,6 @@
           this.screenshots = success;
         });
         this.getPic(draft.property_photo, success => {
-          console.log(this.property_photos)
           this.property_photos = success;
         });
         this.getPic(draft.identity_photo, success => {
