@@ -1068,8 +1068,7 @@
         if (item === 'test') return;
         item = JSON.parse(item);
         let house_res = item.house_res;
-        console.log(house_res)
-        let house_res_com = house_res.community;
+        let house_res_com = community;
 
         this.form.house = {id: '', name: ''};
         this.form.house.id = item.house_id;
