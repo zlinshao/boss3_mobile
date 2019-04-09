@@ -928,14 +928,13 @@
         this.form.toilet = house_types[2];//卫
 
         let house_res = item.house_res;
-        let house_res_com = item.community;
-        console.log(item)
+        let house_res_com = house_res.community;
         if (house_res_com === undefined) {
           return
         }
-        this.form.province = house_res_com.provinces.province_name;//省
-        this.form.city = house_res_com.citys.city_name;//市
-        this.form.district = house_res_com.areas.area_name;
+        this.form.province = house_res_com.province.province_name;//省
+        this.form.city = house_res_com.city.city_name;//市
+        this.form.district = house_res_com.area.area_name;
         //this.form.property_address = house_res_com.address;//街道
         this.form.area = house_res.area;//面积
         if (this.form.type === '2') {//续收
