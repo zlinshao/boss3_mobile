@@ -101,6 +101,7 @@ import VideoPlay from '../components/lejiaUniversity/videoPlay.vue'
 
 // 考勤记录
 import Attendance from '../components/attendance/index.vue'
+import Ca from '../components/ca/index.vue';
 
 // 拓展新盘
 import Expand from '../components/gladTidings/expand/index.vue'
@@ -696,6 +697,18 @@ export default new Router({
         // keepAlive: true
       },
       component: Attendance
+    },
+    {
+      path: '/ca',
+      name: '个人证书申请',
+      icon: 'iconfont icon-buqia',
+      hidden: 'other',
+      back: '#F19851',
+      meta: {
+        title: '个人证书申请',
+        // keepAlive: true
+      },
+      component: Ca
     },
     {
       path: '/contractModels',
