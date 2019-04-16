@@ -699,8 +699,8 @@
           icon="clear"
           @click-icon="form.remark = ''">
         </van-field>
+        <!--:disabled="!enable()||!reenable()"-->
         <van-field
-          :disabled="!enable()||!reenable()"
           v-model="form.staff_name"
           @click="searchSelect(3)"
           readonly
@@ -715,7 +715,6 @@
           readonly
           label="部门"
           type="text"
-          :disabled="!enable()||!reenable()"
           placeholder="请选择部门"
           required>
         </van-field>
