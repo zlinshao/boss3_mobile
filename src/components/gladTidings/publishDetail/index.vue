@@ -600,7 +600,9 @@
       pics(val, index) {
         let arr = [];
         for (let i = 0; i < val.length; i++) {
-          arr.push(val[i].uri);
+          if (!val.is_video) {
+            arr.push(val[i].uri);
+          }
         }
         if (this.IsPC()) {
           this.photo = arr;
