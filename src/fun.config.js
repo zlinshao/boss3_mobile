@@ -219,9 +219,12 @@ export default {
       })
     };
     // loading
-    Vue.prototype.prompt = function (msg = '正在处理', type) {
+    Vue.prototype.prompt = function (msg, type) {
       switch (type) {
         case 'send':
+          if (!msg) {
+            msg = '正在处理...'
+          }
           Toast.loading({
             duration: 0,            // 持续展示 toast
             forbidClick: true,      // 禁用背景点击
