@@ -1,397 +1,346 @@
 <template>
-  <div id="uploadContainer">
-    <div id="container">
-      <div :id="'pickfiles'+ID" class="pickfiles">
-        <div class="imgItem" v-for="(val,key) in editImg" v-if="editImg.length > 0">
-          <div style="position: relative; margin: .3rem 0 0 .3rem;">
-            <img v-if="val.is_video" class="videos" src="../../assets/video.jpg">
-            <img :src="val.uri" v-else>
-            <div class="progress"><b></b></div>
-            <div class="remove pic_delete van-icon van-icon-close" @click="deleteImage(key)">
-            </div>
-          </div>
+  <div id="upLoad">
+    <label class="labelTitle" v-if="file.label">{{file.label}}
+      <span v-if="file.placeholder">({{file.placeholder}})</span>
+    </label>
+    <transition-group name="list" tag="p" class="items-center">
+      <div v-for="(item,index) in showFile" :key="JSON.stringify(item)" class="showFile"
+           :style="uploadCss">
+        <div class="img">
+          <!--图片-->
+          <img :src="item.uri" v-if="item.mime.includes('image')" @click="$bigPhoto(showFile,item.uri)">
+          <!--视频-->
+          <!--@click="videoPlay($event)" 播放事件-->
+          <img src="../../assets/image/file/video.png" :alt="item.uri" @click="videoPlay($event)"
+               v-else-if="item.mime.includes('video')">
+          <!--其它类型-->
+          <img src="../../assets/image/file/xls.png" alt="xls" v-else-if="item.mime.includes('xls')">
+          <img src="../../assets/image/file/doc.png" alt="doc" v-else-if="item.mime.includes('doc')">
+          <img src="../../assets/image/file/txt.png" alt="text" v-else-if="item.mime.includes('text')">
+          <img src="../../assets/image/file/pdf.png" alt="pdf" v-else-if="item.mime.includes('pdf')">
+          <img src="../../assets/image/file/file.png" alt="file" v-else>
         </div>
-        <div class="upButton" @click="getToken" :id="ID">
-          <span class="plus">+</span>
+        <!--进图条-->
+        <div class="progress" :id="'progress' + file.keyName + index"
+             v-if="!item.uri.includes('http')">
+          {{progress['progress' + file.keyName + index]}}
+        </div>
+        <!--删除按钮-->
+        <div class="remove flex" @click="removeFile(index)">
+          <img src="../../assets/image/file/closeBtn.png">
         </div>
       </div>
-    </div>
+      <!--上传按钮-->
+      <label class="uploadPic" :key="file.keyName" :style="uploadCss" :for="file.keyName" @change="uploadPic($event)">
+        <img src="../../assets/image/file/upload.png">
+        <input type="file" :id="file.keyName" hidden multiple>
+      </label>
+    </transition-group>
 
-    <div class="bigPhoto" @click="closePic" v-if="bigPic">
-      <img :src="bigPic">
+    <!--视频播放-->
+    <div id="videoId" :class="['video-' + phoneType()]" v-show="videoSrc !== ''">
+      <video id="video" :src="videoSrc" muted controls autoplay></video>
+      <div class="items-center close">
+        <span class="flex-center" @click="videoPlay()">
+          <img src="../../assets/image/file/closeBtn.png">
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import fileImage from '../../assets/video.jpg';
-  import {md5} from '../../assets/js/MD5.js';
-  import {Dialog} from 'vant';
-  import {Toast} from 'vant';
-  import {ImagePreview} from 'vant';
+  import * as qiniu from 'qiniu-js'
+  import {md5} from '../../assets/js/MD5.js'
 
   export default {
-    name: 'hello',
-    components: {ImagePreview, Toast, Dialog},
-    props: ['ID', 'editImage', 'isClear', 'dis'],
+    name: "upload",
+    props: ['file', 'getImg', 'close'],
     data() {
       return {
         url: globalConfig.server,
-        imgArray: [],
-        imgId: [],
-        errorId: [],
-        isUploading: 'success',
-        activeIndex: null,
-        uploader: null,
-        editImg: [],
-        token: '',
-        bigPic: '',
-        fileLength: 0,
+        subscription: {},
+        token: '',//上传凭证
+        ids: [],
+        showFile: [],//本地文件地址
+        isVideo: '',//是否视频
+        progress: {},
+        uploadCss: this.file.size || {width: '1rem', height: '1rem'},
+        videoSrc: '',
       }
     },
     mounted() {
-      this.active();
+    },
+    activated() {
     },
     watch: {
-      editImage: {
-        deep: true,
-        handler(val, old) {
-          this.editImg = [];
-          this.imgId = [];
-          for (let i = 0; i < val.length; i++) {
-            this.imgId.push(val[i].id );
-            this.editImg.push(val[i])
+      getImg: {
+        handler(val, oldVal) {
+          this.ids = [];
+          this.showFile = [];
+          this.progress = {};
+          if (val.length > 0) {
+            let index = 0;
+            for (let item of val) {
+              this.ids.push(Number(item.id));
+              if (item.info) {
+                item.mime = item.info.mime;
+              }
+              this.showFile.push(item);
+              this.progress['progress' + this.file.keyName + index] = 0;
+              index++;
+            }
           }
-        }
+          console.log(this.progress);
+          this.$emit('success', [this.file.keyName, this.ids, true]);
+        },
+        deep: true,
       },
-      isClear(val) {
-        if (val) {
-          this.imgId = [];
-          this.imgArray = [];
-          this.editImg = [];
-        }
+      close(val) {
+        if (!val) return;
+        this.ids = [];
+        this.showFile = [];
+        this.progress = {};
+        this.$emit('success', [this.file.keyName, this.ids, true]);
       }
     },
+    computed: {},
     methods: {
-      closePic() {
-        this.bigPic = '';
+      // 视频播放
+      videoPlay(event = '') {
+        if (event && event.target.alt.includes('http')) {
+          this.videoSrc = event.target.alt;
+        } else {
+          this.videoSrc = '';
+          // alert('不支持的视频文件！');
+        }
       },
-      active() {
-        let _this = this;
-        $(document).on('click', '#pickfiles' + this.ID + ' ' + 'img', function () {
-          _this.bigPic = $(this).attr("src");
-        });
-        $(document).on('click', '#pickfiles' + this.ID + ' ' + '.progress', function () {
-          _this.bigPic = $(this).prev().attr("src");
-        });
-        $(document).on('click', '#pickfiles' + this.ID + ' ' + '.pic_delete', function () {
-          let id = $(this).attr("data-val");
-          let span = $(this).prev().children('b').children('span').attr('class');
-          let close = false;
-          if (span !== undefined) {
-            close = $(this).prev().children('b').children('span').attr('class').indexOf('close') > -1;
-          }
-          for (let i in _this.uploader.files) {
-            if (_this.uploader.files[i].id === id) {
-              $('#' + id).remove();
-              _this.uploader.splice(i, 1);
-            }
-          }
-          for (let i = 0; i < _this.imgArray.length; i++) {
-            if (_this.imgArray[i].name.indexOf(id) > -1) {
-              _this.imgId.forEach((item) => {
-                if (_this.imgArray[i].id === item) {
-                  _this.imgId = _this.imgId.filter((x) => {
-                    return x !== item
-                  })
-                }
-              });
-              _this.imgArray.splice(i, 1);
-            }
-          }
-          if (close) {
-            let type = _this.imgArray.every((item) => {
-              return item.name.indexOf(id) < 0;
-            });
-            if (type) {
-              _this.errorId.splice(0, 1);
-            }
-            if (_this.errorId.length === 0) {
-              _this.isUploading = 'success';
-            } else {
-              _this.isUploading = 'err';
-            }
-          }
-          _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-        });
-        this.getTokenMessage();
-        setInterval(() => {
-          if (_this.uploader) {
-            this.uploader.refresh();
-          }
-        }, 1000);
-      },
-      getToken() {
-        this.$http.defaults.timeout = 5000;
-        this.$http.get(this.url + 'api/v1/token').then((res) => {
-          this.token = res.data.data;
-          this.$http.defaults.timeout = null;
-          if (!this.uploader) {
-            this.uploaderReady(res.data.data);
-          }
-        }).catch((error) => {
-          this.$http.defaults.timeout = null;
-          if (!this.uploader) {
-            alert('网络故障，上传组件创建失败，请保存草稿，稍后再试');
-          }
-        })
-      },
-      deleteImage(key) {
-        this.imgId.splice(key, 1);
-        this.editImg.splice(key, 1);
+      removeFile(index) {
+        this.showFile.splice(index, 1);
+        this.ids.splice(index, 1);
+        let progress = 'progress' + this.file.keyName + index;
+        if (this.subscription[progress]) {
+          this.subscription[progress].unsubscribe();
+        }
+        delete this.progress[progress];
+        let pro = this.progress;
+        let newPro = {};
+        for (let [i, item] of new Map(Object.keys(pro).map((item, i) => [i, item]))) {
+          newPro['progress' + this.file.keyName + i] = pro[item];
+        }
+        this.progress = newPro;
+        let status = this.ids.length === this.showFile.length;
+        this.$emit('success', [this.file.keyName, this.ids, status]);
       },
       // 获取token
-      getTokenMessage() {
+      uploadPic(event) {
         this.$http.get(this.url + 'api/v1/token').then((res) => {
           this.token = res.data.data;
-          this.uploaderReady(res.data.data);
+          this.startUpload();
+          event.target.value = '';
         })
       },
-      // 生成实例
-      uploaderReady(token) {
-        this.token = token;
-        let _this = this;
-        _this.uploader = Qiniu.uploader({
-          runtimes: 'html5,flash,html4',                // 上传模式，依次退化
-          browse_button: _this.ID,                      //上传按钮的ID
-          uptoken: _this.token,                         // uptoken是上传凭证，由其他程序生成
-          get_new_uptoken: true,                        // 设置上传文件的时候是否每次都重新获取新的uptoken
-          unique_names: false,                          // 默认false，key为文件
-          save_key: false,                              // 默认false，key为文件
-          domain: globalConfig.domain,                  // bucket域名，下载资源时用到，必需
-          // multi_selection: _this.noMulti,
-          // pictureContainer: 'pictureContainer',       // 上传区域DOM ID，默认是browser_button的父元素
-          max_file_size: '100mb',                       // 最大文件体积限制
-          flash_swf_url: 'path/of/plupload/Moxie.swf',  //引入flash，相对路径
-          max_retries: 1,                               // 上传失败最大重试次数
-          dragdrop: true,                               // 开启可拖曳上传
-          drop_element: 'pickfiles' + _this.ID,         // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
-          chunk_size: '4mb',                            // 分块上传时，每块的体积
-          auto_start: true,                                    // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
-          init: {
-            'FilesAdded': function (up, files) {
-              _this.fileLength = _this.imgId.length + files.length;
-              _this.isUploading = 'lose';
-              _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-              plupload.each(files, function (file) {
-                if (!file || !/image\//.test(file.type) || /photoshop/.test(file.type)) {
-
-                  $('#pickfiles' + _this.ID).prepend(`
-                    <div class="imgItem" id="${file.id}">
-                      <div class="picCss">
-                        <img class="videos" src="${fileImage}">
-                        <div class="progress"><b>正在上传</b></div>
-                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}></div>
-                      </div>
-                    </div>
-                   `);
-                } else {
-                  let fr = new mOxie.FileReader();
-                  fr.onload = function () {
-//                     文件添加进队列后，处理相关的事情
-                    $('#pickfiles' + _this.ID).prepend(`
-                    <div class="imgItem" id="${file.id}">
-                      <div class="picBig picCss">
-                        <img src="${fr.result}">
-                        <div class="progress"><b>正在上传</b></div>
-                        <div class="remove pic_delete van-icon van-icon-close" data-val=${file.id}></div>
-                      </div>
-                    </div>
-                   `);
-                  };
-                  fr.readAsDataURL(file.getSource());
-                }
-              });
-            },
-            'UploadProgress': function (up, file) {
-              // 每个文件上传时，处理相关的事情
-              if (document.getElementById(file.id)) {
-                if (file.percent < 100) {
-                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + '%</span>';
-                } else {
-                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span class="texts">处理中</span>';
-                }
-              }
-            },
-            'BeforeUpload': function (up, file) {
-              // 每个文件上传前，处理相关的事情
-              _this.isUploading = 'lose';
-              up.setOption('multipart_params', {
-                token: _this.token,               // 上传凭证
-                'key': file.name,
-              });
-            },
-            'FileUploaded': function (up, file, info) {
-              let domain = up.getOption('domain');
-              let url = JSON.parse(info);
-              let sourceLink = domain + "/" + url.key;
-              _this.$http.defaults.timeout = 5000;
-              _this.$http.post(_this.url + 'api/v1/upload-direct', {
-                url: sourceLink,
-                name: url.key,
-                raw_name: file.name,
-                type: file.type,
-                size: file.size
-              }).then((res) => {
-                _this.$http.defaults.timeout = null;
-                if (res.data.code === "110100") {
-                  _this.imgId.push(res.data.data.id);
-                  let object = {};
-                  object.id = res.data.data.id;
-                  object.name = file.id;
-                  _this.imgArray.push(object);
-                  document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-passed"></span>`;
-                }
-                if (_this.fileLength === _this.imgId.length) {
-                  _this.isUploading = 'success';
-                  _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                }
-              }).catch(error => {
-                _this.$http.defaults.timeout = null;
-                _this.errorId.push(1);
-                _this.isUploading = 'err';
-                _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = `<span class="van-icon van-icon-close"></span>`;
-              });
-            },
-            'UploadComplete': function () {
-              //队列文件处理完毕后，处理相关的事情
-              _this.isUploading = false;
-              _this.$emit('getImg', [_this.ID, _this.imgId, _this.isUploading]);
-            },
-            'Error': function (up, err, errTip) {// 每个文件上传失败后,处理相关的事情
-              if (err.file && err.file.size !== undefined && err.file.size > 104857600) {
-                Dialog.alert({
-                  message: '文件最大不能超过100MB'
-                }).then(() => {
-                });
+      // 图片地址
+      showPhoto(val, type, key) {
+        let data = {};
+        data.info = {};
+        data.uri = val;
+        data.mime = type;
+        data.key = key;
+        this.showFile.push(data);
+      },
+      // 开始上传
+      startUpload() {
+        let that = this;
+        let files = document.getElementById(that.file.keyName).files;
+        for (let file of files) {
+          let reader = new FileReader();//构造FileReader对象
+          let fileType = '';
+          let fileName = file.name;
+          let fileSize = file.size;
+          if (fileSize > 104857600) {
+            alert('文件最大小不得超过100MB');
+            return;
+          }
+          let key = "lejia" + md5(fileName + new Date().getTime()).toLowerCase() + "." + fileName.split(".")[1];
+          reader.readAsDataURL(file);
+          new Promise((resolve, reject) => {
+            reader.onload = function (event) {
+              if (file.type.includes('image')) {
+                fileType = 'image';
+                that.showPhoto(event.target.result, 'image', key);
+              } else if (file.type.includes('video')) {
+                fileType = 'video';
+                that.showPhoto('', 'video', key);
+              } else if (fileName.includes('.xls')) {
+                fileType = 'xls';
+                that.showPhoto(event.target.result, 'xls', key);
+              } else if (fileName.includes('.doc') || fileName.includes('.rtf')) {
+                fileType = 'doc';
+                that.showPhoto(event.target.result, 'doc', key);
+              } else if (fileName.includes('.txt')) {
+                fileType = 'text';
+                that.showPhoto(event.target.result, 'txt', key);
+              } else if (fileName.includes('.pdf')) {
+                fileType = 'pdf';
+                that.showPhoto(event.target.result, 'pdf', key);
               } else {
-                Toast(errTip);
+                fileType = 'file';
+                that.showPhoto(event.target.result, 'file', key);
               }
-            },
-            'Key': function (up, file) {
-              let fileName = file.name.lastIndexOf(".");//取到文件名开始到最后一个点的长度z
-              let fileNameLength = file.name.length;//取到文件名长度
-              let name = file.name.substring(0, fileName);//取到文件名长度
-              let fileFormat = file.name.substring(fileName + 1, fileNameLength);//截
-              file.name = md5(name + new Date().getTime()).toLowerCase() + '.' + fileFormat;
-              // 若想在前端对每个文件的key进行个性化处理，可以配置该函数
-              // 该配置必须要在unique_names: false，save_key: false时才生效
-              return file.name;
+              resolve(fileType);
+            };
+          }).then(fileType => {
+            let qiniuUploadUrl;
+            if (window.location.protocol === 'https:') {
+              qiniuUploadUrl = 'https://up.qbox.me';
+            } else {
+              qiniuUploadUrl = 'http://upload.qiniu.com';
             }
+            let putExtra = {
+              fname: fileName,
+              params: {},
+              mimeType: null,
+            };
+            let config = {
+              useCdnDomain: true,
+              region: null,
+            };
+            if (file.type.includes('image')) {
+              // 图片压缩
+              let options = {
+                quality: 0.8,
+                noCompressIfLarger: true,
+                // maxWidth: 1000,
+                // maxHeight: 618
+              };
+              qiniu.compressImage(file, options).then(data => {
+                that.uploadProgress(data.dist, key, that.token, putExtra, config, fileType, that);
+              });
+            } else {
+              that.uploadProgress(file, key, that.token, putExtra, config, fileType, that);
+            }
+          });
+        }
+      },
+      // 上传文件
+      uploadProgress(file, key, token, putExtra, config, fileType, that) {
+        let pro = 'progress' + that.file.keyName + (Object.keys(that.progress).length);
+        that.progress[pro] = '0%';
+        let observable = qiniu.upload(file, key, token, putExtra, config);
+        this.subscription[pro] = observable.subscribe({
+          next(res) {
+            that.progress[pro] = Math.floor(res.total.percent) + '%';
+            that.progress = Object.assign({}, that.progress);
+          },
+          error(err) {
+            console.log(err);
+          },
+          complete(res) {
+            let data = {};
+            data.url = globalConfig.domain + res.key;
+            data.name = res.key;
+            data.raw_name = res.key;
+            data.type = fileType;
+            data.size = file.size;
+            that.$http.post(that.url + 'api/v1/upload-direct', data).then(res => {
+              if (res.data.code === "110100") {
+                that.ids.push(Number(res.data.data.id));
+                let status = that.ids.length === that.showFile.length;
+                that.$emit('success', [that.file.keyName, that.ids, status]);
+              }
+            })
           }
         });
       },
-    }
+    },
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-  #uploadContainer {
-    @mixin flex {
-      display: flex;
-      display: -webkit-flex;
-      align-items: center;
-      justify-content: center;
+<style lang="scss" scoped>
+  @import "../../assets/scss/common.scss";
+
+  #upLoad {
+    padding: .24rem 0 0 .3rem;
+    width: 100%;
+    video {
+      width: 100%;
+      height: 100%;
+      @include radius(.1rem);
     }
-    .bigPhoto {
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      z-index: 1000;
-      background-color: rgba(0, 0, 0, .4);
-      @include flex;
-      img {
-        max-width: 100%;
-        max-height: 100%
+    .list-enter-active, .list-leave-active {
+      transition: all .6s;
+    }
+    .list-enter, .list-leave-to {
+      opacity: 0;
+      transform: translateY(.3rem);
+    }
+    .showFile, .uploadPic {
+      overflow: hidden;
+      @include radius(.1rem);
+    }
+    .items-center {
+      flex-wrap: wrap;
+    }
+    .labelTitle {
+      white-space: nowrap;
+      margin: .2rem .3rem 0 0;
+      span {
+        color: #A2A2A2;
       }
     }
-    #container {
-      img {
-        width: 1.5rem;
-        height: 1.5rem;
-      }
-      padding: 0 .1rem;
-      .pickfiles {
-        display: flex;
-        display: -webkit-flex; /* Safari */
-        flex-wrap: wrap;
-        .upButton {
-          width: 1.5rem;
-          height: 1.5rem;
-          margin: .3rem 0 0 .3rem;
-          background: #f6f6f6;
-          text-align: center;
-          line-height: 1.5rem;
-          .plus {
-            font-size: 1rem;
-            color: #aaa;
-          }
-        }
-        .progress {
+    .showFile {
+      position: relative;
+      margin: .2rem .2rem 0 0;
+      .img {
+        height: 100%;
+        img {
           width: 100%;
-          position: absolute;
-          bottom: 0;
-          text-align: center;
+          height: 100%;
         }
-        .remove {
-          text-align: center;
-          width: .5rem;
-          height: .5rem;
-          line-height: .5rem;
-          border-radius: 50%;
-          position: absolute;
-          top: -.2rem;
-          right: -.2rem;
-          z-index: 12;
-          background: #333;
-          color: #fff;
-          font-size: .5rem;
+      }
+      .progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        color: #FFFFFF;
+        background-color: rgba(0, 0, 0, .5);
+        opacity: .8;
+        font-size: .22rem;
+        height: .4rem;
+        line-height: .4rem;
+        text-align: center;
+      }
+      .remove {
+        cursor: pointer;
+        position: absolute;
+        top: -.2rem;
+        right: -.2rem;
+        width: .6rem;
+        height: .6rem;
+        @include radius(50%);
+        background-color: #CF2E33;
+        align-items: flex-end;
+        img {
+          margin: 0 0 .14rem .14rem;
+          width: .16rem;
+          height: .16rem;
         }
-        .picCss {
-          width: 1.5rem;
-          height: 1.5rem;
-          position: relative;
-          margin: .3rem 0 0 .3rem;
-          b {
-            display: flex;
-            display: -webkit-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: .28rem;
-            color: #fff !important;
-            background: rgba(0, 0, 0, .2);
-            width: 1.5rem;
-            height: 1.5rem;
-            margin: 0 auto;
-            border-radius: 6px;
-            span {
-              font-size: .42rem;
-            }
-            .texts {
-              font-size: .28rem;
-            }
-          }
-          .videos {
-            width: 1.66rem;
-            height: 1.66rem;
-            margin: -.1rem;
-          }
-        }
+      }
+    }
+    .uploadPic {
+      cursor: pointer;
+      margin-top: .2rem;
+      opacity: .7;
+      background-color: #FFFFFF;
+      padding: .18rem;
+      border: .01rem solid #EBEEF5;
+      img{
+        width: 100%;
+        height: 100%;
       }
     }
   }
+
 </style>

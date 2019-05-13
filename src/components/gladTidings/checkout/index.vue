@@ -114,14 +114,11 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">房屋照片</div>
-        <UpLoad :ID="'photos'" @getImg="headmanAgree" :isClear="isClear" :editImage="photos"></UpLoad>
+        <Upload :file="uploads[0]" :getImg="photos" :close="!isClear" @success="headmanAgree"></Upload>
       </div>
 
       <div class="aloneModel required">
-        <div class="title"><span>*</span>退租交接单照片</div>
-        <UpLoad :ID="'checkouts'" @getImg="headmanAgree" :isClear="isClear" :editImage="checkouts"></UpLoad>
-
+        <Upload :file="uploads[1]" :getImg="checkouts" :close="!isClear" @success="headmanAgree"></Upload>
       </div>
       <van-cell-group>
         <van-field
@@ -250,6 +247,18 @@
         counts: '',
 
         retry: 0,
+
+        uploads: [
+          {
+            label: '房屋照片',
+            keyName: 'photo',
+          },
+          {
+            label: '退租交接单照片',
+            placeholder: '必填',
+            keyName: 'checkout_photo',
+          },
+        ],
       }
     },
     mounted() {
@@ -403,11 +412,7 @@
       // 截图
       headmanAgree(val) {
         this.picStatus = val[2];
-        if (val[0] === 'photos') {
-          this.form.photo = val[1];
-        } else {
-          this.form.checkout_photo = val[1];
-        }
+        this.form[val[0]] = val[1];
       },
       rentChange(val) {
         if (this.numbers !== val) {

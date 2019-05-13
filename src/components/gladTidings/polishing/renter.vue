@@ -165,41 +165,8 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>证件照片</div>
-        <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="pics.identity_photo"></UpLoad>
-      </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>合同照片</div>
-        <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="pics.photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">水表照片</div>
-        <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="pics.water_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">电表照片</div>
-        <UpLoad :ID="'photo4'" @getImg="getImgData" :isClear="isClear" :editImage="pics.electricity_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">燃气表照片</div>
-        <UpLoad :ID="'photo5'" @getImg="getImgData" :isClear="isClear" :editImage="pics.gas_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">交接单照片</div>
-        <UpLoad :ID="'photo6'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkin_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">凭证截图</div>
-        <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="pics.certificate_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">押金收条</div>
-        <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="pics.deposit_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">其他照片</div>
-        <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="pics.other_photo"></UpLoad>
+      <div class="aloneModel" v-for="pic in uploads">
+        <Upload :file="pic" :getImg="pics[pic.keyName]" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <van-cell-group>
@@ -347,6 +314,42 @@
           deposit_photo: {},                //押金收条
           other_photo: {},                  //其他照片
         },
+        uploads: [
+          {
+            label: '证件照片',
+            placeholder: '必填',
+            keyName: 'identity_photo',
+          },
+          {
+            label: '合同照片',
+            placeholder: '必填',
+            keyName: 'photo',
+          },
+          {
+            label: '水表照片',
+            keyName: 'water_photo',
+          },
+          {
+            label: '电表照片',
+            keyName: 'electricity_photo',
+          },
+          {
+            label: '燃气表照片',
+            keyName: 'gas_photo',
+          },
+          {
+            label: '交接单照片',
+            keyName: 'checkin_photo',
+          },
+          {
+            label: '凭证截图',
+            keyName: 'certificate_photo',
+          },
+          {
+            label: '补充照片',
+            keyName: 'other_photo',
+          },
+        ],
       }
     },
     mounted() {
@@ -500,35 +503,7 @@
       // 截图
       getImgData(val) {
         this.picStatus = val[2];
-        switch (val[0]) {
-          case 'photo1'://证件照片
-            this.form.album.identity_photo = val[1];
-            break;
-          case 'photo2'://合同照片
-            this.form.album.photo = val[1];
-            break;
-          case 'photo3'://水表照片
-            this.form.album.water_photo = val[1];
-            break;
-          case 'photo4'://电表照片
-            this.form.album.electricity_photo = val[1];
-            break;
-          case 'photo5'://气表照片
-            this.form.album.gas_photo = val[1];
-            break;
-          case 'photo6'://交接单照片
-            this.form.album.checkin_photo = val[1];
-            break;
-          case 'photo7'://凭证截图
-            this.form.album.certificate_photo = val[1];
-            break;
-          case 'photo8'://押金收条
-            this.form.album.deposit_photo = val[1];
-            break;
-          case 'photo9'://其他照片
-            this.form.album.other_photo = val[1];
-            break;
-        }
+        this.form.album[val[0]] = val[1];
       },
       saveCollect(val) {
         if (this.contract_id !== '') {

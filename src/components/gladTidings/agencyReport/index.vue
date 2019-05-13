@@ -155,13 +155,11 @@
       </van-cell-group>
 
       <div class="aloneModel required" v-if="form.collect_or_rent === '1' && settleStatus">
-        <div class="title"><span>*</span>结清截图</div>
-        <UpLoad :ID="'settle'" @getImg="screen" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <Upload :file="uploads[0]" :getImg="screenshots" :close="!isClear" @success="screen"></Upload>
       </div>
 
       <div class="aloneModel">
-        <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screen" :editImage="screenshots_leader"></UpLoad>
+        <Upload :file="uploads[1]" :getImg="screenshots_leader" :close="!isClear" @success="screen"></Upload>
       </div>
       <van-cell-group>
         <van-field
@@ -258,6 +256,17 @@
         },
         screenshots: {},
         screenshots_leader: {},
+        uploads: [
+          {
+            label: '结清截图',
+            placeholder: '必填',
+            keyName: 'screenshot',
+          },
+          {
+            label: '特殊情况截图',
+            keyName: 'screenshot_leader',
+          },
+        ],
         numbers: '',
 
         counts: '',
@@ -346,11 +355,7 @@
       },
       screen(val) {
         this.picStatus = val[2];
-        if (val[0] === 'settle') {
-          this.form.screenshot = val[1];
-        } else {
-          this.form.screenshot_leader = val[1];
-        }
+        this.form[val[0]] = val[1];
       },
 
       addAmount() {
@@ -406,7 +411,7 @@
             this.form.settle = 0;
           }
           this.form.draft = val;
-          this.form.uniq_code=this.$refs.float.getCode();
+          this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/agency', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;

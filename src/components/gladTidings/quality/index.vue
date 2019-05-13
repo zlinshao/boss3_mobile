@@ -367,8 +367,7 @@
       </van-cell-group>
 
       <div class="aloneModel required">
-        <div class="title"><span>*</span>房屋影像</div>
-        <UpLoad :ID="'headman'" @getImg="myGetImg" :isClear="isClear" :editImage="photos"></UpLoad>
+        <Upload :file="houseUp" :getImg="photos" :close="!isClear" @success="myGetImg"></Upload>
         <div class="upload-tips">提示：请上传6张以上房屋照片和1个以上房屋视频哦~</div>
       </div>
 
@@ -539,7 +538,6 @@
         community_name: '',
         property_fee: '',
         property_phone: '',
-        photos: [],                     //房屋影像
 
         isValue1: true,
         numbers: '',
@@ -548,6 +546,13 @@
         counts: '',
 
         retry: 0,
+
+        photos: [],                     //房屋影像
+        houseUp: {
+          label: '房屋影像',
+          placeholder: '必填',
+          keyName: 'photo',
+        },
       }
     },
     mounted() {
@@ -772,7 +777,6 @@
       },
 
       onConfirm(value, index) {
-        console.log(value, index)
         switch (this.tabs) {
           case 1:
             if (value[1] === '无') {

@@ -256,16 +256,14 @@
           +付款方式变化
         </div>
       </div>
-      <div class="aloneModel required">
-        <div class="title">领导同意截图</div>
-        <UpLoad :ID="'tongYi'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots_leader"></UpLoad>
+
+      <div class="aloneModel">
+        <Upload :file="uploads[0]" :getImg="screenshots_leader" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <div class="aloneModel">
-        <div class="title"><span>*</span>特殊情况截图</div>
-        <UpLoad :ID="'jieTu'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <Upload :file="uploads[1]" :getImg="screenshots" :close="!isClear" @success="getImgData"></Upload>
       </div>
-
       <van-cell-group>
         <van-field
           v-model="form.staff_name"
@@ -374,7 +372,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
-          uniq_code:''
+          uniq_code: ''
 
         },
         screenshots: {},
@@ -386,6 +384,17 @@
         dictValue7: [],                 //安置方式
         value7: [],
         retry: 0,
+        uploads: [
+          {
+            label: '领导同意截图',
+            keyName: 'screenshot_leader',
+          },
+          {
+            label: '特殊情况截图',
+            placeholder: '必填',
+            keyName: 'screenshot',
+          },
+        ],
       }
     },
     created() {
@@ -666,11 +675,7 @@
       //照片
       getImgData(val) {
         this.picStatus = val[2];
-        if (val[0] === 'tongYi') {
-          this.form.screenshot_leader = val[1]
-        } else {
-          this.form.screenshot = val[1]
-        }
+        this.form[val[0]] = val[1]
       },
 
       rentChange(val) {
@@ -701,7 +706,7 @@
             }
           }
           this.form.contract = this.contract;
-          this.form.uniq_code=this.$refs.float.getCode();
+          this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/special', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;

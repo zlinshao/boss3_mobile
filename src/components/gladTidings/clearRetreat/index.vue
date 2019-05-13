@@ -55,8 +55,7 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'headman'" @getImg="headmanAgree" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <Upload :file="uploads[0]" :getImg="screenshots" :close="!isClear" @success="headmanAgree"></Upload>
       </div>
       <van-cell-group>
         <van-field
@@ -135,6 +134,12 @@
         counts: '',
 
         retry: 0,
+        uploads: [
+          {
+            label: '特殊情况截图',
+            keyName: 'screenshot_leader',
+          },
+        ],
       }
     },
     mounted() {

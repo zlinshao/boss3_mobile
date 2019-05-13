@@ -175,76 +175,10 @@
         </van-checkbox-group>
       </div>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>证件照片</div>
-        <UpLoad :ID="'photo1'" @getImg="getImgData" :isClear="isClear" :editImage="pics.identity_photo"></UpLoad>
+      <div class="aloneModel" v-for="pic in uploads">
+        <Upload :file="pic" :getImg="pics[pic.keyName]" :close="!isClear" @success="getImgData"></Upload>
       </div>
-      <div class="aloneModel">
-        <div class="title">银行卡照片</div>
-        <UpLoad :ID="'photo2'" @getImg="getImgData" :isClear="isClear" :editImage="pics.bank_photo"></UpLoad>
-      </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>合同照片</div>
-        <UpLoad :ID="'photo3'" @getImg="getImgData" :isClear="isClear" :editImage="pics.photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">水表照片</div>
-        <UpLoad :ID="'photo4'" @getImg="getImgData" :isClear="isClear" :editImage="pics.water_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">电表照片</div>
-        <UpLoad :ID="'photo5'" @getImg="getImgData" :isClear="isClear" :editImage="pics.electricity_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">燃气表照片</div>
-        <UpLoad :ID="'photo6'" @getImg="getImgData" :isClear="isClear" :editImage="pics.gas_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">交接单照片</div>
-        <UpLoad :ID="'photo7'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkin_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">委托书照片</div>
-        <UpLoad :ID="'photo8'" @getImg="getImgData" :isClear="isClear" :editImage="pics.auth_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">押金收条照片</div>
-        <UpLoad :ID="'photo9'" @getImg="getImgData" :isClear="isClear" :editImage="pics.deposit_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">承诺书照片</div>
-        <UpLoad :ID="'photo10'" @getImg="getImgData" :isClear="isClear" :editImage="pics.promise"></UpLoad>
-      </div>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>房产证照片</div>
-        <UpLoad :ID="'photo14'" @getImg="getImgData" :isClear="isClear" :editImage="pics.property_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">水卡照片</div>
-        <UpLoad :ID="'photo15'" @getImg="getImgData" :isClear="isClear" :editImage="pics.water_card_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">电卡照片</div>
-        <UpLoad :ID="'photo16'" @getImg="getImgData" :isClear="isClear"
-                :editImage="pics.electricity_card_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">燃气卡照片</div>
-        <UpLoad :ID="'photo17'" @getImg="getImgData" :isClear="isClear" :editImage="pics.gas_card_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">退租交接单照片</div>
-        <UpLoad :ID="'photo12'" @getImg="getImgData" :isClear="isClear" :editImage="pics.checkout_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">退租结算照片</div>
-        <UpLoad :ID="'photo13'" @getImg="getImgData" :isClear="isClear"
-                :editImage="pics.checkout_settle_photo"></UpLoad>
-      </div>
-      <div class="aloneModel">
-        <div class="title">补充照片</div>
-        <UpLoad :ID="'photo11'" @getImg="getImgData" :isClear="isClear" :editImage="pics.other_photo"></UpLoad>
-      </div>
+
       <van-cell-group>
         <van-field
           v-model="form.remark_terms"
@@ -423,7 +357,80 @@
           water_card_photo: {},              //水卡
           electricity_card_photo: {},        //电卡
           gas_card_photo: {},                //气卡
-        }
+        },
+        uploads: [
+          {
+            label: '证件照片',
+            placeholder: '必填',
+            keyName: 'identity_photo',
+          },
+          {
+            label: '银行卡照片',
+            keyName: 'bank_photo',
+          },
+          {
+            label: '合同照片',
+            placeholder: '必填',
+            keyName: 'photo',
+          },
+          {
+            label: '水表照片',
+            keyName: 'water_photo',
+          },
+          {
+            label: '电表照片',
+            keyName: 'electricity_photo',
+          },
+          {
+            label: '燃气表照片',
+            keyName: 'gas_photo',
+          },
+          {
+            label: '交接单照片',
+            keyName: 'checkin_photo',
+          },
+          {
+            label: '委托书照片',
+            keyName: 'auth_photo',
+          },
+          {
+            label: '押金收条照片',
+            keyName: 'deposit_photo',
+          },
+          {
+            label: '承诺书照片',
+            keyName: 'promise',
+          },
+          {
+            label: '房产证照片',
+            placeholder: '必填',
+            keyName: 'property_photo',
+          },
+          {
+            label: '水卡照片',
+            keyName: 'water_card_photo',
+          },
+          {
+            label: '电卡照片',
+            keyName: 'water_card_photo',
+          },
+          {
+            label: '燃气卡照片',
+            keyName: 'gas_card_photo',
+          },
+          {
+            label: '退租交接单照片',
+            keyName: 'checkout_settle_photo',
+          },
+          {
+            label: '退租结算照片',
+            keyName: 'identity_photo',
+          },
+          {
+            label: '补充照片',
+            keyName: 'other_photo',
+          },
+        ],
       }
     },
     mounted() {
@@ -557,59 +564,7 @@
       // 截图
       getImgData(val) {
         this.picStatus = val[2];
-        switch (val[0]) {
-          case 'photo1'://证件照片
-            this.form.album.identity_photo = val[1];
-            break;
-          case 'photo2'://银行卡照片
-            this.form.album.bank_photo = val[1];
-            break;
-          case 'photo3'://合同照片
-            this.form.album.photo = val[1];
-            break;
-          case 'photo4'://水表照片
-            this.form.album.water_photo = val[1];
-            break;
-          case 'photo5'://电表照片
-            this.form.album.electricity_photo = val[1];
-            break;
-          case 'photo6'://气表照片
-            this.form.album.gas_photo = val[1];
-            break;
-          case 'photo7'://交接单照片
-            this.form.album.checkin_photo = val[1];
-            break;
-          case 'photo8'://委托书照片
-            this.form.album.auth_photo = val[1];
-            break;
-          case 'photo9'://押金照片
-            this.form.album.deposit_photo = val[1];
-            break;
-          case 'photo10'://承诺书照片
-            this.form.album.promise = val[1];
-            break;
-          case 'photo11'://补充照片
-            this.form.album.other_photo = val[1];
-            break;
-          case 'photo12'://退租交接单照片
-            this.form.album.checkout_photo = val[1];
-            break;
-          case 'photo13'://退租结算照片
-            this.form.album.checkout_settle_photo = val[1];
-            break;
-          case 'photo14'://房产证
-            this.form.album.property_photo = val[1];
-            break;
-          case 'photo15'://水卡
-            this.form.album.water_card_photo = val[1];
-            break;
-          case 'photo16'://电卡
-            this.form.album.electricity_card_photo = val[1];
-            break;
-          case 'photo17'://气卡
-            this.form.album.gas_card_photo = val[1];
-            break;
-        }
+        this.form.album[val[0]] = val[1];
       },
       saveCollect(val) {
         if (this.contract_id !== '') {

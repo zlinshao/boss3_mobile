@@ -99,9 +99,8 @@
         </van-field>
       </van-cell-group>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>领导同意截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="screenshot" :isClear="isClear" :editImage="screenshots"></UpLoad>
+      <div class="aloneModel">
+        <Upload :file="uploads[0]" :getImg="screenshots" :close="!isClear" @success="screenshot"></Upload>
       </div>
 
       <van-cell-group>
@@ -189,6 +188,13 @@
         counts: '',
 
         retry: 0,
+        uploads: [
+          {
+            label: '领导同意截图',
+            placeholder: '必填',
+            keyName: 'screenshot_leader',
+          },
+        ],
       }
     },
     mounted() {

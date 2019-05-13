@@ -91,9 +91,8 @@
         </div>
         <van-switch-cell v-model="refundSta" title="定金是否退还"/> -->
       </van-cell-group>
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>领导同意截图</div>
-        <UpLoad :ID="'headman'" @getImg="headmanAgree" :isClear="isClear" :editImage="screenshots"></UpLoad>
+      <div class="aloneModel">
+        <Upload :file="uploads[0]" :getImg="screenshots" :close="!isClear" @success="headmanAgree"></Upload>
       </div>
       <van-cell-group>
         <van-field
@@ -184,6 +183,13 @@
         counts: '',
 
         retry: 0,
+        uploads: [
+          {
+            label: '领导同意截图',
+            placeholder: '必填',
+            keyName: 'screenshot_leader',
+          },
+        ],
       }
     },
     mounted() {

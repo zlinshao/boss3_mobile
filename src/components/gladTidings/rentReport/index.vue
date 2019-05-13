@@ -383,26 +383,22 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">领导同意截图</div>
-        <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
-      </div>
-
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>凭证截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <Upload :file="uploads[0]" :getImg="leaders" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <div class="aloneModel">
+        <Upload :file="uploads[1]" :getImg="screenshots" :close="!isClear" @success="getImgData"></Upload>
+      </div>
+
+      <div class="aloneModel">
+        <Upload :file="uploads[2]" :getImg="receipts" :close="!isClear" @success="getImgData"></Upload>
         <div class="title">
-          押金收条
-          <div v-if="is_receipt">{{isReceiptMsg.content2}}</div>
+          <div v-if="is_receipt" style="color: #e4393c;">{{isReceiptMsg.content2}}</div>
         </div>
-        <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
       </div>
 
       <div class="aloneModel">
-        <div class="title">合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
+        <Upload :file="uploads[3]" :getImg="photos" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <van-cell-group>
@@ -588,6 +584,25 @@
         counts: '',
 
         retry: 0,
+        uploads: [
+          {
+            label: '领导同意截图',
+            keyName: 'screenshot_leader',
+          },
+          {
+            label: '凭证截图',
+            placeholder: '必填',
+            keyName: 'screenshot',
+          },
+          {
+            label: '押金收条',
+            keyName: 'deposit_photo',
+          },
+          {
+            label: '合同照片',
+            keyName: 'photo',
+          },
+        ],
       }
     },
     watch: {
@@ -751,15 +766,7 @@
       // 截图
       getImgData(val) {
         this.picStatus = val[2];
-        if (val[0] === 'screenshot') {
-          this.form.screenshot = val[1];
-        } else if (val[0] === 'leader') {
-          this.form.screenshot_leader = val[1];
-        } else if (val[0] === 'receipt') {
-          this.form.deposit_photo = val[1];
-        } else {
-          this.form.photo = val[1];
-        }
+        this.form[val[0]] = val[1];
       },
       fee_status(val) {
         if (!val) {

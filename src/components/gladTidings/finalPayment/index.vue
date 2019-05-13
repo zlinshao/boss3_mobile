@@ -209,21 +209,18 @@
       </div>
 
       <div class="aloneModel">
-        <div class="title">领导同意截图</div>
-        <UpLoad :ID="'leader'" @getImg="getImgData" :isClear="isClear" :editImage="leaders"></UpLoad>
-      </div>
-
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>凭证截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <Upload :file="uploads[0]" :getImg="leaders" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <div class="aloneModel">
-        <div class="title">
-          押金收条
+        <Upload :file="uploads[1]" :getImg="screenshots" :close="!isClear" @success="getImgData"></Upload>
+      </div>
+
+      <div class="aloneModel">
+        <Upload :file="uploads[2]" :getImg="receipts" :close="!isClear" @success="getImgData"></Upload>
+        <div class="title" style="color: #E4393C;">
           <div v-if="is_receipt">{{isReceiptMsg.content2}}</div>
         </div>
-        <UpLoad :ID="'receipt'" @getImg="getImgData" :isClear="isClear" :editImage="receipts"></UpLoad>
       </div>
 
       <van-cell-group>
@@ -370,7 +367,7 @@
           department_id: '',            //部门id
           staff_name: '',               //开单人name
           department_name: '',          //部门name
-          uniq_code:''
+          uniq_code: ''
         },
         leaders: {},
         screenshots: {},
@@ -381,6 +378,21 @@
 
         counts: '',
         retry: 0,
+        uploads: [
+          {
+            label: '领导同意截图',
+            keyName: 'screenshot_leader',
+          },
+          {
+            label: '凭证截图',
+            placeholder: '必填',
+            keyName: 'screenshot_new',
+          },
+          {
+            label: '押金收条',
+            keyName: 'deposit_photo_new',
+          },
+        ],
       }
     },
     watch: {
@@ -513,13 +525,7 @@
       // 截图
       getImgData(val) {
         this.picStatus = val[2];
-        if (val[0] === 'leader') {
-          this.form.screenshot_leader = val[1];
-        } else if (val[0] === 'receipt') {
-          this.form.deposit_photo_new = val[1];
-        } else {
-          this.form.screenshot_new = val[1];
-        }
+        this.form[val[0]] = val[1];
       },
       // 显示日期
       timeChoose(val, time, index = '') {
@@ -667,7 +673,7 @@
           this.emptyPic(this.form.screenshot, 'screenshot');
           this.emptyPic(this.form.screenshot_leader, 'screenshot_leader');
           this.emptyPic(this.form.deposit_photo, 'deposit_photo');
-          this.form.uniq_code=this.$refs.float.getCode();
+          this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
             this.haveInHand = true;
             this.retry = 0;

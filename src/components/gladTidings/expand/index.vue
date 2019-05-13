@@ -126,9 +126,8 @@
           placeholder="请输入地铁线路"
           required>
         </van-field>
-        <div class="aloneModel required" v-for="item in photo">
-          <div class="title"><span v-if="item.key !== 'files'">*</span>{{item.label}}</div>
-          <UpLoad :ID="item.key" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
+        <div class="aloneModel required" v-for="pic in uploads">
+          <Upload :file="pic" :getImg="photos[pic.keyName]" :close="!isClear" @success="getImgData"></Upload>
         </div>
 
       </van-cell-group>
@@ -194,18 +193,26 @@
         selectType: '',
 
         isClear: false,
-        photos: {},
-        photo: [
+        photos: {
+          village_photo: {},
+          home_photo: {},
+          files: {},
+        },
+        uploads: [
           {
             label: '小区照片',
-            key: 'village_photo'
-          }, {
+            keyName: 'village_photo',
+          },
+          {
             label: '房屋照片',
-            key: 'home_photo'
-          }, {
-            label: '调研报告(可传文件)',
-            key: 'files'
-          }
+            placeholder: '必填',
+            keyName: 'home_photo',
+          },
+          {
+            label: '房产证照片',
+            placeholder: '必填',
+            keyName: 'files',
+          },
         ],
       }
     },

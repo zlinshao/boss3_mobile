@@ -291,23 +291,19 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <Upload :file="uploads[0]" :getImg="screenshots" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
+      <div class="aloneModel">
+        <Upload :file="uploads[1]" :getImg="photos" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>房产证照片</div>
-        <UpLoad :ID="'property_photo'" @getImg="getImgData" :isClear="isClear" :editImage="property_photos"></UpLoad>
+      <div class="aloneModel">
+        <Upload :file="uploads[2]" :getImg="property_photos" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>证件照片</div>
-        <UpLoad :ID="'identity_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identity_photos"></UpLoad>
+      <div class="aloneModel">
+        <Upload :file="uploads[3]" :getImg="identity_photos" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <van-cell-group>
@@ -444,7 +440,7 @@
           contract_number: 'LJSF',      //合同编号
           screenshot_leader: [],        //领导截图 数组
           photo: [],                    //合同照片 数组
-          property_photo: [],               //房产证照片
+          property_photo: [],           //房产证照片
           identity_photo: [],           //证件照片
           remark: '',                   //备注
           staff_id: '',                 //开单人id
@@ -456,18 +452,39 @@
         property_name: '',              //物业费付款人
         photos: {},                     //照片
         screenshots: {},                //照片
-        property_photos: {},                //房产证照片
+        property_photos: {},            //房产证照片
         identity_photos: {},            //证件照片
 
-        dictValue4: [],         //付款方式
+        dictValue4: [],                 //付款方式
         value4: [],
-        dictValue6: [],         //房东租客
+        dictValue6: [],                 //房东租客
         value6: [],
 
         isValue1: true,
         counts: '',
 
         retry: 0,
+        uploads: [
+          {
+            label: '特殊情况截图',
+            keyName: 'screenshot_leader',
+          },
+          {
+            label: '合同照片',
+            placeholder: '必填',
+            keyName: 'photo',
+          },
+          {
+            label: '房产证照片',
+            placeholder: '必填',
+            keyName: 'property_photo',
+          },
+          {
+            label: '证件照片',
+            placeholder: '必填',
+            keyName: 'identity_photo',
+          },
+        ],
       }
     },
     mounted() {
@@ -584,21 +601,7 @@
       // 图片
       getImgData(val) {
         this.picStatus = val[2];
-        switch (val[0]) {
-          case 'screenshot':
-            this.form.screenshot_leader = val[1];
-            break;
-          case 'photo':
-            this.form.photo = val[1];
-            break;
-          case 'property_photo':
-            this.form.property_photo = val[1];
-            break;
-          case 'identity_photo':
-            this.form.identity_photo = val[1];
-            break;
-        }
-
+        this.form[val[0]] = val[1];
       },
       // 结束日期
       endDate(time, month, day, val) {

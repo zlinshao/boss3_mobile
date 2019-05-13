@@ -1,7 +1,9 @@
-import {Toast, Dialog} from 'vant';
+import {Toast, Dialog, ImagePreview} from 'vant';
+import Upload from './components/common/UPLOAD.vue';
 
 export default {
   install(Vue, options) {
+    Vue.component('Upload', Upload);//上传
     Vue.prototype.routerIndex = function (url, house, id) {
       let that = this;
       document.addEventListener('backbutton', function (e) {
@@ -21,6 +23,48 @@ export default {
           that.$router.push({path: '/index'});
         }
       });
+    };
+    // 查看大图
+    Vue.prototype.$bigPhoto = function (val, uri) {
+      let images = [];
+      if (val instanceof Array) {
+        for (let item of val) {
+          if (item.info && item.info.mime) {
+            if (item.info.mime.includes('image')) {
+              images.push(item.uri);
+            }
+          } else {
+            if (item.mime.includes('image')) {
+              images.push(item.uri);
+            }
+          }
+        }
+      } else {
+        for (let key of Object.keys(val)) {
+          images.push(val[key].uri);
+        }
+      }
+      let index = images.indexOf(uri);
+      let that = this;
+      ImagePreview({
+        images: images,
+        startPosition: index,
+        onClose() {
+          that.$store.dispatch('switch_video', true);
+        }
+      });
+    };
+    // 手机类型
+    Vue.prototype.phoneType = function () {
+      let u = navigator.userAgent;
+      let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //Android
+      let isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+      if (isAndroid) {
+        return 'android'
+      }
+      if (isIOS) {
+        return 'ios'
+      }
     };
     // 钉钉返回
     Vue.prototype.goBack = function (url, data) {

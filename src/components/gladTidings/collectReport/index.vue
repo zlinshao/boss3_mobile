@@ -370,23 +370,22 @@
       </van-cell-group>
 
       <div class="aloneModel">
-        <div class="title">特殊情况截图</div>
-        <UpLoad :ID="'screenshot'" @getImg="getImgData" :isClear="isClear" :editImage="screenshots"></UpLoad>
+        <Upload :file="uploads[0]" :getImg="screenshots" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <div class="aloneModel required">
-        <div class="title"><span>*</span>合同照片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" :editImage="photos"></UpLoad>
+        <Upload :file="uploads[1]" :getImg="photos" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>房产证照片</div>
-        <UpLoad :ID="'property_photo'" @getImg="getImgData" :isClear="isClear" :editImage="property_photos"></UpLoad>
+      <div class="aloneModel">
+        <Upload :file="uploads[2]" :getImg="property_photos" :close="!isClear" @success="getImgData"></Upload>
+        <div class="title" style="color: #E4393C;">
+          <div v-if="is_receipt">{{isReceiptMsg.content2}}</div>
+        </div>
       </div>
 
-      <div class="aloneModel required">
-        <div class="title"><span>*</span>证件照片</div>
-        <UpLoad :ID="'identity_photo'" @getImg="getImgData" :isClear="isClear" :editImage="identity_photos"></UpLoad>
+      <div class="aloneModel">
+        <Upload :file="uploads[3]" :getImg="identity_photos" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <van-cell-group>
@@ -555,6 +554,27 @@
         counts: '',
 
         retry: 0,
+        uploads: [
+          {
+            label: '特殊情况截图',
+            keyName: 'screenshot_leader',
+          },
+          {
+            label: '合同照片',
+            placeholder: '必填',
+            keyName: 'photo',
+          },
+          {
+            label: '房产证照片',
+            placeholder: '必填',
+            keyName: 'property_photo',
+          },
+          {
+            label: '证件照片',
+            placeholder: '必填',
+            keyName: 'identity_photo',
+          },
+        ],
       }
     },
     watch: {
@@ -698,21 +718,7 @@
       // 图片
       getImgData(val) {
         this.picStatus = val[2];
-        switch (val[0]) {
-          case 'screenshot':
-            this.form.screenshot_leader = val[1];
-            break;
-          case 'photo':
-            this.form.photo = val[1];
-            break;
-          case 'property_photo':
-            this.form.property_photo = val[1];
-            break;
-          case 'identity_photo':
-            this.form.identity_photo = val[1];
-            break;
-        }
-
+        this.form[val[0]] = val[1];
       },
       // 显示日期
       timeChoose(val, time) {
