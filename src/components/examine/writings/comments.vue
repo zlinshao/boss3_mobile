@@ -12,7 +12,7 @@
         </van-cell-group>
       </div>
       <div style="background: #fafafe;height: 10px;width: 100%;"></div>
-      <div>
+      <div class="pic">
         <Upload :file="uploads" :close="!isClear" @success="getImgData"></Upload>
       </div>
       <div class="footer">

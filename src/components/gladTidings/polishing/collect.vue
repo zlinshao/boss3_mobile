@@ -567,12 +567,13 @@
         this.form.album[val[0]] = val[1];
       },
       saveCollect(val) {
-        if (!this.picStatus) {
-          Toast(this.alertMsg('pic'));
-          return;
-        }
+        if (this.contract_id !== '') {
+          if (!this.picStatus) {
+            Toast(this.alertMsg('pic'));
+            return;
+          }
           if (this.haveInHand) {
-          this.prompt('', 'send');
+            this.prompt('', 'send');
             this.haveInHand = false;
             for (let i = 0; i < this.sexs.length; i++) {
               this.form.customers[i].sex = this.sexs[i];

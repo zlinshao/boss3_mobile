@@ -11,7 +11,7 @@
             </van-field>
           </van-cell-group>
         </div>
-        <div>
+        <div class="pic">
           <Upload :file="uploads" :close="!isClear" @success="getImgData"></Upload>
         </div>
         <div v-if="queries.marking === 1">
