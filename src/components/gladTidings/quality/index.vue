@@ -893,14 +893,12 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.form.community.property_fee = this.property_fee;
           this.form.community.property_phone = this.property_phone;
           this.haveInHand = false;
@@ -914,6 +912,7 @@
           this.form.is_lord_fill = this.is_lordOn ? 1 : 0;          //房东是否予以配齐
           this.form.is_draft = val;
           this.$http.post(this.urls + 'bulletin/quality', this.form).then((res) => {
+            this.prompt('', 'close');
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === "51410" || res.data.code === "51430") {

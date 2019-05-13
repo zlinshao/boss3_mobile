@@ -11,9 +11,8 @@
             </van-field>
           </van-cell-group>
         </div>
-        <div class="pic">
-          <div class="title">图片</div>
-          <UpLoad :ID="'image_pic'" @getImg="getImgData" :isClear="isClear"></UpLoad>
+        <div>
+          <Upload :file="uploads" :close="!isClear" @success="getImgData"></Upload>
         </div>
         <div v-if="queries.marking === 1">
           <van-cell-group>
@@ -29,12 +28,11 @@
   </div>
 </template>
 <script>
-  import UpLoad from '../../common/UPLOAD.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "comment",
-    components: {Toast, UpLoad},
+    components: {Toast},
     data() {
       return {
         urls: globalConfig.server,
@@ -64,6 +62,10 @@
         showContent: false,
 
         retry: 0,
+        uploads: {
+          label: '图片',
+          keyName: 'image_pic',
+        },
       }
     },
     watch: {
@@ -89,7 +91,6 @@
 
     },
     activated() {
-      $('.imgItem').remove();
       this.haveInHand = true;
       this.queries = this.$route.query;
 
@@ -114,13 +115,14 @@
       },
       // 评分
       mark() {
+        this.prompt('', 'send');
         this.forms.is_electric_appliance = this.is_electric_status ? 1 : 0;
         this.forms.is_clean = this.is_clean_status ? 1 : 0;
         this.$http.put(this.urls + 'bulletin/helper/score/' + this.queries.able, this.forms).then((res) => {
+          this.prompt('', 'close');
           if (res.data.code === '51110') {
             this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
             this.close_();
-            $('.imgItem').remove();
           } else {
             Toast(res.data.msg);
           }
@@ -128,14 +130,12 @@
       },
 
       sure(val) {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
           this.passThrough(val);
         } else {
@@ -143,7 +143,6 @@
         }
       },
       passThrough(val) {
-        this.prompt('正在提交！', 'send');
         this.$http.post(this.urls + 'workflow/process/trans/' + this.queries.ids, {
           operation: this.queries.detail,
         }).then((res) => {
@@ -157,7 +156,6 @@
             } else {
               this.$router.replace({path: this.path, query: {ids: this.queries.ids}});
               this.close_();
-              $('.imgItem').remove();
             }
             Toast.success(res.data.msg);
           } else {
@@ -187,16 +185,13 @@
         }
       },
       comment() {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
-          this.prompt('正在提交！', 'send');
           this.$http.post(this.urls + 'workflow/process/comment', {
             content: this.form.content,
             obj_id: this.queries.ids,
@@ -214,7 +209,6 @@
                 Toast.success(res.data.msg);
               }
               this.close_();
-              $('.imgItem').remove();
               this.haveInHand = true;
             } else {
               Toast(res.data.msg);

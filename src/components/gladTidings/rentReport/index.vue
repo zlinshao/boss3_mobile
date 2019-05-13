@@ -967,14 +967,12 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
           let receipt = [];
           for (let i = 0; i < this.form.receipt.length; i++) {
@@ -1006,6 +1004,7 @@
               customer_info: [{name: this.form.name, phone: this.form.phone}]
             };
             this.$http.post(this.urls + 'coreproject/renter/validate', checkInfo).then(resp => {
+              this.prompt('', 'close');
               this.haveInHand = true;
               if (resp.data.code === '20020') {
                 this.submit();

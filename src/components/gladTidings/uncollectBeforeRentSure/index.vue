@@ -998,14 +998,12 @@
         this.form[val[0]] = val[1];
       },
       saveCollect(val) {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
           let receipt = [];
           for (let i = 0; i < this.form.receipt.length; i++) {
@@ -1022,6 +1020,7 @@
           this.form.day = this.form.day === '' ? '0' : this.form.day;
           this.form.uniq_code=this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/rent_without_collect', this.form).then((res) => {
+            this.prompt('', 'close');
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === "51310" || res.data.code === "51330") {

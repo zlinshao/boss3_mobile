@@ -639,14 +639,12 @@
         return arr;
       },
       saveCollect(val) {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
           let receipt = [];
           for (let i = 0; i < this.form.receipt.length; i++) {
@@ -675,6 +673,7 @@
           this.emptyPic(this.form.deposit_photo, 'deposit_photo');
           this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/retainage', this.form).then((res) => {
+            this.prompt('', 'close');
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50910' || res.data.code === '50930') {

@@ -1,6 +1,6 @@
 <template>
   <div id="upLoad">
-    <label class="labelTitle" v-if="file.label">{{file.label}}
+    <label class="labelTitle" v-if="file.label">{{file.label}}{{file}}
       <span v-if="file.placeholder">({{file.placeholder}})</span>
     </label>
     <transition-group name="list" tag="p" class="items-center">

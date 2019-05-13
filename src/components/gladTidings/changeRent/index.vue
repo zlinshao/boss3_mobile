@@ -971,14 +971,12 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
           let receipt = [];
           for (let i = 0; i < this.form.receipt.length; i++) {
@@ -999,6 +997,7 @@
           this.form.period_pay_arr = this.filter_array(this.form.period_pay_arr);
           this.form.period_price_arr = this.filter_array(this.form.period_price_arr);
           this.$http.post(this.urls + 'bulletin/rent', this.form).then((res) => {
+            this.prompt('', 'close');
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50210' || res.data.code === '50230') {

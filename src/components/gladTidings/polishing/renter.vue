@@ -507,14 +507,12 @@
       },
       saveCollect(val) {
         if (this.contract_id !== '') {
-          if (this.picStatus === 'err') {
-            Toast(this.alertMsg('errPic'));
-            return;
-          } else if (this.picStatus === 'lose') {
+          if (!this.picStatus) {
             Toast(this.alertMsg('pic'));
             return;
           }
           if (this.haveInHand) {
+            this.prompt('', 'send');
             this.haveInHand = false;
             let receipt = [];
             for (let i = 0; i < this.form.receipt.length; i++) {
@@ -529,6 +527,7 @@
             }
             this.form.is_submit = val;
             this.$http.put(this.urls + 'bulletin/complete/rent/' + this.contract_id, this.form).then((res) => {
+              this.prompt('', 'close');
               this.haveInHand = true;
               this.retry = 0;
               if (res.data.code === '51610') {

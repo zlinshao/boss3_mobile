@@ -219,7 +219,7 @@ export default {
       })
     };
     // loading
-    Vue.prototype.prompt = function (msg, type) {
+    Vue.prototype.prompt = function (msg = '正在处理', type) {
       switch (type) {
         case 'send':
           Toast.loading({

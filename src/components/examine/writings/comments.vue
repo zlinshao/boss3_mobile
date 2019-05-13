@@ -12,9 +12,8 @@
         </van-cell-group>
       </div>
       <div style="background: #fafafe;height: 10px;width: 100%;"></div>
-      <div class="pic">
-        <div class="title">图片</div>
-        <UpLoad :ID="'photo'" @getImg="getImgData" :isClear="isClear" style="margin-left: -15px;"></UpLoad>
+      <div>
+        <Upload :file="uploads" :close="!isClear" @success="getImgData"></Upload>
       </div>
       <div class="footer">
         <div @click="manager()">发布评论</div>
@@ -24,12 +23,11 @@
 </template>
 
 <script>
-  import UpLoad from '../../common/UPLOAD.vue'
   import {Toast} from 'vant';
 
   export default {
     name: "comment",
-    components: {Toast, UpLoad},
+    components: {Toast},
     data() {
       return {
         haveInHand: true,
@@ -43,6 +41,10 @@
         pitch: '',
         path: '',
         retry: 0,
+        uploads: {
+          label: '图片',
+          keyName: 'image_pic',
+        },
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -68,14 +70,12 @@
       },
 
       sure() {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('','send');
           this.haveInHand = false;
           this.$http.post(this.urls + 'oa/portal/comment', {
             content: this.form.remark,
@@ -84,12 +84,12 @@
             image_pic: this.form.photo,
             video_file: [],
           }).then((res) => {
+            this.prompt('','close');
             this.haveInHand = true;
             if (res.data.code === '80060') {
               Toast.success(res.data.msg);
               this.$router.push({path: this.path, query: {id: this.pitch}});
               this.close_();
-              $('.imgItem').remove();
             } else {
               Toast(res.data.msg);
             }

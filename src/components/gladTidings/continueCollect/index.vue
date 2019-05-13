@@ -755,14 +755,12 @@
       },
 
       saveCollect(val) {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
           this.form.draft = val;
           this.form.is_corp = this.corp ? 1 : 0;
@@ -773,6 +771,7 @@
           this.form.period_pay_arr = this.filter_array(this.form.period_pay_arr);
           this.form.period_price_arr = this.filter_array(this.form.period_price_arr);
           this.$http.post(this.urls + 'bulletin/collect', this.form).then((res) => {
+            this.prompt('', 'close');
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50110' || res.data.code === '50130') {

@@ -296,19 +296,18 @@
         }
       },
       saveCollect(val) {
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
           this.form.refund = this.refundSta ? 1 : 0;
           this.form.draft = val;
           this.form.uniq_code = this.$refs.float.getCode();
           this.$http.post(this.urls + 'bulletin/lose', this.form).then((res) => {
+            this.prompt('', 'close');
             this.haveInHand = true;
             this.retry = 0;
             if (res.data.code === '50710' || res.data.code === '50730') {

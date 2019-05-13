@@ -1665,17 +1665,14 @@
       },
 
       sendOrSave(val, success) {
-
-        if (this.picStatus === 'err') {
-          Toast(this.alertMsg('errPic'));
-          return;
-        } else if (this.picStatus === 'lose') {
+        if (!this.picStatus) {
           Toast(this.alertMsg('pic'));
           return;
         }
         this.form.uniq_code = this.$refs.float.getCode();
 
         if (this.haveInHand) {
+          this.prompt('', 'send');
           this.haveInHand = false;
           let receipt = [];
           for (let i = 0; i < this.form.receipt.length; i++) {
@@ -1705,14 +1702,10 @@
           }
           this.form.name = this.form.customer_info[0].name;
           this.form.phone = this.form.customer_info[0].phone;
-          Toast.loading({
-            mask: true,
-            duration: 0,
-            message: '加载中...'
-          });
           if (val === 1) {//草稿
             let json = {content: this.form, type: '2'};
             this.$http.post(this.eurls + 'fdd/contract/stash', json).then(res => {
+              this.prompt('', 'close');
               this.haveInHand = true;
               Toast.clear();
               if (success === undefined) {
