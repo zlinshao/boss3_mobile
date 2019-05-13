@@ -5,7 +5,7 @@ globalConfig = {
   attestation: 'http://test.boss-support.lejias.cn/',                 //认证接口
   e_server:'http://test.e_contract.api.ewal.lejias.cn/',//点击合同接口
   env: 'dev',       //用户名
-  domain: 'http://static.lejias.cn',
+  domain: 'http://static.lejias.cn/',
   personal: {},
   client_secret: 'udMntGnEJBgsevojFrMicLuW8G2ABBAsmRlK9fIC',
   client_id: '2',

@@ -68,8 +68,9 @@
           <p>{{index}}</p>
           <h1>
             <span v-for="(pic,num) in key">
+              {{pic.uri}}
               <img v-if="pic.is_video" @click="checkTv(pic.uri)" src="../../../assets/video.jpg">
-              <img v-else @click="pics(key, num, pic.is_video)" :src="pic.uri">
+              <img :src="pic.uri" v-else @click="pics(key, num)">
             </span>
           </h1>
         </div>
