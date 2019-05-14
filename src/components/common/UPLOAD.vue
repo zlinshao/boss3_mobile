@@ -230,6 +230,7 @@
         let observable = qiniu.upload(file, key, token, putExtra, config);
         this.subscription[pro] = observable.subscribe({
           next(res) {
+            console.log(res);
             that.progress[pro] = Math.floor(res.total.percent) + '%';
             that.progress = Object.assign({}, that.progress);
             console.log(that.progress);
