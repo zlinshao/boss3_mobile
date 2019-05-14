@@ -8,7 +8,7 @@
            :style="uploadCss">
         <div class="img">
           <!--图片-->
-          <img :src="item.uri" v-if="item.mime.includes('image')" @click="$bigPhoto(showFile,item.uri)">
+          <img :src="item.uri" v-if="item.mime.includes('image')" @click="$bigPhoto(showFile,item.uri)" alt="">
           <!--视频-->
           <!--@click="videoPlay($event)" 播放事件-->
           <img src="../../assets/image/file/video.png" :alt="item.uri" @click="videoPlay($event)"
@@ -22,17 +22,17 @@
         </div>
         <!--进图条-->
         <div class="progress" :id="'progress' + file.keyName + index"
-             v-if="!item.uri.includes('http')">
+             v-if="!item.uri.includes('http://')">
           {{progress['progress' + file.keyName + index]}}
         </div>
         <!--删除按钮-->
         <div class="remove flex" @click="removeFile(index)">
-          <img src="../../assets/image/file/closeBtn.png">
+          <img src="../../assets/image/file/closeBtn.png" alt="">
         </div>
       </div>
       <!--上传按钮-->
       <label class="uploadPic" :key="file.keyName" :style="uploadCss" :for="file.keyName" @change="uploadPic($event)">
-        <img src="../../assets/image/file/upload.png">
+        <img src="../../assets/image/file/upload.png" alt="">
         <input type="file" :id="file.keyName" hidden multiple>
       </label>
     </transition-group>
@@ -42,7 +42,7 @@
       <video id="video" :src="videoSrc" muted controls autoplay></video>
       <div class="items-center close">
         <span class="flex-center" @click="videoPlay()">
-          <img src="../../assets/image/file/closeBtn.png">
+          <img src="../../assets/image/file/closeBtn.png" alt="">
         </span>
       </div>
     </div>
@@ -232,6 +232,7 @@
           next(res) {
             that.progress[pro] = Math.floor(res.total.percent) + '%';
             that.progress = Object.assign({}, that.progress);
+            console.log(that.progress);
           },
           error(err) {
             console.log(err);

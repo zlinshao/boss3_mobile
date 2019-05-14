@@ -14,9 +14,9 @@ import '@/assets/js/formData.js'
 import 'vant/lib/index.css'
 // import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 
-// import VConsole from 'vconsole/dist/vconsole.min.js'; //import vconsole
-// let vConsole = new VConsole(); // 初始化
-// Vue.use(vConsole);
+import VConsole from 'vconsole/dist/vconsole.min.js'; //import vconsole
+let vConsole = new VConsole(); // 初始化
+Vue.use(vConsole);
 
 import {
   Cell,
@@ -83,17 +83,13 @@ router.beforeEach((to, from, next) => {
 router.afterEach(route => {
   // 从路由的元信息中获取 title 属性
   if (route.meta.title) {
-    document.title = route.meta.title;
-    // 如果是 iOS 设备，则使用如下 hack 的写法实现页面标题的更新
-    if (navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
-      const hackIframe = document.createElement('iframe');
-      hackIframe.style.display = 'none';
-      hackIframe.src = '/static/html/fixIosTitle.html?r=' + Math.random();
-      document.body.appendChild(hackIframe);
-      setTimeout(_ => {
-        document.body.removeChild(hackIframe);
-      }, 300);
-    }
+    dd.biz.navigation.setTitle({
+      title: route.meta.title,//控制标题文本，空字符串表示显示默认文本
+      onSuccess(result) {
+      },
+      onFail(err) {
+      }
+    });
   }
 });
 
