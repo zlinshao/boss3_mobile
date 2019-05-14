@@ -276,6 +276,7 @@
     },
     activated() {
       this.routerIndex('');
+      this.goBack('/');
       this.finished = true;
       this.scrollTops();
       this.toDone();
