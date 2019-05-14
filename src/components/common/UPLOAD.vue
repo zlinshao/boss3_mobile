@@ -162,6 +162,8 @@
             alert('文件最大小不得超过100MB');
             return;
           }
+          let pro = 'progress' + that.file.keyName + (Object.keys(that.progress).length);
+          that.progress[pro] = '0%';
           let key = "lejia" + md5(fileName + new Date().getTime()).toLowerCase() + "." + fileName.split(".")[1];
           reader.readAsDataURL(file);
           new Promise((resolve, reject) => {
@@ -215,18 +217,16 @@
                 // maxHeight: 618
               };
               qiniu.compressImage(file, options).then(data => {
-                that.uploadProgress(data.dist, key, that.token, putExtra, config, fileType, that);
+                that.uploadProgress(data.dist, key, that.token, putExtra, config, fileType, that, pro);
               });
             } else {
-              that.uploadProgress(file, key, that.token, putExtra, config, fileType, that);
+              that.uploadProgress(file, key, that.token, putExtra, config, fileType, that, pro);
             }
           });
         }
       },
       // 上传文件
-      uploadProgress(file, key, token, putExtra, config, fileType, that) {
-        let pro = 'progress' + that.file.keyName + (Object.keys(that.progress).length);
-        that.progress[pro] = '0%';
+      uploadProgress(file, key, token, putExtra, config, fileType, that, pro) {
         let observable = qiniu.upload(file, key, token, putExtra, config);
         this.subscription[pro] = observable.subscribe({
           next(res) {
@@ -264,42 +264,53 @@
   #upLoad {
     padding: .24rem 0 0 .3rem;
     width: 100%;
+
     video {
       width: 100%;
       height: 100%;
       @include radius(.1rem);
     }
+
     .list-enter-active, .list-leave-active {
       transition: all .6s;
     }
+
     .list-enter, .list-leave-to {
       opacity: 0;
       transform: translateY(.3rem);
     }
+
     .showFile, .uploadPic {
       overflow: hidden;
       @include radius(.1rem);
     }
+
     .items-center {
       flex-wrap: wrap;
     }
+
     .labelTitle {
       white-space: nowrap;
       margin: .2rem .3rem 0 0;
+
       span {
         color: #A2A2A2;
       }
     }
+
     .showFile {
       position: relative;
       margin: .2rem .2rem 0 0;
+
       .img {
         height: 100%;
+
         img {
           width: 100%;
           height: 100%;
         }
       }
+
       .progress {
         position: absolute;
         bottom: 0;
@@ -313,6 +324,7 @@
         line-height: .4rem;
         text-align: center;
       }
+
       .remove {
         cursor: pointer;
         position: absolute;
@@ -323,6 +335,7 @@
         @include radius(50%);
         background-color: #CF2E33;
         align-items: flex-end;
+
         img {
           margin: 0 0 .14rem .14rem;
           width: .16rem;
@@ -330,16 +343,17 @@
         }
       }
     }
+
     .uploadPic {
       cursor: pointer;
+      background-color: #F0F0F0;
       margin-top: .2rem;
       opacity: .7;
-      background-color: #FFFFFF;
-      padding: .18rem;
-      border: .01rem solid #EBEEF5;
-      img{
-        width: 100%;
-        height: 100%;
+      @include flex('flex-center');
+
+      img {
+        width: .3rem;
+        height: .3rem;
       }
     }
   }

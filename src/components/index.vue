@@ -298,8 +298,8 @@
           // case 18:
           //   isShow = this.showBulletin;
           //   break;
-          default :
-            isShow=key.hidden==='glad';
+          default:
+            isShow = key.hidden === 'glad';
             break;
         }
         return isShow
@@ -464,7 +464,7 @@
       getShowEContract() {
         this.$http.get(this.urls + 'bulletin/component_visible').then(resp => {
           this.showEContract = resp.data.code === '20000';
-          this.showBulletin=!this.showEContract;
+          this.showBulletin = !this.showEContract;
         })
       }
     }
