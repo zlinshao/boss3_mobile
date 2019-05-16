@@ -352,7 +352,13 @@
         this.$router.push('/newRentContract');//type 0为新签 1为作废重签
       },
       getData() {
+        console.log(1);
+        console.log(this.page);
+        console.log(this.totalPages);
         if (this.page > this.totalPages) return;
+        console.log(2);
+        console.log(this.page);
+        console.log(this.totalPages);
         this.loading = true;
         let per = JSON.parse(sessionStorage.personal);
         let staff_id = per.id;
