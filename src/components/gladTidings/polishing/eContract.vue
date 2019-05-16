@@ -18,7 +18,7 @@
         v-model="loading"
         :finished="finished"
         finished-text="没有更多了"
-        @load="onSearch">
+        @load="onLoad">
         <van-cell v-for="(item,index) in list" class="list" :key="index" @click="toDetail(item)">
           <div class="infoParent">
             <span class="owner" style="font-size:.8em;color: #e4393c;position: absolute;right: 1.2em;top: .5em">{{getStatusStr(item)}}</span>
@@ -133,8 +133,19 @@
     },
     methods: {
       onSearch() {
-        this.page++;
-        this.getData();
+       this.refresh();
+      },
+      onLoad() {
+        // 异步更新数据
+        setTimeout(() => {
+          // 加载状态结束
+          this.loading = false;
+          // 数据全部加载完成
+          if (!this.finished) {
+            this.getData();
+            this.page++;
+          }
+        }, 500);
       },
       lookContractModels() {
         this.$router.push('/contractModels');
@@ -352,13 +363,6 @@
         this.$router.push('/newRentContract');//type 0为新签 1为作废重签
       },
       getData() {
-        console.log(1);
-        console.log(this.page);
-        console.log(this.totalPages);
-        if (this.page > this.totalPages) return;
-        console.log(2);
-        console.log(this.page);
-        console.log(this.totalPages);
         this.loading = true;
         let per = JSON.parse(sessionStorage.personal);
         let staff_id = per.id;
