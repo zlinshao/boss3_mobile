@@ -14,9 +14,9 @@ import '@/assets/js/formData.js'
 import 'vant/lib/index.css'
 // import 'vue2-editor/node_modules/quill/dist/quill.bubble.css'
 
-// import VConsole from 'vconsole/dist/vconsole.min.js'; //import vconsole
-// let vConsole = new VConsole(); // 初始化
-// Vue.use(vConsole);
+import VConsole from 'vconsole/dist/vconsole.min.js'; //import vconsole
+let vConsole = new VConsole(); // 初始化
+Vue.use(vConsole);
 
 import {
   Cell,
