@@ -240,7 +240,7 @@
           },
           complete(res) {
             let data = {};
-            data.url = globalConfig.domain + res.key;
+            data.url = globalConfig.domain + '/' + res.key;
             data.name = res.key;
             data.raw_name = res.key;
             data.type = fileType;
