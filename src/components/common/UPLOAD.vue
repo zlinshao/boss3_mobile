@@ -211,10 +211,9 @@
             if (file.type.includes('image')) {
               // 图片压缩
               let options = {
-                quality: 0.8,
                 noCompressIfLarger: true,
-                // maxWidth: 1000,
-                // maxHeight: 618
+                maxWidth: 1200,
+                maxHeight: 1200
               };
               qiniu.compressImage(file, options).then(data => {
                 that.uploadProgress(data.dist, key, that.token, putExtra, config, fileType, that, pro);
