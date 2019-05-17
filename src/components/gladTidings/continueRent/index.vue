@@ -360,14 +360,14 @@
       </div>
 
       <div class="aloneModel">
-        <Upload :file="uploads[2]" :getImg="receipts" :close="!isClear" @success="getImgData"></Upload>
-        <div class="title">
-          <div v-if="is_receipt" style="color: #E4393C;">{{isReceiptMsg.content2}}</div>
-        </div>
+        <Upload :file="uploads[2]" :getImg="photos" :close="!isClear" @success="getImgData"></Upload>
       </div>
 
       <div class="aloneModel">
-        <Upload :file="uploads[3]" :getImg="photos" :close="!isClear" @success="getImgData"></Upload>
+        <Upload :file="uploads[3]" :getImg="receipts" :close="!isClear" @success="getImgData"></Upload>
+        <div class="title">
+          <div v-if="is_receipt" style="color: #E4393C;">{{isReceiptMsg.content2}}</div>
+        </div>
       </div>
 
       <van-cell-group>
@@ -546,23 +546,22 @@
         retry: 0,
         uploads: [
           {
-            label: '特殊情况截图',
+            label: '领导同意截图',
             keyName: 'screenshot_leader',
           },
           {
-            label: '合同照片',
+            label: '凭证截图',
             placeholder: '必填',
+            keyName: 'screenshot',
+          },
+          {
+            label: '合同照片',
             keyName: 'photo',
           },
           {
-            label: '房产证照片',
+            label: '押金收条',
             placeholder: '必填',
-            keyName: 'property_photo',
-          },
-          {
-            label: '证件照片',
-            placeholder: '必填',
-            keyName: 'identity_photo',
+            keyName: 'deposit_photo',
           },
         ],
       }
